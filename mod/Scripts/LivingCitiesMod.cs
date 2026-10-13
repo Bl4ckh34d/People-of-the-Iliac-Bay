@@ -6,6 +6,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using LivingCities.Core;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ namespace LivingCities.DFU
     public sealed class LivingCitiesMod : MonoBehaviour, IHasModSaveData
     {
         private WorldStateStore store = new WorldStateStore(0);
+        private RuntimeOptions options = new RuntimeOptions(true, 3, 6, 22, 1, true);
+        private Mod mod;
         private SettlementPopulation current;
         private bool panel, saveFault;
         private float nextCheck;
@@ -26,7 +29,10 @@ namespace LivingCities.DFU
             var host = new GameObject("Living Cities");
             DontDestroyOnLoad(host);
             var component = host.AddComponent<LivingCitiesMod>();
+            component.mod = initParams.Mod;
             initParams.Mod.SaveDataInterface = component;
+            initParams.Mod.LoadSettingsCallback = component.LoadSettings;
+            initParams.Mod.LoadSettings();
             initParams.Mod.IsReady = true;
             Debug.Log("LIVING_CITIES_READY: virtual population foundation; save interface registered.");
         }
@@ -40,6 +46,17 @@ namespace LivingCities.DFU
         {
             StartGameBehaviour.OnNewGame -= ResetWorld;
             SaveLoadManager.OnStartLoad -= BeforeLoad;
+            if (mod != null) mod.LoadSettingsCallback = null;
+        }
+        private void LoadSettings(ModSettings settings, ModSettingsChange change)
+        {
+            options = new RuntimeOptions(settings.GetBool("General", "Enabled"),
+                settings.GetInt("Population", "HouseholdLimit"), settings.GetInt("DailyRoutine", "WakeHour"),
+                settings.GetInt("DailyRoutine", "SleepHour"), settings.GetInt("Diagnostics", "RefreshSeconds"),
+                settings.GetBool("Diagnostics", "EnableF8Panel"));
+            if (!options.DiagnosticsEnabled) panel = false;
+            nextCheck = 0;
+            Debug.Log("LIVING_CITIES_SETTINGS_LOADED: native mod menu; six functional foundation controls.");
         }
         private void ResetWorld()
         {
@@ -66,9 +83,10 @@ namespace LivingCities.DFU
         }
         private void Update()
         {
-            if (Input.GetKeyDown(KeyCode.F8)) panel = !panel;
+            if (options.DiagnosticsEnabled && Input.GetKeyDown(KeyCode.F8)) panel = !panel;
             if (Time.unscaledTime < nextCheck) return;
-            nextCheck = Time.unscaledTime + 1;
+            nextCheck = Time.unscaledTime + options.RefreshSeconds;
+            if (!options.Enabled) { diagnostic = "Simulation disabled in mod settings. Saved residents are retained."; return; }
             if (saveFault) { diagnostic = "Population suspended: save restore failed or is in progress."; return; }
             GameManager game = GameManager.Instance;
             if (game == null || !game.IsReady || !game.IsPlayingGame() || !game.PlayerGPS.HasCurrentLocation) return;
@@ -80,14 +98,14 @@ namespace LivingCities.DFU
                 for (int kind = (int)DFLocation.BuildingTypes.House1; kind <= (int)DFLocation.BuildingTypes.House6; kind++)
                     foreach (BuildingSummary home in directory.GetBuildingsOfType((DFLocation.BuildingTypes)kind))
                         homes.Add(home.buildingKey);
-                current = store.GetOrCreate(directory.MapID, homes);
+                current = store.GetOrCreate(directory.MapID, homes, options.HouseholdLimit);
                 Debug.Log("LIVING_CITIES_SETTLEMENT: " + directory.MapID + "; households=" + current.Households.Count);
             }
             int alive = 0, dead = 0, sleeping = 0;
             long minute = (long)(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds() / 60);
             foreach (Household home in current.Households)
             {
-                Activity activity = DailySchedule.HomeDay(home.BuildingKey, 360, 1320).Evaluate(minute).Activity;
+                Activity activity = DailySchedule.HomeDay(home.BuildingKey, options.WakeHour * 60, options.SleepHour * 60).Evaluate(minute).Activity;
                 foreach (Resident resident in home.Residents)
                 {
                     if (!resident.IsAlive) dead++;

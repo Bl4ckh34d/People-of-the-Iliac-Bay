@@ -2,6 +2,8 @@
 
 Approved by the user on 13 October 2026. This design covers a standard Daggerfall Unity mod with persistent residents, daily activities, finite guards, civilian stealth, and optional local language-model dialogue. The baseline sections preserve setup evidence at design time. Current implementation status and acceptance evidence live in `docs/MILESTONES.md` in the LivingCities repository.
 
+User addition on 13 October 2026: provide a configurable mod menu with meaningful controls for implemented subsystems. After stable vanilla gameplay, add compatibility patches for city overhauls, added market stalls/buildings, and currently non-interactable vendor NPCs. Detailed constraints and sequencing are in `docs/SETTINGS-AND-COMPATIBILITY.md`.
+
 ## Setup as of 13 October 2026
 
 - Workspace: `C:/Users/Daniel/Desktop/Code_Experiments/DFU`.

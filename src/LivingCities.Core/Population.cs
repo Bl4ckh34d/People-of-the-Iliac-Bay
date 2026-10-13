@@ -30,8 +30,9 @@ namespace LivingCities.Core
 
     public static class Population
     {
-        public static SettlementPopulation Create(uint seed, int settlementId, IEnumerable<int> homeKeys)
+        public static SettlementPopulation Create(uint seed, int settlementId, IEnumerable<int> homeKeys, int maxResidents = 3)
         {
+            if (maxResidents < 1 || maxResidents > 3) throw new ArgumentOutOfRangeException(nameof(maxResidents));
             if (settlementId < 0) throw new ArgumentOutOfRangeException(nameof(settlementId));
             if (homeKeys == null) throw new ArgumentNullException(nameof(homeKeys));
             var homes = new SortedSet<int>();
@@ -44,7 +45,7 @@ namespace LivingCities.Core
             foreach (int key in homes)
             {
                 var household = new Household { BuildingKey = key };
-                int count = 1 + (int)(StableSeed.Combine(seed, (uint)settlementId, (uint)key, uint.MaxValue) % 3);
+                int count = 1 + (int)(StableSeed.Combine(seed, (uint)settlementId, (uint)key, uint.MaxValue) % (uint)maxResidents);
                 for (int slot = 0; slot < count; slot++)
                 {
                     household.Residents.Add(new Resident

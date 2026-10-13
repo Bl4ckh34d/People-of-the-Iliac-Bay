@@ -1,0 +1,87 @@
+{
+  "Version": "1.0",
+  "Sections": [
+    {
+      "Name": "General",
+      "Description": "Foundation build: controls currently affect virtual residents. Physical NPC integration is still in development.",
+      "IsAdvanced": false,
+      "Keys": [
+        {
+          "Value": true,
+          "Name": "Enabled",
+          "Description": "Enable virtual population updates. Disabling keeps saved residents and deaths; their schedules catch up when re-enabled.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        }
+      ],
+      "$version": "v1"
+    },
+    {
+      "Name": "Population",
+      "Description": "Changes affect initial allocation in newly visited settlements. Existing households remain intact.",
+      "IsAdvanced": false,
+      "Keys": [
+        {
+          "Min": 1,
+          "Max": 3,
+          "Value": 3,
+          "Name": "HouseholdLimit",
+          "Description": "Maximum permanent residents per new household. Visitors will use separate limits when implemented.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        }
+      ],
+      "$version": "v1"
+    },
+    {
+      "Name": "DailyRoutine",
+      "Description": "Hours use the 24-hour clock. Currently controls virtual home/sleep schedules; changes apply immediately.",
+      "IsAdvanced": false,
+      "Keys": [
+        {
+          "Min": 4,
+          "Max": 10,
+          "Value": 6,
+          "Name": "WakeHour",
+          "Description": "Hour residents wake at home.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
+        {
+          "Min": 18,
+          "Max": 23,
+          "Value": 22,
+          "Name": "SleepHour",
+          "Description": "Hour residents go to sleep at home.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        }
+      ],
+      "$version": "v1"
+    },
+    {
+      "Name": "Diagnostics",
+      "Description": "Development controls. These affect diagnostic refresh, not walking speed.",
+      "IsAdvanced": true,
+      "Keys": [
+        {
+          "Min": 1,
+          "Max": 10,
+          "Value": 1,
+          "Name": "RefreshSeconds",
+          "Description": "Seconds between settlement and diagnostic updates.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
+        {
+          "Value": true,
+          "Name": "EnableF8Panel",
+          "Description": "Allow F8 to toggle the population diagnostic panel.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        }
+      ],
+      "$version": "v1"
+    }
+  ]
+}

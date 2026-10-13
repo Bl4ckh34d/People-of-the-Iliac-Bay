@@ -14,11 +14,11 @@ namespace LivingCities.Core
     {
         private WorldState state;
         public WorldStateStore(uint seed) { state = new WorldState { WorldSeed = seed }; }
-        public SettlementPopulation GetOrCreate(int settlementId, IEnumerable<int> homeKeys)
+        public SettlementPopulation GetOrCreate(int settlementId, IEnumerable<int> homeKeys, int maxResidents = 3)
         {
             foreach (SettlementPopulation existing in state.Settlements)
                 if (existing.SettlementId == settlementId) return existing;
-            SettlementPopulation created = Population.Create(state.WorldSeed, settlementId, homeKeys);
+            SettlementPopulation created = Population.Create(state.WorldSeed, settlementId, homeKeys, maxResidents);
             state.Settlements.Add(created);
             return created;
         }

@@ -12,9 +12,11 @@ This is experimental software. Use the isolated portable player and dedicated te
 
 ## Verified foundation
 
-`dotnet run --project tests/LivingCities.Tests` passes 52 behavior tests: household identity/capacity, persistent deaths, deterministic weighted paths, analytical schedules, save round trips, and atomic restore rejection.
+`dotnet run --project tests/LivingCities.Tests` passes 57 behavior tests: household identity/capacity, persistent deaths, deterministic weighted paths, analytical schedules, save round trips, atomic restore rejection, and bounded settings without regenerating existing residents.
 
 The standard `livingcities.dfmod` builds, reopens, and initializes alongside Basic Roads in the isolated player. Unity's integration verifier exercises DFU's real FullSerializer and the mod save adapter. The runtime adapter currently displays virtual home/sleep counts with F8. Physical NPCs, live commutes, and actual save-slot continuity remain pending.
+
+The native mod settings menu provides six working foundation controls: simulation enable, maximum initial household size (1–3, new settlements only), wake/sleep hours, refresh interval, and F8 diagnostics availability. Settings load through DFU's live callback and are validated again at runtime. More controls accompany their gameplay systems; city-overhaul and market-vendor patches follow vanilla stability. See `docs/SETTINGS-AND-COMPATIBILITY.md`.
 
 Canonical source lives here; `tools/Deploy.ps1` copies it into the upstream project's ignored mod folder. To build the installed mod, run Unity with `-batchmode -nographics -quit -projectPath` pointing to the sibling `daggerfall-unity` checkout and `-executeMethod LivingCitiesBuild.VerifyAndBuild`. Preserve the log with `-logFile`. Run `tools/SmokeTest.ps1` for isolated headless startup checks; it stops only its owned process.
 

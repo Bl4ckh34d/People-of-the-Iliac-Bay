@@ -6,6 +6,7 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using LivingCities.Core;
 using LivingCities.DFU;
 using UnityEditor;
@@ -40,6 +41,7 @@ public static class LivingCitiesBuild
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         VerifySerialization();
+        VerifySettings();
         Require(typeof(IHasModSaveData).IsAssignableFrom(typeof(LivingCitiesMod)), "Save adapter contract");
         Require(typeof(BuildingDirectory).GetMethod("GetBuildingsOfType") != null, "Building enumeration hook");
         Require(typeof(CityNavigation).GetMethod("GetNavGridWeightLocal", new[] { typeof(int), typeof(int) }) != null, "Street grid hook");
@@ -55,6 +57,7 @@ public static class LivingCitiesBuild
         var assets = new List<string> { manifestPath };
         foreach (string source in info.Files)
         {
+            if (source.EndsWith("/modsettings.json")) { assets.Add(source); continue; }
             Require(source.EndsWith(".cs") && !source.Contains("/Editor/"), "Only runtime sources may ship");
             string target = staging + "/" + Path.GetFileName(source) + ".txt";
             File.Copy(source, target, true); assets.Add(target);
@@ -79,7 +82,7 @@ public static class LivingCitiesBuild
         Directory.CreateDirectory(evidence);
         File.WriteAllText(Path.Combine(evidence, "unity-build-result.json"),
             "{\"fullSerializerRoundTrip\":true,\"adapterSaveLifecycle\":true,\"publicHookContracts\":true,\"assetCount\":" + assets.Count +
-            ",\"installed\":true,\"physicalActors\":false}");
+            ",\"nativeSettings\":true,\"installed\":true,\"physicalActors\":false}");
         Debug.Log("LIVING_CITIES_BUILD_SUCCESS: serializer, adapter lifecycle, contracts and bundle verified; installed.");
     }
     private static void VerifySerialization()
@@ -92,6 +95,18 @@ public static class LivingCitiesBuild
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), serialized));
         Require(serialized == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "FullSerializer round trip");
         Require(!restored.GetOrCreate(100, new[] { 10 }).Households[0].Residents[0].IsAlive, "Death persistence");
+    }
+    private static void VerifySettings()
+    {
+        string json = File.ReadAllText("Assets/Game/Mods/LivingCities/modsettings.json");
+        var data = (ModSettingsData)SaveLoadManager.Deserialize(typeof(ModSettingsData), json);
+        Require(data.GetValue<bool>("General", "Enabled"), "Simulation toggle default");
+        Require(data.GetValue<int>("Population", "HouseholdLimit") == 3, "Household slider default");
+        Require(data.GetValue<int>("DailyRoutine", "WakeHour") == 6, "Wake slider default");
+        Require(data.GetValue<int>("DailyRoutine", "SleepHour") == 22, "Sleep slider default");
+        Require(data.GetValue<int>("Diagnostics", "RefreshSeconds") == 1, "Refresh slider default");
+        Require(data.GetValue<bool>("Diagnostics", "EnableF8Panel"), "Panel toggle default");
+        Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: six native menu controls deserialize with expected types and defaults.");
     }
     private static void VerifyAdapter()
     {

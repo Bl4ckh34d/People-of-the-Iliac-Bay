@@ -24,7 +24,7 @@ try {
         if ((Test-Path -LiteralPath $log) -and (Get-Item -LiteralPath $log).LastWriteTime -ge $started) {
             $body = Get-Content -LiteralPath $log -Raw
             if ($body -match 'error CS\d+|Exception:|LIVING_CITIES_GUARD_PROBE_FAIL') { throw 'Player reported an exception or compile error; inspect preserved smoke log.' }
-            $ready = $body -match 'LIVING_CITIES_READY:' -and $body -match 'Finished mod init: BasicRoads' -and $body -match 'GameManager ready'
+            $ready = $body -match 'LIVING_CITIES_READY:' -and $body -match 'LIVING_CITIES_SETTINGS_LOADED:' -and $body -match 'Finished mod init: BasicRoads' -and $body -match 'GameManager ready'
             if ($GuardProbe) { $ready = $ready -and $body -match 'LIVING_CITIES_GUARD_PROBE_PASS:' }
             if ($ready -and $null -eq $readyAt) { $readyAt = Get-Date }
             if ($null -ne $readyAt -and ((Get-Date) - $readyAt).TotalSeconds -ge 2) { $passed = $true; break }
