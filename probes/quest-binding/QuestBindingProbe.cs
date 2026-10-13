@@ -22,11 +22,12 @@ namespace LivingCities.Probes
         private static IDictionary<int, string[]> homes;
         private static int mapId;
         private static int calls;
+        public static string BoundQuestJson { get; private set; }
         [Invoke(StateManager.StateTypes.Start, 100)]
         public static void Init(InitParams p) { p.Mod.IsReady = true; }
         public static IEnumerator Run(int settlementId, IDictionary<int, string[]> householdResidents)
         {
-            homes = householdResidents; calls = 0; mapId = settlementId;
+            homes = householdResidents; calls = 0; mapId = settlementId; BoundQuestJson = null;
             var harmony = new Harmony(Owner);
             var method = typeof(Parser).GetMethod("Parse", new[] { typeof(string[]), typeof(int), typeof(bool) });
             try
@@ -61,6 +62,7 @@ namespace LivingCities.Probes
                 var label = (MultiFormatTextLabel)prompt.GetType().GetField("label", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(prompt);
                 string promptText = string.Join(" ", label.TextLabels.Select(t => t.Text));
                 Require(promptText.Contains(expected[0]) && promptText.Contains(expected[1]), "Native prompt labels disagree with bound names.");
+                BoundQuestJson = SaveLoadManager.Serialize(typeof(Quest.QuestSaveData_v1), quest.GetSaveData());
                 var destination = new Place(quest, "Place _next_ local tavern"); quest.AddResource(destination);
                 person.SetAssignedPlaceSymbol(destination.Symbol);
                 string movedText = string.Join(" ", quest.GetMessage(1000).GetTextTokens().Select(t => t.text ?? ""));

@@ -38,13 +38,14 @@ namespace LivingCities.DFU
                     DFRandom.Seed = home.SurnameSeed;
                     string surname = DaggerfallUnity.Instance.NameHelper.Surname(NameHelper.BankTypes.Breton);
                     homes.Add(home.BuildingKey, new[] { first + " " + surname,
-                        TextManager.Instance.GetLocalizedText("theNamedResidence").Replace("%s", surname) });
+                        TextManager.Instance.GetLocalizedText("theNamedResidence").Replace("%s", surname), resident.Id });
                 }
             }
             finally { DFRandom.Seed = oldSeed; }
             yield return (IEnumerator)probe.GetMethod("Run").Invoke(null, new object[] { mapId, homes });
             if (JsonUtility.ToJson(adapter.GetSaveData()) != originalPopulation)
                 throw new InvalidOperationException("Disposable quest preview changed persistent population data.");
+            yield return QuestLedgerProbe.Run((string)probe.GetProperty("BoundQuestJson").GetValue(null, null), homes);
         }
     }
 }

@@ -209,12 +209,18 @@ public static class LivingCitiesBuild
         store.SetRoutines(new TownRoutineState { SettlementId = 100, Residents = new List<ResidentRoutine> {
             new ResidentRoutine { ResidentId = town.Households[0].Residents[0].Id, DestinationKey = 30, OpenMinute = 600, CloseMinute = 1000,
                 Route = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 10.5, Z = 20 } } } } });
+        store.CommitQuestBindings(store.PrepareQuestBindings(new[] { new QuestResidentBinding {
+            QuestUid = long.MaxValue, QuestName = "_SERIALIZER_", PersonSymbol = "_recipient_", SettlementId = 100,
+            HomeKey = 10, ResidentId = town.Households[0].Residents[0].Id, PersonName = "Anna Ashfield",
+            HomeName = "The Ashfield Residence", RuleId = "serializer/permanent-resident/v1" } }));
         Population.MarkDead(town, town.Households[0].Residents[0].Id);
         string serialized = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
         var restored = new WorldStateStore(0);
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), serialized));
         Require(serialized == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "FullSerializer round trip");
         Require(!restored.GetOrCreate(100, new[] { 10 }).Households[0].Residents[0].IsAlive, "Death persistence");
+        Require(restored.Snapshot().QuestBindings[0].QuestUid == long.MaxValue &&
+            restored.Snapshot().QuestBindings[0].PersonName == "Anna Ashfield", "Published quest contract and largest native-serializable UID persistence");
 
         var profiles = new List<HomeProfile>();
         for (int key = 1; key <= 100; key++) profiles.Add(new HomeProfile(key, 4, 200));
@@ -235,10 +241,16 @@ public static class LivingCitiesBuild
             string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
             var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
-            Require(migrated.Version == 3 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
+            Require(migrated.Version == 4 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
                 resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
                 home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
         }
+        string schemaThree = "{\"Version\":3,\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"SurnameSeed\":876,\"Residents\":[{\"Id\":\"legacy-family\",\"HomeKey\":10,\"AppearanceSeed\":3,\"Sex\":1,\"IsAlive\":false}]}]}],\"Routines\":[]}";
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), schemaThree));
+        Require(restored.Snapshot().Version == 4 && restored.Snapshot().QuestBindings.Count == 0 &&
+            restored.Snapshot().Settlements[0].Households[0].SurnameSeed == 876 &&
+            !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
+        Debug.Log("LIVING_CITIES_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
     }
     private static void VerifySettings()
     {
@@ -262,7 +274,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 3 && saved.Settlements.Count == 0 && saved.Routines.Count == 0, "New world state");
+            Require(saved.Version == 4 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }

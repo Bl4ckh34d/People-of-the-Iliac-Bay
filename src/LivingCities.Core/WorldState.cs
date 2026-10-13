@@ -6,12 +6,13 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 3;
+        public int Version = 4;
         public uint WorldSeed;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
         public List<TownRoutineState> Routines = new List<TownRoutineState>();
+        public List<QuestResidentBinding> QuestBindings = new List<QuestResidentBinding>();
     }
-    public sealed class WorldStateStore
+    public sealed partial class WorldStateStore
     {
         private WorldState state;
         public uint WorldSeed { get { return state.WorldSeed; } }
@@ -33,7 +34,11 @@ namespace LivingCities.Core
             return created;
         }
         public WorldState Snapshot() { return CopyValidated(state); }
-        public void Restore(WorldState incoming) { state = CopyValidated(incoming); }
+        public void Restore(WorldState incoming)
+        {
+            state = CopyValidated(incoming);
+            bindingEpoch = new object();
+        }
         public TownRoutineState GetRoutines(int settlementId)
         { return Snapshot().Routines.Find(item => item.SettlementId == settlementId); }
         public void SetRoutines(TownRoutineState routines)
@@ -50,7 +55,7 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 3, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 4, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             var settlements = new HashSet<int>();
@@ -128,6 +133,11 @@ namespace LivingCities.Core
                     townCopy.Residents.Add(saved);
                 }
                 copy.Routines.Add(townCopy);
+            }
+            if (source.Version >= 4)
+            {
+                copy.QuestBindings = source.QuestBindings;
+                copy.QuestBindings = CopyQuestBindings(copy);
             }
             return copy;
         }

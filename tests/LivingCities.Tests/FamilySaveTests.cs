@@ -20,7 +20,7 @@ namespace LivingCities.Tests
             for (int i = 0; i < 3; i++) home.Residents.Add(new Resident { Id = "child" + i, HomeKey = 10,
                 AgeGroup = ResidentAgeGroup.Child, Sex = i == 1 ? ResidentSex.Female : ResidentSex.Male,
                 AppearanceSeed = (uint)(8 + i), FatherId = "father", MotherId = "mother" });
-            return new WorldState { Version = 3, WorldSeed = 42, Settlements = new List<SettlementPopulation> {
+            return new WorldState { WorldSeed = 42, Settlements = new List<SettlementPopulation> {
                 new SettlementPopulation { SettlementId = 100, Households = new List<Household> { home } } } };
         }
         internal static void Add(List<(string, Action)> cases)
@@ -58,7 +58,7 @@ namespace LivingCities.Tests
                     if (version == 1) old.Routines = null;
                     else old.Routines.Add(Visit("old1"));
                     var store = new WorldStateStore(0); store.Restore(old); var saved = store.Snapshot();
-                    Check.Equal(3, saved.Version); var home = saved.Settlements[0].Households[0];
+                    Check.Equal(4, saved.Version); var home = saved.Settlements[0].Households[0];
                     Check.Equal(2, home.Residents.Count);
                     Check.Equal(StableSeed.Combine(42, 100, 10, 0xfffffffe), home.SurnameSeed);
                     Check.Equal("old0", home.Residents[0].Id); Check.Equal(2u, home.Residents[0].AppearanceSeed);

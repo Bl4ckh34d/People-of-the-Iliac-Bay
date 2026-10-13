@@ -67,6 +67,8 @@ Custom C# quest engines, private placement systems or bypassed macro expansion m
 
 ## Pre-publication interception checkpoint, 14 October 2026
 
+Historical checkpoint: the subsequent persistent-ledger section below extends this probe with native quest startup and an actual save-slot reload. The original pre-publication checks and limitations remain relevant.
+
 The preceding no-interception status is superseded only for a separate opt-in feasibility probe. A standard mod package successfully attaches a Harmony postfix to native `Parser.Parse` in the shipped player. For its synthetic procedural recipient, it selects an existing living male household resident at the native quest-selected local home and sets the native person display name and residence name before offer expansion. This is temporary probe behavior; normal Living Cities gameplay does not rewrite quests yet.
 
 The expanded actual-player test passes:
@@ -85,3 +87,23 @@ The test constructs a native prompt but does not accept an actual guild quest, p
 The reproducible inventory now covers 265 shipped scripts and 125 explicit NPC placement actions. `QUEST-SOURCE-SURVEY.md` records counts, the merchant relocation counterexample and open coverage groups. `docs/superpowers/plans/2026-10-14-quest-binding.md` records the remaining persisted binding and actual actor/quest integration work.
 
 This tests a synthetic questor binding on an actual original tavern NPC, using the native activation handler directly. It does not test mouse raycasting, door locks/greeting gates, every named individual/main quest, turn-in rewards, shops/services while relocated, scripted placement into another building, death policy, or cross-map actor transfer. M1 probes are complete; the corresponding M2/M3 integration work remains open. No engine changes were required for this probe. Read-only Luna/high review found no confirmed critical or important issue; runtime evidence remains the acceptance authority.
+
+## Persistent binding ledger checkpoint, 14 October 2026
+
+Schema 4 adds committed quest-to-resident contracts to the mod save data. Each contract records the native quest UID/name and person symbol, persistent settlement/home/resident IDs, published person and residence names, and the adapter rule that established eligibility. The caller must explicitly establish permanent residency; a generated quest home is not sufficient evidence. General gameplay quest rewriting remains disabled.
+
+`PrepareQuestBindings` returns a detached, immutable offer plan without changing the world. Discarding that plan leaves no allocation or naming side effects. `CommitQuestBindings` validates the complete batch before assigning the ledger. A new binding to a dead resident, conflicting published person/home names, duplicate symbols, or mismatched source quest rejects the batch. Compatible concurrent quests can share a resident. Repeated commitment is idempotent. Committed contracts remain historical records after death; commitment does not replace the live resident references held by actors. Plans from another store or before a successful restore cannot commit. Snapshots and restores copy the ledger defensively.
+
+Schemas 1–3 migrate to an empty ledger without regenerating residents, family links, surnames, deaths or existing routes. Native FullSerializer converts unsigned numbers through `Int64`; the first boundary test with `ulong.MaxValue` exposed an overflow. The ledger now rejects UIDs above `Int64.MaxValue` before saving. Native round-trip verification preserves `Int64.MaxValue` exactly, including precision beyond floating-point integer range. This changes no engine file or serializer.
+
+Evidence:
+
+- 118/118 core tests pass. Twenty initial behavioral tests failed against stubs, then passed; the native UID-range rejection separately failed before its fix. Logs: `work/quest-ledger-red.log`, `work/quest-ledger-uid-red.log`, `work/quest-ledger-green.log`.
+- Unity serializer/adapter/build checks pass, including committed contracts, deceased residents and actual old JSON shapes without the ledger field. Logs: `work/quest-ledger-native-red.log` and `work/quest-ledger-native-pass.log`.
+- The opt-in parser probe now hands a serialized bound quest to `QuestLedgerProbe`. The latter checks preparation does not modify the mod save, starts that synthetic quest through native `StartQuest`, commits the binding, saves and reloads a real slot, then compares the reconstructed native quest with its reconstructed mod contract and household resident.
+- Actual-player run passed with UID `33554450`, resident `s:206728581:h:131598:r:0`, Gondane Hawkham, SAVE19 **Living Cities - quest binding ledger**, character `LivingCitiesTest-126494eb`. Log: `work/quest-ledger-runtime-pass.log`. The same run passes walking animation, interior continuity, death persistence and five-person family checks under schema 4. Temporary probe package was removed afterward.
+- Read-only Luna/high review found no confirmed correctness or migration defect in the ledger diff. Built and installed normal bundle SHA-256: `8092B85CFAEC8F57C23AB84647CB1F6EBB9A6CA27DD399B94F0529EF5D8CECC2`.
+
+Reproduce with the same `Build.ps1 -QuestBindingProbe` and `TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -QuestBindingProbe` commands above. SAVE19 is a developer fixture containing a synthetic active quest, not the recommended normal preview.
+
+Still pending: the actual guild UI acceptance/rejection adapter, authoritative fixed-name/guest/captive classification, old accepted-quest reconciliation, household surname overrides, duplicate-free native target actors, actual activation/hand-in, discovered labels and rumors, quest completion/history retirement, and representative main/side/mod-added coverage. Current ledger entries retain references to deceased residents still stored in their households; later migration/repopulation must preserve historical identity rather than remove referenced records. This checkpoint establishes persistence, not complete quest compatibility.
