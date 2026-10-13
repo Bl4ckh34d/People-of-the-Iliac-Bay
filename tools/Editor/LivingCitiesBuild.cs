@@ -270,6 +270,7 @@ public static class LivingCitiesBuild
     }
     public static void VerifyGuardPersistence()
     {
+        VerifyGuardHooks();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
         var posts = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 10 },
@@ -299,6 +300,52 @@ public static class LivingCitiesBuild
         Require(restored.Snapshot().Version == 6 && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
+    }
+    private static void VerifyGuardHooks()
+    {
+        var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText("Assets/Game/Mods/LivingCities/LivingCities.dfmod.json"));
+        var mod = new Mod(); mod.ModInfo.Files = info.Files;
+        var types = (Type[])typeof(Mod).GetMethod("GetTypesInEditor", System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.NonPublic).Invoke(mod, null);
+        var type = Array.Find(types, t => t.FullName == "LivingCities.QuestHooks.NativeGuardHooks");
+        Require(type != null, "Production guard hooks are loadable");
+        bool owns = true; int immediate = 0, delayed = 0, singles = 0;
+        var actor = new GameObject("Guard hook contract actor");
+        IDisposable hook = null;
+        try
+        {
+            hook = (IDisposable)Activator.CreateInstance(type, new object[] {
+                new Func<bool>(() => owns), new Action<bool>(value => { if (value) immediate++; else delayed++; }),
+                new Func<Vector3, Vector3, GameObject>((position, direction) => {
+                    Require(position == Vector3.one && direction == Vector3.forward, "Guard position and direction preserved");
+                    singles++; return actor;
+                }) });
+            var player = (PlayerEntity)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(PlayerEntity));
+            player.SpawnCityGuards(true); player.SpawnCityGuards(false);
+            var conversion = type.GetMethod("BeforePoolConversion", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
+            Require(conversion != null && !(bool)conversion.Invoke(null, null), "Owned towns suppress automatic pooled guard conversion");
+            Require(player.SpawnCityGuard(Vector3.one, Vector3.forward) == actor && singles == 1 && immediate == 1 && delayed == 1,
+                "Native spawn entry points route to owned callbacks");
+            owns = false;
+            Require((bool)conversion.Invoke(null, null), "Unsupported towns retain pooled guard conversion");
+            var flags = System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic;
+            Require((bool)type.GetMethod("BeforeBatch", flags).Invoke(null, new object[] { true }), "Unsupported town keeps native batch spawning");
+            var args = new object[] { Vector3.one, Vector3.forward, null };
+            Require((bool)type.GetMethod("BeforeSingle", flags).Invoke(null, args) && args[2] == null && singles == 1,
+                "Unsupported town keeps native single spawning");
+            hook.Dispose(); hook = null;
+            Require((bool)type.GetMethod("BeforeBatch", flags).Invoke(null, new object[] { true }), "Disposed hooks are inactive");
+            owns = true;
+            hook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool>(() => owns),
+                new Action<bool>(value => { }), new Func<Vector3, Vector3, GameObject>((position, direction) => null) });
+            bool rejected = false;
+            try { player.SpawnCityGuard(Vector3.one, Vector3.forward); }
+            catch (InvalidOperationException) { rejected = true; }
+            Require(rejected, "Owned single spawning cannot silently return null or fall back to infinite native spawning");
+            hook.Dispose(); hook = null;
+        }
+        finally { if (hook != null) hook.Dispose(); UnityEngine.Object.DestroyImmediate(actor); }
+        Debug.Log("LIVING_CITIES_GUARD_HOOKS_PASS: native immediate/deferred interception, exact actor return, unsupported-town fallback and disposal.");
     }
     private static void VerifyAlarmSerialization()
     {

@@ -1,6 +1,8 @@
 param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent))
 $ErrorActionPreference = 'Stop'
 # Validate the new core with DFU's own serializer without replacing the playable bundle.
+dotnet build (Join-Path $PSScriptRoot '../src/LivingCities.QuestHooks/LivingCities.QuestHooks.csproj') -c Release --nologo
+if ($LASTEXITCODE -ne 0) { throw 'Guard hook compilation failed.' }
 & (Join-Path $PSScriptRoot 'Deploy.ps1') -DfuRoot $DfuRoot
 $editor = 'C:/Program Files/Unity/Hub/Editor/2019.4.40f1/Editor/Unity.exe'
 if (Get-Process Unity -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq [IO.Path]::GetFullPath($editor) }) {

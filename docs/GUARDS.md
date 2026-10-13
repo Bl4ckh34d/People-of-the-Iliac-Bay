@@ -16,6 +16,10 @@ Arrival starts a bounded search at the reported location. Fresh sightings may up
 
 ## Implementation sequence
 
+The production `NativeGuardHooks` bridge now intercepts both native spawn entry points and suppresses automatic pooled-guard conversion while the roster owns a town. Its owner supplies a supported-town predicate, a report callback and a real roster-actor resolver. Native Unity tests exercise immediate/deferred calls and actor returns, unsupported-town fallthrough, conversion gating, disposal and rejection of null actors. The hook is deliberately not installed by `LivingCitiesMod` yet: there is no physical roster controller to satisfy its actor contract.
+
+The controller must also take ownership of native mobile guards. `WeaponManager` immediately dereferences a guard returned while attacking a mobile guard, and `PlayerEntity` can convert additional pooled guards after a response. Leaving native pooled guards active alongside the roster would duplicate the population. Entry from an interior must retain exterior route/door information; current saved citizen routes do not provide a complete navigation cache. These are integration requirements before activation, not reasons to keep instant native reinforcements in the final mod.
+
 1. Test and implement roster identities, settlement counts, finite dispatch, distance-based arrival, search/return, death and bounded recruitment in the deterministic core.
 2. Persist and validate the roster in schema 6, including native DFU serialization and migration from schemas 1–5.
 3. Replace supported-town native batch/single spawn paths with roster ownership, preserving the return contract when vanilla hits an already visible guard.
