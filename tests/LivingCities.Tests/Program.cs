@@ -11,6 +11,7 @@ namespace LivingCities.Tests
             PopulationTests.Add(cases);
             PathTests.Add(cases);
             ScheduleTests.Add(cases);
+            SaveTests.Add(cases);
             int failures = 0;
             foreach (var test in cases)
             {
