@@ -10,3 +10,13 @@ See [milestones](docs/MILESTONES.md), [approved design](docs/superpowers/specs/2
 
 This is experimental software. Use the isolated portable player and dedicated test saves. Individual milestone completion is recorded only after its acceptance checks pass.
 
+## Verified foundation
+
+`dotnet run --project tests/LivingCities.Tests` passes 52 behavior tests: household identity/capacity, persistent deaths, deterministic weighted paths, analytical schedules, save round trips, and atomic restore rejection.
+
+The standard `livingcities.dfmod` builds, reopens, and initializes alongside Basic Roads in the isolated player. Unity's integration verifier exercises DFU's real FullSerializer and the mod save adapter. The runtime adapter currently displays virtual home/sleep counts with F8. Physical NPCs, live commutes, and actual save-slot continuity remain pending.
+
+Canonical source lives here; `tools/Deploy.ps1` copies it into the upstream project's ignored mod folder. To build the installed mod, run Unity with `-batchmode -nographics -quit -projectPath` pointing to the sibling `daggerfall-unity` checkout and `-executeMethod LivingCitiesBuild.VerifyAndBuild`. Preserve the log with `-logFile`. Run `tools/SmokeTest.ps1` for isolated headless startup checks; it stops only its owned process.
+
+Evidence: `work/unity-build-result.json`, `work/player-smoke.log`, and sibling `../work/livingcities-build.log`. Build artifacts and machine-local logs are ignored by Git. `docs/INTEGRATION.md` records known engine limitations and deferred checks.
+

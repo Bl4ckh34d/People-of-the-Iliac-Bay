@@ -1,6 +1,6 @@
 # Daggerfall Unity NPC mod workspace
 
-This workspace prepares a standard Daggerfall Unity mod with persistent residents, daily activities, finite guards, civilian stealth, and optional local language-model dialogue. The simulation design below is a proposal for review. No custom NPC or guard behavior has been implemented yet.
+Approved by the user on 13 October 2026. This design covers a standard Daggerfall Unity mod with persistent residents, daily activities, finite guards, civilian stealth, and optional local language-model dialogue. The baseline sections preserve setup evidence at design time. Current implementation status and acceptance evidence live in `docs/MILESTONES.md` in the LivingCities repository.
 
 ## Setup as of 13 October 2026
 
@@ -88,7 +88,7 @@ DFU supplies the authoritative answer, known facts, disposition, social role, lo
 5. **Night events and haunting:** bounded incursions, nightlife distribution, refuges, and the main-quest override. Test event cooldowns, protected NPCs, fear behavior, and haunting resolution.
 6. **Local dialogue and broader rollout:** add free-text UI and model service, then test mixed towns and nearby settlements, profiler budgets, save migration, other mods, and fallback behavior.
 
-The first implementation approval should cover milestone 1 and the detailed design of milestone 2. Each later subsystem needs its own focused design and integration tests. The current proposal is not a finished mod or a claim that all engine hooks work.
+Implementation is authorized across the seven milestones. Each subsystem receives focused design and integration tests. Current acceptance evidence lives in `docs/MILESTONES.md`; this approved design is not a claim that all gameplay or engine hooks are complete.
 
 ## Primary sources
 

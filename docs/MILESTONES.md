@@ -2,7 +2,7 @@
 
 Approved on 13 October 2026. The active Codex goal covers all milestones; this file records concrete acceptance evidence.
 
-- [ ] M1 Baseline and integration probes. Baseline complete: official assets and patched player verified; Unity compilation, Basic Roads build and headless initialization passed. Remaining: quest identity probe, guard interception feasibility, and reproducible host test harness.
+- [ ] M1 Baseline and integration probes. Official assets and patched player verified; Unity compilation, Basic Roads and Living Cities builds/startup passed. Temporary standard-mod guard interception passed in the shipped Mono player. Remaining: quest identity probe and in-world save/load test harness.
 - [ ] M2 One-town persistent population. Stable households capped at three, deterministic routes and work/travel/sleep, nearby physical actors, no duplicates, save/load and leave/return continuity.
 - [ ] M3 Civilian awareness and activities. Sleep poses/anchors, closed shops, burglary and wake-up detection, meetings, visiting, and tavern groups; quest bindings preserved.
 - [ ] M4 Finite guards. Settlement-specific rosters, no garrison in tiny hamlets, small-town contingents, patrol pairs with torches, reachable wall posts, physical response, last-seen search/escape, arrest compatibility, defense, persistent deaths and bounded recruitment.
@@ -12,5 +12,16 @@ Approved on 13 October 2026. The active Codex goal covers all milestones; this f
 
 ## Current work
 
-Population foundation plan in progress. No completed NPC feature is claimed by the baseline setup. New changes must record test commands, results, and material limitations here.
+Population foundation implemented and reviewed. Full milestones remain incomplete.
+
+- 52/52 behavior tests pass with `dotnet run --project tests/LivingCities.Tests`.
+- Stable residents and maximum-three households, deterministic bounded weighted routes, analytical work/travel/home/sleep schedules, persistent deaths, and transactional save validation are implemented in the Unity-independent core.
+- Unity compiled the deployed sources. `LivingCitiesBuild.VerifyAndBuild` passed real DFU FullSerializer round-trip, adapter restore-failure isolation, API checks, and bundle reopen checks; exit code 0.
+- The standard mod is installed in the isolated portable player. `tools/SmokeTest.ps1` verified its runtime source compilation and initialization alongside Basic Roads, then GameManager readiness. The owned process was stopped after the check.
+- A read-only Luna/high review found no critical or important issues in the foundation. Its remaining test caveat is actual in-game save-slot and leave/return continuity.
+- Temporary Harmony probe intercepted both guard spawn entry points, including immediate/deferred batch calls and single-call return value, then removed its patches. Probe package removed after testing. This proves feasibility, not finite-guard gameplay.
+
+The live adapter currently shows virtual household/home/sleep diagnostics with F8. Core commutes are not yet connected to real doors or physical actors. No actual playthrough, bed placement, quest movement, finite guard gameplay, or LLM dialogue has passed testing yet.
+
+Evidence: `work/unity-build-result.json`, `work/player-smoke.log`, sibling `../work/livingcities-build.log`. See `INTEGRATION.md` for engine constraints and the separate `probes/guard` experiment.
 

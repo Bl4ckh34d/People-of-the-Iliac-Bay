@@ -17,7 +17,7 @@ Target inspected: upstream `v1.1.1-cve-2025`, commit `fb2627082fabe473bf108c8162
 | Awareness | `EnemySenses.StealthCheck`, `FormulaHelper.CalculateStealthChance`, existing player crouch | Extend existing stealth semantics; avoid an unrelated second player skill. |
 | Basic Roads | Built 1.3.1 source exposes `getPathData`, `getRoadPoint`, `getTrackPoint`, `getPathsPoint` messages | Wilderness path data available. Installed coexistence and actual NPC road following are separate acceptance checks. |
 
-## Finite guard interception remains unresolved
+## Finite guard interception: feasibility passed, behavior pending
 
 `PlayerEntity.SpawnCityGuards(bool)` (line 621) and `SpawnCityGuard(Vector3, Vector3)` (line 747) are public, non-virtual methods. No dedicated cancellation event was found in those methods. Subclass overrides cannot replace these calls.
 
@@ -25,7 +25,11 @@ The immediate interior branch creates 2–5 guards at a door. Exterior branches 
 
 Callers include `PlayerActivate`, `WeaponManager`, `DaggerfallEntityBehaviour`, inventory/trade/rest windows, player crime checks, and the quest `SpawnCityGuards` action. Some callers use the returned guard object. A replacement must honor return expectations and quest behavior while dispatching a finite roster. Deleting guards after creation does not satisfy the requirement.
 
-Next probe: test runtime interception against the pinned Mono player and preserve the original fallback outside supported settlements. Runtime patching is not yet installed or verified. If standard-mod interception cannot work reliably, document a minimal engine hook before choosing that route.
+A temporary precompiled standard mod using Harmony 2.3.6 intercepted both entry points in the shipped Mono player. The probe verified immediate/deferred batch calls, a supplied return object for the single-guard call, and removal of its own patches. It then stopped its owned process, and its temporary package and Unity staging were removed. Evidence: `work/guard-probe-player.log`; build log: sibling `../work/guard-probe-build.log`. Source and constraints: `probes/guard`.
+
+This resolves basic runtime interception feasibility on this pinned Windows player. It does not prove the roster implementation, quest callers, arrest compatibility, other patching mods, or other platforms. No guard patches are installed by the main mod yet. Preserve vanilla fallback outside supported settlements in the eventual integration.
+
+DFU's runtime source compiler excludes references to precompiled assemblies loaded from byte arrays because they have no file location. The Harmony-referencing probe therefore ships as a precompiled DLL alongside Harmony, both in the mod bundle as `.dll.bytes`. This avoids adding DLLs to the player installation's Managed directory or modifying the engine.
 
 ## Foundation limitations
 

@@ -13,6 +13,29 @@ using UnityEngine;
 
 public static class LivingCitiesBuild
 {
+    public static void BuildGuardProbe()
+    {
+        string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+        const string staging = "Assets/Game/Mods/LivingCitiesGuardProbe";
+        Directory.CreateDirectory(staging);
+        File.Copy(Path.Combine(root, "LivingCities/work/Harmony/net472/0Harmony.dll"), staging + "/0Harmony.dll.bytes", true);
+        File.Copy(Path.Combine(root, "LivingCities/probes/guard/bin/Release/net472/GuardProbe.dll"), staging + "/GuardProbe.dll.bytes", true);
+        var info = new ModInfo { ModTitle = "Living Cities Guard Probe", ModVersion = "0.0.1", ModAuthor = "Daniel",
+            DFUnity_Version = "1.1.1", ModDescription = "Temporary opt-in feasibility test. Not gameplay.",
+            GUID = "88cbbd21-cad5-4f82-b360-2046b18845d4" };
+        File.WriteAllText(staging + "/GuardProbe.dfmod.json", JsonUtility.ToJson(info, true));
+        AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+        string output = Path.Combine(root, "LivingCities/work/GuardProbeBuild");
+        Directory.CreateDirectory(output);
+        var build = new AssetBundleBuild { assetBundleName = "livingcitiesguardprobe.dfmod", assetNames = new[] {
+            staging + "/0Harmony.dll.bytes", staging + "/GuardProbe.dll.bytes", staging + "/GuardProbe.dfmod.json" } };
+        Require(BuildPipeline.BuildAssetBundles(output, new[] { build }, BuildAssetBundleOptions.ChunkBasedCompression,
+            BuildTarget.StandaloneWindows64) != null, "Guard probe bundle");
+        File.Copy(Path.Combine(output, "livingcitiesguardprobe.dfmod"),
+            Path.Combine(root, "Player/DaggerfallUnity_Data/StreamingAssets/Mods/livingcitiesguardprobe.dfmod"), true);
+        Debug.Log("LIVING_CITIES_GUARD_PROBE_BUILT");
+    }
+
     public static void VerifyAndBuild()
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));

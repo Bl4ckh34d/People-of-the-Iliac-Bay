@@ -26,7 +26,7 @@
 
 **Interfaces:** `Population.Create(uint seed, int settlementId, IEnumerable<int> homeKeys)` returns `SettlementPopulation`; records contain household keys, resident IDs, appearance seeds, and alive/protected state. `Population.MarkDead(SettlementPopulation, string)` updates only the matching non-protected resident.
 
-- [ ] Write behavior tests using a reversed building order, distinct settlements, duplicate building keys, and an empty layout. Mutation caught: allocation from loop index or process-global Random changes identities when input order changes.
+- [x] Write behavior tests using a reversed building order, distinct settlements, duplicate building keys, and an empty layout. Mutation caught: allocation from loop index or process-global Random changes identities when input order changes.
 
 ```csharp
 var first = Population.Create(42, 100, new[] { 20, 10 });
@@ -35,9 +35,9 @@ Check.Equal(Signature(first), Signature(second));
 Check.True(first.Households.All(h => h.Residents.Count >= 1 && h.Residents.Count <= 3));
 ```
 
-- [ ] Run `dotnet run --project tests/LivingCities.Tests`; see explicit failing behavior results with the unimplemented contract.
-- [ ] Implement sorted unique home allocation with stable integer mixing and culture-independent IDs. Reject duplicate homes rather than silently creating duplicate residents.
-- [ ] Run all tests; add death idempotency and protected-person tests. Commit verified task.
+- [x] Run `dotnet run --project tests/LivingCities.Tests`; see explicit failing behavior results with the unimplemented contract.
+- [x] Implement sorted unique home allocation with stable integer mixing and culture-independent IDs. Reject duplicate homes rather than silently creating duplicate residents.
+- [x] Run all tests; add death idempotency and protected-person tests. Commit verified task.
 
 ## Task 2 Deterministic street routing
 
@@ -45,7 +45,7 @@ Check.True(first.Households.All(h => h.Residents.Count >= 1 && h.Residents.Count
 
 **Interfaces:** `IWalkGrid.Width`, `Height`, and `Cost(int x, int z)`; zero means blocked. `GridPathfinder.Find(IWalkGrid, GridCell, GridCell, int)` returns a list of cells or an empty list for unreachable routes or exhausted search budget.
 
-- [ ] Write tests for an obstacle detour, an unreachable destination, costly shortcuts, start=end, out-of-bounds inputs, and deterministic tie-breaking.
+- [x] Write tests for an obstacle detour, an unreachable destination, costly shortcuts, start=end, out-of-bounds inputs, and deterministic tie-breaking.
 
 ```csharp
 var path = GridPathfinder.Find(new TestGrid("111", "001", "111"),
@@ -54,8 +54,8 @@ Check.Equal(7, path.Count);
 Check.Equal(new GridCell(0, 2), path[path.Count - 1]);
 ```
 
-- [ ] Run and observe failures. Implement deterministic A* with bounded work, positive costs, a Manhattan lower bound, and stable ties.
-- [ ] Run tests and verify no route crosses a blocked cell. Commit verified task.
+- [x] Run and observe failures. Implement deterministic A* with bounded work, positive costs, a Manhattan lower bound, and stable ties.
+- [x] Run tests and verify no route crosses a blocked cell. Commit verified task.
 
 ## Task 3 Continuous schedules
 
@@ -63,7 +63,7 @@ Check.Equal(new GridCell(0, 2), path[path.Count - 1]);
 
 **Interfaces:** `DailySchedule.Workday(homeKey, workKey, route, openMinute, closeMinute, commuteMinutes, wakeMinute, sleepMinute)`; `Evaluate(long absoluteMinute)` returns activity, interior building key or exterior route position, and normalized route progress. `DailySchedule.HomeDay(homeKey, wakeMinute, sleepMinute)` handles residents without a valid commute. Routes consist of immutable copied points, and reverse trips follow the same route backward.
 
-- [ ] Write boundary tests for sleep, outbound travel, arrival exactly at opening, departure exactly at closing, return, midnight, repeated days, and time jumps. Reject overlapping or impossible schedule windows and negative time.
+- [x] Write boundary tests for sleep, outbound travel, arrival exactly at opening, departure exactly at closing, return, midnight, repeated days, and time jumps. Reject overlapping or impossible schedule windows and negative time.
 
 ```csharp
 var plan = DailySchedule.Workday(10, 20,
@@ -74,7 +74,7 @@ Check.Equal(20, plan.Evaluate(480).BuildingKey);
 Check.Equal(Activity.Sleep, plan.Evaluate(1440 + 270).Activity);
 ```
 
-- [ ] Observe failures, implement a pure analytical schedule without frame-by-frame catch-up, then test all boundaries and route interpolation. Commit verified task.
+- [x] Observe failures, implement a pure analytical schedule without frame-by-frame catch-up, then test all boundaries and route interpolation. Commit verified task.
 
 ## Task 4 Save validation and transactional restore
 
@@ -82,7 +82,7 @@ Check.Equal(Activity.Sleep, plan.Evaluate(1440 + 270).Activity);
 
 **Interfaces:** `WorldState` has `Version`, `WorldSeed`, and `Settlements`; `WorldStateStore.Snapshot()` and `Restore(WorldState)` deep-copy and validate the entire graph before replacement; `GetOrCreate(int settlementId, IEnumerable<int> homeKeys)` returns existing records without regenerating deaths.
 
-- [ ] Test round-trip identities/deaths, snapshot aliasing, future-version rejection, duplicate IDs, wrong household ownership, over-capacity homes, malformed null collections, and preservation of live state after rejected restore.
+- [x] Test round-trip identities/deaths, snapshot aliasing, future-version rejection, duplicate IDs, wrong household ownership, over-capacity homes, malformed null collections, and preservation of live state after rejected restore.
 
 ```csharp
 var before = store.Snapshot();
@@ -92,7 +92,7 @@ Check.Throws<ArgumentException>(() => store.Restore(invalid));
 Check.Equal(Signature(before), Signature(store.Snapshot()));
 ```
 
-- [ ] Observe failures, implement deep copies and validation, run the suite, and commit verified task.
+- [x] Observe failures, implement deep copies and validation, run the suite, and commit verified task.
 
 ## Task 5 DFU host adapter and build
 
@@ -100,15 +100,15 @@ Check.Equal(Signature(before), Signature(store.Snapshot()));
 
 **Interfaces:** implement DFU's `IHasModSaveData`. Register at Start, wait for GameManager readiness, read current BuildingDirectory, use home types House1 through House6, and avoid for-sale homes. Track current settlement by MapID and report generated counts in a diagnostic panel toggled with F8. The panel is development-only and must identify the simulation as virtual until actor replacement is implemented.
 
-- [ ] Add a Unity integration verifier that constructs and serializes/restores real core data with FullSerializer, validates DFU type/method contracts, and fails when required hooks are absent.
-- [ ] Deploy source to `Assets/Game/Mods/LivingCities`, compile with Unity, then build the standard source bundle. The output must include all manifest assets and no editor/test code.
-- [ ] Start the isolated player, verify Living Cities initialization and Basic Roads coexistence, then stop only the owned test process. Record the difference between startup verification and gameplay verification.
-- [ ] Commit source, tests, plan status, and evidence references.
+- [x] Add a Unity integration verifier that constructs and serializes/restores real core data with FullSerializer, validates DFU type/method contracts, and fails when required hooks are absent.
+- [x] Deploy source to `Assets/Game/Mods/LivingCities`, compile with Unity, then build the standard source bundle. The output must include all manifest assets and no editor/test code.
+- [x] Start the isolated player, verify Living Cities initialization and Basic Roads coexistence, then stop only the owned test process. Record the difference between startup verification and gameplay verification.
+- [x] Commit source, tests, plan status, and evidence references.
 
 ## Task 6 Review and integration risk report
 
 **Files:** `docs/INTEGRATION.md`, `docs/MILESTONES.md`.
 
-- [ ] Record direct non-virtual guard spawn call sites and available quest, save, population, and UI hooks from the pinned source. Do not label runtime interception successful before testing it.
-- [ ] Use a read-only Luna/high reviewer for the completed foundation. Fix critical and important findings, rerun affected checks, and capture verified reusable results in Obsidian.
-- [ ] Keep the overall goal active. M2 remains incomplete until physical actors and in-world continuity pass testing; guard interception remains an explicit M1 task.
+- [x] Record direct non-virtual guard spawn call sites and available quest, save, population, and UI hooks from the pinned source. Do not label runtime interception successful before testing it.
+- [x] Use a read-only Luna/high reviewer for the completed foundation. Fix critical and important findings, rerun affected checks, and capture verified reusable results in Obsidian.
+- [x] Keep the overall goal active. M2 remains incomplete until physical actors and in-world continuity pass testing; guard interception feasibility passed a separate temporary standard-mod probe; roster and quest behavior remain pending.
