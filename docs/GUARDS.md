@@ -1,5 +1,17 @@
 # Finite guards
 
+## Live controller checkpoint, 14 October 2026 — version 0.3.5
+
+Enable General / ExperimentalExteriorGuards to try the exterior Gothway Garden controller. Indoor guards remain vanilla. This supersedes older statements below that guard bodies were test-only.
+
+A fixed saved roster supplies bounded reinforcements along validated routes. The controller removes old non-quest transient guards and hides pooled guards while it owns the exterior. Native combat activates on sight or direct hostility. Wounded health, actual position and last-seen suspect position persist; reload does not grant fresh player-position knowledge. Search expiry routes guards back from their actual positions.
+
+Guards / MaximumResponders permits 1–8 (default 4); ActorRadius permits 64–256 metres (default 160). Engaged guards remain active beyond that radius. Settings never reroll existing rosters.
+
+Verified: 142/142 core tests, native Unity build/settings/serialization checks, and actual-player GuardControllerProbe plus GuardActorProbe. Tests cover bounded repeated reports, takeover, combat readiness, wounded SAVE30 reload, search expiry, posted self-defense, walking animation and persistent death. Full arrest dialogue and an actual weapon hit on a guard are not covered by these probes.
+
+Next: physical shop reinforcements and door transitions, paired patrols/torches/walls, citizen reports and defense against other enemies. Guards outside the reachable navigation grid can stop and retry their return route indefinitely; there is no teleport fallback. M4 remains incomplete. Evidence: work/guard-controller-runtime-pass.log and work/guard-actor-runtime-pass.log.
+
 This is the foundation for M4 under the existing approved gameplay requirements. The installed 0.3.4 development preview still uses native spawning in ordinary play until the replacement controller is validated.
 
 ## Physical actor checkpoint

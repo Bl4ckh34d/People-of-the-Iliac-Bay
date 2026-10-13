@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+Current 0.3.5 checkpoint: 142 core tests and actual-player controller/actor probes pass. Opt-in exterior Gothway Garden guards now have a fixed roster, bounded physical responses, native combat, wounded save/load and last-seen search expiry/return. Indoor guards remain vanilla. Physical shop response and door transitions are next. See GUARDS.md for tested limits. Older checkpoint paragraphs below are historical; all unfinished milestones remain open.
+
 > Current amendment, 14 October 2026: one NPC per bed; maximum household residents equals actual bed count, with no separate five-person cap. Preserve old saves and use a fresh compliant test population. Shared-bed rendering, kill-all-bed logic and separate head/blanket layers are superseded. Keep complete green-blanket/white-pillow single-sleeper sprites. Children may inherit either parent's race; keep existing child sprites now. Gameplay takes priority over art. See [current citizen behavior and next guard work](CIVILIAN-RESPONSES.md). Earlier checkpoint descriptions below remain historical evidence.
 
 Approved on 13 October 2026. The active Codex goal covers all milestones; this file records concrete acceptance evidence.

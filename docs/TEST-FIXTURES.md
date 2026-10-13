@@ -1,5 +1,11 @@
 # Gothway Garden test saves
 
+## Guard response fixture, 14 October 2026
+
+Character LivingCitiesTest-f238d317 now has SAVE30, named Living Cities - guard response. This disposable slot contains ten roster guards, an active response and a wounded guard. Enable General / ExperimentalExteriorGuards for the exterior controller. Guards / MaximumResponders and ActorRadius tune response size and actor visibility. Indoor guards still use vanilla behavior.
+
+Reproduce with tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -GuardControllerProbe. This overwrites only the dedicated guard-response fixture. SAVE24 remains the ordinary town exploration starting point.
+
 Verified 14 October 2026 in the isolated portable player with Basic Roads and Living Cities enabled.
 
 ## Current bed-compliant fixture, version 0.3.3

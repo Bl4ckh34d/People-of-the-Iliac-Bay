@@ -5,7 +5,7 @@ using System.Globalization;
 namespace LivingCities.Core
 {
     public enum SettlementScale { Hamlet, Town, City }
-    public enum GuardDuty { Posted, Responding, Searching, Returning, Dead }
+    public enum GuardDuty { Posted, Responding, Searching, Returning, Dead, Engaged }
     [Serializable]
     public sealed class GuardRecord
     {
@@ -13,6 +13,9 @@ namespace LivingCities.Core
         public uint AppearanceSeed;
         public bool IsAlive = true;
         public SavedRoutePoint Post, DeathPosition;
+        public SavedRoutePoint EngagementPosition;
+        public SavedRoutePoint LastSeenSuspect;
+        public double HealthFraction = 1;
         public GuardDuty Duty;
         public List<SavedRoutePoint> Route = new List<SavedRoutePoint>();
         public double DepartedAt, ArrivesAt, SearchUntil, DiedAt;
@@ -122,6 +125,7 @@ namespace LivingCities.Core
             Advance(now);
             var guard = Find(id);
             if (!guard.IsAlive) return CopyPoint(guard.DeathPosition);
+            if (guard.Duty == GuardDuty.Engaged) return CopyPoint(guard.EngagementPosition);
             if (guard.Route.Count < 2 || guard.Duty == GuardDuty.Posted) return CopyPoint(guard.Post);
             if (guard.Duty == GuardDuty.Searching) return CopyPoint(guard.Route[guard.Route.Count - 1]);
             double duration = guard.ArrivesAt - guard.DepartedAt;
@@ -141,8 +145,43 @@ namespace LivingCities.Core
             Require(Time(now), "Invalid guard death time.");
             var guard = Find(id); if (!guard.IsAlive) return false;
             guard.DeathPosition = Position(id, now);
-            guard.IsAlive = false; guard.Duty = GuardDuty.Dead; guard.DiedAt = now;
+            guard.IsAlive = false; guard.Duty = GuardDuty.Dead; guard.DiedAt = now; guard.HealthFraction = 0;
+            guard.EngagementPosition = null;
+            guard.LastSeenSuspect = null;
             return true;
+        }
+        public void Engage(string id, double now)
+        {
+            Require(Time(now), "Invalid engagement time.");
+            var guard = Find(id);
+            Require(guard.IsAlive && guard.IncidentId != null, "Engagement needs a living assigned guard.");
+            var preview = CopyValidated(this);
+            var position = preview.Position(id, now);
+            Require(preview.Find(id).IncidentId != null && Time(now + 300), "Guard assignment has expired.");
+            Advance(now);
+            guard.EngagementPosition = position; guard.Duty = GuardDuty.Engaged; guard.SearchUntil = now + 300;
+            guard.LastSeenSuspect = CopyPoint(guard.Route[guard.Route.Count - 1]);
+        }
+        public void ObserveEngagement(string id, SavedRoutePoint position, double healthFraction, double now, bool seesSuspect, SavedRoutePoint suspect = null)
+        {
+            var point = CopyPoint(position);
+            var seen = suspect == null ? null : CopyPoint(suspect);
+            Require(Time(now) && Time(now + 300) && Finite(healthFraction) && healthFraction > 0 && healthFraction <= 1, "Invalid guard observation.");
+            var guard = Find(id);
+            Require(guard.IsAlive && guard.Duty == GuardDuty.Engaged, "Guard is not engaged.");
+            guard.EngagementPosition = point; guard.HealthFraction = healthFraction;
+            if (seesSuspect) { guard.SearchUntil = now + 300; if (seen != null) guard.LastSeenSuspect = seen; }
+        }
+        public void ReturnFromEngagement(string id, double now, List<SavedRoutePoint> route, double speed, double timeScale)
+        {
+            Require(Time(now) && Finite(speed) && speed > 0 && Finite(timeScale) && timeScale > 0, "Invalid guard return.");
+            var guard = Find(id); var copy = CopyRoute(route);
+            Require(guard.IsAlive && guard.Duty == GuardDuty.Engaged && copy.Count >= 2 &&
+                Distance(copy[0], guard.EngagementPosition) < 0.05 && Distance(copy[copy.Count - 1], guard.Post) < 0.05, "Return must join actual position to assigned post.");
+            double arrival = now + Length(copy) / speed * timeScale;
+            Require(Time(arrival), "Guard return time overflow.");
+            guard.Route = copy; guard.DepartedAt = now; guard.ArrivesAt = arrival; guard.SearchUntil = now;
+            guard.Duty = GuardDuty.Returning; guard.EngagementPosition = null; guard.LastSeenSuspect = null;
         }
         public int Recruit(double now)
         {
@@ -184,6 +223,10 @@ namespace LivingCities.Core
                     guard.IsAlive == (guard.Duty != GuardDuty.Dead) && Time(guard.DepartedAt) && Time(guard.ArrivesAt) &&
                     Time(guard.SearchUntil) && Time(guard.DiedAt), "Invalid guard identity or state.");
                 if (guard.IsAlive) alive++;
+                Require(Finite(guard.HealthFraction) && guard.HealthFraction >= 0 && guard.HealthFraction <= 1 &&
+                    (!guard.IsAlive || guard.HealthFraction > 0), "Invalid guard health.");
+                Require((guard.Duty == GuardDuty.Engaged) == (guard.EngagementPosition != null), "Invalid engagement position.");
+                Require((guard.Duty == GuardDuty.Engaged) == (guard.LastSeenSuspect != null), "Invalid last-seen position.");
                 var route = CopyRoute(guard.Route);
                 if (guard.Duty == GuardDuty.Posted) Require(route.Count == 0 && guard.IncidentId == null, "Posted guard has a pending route.");
                 else if (guard.IsAlive)
@@ -197,6 +240,9 @@ namespace LivingCities.Core
                 copy.Guards.Add(new GuardRecord { Id = guard.Id, IncidentId = guard.IncidentId, ReplacedById = guard.ReplacedById,
                     AppearanceSeed = guard.AppearanceSeed, IsAlive = guard.IsAlive, Post = CopyPoint(guard.Post), Duty = guard.Duty,
                     DeathPosition = guard.DeathPosition == null ? null : CopyPoint(guard.DeathPosition),
+                    HealthFraction = guard.HealthFraction,
+                    EngagementPosition = guard.EngagementPosition == null ? null : CopyPoint(guard.EngagementPosition),
+                    LastSeenSuspect = guard.LastSeenSuspect == null ? null : CopyPoint(guard.LastSeenSuspect),
                     Route = route, DepartedAt = guard.DepartedAt, ArrivesAt = guard.ArrivesAt, SearchUntil = guard.SearchUntil, DiedAt = guard.DiedAt });
             }
             Require(alive <= source.Target && source.NextIdentity == source.Guards.Count, "Invalid guard allocation count.");

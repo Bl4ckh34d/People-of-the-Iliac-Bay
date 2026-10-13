@@ -31,6 +31,8 @@ namespace LivingCities.DFU
         private RuntimeOptions options = new RuntimeOptions(true, 6, 22, 1, true);
         private Mod mod;
         private StreetPopulation streets;
+        private GuardPopulation guards;
+        private bool exteriorGuardsEnabled;
         private IDisposable guardLifetimeHook;
         private bool streetPopulationEnabled;
         private bool questHouseholdsEnabled;
@@ -55,6 +57,7 @@ namespace LivingCities.DFU
             DontDestroyOnLoad(host);
             var component = host.AddComponent<LivingCitiesMod>();
             component.streets = host.AddComponent<StreetPopulation>();
+            component.guards = host.AddComponent<GuardPopulation>();
             component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
             component.streets.InstallReactionHook();
@@ -121,6 +124,13 @@ namespace LivingCities.DFU
         }
         private void LoadSettings(ModSettings settings, ModSettingsChange change)
         {
+            if (guards) guards.Clear();
+            exteriorGuardsEnabled = settings.GetBool("General", "ExperimentalExteriorGuards");
+            if (guards)
+            {
+                guards.MaximumResponders = settings.GetInt("Guards", "MaximumResponders");
+                guards.ActorRadius = settings.GetInt("Guards", "ActorRadius");
+            }
             if (streets) streets.Clear();
             streetPopulationEnabled = settings.GetBool("General", "StreetPopulation");
             if (streets) streets.SleepEnabled = settings.GetBool("DailyRoutine", "SleepingPoses");
@@ -138,6 +148,7 @@ namespace LivingCities.DFU
         }
         private void ResetWorld()
         {
+            if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
             store = new WorldStateStore(NewSeed()); current = null; saveFault = false; nextCheck = 0;
@@ -145,6 +156,7 @@ namespace LivingCities.DFU
         }
         private void BeforeLoad(SaveData_v1 ignored)
         {
+            if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
             // DFU catches deserialization failures before calling RestoreSaveData. Stay
@@ -156,10 +168,12 @@ namespace LivingCities.DFU
         public object GetSaveData()
         {
             if (saveFault) throw new InvalidOperationException("Living Cities save restore failed; refusing to overwrite population data.");
+            if (guards) guards.Capture();
             return store.Snapshot();
         }
         public void RestoreSaveData(object saveData)
         {
+            if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
             saveFault = true; current = null;
@@ -192,6 +206,8 @@ namespace LivingCities.DFU
             if (streets && streetPopulationEnabled)
                 streets.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current,
                     store, options.WakeHour, options.SleepHour);
+            if (guards && exteriorGuardsEnabled && streets && streets.Ready)
+                guards.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current, store);
             int alive = 0, dead = 0, sleeping = 0, children = 0;
             long minute = (long)(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds() / 60);
             foreach (Household home in current.Households)
@@ -211,8 +227,8 @@ namespace LivingCities.DFU
         private void OnGUI()
         {
             if (!panel) return;
-            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.4 — development diagnostics (F8)");
-            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nCitizen reactions active when enabled. Finite guard controller and further animations pending.");
+            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.5 — development diagnostics (F8)");
+            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nExterior guards: " + (exteriorGuardsEnabled ? "experimental, actors " + guards.ActiveCount : "off") + ". Indoor guards still vanilla.");
         }
         public string TestStatus()
         {

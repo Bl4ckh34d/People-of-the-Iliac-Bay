@@ -199,6 +199,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-guard-controller-probe") >= 0)
+            {
+                yield return GuardControllerProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: fixture loads and finite guard controller; character=" + character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-guard-actor-probe") >= 0)
             {
                 yield return GuardActorProbe.Run();

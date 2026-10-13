@@ -7,6 +7,13 @@
       "IsAdvanced": false,
       "Keys": [
         {
+          "Value": false,
+          "Name": "ExperimentalExteriorGuards",
+          "Description": "Gothway Garden exterior preview: fixed guard roster, posts, physical response, native combat and timed search/return. Saves identities, deaths and wounded health. Indoor reinforcements, patrol pairs and wall posts are not integrated yet; interiors still use vanilla guards.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
           "Value": true,
           "Name": "CivilianReactions",
           "Description": "Generated residents react to witnessed weapon kills: adults flee or counterattack, children flee, and fleeing direct witnesses warn at most two people. Interior retreat is room-level. Finite guards and original stationary NPC reactions remain in development.",
@@ -33,6 +40,32 @@
           "Description": "Gothway Garden prototype: adult visits and family interior presence using classic sprites. Replaces random street civilians while active; keeps existing guards. Children stay home until play and movement animations are ready.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        }
+      ],
+      "$version": "v1"
+    },
+    {
+      "Name": "Guards",
+      "Description": "Controls the experimental exterior guard preview. Existing roster identities and deaths remain saved when settings change.",
+      "IsAdvanced": false,
+      "Keys": [
+        {
+          "Min": 1,
+          "Max": 8,
+          "Value": 4,
+          "Name": "MaximumResponders",
+          "Description": "Maximum available guards assigned to each new report. Repeated reports do not add more guards; guards attacked directly can still defend themselves.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
+        {
+          "Min": 64,
+          "Max": 256,
+          "Value": 160,
+          "Name": "ActorRadius",
+          "Description": "Distance in metres for visible guard bodies. Travel continues outside this radius. Engaged guards stay active until pursuit ends.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         }
       ],
       "$version": "v1"

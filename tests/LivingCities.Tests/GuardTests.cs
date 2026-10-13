@@ -16,6 +16,36 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Guard engagement preserves actual position and wounded health through reload", () => {
+                var roster = Roster(1);
+                roster.Dispatch("fight", 10, new Dictionary<string, List<SavedRoutePoint>> { { roster.Guards[0].Id, Route(0, 50) } }, 1, 2, 12);
+                roster.Engage(roster.Guards[0].Id, 20);
+                roster.ObserveEngagement(roster.Guards[0].Id, new SavedRoutePoint { X = 4, Z = 3 }, 0.4, 30, true, new SavedRoutePoint { X = 9 });
+                var saved = GuardRoster.CopyValidated(roster);
+                Check.Equal(GuardDuty.Engaged, saved.Guards[0].Duty);
+                Check.Equal(4d, saved.Position(saved.Guards[0].Id, 40).X);
+                Check.Equal(0.4, saved.Guards[0].HealthFraction);
+                Check.Equal(330d, saved.Guards[0].SearchUntil);
+                saved.ObserveEngagement(saved.Guards[0].Id, new SavedRoutePoint { X = 5 }, 0.3, 50, false, new SavedRoutePoint { X = 99 });
+                Check.Equal(9d, GuardRoster.CopyValidated(saved).Guards[0].LastSeenSuspect.X);
+                Check.Equal(330d, saved.Guards[0].SearchUntil);
+                Check.Equal(0.3, GuardRoster.CopyValidated(saved).Guards[0].HealthFraction);
+            }));
+            cases.Add(("Guard return starts from actual engagement position without teleporting", () => {
+                var roster = Roster(1); string id = roster.Guards[0].Id;
+                roster.Dispatch("fight", 10, new Dictionary<string, List<SavedRoutePoint>> { { id, Route(0, 50) } }, 1, 2, 12);
+                roster.Engage(id, 20);
+                roster.ObserveEngagement(id, new SavedRoutePoint { X = 30 }, 0.5, 30, false);
+                Check.Throws<ArgumentException>(() => roster.ReturnFromEngagement(id, 40, Route(99, 0), 2, 12));
+                Check.Equal(GuardDuty.Engaged, roster.Guards[0].Duty);
+                roster.ReturnFromEngagement(id, 40, Route(30, 0), 2, 12);
+                Check.Equal(30d, roster.Position(id, 40).X);
+                Check.Equal(15d, roster.Position(id, 130).X);
+                Check.Equal(GuardDuty.Returning, GuardRoster.CopyValidated(roster).Guards[0].Duty);
+                roster.Advance(220);
+                Check.Equal(GuardDuty.Posted, roster.Guards[0].Duty);
+                Check.Equal(0.5, roster.Guards[0].HealthFraction);
+            }));
             cases.Add(("Guard policy gives small towns a handful and tiny hamlets none", () => {
                 Check.Equal(0, GuardRoster.TargetCount(SettlementScale.Hamlet, 12));
                 Check.Equal(4, GuardRoster.TargetCount(SettlementScale.Town, 30));

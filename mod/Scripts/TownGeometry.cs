@@ -97,6 +97,18 @@ namespace LivingCities.DFU
             }
             return points;
         }
+        public List<SavedRoutePoint> RouteBetweenPoints(SavedRoutePoint from, SavedRoutePoint to)
+        {
+            Vector3 a = ScenePoint(new RoutePoint(from.X, from.Z));
+            Vector3 b = ScenePoint(new RoutePoint(to.X, to.Z));
+            GridCell start, end;
+            var result = new List<SavedRoutePoint>();
+            if (!FindEntranceCell(a, out start) || !FindEntranceCell(b, out end)) return result;
+            var points = RouteBetween(new Entrance { Cell = start, LocalDoor = origin.InverseTransformPoint(a) },
+                new Entrance { Cell = end, LocalDoor = origin.InverseTransformPoint(b) });
+            foreach (var point in points) result.Add(new SavedRoutePoint { X = point.X, Z = point.Z });
+            return result;
+        }
         private bool FindEntranceCell(Vector3 door, out GridCell result)
         {
             var near = navigation.WorldToNavGridPosition(navigation.SceneToWorldPosition(door));
