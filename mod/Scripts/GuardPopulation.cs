@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -26,6 +27,7 @@ namespace LivingCities.DFU
         private readonly Dictionary<GameObject, bool> nativeGuards = new Dictionary<GameObject, bool>();
         private float nextRoutes;
         private bool awaitingSight;
+        private Coroutine approachSurvey;
         private bool OwnsTown()
         {
             var game = GameManager.Instance;
@@ -57,6 +59,7 @@ namespace LivingCities.DFU
             for (int i = 0; i < count; i++) selected.Add(posts[i * posts.Count / count]);
             directory = town; geometry = new TownGeometry(town, navigation, false);
             Roster = store.GetOrCreateGuards(town.MapID, count, selected);
+            approachSurvey = StartCoroutine(SurveyApproaches(navigation));
             foreach (var guard in Roster.Guards)
                 if (guard.IsAlive && guard.IncidentId != null) { reportId = guard.IncidentId; break; }
             var type = Type.GetType("LivingCities.QuestHooks.NativeGuardHooks, LivingCities.QuestHooks", true);
@@ -78,6 +81,37 @@ namespace LivingCities.DFU
         {
             var now = DaggerfallUnity.Instance.WorldTime.Now;
             return now.ToSeconds() + now.Second - Math.Floor(now.Second);
+        }
+        private IEnumerator SurveyApproaches(CityNavigation navigation)
+        {
+            // Door discovery and physics queries must run against the active exterior.
+            var survey = new TownGeometry(directory, navigation);
+            int completed = 0;
+            foreach (var entry in survey.Entrances)
+            {
+                if (Roster.BuildingApproaches.Exists(a => a.BuildingKey == entry.Key)) continue;
+                var routes = new Dictionary<string, List<SavedRoutePoint>>();
+                var door = entry.Value.LocalDoor;
+                var target = new SavedRoutePoint { X = door.x, Z = door.z };
+                // The roster can gain recruits during the coroutine. Use a stable
+                // post survey snapshot; replacements can reuse the same post route.
+                var guards = new List<GuardRecord>(Roster.Guards);
+                foreach (var guard in guards)
+                {
+                    while (!OwnsTown() || !directory.gameObject.activeInHierarchy || GameManager.IsGamePaused)
+                        yield return null;
+                    var route = survey.RouteBetweenPoints(guard.Post, target);
+                    if (route.Count >= 2) routes.Add(guard.Id, route);
+                    yield return null;
+                }
+                if (routes.Count > 0)
+                {
+                    Roster.CacheBuildingApproach(entry.Key, target, routes);
+                    completed++;
+                }
+            }
+            Debug.Log("LIVING_CITIES_GUARD_APPROACHES_READY: buildings=" + Roster.BuildingApproaches.Count + "; added=" + completed);
+            approachSurvey = null;
         }
         private SavedRoutePoint Local(Vector3 position)
         { var p = directory.transform.InverseTransformPoint(position); return new SavedRoutePoint { X = p.x, Z = p.z }; }
@@ -211,6 +245,7 @@ namespace LivingCities.DFU
         { foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeSelf) { pair.Value.Capture(Now()); pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); } }
         public void Clear()
         {
+            if (approachSurvey != null) { StopCoroutine(approachSurvey); approachSurvey = null; }
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             Capture();
             foreach (var pair in actors) if (pair.Value) Destroy(pair.Value.gameObject);

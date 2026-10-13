@@ -38,8 +38,28 @@ namespace LivingCities.DFU
                 if (transient) throw new InvalidOperationException("Transient native guard survived municipal roster takeover.");
                 var roster = (GuardRoster)type.GetProperty("Roster").GetValue(controller, null);
                 if (roster == null || roster.Guards.Count != 10) throw new InvalidOperationException("Test town must receive ten persistent guards.");
+                float surveyDeadline = Time.realtimeSinceStartup + 20;
+                while (roster.BuildingApproaches.Count == 0 && Time.realtimeSinceStartup < surveyDeadline) yield return null;
+                if (roster.BuildingApproaches.Count == 0) throw new InvalidOperationException("Exterior guard approaches were not surveyed.");
+                int surveyedBuilding = roster.BuildingApproaches[0].BuildingKey;
+                if (roster.BuildingApproaches[0].Routes.Count == 0) throw new InvalidOperationException("Surveyed building has no reachable guard approach.");
                 var target = roster.Guards[0].Post;
                 var geometry = new TownGeometry(directory, game.StreamingWorld.GetCurrentCityNavigation(), false);
+                var approach = roster.BuildingApproaches[0];
+                var start = approach.Routes[0].Points[0];
+                if (geometry.RouteBetweenPoints(start, approach.Entrance).Count < 2)
+                    throw new InvalidOperationException("Saved survey approach is not currently reachable.");
+                var obstacle = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                try
+                {
+                    obstacle.transform.position = geometry.ScenePoint(new RoutePoint(start.X, start.Z)) + Vector3.up * 0.4f;
+                    obstacle.transform.localScale = Vector3.one * 0.1f;
+                    Physics.SyncTransforms();
+                    if (geometry.RouteBetweenPoints(start, approach.Entrance).Count != 0)
+                        throw new InvalidOperationException("Guard route accepted a blocker overlapping its starting waypoint.");
+                }
+                finally { UnityEngine.Object.Destroy(obstacle); }
+                yield return null;
                 game.PlayerMotor.transform.position = geometry.ScenePoint(new RoutePoint(target.X, target.Z)) + Vector3.up;
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = true;
@@ -79,6 +99,8 @@ namespace LivingCities.DFU
                 while ((!loaded || controller.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!loaded || controller.Roster == null) throw new InvalidOperationException("Guard response reload timed out.");
                 roster = controller.Roster;
+                if (!roster.BuildingApproaches.Exists(a => a.BuildingKey == surveyedBuilding))
+                    throw new InvalidOperationException("Real reload lost the exterior approach cache.");
                 if (roster.Guards.Count != 10 || Math.Abs(roster.Guards.Find(g => g.Id == woundedId).HealthFraction - health) > 0.02)
                     throw new InvalidOperationException("Real reload changed guard allocation or healed the wounded guard.");
                 game.PlayerMotor.transform.position += Vector3.right * 100;

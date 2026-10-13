@@ -84,6 +84,13 @@ namespace LivingCities.DFU
                 points.Add(new RoutePoint(local.x, local.z));
             }
             points.Add(new RoutePoint(to.LocalDoor.x, to.LocalDoor.z));
+            // Sphere casts do not detect blockers already overlapping their origin.
+            // Check every waypoint, including the terminal doorway, before segments.
+            foreach (var point in points)
+                foreach (float height in new[] { 0.4f, 1.0f })
+                    foreach (var collider in Physics.OverlapSphere(ScenePoint(point) + Vector3.up * height,
+                        0.2f, ~0, QueryTriggerInteraction.Ignore))
+                        if (IsStaticBlocker(collider)) return new List<RoutePoint>();
             for (int i = 1; i < points.Count; i++)
             {
                 Vector3 a = ScenePoint(points[i - 1]), b = ScenePoint(points[i]);

@@ -1,5 +1,7 @@
 # Finite guards
 
+Version 0.3.6 now incrementally surveys real exterior post-to-door approaches and preserves completed building routes through actual save/load. Indoor dispatch and actors remain pending; see GUARD-BUILDING-RESPONSE.md. Older installed-version statements below describe their historical checkpoints.
+
 The next building-response core now persists validated exterior approaches and immutable building-bound reports. Core tests: 146/146; DFU native serializer verification passes. The installed player remains 0.3.5 while the indoor adapter is unfinished. See [building response implementation](GUARD-BUILDING-RESPONSE.md).
 
 ## Live controller checkpoint, 14 October 2026 — version 0.3.5
