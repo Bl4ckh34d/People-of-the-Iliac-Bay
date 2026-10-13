@@ -3,7 +3,7 @@
   "Sections": [
     {
       "Name": "General",
-      "Description": "Development build with persistent population and scheduled street visits. Families and interior activity are still in development.",
+      "Description": "Development build with persistent families and scheduled adult visits. Children stay home; play, sleep poses and reactions remain in development.",
       "IsAdvanced": false,
       "Keys": [
         {
@@ -16,7 +16,7 @@
         {
           "Value": true,
           "Name": "StreetPopulation",
-          "Description": "Gothway Garden prototype: scheduled adult visits and interior presence using classic sprites. Replaces random street civilians while active; keeps existing guards. Beds, families and reactions remain unfinished.",
+          "Description": "Gothway Garden prototype: adult visits and family interior presence using classic sprites. Replaces random street civilians while active; keeps existing guards. Children stay home until play and movement animations are ready.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         }
@@ -30,10 +30,10 @@
       "Keys": [
         {
           "Min": 1,
-          "Max": 3,
-          "Value": 3,
+          "Max": 5,
+          "Value": 5,
           "Name": "HouseholdLimit",
-          "Description": "Maximum permanent residents per new household. Visitors will use separate limits when implemented.",
+          "Description": "Maximum residents in newly created households: up to two adults and three children. Beds and house size influence family size without hard bed limits. Existing households remain intact.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         }

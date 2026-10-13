@@ -1,6 +1,18 @@
-# Indoor murder alarms and crime-scene guards
+# Crime reports, physical guard response and crime scenes
 
 User refinements, 14 October 2026. These distinguish eyewitness alarm, body discovery and a known murderer.
+
+## Shop theft and delayed guard arrival
+
+When detected shop theft calls guards, dispatch available members of the existing finite roster from nearby exterior posts, patrols or actual guard quarters, including reachable city-wall headquarters entrances. Guards must travel from their current locations to the shop and enter through its door as they arrive. Do not spawn a squad inside, teleport guards to the entrance, or treat every wall door as a guard source. Headquarters can supply only guards already assigned there.
+
+Arrival time follows the actual reachable route, guard speed and door transitions. A distant garrison means a longer wait; no available guard means no invented immediate response. The player can leave during this delay and attempt escape. Keep the response advancing while the player remains inside, leaves, or reloads; crossing the shop threshold must neither summon responders instantly nor reset their journey. Once outside, pursuit uses actual sightings, last-known position and the planned search/escape rules rather than continuous knowledge of the player's position.
+
+The shopkeeper can attack or remain passive after reporting. Select a stable response from capability, disposition and courage, keeping reporting separate from combat. Preserve the shopkeeper's identity and use the required appearance-specific combat animation when active; passivity does not cancel the report. This choice is separate from the indoor-murder fight-or-flight rules below.
+
+Acceptance cases: nearby patrol versus distant post with measurably different arrival times; real headquarters exit; staggered responders entering as they arrive; player leaves before the first arrival and escapes unseen; player remains inside while exterior travel progresses; shopkeeper attacks versus stays passive; no available guards; duplicate theft reports do not duplicate guards; save/load preserves responder identity, location and journey progress. This refinement is planned for M4; vanilla theft guard spawning remains in the current preview.
+
+## Indoor murder and discovery
 
 If a house has one occupant and the player kills that person in one blow without another witness, do not send an immediate guard alarm. On the player's departure, schedule guards from the finite roster to travel to and enter the house. They discover the body and clear it upon arrival. This specific discovery cleanup supersedes the generic one-day corpse-cleanup delay for this case. No teleporting reinforcements and no attribution of an unwitnessed murder to the player merely because a corpse exists.
 

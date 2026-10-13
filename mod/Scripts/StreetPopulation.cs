@@ -72,7 +72,6 @@ namespace LivingCities.DFU
         }
         private IEnumerator Build(SettlementPopulation population, WorldStateStore store, int wake, int sleep)
         {
-            uint seed = store.WorldSeed;
             var saved = store.GetRoutines(population.SettlementId);
             if (saved != null)
             {
@@ -82,7 +81,7 @@ namespace LivingCities.DFU
                     {
                         if (resident.IsQuestProtected) continue;
                         var routine = saved.Residents.Find(item => item.ResidentId == resident.Id) ?? new ResidentRoutine { ResidentId = resident.Id };
-                        AddPlan(resident, routine, seed, population.SettlementId, wake, sleep);
+                        AddPlan(resident, routine, home.SurnameSeed, wake, sleep);
                     }
                 FinishBuild(population.SettlementId);
                 yield break;
@@ -94,7 +93,7 @@ namespace LivingCities.DFU
                 needsExterior = true;
                 foreach (var home in population.Households)
                     foreach (var resident in home.Residents)
-                        if (!resident.IsQuestProtected) AddPlan(resident, new ResidentRoutine { ResidentId = resident.Id }, seed, population.SettlementId, wake, sleep);
+                        if (!resident.IsQuestProtected) AddPlan(resident, new ResidentRoutine { ResidentId = resident.Id }, home.SurnameSeed, wake, sleep);
                 Ready = true; building = null;
                 yield break;
             }
@@ -120,7 +119,7 @@ namespace LivingCities.DFU
                     if (resident.IsQuestProtected) continue;
                     var routine = new ResidentRoutine { ResidentId = resident.Id };
                     int first = destinations.Count == 0 ? 0 : (int)(resident.AppearanceSeed % (uint)destinations.Count);
-                    for (int attempt = 0; entrance != null && attempt < Math.Min(4, destinations.Count); attempt++)
+                    for (int attempt = 0; resident.AgeGroup == ResidentAgeGroup.Adult && entrance != null && attempt < Math.Min(4, destinations.Count); attempt++)
                     {
                         // Physics queries are valid only while exterior geometry is active.
                         while (GameManager.Instance.PlayerEnterExit.IsPlayerInside) yield return null;
@@ -142,7 +141,7 @@ namespace LivingCities.DFU
                         break;
                     }
                     saved.Residents.Add(routine);
-                    AddPlan(resident, routine, seed, population.SettlementId, wake, sleep);
+                    AddPlan(resident, routine, home.SurnameSeed, wake, sleep);
                 }
                 // Bounded incremental layout work avoids a single long main-thread stall.
                 yield return null;
@@ -150,7 +149,7 @@ namespace LivingCities.DFU
             store.SetRoutines(saved);
             FinishBuild(population.SettlementId);
         }
-        private void AddPlan(Resident resident, ResidentRoutine routine, uint seed, int settlementId, int wake, int sleep)
+        private void AddPlan(Resident resident, ResidentRoutine routine, uint surnameSeed, int wake, int sleep)
         {
             var points = new List<RoutePoint>();
             foreach (var point in routine.Route) points.Add(new RoutePoint(point.X, point.Z));
@@ -158,7 +157,7 @@ namespace LivingCities.DFU
                 DailySchedule.DayVisit(resident.HomeKey, routine.DestinationKey, points, routine.OpenMinute, routine.CloseMinute,
                     20 + (int)(resident.AppearanceSeed % 41), 1.3, 12, resident.AppearanceSeed, wake * 60, sleep * 60);
             plans.Add(new Plan { Resident = resident, Schedule = schedule,
-                SurnameSeed = StableSeed.Combine(seed, (uint)settlementId, (uint)resident.HomeKey, 0xfffffffe) });
+                SurnameSeed = surnameSeed });
         }
         private void FinishBuild(int settlementId)
         {

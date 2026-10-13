@@ -2,6 +2,8 @@
 
 User additions on 13 October 2026. These extend the active mod goal without replacing its earlier requirements.
 
+Verified 0.3.0 checkpoint, 14 October: new households now use soft bed/size preferences, up to five residents, shared surnames and persistent sex/age/parent/partner fields. Legacy adults remain unchanged. Home-only child flats and a brief greeting pass actual-player save/load tests; outdoor play, richer family dialogue, sleeping and relationships beyond family links remain unfinished. Sleeping sprites for all NPC flats are the first art production step when home/tavern sleeping is implemented. Complete animation and child-diversity requirements remain in `DIRECTIONAL-CIVILIAN-ANIMATION.md`.
+
 ## Current mod: relationships and bereavement
 
 Track persistent NPC-to-NPC relationships using stable resident IDs, separately from disposition toward the player. Household membership does not automatically define a marriage: model the actual bond so dialogue can identify a partner, relative, friend, or housemate correctly.

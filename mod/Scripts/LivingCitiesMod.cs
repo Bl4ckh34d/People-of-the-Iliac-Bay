@@ -7,6 +7,7 @@ using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
+using DaggerfallWorkshop.Game.UserInterface;
 using LivingCities.Core;
 using UnityEngine;
 
@@ -15,12 +16,13 @@ namespace LivingCities.DFU
     public sealed class LivingCitiesMod : MonoBehaviour, IHasModSaveData
     {
         private WorldStateStore store = new WorldStateStore(0);
-        private RuntimeOptions options = new RuntimeOptions(true, 3, 6, 22, 1, true);
+        private RuntimeOptions options = new RuntimeOptions(true, 5, 6, 22, 1, true);
         private Mod mod;
         private StreetPopulation streets;
         private bool streetPopulationEnabled;
         private SettlementPopulation current;
         private bool panel, saveFault;
+        private bool uiRegistered, redirectingChildTalk;
         private float nextCheck;
         private string diagnostic = "Awaiting a loaded settlement.";
         public Type SaveDataType { get { return typeof(WorldState); } }
@@ -36,6 +38,8 @@ namespace LivingCities.DFU
             initParams.Mod.SaveDataInterface = component;
             initParams.Mod.LoadSettingsCallback = component.LoadSettings;
             initParams.Mod.LoadSettings();
+            DaggerfallUI.UIManager.OnWindowChange += component.OnWindowChange;
+            component.uiRegistered = true;
             initParams.Mod.IsReady = true;
             Debug.Log("LIVING_CITIES_READY: scheduled population preview; save interface registered.");
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-town-test") >= 0)
@@ -52,6 +56,24 @@ namespace LivingCities.DFU
             StartGameBehaviour.OnNewGame -= ResetWorld;
             SaveLoadManager.OnStartLoad -= BeforeLoad;
             if (mod != null) mod.LoadSettingsCallback = null;
+            if (uiRegistered) DaggerfallUI.UIManager.OnWindowChange -= OnWindowChange;
+        }
+        private void OnWindowChange(object sender, EventArgs args)
+        {
+            if (redirectingChildTalk || !(DaggerfallUI.UIManager.TopWindow is DaggerfallTalkWindow)) return;
+            if (GameManager.Instance.TalkManager.CurrentNPCType != TalkManager.NPCType.Mobile) return;
+            var person = GameManager.Instance.TalkManager.MobileNPC;
+            var actor = person ? person.GetComponent<ResidentActor>() : null;
+            if (!actor || actor.Resident.AgeGroup != ResidentAgeGroup.Child || !actor.Resident.IsAlive) return;
+            // Use the public window boundary only for this mod's child actors.
+            // Native adult conversations and vanilla NPCs retain their own windows.
+            redirectingChildTalk = true;
+            try
+            {
+                DaggerfallUI.UIManager.PopWindow();
+                DaggerfallUI.UIManager.PushWindow(new ChildGreetingWindow(DaggerfallUI.UIManager, person.NameNPC));
+            }
+            finally { redirectingChildTalk = false; }
         }
         private void LoadSettings(ModSettings settings, ModSettingsChange change)
         {
@@ -104,17 +126,13 @@ namespace LivingCities.DFU
             if (directory == null || directory.BuildingCount == 0) { current = null; diagnostic = "Awaiting settlement layout."; return; }
             if (current == null || current.SettlementId != directory.MapID)
             {
-                var homes = new List<int>();
-                for (int kind = (int)DFLocation.BuildingTypes.House1; kind <= (int)DFLocation.BuildingTypes.House6; kind++)
-                    foreach (BuildingSummary home in directory.GetBuildingsOfType((DFLocation.BuildingTypes)kind))
-                        homes.Add(home.buildingKey);
-                current = store.GetOrCreate(directory.MapID, homes, options.HouseholdLimit);
+                current = store.GetOrCreateFamilies(directory.MapID, HousingSurvey.Read(directory), options.HouseholdLimit);
                 Debug.Log("LIVING_CITIES_SETTLEMENT: " + directory.MapID + "; households=" + current.Households.Count);
             }
             if (streets && streetPopulationEnabled)
                 streets.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current,
                     store, options.WakeHour, options.SleepHour);
-            int alive = 0, dead = 0, sleeping = 0;
+            int alive = 0, dead = 0, sleeping = 0, children = 0;
             long minute = (long)(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds() / 60);
             foreach (Household home in current.Households)
             {
@@ -122,19 +140,19 @@ namespace LivingCities.DFU
                 foreach (Resident resident in home.Residents)
                 {
                     if (!resident.IsAlive) dead++;
-                    else { alive++; if (activity == Activity.Sleep) sleeping++; }
+                    else { alive++; if (activity == Activity.Sleep) sleeping++; if (resident.AgeGroup == ResidentAgeGroup.Child) children++; }
                 }
             }
             diagnostic = directory.LocationData.Name + " | households " + current.Households.Count +
-                "\nAlive " + alive + " | dead " + dead + " | sleeping " + sleeping +
+                "\nAlive " + alive + " | children " + children + " | dead " + dead + " | sleeping " + sleeping +
                 "\nMinute " + (minute % 1440) + " | street actors " + (streets ? streets.ActiveCount : 0) +
                 " | schedules " + (streets ? streets.PlannedCount : 0);
         }
         private void OnGUI()
         {
             if (!panel) return;
-            GUI.Box(new Rect(12, 12, 510, 120), "Living Cities 0.2.0 — development diagnostics (F8)");
-            GUI.Label(new Rect(24, 40, 490, 90), diagnostic + "\nGothway preview: adult visits/interior presence; beds/families pending.");
+            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.0 — development diagnostics (F8)");
+            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nFamilies: children stay home. Play, sleeping poses and reactions pending.");
         }
         public string TestStatus()
         {

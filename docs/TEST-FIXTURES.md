@@ -2,6 +2,24 @@
 
 Verified 14 October 2026 in the isolated portable player with Basic Roads and Living Cities enabled.
 
+## Current family preview, version 0.3.0
+
+Use character `LivingCitiesTest-126494eb` for the current family preview:
+
+- `SAVE11`: `Living Cities - inside Gothway Garden`, map pixel 109,159.
+- `SAVE12`: `Living Cities - outside Gothway Garden`, adjacent pixel 110,159.
+- `SAVE13`: `Living Cities - interior continuity`, sampled living adult.
+- `SAVE14`: `Living Cities - resident death`, disposable death-persistence case.
+- `SAVE15`: `Living Cities - family home`, a five-person household with child Agryn Ashfield visible inside.
+
+Run `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb` to verify family and existing adult behavior. The actual player passed with 162 households, 402 residents and 118 children. It checked housing profiles from actual game assets, no adult visits for children over a sampled day, shared surnames and saved family fields, child appearance and name after indoor reload, and four adult walking frames with physical displacement. The selected child is `s:206728581:h:4:r:2` in building 4. Children currently stay home using original boy/girl flats; this is not animated outdoor play or sleeping.
+
+The UI check opens the native mobile conversation boundary and verifies the brief child greeting. It then simulates a static conversation with the stale mobile target retained and checks that the normal talk window remains. This is a focused UI regression check, not broad quest/service dialogue acceptance. The family screenshot was inspected after an actual camera visibility/line-of-sight check. Evidence: `work/family-runtime-pass.log`, `work/legacy-family-migration-pass.log`, and `LivingCities-family.png` in the player's normal LocalLow screenshot directory.
+
+Legacy fixture validation also passed on schema 3 without creating children or rerolling its 324 adults. SAVE7–SAVE10 belong to an earlier disposable allocation regression run and are not the recommended family preview. All earlier saves remain preserved.
+
+## Historical adult fixture, version 0.2.0
+
 - Character: `LivingCitiesTest-a2dd8579` (disposable developer character, god mode).
 - `SAVE3`: `Living Cities - inside Gothway Garden`, map pixel 109,159.
 - `SAVE4`: `Living Cities - outside Gothway Garden`, adjacent pixel 110,159.

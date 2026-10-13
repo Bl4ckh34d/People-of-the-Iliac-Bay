@@ -7,6 +7,9 @@ using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
+using DaggerfallWorkshop;
+using DaggerfallWorkshop.Utility;
+using DaggerfallConnect;
 using LivingCities.Core;
 using LivingCities.DFU;
 using UnityEditor;
@@ -42,6 +45,7 @@ public static class LivingCitiesBuild
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         VerifySerialization();
         VerifySettings();
+        VerifyHousing();
         Require(!StreetPopulation.IsVisitDestination(DaggerfallConnect.DFLocation.BuildingTypes.House1), "House1 is not an open shop destination");
         Require(typeof(IHasModSaveData).IsAssignableFrom(typeof(LivingCitiesMod)), "Save adapter contract");
         Require(typeof(BuildingDirectory).GetMethod("GetBuildingsOfType") != null, "Building enumeration hook");
@@ -92,6 +96,39 @@ public static class LivingCitiesBuild
         VerifyAdapter();
         Debug.Log("LIVING_CITIES_SAVE_STATE_VERIFIED: FullSerializer, family migration and adapter lifecycle passed; no bundle installed.");
     }
+    public static void VerifyHousing()
+    {
+        string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+        var reader = new ContentReader(Path.Combine(root, "GameFiles/arena2"));
+        DFLocation location;
+        Require(reader.GetLocation("Daggerfall", "Gothway Garden", out location), "Housing fixture location");
+        bool found = false;
+        for (int y = 0; y < location.Exterior.ExteriorData.Height; y++)
+        for (int x = 0; x < location.Exterior.ExteriorData.Width; x++)
+        {
+            string name = reader.BlockFileReader.CheckName(reader.MapFileReader.GetRmbBlockName(location, x, y));
+            if (name != "BANKAM02.RMB") continue;
+            var block = reader.BlockFileReader.GetBlock(name);
+            var summaries = RMBLayout.GetBuildingData(block, x, y);
+            // Independent original-asset census records BANKAM02 homes 0..7 with one bed each.
+            var homes = new List<BuildingSummary>();
+            for (int i = 0; i < 8; i++) homes.Add(summaries[i]);
+            var profiles = HousingSurvey.Read(reader, location, homes, null);
+            Require(profiles.Count == 8, "Housing profile count");
+            for (int i = 0; i < profiles.Count; i++)
+                Require(profiles[i].BuildingKey == summaries[i].buildingKey && profiles[i].BedCount == 1 &&
+                    profiles[i].FootprintArea == 0, "Original bank block home beds and unknown size fallback");
+            homes.Reverse();
+            var reordered = HousingSurvey.Read(reader, location, homes, null);
+            Require(reordered[0].BuildingKey == profiles[0].BuildingKey, "Stable housing enumeration");
+            found = true;
+        }
+        Require(found, "Independent census block exists in test town");
+        Require(HousingSurvey.Footprint(new[] { new Vector3(-2, 8, -3), new Vector3(2, -4, 2) }) == 20,
+            "House footprint uses XZ bounds in square metres");
+        Require(HousingSurvey.Footprint(new Vector3[0]) == 0, "Missing footprint is unknown");
+        Debug.Log("LIVING_CITIES_HOUSING_VERIFIED: original bed census, building keys, order and footprint passed.");
+    }
     private static void VerifySerialization()
     {
         var store = new WorldStateStore(uint.MaxValue);
@@ -135,7 +172,7 @@ public static class LivingCitiesBuild
         string json = File.ReadAllText("Assets/Game/Mods/LivingCities/modsettings.json");
         var data = (ModSettingsData)SaveLoadManager.Deserialize(typeof(ModSettingsData), json);
         Require(data.GetValue<bool>("General", "Enabled"), "Simulation toggle default");
-        Require(data.GetValue<int>("Population", "HouseholdLimit") == 3, "Household slider default");
+        Require(data.GetValue<int>("Population", "HouseholdLimit") == 5, "Household slider default");
         Require(data.GetValue<int>("DailyRoutine", "WakeHour") == 6, "Wake slider default");
         Require(data.GetValue<int>("DailyRoutine", "SleepHour") == 22, "Sleep slider default");
         Require(data.GetValue<int>("Diagnostics", "RefreshSeconds") == 1, "Refresh slider default");

@@ -129,10 +129,10 @@ namespace LivingCities.DFU
             int outsideKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - outside Gothway Garden");
             Debug.Log("LIVING_CITIES_TEST_SAVE: outside=" + game.SaveLoadManager.GetSaveFolder(outsideKey));
             Debug.Log("LIVING_CITIES_TOWN_SAVES_PASS: character=" + game.PlayerEntity.Name + "; insideKey=" + insideKey + "; outsideKey=" + outsideKey);
-            yield return VerifyLoads(game.PlayerEntity.Name, pixel, location.MapTableData.MapId);
+            yield return VerifyLoads(game.PlayerEntity.Name, pixel, location.MapTableData.MapId, true);
         }
 
-        private IEnumerator VerifyLoads(string character, DFPosition pixel, int mapId)
+        private IEnumerator VerifyLoads(string character, DFPosition pixel, int mapId, bool requireFamily = false)
         {
             var game = GameManager.Instance;
             var adapter = GetComponent<LivingCitiesMod>();
@@ -180,7 +180,128 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             yield return VerifyStreets();
+            yield return VerifyFamilies(mapId, requireFamily);
             Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: real saves, repeated loads and street actors; character=" + character);
+        }
+        private IEnumerator VerifyFamilies(int mapId, bool required)
+        {
+            var adapter = GetComponent<LivingCitiesMod>();
+            var streets = GetComponent<StreetPopulation>();
+            var world = (WorldState)adapter.GetSaveData();
+            var town = world.Settlements.Find(item => item.SettlementId == mapId);
+            Household selected = null; Resident child = null; int children = 0;
+            foreach (var home in town.Households)
+                foreach (var resident in home.Residents)
+                    if (resident.AgeGroup == ResidentAgeGroup.Child)
+                    { children++; if (resident.IsAlive && (child == null || home.Residents.Count > selected.Residents.Count)) { selected = home; child = resident; } }
+            if (child == null)
+            {
+                if (required) throw new InvalidOperationException("Fresh family fixture contains no children.");
+                Debug.Log("LIVING_CITIES_TOWN_LEGACY_ADULTS_PASS: old households preserved without invented children.");
+                yield break;
+            }
+            var game = GameManager.Instance;
+            if (game.PlayerEnterExit.IsPlayerInside) game.PlayerEnterExit.TransitionExterior();
+            yield return new WaitForSecondsRealtime(1);
+            var now = DaggerfallUnity.Instance.WorldTime.Now;
+            double seconds = now.ToSeconds();
+            for (int minute = 0; minute < 1440; minute += 10)
+            {
+                var state = streets.GetState(child.Id, seconds + minute * 60);
+                if (state.BuildingKey != child.HomeKey || (state.Activity != Activity.Home && state.Activity != Activity.Sleep))
+                    throw new InvalidOperationException("Child received an adult visit schedule.");
+            }
+            var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
+            var profiles = HousingSurvey.Read(directory);
+            if (profiles.Count != town.Households.Count || !profiles.Exists(p => p.BedCount > 0 && p.FootprintArea > 0))
+                throw new InvalidOperationException("Runtime housing survey missing actual beds or footprints.");
+            // Enter a family home in the morning; sleep poses are a later milestone.
+            int daySeconds = (int)(now.ToSeconds() % 86400);
+            now.RaiseTime((86400 + 7 * 3600 - daySeconds) % 86400);
+            DaggerfallStaticDoors owner = null; StaticDoor entry = default(StaticDoor);
+            foreach (var candidate in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                foreach (var door in candidate.Doors)
+                    if (door.doorType == DoorTypes.Building && door.buildingKey == selected.BuildingKey)
+                    { owner = candidate; entry = door; break; }
+            if (!owner) throw new InvalidOperationException("Family home has no door.");
+            game.PlayerEnterExit.TransitionInterior(owner.transform, entry, false, false);
+            yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
+            yield return new WaitForSecondsRealtime(1);
+            var actor = streets.FindActor(child.Id);
+            if (!actor || !actor.gameObject.activeInHierarchy) throw new InvalidOperationException("Child missing from family interior.");
+            var flat = actor.GetComponentInChildren<DaggerfallBillboard>();
+            if (!flat || !DaggerfallWorkshop.Utility.TextureReader.IsChildNPCTexture(flat.Summary.Archive, flat.Summary.Record))
+                throw new InvalidOperationException("Child rendered as adult instead of classic child flat.");
+            string childName = actor.Person.NameNPC; string surname = childName.Substring(childName.IndexOf(' ') + 1);
+            foreach (var resident in selected.Residents)
+            {
+                var relative = streets.FindActor(resident.Id);
+                var state = streets.GetState(resident.Id, now.ToSeconds());
+                bool expectedHome = resident.IsAlive && state.Activity != Activity.Travel && state.BuildingKey == selected.BuildingKey;
+                if (expectedHome && (!relative || !relative.Person.NameNPC.EndsWith(" " + surname, StringComparison.Ordinal)))
+                    throw new InvalidOperationException("Family missing or household surname changed.");
+                if (relative && relative.Person.Gender != (resident.Sex == ResidentSex.Female ? Genders.Female : Genders.Male))
+                    throw new InvalidOperationException("Rendered sex does not match saved family role.");
+            }
+            Vector3 childCenter = flat.GetComponent<MeshRenderer>().bounds.center;
+            var indoor = game.PlayerEnterExit.Interior;
+            bool foundView = false;
+            foreach (var anchor in new InteriorGeometry(indoor).LocalAnchors)
+            {
+                Vector3 floor = indoor.transform.TransformPoint(anchor);
+                float distance = Vector3.Distance(floor + Vector3.up, childCenter);
+                if (distance < 2 || distance > 6 || Physics.Linecast(floor + Vector3.up * 1.6f, childCenter, ~0, QueryTriggerInteraction.Ignore)) continue;
+                game.PlayerMotor.transform.position = floor + Vector3.up;
+                foundView = true; break;
+            }
+            if (!foundView) throw new InvalidOperationException("No unobstructed family screenshot viewpoint.");
+            yield return new WaitForSecondsRealtime(0.5f);
+            game.PlayerMouseLook.SetFacing(childCenter - Camera.main.transform.position);
+            yield return new WaitForEndOfFrame();
+            Vector3 view = Camera.main.WorldToViewportPoint(childCenter);
+            if (view.z <= 0 || view.x < 0.1f || view.x > 0.9f || view.y < 0.1f || view.y > 0.9f ||
+                Physics.Linecast(Camera.main.transform.position, childCenter, ~0, QueryTriggerInteraction.Ignore))
+                throw new InvalidOperationException("Child is not visible from the actual test camera.");
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-family.png"));
+            yield return new WaitForEndOfFrame();
+            // Exercise the native target/window boundary without depending on a
+            // random disposition refusal or synthesizing a player click.
+            game.TalkManager.TalkToMobileNPC(actor.Person);
+            DaggerfallUI.Instance.PopToHUD();
+            DaggerfallUI.UIManager.PushWindow(DaggerfallUI.Instance.TalkWindow);
+            yield return null;
+            if (DaggerfallUI.UIManager.TopWindow.GetType().Name != "ChildGreetingWindow")
+                throw new InvalidOperationException("Child exposes unrestricted adult conversation.");
+            DaggerfallUI.Instance.PopToHUD();
+            // TalkManager retains the last mobile reference during static NPC talks.
+            // Model that boundary explicitly, without injecting a fake quest NPC.
+            var typeField = typeof(TalkManager).GetField("currentNPCType", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (typeField == null) throw new InvalidOperationException("NPC conversation type probe unavailable.");
+            var previousType = typeField.GetValue(game.TalkManager);
+            typeField.SetValue(game.TalkManager, TalkManager.NPCType.Static);
+            DaggerfallUI.UIManager.PushWindow(DaggerfallUI.Instance.TalkWindow);
+            bool untouched = DaggerfallUI.UIManager.TopWindow == DaggerfallUI.Instance.TalkWindow;
+            DaggerfallUI.Instance.PopToHUD(); typeField.SetValue(game.TalkManager, previousType);
+            if (!untouched) throw new InvalidOperationException("Child conversation intercepts a later static NPC talk.");
+            string before = JsonUtility.ToJson(selected);
+            saved = false; game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - family home");
+            float deadline = Time.realtimeSinceStartup + 30;
+            while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!saved) throw new InvalidOperationException("Family save timed out.");
+            yield return null;
+            int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - family home");
+            loaded = false; game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
+            deadline = Time.realtimeSinceStartup + 90;
+            while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!loaded || !streets.Ready) throw new InvalidOperationException("Family reload timed out.");
+            yield return new WaitForSecondsRealtime(1);
+            world = (WorldState)adapter.GetSaveData();
+            var restored = world.Settlements.Find(t => t.SettlementId == mapId).Households.Find(h => h.BuildingKey == selected.BuildingKey);
+            actor = streets.FindActor(child.Id);
+            if (before != JsonUtility.ToJson(restored) || !actor || actor.Person.NameNPC != childName)
+                throw new InvalidOperationException("Family roles or child identity changed after indoor reload.");
+            Debug.Log("LIVING_CITIES_TOWN_FAMILY_PASS: children=" + children + "; selectedHousehold=" + selected.Residents.Count +
+                "; child=" + child.Id + "; name=" + childName + "; schema=" + world.Version);
         }
         private IEnumerator VerifyStreets()
         {

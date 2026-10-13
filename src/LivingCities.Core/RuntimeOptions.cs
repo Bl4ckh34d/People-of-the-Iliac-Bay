@@ -9,7 +9,7 @@ namespace LivingCities.Core
         public RuntimeOptions(bool enabled, int householdLimit, int wakeHour, int sleepHour, int refreshSeconds, bool diagnosticsEnabled)
         {
             Enabled = enabled; DiagnosticsEnabled = diagnosticsEnabled;
-            HouseholdLimit = Clamp(householdLimit, 1, 3);
+            HouseholdLimit = Clamp(householdLimit, 1, 5);
             WakeHour = Clamp(wakeHour, 4, 10);
             SleepHour = Clamp(sleepHour, 18, 23);
             RefreshSeconds = Clamp(refreshSeconds, 1, 10);

@@ -31,6 +31,15 @@ namespace LivingCities.DFU
                 Delegate.CreateDelegate(typeof(FloatingOrigin.OnPositionUpdateEventHandler), motor, handler);
             Person.Motor = motor;
             Person.Asset = motor.MobileAsset;
+            if (resident.AgeGroup == ResidentAgeGroup.Child)
+            {
+                motor.MobileAsset.gameObject.SetActive(false);
+                var childAsset = new GameObject("Child home sprite");
+                childAsset.layer = gameObject.layer;
+                childAsset.transform.SetParent(transform, false);
+                Person.Asset = childAsset.AddComponent<ChildHomeBillboard>();
+                motor.MobileAsset = Person.Asset;
+            }
             var randomState = UnityEngine.Random.state;
             uint dfSeed = DFRandom.Seed;
             try
@@ -39,11 +48,10 @@ namespace LivingCities.DFU
                 DFRandom.Seed = resident.AppearanceSeed;
                 Person.IsGuard = false;
                 Person.raceToBeSet = Races.Breton;
-                Person.genderToBeSet = (resident.AppearanceSeed & 1) == 0 ? Genders.Male : Genders.Female;
+                Person.genderToBeSet = resident.Sex == ResidentSex.Male ? Genders.Male : Genders.Female;
                 Person.outfitVariantToBeSet = (int)((resident.AppearanceSeed >> 1) % 4);
                 Person.ApplyPersonSettingsViaInspector();
-                // Regional surname conventions and persisted literal names join the
-                // family schema later. This first Breton town uses stable shared names.
+                // Family surname is persisted independently of transient actors.
                 var names = DaggerfallUnity.Instance.NameHelper;
                 DFRandom.Seed = resident.AppearanceSeed;
                 string given = names.FirstName(NameHelper.BankTypes.Breton, Person.Gender);
@@ -51,7 +59,8 @@ namespace LivingCities.DFU
                 Person.NameNPC = given + " " + names.Surname(NameHelper.BankTypes.Breton);
             }
             finally { UnityEngine.Random.state = randomState; DFRandom.Seed = dfSeed; }
-            Person.Asset.transform.localPosition = Vector3.up * ((Person.Asset.GetSize().y - 2f) * 0.52f);
+            Person.Asset.transform.localPosition = Vector3.up * ((Person.Asset.GetSize().y - 2f) *
+                (resident.AgeGroup == ResidentAgeGroup.Child ? 0.5f : 0.52f));
             entity = GetComponent<DaggerfallEntityBehaviour>().Entity;
             entity.OnDeath += Died;
         }

@@ -9,6 +9,11 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Family setting permits five-person households", () => {
+                var options = new RuntimeOptions(true, 5, 6, 22, 1, true);
+                var town = Population.CreateFamilies(42, 100, Enumerable.Range(1, 200).Select(k => new HomeProfile(k, 3, 200)), options.HouseholdLimit);
+                Check.True(town.Households.Any(h => h.Residents.Count == 5));
+            }));
             cases.Add(("Household setting caps new population", () => {
                 var homes = Enumerable.Range(1, 200).ToArray();
                 Check.True(Population.Create(42, 100, homes, 1).Households.All(h => h.Residents.Count == 1));
@@ -31,7 +36,7 @@ namespace LivingCities.Tests
             cases.Add(("Edited configuration is normalized into safe schedule bounds", () => {
                 var lower = new RuntimeOptions(false, -2, -900, -900, 0, false);
                 var upper = new RuntimeOptions(true, 99, 999, 999, 999, true);
-                Check.Equal(1, lower.HouseholdLimit); Check.Equal(3, upper.HouseholdLimit);
+                Check.Equal(1, lower.HouseholdLimit); Check.Equal(5, upper.HouseholdLimit);
                 Check.Equal(1, lower.RefreshSeconds); Check.Equal(10, upper.RefreshSeconds);
                 Check.True(!lower.Enabled && !lower.DiagnosticsEnabled && upper.Enabled && upper.DiagnosticsEnabled);
                 var lowPlan = DailySchedule.HomeDay(1, lower.WakeHour * 60, lower.SleepHour * 60);
