@@ -31,6 +31,7 @@ namespace LivingCities.DFU
         private RuntimeOptions options = new RuntimeOptions(true, 6, 22, 1, true);
         private Mod mod;
         private StreetPopulation streets;
+        private IDisposable guardLifetimeHook;
         private bool streetPopulationEnabled;
         private bool questHouseholdsEnabled;
         private QuestOfferBindings CreateQuestOffers()
@@ -57,6 +58,9 @@ namespace LivingCities.DFU
             component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
             component.streets.InstallReactionHook();
+            var lifetimeType = Type.GetType("LivingCities.QuestHooks.NativeGuardLifetimeHooks, LivingCities.QuestHooks", true);
+            component.guardLifetimeHook = (IDisposable)Activator.CreateInstance(lifetimeType,
+                new object[] { new Func<GameObject, bool>(body => body.GetComponent<GuardActor>() != null) });
             component.mod = initParams.Mod;
             initParams.Mod.SaveDataInterface = component;
             initParams.Mod.LoadSettingsCallback = component.LoadSettings;
@@ -76,6 +80,7 @@ namespace LivingCities.DFU
         }
         private void OnDestroy()
         {
+            if (guardLifetimeHook != null) guardLifetimeHook.Dispose();
             ClearQuestOffers();
             StartGameBehaviour.OnNewGame -= ResetWorld;
             SaveLoadManager.OnStartLoad -= BeforeLoad;
@@ -206,8 +211,8 @@ namespace LivingCities.DFU
         private void OnGUI()
         {
             if (!panel) return;
-            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.3 — development diagnostics (F8)");
-            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nSleeping: one male and one female appearance in unshared beds. Child play/reactions pending.");
+            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.4 — development diagnostics (F8)");
+            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nCitizen reactions active when enabled. Finite guard controller and further animations pending.");
         }
         public string TestStatus()
         {

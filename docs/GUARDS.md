@@ -1,6 +1,16 @@
 # Finite guards
 
-This is the deterministic core foundation for M4 under the existing approved gameplay requirements. The installed 0.3.3 preview still uses native spawning until the replacement adapter is validated.
+This is the foundation for M4 under the existing approved gameplay requirements. The installed 0.3.4 development preview still uses native spawning in ordinary play until the replacement controller is validated.
+
+## Physical actor checkpoint
+
+`GuardActor` now materializes a saved identity as a native City Watch body. It follows saved route positions and native directional walking animation, retains native colliders and death handling, and records deaths in the roster. `LoadID = 0` excludes the view from native enemy persistence, preventing a second native save owner. Creation preserves shared random state. A dead saved guard cannot materialize again.
+
+Native `EnemyEntity.Update` normally deletes City Watch bodies when the player has no active crime. A narrowly scoped `NativeGuardLifetimeHooks` patch skips that destruction only for bodies carrying `GuardActor`, while preserving the rest of the native entity update. Ordinary vanilla guard cleanup remains active.
+
+The actual-player command `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -GuardActorProbe` passes repeated fixture loads, timed route placement, multiple rendered walking frames, crime-free survival, unchanged RNG, unowned vanilla cleanup, native death and serialized no-resurrection checks. Evidence: `work/guard-actor-runtime-pass.log`. Build and native hook/serializer checks pass. No old save slot is rewritten by this focused probe.
+
+This actor view is currently exercised by the explicit test mode only. Native motor, senses and attack are disabled while the view owns its position. The production controller still must enforce one view per ID, handle scene/door transitions and distance visibility, preserve wounded health, dispatch crime reports and connect pursuit/combat/arrest. Do not claim that normal play already has finite guards.
 
 ## State and behavior
 

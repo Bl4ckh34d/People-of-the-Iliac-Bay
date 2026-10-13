@@ -199,6 +199,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-guard-actor-probe") >= 0)
+            {
+                yield return GuardActorProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: fixture loads and physical guard actor; character=" + character);
+                yield break;
+            }
             if (!requireFamily && Array.IndexOf(probeArguments, "-livingcities-response-probe") >= 0 &&
                 Array.IndexOf(probeArguments, "-livingcities-bed-probe") < 0 && Array.IndexOf(probeArguments, "-livingcities-sleep-probe") < 0)
             {
