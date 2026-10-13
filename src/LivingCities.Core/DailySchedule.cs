@@ -8,7 +8,7 @@ namespace LivingCities.Core
         public readonly double X, Z;
         public RoutePoint(double x, double z) { X = x; Z = z; }
     }
-    public enum Activity { Sleep, Home, Work, Travel }
+    public enum Activity { Sleep, Home, Work, Travel, Visit }
     public struct ActivitySnapshot
     {
         public readonly Activity Activity;
@@ -23,6 +23,7 @@ namespace LivingCities.Core
         private readonly int home, work, wake, sleep, open, close, commute;
         private readonly RoutePoint[] points;
         private readonly double[] distances;
+        private Activity awayActivity = Activity.Work;
         private DailySchedule(int home, int work, int wake, int sleep, int open, int close, int commute, RoutePoint[] points)
         {
             this.home = home; this.work = work; this.wake = wake; this.sleep = sleep;
@@ -56,6 +57,39 @@ namespace LivingCities.Core
             ValidateHome(homeKey, wakeMinute, sleepMinute);
             return new DailySchedule(homeKey, -1, wakeMinute, sleepMinute, 0, 0, 0, new RoutePoint[0]);
         }
+        public static DailySchedule DayVisit(int homeKey, int destinationKey, IEnumerable<RoutePoint> route,
+            int opens, int closes, int dwellMinutes, double metresPerRealSecond, double gameSecondsPerRealSecond,
+            uint seed, int wakeMinute, int sleepMinute)
+        {
+            ValidateHome(homeKey, wakeMinute, sleepMinute);
+            if (!Finite(metresPerRealSecond) || metresPerRealSecond <= 0 ||
+                !Finite(gameSecondsPerRealSecond) || gameSecondsPerRealSecond <= 0)
+                throw new ArgumentOutOfRangeException(nameof(metresPerRealSecond));
+            if (destinationKey < 0 || destinationKey == homeKey || opens < 0 || closes > 1440 ||
+                opens >= closes || dwellMinutes < 1) throw new ArgumentException("Invalid visit window.");
+            if (route == null) throw new ArgumentNullException(nameof(route));
+            RoutePoint[] copy = new List<RoutePoint>(route).ToArray();
+            double length = 0;
+            for (int i = 0; i < copy.Length; i++)
+            {
+                if (!Finite(copy[i].X) || !Finite(copy[i].Z)) throw new ArgumentException("Invalid route coordinate.");
+                if (i == 0) continue;
+                double dx = copy[i].X - copy[i - 1].X, dz = copy[i].Z - copy[i - 1].Z;
+                length += Math.Sqrt(dx * dx + dz * dz);
+            }
+            double travel = Math.Ceiling(length / metresPerRealSecond * gameSecondsPerRealSecond / 60);
+            if (copy.Length < 2 || length <= 0 || !Finite(travel) || travel >= 1440)
+                return HomeDay(homeKey, wakeMinute, sleepMinute);
+            int commuteMinutes = Math.Max(1, (int)travel);
+            int earliest = Math.Max(opens, wakeMinute + commuteMinutes);
+            int latest = Math.Min(closes, sleepMinute - commuteMinutes) - dwellMinutes;
+            if (latest < earliest) return HomeDay(homeKey, wakeMinute, sleepMinute);
+            int arrival = earliest + (int)(seed % (uint)(latest - earliest + 1));
+            var schedule = Workday(homeKey, destinationKey, copy, arrival, arrival + dwellMinutes,
+                commuteMinutes, wakeMinute, sleepMinute);
+            schedule.awayActivity = Activity.Visit;
+            return schedule;
+        }
         public ActivitySnapshot EvaluateSeconds(double absoluteSeconds)
         {
             if (!Finite(absoluteSeconds) || absoluteSeconds < 0)
@@ -73,7 +107,7 @@ namespace LivingCities.Core
         {
             if (minute < wake || minute >= sleep) return Interior(Activity.Sleep, home);
             if (work < 0 || minute < open - commute || minute >= close + commute) return Interior(Activity.Home, home);
-            if (minute >= open && minute < close) return Interior(Activity.Work, work);
+            if (minute >= open && minute < close) return Interior(awayActivity, work);
             double progress = minute < open ? (minute - (open - commute)) / (double)commute : 1 - (minute - close) / (double)commute;
             double along = progress * distances[distances.Length - 1];
             for (int i = 1; i < points.Length; i++)

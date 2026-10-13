@@ -6,13 +6,15 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 1;
+        public int Version = 2;
         public uint WorldSeed;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
+        public List<TownRoutineState> Routines = new List<TownRoutineState>();
     }
     public sealed class WorldStateStore
     {
         private WorldState state;
+        public uint WorldSeed { get { return state.WorldSeed; } }
         public WorldStateStore(uint seed) { state = new WorldState { WorldSeed = seed }; }
         public SettlementPopulation GetOrCreate(int settlementId, IEnumerable<int> homeKeys, int maxResidents = 3)
         {
@@ -24,11 +26,23 @@ namespace LivingCities.Core
         }
         public WorldState Snapshot() { return CopyValidated(state); }
         public void Restore(WorldState incoming) { state = CopyValidated(incoming); }
+        public TownRoutineState GetRoutines(int settlementId)
+        { return Snapshot().Routines.Find(item => item.SettlementId == settlementId); }
+        public void SetRoutines(TownRoutineState routines)
+        {
+            if (routines == null) throw new ArgumentNullException(nameof(routines));
+            var incoming = Snapshot();
+            incoming.Routines.RemoveAll(item => item.SettlementId == routines.SettlementId);
+            incoming.Routines.Add(routines);
+            // Preserve live resident object bindings held by actors when committing routes.
+            var validated = CopyValidated(incoming);
+            state.Routines = validated.Routines;
+        }
 
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version == 1, "Unsupported save schema.");
+            Require(source.Version == 1 || source.Version == 2, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             var settlements = new HashSet<int>();
@@ -58,6 +72,45 @@ namespace LivingCities.Core
                     townCopy.Households.Add(homeCopy);
                 }
                 copy.Settlements.Add(townCopy);
+            }
+            if (source.Version == 1) return copy;
+            Require(source.Routines != null, "Missing routine cache.");
+            var cachedTowns = new HashSet<int>();
+            foreach (var town in source.Routines)
+            {
+                Require(town != null && settlements.Contains(town.SettlementId) && cachedTowns.Add(town.SettlementId), "Invalid routine settlement.");
+                Require(town.Residents != null, "Missing resident routines.");
+                var residents = new Dictionary<string, Resident>(StringComparer.Ordinal);
+                foreach (var home in copy.Settlements.Find(item => item.SettlementId == town.SettlementId).Households)
+                    foreach (var resident in home.Residents) residents.Add(resident.Id, resident);
+                var cachedResidents = new HashSet<string>(StringComparer.Ordinal);
+                var townCopy = new TownRoutineState { SettlementId = town.SettlementId };
+                foreach (var routine in town.Residents)
+                {
+                    Require(routine != null && routine.ResidentId != null && residents.ContainsKey(routine.ResidentId) &&
+                        cachedResidents.Add(routine.ResidentId), "Invalid or duplicate resident routine.");
+                    Require(routine.Route != null && routine.Route.Count <= 10000, "Invalid route points.");
+                    if (routine.DestinationKey == -1)
+                        Require(routine.Route.Count == 0 && routine.OpenMinute == 0 && routine.CloseMinute == 0, "Invalid home routine.");
+                    else
+                        Require(routine.DestinationKey >= 0 && routine.DestinationKey != residents[routine.ResidentId].HomeKey &&
+                            routine.OpenMinute >= 0 && routine.OpenMinute < routine.CloseMinute && routine.CloseMinute <= 1440 &&
+                            routine.Route.Count >= 2, "Invalid visit routine.");
+                    var saved = new ResidentRoutine { ResidentId = routine.ResidentId, DestinationKey = routine.DestinationKey,
+                        OpenMinute = routine.OpenMinute, CloseMinute = routine.CloseMinute };
+                    double length = 0; SavedRoutePoint previous = null;
+                    foreach (var point in routine.Route)
+                    {
+                        Require(point != null && !double.IsNaN(point.X) && !double.IsNaN(point.Z) &&
+                            Math.Abs(point.X) <= 1000000 && Math.Abs(point.Z) <= 1000000, "Invalid route coordinate.");
+                        saved.Route.Add(new SavedRoutePoint { X = point.X, Z = point.Z });
+                        if (previous != null) length += Math.Abs(point.X - previous.X) + Math.Abs(point.Z - previous.Z);
+                        previous = point;
+                    }
+                    Require(routine.DestinationKey == -1 || length > 0, "Empty route length.");
+                    townCopy.Residents.Add(saved);
+                }
+                copy.Routines.Add(townCopy);
             }
             return copy;
         }

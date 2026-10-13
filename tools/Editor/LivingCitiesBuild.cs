@@ -42,6 +42,7 @@ public static class LivingCitiesBuild
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         VerifySerialization();
         VerifySettings();
+        Require(!StreetPopulation.IsVisitDestination(DaggerfallConnect.DFLocation.BuildingTypes.House1), "House1 is not an open shop destination");
         Require(typeof(IHasModSaveData).IsAssignableFrom(typeof(LivingCitiesMod)), "Save adapter contract");
         Require(typeof(BuildingDirectory).GetMethod("GetBuildingsOfType") != null, "Building enumeration hook");
         Require(typeof(CityNavigation).GetMethod("GetNavGridWeightLocal", new[] { typeof(int), typeof(int) }) != null, "Street grid hook");
@@ -89,6 +90,9 @@ public static class LivingCitiesBuild
     {
         var store = new WorldStateStore(uint.MaxValue);
         var town = store.GetOrCreate(100, new[] { 10, 20 });
+        store.SetRoutines(new TownRoutineState { SettlementId = 100, Residents = new List<ResidentRoutine> {
+            new ResidentRoutine { ResidentId = town.Households[0].Residents[0].Id, DestinationKey = 30, OpenMinute = 600, CloseMinute = 1000,
+                Route = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 10.5, Z = 20 } } } } });
         Population.MarkDead(town, town.Households[0].Residents[0].Id);
         string serialized = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
         var restored = new WorldStateStore(0);
@@ -106,7 +110,8 @@ public static class LivingCitiesBuild
         Require(data.GetValue<int>("DailyRoutine", "SleepHour") == 22, "Sleep slider default");
         Require(data.GetValue<int>("Diagnostics", "RefreshSeconds") == 1, "Refresh slider default");
         Require(data.GetValue<bool>("Diagnostics", "EnableF8Panel"), "Panel toggle default");
-        Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: six native menu controls deserialize with expected types and defaults.");
+        Require(data.GetValue<bool>("General", "StreetPopulation"), "Street population default");
+        Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: seven native menu controls deserialize with expected types and defaults.");
     }
     private static void VerifyAdapter()
     {
@@ -116,7 +121,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 1 && saved.Settlements.Count == 0, "New world state");
+            Require(saved.Version == 2 && saved.Settlements.Count == 0 && saved.Routines.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }

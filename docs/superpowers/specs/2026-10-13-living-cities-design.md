@@ -23,7 +23,7 @@ The local setup helper is preserved at `tools/DFUBaselineSetup.cs` and copied in
 
 ## Confirmed preferences
 
-Use the standard mod format and preserve quests and saves. Engine changes are allowed only when a concrete integration limitation proves them necessary. Keep classic sprites and add action poses or animations where needed. Ordinary resident and guard deaths persist, with bounded, gradual recruitment and migration. Quest-critical characters remain protected. Very small hamlets have no garrison; small towns have a handful of guards; cities have larger rosters.
+Use the standard mod format and preserve technical quest bindings and save integrity. Engine changes are allowed only when a concrete integration limitation proves them necessary. Keep classic sprites and add action poses or animations where needed. Ordinary resident and guard deaths persist, with bounded, gradual recruitment and migration. The 14 October amendment allows the player to kill important quest NPCs and break their quests; separate that from default protection against background events. Very small hamlets have no garrison; small towns have a handful of guards; cities have larger rosters. Later crime, recovery, public-warning and family refinements are authoritative in `docs/MILESTONES.md` and its linked specifications.
 
 ## Proposed architecture
 

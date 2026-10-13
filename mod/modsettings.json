@@ -3,13 +3,20 @@
   "Sections": [
     {
       "Name": "General",
-      "Description": "Foundation build: controls currently affect virtual residents. Physical NPC integration is still in development.",
+      "Description": "Development build with persistent population and scheduled street visits. Families and interior activity are still in development.",
       "IsAdvanced": false,
       "Keys": [
         {
           "Value": true,
           "Name": "Enabled",
-          "Description": "Enable virtual population updates. Disabling keeps saved residents and deaths; their schedules catch up when re-enabled.",
+          "Description": "Enable population updates. Disabling keeps saved residents and deaths; schedules catch up when re-enabled.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
+          "Name": "StreetPopulation",
+          "Description": "Gothway Garden prototype: scheduled adult visits and interior presence using classic sprites. Replaces random street civilians while active; keeps existing guards. Beds, families and reactions remain unfinished.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         }

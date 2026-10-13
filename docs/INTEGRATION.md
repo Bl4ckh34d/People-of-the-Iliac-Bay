@@ -33,8 +33,8 @@ DFU's runtime source compiler excludes references to precompiled assemblies load
 
 ## Foundation limitations
 
-This build persists virtual households and shows F8 diagnostics. Its live adapter currently assigns home/sleep schedules only. Core work/commute routing is tested separately; it is not yet connected to building entrances or physical NPCs.
+Version 0.2.0 connects scheduled adult street visits and interior presence in Gothway Garden. Other towns retain vanilla physical populations. F8 reports household/schedule/actor counts. Saved routes avoid relying on `CityNavigation.Start` or exterior physics during indoor save loads; schema 1 migrates to schema 2 without changing residents. Exact door, animation, identity and death-save evidence is recorded in `TEST-FIXTURES.md`.
 
-House types 1–6 are eligible; explicit `HouseForSale` types are excluded. Dynamically listed properties, player purchases, beds, existing permanent occupants, and quest reservations still require allocation rules before any physical population replacement. The current virtual allocation must not be mistaken for a complete housing census.
+House types 1–6 are candidates; explicit `HouseForSale` types are excluded. Dynamically listed properties, player purchases, beds, existing permanent occupants, and quest reservations still require allocation rules before broad physical population replacement. The pilot allocation must not be mistaken for a complete housing census. Existing stationary quest/service NPCs are retained; replacing them without duplicate identities remains work.
 
-No changes to vanilla guard spawning, civilian visuals, enemy behavior, crime, quest actors, or dialogue are shipped in this foundation. These remain milestone work.
+The preview uses vanilla mobile sprite assets with stable names and identities. No changes to vanilla guard spawning, enemy behavior, crime, quest actors or dialogue are shipped yet. Current indoor residents stand rather than use furniture. Full interior navigation, corner smoothing, actor avoidance and radius behavior across loaded map boundaries remain unfinished.

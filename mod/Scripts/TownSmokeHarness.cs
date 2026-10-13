@@ -8,6 +8,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Player;
 using DaggerfallWorkshop.Game.Serialization;
+using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using LivingCities.Core;
@@ -24,6 +25,8 @@ namespace LivingCities.DFU
         private void OnDestroy() { SaveLoadManager.OnSave -= OnSaved; SaveLoadManager.OnLoad -= OnLoaded; }
         private IEnumerator Start()
         {
+            // Opt-in test process must keep advancing when the editor/chat has focus.
+            Application.runInBackground = true;
             while (GameManager.Instance == null || !GameManager.Instance.IsReady) yield return null;
             yield return null;
             var game = GameManager.Instance;
@@ -145,6 +148,8 @@ namespace LivingCities.DFU
                 if (key < 0) { Debug.LogError("LIVING_CITIES_TOWN_FAIL: missing fixture " + name); yield break; }
                 loaded = false;
                 game.SaveLoadManager.Load(key);
+                // Match the game's LoadGame button: loading alone leaves its menu open.
+                DaggerfallUI.Instance.PopToHUD();
                 float deadline = Time.realtimeSinceStartup + 90;
                 while ((!loaded || !game.StreamingWorld.IsReady || game.StreamingWorld.IsRepositioningPlayer) &&
                     Time.realtimeSinceStartup < deadline) yield return null;
@@ -165,13 +170,151 @@ namespace LivingCities.DFU
                 SettlementPopulation town = state.Settlements.Find(value => value.SettlementId == mapId);
                 if (town == null || town.Households.Count == 0)
                 { Debug.LogError("LIVING_CITIES_TOWN_FAIL: town population missing after load."); yield break; }
+                // Newly generated route caches may finish between loads; compare all
+                // persistent population fields independently of that derived cache.
+                state.Routines.Clear();
                 string actual = JsonUtility.ToJson(state);
                 if (expectedPopulation != null && expectedPopulation != actual)
                 { Debug.LogError("LIVING_CITIES_TOWN_FAIL: population changed across fixture loads."); yield break; }
                 expectedPopulation = actual;
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
-            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: real saves and repeated loads; character=" + character);
+            yield return VerifyStreets();
+            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: real saves, repeated loads and street actors; character=" + character);
+        }
+        private IEnumerator VerifyStreets()
+        {
+            var streets = GetComponent<StreetPopulation>();
+            Debug.Log("LIVING_CITIES_TOWN_ACTORS_START: " + GetComponent<LivingCitiesMod>().TestStatus());
+            float deadline = Time.realtimeSinceStartup + 100;
+            while (!streets.Ready && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!streets.Ready || streets.PlannedCount == 0) throw new InvalidOperationException("No scheduled street population: " + GetComponent<LivingCitiesMod>().TestStatus());
+            var game = GameManager.Instance;
+            var now = DaggerfallUnity.Instance.WorldTime.Now;
+            double currentSeconds = now.ToSeconds() + (now.Second - Math.Floor(now.Second));
+            string id = null; Vector3 ground = Vector3.zero;
+            int offset;
+            for (offset = 0; offset < 1440; offset++)
+                if (streets.TrySample(currentSeconds + offset * 60, out id, out ground)) break;
+            if (id == null) throw new InvalidOperationException("No traveling resident in next day.");
+            if (offset > 0) now.RaiseTime(offset * 60);
+            Vector3 observer = ground + Vector3.back * 5;
+            foreach (var direction in new[] { Vector3.back, Vector3.right, Vector3.left, Vector3.forward })
+            {
+                var candidate = ground + direction * 5;
+                if (!Physics.Linecast(candidate + Vector3.up, ground + Vector3.up, ~0, QueryTriggerInteraction.Ignore))
+                { observer = candidate; break; }
+            }
+            game.PlayerEntity.GodMode = true;
+            game.PlayerMotor.transform.position = observer + Vector3.up * 2;
+            game.PlayerMouseLook.SetHorizontalFacing(ground - observer);
+            yield return new WaitForSecondsRealtime(2);
+            var actor = streets.FindActor(id);
+            if (!actor || !actor.gameObject.activeInHierarchy || !actor.Person.Asset.GetComponent<MeshRenderer>().enabled)
+                throw new InvalidOperationException("Scheduled resident is not rendered.");
+            Vector3 before = actor.transform.position;
+            var billboard = actor.Person.Asset as MobilePersonBillboard;
+            var frameField = typeof(MobilePersonBillboard).GetField("currentFrame", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            if (!billboard || frameField == null) throw new InvalidOperationException("Classic sprite animation probe unavailable.");
+            var frames = new HashSet<int>();
+            float animationDeadline = Time.realtimeSinceStartup + 2;
+            while (Time.realtimeSinceStartup < animationDeadline)
+            {
+                frames.Add((int)frameField.GetValue(billboard));
+                yield return new WaitForEndOfFrame();
+            }
+            if (!actor || Vector3.Distance(before, actor.transform.position) < 0.2f)
+                throw new InvalidOperationException("Scheduled resident did not move.");
+            if (frames.Count < 3) throw new InvalidOperationException("Moving resident sprite did not cycle walking frames.");
+            game.PlayerMouseLook.SetHorizontalFacing(actor.transform.position - game.PlayerMotor.transform.position);
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-streets.png"));
+            yield return new WaitForSecondsRealtime(1);
+            Debug.Log("LIVING_CITIES_TOWN_ACTORS_PASS: planned=" + streets.PlannedCount + "; active=" + streets.ActiveCount +
+                "; observed=" + id + "; name=" + actor.Person.NameNPC + "; animationFrames=" + frames.Count + "; movement=" + Vector3.Distance(before, actor.transform.position));
+            string expectedName = actor.Person.NameNPC;
+            uint expectedAppearance = actor.Resident.AppearanceSeed;
+            // Advance to this actual traveller's arrival, then follow the real door.
+            double departureSeconds = now.ToSeconds() + (now.Second - Math.Floor(now.Second));
+            ActivitySnapshot arrived = default(ActivitySnapshot);
+            for (offset = 1; offset < 1440; offset++)
+            {
+                arrived = streets.GetState(id, departureSeconds + offset * 60);
+                if (arrived.Activity == Activity.Visit || arrived.Activity == Activity.Home) break;
+            }
+            if (offset >= 1440) throw new InvalidOperationException("Resident has no scheduled arrival.");
+            now.RaiseTime(offset * 60);
+            var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
+            DaggerfallStaticDoors owner = null; StaticDoor selectedDoor = default(StaticDoor);
+            foreach (var candidate in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                foreach (var door in candidate.Doors)
+                    if (door.doorType == DoorTypes.Building && door.buildingKey == arrived.BuildingKey)
+                    { owner = candidate; selectedDoor = door; break; }
+            if (!owner) throw new InvalidOperationException("Arrival building has no exterior door.");
+            game.PlayerEnterExit.TransitionInterior(owner.transform, selectedDoor, false, false);
+            yield return new WaitForSecondsRealtime(1);
+            DaggerfallUI.Instance.PopToHUD();
+            yield return new WaitForSecondsRealtime(1);
+            actor = streets.FindActor(id);
+            if (!game.PlayerEnterExit.IsPlayerInsideBuilding || !actor || !actor.gameObject.activeInHierarchy)
+                throw new InvalidOperationException("Arrived resident missing from destination interior.");
+            if (actor.Person.NameNPC != expectedName || actor.Resident.AppearanceSeed != expectedAppearance)
+                throw new InvalidOperationException("Resident identity changed during interior transition.");
+            Debug.Log("LIVING_CITIES_TOWN_INTERIOR_PASS: resident=" + id + "; building=" + arrived.BuildingKey + "; name=" + expectedName);
+            game.PlayerMouseLook.SetHorizontalFacing(actor.transform.position - game.PlayerMotor.transform.position);
+            yield return new WaitForEndOfFrame();
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-interior.png"));
+            game.PlayerEnterExit.TransitionExterior();
+            yield return new WaitForSecondsRealtime(1);
+            game.PlayerEnterExit.TransitionInterior(owner.transform, selectedDoor, false, false);
+            yield return new WaitForSecondsRealtime(1);
+            DaggerfallUI.Instance.PopToHUD();
+            yield return new WaitForSecondsRealtime(1);
+            actor = streets.FindActor(id);
+            if (!actor || !actor.gameObject.activeInHierarchy || actor.Person.NameNPC != expectedName)
+                throw new InvalidOperationException("Resident missing or changed after interior re-entry.");
+            int duplicates = 0;
+            foreach (var candidate in Resources.FindObjectsOfTypeAll<ResidentActor>())
+                if (candidate.gameObject.activeInHierarchy && candidate.Resident.Id == id) duplicates++;
+            if (duplicates != 1) throw new InvalidOperationException("Resident actor duplicated across transitions.");
+            SaveLoadManager.OnSave += OnSaved;
+            saved = false;
+            game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - interior continuity");
+            deadline = Time.realtimeSinceStartup + 30;
+            while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!saved) throw new InvalidOperationException("Interior fixture save timed out.");
+            yield return null;
+            int interiorKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - interior continuity");
+            loaded = false; game.SaveLoadManager.Load(interiorKey); DaggerfallUI.Instance.PopToHUD();
+            deadline = Time.realtimeSinceStartup + 90;
+            while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!loaded || !streets.Ready) throw new InvalidOperationException("Living resident interior fixture reload timed out.");
+            yield return new WaitForSecondsRealtime(1);
+            actor = streets.FindActor(id);
+            if (!actor || !actor.gameObject.activeInHierarchy || actor.Person.NameNPC != expectedName || actor.Resident.AppearanceSeed != expectedAppearance)
+                throw new InvalidOperationException("Living resident missing or changed after interior save/load.");
+            actor.GetComponent<DaggerfallEntityBehaviour>().Entity.SetHealth(0);
+            yield return null;
+            if (actor.Resident.IsAlive) throw new InvalidOperationException("Actor death did not update resident.");
+            saved = false;
+            game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - resident death");
+            deadline = Time.realtimeSinceStartup + 30;
+            while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!saved) throw new InvalidOperationException("Death fixture save timed out.");
+            yield return null;
+            int deathKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - resident death");
+            loaded = false; game.SaveLoadManager.Load(deathKey); DaggerfallUI.Instance.PopToHUD();
+            deadline = Time.realtimeSinceStartup + 90;
+            while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+            if (!loaded || !streets.Ready) throw new InvalidOperationException("Interior death fixture reload timed out.");
+            yield return new WaitForSecondsRealtime(2);
+            bool foundDead = false;
+            foreach (var settlement in ((WorldState)GetComponent<LivingCitiesMod>().GetSaveData()).Settlements)
+                foreach (var home in settlement.Households)
+                    foreach (var resident in home.Residents)
+                        if (resident.Id == id) foundDead = !resident.IsAlive;
+            if (!foundDead || streets.FindActor(id)) throw new InvalidOperationException("Dead resident respawned after load.");
+            Debug.Log("LIVING_CITIES_TOWN_CONTINUITY_PASS: re-entry, one actor, death and interior save/load; resident=" + id);
         }
         private static void VerifyGeometry(BuildingDirectory directory, CityNavigation navigation)
         {

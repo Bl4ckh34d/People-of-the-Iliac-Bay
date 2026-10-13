@@ -10,6 +10,34 @@ namespace LivingCities.Tests
             route ?? new[] { new RoutePoint(0, 0), new RoutePoint(100, 0) }, 480, 1020, 20, 360, 1320);
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Visits arrive while open and leave time for a walking-speed return", () => {
+                var p = DailySchedule.DayVisit(10, 20, new[] { new RoutePoint(0, 0), new RoutePoint(130, 0) },
+                    600, 720, 30, 1.3, 12, 0, 360, 1320);
+                Check.Equal(Activity.Home, p.Evaluate(579).Activity);
+                Check.Near(65, p.Evaluate(590).Position.X);
+                Check.Equal(Activity.Visit, p.Evaluate(600).Activity);
+                Check.Equal(20, p.Evaluate(600).BuildingKey);
+                Check.Equal(Activity.Travel, p.Evaluate(630).Activity);
+                Check.Equal(Activity.Home, p.Evaluate(650).Activity);
+            }));
+            cases.Add(("Visit slots are reproducible and constrained by closing and bedtime", () => {
+                var route = new[] { new RoutePoint(0, 0), new RoutePoint(130, 0) };
+                var p = DailySchedule.DayVisit(10, 20, route, 600, 720, 30, 1.3, 12, 90, 360, 1320);
+                Check.Equal(Activity.Visit, p.Evaluate(719).Activity);
+                Check.Equal(Activity.Travel, p.Evaluate(720).Activity);
+                Check.Equal(Activity.Home, p.Evaluate(740).Activity);
+                Check.Equal(p.Evaluate(719).Activity, p.Evaluate(1440 * 1000 + 719).Activity);
+                var impossible = DailySchedule.DayVisit(10, 20, route, 600, 610, 30, 1.3, 12, 0, 360, 1320);
+                Check.Equal(Activity.Home, impossible.Evaluate(600).Activity);
+            }));
+            cases.Add(("Visit planning handles missing routes and rejects invalid speeds", () => {
+                Check.Equal(Activity.Home, DailySchedule.DayVisit(10, 20, new RoutePoint[0], 600, 720, 30,
+                    1.3, 12, 0, 360, 1320).Evaluate(600).Activity);
+                var route = new[] { new RoutePoint(0, 0), new RoutePoint(10, 0) };
+                foreach (double speed in new[] { 0d, -1, double.NaN, double.PositiveInfinity })
+                    Check.Throws<ArgumentOutOfRangeException>(() => DailySchedule.DayVisit(10, 20, route, 600, 720, 30,
+                        speed, 12, 0, 360, 1320));
+            }));
             cases.Add(("Travel advances within a game minute and between fractional seconds", () => {
                 var p = Work();
                 Check.Near(52.5, p.EvaluateSeconds(470 * 60 + 30).Position.X);

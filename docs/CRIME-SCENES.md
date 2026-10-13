@@ -1,0 +1,25 @@
+# Indoor murder alarms and crime-scene guards
+
+User refinements, 14 October 2026. These distinguish eyewitness alarm, body discovery and a known murderer.
+
+If a house has one occupant and the player kills that person in one blow without another witness, do not send an immediate guard alarm. On the player's departure, schedule guards from the finite roster to travel to and enter the house. They discover the body and clear it upon arrival. This specific discovery cleanup supersedes the generic one-day corpse-cleanup delay for this case. No teleporting reinforcements and no attribution of an unwitnessed murder to the player merely because a corpse exists.
+
+From the guards' arrival, hold the crime scene for six game hours. If the player returns during that interval, guards attempt to take the player into custody as for a crime. Track this explicitly as crime-scene suspicion/custody behavior, separately from a witnessed murderer identity. After six hours the occupation expires and guards resume normal duty; the house remains vacant until its independent recovery/sale deadline. Do not use an unobserved corpse cleanup event to invent a witness.
+
+Where other occupants are present, survivors react immediately. Stationary indoor NPCs must become active actors rather than remaining inert flats: those capable of fighting can become hostile and attack, while others flee outside and inform guards. A successful fleeing witness raises the alarm; responding guards pursue the player as hostile. The final clarification permits fight-or-flight, superseding the preceding blanket instruction that all survivors flee. Preserve persistent identity, faction, relationships, service ownership and quest bindings when changing actor mode. Do not replace a quest NPC with an unrelated generic enemy.
+
+Keep witness knowledge and readiness to fight separate. Household members absent elsewhere do not witness the killing automatically. Partner-killing hostility and bereavement remain applicable, with flight to obtain help a possible immediate response. A murder that is not silent/instant, outside witnesses, failed escape or guards already present can follow the broader perception system; this one-blow special case is not blanket impunity for every indoor attack.
+
+Use separate persisted events for killing, witnessing, fleeing/alarm, player departure, guard dispatch/arrival, corpse removal, custody suspicion and six-hour occupation expiry. Timers use game time and survive save/load/absence. Dispatch only available guards; tiny hamlets with no garrison cannot conjure responders. Record a pending report/discovery and respect later external response capacity rather than violating finite rosters.
+
+## Public incidents and bounded warnings
+
+Nearby NPCs who perceive a public killing flee toward home or a reachable safe interior such as a guild, castle or shop. Refuge selection respects access, opening hours and actual routes. While fleeing, each direct witness alerts guards within a configurable local radius and warns at most the next two eligible NPCs encountered nearby. Those recipients may flee or fight according to their capabilities and disposition, but do not relay secondhand warnings further. This one-hop rule bounds propagation from each witness and prevents an unlimited town-wide chain reaction.
+
+Give each incident a stable ID. Deduplicate reports and recipients, retain each witness's two-recipient budget across actor unloading/save-load, and expire local alarm opportunities. A recipient already aware of this incident is not a new warning recipient. Multiple direct witnesses can each warn two people; genuinely new witnessed violence can create a new incident. Guard alerts update the same finite response rather than spawning a fresh squad for every report. Exposure to the same corpse or repeated reporting must not reset budgets.
+
+## Player-caused deaths and quest compatibility
+
+The user explicitly superseded blanket quest-NPC invulnerability: deliberate player kills may permanently kill important NPCs and break their quests. Preserve the NPC's technical identity, quest bindings and save integrity; do not silently resurrect or substitute another actor to repair story consequences. Keep protection from random background events as the default, separately from player-caused death policy. The current foundation's `IsQuestProtected` death restriction remains implemented until a versioned policy migration separates these cases.
+
+Acceptance cases: silent single-occupant kill while player stays; exit then travel delay; corpse removal only after arrival; return before/after six-hour expiry; multiple occupants fighting/fleeing; stationary-to-active identity continuity; absent household member; no available guards; save/load during each phase; deliberate player kill of a quest NPC; ambient-event protection; owned-property handling; two warnings per direct witness; no secondhand relay; duplicate reports; multiple witnesses; save/load of warning budgets. This behavior is planned; current vanilla combat still spawns guards and the temporary hook probe does not implement these crime rules.

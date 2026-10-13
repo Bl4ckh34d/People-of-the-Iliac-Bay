@@ -21,15 +21,20 @@ namespace LivingCities.DFU
         }
         private readonly CityNavigation navigation;
         private readonly Transform origin;
+        private readonly Terrain terrain;
         public readonly SortedDictionary<int, Entrance> Entrances = new SortedDictionary<int, Entrance>();
         public int RejectedDoors { get; private set; }
         public int Width { get { return navigation.NavGridWidth; } }
         public int Height { get { return navigation.NavGridHeight; } }
-        public TownGeometry(BuildingDirectory directory, CityNavigation navigation)
+        public TownGeometry(BuildingDirectory directory, CityNavigation navigation, bool mapEntrances = true)
         {
             if (directory == null || navigation == null) throw new ArgumentNullException();
             this.navigation = navigation;
             origin = directory.transform;
+            var location = directory.GetComponent<DaggerfallLocation>();
+            var terrainObject = GameManager.Instance.StreamingWorld.GetTerrainFromPixel(location.Summary.MapPixelX, location.Summary.MapPixelY);
+            terrain = terrainObject ? terrainObject.GetComponent<Terrain>() : null;
+            if (!mapEntrances) return;
             foreach (var owner in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
             {
                 if (owner.Doors == null) continue;
@@ -61,6 +66,37 @@ namespace LivingCities.DFU
         public Vector3 SceneCell(GridCell cell)
         { return navigation.WorldToScenePosition(navigation.NavGridToWorldPosition(new DFPosition(cell.X, cell.Z))); }
         public Vector3 SceneDoor(Entrance entrance) { return origin.TransformPoint(entrance.LocalDoor); }
+        public Vector3 ScenePoint(RoutePoint point)
+        {
+            Vector3 result = origin.TransformPoint(new Vector3((float)point.X, 0, (float)point.Z));
+            if (terrain) result.y = terrain.SampleHeight(result) + GameManager.Instance.StreamingWorld.WorldCompensation.y;
+            return result;
+        }
+        public List<RoutePoint> RouteBetween(Entrance from, Entrance to)
+        {
+            var cells = GridPathfinder.Find(this, from.Cell, to.Cell, 30000);
+            var points = new List<RoutePoint>();
+            if (cells.Count == 0) return points;
+            points.Add(new RoutePoint(from.LocalDoor.x, from.LocalDoor.z));
+            foreach (var cell in cells)
+            {
+                var local = origin.InverseTransformPoint(SceneCell(cell));
+                points.Add(new RoutePoint(local.x, local.z));
+            }
+            points.Add(new RoutePoint(to.LocalDoor.x, to.LocalDoor.z));
+            for (int i = 1; i < points.Count; i++)
+            {
+                Vector3 a = ScenePoint(points[i - 1]), b = ScenePoint(points[i]);
+                Vector3 delta = b - a;
+                float distance = delta.magnitude;
+                if (distance < 0.001f) continue;
+                foreach (float height in new[] { 0.4f, 1.0f })
+                    foreach (var hit in Physics.SphereCastAll(a + Vector3.up * height, 0.2f, delta.normalized,
+                        distance, ~0, QueryTriggerInteraction.Ignore))
+                        if (IsStaticBlocker(hit.collider)) return new List<RoutePoint>();
+            }
+            return points;
+        }
         private bool FindEntranceCell(Vector3 door, out GridCell result)
         {
             var near = navigation.WorldToNavGridPosition(navigation.SceneToWorldPosition(door));
