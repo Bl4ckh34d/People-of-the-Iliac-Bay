@@ -18,6 +18,7 @@ namespace LivingCities.DFU
             public Resident Resident;
             public uint SurnameSeed;
             public DailySchedule Schedule;
+            public ResidentRoutine Routine;
         }
         private BuildingDirectory directory;
         private CityNavigation navigation;
@@ -34,6 +35,27 @@ namespace LivingCities.DFU
         private readonly Dictionary<string, int> indoorSlots = new Dictionary<string, int>();
         private SettlementPopulation population;
         private SleepingArt sleepingArt;
+        private CivilianResponses responses;
+        private IDisposable reactionHook;
+        public bool ReactionsEnabled { get; set; }
+        public void InstallReactionHook()
+        {
+            var type = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
+            reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Action<Transform>(BeforeWeaponHit) });
+        }
+        private void BeforeWeaponHit(Transform target)
+        {
+            if (!ReactionsEnabled || !Ready || responses == null || !target) return;
+            var actor = target.GetComponent<ResidentActor>();
+            if (!actor || !actor.Resident.IsAlive || FindActor(actor.Resident.Id) != actor) return;
+            double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            responses.Murder(actor, actors.Values, id => GetState(id, now).Activity == Activity.Sleep, now,
+                interior ? interior.EntryDoor.buildingKey : -1);
+        }
+        private AlarmPerson Reaction(string id, double now)
+        { return ReactionsEnabled && responses != null ? responses.Active(id, now) : null; }
+        public bool IsAlarmed(string id)
+        { return Reaction(id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()) != null; }
         private readonly Dictionary<int, BedAnchor> indoorBeds = new Dictionary<int, BedAnchor>();
         private readonly Dictionary<string, BedAssignment> bedClaims = new Dictionary<string, BedAssignment>();
         public void SetSleepingArt(Mod mod) { if (sleepingArt != null) sleepingArt.Dispose(); sleepingArt = new SleepingArt(mod); }
@@ -77,6 +99,7 @@ namespace LivingCities.DFU
             if (town.MapID != 206728581) { Clear(); return; }
             if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
             Clear(); directory = town; navigation = nav; this.population = population;
+            responses = new CivilianResponses(store, population.SettlementId);
             building = StartCoroutine(Build(population, store, wake, sleep));
         }
         private IEnumerator Build(SettlementPopulation population, WorldStateStore store, int wake, int sleep)
@@ -165,7 +188,7 @@ namespace LivingCities.DFU
             var schedule = routine.DestinationKey < 0 ? DailySchedule.HomeDay(resident.HomeKey, wake * 60, sleep * 60) :
                 DailySchedule.DayVisit(resident.HomeKey, routine.DestinationKey, points, routine.OpenMinute, routine.CloseMinute,
                     20 + (int)(resident.AppearanceSeed % 41), 1.3, 12, resident.AppearanceSeed, wake * 60, sleep * 60);
-            plans.Add(new Plan { Resident = resident, Schedule = schedule,
+            plans.Add(new Plan { Resident = resident, Schedule = schedule, Routine = routine,
                 SurnameSeed = surnameSeed });
         }
         private void FinishBuild(int settlementId)
@@ -213,6 +236,9 @@ namespace LivingCities.DFU
                 if (interior) Debug.Log("LIVING_CITIES_INTERIOR_ANCHORS: building=" + interior.EntryDoor.buildingKey +
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
+            if (ReactionsEnabled && responses != null)
+                responses.WarnNearby(actors.Values, seconds, interior ? interior.EntryDoor.buildingKey : -1,
+                    id => GetState(id, seconds).Activity == Activity.Sleep);
             if (game.PlayerEnterExit.IsPlayerInside)
             {
                 if (interior) UpdateInterior(seconds); else ClearActors();
@@ -224,9 +250,13 @@ namespace LivingCities.DFU
                 var state = plan.Schedule.EvaluateSeconds(seconds);
                 ResidentActor actor;
                 actors.TryGetValue(plan.Resident.Id, out actor);
+                var reaction = Reaction(plan.Resident.Id, seconds);
                 Vector3 position = state.Activity == Activity.Travel ? geometry.ScenePoint(state.Position) : Vector3.zero;
+                if (reaction != null && reaction.HasPosition)
+                    position = directory.transform.TransformPoint(new Vector3((float)reaction.X, (float)reaction.Y, (float)reaction.Z));
                 float limit = actor ? 165 : 140;
-                bool visible = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && state.Activity == Activity.Travel &&
+                bool outside = reaction != null && reaction.HasPosition ? reaction.BuildingKey == -1 && !reaction.ReachedRefuge : state.Activity == Activity.Travel;
+                bool visible = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && outside &&
                     (position - player).sqrMagnitude <= limit * limit;
                 if (!visible)
                 {
@@ -243,6 +273,11 @@ namespace LivingCities.DFU
                     actors.Add(plan.Resident.Id, actor);
                     go.SetActive(true);
                 }
+                if (reaction != null && reaction.HasPosition)
+                {
+                    CivilianResponses.Move(actor, reaction, plan.Routine, directory.transform, geometry, null);
+                    continue;
+                }
                 var next = plan.Schedule.EvaluateSeconds(seconds + 0.1);
                 Vector3 direction = next.Activity == Activity.Travel ? geometry.ScenePoint(next.Position) - position :
                     position - geometry.ScenePoint(plan.Schedule.EvaluateSeconds(Math.Max(0, seconds - 0.1)).Position);
@@ -255,7 +290,10 @@ namespace LivingCities.DFU
             {
                 var state = plan.Schedule.EvaluateSeconds(seconds);
                 ResidentActor actor; actors.TryGetValue(plan.Resident.Id, out actor);
-                bool present = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && state.Activity != Activity.Travel && state.BuildingKey == interior.EntryDoor.buildingKey;
+                var reaction = Reaction(plan.Resident.Id, seconds);
+                bool atHome = reaction != null && reaction.HasPosition ? reaction.BuildingKey == interior.EntryDoor.buildingKey :
+                    state.Activity != Activity.Travel && state.BuildingKey == interior.EntryDoor.buildingKey;
+                bool present = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && atHome;
                 if (!present)
                 {
                     if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
@@ -277,8 +315,13 @@ namespace LivingCities.DFU
                     actor.Initialize(plan.Resident, plan.SurnameSeed, navigation);
                     actors.Add(plan.Resident.Id, actor); go.SetActive(true);
                 }
+                if (reaction != null && reaction.HasPosition && !reaction.ReachedRefuge)
+                {
+                    CivilianResponses.Move(actor, reaction, plan.Routine, interior.transform, geometry, indoorGeometry);
+                    continue;
+                }
                 BedAssignment bedClaim;
-                var art = SleepEnabled && state.Activity == Activity.Sleep && sleepingArt != null &&
+                var art = reaction == null && SleepEnabled && state.Activity == Activity.Sleep && sleepingArt != null &&
                     bedClaims.TryGetValue(plan.Resident.Id, out bedClaim) && bedClaim.SharingCount == 1 ?
                     sleepingArt.ForResident(plan.Resident) : null;
                 if (art != null)
@@ -301,6 +344,7 @@ namespace LivingCities.DFU
             needsExterior = false;
             interior = null; indoorGeometry = null; indoorSlots.Clear();
             population = null; indoorBeds.Clear(); bedClaims.Clear();
+            responses = null;
             if (ownsVanilla && vanilla)
             {
                 foreach (var pair in hiddenVanilla) if (pair.Key) pair.Key.SetActive(pair.Value);
@@ -308,6 +352,6 @@ namespace LivingCities.DFU
             }
             hiddenVanilla.Clear(); ownsVanilla = false; vanilla = null; directory = null; geometry = null;
         }
-        private void OnDestroy() { Clear(); if (sleepingArt != null) sleepingArt.Dispose(); }
+        private void OnDestroy() { Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); }
     }
 }

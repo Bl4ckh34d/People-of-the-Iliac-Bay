@@ -14,6 +14,12 @@ Acceptance cases: nearby patrol versus distant post with measurably different ar
 
 ## Indoor murder and discovery
 
+### Sleeping deaths (latest decision, 14 October 2026)
+
+One person occupies each bed, and household capacity equals actual bed count with no independent five-person cap. This supersedes the earlier shared-bed kill-all decision. A lethal hit kills that bed's sole occupant. Old saves retain their identities, but excess legacy residents receive no shared-bed assignments. Fresh compliant test populations are separate from preserved old saves.
+
+Slain-in-bed sprites are still missing. Add covered corpse poses with the same green blanket and white pillows, distinguishable from living sleepers and retaining appearance. Bodies must remain until the established discovery/cleanup rule removes them; save/reload must preserve that state. The current preview removes deceased actors immediately and does not yet implement corpse persistence or crime-scene cleanup.
+
 If a house has one occupant and the player kills that person in one blow without another witness, do not send an immediate guard alarm. On the player's departure, schedule guards from the finite roster to travel to and enter the house. They discover the body and clear it upon arrival. This specific discovery cleanup supersedes the generic one-day corpse-cleanup delay for this case. No teleporting reinforcements and no attribution of an unwitnessed murder to the player merely because a corpse exists.
 
 From the guards' arrival, hold the crime scene for six game hours. If the player returns during that interval, guards attempt to take the player into custody as for a crime. Track this explicitly as crime-scene suspicion/custody behavior, separately from a witnessed murderer identity. After six hours the occupation expires and guards resume normal duty; the house remains vacant until its independent recovery/sale deadline. Do not use an unobserved corpse cleanup event to invent a witness.

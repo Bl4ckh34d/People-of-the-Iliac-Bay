@@ -40,12 +40,9 @@ namespace LivingCities.Core
                     if (resident.AgeGroup != age || !assigned.Add(resident.Id)) continue;
                     List<Resident> target = null;
                     foreach (var occupants in beds.Values)
-                        if (target == null || occupants.Count < target.Count) target = occupants;
+                        if (occupants.Count == 0) { target = occupants; break; }
+                    if (target == null) continue;
                     target.Add(resident);
-                    Resident partner;
-                    if (age == ResidentAgeGroup.Adult && resident.PartnerId != null &&
-                        residents.TryGetValue(resident.PartnerId, out partner) && partner.AgeGroup == ResidentAgeGroup.Adult &&
-                        partner.PartnerId == resident.Id && assigned.Add(partner.Id)) target.Add(partner);
                 }
             foreach (var bed in beds)
                 for (int slot = 0; slot < bed.Value.Count; slot++)

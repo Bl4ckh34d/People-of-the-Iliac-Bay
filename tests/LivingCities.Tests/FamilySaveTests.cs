@@ -27,12 +27,12 @@ namespace LivingCities.Tests
         {
             cases.Add(("Family creation keeps saved residents when settings or housing change", () => {
                 var store = new WorldStateStore(42);
-                var profiles = Enumerable.Range(1, 100).Select(k => new HomeProfile(k, 4, 200));
+                var profiles = Enumerable.Range(1, 100).Select(k => new HomeProfile(k, 5, 200));
                 var town = store.GetOrCreateFamilies(100, profiles);
                 Check.True(town.Households.Any(h => h.Residents.Count == 5));
                 var father = town.Households.First(h => h.Residents.Count == 5).Residents[0];
                 father.IsAlive = false; string before = Encode(store.Snapshot());
-                Check.True(object.ReferenceEquals(town, store.GetOrCreateFamilies(100, new[] { new HomeProfile(999) }, 1)));
+                Check.True(object.ReferenceEquals(town, store.GetOrCreateFamilies(100, new[] { new HomeProfile(999) })));
                 Check.Equal(before, Encode(store.Snapshot()));
                 store.SetRoutines(Visit(father.Id)); father.IsAlive = true;
                 Check.True(store.Snapshot().Settlements[0].Households.SelectMany(h => h.Residents).Single(r => r.Id == father.Id).IsAlive);
@@ -58,7 +58,7 @@ namespace LivingCities.Tests
                     if (version == 1) old.Routines = null;
                     else old.Routines.Add(Visit("old1"));
                     var store = new WorldStateStore(0); store.Restore(old); var saved = store.Snapshot();
-                    Check.Equal(4, saved.Version); var home = saved.Settlements[0].Households[0];
+                    Check.Equal(5, saved.Version); var home = saved.Settlements[0].Households[0];
                     Check.Equal(2, home.Residents.Count);
                     Check.Equal(StableSeed.Combine(42, 100, 10, 0xfffffffe), home.SurnameSeed);
                     Check.Equal("old0", home.Residents[0].Id); Check.Equal(2u, home.Residents[0].AppearanceSeed);

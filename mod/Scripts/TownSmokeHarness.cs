@@ -154,6 +154,7 @@ namespace LivingCities.DFU
         {
             var game = GameManager.Instance;
             var adapter = GetComponent<LivingCitiesMod>();
+            var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
             string expectedPopulation = null;
             // Inside, outside, then town return exercise real save slots and streamed
@@ -198,6 +199,20 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (!requireFamily && Array.IndexOf(probeArguments, "-livingcities-response-probe") >= 0 &&
+                Array.IndexOf(probeArguments, "-livingcities-bed-probe") < 0 && Array.IndexOf(probeArguments, "-livingcities-sleep-probe") < 0)
+            {
+                int key = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - family home");
+                if (key < 0) throw new InvalidOperationException("Focused response probe requires the saved family fixture.");
+                loaded = false; game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
+                float deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Response family load timed out.");
+                yield return new WaitForSecondsRealtime(1);
+                yield return CivilianResponseProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: fixture loads and focused civilian response; character=" + character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-delivery-probe") >= 0 &&
                 Array.IndexOf(probeArguments, "-livingcities-quest-binding-probe") < 0 &&
                 Array.IndexOf(probeArguments, "-livingcities-quest-probe") < 0 &&
@@ -212,6 +227,8 @@ namespace LivingCities.DFU
             }
             yield return VerifyStreets();
             yield return VerifyFamilies(mapId, requireFamily);
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-response-probe") >= 0)
+                yield return CivilianResponseProbe.Run();
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-sleep-probe") >= 0)
                 yield return SleepProbe.Run();
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-bed-probe") >= 0)
@@ -254,6 +271,16 @@ namespace LivingCities.DFU
             }
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             var profiles = HousingSurvey.Read(directory);
+            if (required || town.Households.TrueForAll(h => h.BedCapacity >= 0))
+            {
+                foreach (var home in town.Households)
+                {
+                    var profile = profiles.Find(p => p.BuildingKey == home.BuildingKey);
+                    if (profile == null || home.BedCapacity != Math.Max(0, profile.BedCount) || home.Residents.Count > home.BedCapacity)
+                        throw new InvalidOperationException("Fresh population exceeds real bed capacity.");
+                }
+                Debug.Log("LIVING_CITIES_TOWN_CAPACITY_PASS: every fresh household fits actual bed count.");
+            }
             if (profiles.Count != town.Households.Count || !profiles.Exists(p => p.BedCount > 0 && p.FootprintArea > 0))
                 throw new InvalidOperationException("Runtime housing survey missing actual beds or footprints.");
             // Enter a family home in the morning; sleep poses are a later milestone.

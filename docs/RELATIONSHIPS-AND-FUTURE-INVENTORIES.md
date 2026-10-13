@@ -1,5 +1,7 @@
 # Relationships, memory, and future inventories
 
+> Current amendment, 14 October 2026: one NPC per bed; maximum household residents equals actual bed count, with no separate five-person cap. Preserve old saves and use a fresh compliant test population. Shared-bed rendering, kill-all-bed logic and separate head/blanket layers are superseded. Keep complete green-blanket/white-pillow single-sleeper sprites. Children may inherit either parent's race; keep existing child sprites now. Gameplay takes priority over art. See [current citizen behavior and next guard work](CIVILIAN-RESPONSES.md). Earlier checkpoint descriptions below remain historical evidence.
+
 User additions on 13 October 2026. These extend the active mod goal without replacing its earlier requirements.
 
 Verified 0.3.0 checkpoint, 14 October: new households now use soft bed/size preferences, up to five residents, shared surnames and persistent sex/age/parent/partner fields. Legacy adults remain unchanged. Home-only child flats and a brief greeting pass actual-player save/load tests; outdoor play, richer family dialogue, sleeping and relationships beyond family links remain unfinished. Sleeping sprites for all NPC flats are the first art production step when home/tavern sleeping is implemented. Complete animation and child-diversity requirements remain in `DIRECTIONAL-CIVILIAN-ANIMATION.md`.

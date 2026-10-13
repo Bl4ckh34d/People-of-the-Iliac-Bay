@@ -9,10 +9,9 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
-            cases.Add(("Family setting permits five-person households", () => {
-                var options = new RuntimeOptions(true, 5, 6, 22, 1, true);
-                var town = Population.CreateFamilies(42, 100, Enumerable.Range(1, 200).Select(k => new HomeProfile(k, 3, 200)), options.HouseholdLimit);
-                Check.True(town.Households.Any(h => h.Residents.Count == 5));
+            cases.Add(("Household capacity comes from beds rather than a settings cap", () => {
+                var town = Population.CreateFamilies(42, 100, Enumerable.Range(1, 200).Select(k => new HomeProfile(k, 6, 200)));
+                Check.True(town.Households.Any(h => h.Residents.Count == 6));
             }));
             cases.Add(("Household setting caps new population", () => {
                 var homes = Enumerable.Range(1, 200).ToArray();
@@ -34,9 +33,8 @@ namespace LivingCities.Tests
                 Check.Throws<ArgumentOutOfRangeException>(() => Population.Create(42, 100, new[] { 1 }, 4));
             }));
             cases.Add(("Edited configuration is normalized into safe schedule bounds", () => {
-                var lower = new RuntimeOptions(false, -2, -900, -900, 0, false);
-                var upper = new RuntimeOptions(true, 99, 999, 999, 999, true);
-                Check.Equal(1, lower.HouseholdLimit); Check.Equal(5, upper.HouseholdLimit);
+                var lower = new RuntimeOptions(false, -900, -900, 0, false);
+                var upper = new RuntimeOptions(true, 999, 999, 999, true);
                 Check.Equal(1, lower.RefreshSeconds); Check.Equal(10, upper.RefreshSeconds);
                 Check.True(!lower.Enabled && !lower.DiagnosticsEnabled && upper.Enabled && upper.DiagnosticsEnabled);
                 var lowPlan = DailySchedule.HomeDay(1, lower.WakeHour * 60, lower.SleepHour * 60);
@@ -45,8 +43,8 @@ namespace LivingCities.Tests
                 Check.Equal(Activity.Sleep, highPlan.Evaluate(0).Activity);
             }));
             cases.Add(("Normal settings preserve requested values", () => {
-                var options = new RuntimeOptions(true, 2, 7, 21, 4, true);
-                Check.Equal(2, options.HouseholdLimit); Check.Equal(7, options.WakeHour);
+                var options = new RuntimeOptions(true, 7, 21, 4, true);
+                Check.Equal(7, options.WakeHour);
                 Check.Equal(21, options.SleepHour); Check.Equal(4, options.RefreshSeconds);
             }));
         }

@@ -17,6 +17,8 @@ namespace LivingCities.DFU
         public MobilePersonNPC Person { get; private set; }
         private DaggerfallEntity entity;
         private SleepingPose sleeping;
+        public float NextCounterattack;
+        public int Counterattacks;
         public bool IsSleeping { get { return sleeping && sleeping.Active; } }
         public void Sleep(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
         {

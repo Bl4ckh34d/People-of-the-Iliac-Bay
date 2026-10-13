@@ -1,5 +1,7 @@
 # Vanilla settlement bed census — 14 October 2026
 
+> Current amendment, 14 October 2026: one NPC per bed; maximum household residents equals actual bed count, with no separate five-person cap. Preserve old saves and use a fresh compliant test population. Shared-bed rendering, kill-all-bed logic and separate head/blanket layers are superseded. Keep complete green-blanket/white-pillow single-sleeper sprites. Children may inherit either parent's race; keep existing child sprites now. Gameplay takes priority over art. See [current citizen behavior and next guard work](CIVILIAN-RESPONSES.md). Earlier checkpoint descriptions below remain historical evidence.
+
 Read-only scan of the installed original game assets through pinned DFU 1.1.1 readers. `BedCensus.Run` visited 3,444 cities, hamlets and villages, using 491 distinct RMB blocks and 5,780 block/interior record combinations. The editor's model catalog labels models 41000, 41001 and 41002 as beds. These counts describe model instances, not sleeping capacity or navigable sleep anchors.
 
 | Internal building type | Distinct block/interior records used | Bed counts observed |

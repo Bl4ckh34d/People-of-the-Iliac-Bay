@@ -6,22 +6,23 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 4;
+        public int Version = 5;
         public uint WorldSeed;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
         public List<TownRoutineState> Routines = new List<TownRoutineState>();
         public List<QuestResidentBinding> QuestBindings = new List<QuestResidentBinding>();
+        public List<CivilianIncident> AlarmIncidents = new List<CivilianIncident>();
     }
     public sealed partial class WorldStateStore
     {
         private WorldState state;
         public uint WorldSeed { get { return state.WorldSeed; } }
         public WorldStateStore(uint seed) { state = new WorldState { WorldSeed = seed }; }
-        public SettlementPopulation GetOrCreateFamilies(int settlementId, IEnumerable<HomeProfile> homes, int maxResidents = 5)
+        public SettlementPopulation GetOrCreateFamilies(int settlementId, IEnumerable<HomeProfile> homes)
         {
             foreach (SettlementPopulation existing in state.Settlements)
                 if (existing.SettlementId == settlementId) return existing;
-            SettlementPopulation created = Population.CreateFamilies(state.WorldSeed, settlementId, homes, maxResidents);
+            SettlementPopulation created = Population.CreateFamilies(state.WorldSeed, settlementId, homes);
             state.Settlements.Add(created);
             return created;
         }
@@ -55,7 +56,7 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 4, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 5, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             var settlements = new HashSet<int>();
@@ -71,8 +72,12 @@ namespace LivingCities.Core
                 {
                     Require(home != null, "Null household.");
                     Require(home.BuildingKey >= 0 && homes.Add(home.BuildingKey), "Invalid or duplicate household.");
-                    Require(home.Residents != null && home.Residents.Count <= (source.Version < 3 ? 3 : 5), "Missing or overcrowded household residents.");
+                    int bedCapacity = source.Version < 5 ? -1 : home.BedCapacity;
+                    Require(bedCapacity >= -1, "Invalid saved bed capacity.");
+                    Require(home.Residents != null && home.Residents.Count <=
+                        (source.Version < 3 ? 3 : bedCapacity >= 0 ? bedCapacity : 5), "Missing or overcrowded household residents.");
                     var homeCopy = new Household { BuildingKey = home.BuildingKey,
+                        BedCapacity = bedCapacity,
                         SurnameSeed = source.Version < 3 ? StableSeed.Combine(source.WorldSeed, (uint)town.SettlementId,
                             (uint)home.BuildingKey, 0xfffffffe) : home.SurnameSeed };
                     foreach (Resident resident in home.Residents)
@@ -139,6 +144,7 @@ namespace LivingCities.Core
                 copy.QuestBindings = source.QuestBindings;
                 copy.QuestBindings = CopyQuestBindings(copy);
             }
+            if (source.Version >= 5) copy.AlarmIncidents = CopyAlarms(source);
             return copy;
         }
         private static void ValidateFamily(Household home)

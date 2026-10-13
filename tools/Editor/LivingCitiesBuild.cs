@@ -65,6 +65,7 @@ public static class LivingCitiesBuild
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         VerifySerialization();
+        VerifyAlarmSerialization();
         VerifySettings();
         VerifyHousing();
         VerifyBeds();
@@ -237,7 +238,7 @@ public static class LivingCitiesBuild
             restored.Snapshot().QuestBindings[0].PersonName == "Anna Ashfield", "Published quest contract and largest native-serializable UID persistence");
 
         var profiles = new List<HomeProfile>();
-        for (int key = 1; key <= 100; key++) profiles.Add(new HomeProfile(key, 4, 200));
+        for (int key = 1; key <= 100; key++) profiles.Add(new HomeProfile(key, 5, 200));
         var familyTown = store.GetOrCreateFamilies(200, profiles);
         var family = familyTown.Households.Find(home => home.Residents.Count == 5);
         Require(family != null, "Five-person family fixture");
@@ -245,7 +246,7 @@ public static class LivingCitiesBuild
         serialized = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), serialized));
         Require(serialized == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Family FullSerializer round trip");
-        var savedFamily = restored.GetOrCreateFamilies(200, profiles, 1).Households.Find(home => home.BuildingKey == family.BuildingKey);
+        var savedFamily = restored.GetOrCreateFamilies(200, profiles).Households.Find(home => home.BuildingKey == family.BuildingKey);
         Require(savedFamily.Residents.Count == 5 && savedFamily.Residents[2].FatherId == family.Residents[0].Id &&
             savedFamily.Residents[2].AgeGroup == ResidentAgeGroup.Child && !savedFamily.Residents[0].IsAlive &&
             savedFamily.Residents[1].PartnerId == family.Residents[0].Id && savedFamily.SurnameSeed == family.SurnameSeed,
@@ -255,23 +256,39 @@ public static class LivingCitiesBuild
             string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
             var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
-            Require(migrated.Version == 4 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
+            Require(migrated.Version == 5 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
                 resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
                 home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
         }
         string schemaThree = "{\"Version\":3,\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"SurnameSeed\":876,\"Residents\":[{\"Id\":\"legacy-family\",\"HomeKey\":10,\"AppearanceSeed\":3,\"Sex\":1,\"IsAlive\":false}]}]}],\"Routines\":[]}";
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), schemaThree));
-        Require(restored.Snapshot().Version == 4 && restored.Snapshot().QuestBindings.Count == 0 &&
+        Require(restored.Snapshot().Version == 5 && restored.Snapshot().QuestBindings.Count == 0 &&
             restored.Snapshot().Settlements[0].Households[0].SurnameSeed == 876 &&
             !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
         Debug.Log("LIVING_CITIES_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
+    }
+    private static void VerifyAlarmSerialization()
+    {
+        var store = new WorldStateStore(42);
+        var town = store.GetOrCreate(99, new[] { 1, 2, 3, 4, 5 });
+        var people = new List<Resident>();
+        foreach (var home in town.Households) people.AddRange(home.Residents);
+        var alarm = store.RecordViolence(99, people[0].Id, 100);
+        store.Witness(alarm.Id, people[1].Id, 100);
+        Require(store.Warn(alarm.Id, people[1].Id, people[2].Id, 101), "First warning");
+        Require(store.Warn(alarm.Id, people[1].Id, people[3].Id, 102), "Second warning");
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        store.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(json == SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot()), "Native alarm ledger round trip");
+        Require(!store.Warn(alarm.Id, people[1].Id, people[4].Id, 103), "Warning budget survives native restore");
+        Debug.Log("LIVING_CITIES_ALARM_SERIALIZATION_PASS: identities, warnings, reaction and expiry survive native serialization.");
     }
     private static void VerifySettings()
     {
         string json = File.ReadAllText("Assets/Game/Mods/LivingCities/modsettings.json");
         var data = (ModSettingsData)SaveLoadManager.Deserialize(typeof(ModSettingsData), json);
         Require(data.GetValue<bool>("General", "Enabled"), "Simulation toggle default");
-        Require(data.GetValue<int>("Population", "HouseholdLimit") == 5, "Household slider default");
+        Require(data.GetValue<bool>("General", "CivilianReactions"), "Civilian reactions default");
         Require(data.GetValue<int>("DailyRoutine", "WakeHour") == 6, "Wake slider default");
         Require(data.GetValue<int>("DailyRoutine", "SleepHour") == 22, "Sleep slider default");
         Require(data.GetValue<bool>("DailyRoutine", "SleepingPoses"), "Sleeping poses default");
@@ -289,7 +306,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 4 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
+            Require(saved.Version == 5 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }

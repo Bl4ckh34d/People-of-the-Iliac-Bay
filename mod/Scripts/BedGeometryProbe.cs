@@ -33,7 +33,11 @@ namespace LivingCities.DFU
             }
             var claims = HomeBeds.Assign(home, keys);
             int living = home.Residents.FindAll(r => r.IsAlive).Count;
-            if (claims.Count != living) throw new InvalidOperationException("Shared beds capped the actual family.");
+            if (claims.Count != living) throw new InvalidOperationException("Compliant family is missing an exclusive bed.");
+            var occupied = new HashSet<int>();
+            foreach (var claim in claims)
+                if (claim.SharingCount != 1 || !occupied.Add(claim.BedRecordIndex))
+                    throw new InvalidOperationException("Multiple residents assigned to one bed.");
             string before = Signature(claims);
             // Reload the existing disposable fixture, then reconstruct from new scene objects.
             int save = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - family home");
@@ -86,7 +90,7 @@ namespace LivingCities.DFU
                     if (bed.ModelId == modelId) { VerifySurface(interior, bed); verifiedModels.Add(modelId); }
                 if (!verifiedModels.Contains(modelId)) throw new InvalidOperationException("Real bed fixture did not contain requested model.");
             }
-            Debug.Log("LIVING_CITIES_TOWN_BEDS_PASS: all three loaded mattress models, family sharing and save/load; familyBeds=" + beds.Count + "; residents=" + living);
+            Debug.Log("LIVING_CITIES_TOWN_BEDS_PASS: all three loaded mattress models, exclusive family beds and save/load; familyBeds=" + beds.Count + "; residents=" + living);
         }
         private static void VerifySurface(DaggerfallInterior interior, BedAnchor bed)
         {

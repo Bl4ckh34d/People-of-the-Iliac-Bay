@@ -2,6 +2,19 @@
 
 Verified 14 October 2026 in the isolated portable player with Basic Roads and Living Cities enabled.
 
+## Current bed-compliant fixture, version 0.3.3
+
+Use `LivingCitiesTest-f238d317`. New population: 162 candidate homes, 181 residents, eight children. Household occupancy never exceeds actual bed count; one NPC per bed. Older characters below remain preserved historical fixtures and should not be overwritten by current tests.
+
+- SAVE24: **Living Cities - inside Gothway Garden**.
+- SAVE25: **Living Cities - outside Gothway Garden**.
+- SAVE26: **Living Cities - interior continuity**.
+- SAVE27: **Living Cities - resident death**, disposable regression case.
+- SAVE28: **Living Cities - family home**, four-person home, building 131584.
+- SAVE29: **Living Cities - civilian response**, disposable post-crime fight/flight and save/load case.
+
+Start from SAVE24 or SAVE28 to explore ordinary behavior. SAVE29 includes a killing and native guard response. Native guards are still unlimited in this checkpoint; finite roster replacement is the next gameplay slice.
+
 ## Current family preview, version 0.3.0
 
 Use character `LivingCitiesTest-126494eb` for the current family preview:

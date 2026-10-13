@@ -1,5 +1,7 @@
 # Sleeping foundation checkpoint — 14 October 2026
 
+> Current amendment, 14 October 2026: one NPC per bed; maximum household residents equals actual bed count, with no separate five-person cap. Preserve old saves and use a fresh compliant test population. Shared-bed rendering, kill-all-bed logic and separate head/blanket layers are superseded. Keep complete green-blanket/white-pillow single-sleeper sprites. Children may inherit either parent's race; keep existing child sprites now. Gameplay takes priority over art. See [current citizen behavior and next guard work](CIVILIAN-RESPONSES.md). Earlier checkpoint descriptions below remain historical evidence.
+
 ## Version 0.3.2: female appearance and green blankets
 
 Sleeping now supports two generated adult appearances in unshared home beds: Breton male variant zero (archive 385) and female variant zero (archive 453). Each has a separately cached five-view atlas. Both atlases and the current flat-182/1 side study now use green blankets matching the original bed cover, with white pillows, as requested. Historical white studies are superseded. Full generation/edit prompts and source metadata are in `art/sleep/README.md`, `mobile-453-prompt.txt` and `green-blanket-edit-prompt.txt`. The female green PNG is 793×1984 pixels; this is still prototype art, not native-resolution production coverage.

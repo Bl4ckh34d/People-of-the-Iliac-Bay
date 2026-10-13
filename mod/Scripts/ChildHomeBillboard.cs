@@ -17,15 +17,15 @@ namespace LivingCities.DFU
             ClickAnywhereToClose = true;
         }
     }
-    // Home-only prototype. Directional child locomotion is a separate required asset
-    // milestone; this asset deliberately refuses movement rather than gliding.
+    // Classic single-flat fallback. Emergency movement is allowed while directional
+    // locomotion art remains deferred; movement must not fail because art is missing.
     public sealed class ChildHomeBillboard : MobilePersonAsset
     {
         private DaggerfallBillboard flat;
         public override bool IsIdle
         {
             get { return true; }
-            set { if (!value) throw new InvalidOperationException("Child movement requires directional animation assets."); }
+            set { }
         }
         public override void SetPerson(Races race, Genders gender, int variant, bool guard, int faceVariant, int faceRecord)
         {

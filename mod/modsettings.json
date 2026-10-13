@@ -8,6 +8,13 @@
       "Keys": [
         {
           "Value": true,
+          "Name": "CivilianReactions",
+          "Description": "Generated residents react to witnessed weapon kills: adults flee or counterattack, children flee, and fleeing direct witnesses warn at most two people. Interior retreat is room-level. Finite guards and original stationary NPC reactions remain in development.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
           "Name": "QuestHouseholds",
           "Description": "Pilot: bind new vanilla The Delivery Boy recipients to existing Gothway Garden households. Other quests keep native behavior. Disabling stops new bindings; already accepted names and quest targets remain stable.",
           "$version": "v1",
@@ -31,23 +38,6 @@
       "$version": "v1"
     },
     {
-      "Name": "Population",
-      "Description": "Changes affect initial allocation in newly visited settlements. Existing households remain intact.",
-      "IsAdvanced": false,
-      "Keys": [
-        {
-          "Min": 1,
-          "Max": 5,
-          "Value": 5,
-          "Name": "HouseholdLimit",
-          "Description": "Maximum residents in newly created households: up to two adults and three children. Beds and house size influence family size without hard bed limits. Existing households remain intact.",
-          "$version": "v1",
-          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
-        }
-      ],
-      "$version": "v1"
-    },
-    {
       "Name": "DailyRoutine",
       "Description": "Hours use the 24-hour clock. Controls home/sleep schedules and experimental bed poses; changes apply immediately.",
       "IsAdvanced": false,
@@ -55,7 +45,7 @@
         {
           "Value": true,
           "Name": "SleepingPoses",
-          "Description": "Experimental bed poses in Gothway Garden. Currently covers one male and one female appearance in unshared beds; other appearances and shared-family blankets are still in development. Turning this off restores standing sprites without changing schedules or saved identities.",
+          "Description": "Experimental complete single-sleeper poses in Gothway Garden. One NPC per bed. Currently covers one male and one female appearance; other appearances remain in development. Turning this off restores standing sprites without changing schedules or saved identities.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },

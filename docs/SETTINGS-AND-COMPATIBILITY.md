@@ -1,8 +1,12 @@
 # Settings and city-mod compatibility
 
+> Current amendment, 14 October 2026: one NPC per bed; maximum household residents equals actual bed count, with no separate five-person cap. Preserve old saves and use a fresh compliant test population. Shared-bed rendering, kill-all-bed logic and separate head/blanket layers are superseded. Keep complete green-blanket/white-pillow single-sleeper sprites. Children may inherit either parent's race; keep existing child sprites now. Gameplay takes priority over art. See [current citizen behavior and next guard work](CIVILIAN-RESPONSES.md). Earlier checkpoint descriptions below remain historical evidence.
+
 User requirement added 13 October 2026: provide broad, practical player control through a mod menu, and add city-overhaul patches after the vanilla implementation is stable. This is part of the active goal, not a separate project.
 
-Use DFU's native mod settings menu and live-settings callback. Add controls only when their corresponding behavior exists. Describe whether a setting takes effect immediately, affects future allocation only, or needs a reload. Disabling a subsystem must preserve its saved identities/deaths. The amended maximum is five for family households; beds and house size are soft allocation preferences, with shared beds allowed and most homes smaller. Preserve technical quest/save integrity while allowing the player's deliberate quest-NPC kills as later requested; separate background-event protection. The initial foundation used a 1–3 control before family-aware allocation and save migration.
+Use DFU's native mod settings menu and live-settings callback. Add controls only when their corresponding behavior exists. Describe whether a setting takes effect immediately, affects future allocation only, or needs a reload. Disabling a subsystem must preserve its saved identities/deaths. Household capacity now equals actual bed count, one person per bed, without a separate five-person cap. Preserve technical quest/save integrity while allowing the player's deliberate quest-NPC kills as later requested; separate background-event protection.
+
+Version 0.3.3 removes `Population/HouseholdLimit` and adds `General/CivilianReactions` (default true), retaining nine controls. This pilot controls generated-citizen fight-or-flight and one-hop warnings; disabling it retains saved incidents. Native guard replacement is not included yet. The older setting counts and hashes below describe historical checkpoints.
 
 Version 0.3.0 supersedes the earlier 1–3 limit described above: family allocation and schema-3 migration now support 1–5, default five. The isolated player's saved setting is also five; existing households are never rerolled.
 

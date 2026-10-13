@@ -28,7 +28,7 @@ namespace LivingCities.DFU
                 return questOffers;
             }
         }
-        private RuntimeOptions options = new RuntimeOptions(true, 5, 6, 22, 1, true);
+        private RuntimeOptions options = new RuntimeOptions(true, 6, 22, 1, true);
         private Mod mod;
         private StreetPopulation streets;
         private bool streetPopulationEnabled;
@@ -56,6 +56,7 @@ namespace LivingCities.DFU
             component.streets = host.AddComponent<StreetPopulation>();
             component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
+            component.streets.InstallReactionHook();
             component.mod = initParams.Mod;
             initParams.Mod.SaveDataInterface = component;
             initParams.Mod.LoadSettingsCallback = component.LoadSettings;
@@ -87,7 +88,22 @@ namespace LivingCities.DFU
             if (GameManager.Instance.TalkManager.CurrentNPCType != TalkManager.NPCType.Mobile) return;
             var person = GameManager.Instance.TalkManager.MobileNPC;
             var actor = person ? person.GetComponent<ResidentActor>() : null;
-            if (!actor || actor.Resident.AgeGroup != ResidentAgeGroup.Child || !actor.Resident.IsAlive) return;
+            if (!actor || !actor.Resident.IsAlive) return;
+            if (streets && streets.IsAlarmed(actor.Resident.Id))
+            {
+                redirectingChildTalk = true;
+                try
+                {
+                    DaggerfallUI.UIManager.PopWindow();
+                    var refusal = new DaggerfallWorkshop.Game.UserInterfaceWindows.DaggerfallMessageBox(DaggerfallUI.UIManager);
+                    refusal.SetText(new[] { person.NameNPC, "\"Stay away from me!\"" });
+                    refusal.ClickAnywhereToClose = true;
+                    DaggerfallUI.UIManager.PushWindow(refusal);
+                }
+                finally { redirectingChildTalk = false; }
+                return;
+            }
+            if (actor.Resident.AgeGroup != ResidentAgeGroup.Child) return;
             // Use the public window boundary only for this mod's child actors.
             // Native adult conversations and vanilla NPCs retain their own windows.
             redirectingChildTalk = true;
@@ -103,8 +119,9 @@ namespace LivingCities.DFU
             if (streets) streets.Clear();
             streetPopulationEnabled = settings.GetBool("General", "StreetPopulation");
             if (streets) streets.SleepEnabled = settings.GetBool("DailyRoutine", "SleepingPoses");
+            if (streets) streets.ReactionsEnabled = settings.GetBool("General", "CivilianReactions");
             options = new RuntimeOptions(settings.GetBool("General", "Enabled"),
-                settings.GetInt("Population", "HouseholdLimit"), settings.GetInt("DailyRoutine", "WakeHour"),
+                settings.GetInt("DailyRoutine", "WakeHour"),
                 settings.GetInt("DailyRoutine", "SleepHour"), settings.GetInt("Diagnostics", "RefreshSeconds"),
                 settings.GetBool("Diagnostics", "EnableF8Panel"));
             if (!options.DiagnosticsEnabled) panel = false;
@@ -164,7 +181,7 @@ namespace LivingCities.DFU
             if (directory == null || directory.BuildingCount == 0) { current = null; diagnostic = "Awaiting settlement layout."; return; }
             if (current == null || current.SettlementId != directory.MapID)
             {
-                current = store.GetOrCreateFamilies(directory.MapID, HousingSurvey.Read(directory), options.HouseholdLimit);
+                current = store.GetOrCreateFamilies(directory.MapID, HousingSurvey.Read(directory));
                 Debug.Log("LIVING_CITIES_SETTLEMENT: " + directory.MapID + "; households=" + current.Households.Count);
             }
             if (streets && streetPopulationEnabled)
@@ -189,7 +206,7 @@ namespace LivingCities.DFU
         private void OnGUI()
         {
             if (!panel) return;
-            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.2 — development diagnostics (F8)");
+            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.3 — development diagnostics (F8)");
             GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nSleeping: one male and one female appearance in unshared beds. Child play/reactions pending.");
         }
         public string TestStatus()

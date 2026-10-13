@@ -22,21 +22,21 @@ namespace LivingCities.Tests
 
         internal static void Add(List<(string, Action)> cases)
         {
-            cases.Add(("Parents share a bed while spare beds serve children", () => {
-                var beds = HomeBeds.Assign(Family(), new[] { 9, 3, 15 });
+            cases.Add(("Every family member including partners has an exclusive bed", () => {
+                var beds = HomeBeds.Assign(Family(), new[] { 9, 3, 15, 20, 25 });
                 var father = beds.Single(a => a.ResidentId == "father");
                 var mother = beds.Single(a => a.ResidentId == "mother");
-                Check.Equal(father.BedRecordIndex, mother.BedRecordIndex);
-                Check.True(father.SharingSlot != mother.SharingSlot);
-                Check.Equal(3, beds.Select(a => a.BedRecordIndex).Distinct().Count());
+                Check.True(father.BedRecordIndex != mother.BedRecordIndex);
+                Check.True(beds.All(a => a.SharingSlot == 0 && a.SharingCount == 1));
+                Check.Equal(5, beds.Select(a => a.BedRecordIndex).Distinct().Count());
                 Check.True(beds.Where(a => a.ResidentId.StartsWith("child")).All(a => a.BedRecordIndex != father.BedRecordIndex));
             }));
-            cases.Add(("One bed can be shared by five without capping household size", () => {
+            cases.Add(("Legacy oversized home cannot create shared bed claims or lose saved identities", () => {
                 var home = Family();
                 var beds = HomeBeds.Assign(home, new[] { 42 });
-                Check.Equal(5, beds.Count);
-                Check.True(beds.All(a => a.BedRecordIndex == 42 && a.SharingCount == 5));
-                Check.Equal(5, beds.Select(a => a.SharingSlot).Distinct().Count());
+                Check.Equal(1, beds.Count);
+                Check.True(beds.All(a => a.BedRecordIndex == 42 && a.SharingCount == 1));
+                Check.Equal(1, beds.Select(a => a.SharingSlot).Distinct().Count());
                 Check.True(beds.All(a => a.SharingSlot >= 0 && a.SharingSlot < a.SharingCount));
                 Check.Equal(5, home.Residents.Count);
             }));
@@ -49,9 +49,9 @@ namespace LivingCities.Tests
             }));
             cases.Add(("Deaths leave survivors in their existing bed slots", () => {
                 var home = Family();
-                var before = HomeBeds.Assign(home, new[] { 8, 9 });
+                var before = HomeBeds.Assign(home, new[] { 8, 9, 10, 11, 12 });
                 home.Residents[0].IsAlive = false; home.Residents[2].IsAlive = false;
-                var after = HomeBeds.Assign(home, new[] { 8, 9 });
+                var after = HomeBeds.Assign(home, new[] { 8, 9, 10, 11, 12 });
                 Check.Equal(3, after.Count);
                 Check.Equal(Signature(before.Where(a => a.ResidentId != "father" && a.ResidentId != "child-a")), Signature(after));
             }));

@@ -1,5 +1,7 @@
 # Directional civilian animation
 
+> Current amendment, 14 October 2026: one NPC per bed; maximum household residents equals actual bed count, with no separate five-person cap. Preserve old saves and use a fresh compliant test population. Shared-bed rendering, kill-all-bed logic and separate head/blanket layers are superseded. Keep complete green-blanket/white-pillow single-sleeper sprites. Children may inherit either parent's race; keep existing child sprites now. Gameplay takes priority over art. See [current citizen behavior and next guard work](CIVILIAN-RESPONSES.md). Earlier checkpoint descriptions below remain historical evidence.
+
 User amendments, 14 October 2026, including the expanded all-human coverage requirement. This is an essential part of the current mod, not only future visual polish. No generated sets are implemented or validated yet.
 
 ## Required behavior
