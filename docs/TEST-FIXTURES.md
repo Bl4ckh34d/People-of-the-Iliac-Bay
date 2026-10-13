@@ -18,6 +18,8 @@ The UI check opens the native mobile conversation boundary and verifies the brie
 
 Legacy fixture validation also passed on schema 3 without creating children or rerolling its 324 adults. SAVE7–SAVE10 belong to an earlier disposable allocation regression run and are not the recommended family preview. All earlier saves remain preserved.
 
+Optional `-QuestProbe` adds native quest identity checks after the normal tests. It creates/updates SAVE16, **Living Cities - quest identity probe**, on the same disposable character. This save contains a synthetic active quest bound to original tavern NPC Vannolda Woodston in building 65542. Movement, native activation, hide/show and reconstructed save/load passed. Use SAVE15 for the normal family preview. `QUEST-IDENTITY.md` records the exact scope and evidence. Scripted entries now perform native building discovery and activation setup; live input is disabled only in the automated process, preventing accidental door activation during assertions.
+
 ## Historical adult fixture, version 0.2.0
 
 - Character: `LivingCitiesTest-a2dd8579` (disposable developer character, god mode).

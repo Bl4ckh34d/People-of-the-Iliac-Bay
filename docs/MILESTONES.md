@@ -2,7 +2,7 @@
 
 Approved on 13 October 2026. The active Codex goal covers all milestones; this file records concrete acceptance evidence.
 
-- [ ] M1 Baseline and integration probes. Official assets and patched player verified; Unity compilation, Basic Roads and Living Cities builds/startup passed. Temporary standard-mod guard interception and actual inside/outside Gothway Garden saves/reloads passed in the shipped player. Remaining: quest identity probe.
+- [x] M1 Baseline and integration probes. Official assets and patched player verified; Unity compilation, Basic Roads and Living Cities builds/startup passed. Temporary standard-mod guard interception and actual inside/outside Gothway Garden saves/reloads passed in the shipped player. The quest identity probe now passes native clicks, in-place movement, hide/show and actual save/load reconstruction of an original NPC bound to a synthetic quest. This establishes integration feasibility, not full quest/service compatibility; see `QUEST-IDENTITY.md`.
 - [ ] M2 One-town persistent population. Stable households with shared surnames; mostly smaller households, up to five for two adults and three children (14 October amendment supersedes maximum three). Beds and house size are soft preferences; couples and children can share beds. Explicit family roles, child-local play/home schedules, shopkeepers commuting home when their shop has no living quarters, deterministic adult work/travel/sleep, nearby physical actors, no duplicates, save/load and leave/return continuity.
 - [ ] M3 Civilian awareness, relationships and activities. Sleep poses/anchors, closed shops, burglary/waking, friendships/rivalries, meetings, visiting and tavern groups; persistent bereavement with fading salience and witnessed-killing hostility; quest bindings preserved.
 - [ ] M4 Finite guards. Settlement-specific rosters, no garrison in tiny hamlets, small-town contingents, patrol pairs with torches, reachable wall posts, physical response, last-seen search/escape, arrest compatibility, defense, persistent deaths and bounded recruitment.
@@ -33,6 +33,8 @@ Future speech extension: optional English TTS, investigating the Telegram bot's 
 ## Current work
 
 Population foundation implemented and reviewed. Full milestones remain incomplete.
+
+M1 baseline probes are complete. The opt-in quest probe found and fixed a harness fidelity issue: direct interior entry skipped native discovery/open-state setup and hid vanilla occupants. All test entries now use the native handler; the actual-player family/street/quest run passes. Original questor data, name, binding and task behavior survive movement and reconstructed save/load. This supports retaining original components for upcoming sleep poses; cross-building proxies, actual beds/waking and broad quest/service behavior remain unverified.
 
 The active goal's original text still mentions three residents; the user's later explicit five-person family limit above supersedes it. The goal tool permits status updates only, so this file and the amended design are the authoritative evolving scope. Installed version 0.3.0 now uses housing-aware families, a 1–5 creation cap and schema-3 saves. Legacy saved households remain unchanged.
 

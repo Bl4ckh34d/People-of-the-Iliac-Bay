@@ -10,6 +10,8 @@ See [milestones](docs/MILESTONES.md), [approved design](docs/superpowers/specs/2
 
 This is experimental software. Use the isolated portable player and dedicated test saves. Individual milestone completion is recorded only after its acceptance checks pass.
 
+M1 baseline probes are complete. The opt-in `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -QuestProbe` verifies native quest activation, in-place original-NPC movement, hide/show and actual save/load reconstruction. See [quest identity evidence](docs/QUEST-IDENTITY.md) for boundaries; broad quest/service compatibility remains part of later milestones.
+
 ## Verified foundation
 
 `dotnet run --project tests/LivingCities.Tests` passes 87 behavior tests: family allocation and relationships, household identity/capacity, persistent deaths, deterministic weighted paths, fractional-second schedules, bounded visits, save migration and route persistence, atomic restore rejection, and bounded settings.

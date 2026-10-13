@@ -20,6 +20,19 @@ namespace LivingCities.DFU
     public sealed class TownSmokeHarness : MonoBehaviour
     {
         private bool saved, loaded;
+        internal static void EnterInterior(Transform owner, StaticDoor door)
+        {
+            var game = GameManager.Instance;
+            game.PlayerGPS.DiscoverBuilding(door.buildingKey);
+            var enter = typeof(PlayerActivate).GetMethod("TransitionInterior",
+                System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+            if (enter == null) throw new InvalidOperationException("Native interior entry handler missing.");
+            // Native activation sets BuildingDiscoveryData and shop/tavern/residence
+            // flags before layout. Bypassing it can silently hide vanilla occupants.
+            enter.Invoke(game.PlayerActivate, new object[] { owner, door, false });
+            if (game.PlayerEnterExit.BuildingDiscoveryData.buildingKey != door.buildingKey)
+                throw new InvalidOperationException("Native entry did not set building discovery data.");
+        }
         private void OnSaved(SaveData_v1 ignored) { saved = true; }
         private void OnLoaded(SaveData_v1 ignored) { loaded = true; }
         private void OnDestroy() { SaveLoadManager.OnSave -= OnSaved; SaveLoadManager.OnLoad -= OnLoaded; }
@@ -30,6 +43,11 @@ namespace LivingCities.DFU
             while (GameManager.Instance == null || !GameManager.Instance.IsReady) yield return null;
             yield return null;
             var game = GameManager.Instance;
+            // This owned test process drives transitions and camera directly. Do not
+            // let desktop clicks/keys accidentally activate doors during assertions.
+            InputManager.Instance.ClearAllActions();
+            InputManager.Instance.enabled = false;
+            game.PlayerActivate.enabled = false;
             DFLocation location;
             if (!DaggerfallUnity.Instance.ContentReader.GetLocation("Daggerfall", "Gothway Garden", out location))
             { Debug.LogError("LIVING_CITIES_TOWN_FAIL: test settlement missing."); yield break; }
@@ -181,6 +199,8 @@ namespace LivingCities.DFU
             }
             yield return VerifyStreets();
             yield return VerifyFamilies(mapId, requireFamily);
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-quest-probe") >= 0)
+                yield return QuestIdentityProbe.Run();
             Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: real saves, repeated loads and street actors; character=" + character);
         }
         private IEnumerator VerifyFamilies(int mapId, bool required)
@@ -224,7 +244,7 @@ namespace LivingCities.DFU
                     if (door.doorType == DoorTypes.Building && door.buildingKey == selected.BuildingKey)
                     { owner = candidate; entry = door; break; }
             if (!owner) throw new InvalidOperationException("Family home has no door.");
-            game.PlayerEnterExit.TransitionInterior(owner.transform, entry, false, false);
+            EnterInterior(owner.transform, entry);
             yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
             yield return new WaitForSecondsRealtime(1);
             var actor = streets.FindActor(child.Id);
@@ -372,7 +392,7 @@ namespace LivingCities.DFU
                     if (door.doorType == DoorTypes.Building && door.buildingKey == arrived.BuildingKey)
                     { owner = candidate; selectedDoor = door; break; }
             if (!owner) throw new InvalidOperationException("Arrival building has no exterior door.");
-            game.PlayerEnterExit.TransitionInterior(owner.transform, selectedDoor, false, false);
+            EnterInterior(owner.transform, selectedDoor);
             yield return new WaitForSecondsRealtime(1);
             DaggerfallUI.Instance.PopToHUD();
             yield return new WaitForSecondsRealtime(1);
@@ -387,7 +407,7 @@ namespace LivingCities.DFU
             ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-interior.png"));
             game.PlayerEnterExit.TransitionExterior();
             yield return new WaitForSecondsRealtime(1);
-            game.PlayerEnterExit.TransitionInterior(owner.transform, selectedDoor, false, false);
+            EnterInterior(owner.transform, selectedDoor);
             yield return new WaitForSecondsRealtime(1);
             DaggerfallUI.Instance.PopToHUD();
             yield return new WaitForSecondsRealtime(1);
