@@ -114,7 +114,7 @@ namespace LivingCities.DFU
                 responseText.Contains("Offer refused.") && !responseText.Contains("Accepted:"), "Native response text does not match acceptance decision.");
             DaggerfallUI.Instance.PopToHUD(); yield return null;
         }
-        private static IEnumerator Enter(int buildingKey)
+        internal static IEnumerator Enter(int buildingKey)
         {
             var game = GameManager.Instance;
             if (game.PlayerEnterExit.IsPlayerInside) game.PlayerEnterExit.TransitionExterior();

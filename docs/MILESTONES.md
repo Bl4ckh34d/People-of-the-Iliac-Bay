@@ -36,6 +36,8 @@ Future speech extension: optional English TTS, investigating the Telegram bot's 
 
 ## Current work
 
+Shipped quest checkpoint (14 October): unchanged vanilla A0C00Y14 now passes native package generation, SAVE20 reload, journal/recipient name agreement, actual item hand-in and collection of its gold reward. This is an explicitly bound test of one randomized local delivery branch using native handlers, not automatic production eligibility or broad quest compatibility. No engine or quest source files changed. See `QUEST-IDENTITY.md` and `TEST-FIXTURES.md`.
+
 Native offer checkpoint (14 October): explicitly staged bindings now pass native guild offer refusal, dead-recipient rejection before acceptance text, valid acceptance/commit, actual native target placement/name/activation, and SAVE19 reconstruction with repeated activation. Core tests pass 119/119. The standard `.dfmod` contains scoped runtime hooks and dependency notices; no engine files change. Editor manifest library discovery is verified through DFU's loader. Automatic quest-role classification, broad quest compatibility and item hand-in remain open. See `QUEST-IDENTITY.md` for evidence and exact limits.
 
 Quest actor ownership now suppresses the generated representation while a bound native quest controls the resident. Actual nighttime placement and save/load show no household duplicate, and ending the native quest restores the normal scheduled actor. Native quest appearance, mobile schedules and sleeping remain pending; this is a tested placement priority, not completed radiant quest integration.

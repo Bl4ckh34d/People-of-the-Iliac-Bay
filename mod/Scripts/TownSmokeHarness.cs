@@ -207,6 +207,8 @@ namespace LivingCities.DFU
                 yield return QuestIdentityProbe.Run();
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-quest-binding-probe") >= 0)
                 yield return QuestBindingProbeHost.Run();
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-delivery-probe") >= 0)
+                yield return VanillaDeliveryProbe.Run();
             Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: real saves, repeated loads and street actors; character=" + character);
         }
         private IEnumerator VerifyFamilies(int mapId, bool required)

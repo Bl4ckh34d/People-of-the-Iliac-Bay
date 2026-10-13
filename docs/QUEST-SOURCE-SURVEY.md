@@ -39,3 +39,7 @@ Native `Person.GetDialogPlace()` selects the assigned place when present and oth
 - Native-format mod quest files, bundled mod quest assets, and explicit adapters for custom engines.
 
 The opt-in binding probe is evidence for interception timing and native name/resource behavior only. It does not close these end-to-end cases. No general quest-rewriting policy is enabled in normal play yet.
+
+## Verified shipped case, 14 October 2026
+
+`A0C00Y14` (**The Delivery Boy**) now passes the dedicated actual-player `-DeliveryProbe`: unchanged source loaded through QuestListsManager, explicit local household binding, native package startup, real pre-delivery save/reload, journal recipient consistency, native hand-in consuming the package, and collection of the script's gold reward. This covers one randomized package branch. The probe bypasses random social offer selection, mouse raycasting and quest eligibility rules; thief/failure/timeout branches remain untested. Remote counterpart `A0C00Y15` remains untested. See `QUEST-IDENTITY.md` for exact evidence and reproduction.
