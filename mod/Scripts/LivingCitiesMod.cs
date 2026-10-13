@@ -35,6 +35,8 @@ namespace LivingCities.DFU
             initParams.Mod.LoadSettings();
             initParams.Mod.IsReady = true;
             Debug.Log("LIVING_CITIES_READY: virtual population foundation; save interface registered.");
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-town-test") >= 0)
+                host.AddComponent<TownSmokeHarness>();
         }
         private void Awake()
         {

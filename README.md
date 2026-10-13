@@ -12,9 +12,11 @@ This is experimental software. Use the isolated portable player and dedicated te
 
 ## Verified foundation
 
-`dotnet run --project tests/LivingCities.Tests` passes 57 behavior tests: household identity/capacity, persistent deaths, deterministic weighted paths, analytical schedules, save round trips, atomic restore rejection, and bounded settings without regenerating existing residents.
+`dotnet run --project tests/LivingCities.Tests` passes 60 behavior tests: household identity/capacity, persistent deaths, deterministic weighted paths, analytical schedules with fractional-second travel, save round trips, atomic restore rejection, and bounded settings without regenerating existing residents.
 
-The standard `livingcities.dfmod` builds, reopens, and initializes alongside Basic Roads in the isolated player. Unity's integration verifier exercises DFU's real FullSerializer and the mod save adapter. The runtime adapter currently displays virtual home/sleep counts with F8. Physical NPCs, live commutes, and actual save-slot continuity remain pending.
+The standard `livingcities.dfmod` builds, reopens, and initializes alongside Basic Roads in the isolated player. Unity's integration verifier exercises DFU's real FullSerializer and the mod save adapter. Actual Gothway Garden inside/outside saves and repeated cross-process loads preserve the full virtual population. The runtime adapter currently displays virtual home/sleep counts with F8. Physical NPCs and live commutes remain pending.
+
+The latest family requirement allows up to five residents, with shared surnames and local child play. Beds and house size influence family size without a strict one-person-per-bed rule. Current code still enforces the original three-person cap until family-aware allocation and save migration are implemented. See the milestone file for current scope and implementation boundaries; optional future English voice plans are in `docs/FUTURE-DIALOGUE-AND-VOICE.md`.
 
 The native mod settings menu provides six working foundation controls: simulation enable, maximum initial household size (1–3, new settlements only), wake/sleep hours, refresh interval, and F8 diagnostics availability. Settings load through DFU's live callback and are validated again at runtime. More controls accompany their gameplay systems; city-overhaul and market-vendor patches follow vanilla stability. See `docs/SETTINGS-AND-COMPATIBILITY.md`.
 

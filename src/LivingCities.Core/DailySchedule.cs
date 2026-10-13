@@ -56,10 +56,21 @@ namespace LivingCities.Core
             ValidateHome(homeKey, wakeMinute, sleepMinute);
             return new DailySchedule(homeKey, -1, wakeMinute, sleepMinute, 0, 0, 0, new RoutePoint[0]);
         }
+        public ActivitySnapshot EvaluateSeconds(double absoluteSeconds)
+        {
+            if (!Finite(absoluteSeconds) || absoluteSeconds < 0)
+                throw new ArgumentOutOfRangeException(nameof(absoluteSeconds));
+            // Reduce to the day before division to retain sub-minute precision even
+            // at large game-calendar epochs. No frame-by-frame catch-up is needed.
+            return EvaluateMinuteOfDay((absoluteSeconds % 86400) / 60);
+        }
         public ActivitySnapshot Evaluate(long absoluteMinute)
         {
             if (absoluteMinute < 0) throw new ArgumentOutOfRangeException(nameof(absoluteMinute));
-            int minute = (int)(absoluteMinute % 1440);
+            return EvaluateMinuteOfDay(absoluteMinute % 1440);
+        }
+        private ActivitySnapshot EvaluateMinuteOfDay(double minute)
+        {
             if (minute < wake || minute >= sleep) return Interior(Activity.Sleep, home);
             if (work < 0 || minute < open - commute || minute >= close + commute) return Interior(Activity.Home, home);
             if (minute >= open && minute < close) return Interior(Activity.Work, work);

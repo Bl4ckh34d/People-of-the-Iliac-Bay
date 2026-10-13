@@ -10,6 +10,26 @@ namespace LivingCities.Tests
             route ?? new[] { new RoutePoint(0, 0), new RoutePoint(100, 0) }, 480, 1020, 20, 360, 1320);
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Travel advances within a game minute and between fractional seconds", () => {
+                var p = Work();
+                Check.Near(52.5, p.EvaluateSeconds(470 * 60 + 30).Position.X);
+                Check.Near(50 + 0.5 / 12, p.EvaluateSeconds(470 * 60 + 0.5).Position.X);
+                Check.Near(47.5, p.EvaluateSeconds(1030 * 60 + 30).Position.X);
+            }));
+            cases.Add(("Second-resolution schedule preserves exact arrival and midnight boundaries", () => {
+                var p = Work();
+                Check.Equal(Activity.Travel, p.EvaluateSeconds(480 * 60 - 0.1).Activity);
+                Check.Equal(Activity.Work, p.EvaluateSeconds(480 * 60).Activity);
+                Check.Equal(Activity.Travel, p.EvaluateSeconds(1040 * 60 - 0.1).Activity);
+                Check.Equal(Activity.Home, p.EvaluateSeconds(1040 * 60).Activity);
+                Check.Equal(Activity.Sleep, p.EvaluateSeconds(86400).Activity);
+                Check.Near(p.EvaluateSeconds(470 * 60 + 0.5).Position.X,
+                    p.EvaluateSeconds(86400d * 1000000 + 470 * 60 + 0.5).Position.X);
+            }));
+            cases.Add(("Invalid second-resolution times are rejected", () => {
+                foreach (double time in new[] { -0.1, double.NaN, double.PositiveInfinity, double.NegativeInfinity })
+                    Check.Throws<ArgumentOutOfRangeException>(() => Work().EvaluateSeconds(time));
+            }));
             cases.Add(("Sleep and waking respect exact boundaries", () => {
                 var p = Work();
                 Check.Equal(Activity.Sleep, p.Evaluate(359).Activity);

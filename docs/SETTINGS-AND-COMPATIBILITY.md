@@ -2,7 +2,7 @@
 
 User requirement added 13 October 2026: provide broad, practical player control through a mod menu, and add city-overhaul patches after the vanilla implementation is stable. This is part of the active goal, not a separate project.
 
-Use DFU's native mod settings menu and live-settings callback. Add controls only when their corresponding behavior exists. Describe whether a setting takes effect immediately, affects future allocation only, or needs a reload. Disabling a subsystem must preserve its saved identities/deaths. Keep household capacity at or below the approved maximum of three and retain quest protection.
+Use DFU's native mod settings menu and live-settings callback. Add controls only when their corresponding behavior exists. Describe whether a setting takes effect immediately, affects future allocation only, or needs a reload. Disabling a subsystem must preserve its saved identities/deaths. The amended maximum is five for family households; beds and house size are soft allocation preferences, with shared beds allowed and most homes smaller. Retain quest protection. The implemented foundation control remains 1–3 until family-aware allocation and save migration are implemented.
 
 First functional controls: virtual simulation enable, initial household capacity (1–3; new settlements only), waking hour, sleeping hour, diagnostic refresh interval, and F8 diagnostics availability. Validate settings even when configuration files are edited outside the menu. Existing residents must not disappear or resurrect when capacity changes.
 
