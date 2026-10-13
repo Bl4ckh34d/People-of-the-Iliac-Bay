@@ -6,12 +6,13 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 5;
+        public int Version = 6;
         public uint WorldSeed;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
         public List<TownRoutineState> Routines = new List<TownRoutineState>();
         public List<QuestResidentBinding> QuestBindings = new List<QuestResidentBinding>();
         public List<CivilianIncident> AlarmIncidents = new List<CivilianIncident>();
+        public List<GuardRoster> Garrisons = new List<GuardRoster>();
     }
     public sealed partial class WorldStateStore
     {
@@ -56,7 +57,7 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 5, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 6, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             var settlements = new HashSet<int>();
@@ -145,6 +146,16 @@ namespace LivingCities.Core
                 copy.QuestBindings = CopyQuestBindings(copy);
             }
             if (source.Version >= 5) copy.AlarmIncidents = CopyAlarms(source);
+            if (source.Version >= 6)
+            {
+                Require(source.Garrisons != null, "Missing garrison ledger.");
+                var garrisons = new HashSet<int>();
+                foreach (var garrison in source.Garrisons)
+                {
+                    Require(garrison != null && settlements.Contains(garrison.SettlementId) && garrisons.Add(garrison.SettlementId), "Unknown or duplicate garrison settlement.");
+                    copy.Garrisons.Add(GuardRoster.CopyValidated(garrison));
+                }
+            }
             return copy;
         }
         private static void ValidateFamily(Household home)

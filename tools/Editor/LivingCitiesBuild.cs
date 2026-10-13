@@ -66,6 +66,7 @@ public static class LivingCitiesBuild
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         VerifySerialization();
         VerifyAlarmSerialization();
+        VerifyGuardPersistence();
         VerifySettings();
         VerifyHousing();
         VerifyBeds();
@@ -256,16 +257,48 @@ public static class LivingCitiesBuild
             string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
             var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
-            Require(migrated.Version == 5 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
+            Require(migrated.Version == 6 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
                 resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
                 home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
         }
         string schemaThree = "{\"Version\":3,\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"SurnameSeed\":876,\"Residents\":[{\"Id\":\"legacy-family\",\"HomeKey\":10,\"AppearanceSeed\":3,\"Sex\":1,\"IsAlive\":false}]}]}],\"Routines\":[]}";
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), schemaThree));
-        Require(restored.Snapshot().Version == 5 && restored.Snapshot().QuestBindings.Count == 0 &&
+        Require(restored.Snapshot().Version == 6 && restored.Snapshot().QuestBindings.Count == 0 &&
             restored.Snapshot().Settlements[0].Households[0].SurnameSeed == 876 &&
             !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
         Debug.Log("LIVING_CITIES_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
+    }
+    public static void VerifyGuardPersistence()
+    {
+        var store = new WorldStateStore(42);
+        store.GetOrCreate(99, new[] { 1, 2 });
+        var posts = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 10 },
+            new SavedRoutePoint { X = 20 }, new SavedRoutePoint { X = 30 } };
+        var roster = store.GetOrCreateGuards(99, 4, posts);
+        var routes = new Dictionary<string, List<SavedRoutePoint>>();
+        foreach (var guard in roster.Guards)
+            routes.Add(guard.Id, new List<SavedRoutePoint> { new SavedRoutePoint { X = guard.Post.X }, new SavedRoutePoint { X = 100 } });
+        var sent = roster.Dispatch("native-theft", 100, routes, 2, 2, 12);
+        Require(sent.Count == 2 && sent[0].Id == roster.Guards[3].Id, "Native nearest finite guard selection");
+        roster.Kill(sent[0].Id, 310);
+        Require(Math.Abs(roster.Position(sent[0].Id, 500).X - 65) < 0.001, "Native guard death location");
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        var restored = new WorldStateStore(0);
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native garrison save round trip");
+        var saved = restored.GetOrCreateGuards(99, 200, new List<SavedRoutePoint>());
+        Require(saved.Guards.Count == 4 && saved.Dispatch("native-theft", 500, routes, 4, 2, 12).Count == 2,
+            "Native reload cannot reroll or replenish a report");
+        Require(saved.Recruit(310 + 7 * 86400 - 1) == 0 && saved.Recruit(310 + 7 * 86400) == 1 &&
+            saved.Recruit(310 + 7 * 86400) == 0, "Native bounded recruitment");
+        json = SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot());
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Recruitment and replacement lineage persist");
+        var legacy = restored.Snapshot(); legacy.Version = 5; legacy.Garrisons = null;
+        restored.Restore(legacy);
+        Require(restored.Snapshot().Version == 6 && restored.Snapshot().Garrisons.Count == 0 &&
+            restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
+        Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
     }
     private static void VerifyAlarmSerialization()
     {
@@ -306,7 +339,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 5 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
+            Require(saved.Version == 6 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }
