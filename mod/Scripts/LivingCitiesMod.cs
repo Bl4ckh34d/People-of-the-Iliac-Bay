@@ -24,7 +24,7 @@ namespace LivingCities.DFU
             get
             {
                 if (saveFault) throw new InvalidOperationException("Cannot stage a quest while world restoration is incomplete.");
-                if (questOffers == null) questOffers = new QuestOfferBindings(store);
+                if (questOffers == null) questOffers = CreateQuestOffers();
                 return questOffers;
             }
         }
@@ -32,6 +32,14 @@ namespace LivingCities.DFU
         private Mod mod;
         private StreetPopulation streets;
         private bool streetPopulationEnabled;
+        private bool questHouseholdsEnabled;
+        private QuestOfferBindings CreateQuestOffers()
+        { return new QuestOfferBindings(store, SelectKnownQuestBinding, () => !saveFault && options.Enabled && questHouseholdsEnabled); }
+        private QuestResidentBinding SelectKnownQuestBinding(DaggerfallWorkshop.Game.Questing.Quest quest, string[] source)
+        {
+            if (saveFault || !options.Enabled || !questHouseholdsEnabled || current == null) return null;
+            return KnownQuestBindings.Select(quest, source, current);
+        }
         private SettlementPopulation current;
         private bool panel, saveFault;
         private bool uiRegistered, redirectingChildTalk;
@@ -100,6 +108,9 @@ namespace LivingCities.DFU
                 settings.GetInt("DailyRoutine", "SleepHour"), settings.GetInt("Diagnostics", "RefreshSeconds"),
                 settings.GetBool("Diagnostics", "EnableF8Panel"));
             if (!options.DiagnosticsEnabled) panel = false;
+            questHouseholdsEnabled = settings.GetBool("General", "QuestHouseholds");
+            if (questHouseholdsEnabled && !saveFault && questOffers == null)
+                questOffers = CreateQuestOffers();
             nextCheck = 0;
             Debug.Log("LIVING_CITIES_SETTINGS_LOADED: enabled=" + options.Enabled + "; streets=" + streetPopulationEnabled);
         }
@@ -108,6 +119,7 @@ namespace LivingCities.DFU
             ClearQuestOffers();
             if (streets) streets.Clear();
             store = new WorldStateStore(NewSeed()); current = null; saveFault = false; nextCheck = 0;
+            if (questHouseholdsEnabled && mod != null) questOffers = CreateQuestOffers();
         }
         private void BeforeLoad(SaveData_v1 ignored)
         {
@@ -130,7 +142,8 @@ namespace LivingCities.DFU
             if (streets) streets.Clear();
             saveFault = true; current = null;
             store.Restore(saveData as WorldState);
-            if (store.Snapshot().QuestBindings.Count > 0) questOffers = new QuestOfferBindings(store);
+            if (store.Snapshot().QuestBindings.Count > 0 || (questHouseholdsEnabled && mod != null))
+                questOffers = CreateQuestOffers();
             saveFault = false; nextCheck = 0;
         }
         private void ClearQuestOffers()

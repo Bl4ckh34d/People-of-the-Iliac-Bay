@@ -1,6 +1,9 @@
 using System;
 using System.Collections;
 using System.Reflection;
+using System.IO;
+using System.Collections.Generic;
+using DaggerfallConnect.Arena2;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -8,7 +11,10 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
+using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.Utility;
+using DaggerfallWorkshop.Game.Utility.ModSupport;
+using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Utility;
 using LivingCities.Core;
 using UnityEngine;
@@ -18,6 +24,19 @@ namespace LivingCities.DFU
     // Opt-in validation of an unchanged shipped quest. This is not an automatic eligibility rule.
     public static class VanillaDeliveryProbe
     {
+        // Substitute only random quest selection; native window setup and response handler remain active.
+        private sealed class SelectedSocialOffer : DaggerfallQuestOfferWindow
+        {
+            private readonly Quest selected;
+            public SelectedSocialOffer(StaticNPC npc, Quest selected) : base(DaggerfallUI.UIManager, npc.Data, FactionFile.SocialGroups.Commoners, false)
+            { this.selected = selected; }
+            protected override void GetQuest()
+            {
+                offeredQuest = selected;
+                var prompt = QuestMachine.Instance.CreateMessagePrompt(offeredQuest, 1000);
+                prompt.OnButtonClick += OfferQuest_OnButtonClick; prompt.Show();
+            }
+        }
         private static readonly string[] Packages = { "_book_", "_womensclothing_", "_potion_", "_mensclothing_",
             "_painting_", "_weapon_", "_ingredient_", "_jewelry_" };
         public static IEnumerator Run()
@@ -33,6 +52,21 @@ namespace LivingCities.DFU
             var npcs = game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>();
             Require(npcs.Length > 0, "Native quest giver context missing.");
             QuestMachine.Instance.LastNPCClicked = npcs[0];
+            string[] reviewedSource = File.ReadAllLines(Path.Combine(QuestMachine.QuestSourceFolder, "A0C00Y14.txt"));
+            ApplyQuestSetting(adapter, false);
+            bool checkedDisabled = false;
+            for (int attempt = 0; attempt < 40 && !checkedDisabled; attempt++)
+            {
+                var unbound = game.QuestListsManager.GetQuest("A0C00Y14");
+                var eligible = KnownQuestBindings.Select(unbound, reviewedSource, town);
+                if (eligible == null) continue;
+                Require(unbound.GetPerson(new Symbol("_pickuplocal_")).DisplayName != eligible.PersonName,
+                    "Disabled setting still rewrites newly loaded quest recipients.");
+                checkedDisabled = true;
+            }
+            Require(checkedDisabled, "No eligible quest for disabled-setting control.");
+            ApplyQuestSetting(adapter, true);
+            string beforeAutomaticParse = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
             Quest quest = null; Household home = null; Resident resident = null;
             for (int attempt = 0; attempt < 40 && resident == null; attempt++)
             {
@@ -47,6 +81,8 @@ namespace LivingCities.DFU
                     (r.Sex == ResidentSex.Male) == (person.Gender == Genders.Male));
             }
             Require(resident != null, "No compatible household recipient in fixture town.");
+            Require(beforeAutomaticParse == SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData()),
+                "Automatic full parse committed an unaccepted household contract.");
             string first, surname;
             uint oldSeed = DFRandom.Seed;
             try
@@ -63,9 +99,37 @@ namespace LivingCities.DFU
                 ResidentId = resident.Id, PersonName = first + " " + surname,
                 HomeName = TextManager.Instance.GetLocalizedText("theNamedResidence").Replace("%s", surname),
                 RuleId = "probe/shipped-delivery/v1" };
-            adapter.QuestOffers.Prepare(quest, new[] { binding });
+            Require(quest.GetPerson(new Symbol("_pickuplocal_")).DisplayName == binding.PersonName,
+                "Normal quest loading did not bind the recipient before publishing acceptance text.");
+            string[] changedSource = (string[])reviewedSource.Clone(); changedSource[0] += " changed";
+            Require(KnownQuestBindings.Select(quest, changedSource, town) == null, "Changed source inherited vanilla eligibility.");
+            string snapshotBefore = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
+            var partial = game.QuestListsManager.LoadQuest(new QuestData { name = "A0C00Y14", path = QuestMachine.QuestSourceFolder }, 0, true);
+            Require(partial != null && partial.GetAllResources().Length == 0 && snapshotBefore == SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData()),
+                "Partial or unaccepted preview changed saved population.");
             Require(MessageText(quest, 1002).Contains(binding.PersonName), "Native acceptance expansion disagrees with recipient.");
+            ApplyQuestSetting(adapter, false);
             QuestMachine.Instance.StartQuest(quest);
+            Require(QuestMachine.Instance.GetQuest(quest.UID) == null &&
+                !((WorldState)adapter.GetSaveData()).QuestBindings.Exists(b => b.QuestUid == quest.UID),
+                "Offer staged before disabling still created a new binding.");
+            ApplyQuestSetting(adapter, true);
+            var offer = new SelectedSocialOffer(npcs[0], quest);
+            DaggerfallUI.UIManager.PushWindow(offer); yield return null; yield return null;
+            var prompt = DaggerfallUI.UIManager.TopWindow as DaggerfallMessageBox;
+            Require(prompt != null, "Social quest offer prompt missing.");
+            var buttons = (List<Button>)typeof(DaggerfallMessageBox).GetField("buttons", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(prompt);
+            var yes = buttons.Find(b => (DaggerfallMessageBox.MessageBoxButtons)b.Tag == DaggerfallMessageBox.MessageBoxButtons.Yes);
+            Require(yes != null, "Social offer acceptance button missing.");
+            typeof(DaggerfallMessageBox).GetMethod("ActivateButton", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(prompt, new object[] { yes });
+            yield return null;
+            var accepted = DaggerfallUI.UIManager.TopWindow as DaggerfallMessageBox;
+            Require(accepted != null, "Social offer acceptance text missing.");
+            var labels = (MultiFormatTextLabel)typeof(DaggerfallMessageBox).GetField("label", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(accepted);
+            string acceptedText = ""; foreach (var label in labels.TextLabels) acceptedText += label.Text + " ";
+            Require(acceptedText.Contains(binding.PersonName), "Actual social acceptance text has wrong recipient.");
+            Require(((WorldState)adapter.GetSaveData()).QuestBindings.Exists(b => b.QuestUid == quest.UID && b.ResidentId == resident.Id &&
+                b.RuleId == "vanilla/A0C00Y14/local-recipient/v1"), "Automatic offer acceptance did not commit the reviewed rule.");
             string package = null;
             float deadline = Time.realtimeSinceStartup + 15;
             while (package == null && Time.realtimeSinceStartup < deadline)
@@ -88,6 +152,9 @@ namespace LivingCities.DFU
                 if (target.QuestUID == quest.UID && target.TargetSymbol.Name == "pickuplocal") recipient = target;
             Require(recipient && recipient.GetComponent<StaticNPC>().DisplayName == binding.PersonName,
                 "Reloaded native recipient differs from published name.");
+            ApplyQuestSetting(adapter, false);
+            Require(adapter.QuestOffers.OwnsResident(resident.Id) && recipient.GetComponent<StaticNPC>().DisplayName == binding.PersonName,
+                "Disabling new bindings changed an accepted quest contract.");
             int goldBefore = game.PlayerEntity.GoldPieces;
             int reward = quest.GetItem(new Symbol("_gold_")).DaggerfallUnityItem.stackCount;
             typeof(PlayerActivate).GetMethod("StaticNPCClick", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(
@@ -111,7 +178,8 @@ namespace LivingCities.DFU
             Require(quest.QuestComplete && !adapter.QuestOffers.OwnsResident(resident.Id), "Completed delivery kept resident ownership.");
             Require(((WorldState)adapter.GetSaveData()).QuestBindings.Exists(b => b.QuestUid == binding.QuestUid),
                 "Quest completion erased historical resident contract.");
-            Debug.Log("LIVING_CITIES_TOWN_DELIVERY_PASS: unchanged A0C00Y14 loaded by QuestListsManager; native package; real save/load; native recipient hand-in; collected gold=" +
+            ApplyQuestSetting(adapter, true);
+            Debug.Log("LIVING_CITIES_TOWN_DELIVERY_PASS: automatic A0C00Y14 binding; social offer acceptance; native package; real save/load; native recipient hand-in; collected gold=" +
                 reward + "; recipient=" + binding.PersonName + "; resident=" + resident.Id + "; uid=" + binding.QuestUid);
         }
         private static string MessageText(Quest quest, int id)
@@ -119,6 +187,18 @@ namespace LivingCities.DFU
             string result = "";
             foreach (var token in quest.GetMessage(id).GetTextTokens()) result += token.text + " ";
             return result;
+        }
+        private static void ApplyQuestSetting(LivingCitiesMod adapter, bool enabled)
+        {
+            // Exercise the native settings callback without changing the user's settings file.
+            var mod = (Mod)typeof(LivingCitiesMod).GetField("mod", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+            var settings = mod.GetSettings();
+            var data = (ModSettingsData)typeof(ModSettings).GetField("data", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(settings);
+            ToggleKey key;
+            Require(data.TryGetKey("General", "QuestHouseholds", out key), "Quest household setting missing.");
+            key.Value = enabled;
+            var callback = (Delegate)typeof(Mod).GetProperty("LoadSettingsCallback").GetValue(mod, null);
+            callback.DynamicInvoke(settings, new ModSettingsChange());
         }
         private static IEnumerator ReloadFixture(string name)
         {

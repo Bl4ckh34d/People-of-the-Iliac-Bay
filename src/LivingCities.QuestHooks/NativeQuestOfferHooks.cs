@@ -16,13 +16,15 @@ namespace LivingCities.QuestHooks
         private readonly Func<Quest, bool> canStart;
         private readonly Action<Quest> started, discard;
         private readonly Func<StaticNPC, string> residentName;
-        public NativeQuestOfferHooks(Func<Quest, bool> canStart, Action<Quest> started, Action<Quest> discard, Func<StaticNPC, string> residentName)
+        private readonly Action<Quest, string[], bool> parsed;
+        public NativeQuestOfferHooks(Func<Quest, bool> canStart, Action<Quest> started, Action<Quest> discard, Func<StaticNPC, string> residentName, Action<Quest, string[], bool> parsed)
         {
             if (active != null) throw new InvalidOperationException("Quest offer hooks already installed.");
             this.canStart = canStart ?? throw new ArgumentNullException(nameof(canStart));
             this.started = started ?? throw new ArgumentNullException(nameof(started));
             this.discard = discard ?? throw new ArgumentNullException(nameof(discard));
             this.residentName = residentName ?? throw new ArgumentNullException(nameof(residentName));
+            this.parsed = parsed ?? throw new ArgumentNullException(nameof(parsed));
             active = this;
             try
             {
@@ -32,6 +34,7 @@ namespace LivingCities.QuestHooks
                 harmony.Patch(response, prefix: Patch(nameof(BeforeResponse)));
                 harmony.Patch(start, prefix: Patch(nameof(BeforeStart)), postfix: Patch(nameof(AfterStart)));
                 harmony.Patch(typeof(StaticNPC).GetProperty("DisplayName").GetGetMethod(), postfix: Patch(nameof(AfterName)));
+                harmony.Patch(typeof(Parser).GetMethod("Parse", new[] { typeof(string[]), typeof(int), typeof(bool) }), postfix: Patch(nameof(AfterParse)));
             }
             catch { Dispose(); throw; }
         }
@@ -60,6 +63,8 @@ namespace LivingCities.QuestHooks
             string name = active == null ? null : active.residentName(__instance);
             if (name != null) __result = name;
         }
+        private static void AfterParse(Quest __result, string[] __0, bool __2)
+        { if (active != null) active.parsed(__result, __0, __2); }
         public void Dispose()
         {
             if (active != this) return;

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Questing;
 using LivingCities.Core;
@@ -11,26 +12,40 @@ namespace LivingCities.DFU
     public sealed class QuestOfferBindings : IDisposable
     {
         private readonly WorldStateStore store;
-        private readonly Dictionary<Quest, QuestBindingPlan> pending = new Dictionary<Quest, QuestBindingPlan>();
+        private ConditionalWeakTable<Quest, QuestBindingPlan> pending = new ConditionalWeakTable<Quest, QuestBindingPlan>();
+        private readonly Func<Quest, string[], QuestResidentBinding> select;
+        private readonly Func<bool> allowNewBindings;
         private readonly IDisposable hooks;
         private List<QuestResidentBinding> committed;
         private readonly Dictionary<string, List<QuestResidentBinding>> residentContracts = new Dictionary<string, List<QuestResidentBinding>>();
         private bool disposed;
-        public QuestOfferBindings(WorldStateStore store)
+        public QuestOfferBindings(WorldStateStore store, Func<Quest, string[], QuestResidentBinding> select = null, Func<bool> allowNewBindings = null)
         {
             if (store == null) throw new ArgumentNullException(nameof(store));
             this.store = store;
+            this.select = select;
+            this.allowNewBindings = allowNewBindings;
             committed = store.Snapshot().QuestBindings;
             IndexResidents();
             var type = Type.GetType("LivingCities.QuestHooks.NativeQuestOfferHooks, LivingCities.QuestHooks", true);
             hooks = (IDisposable)Activator.CreateInstance(type, new object[] {
-                new Func<Quest, bool>(CanStart), new Action<Quest>(Started), new Action<Quest>(Discard), new Func<StaticNPC, string>(ResidentName) });
+                new Func<Quest, bool>(CanStart), new Action<Quest>(Started), new Action<Quest>(Discard), new Func<StaticNPC, string>(ResidentName),
+                new Action<Quest, string[], bool>(Parsed) });
+        }
+        private void Parsed(Quest quest, string[] source, bool partial)
+        {
+            if (disposed || partial || quest == null || select == null) return;
+            var binding = select(quest, source);
+            if (binding == null) return;
+            try { Prepare(quest, new[] { binding }); }
+            catch (ArgumentException ex) { Debug.LogWarning("LIVING_CITIES_BINDING_SKIPPED: " + ex.Message); }
         }
         public void Prepare(Quest quest, IEnumerable<QuestResidentBinding> candidates)
         {
             if (disposed) throw new ObjectDisposedException(nameof(QuestOfferBindings));
             if (quest == null) throw new ArgumentNullException(nameof(quest));
-            if (QuestMachine.Instance.GetQuest(quest.UID) != null || pending.ContainsKey(quest))
+            QuestBindingPlan existing;
+            if (QuestMachine.Instance.GetQuest(quest.UID) != null || pending.TryGetValue(quest, out existing))
                 throw new ArgumentException("Cannot rewrite a started or already offered quest.");
             var plan = store.PrepareQuestBindings(candidates);
             foreach (var binding in plan.Bindings) ValidateResource(quest, binding, false);
@@ -66,6 +81,7 @@ namespace LivingCities.DFU
         {
             QuestBindingPlan plan;
             if (quest == null || !pending.TryGetValue(quest, out plan)) return true;
+            if (allowNewBindings != null && !allowNewBindings()) return false;
             try
             {
                 store.ValidateQuestBindings(plan);
@@ -125,7 +141,7 @@ namespace LivingCities.DFU
         public void Dispose()
         {
             if (disposed) return;
-            disposed = true; pending.Clear(); hooks.Dispose();
+            disposed = true; pending = new ConditionalWeakTable<Quest, QuestBindingPlan>(); hooks.Dispose();
         }
     }
 }

@@ -197,6 +197,19 @@ namespace LivingCities.DFU
                 expectedPopulation = actual;
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
+            string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-delivery-probe") >= 0 &&
+                Array.IndexOf(probeArguments, "-livingcities-quest-binding-probe") < 0 &&
+                Array.IndexOf(probeArguments, "-livingcities-quest-probe") < 0 &&
+                Array.IndexOf(probeArguments, "-livingcities-sleep-probe") < 0 &&
+                Array.IndexOf(probeArguments, "-livingcities-bed-probe") < 0)
+            {
+                // Focused quest regressions reuse inside/outside save validation without
+                // repeatedly driving unrelated walking, family-camera and death fixtures.
+                yield return VanillaDeliveryProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: fixture loads and focused vanilla delivery; character=" + character);
+                yield break;
+            }
             yield return VerifyStreets();
             yield return VerifyFamilies(mapId, requireFamily);
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-sleep-probe") >= 0)
@@ -284,7 +297,7 @@ namespace LivingCities.DFU
             }
             if (!foundView) throw new InvalidOperationException("No unobstructed family screenshot viewpoint.");
             yield return new WaitForSecondsRealtime(0.5f);
-            game.PlayerMouseLook.SetFacing(childCenter - Camera.main.transform.position);
+            SleepProbe.AimCamera(childCenter);
             yield return new WaitForEndOfFrame();
             Vector3 view = Camera.main.WorldToViewportPoint(childCenter);
             if (view.z <= 0 || view.x < 0.1f || view.x > 0.9f || view.y < 0.1f || view.y > 0.9f ||

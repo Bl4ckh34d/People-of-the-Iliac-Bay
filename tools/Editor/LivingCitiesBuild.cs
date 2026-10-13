@@ -274,7 +274,8 @@ public static class LivingCitiesBuild
         Require(data.GetValue<int>("Diagnostics", "RefreshSeconds") == 1, "Refresh slider default");
         Require(data.GetValue<bool>("Diagnostics", "EnableF8Panel"), "Panel toggle default");
         Require(data.GetValue<bool>("General", "StreetPopulation"), "Street population default");
-        Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: eight native menu controls deserialize with expected types and defaults.");
+        Require(data.GetValue<bool>("General", "QuestHouseholds"), "Quest household pilot default");
+        Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: nine native menu controls deserialize with expected types and defaults.");
     }
     private static void VerifyAdapter()
     {

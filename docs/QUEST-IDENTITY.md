@@ -2,6 +2,18 @@
 
 Verified on 14 October 2026 against the installed DFU 1.1.1 player. This is baseline feasibility evidence, not a replacement quest system or complete quest compatibility.
 
+## Current checkpoint: automatic local delivery pilot
+
+Normal gameplay now installs the native parser hook and enables one explicit rule: unchanged vanilla `A0C00Y14` (The Delivery Boy), local recipient `_pickuplocal_`, Gothway Garden only. The native quest-selected house must already have a living adult of the recipient's gender. Existing resident identity and surname supply the pre-offer name; destination, quest UID, symbols and native tasks remain unchanged. Partial parses, fixed individuals, questors, other towns and other quests are excluded. A SHA-256 check over UTF-8 source lines joined with LF (`3423FFF5B75ABA8C8C8240C850A5096FAED612ACC0F3349E9241F586B2D69CAC`) rejects modified sources, including quest mods overriding the same name. Rule provenance is `vanilla/A0C00Y14/local-recipient/v1`.
+
+The ninth native setting, `General/QuestHouseholds`, defaults true. Disabling blocks new selection and acceptance of a previously staged binding. Already accepted contracts retain published names and resident ownership, including after reload. Unaccepted plans do not alter persistent population; weak references avoid retaining abandoned quest previews indefinitely.
+
+Actual-player combined verification passed native social offer acceptance, native package creation, SAVE20 reload, matching journal and recipient names, native hand-in and collection of 40 gold. Recipient: Elyzyssa Buckingham, resident `s:206728581:h:260:r:1`, quest UID 33554466. The fixture selects an eligible native quest and uses native offer/message handlers; it does not test random social-quest selection or mouse raycasting. It also verifies disabled selection, disabling between staging and acceptance, changed-source exclusion, partial previews and accepted-contract retention while disabled. Existing street/interior/death/family and synthetic offer/ledger tests pass in the same run. A test-camera helper now explicitly applies the native yaw/pitch transforms for unattended family visibility checks, as the sleep probe already does; normal input/camera behavior is unchanged.
+
+Reproduce with `tools/Build.ps1 -QuestBindingProbe` followed by `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -QuestBindingProbe -DeliveryProbe`. Both exit 0. Evidence: `work/quest-auto-native-pass.log`, `work/quest-auto-runtime-pass.log`; ordinary startup without the temporary probe passes in `work/player-smoke.log`. The initial automatic-binding assertion and the staged-offer toggle regression each failed before their fixes (`work/quest-auto-binding-red.log`, `work/quest-toggle-staged-red.log`). Read-only Luna/high review found no remaining critical/important toggle defect. Core code remains unchanged from the 119/119 checkpoint.
+
+This bounded quest pilot is closed. Per the user's priority amendment, return to sleeping, population activities and complete appearance-specific animation coverage now. Broad main/side/mod quest compatibility, rumors/building labels, remote recipients and native quest actor appearance/mobility/sleep remain open. The historical checkpoints below describe earlier stages and do not override this current status.
+
 ## Reproduce
 
 Run `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -QuestProbe` from the Living Cities repository. The runner starts its own player, requires the disposable character naming convention, and refuses to interrupt an existing player. Normal gameplay never starts the probe. The harness disables live input only in this owned test process; native activation methods are invoked directly where needed.

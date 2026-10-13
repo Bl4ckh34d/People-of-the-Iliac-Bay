@@ -177,7 +177,7 @@ namespace LivingCities.DFU
                 "; distinctViews=" + observedViews.Count + "; camera=" + Camera.main.transform.position + "; sleeper=" + actor.transform.position);
             yield return new WaitForEndOfFrame();
         }
-        private static void AimCamera(Vector3 target)
+        internal static void AimCamera(Vector3 target)
         {
             var look = GameManager.Instance.PlayerMouseLook;
             look.SetFacing(target - Camera.main.transform.position);

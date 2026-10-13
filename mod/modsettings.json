@@ -8,6 +8,13 @@
       "Keys": [
         {
           "Value": true,
+          "Name": "QuestHouseholds",
+          "Description": "Pilot: bind new vanilla The Delivery Boy recipients to existing Gothway Garden households. Other quests keep native behavior. Disabling stops new bindings; already accepted names and quest targets remain stable.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
           "Name": "Enabled",
           "Description": "Enable population updates. Disabling keeps saved residents and deaths; schedules catch up when re-enabled.",
           "$version": "v1",

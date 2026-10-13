@@ -42,4 +42,6 @@ The opt-in binding probe is evidence for interception timing and native name/res
 
 ## Verified shipped case, 14 October 2026
 
+The subsequent production pilot automatically binds this unchanged source in Gothway Garden only, before native offer text. A normalized-source SHA-256 guard rejects modified scripts, including mod overrides with the same quest name. Automatic eligibility, native social acceptance, save/reload and delivery now pass for this one reviewed rule; this does not generalize the census into a role classifier. Further survey/adapter expansion is deferred while M2/M3 gameplay and animations resume. See the current checkpoint in `QUEST-IDENTITY.md`.
+
 `A0C00Y14` (**The Delivery Boy**) now passes the dedicated actual-player `-DeliveryProbe`: unchanged source loaded through QuestListsManager, explicit local household binding, native package startup, real pre-delivery save/reload, journal recipient consistency, native hand-in consuming the package, and collection of the script's gold reward. This covers one randomized package branch. The probe bypasses random social offer selection, mouse raycasting and quest eligibility rules; thief/failure/timeout branches remain untested. Remote counterpart `A0C00Y15` remains untested. See `QUEST-IDENTITY.md` for exact evidence and reproduction.
