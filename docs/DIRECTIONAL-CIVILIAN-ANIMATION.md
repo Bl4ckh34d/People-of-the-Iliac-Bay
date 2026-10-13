@@ -13,6 +13,8 @@ User amendments, 14 October 2026, including the expanded all-human coverage requ
 
 ## Delivery sequence
 
+Sleeping-art refinement (14 October): the user chose a thick white blanket covering the body up to the neck, with only the face/head visible. Reuse blanket poses where possible and preserve identity through the visible face, head silhouette and appropriate adult/child proportions. Sleeping does not require drawing every clothing combination under the blanket; waking still restores the original appearance. Use side and angled views appropriate to a player standing beside a bed, including head/foot viewpoints. A top-down cutout placed flat on the mattress is not the finished solution. Shared-bed variants must accommodate partners/children without stacking complete single-person blankets in the same position. Normal room views, mattress anchoring and camera changes need in-engine inspection.
+
 User-selected production order: start with sleeping sprites for all NPC flats when implementing actual sleeping in homes and taverns. Validate bed alignment and waking transitions at that milestone, then expand into the full directional sets below. This changes sequencing, not the required movement/combat/child-diversity coverage. Do not delay the current family foundation to generate all animation sets upfront.
 
 1. Export and inspect actual source flats from the installed game. Record archive/record, dimensions, pivot and palette references in an asset manifest.

@@ -7,7 +7,7 @@ New-Item -ItemType Directory -Path "$destination/Core", "$destination/Scripts", 
 Get-ChildItem -LiteralPath "$repo/mod/Scripts" -Filter '*.cs' | Copy-Item -Destination "$destination/Scripts" -Force
 Copy-Item -LiteralPath "$repo/mod/modsettings.json" -Destination "$destination/modsettings.json" -Force
 Get-ChildItem -LiteralPath "$repo/src/LivingCities.Core" -Filter '*.cs' | Copy-Item -Destination "$destination/Core" -Force
-Copy-Item -LiteralPath "$repo/tools/Editor/LivingCitiesBuild.cs" -Destination "$destination/Editor/LivingCitiesBuild.cs" -Force
+Get-ChildItem -LiteralPath "$repo/tools/Editor" -Filter '*.cs' | Copy-Item -Destination "$destination/Editor" -Force
 $manifest = Get-Content -LiteralPath "$repo/mod/LivingCities.dfmod.json" -Raw | ConvertFrom-Json
 $manifest.Files = @('Assets/Game/Mods/LivingCities/modsettings.json') + @(Get-ChildItem -LiteralPath "$destination/Scripts" -Filter '*.cs' | Sort-Object Name | ForEach-Object { "Assets/Game/Mods/LivingCities/Scripts/$($_.Name)" }) + @(Get-ChildItem -LiteralPath "$destination/Core" -Filter '*.cs' | Sort-Object Name | ForEach-Object { "Assets/Game/Mods/LivingCities/Core/$($_.Name)" })
 $manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath "$destination/LivingCities.dfmod.json" -Encoding utf8

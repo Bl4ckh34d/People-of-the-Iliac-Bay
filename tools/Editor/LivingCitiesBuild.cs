@@ -46,6 +46,7 @@ public static class LivingCitiesBuild
         VerifySerialization();
         VerifySettings();
         VerifyHousing();
+        VerifyBeds();
         Require(!StreetPopulation.IsVisitDestination(DaggerfallConnect.DFLocation.BuildingTypes.House1), "House1 is not an open shop destination");
         Require(typeof(IHasModSaveData).IsAssignableFrom(typeof(LivingCitiesMod)), "Save adapter contract");
         Require(typeof(BuildingDirectory).GetMethod("GetBuildingsOfType") != null, "Building enumeration hook");
@@ -95,6 +96,34 @@ public static class LivingCitiesBuild
         VerifySerialization();
         VerifyAdapter();
         Debug.Log("LIVING_CITIES_SAVE_STATE_VERIFIED: FullSerializer, family migration and adapter lifecycle passed; no bundle installed.");
+    }
+    public static void VerifyBeds()
+    {
+        var meshReader = DaggerfallUnity.Instance.MeshReader;
+        for (uint id = 41000; id <= 41002; id++)
+        {
+            ModelData model;
+            Require(meshReader.GetModelData(id, out model), "Original bed mesh");
+            Bounds mattress = BedGeometry.Mattress(model);
+            Require(mattress.size.x > 2 && mattress.size.x < 2.2f && mattress.size.z > 1 && mattress.size.z < 1.6f,
+                "Mattress extents exclude frame and pillow");
+            if (id == 41002) Require(mattress.center.y < 0, "Canopy is not mattress");
+            var record = new DFBlock.RmbBlock3dObjectRecord { ModelIdNum = id, XPos = 100, YPos = -200, ZPos = 300,
+                YRotation = 512, ObjectType = 0 };
+            var bed = BedGeometry.FromRecord(record, 7, model);
+            Vector3 expected = new Vector3(2.5f, 5, 7.5f) + Quaternion.Euler(0, -90, 0) * mattress.center;
+            Require(Vector3.Distance(bed.LocalCenter, expected) < 0.0001f && bed.RecordIndex == 7 && bed.ModelId == id,
+                "Upstairs rotated bed follows original record transform");
+            Require(Vector3.Dot(bed.LocalHeadDirection, Vector3.forward) > 0.999f &&
+                Math.Abs(bed.Length - mattress.size.x) < 0.0001f, "Head direction and dimensions");
+            record.ObjectType = 3; record.YPos = 200;
+            bed = BedGeometry.FromRecord(record, 7, model);
+            float bottom = float.PositiveInfinity;
+            foreach (var vertex in model.Vertices) bottom = Math.Min(bottom, vertex.y);
+            Require(Math.Abs(bed.LocalCenter.y - (5 - bottom + mattress.center.y)) < 0.0001f,
+                "Prop bed bottom offset follows DFU layout");
+        }
+        Debug.Log("LIVING_CITIES_BEDS_VERIFIED: original mattresses, canopy exclusion, rotation and prop offsets passed.");
     }
     public static void VerifyHousing()
     {

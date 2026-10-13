@@ -12,6 +12,8 @@ Approved on 13 October 2026. The active Codex goal covers all milestones; this f
 
 Cross-cutting requirement: a mod settings menu with bounded controls, useful presets, subsystem toggles, clear save/reload semantics, and defaults. Expose working features as they are implemented. See `SETTINGS-AND-COMPATIBILITY.md`.
 
+Quest-household amendment: authoritative quest names, destinations and relationships win over generated families for main and side quests. Ordinary-home generated relatives adopt a permanent named resident's surname through a stable binding/override; temporary guests and captives do not rename homes. Never redirect a quest to a matching generated surname. Castles/palaces retain vanilla arrangements. Test late-starting quests and save/load as well as first visits; see `QUEST-IDENTITY.md`. This remains pending M2/M3 integration.
+
 Tavern amendment: nonlocal travelers rent for one or several nights, visit town, then depart. Paid reservations retain rooms while guests are out; first come, first served, no guaranteed player vacancy. Reserved rooms reject player sleep; full taverns report the earliest room release. Preserve existing paid player bookings. See `TAVERN-LODGING.md` for persistence and acceptance requirements.
 
 Death/recovery amendment: extinct households stay vacant; corpse cleanup waits for elapsed time and an unobserved interior. New families use new identities. Dense-city recovery or bank listing takes 3–7 days; other settlements 7–30 days, with emptied isolated hamlets toward 30. Preserve ownership, deceased identities and memories. See `VACANCY-AND-RECOVERY.md`.
@@ -31,6 +33,8 @@ Child diversity amendment: at least 12 distinct child appearances: three variati
 Future speech extension: optional English TTS, investigating the Telegram bot's MiraTTS engine; at least 52 female and 52 male base voices plus fantasy options, with persistent per-NPC voice/pitch/speed. The user delegates the 7B dialogue model choice; selection awaits benchmarks. See `FUTURE-DIALOGUE-AND-VOICE.md`.
 
 ## Current work
+
+Sleeping foundation checkpoint (14 October): 94 core tests pass; native build checks cover all three classic bed meshes. Actual-player testing matches all three mattress models to their colliders in real interiors and restores five logical bed assignments to the family home's single bed after reload. Sleeping art now uses the user's thick white blanket/visible-face approach, viewed from the side or at an angle. One angle study exists; it is not native-resolution production art. Physical sleeping/waking, shared-bed rendering, original NPC binding and tavern booking remain incomplete. See `SLEEPING-CHECKPOINT.md`.
 
 Population foundation implemented and reviewed. Full milestones remain incomplete.
 

@@ -31,4 +31,16 @@ The previous harness also accepted live desktop input during automated steps. A 
 
 ## Remaining acceptance
 
+### Quest destinations and household surnames
+
+User requirement added 14 October: quests directing the player to a named person at a specific house must agree with the household simulation, for both side quests and main quests. Castles and palaces retain vanilla identities and arrangements.
+
+The quest's authoritative person name, placement, destination and scripted relationships take precedence. Do not redirect a quest to a generated household merely because its surname matches; do not rename the quest person or rewrite journal/rumor/marker destinations to satisfy generated population data. Bind the original quest identity at its required location.
+
+In an ordinary residence, establish whether the named person is a permanent resident before generating family ties. Generated relatives adopt that resident's surname, while retaining their own stable IDs, given names, relationships and death records. If a quest introduces an authoritative resident after initial allocation, reconcile the generated family surname through a persisted override with provenance; do not regenerate the family. A visitor, captive, enemy or temporary quest target must not rename the household. Explicit quest relationships, distinct fixed names and unrelated lodgers override the generated shared-surname convention. Do not guess a surname by blindly taking the last word of a title, mononym or unusual name. A quest ending must not randomly roll names again.
+
+Keep castles, palaces and shared institutions outside this generated-family rename policy. Existing vanilla named NPCs remain authoritative. Ambiguous residency must not silently create a family or alter quest data; preserve native behavior until an explicit binding rule is established.
+
+Required tests: a named home resident before initial population creation; a side quest starting after the house was visited; an actual main-quest home target; a temporary visitor/captive; conflicting fixed names; castle/palace NPCs; quest start/completion/cancellation and save/reload. Verify native person binding, journal/rumor destination, actual door/interior presence, conversation/task advancement, generated relatives' surname and unchanged resident IDs. This policy is recorded scope, not implemented behavior. The current synthetic tavern probe does not prove these cases.
+
 This tests a synthetic questor binding on an actual original tavern NPC, using the native activation handler directly. It does not test mouse raycasting, door locks/greeting gates, every named individual/main quest, turn-in rewards, shops/services while relocated, scripted placement into another building, death policy, or cross-map actor transfer. M1 probes are complete; the corresponding M2/M3 integration work remains open. No engine changes were required for this probe. Read-only Luna/high review found no confirmed critical or important issue; runtime evidence remains the acceptance authority.
