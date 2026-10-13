@@ -1,7 +1,8 @@
 param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent),
     [ValidatePattern('^LivingCitiesTest-[a-f0-9]{8}$')][string]$FixtureCharacter,
     [switch]$QuestProbe,
-    [switch]$BedProbe)
+    [switch]$BedProbe,
+    [switch]$SleepProbe)
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
 $player = Join-Path $DfuRoot 'Player/DaggerfallUnity.exe'
@@ -18,6 +19,7 @@ $arguments = '-screen-fullscreen 0 -screen-width 1280 -screen-height 720 -living
 if ($FixtureCharacter) { $arguments += ' -livingcities-fixture-character ' + $FixtureCharacter }
 if ($QuestProbe) { $arguments += ' -livingcities-quest-probe' }
 if ($BedProbe) { $arguments += ' -livingcities-bed-probe' }
+if ($SleepProbe) { $arguments += ' -livingcities-sleep-probe' }
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
 Write-Output "Owned town-test process: $($owned.Id)"
 try {
@@ -38,6 +40,7 @@ try {
     if (-not $passed) { throw 'Town test did not finish within 180 seconds.' }
     if ($QuestProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_PASS:') { throw 'Quest probe did not complete.' }
     if ($BedProbe -and $body -notmatch 'LIVING_CITIES_TOWN_BEDS_PASS:') { throw 'Bed probe did not complete.' }
+    if ($SleepProbe -and $body -notmatch 'LIVING_CITIES_TOWN_SLEEP_PASS:') { throw 'Sleep probe did not complete.' }
 } finally {
     try {
         if (Test-Path -LiteralPath $log) { Copy-Item -LiteralPath $log -Destination "$repo/work/town-test.log" -Force }

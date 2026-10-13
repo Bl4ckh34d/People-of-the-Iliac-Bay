@@ -199,6 +199,8 @@ namespace LivingCities.DFU
             }
             yield return VerifyStreets();
             yield return VerifyFamilies(mapId, requireFamily);
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-sleep-probe") >= 0)
+                yield return SleepProbe.Run();
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-bed-probe") >= 0)
                 yield return BedGeometryProbe.Run();
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-quest-probe") >= 0)

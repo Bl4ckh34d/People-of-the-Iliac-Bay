@@ -16,6 +16,13 @@ namespace LivingCities.DFU
         public Resident Resident { get; private set; }
         public MobilePersonNPC Person { get; private set; }
         private DaggerfallEntity entity;
+        private SleepingPose sleeping;
+        public bool IsSleeping { get { return sleeping && sleeping.Active; } }
+        public void Sleep(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
+        {
+            if (!sleeping) sleeping = gameObject.AddComponent<SleepingPose>();
+            sleeping.Begin(this, interior, bed, atlas);
+        }
         public void Initialize(Resident resident, uint surnameSeed, CityNavigation navigation)
         {
             Resident = resident;
@@ -73,6 +80,7 @@ namespace LivingCities.DFU
         private void OnDestroy() { if (entity != null) entity.OnDeath -= Died; }
         public void Place(Vector3 ground, Vector3 direction, bool standing = false)
         {
+            if (sleeping) sleeping.Wake();
             transform.position = ground + Vector3.up;
             direction.y = 0;
             if (direction.sqrMagnitude > 0.00001f) transform.rotation = Quaternion.LookRotation(direction);

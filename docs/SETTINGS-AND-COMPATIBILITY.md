@@ -10,6 +10,14 @@ First seven functional controls: simulation enable, Gothway Garden physical-popu
 
 Later controls accompany implementation: crowd/activity weights and operating hours; stealth/detection/waking sensitivity; settlement guard counts, patrol/response/search settings and recruitment; nightlife/group behavior, event frequency/severity and haunting behavior; dialogue enable/model/response limits/timeouts; actor radius, simulation budgets and diagnostics. Add coherent presets and reset-to-defaults support when enough systems exist to make presets useful. Changes that affect saves require explicit descriptions and migration behavior.
 
+Version 0.3.1 adds the eighth control, `DailyRoutine/SleepingPoses` (default true). It immediately enables/disables supported sleeping visuals while retaining identity and schedule state. Current coverage is explicitly one adult appearance on unshared home beds. Native deserialization/default checks cover this control; runtime tests exercise the underlying live transition. Clicking the actual settings menu remains a separate UI acceptance check.
+
+## Distribution boundary
+
+The user requires a distributable standard mod, not a custom game installation. Living Cities is packaged as `livingcities.dfmod`; its runtime sources, settings and generated atlas are under its own mod directory. Editor-only build/survey tools are excluded from the package. Mod save data is separate (`mod_livingcities.txt`). No custom executable or replacement engine assembly is required. Any future inability to implement a feature through a standard mod must be reported rather than silently changing this distribution requirement.
+
+Verified 14 October 2026: the pinned upstream DFU checkout has no tracked changes, and all 598 files from the official `dfu_windows_64bit-v1.1.1.zip` match the installed player by SHA-256, with no missing files. The archive's 642 entries also include directories. The installed and built Living Cities 0.3.1 bundles match SHA-256 `8DAD697BB9EEFED95EC796292843CA2AB2B4F63706BD08500DB702D376EB0479`. The official security-patched player is the baseline release, not an engine patch made by Living Cities. Building inside the upstream ignored `Assets/Game/Mods/LivingCities` folder does not modify tracked engine source.
+
 ## City overhaul adapters, after vanilla acceptance
 
 Keep settlement inventory, navigable routes, entrance/bed/activity anchors, vendor capabilities, and persistent identity mapping behind clear adapter boundaries. A patch can register additional market stalls, buildings, destinations, and actors. Stable IDs must include the supplying mod and object key so additions do not renumber existing residents.

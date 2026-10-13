@@ -34,6 +34,7 @@ namespace LivingCities.DFU
             DontDestroyOnLoad(host);
             var component = host.AddComponent<LivingCitiesMod>();
             component.streets = host.AddComponent<StreetPopulation>();
+            component.streets.SetSleepingArt(initParams.Mod);
             component.mod = initParams.Mod;
             initParams.Mod.SaveDataInterface = component;
             initParams.Mod.LoadSettingsCallback = component.LoadSettings;
@@ -79,6 +80,7 @@ namespace LivingCities.DFU
         {
             if (streets) streets.Clear();
             streetPopulationEnabled = settings.GetBool("General", "StreetPopulation");
+            if (streets) streets.SleepEnabled = settings.GetBool("DailyRoutine", "SleepingPoses");
             options = new RuntimeOptions(settings.GetBool("General", "Enabled"),
                 settings.GetInt("Population", "HouseholdLimit"), settings.GetInt("DailyRoutine", "WakeHour"),
                 settings.GetInt("DailyRoutine", "SleepHour"), settings.GetInt("Diagnostics", "RefreshSeconds"),
@@ -151,8 +153,8 @@ namespace LivingCities.DFU
         private void OnGUI()
         {
             if (!panel) return;
-            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.0 — development diagnostics (F8)");
-            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nFamilies: children stay home. Play, sleeping poses and reactions pending.");
+            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.1 — development diagnostics (F8)");
+            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nSleeping: one adult appearance in unshared beds. Child play/reactions pending.");
         }
         public string TestStatus()
         {

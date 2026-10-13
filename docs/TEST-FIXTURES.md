@@ -20,6 +20,12 @@ Legacy fixture validation also passed on schema 3 without creating children or r
 
 Optional `-QuestProbe` adds native quest identity checks after the normal tests. It creates/updates SAVE16, **Living Cities - quest identity probe**, on the same disposable character. This save contains a synthetic active quest bound to original tavern NPC Vannolda Woodston in building 65542. Movement, native activation, hide/show and reconstructed save/load passed. Use SAVE15 for the normal family preview. `QUEST-IDENTITY.md` records the exact scope and evidence. Scripted entries now perform native building discovery and activation setup; live input is disabled only in the automated process, preventing accidental door activation during assertions.
 
+## Sleeping preview, version 0.3.1
+
+Character `LivingCitiesTest-126494eb` now has SAVE17, **Living Cities - sleeping preview**, at 23:00 beside Edwore Coppercroft's upstairs bed in building 263. SAVE18, **Living Cities - sleeping death**, is the disposable dead-resident regression save; use SAVE17 for observation. Both names and character ownership were verified from actual save metadata.
+
+Run `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -SleepProbe` for the complete current check. It passes schedule transitions, preserved native actor/name, horizontal interaction capsule and raycast targeting, immediate sleep toggle, side/foot viewpoints, actual living save/load, death persistence through another reload, and restoration of the living preview. The same run passes the existing family and street checks. Sleeping is limited to one adult appearance using unshared home beds. No tavern booking, shared-family pose, child sleeping, native questor sleeping or stealth waking is included. See `SLEEPING-CHECKPOINT.md` for image and camera-test limitations.
+
 ## Historical adult fixture, version 0.2.0
 
 - Character: `LivingCitiesTest-a2dd8579` (disposable developer character, god mode).

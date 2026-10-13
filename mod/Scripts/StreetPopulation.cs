@@ -5,6 +5,7 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility;
+using DaggerfallWorkshop.Game.Utility.ModSupport;
 using LivingCities.Core;
 using UnityEngine;
 
@@ -31,9 +32,15 @@ namespace LivingCities.DFU
         private DaggerfallInterior interior;
         private InteriorGeometry indoorGeometry;
         private readonly Dictionary<string, int> indoorSlots = new Dictionary<string, int>();
+        private SettlementPopulation population;
+        private SleepingArt sleepingArt;
+        private readonly Dictionary<int, BedAnchor> indoorBeds = new Dictionary<int, BedAnchor>();
+        private readonly Dictionary<string, BedAssignment> bedClaims = new Dictionary<string, BedAssignment>();
+        public void SetSleepingArt(Mod mod) { if (sleepingArt != null) sleepingArt.Dispose(); sleepingArt = new SleepingArt(mod); }
         public int ActiveCount { get { return actors.Count; } }
         public int PlannedCount { get { return plans.Count; } }
         public bool Ready { get; private set; }
+        public bool SleepEnabled { get; set; }
         public bool TrySample(double seconds, out string id, out Vector3 ground)
         {
             foreach (var plan in plans)
@@ -67,7 +74,7 @@ namespace LivingCities.DFU
             // M2 preview is deliberately limited to the verified Breton test town.
             if (town.MapID != 206728581) { Clear(); return; }
             if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
-            Clear(); directory = town; navigation = nav;
+            Clear(); directory = town; navigation = nav; this.population = population;
             building = StartCoroutine(Build(population, store, wake, sleep));
         }
         private IEnumerator Build(SettlementPopulation population, WorldStateStore store, int wake, int sleep)
@@ -191,6 +198,16 @@ namespace LivingCities.DFU
             {
                 ClearActors(); interior = loadedInterior; indoorSlots.Clear();
                 indoorGeometry = interior ? new InteriorGeometry(interior) : null;
+                indoorBeds.Clear(); bedClaims.Clear();
+                if (interior && population != null)
+                {
+                    var home = population.Households.Find(h => h.BuildingKey == interior.EntryDoor.buildingKey);
+                    if (home != null)
+                    {
+                        foreach (var bed in BedGeometry.Read(interior)) indoorBeds.Add(bed.RecordIndex, bed);
+                        foreach (var claim in HomeBeds.Assign(home, indoorBeds.Keys)) bedClaims.Add(claim.ResidentId, claim);
+                    }
+                }
                 if (interior) Debug.Log("LIVING_CITIES_INTERIOR_ANCHORS: building=" + interior.EntryDoor.buildingKey +
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
@@ -258,7 +275,16 @@ namespace LivingCities.DFU
                     actor.Initialize(plan.Resident, plan.SurnameSeed, navigation);
                     actors.Add(plan.Resident.Id, actor); go.SetActive(true);
                 }
-                actor.Place(interior.transform.TransformPoint(indoorGeometry.LocalAnchors[slot]), Vector3.forward, true);
+                BedAssignment bedClaim;
+                var art = SleepEnabled && state.Activity == Activity.Sleep && sleepingArt != null &&
+                    bedClaims.TryGetValue(plan.Resident.Id, out bedClaim) && bedClaim.SharingCount == 1 ?
+                    sleepingArt.ForResident(plan.Resident) : null;
+                if (art != null)
+                {
+                    bedClaim = bedClaims[plan.Resident.Id];
+                    actor.Sleep(interior.transform, indoorBeds[bedClaim.BedRecordIndex], art);
+                }
+                else actor.Place(interior.transform.TransformPoint(indoorGeometry.LocalAnchors[slot]), Vector3.forward, true);
             }
         }
         private void ClearActors()
@@ -272,6 +298,7 @@ namespace LivingCities.DFU
             ClearActors(); plans.Clear(); Ready = false;
             needsExterior = false;
             interior = null; indoorGeometry = null; indoorSlots.Clear();
+            population = null; indoorBeds.Clear(); bedClaims.Clear();
             if (ownsVanilla && vanilla)
             {
                 foreach (var pair in hiddenVanilla) if (pair.Key) pair.Key.SetActive(pair.Value);
@@ -279,6 +306,6 @@ namespace LivingCities.DFU
             }
             hiddenVanilla.Clear(); ownsVanilla = false; vanilla = null; directory = null; geometry = null;
         }
-        private void OnDestroy() { Clear(); }
+        private void OnDestroy() { Clear(); if (sleepingArt != null) sleepingArt.Dispose(); }
     }
 }

@@ -47,6 +47,7 @@ public static class LivingCitiesBuild
         VerifySettings();
         VerifyHousing();
         VerifyBeds();
+        VerifySleepingArt();
         Require(!StreetPopulation.IsVisitDestination(DaggerfallConnect.DFLocation.BuildingTypes.House1), "House1 is not an open shop destination");
         Require(typeof(IHasModSaveData).IsAssignableFrom(typeof(LivingCitiesMod)), "Save adapter contract");
         Require(typeof(BuildingDirectory).GetMethod("GetBuildingsOfType") != null, "Building enumeration hook");
@@ -64,6 +65,7 @@ public static class LivingCitiesBuild
         foreach (string source in info.Files)
         {
             if (source.EndsWith("/modsettings.json")) { assets.Add(source); continue; }
+            if (source.EndsWith(".png.bytes") && source.Contains("/Textures/")) { assets.Add(source); continue; }
             Require(source.EndsWith(".cs") && !source.Contains("/Editor/"), "Only runtime sources may ship");
             string target = staging + "/" + Path.GetFileName(source) + ".txt";
             File.Copy(source, target, true); assets.Add(target);
@@ -124,6 +126,26 @@ public static class LivingCitiesBuild
                 "Prop bed bottom offset follows DFU layout");
         }
         Debug.Log("LIVING_CITIES_BEDS_VERIFIED: original mattresses, canopy exclusion, rotation and prop offsets passed.");
+    }
+    private static void VerifySleepingArt()
+    {
+        var texture = new Texture2D(2, 2);
+        try
+        {
+            Require(texture.LoadImage(File.ReadAllBytes("Assets/Game/Mods/LivingCities/Textures/sleep-mobile-385.png.bytes")), "Sleeping PNG decode");
+            var views = SleepingArt.FindViews(texture);
+            Require(views.Length == 5 && views[2].width > views[0].width && views[2].width > views[4].width,
+                "Atlas has distinct broadside and foreshortened end views");
+            for (int i = 1; i < views.Length; i++) Require(views[i].yMax < views[i - 1].yMin, "Atlas rows do not overlap");
+            // The generated PNG has occasional 1/255 alpha outside the sprites.
+            // DFU's billboard shader clips below 0.5; verify the rendered boundary.
+            for (int x = 0; x < texture.width; x++)
+                Require(texture.GetPixel(x, 0).a < 0.5f && texture.GetPixel(x, texture.height - 1).a < 0.5f, "Atlas top/bottom are clipped");
+            for (int y = 0; y < texture.height; y++)
+                Require(texture.GetPixel(0, y).a < 0.5f && texture.GetPixel(texture.width - 1, y).a < 0.5f, "Atlas sides are clipped");
+        }
+        finally { UnityEngine.Object.DestroyImmediate(texture); }
+        Debug.Log("LIVING_CITIES_SLEEP_ART_VERIFIED: transparent five-view atlas with distinct side/end footprints.");
     }
     public static void VerifyHousing()
     {
@@ -204,10 +226,11 @@ public static class LivingCitiesBuild
         Require(data.GetValue<int>("Population", "HouseholdLimit") == 5, "Household slider default");
         Require(data.GetValue<int>("DailyRoutine", "WakeHour") == 6, "Wake slider default");
         Require(data.GetValue<int>("DailyRoutine", "SleepHour") == 22, "Sleep slider default");
+        Require(data.GetValue<bool>("DailyRoutine", "SleepingPoses"), "Sleeping poses default");
         Require(data.GetValue<int>("Diagnostics", "RefreshSeconds") == 1, "Refresh slider default");
         Require(data.GetValue<bool>("Diagnostics", "EnableF8Panel"), "Panel toggle default");
         Require(data.GetValue<bool>("General", "StreetPopulation"), "Street population default");
-        Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: seven native menu controls deserialize with expected types and defaults.");
+        Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: eight native menu controls deserialize with expected types and defaults.");
     }
     private static void VerifyAdapter()
     {

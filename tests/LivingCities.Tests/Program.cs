@@ -12,6 +12,7 @@ namespace LivingCities.Tests
             FamilyTests.Add(cases);
             FamilySaveTests.Add(cases);
             BedTests.Add(cases);
+            SleepViewTests.Add(cases);
             PathTests.Add(cases);
             ScheduleTests.Add(cases);
             SaveTests.Add(cases);

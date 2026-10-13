@@ -1,6 +1,20 @@
 # Sleeping foundation checkpoint — 14 October 2026
 
-The current installed 0.3.0 development bundle includes bed geometry and assignment code. NPC sleeping poses are not active yet. No M2/M3 completion is claimed.
+Version 0.3.1 adds a limited sleeping prototype: generated adult men using mobile archive 385 can sleep in unshared home beds. Other appearances and shared beds still use standing presence. No M2/M3 completion is claimed.
+
+## Runtime prototype
+
+The renderer keeps the same ResidentActor and MobilePersonNPC, hides its standing asset, places a directional blanket/face visual at the native mattress, and changes the existing interaction capsule to a horizontal body. Morning and the live `DailyRoutine/SleepingPoses` toggle restore the original asset and capsule. Five atlas views are selected by camera direction, with mirrored opposite views. The first atlas is oversized generated prototype art, not completed classic-resolution production coverage; its provenance and exact prompt are in `art/sleep/README.md`.
+
+Core tests pass 97/97, including three direction-selection cases. The Unity build checks the five separated atlas views, transparent borders against the native shader cutoff, end/side proportions, eight settings controls and the reopened bundle.
+
+`tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -SleepProbe` passed in the actual player. Edwore Coppercroft (`s:206728581:h:263:r:0`, building 263) sleeps at 23:00 and midnight, wakes with the same native person/name and restored upright capsule at 07:00, and responds to the sleep toggle. Camera raycasts reach the sleeping interaction target. Actual SAVE17 reload restores the living pose; entity death removes the actor, SAVE18 reload retains death, and reloading SAVE17 restores the living preview. This tests the death callback, not melee damage, crime attribution or sleeping dialogue. Existing street/interior/family checks passed in the same run. Evidence: `work/sleep-runtime-pass.log`; earlier failing checks are retained under `work/sleep-runtime-red.log` and camera diagnostic logs. Read-only Luna/high review found no confirmed important production-code issue.
+
+Actual side and foot-end screenshots were inspected: blanket/head are visible on the mattress with transparent surroundings. The waking screenshot points toward the downstairs standing destination but is occluded; the visible standing pose is not established by that screenshot. Waking identity, original asset activation and capsule restoration are established by runtime assertions. Physical stair/bed approach remains unimplemented.
+
+The screenshot harness needed two corrections: native `SetFacing` changes fields but its Update may skip applying transforms in the unattended process; the probe now explicitly applies the native body-yaw/camera-pitch split and checks centered projection. Player positions are grounded by interior floor raycasts near the upstairs bed, excluding the player's own collider, with movement cleared before teleporting. The general standing-anchor survey deliberately does not traverse stairs and cannot supply this upstairs camera position. The corrected preview survives actual reload without the previous below-floor camera placement.
+
+Remaining limits: no shared-bed blanket compositions, child or other adult appearance coverage, original stationary NPC binding, tavern bookings, stealth wake reactions, or walking to/from the bed. Entering/leaving the sleep pose currently snaps between the bed and the existing standing anchor. The native NPC/quest integration is still separate, and broad quest compatibility remains pending.
 
 ## Verified behavior
 
@@ -23,4 +37,4 @@ The user chose a thick white blanket covering the body to the neck, with only th
 
 ## Remaining implementation
 
-Connect schedule sleep/wake to actual bed poses, preserve actor/service/quest identity and collider behavior, and verify morning waking, time skips, settings changes, death and save/load. Define family blanket compositions that physically fit shared beds and handle missing/unsupported geometry explicitly. Bind original home/shop NPCs without duplicates, including authoritative quest household surnames and destinations. Implement paid traveler/player room rights before tavern sleepers or occupied-bed enforcement. Expand approved sleeping faces/views across all required human appearances, including children.
+Extend the limited runtime prototype across supported appearances and shared beds. Define family blanket compositions that physically fit shared beds and handle missing/unsupported geometry explicitly. Bind original home/shop NPCs without duplicates, including authoritative quest household surnames and destinations. Implement paid traveler/player room rights before tavern sleepers or occupied-bed enforcement. Expand approved sleeping faces/views across all required human appearances, including children. Verify sleep-specific exit/re-entry, native service/quest activation, waking reactions and physical bed approach before claiming the complete feature.

@@ -36,7 +36,7 @@ Future speech extension: optional English TTS, investigating the Telegram bot's 
 
 ## Current work
 
-Sleeping foundation checkpoint (14 October): 94 core tests pass; native build checks cover all three classic bed meshes. Actual-player testing matches all three mattress models to their colliders in real interiors and restores five logical bed assignments to the family home's single bed after reload. Sleeping art now uses the user's thick white blanket/visible-face approach, viewed from the side or at an angle. One angle study exists; it is not native-resolution production art. Physical sleeping/waking, shared-bed rendering, original NPC binding and tavern booking remain incomplete. See `SLEEPING-CHECKPOINT.md`.
+Sleeping prototype 0.3.1 (14 October): 97 core tests pass; native build checks cover all three classic bed meshes and a five-view blanket atlas. The runtime now places one supported adult male appearance in unshared home beds and restores the same standing actor on waking or disabling sleep poses. A new native setting controls these poses. Shared-bed rendering, remaining appearances, original NPC binding, bed approach and tavern booking remain incomplete. The generated art is a functional prototype, not native-resolution production coverage. See `SLEEPING-CHECKPOINT.md` for actual-player evidence and fixture limitations.
 
 Population foundation implemented and reviewed. Full milestones remain incomplete.
 
