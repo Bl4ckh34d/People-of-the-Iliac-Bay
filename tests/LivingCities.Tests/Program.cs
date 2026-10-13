@@ -9,6 +9,8 @@ namespace LivingCities.Tests
         {
             var cases = new List<(string Name, Action Body)>();
             PopulationTests.Add(cases);
+            FamilyTests.Add(cases);
+            FamilySaveTests.Add(cases);
             PathTests.Add(cases);
             ScheduleTests.Add(cases);
             SaveTests.Add(cases);

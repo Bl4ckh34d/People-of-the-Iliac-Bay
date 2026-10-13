@@ -8,8 +8,8 @@ namespace LivingCities.Tests
     internal static class PopulationTests
     {
         internal static string Signature(SettlementPopulation p) => p.SettlementId + ":" +
-            string.Join("|", p.Households.Select(h => h.BuildingKey + ":" +
-                string.Join(",", h.Residents.Select(r => $"{r.Id}/{r.HomeKey}/{r.AppearanceSeed}/{r.IsAlive}/{r.IsQuestProtected}"))));
+            string.Join("|", p.Households.Select(h => h.BuildingKey + ":" + h.SurnameSeed + ":" +
+                string.Join(",", h.Residents.Select(r => $"{r.Id}/{r.HomeKey}/{r.AppearanceSeed}/{r.IsAlive}/{r.IsQuestProtected}/{r.AgeGroup}/{r.Sex}/{r.PartnerId}/{r.MotherId}/{r.FatherId}"))));
 
         internal static void Add(List<(string, Action)> cases)
         {

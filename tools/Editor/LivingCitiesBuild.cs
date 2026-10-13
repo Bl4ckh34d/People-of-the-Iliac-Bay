@@ -86,6 +86,12 @@ public static class LivingCitiesBuild
             ",\"nativeSettings\":true,\"installed\":true,\"physicalActors\":false}");
         Debug.Log("LIVING_CITIES_BUILD_SUCCESS: serializer, adapter lifecycle, contracts and bundle verified; installed.");
     }
+    public static void VerifySaveState()
+    {
+        VerifySerialization();
+        VerifyAdapter();
+        Debug.Log("LIVING_CITIES_SAVE_STATE_VERIFIED: FullSerializer, family migration and adapter lifecycle passed; no bundle installed.");
+    }
     private static void VerifySerialization()
     {
         var store = new WorldStateStore(uint.MaxValue);
@@ -99,6 +105,30 @@ public static class LivingCitiesBuild
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), serialized));
         Require(serialized == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "FullSerializer round trip");
         Require(!restored.GetOrCreate(100, new[] { 10 }).Households[0].Residents[0].IsAlive, "Death persistence");
+
+        var profiles = new List<HomeProfile>();
+        for (int key = 1; key <= 100; key++) profiles.Add(new HomeProfile(key, 4, 200));
+        var familyTown = store.GetOrCreateFamilies(200, profiles);
+        var family = familyTown.Households.Find(home => home.Residents.Count == 5);
+        Require(family != null, "Five-person family fixture");
+        family.Residents[0].IsAlive = false;
+        serialized = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), serialized));
+        Require(serialized == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Family FullSerializer round trip");
+        var savedFamily = restored.GetOrCreateFamilies(200, profiles, 1).Households.Find(home => home.BuildingKey == family.BuildingKey);
+        Require(savedFamily.Residents.Count == 5 && savedFamily.Residents[2].FatherId == family.Residents[0].Id &&
+            savedFamily.Residents[2].AgeGroup == ResidentAgeGroup.Child && !savedFamily.Residents[0].IsAlive &&
+            savedFamily.Residents[1].PartnerId == family.Residents[0].Id && savedFamily.SurnameSeed == family.SurnameSeed,
+            "Persistent family roles and deceased parent");
+        for (int version = 1; version <= 2; version++)
+        {
+            string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
+            restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
+            var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
+            Require(migrated.Version == 3 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
+                resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
+                home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
+        }
     }
     private static void VerifySettings()
     {
@@ -121,7 +151,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 2 && saved.Settlements.Count == 0 && saved.Routines.Count == 0, "New world state");
+            Require(saved.Version == 3 && saved.Settlements.Count == 0 && saved.Routines.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }

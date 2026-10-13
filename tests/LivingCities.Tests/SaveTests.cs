@@ -21,7 +21,7 @@ namespace LivingCities.Tests
                 var s = Filled(); var old = s.Snapshot(); old.Version = 1; old.Routines = null;
                 string identity = old.Settlements[0].Households[0].Residents[0].Id;
                 s.Restore(old);
-                Check.Equal(2, s.Snapshot().Version);
+                Check.Equal(3, s.Snapshot().Version);
                 Check.Equal(identity, s.Snapshot().Settlements[0].Households[0].Residents[0].Id);
                 Check.Equal(0, s.Snapshot().Routines.Count);
             }));
@@ -96,7 +96,7 @@ namespace LivingCities.Tests
             Reject(cases, "wrong ownership", s => s.Settlements[0].Households[0].Residents[0].HomeKey = 900);
             Reject(cases, "overcrowded home", s => {
                 var h = s.Settlements[0].Households[0];
-                while (h.Residents.Count < 4) h.Residents.Add(new Resident { Id = "extra" + h.Residents.Count, HomeKey = h.BuildingKey });
+                while (h.Residents.Count < 6) h.Residents.Add(new Resident { Id = "extra" + h.Residents.Count, HomeKey = h.BuildingKey });
             });
             Reject(cases, "dead protected resident", s => {
                 var r = s.Settlements[0].Households[0].Residents[0]; r.IsQuestProtected = true; r.IsAlive = false;
