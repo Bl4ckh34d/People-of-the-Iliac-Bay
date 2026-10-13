@@ -10,8 +10,7 @@ using UnityEngine;
 
 namespace LivingCities.DFU
 {
-    // First live controller is exterior-only. Indoor dispatch is a separate next
-    // integration step; no hidden claim that this already replaces all guards.
+    // Physical roster controller for the supported town and surveyed buildings.
     public sealed class GuardPopulation : MonoBehaviour
     {
         public GuardRoster Roster { get; private set; }
@@ -28,18 +27,21 @@ namespace LivingCities.DFU
         private float nextRoutes;
         private bool awaitingSight;
         private Coroutine approachSurvey;
+        private DaggerfallInterior interior;
+        private Vector3? entryGround;
         private bool OwnsTown()
         {
             var game = GameManager.Instance;
             return isActiveAndEnabled && directory && Roster != null && game != null && game.IsPlayingGame() &&
-                !game.PlayerEnterExit.IsPlayerInside && game.PlayerGPS.HasCurrentLocation &&
-                game.PlayerGPS.CurrentLocation.MapTableData.MapId == directory.MapID;
+                game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId == directory.MapID &&
+                (!game.PlayerEnterExit.IsPlayerInside || (game.PlayerEnterExit.IsPlayerInsideBuilding &&
+                game.PlayerEnterExit.Interior && Roster.BuildingApproaches.Exists(a => a.BuildingKey == game.PlayerEnterExit.Interior.EntryDoor.buildingKey)));
         }
         public void SetTown(BuildingDirectory town, CityNavigation navigation, SettlementPopulation population, WorldStateStore store)
         {
             if (directory == town && Roster != null) return;
             Clear();
-            if (town.MapID != 206728581 || GameManager.Instance.PlayerEnterExit.IsPlayerInside) return;
+            if (town.MapID != 206728581 || (GameManager.Instance.PlayerEnterExit.IsPlayerInside && store.GetGuards(town.MapID) == null)) return;
             var routines = store.GetRoutines(town.MapID);
             if (routines == null) return;
             var posts = new List<SavedRoutePoint>();
@@ -80,10 +82,14 @@ namespace LivingCities.DFU
         private static double Now()
         {
             var now = DaggerfallUnity.Instance.WorldTime.Now;
-            return now.ToSeconds() + now.Second - Math.Floor(now.Second);
+            // Second is a float. Promote before addition or the absolute game
+            // timestamp (~12 billion seconds) rounds to 1024-second increments.
+            return (double)now.ToSeconds() + (double)now.Second - Math.Floor(now.Second);
         }
         private IEnumerator SurveyApproaches(CityNavigation navigation)
         {
+            while (GameManager.Instance.PlayerEnterExit.IsPlayerInside || !directory.gameObject.activeInHierarchy)
+                yield return null;
             // Door discovery and physics queries must run against the active exterior.
             var survey = new TownGeometry(directory, navigation);
             int completed = 0;
@@ -98,7 +104,8 @@ namespace LivingCities.DFU
                 var guards = new List<GuardRecord>(Roster.Guards);
                 foreach (var guard in guards)
                 {
-                    while (!OwnsTown() || !directory.gameObject.activeInHierarchy || GameManager.IsGamePaused)
+                    while (!OwnsTown() || GameManager.Instance.PlayerEnterExit.IsPlayerInside ||
+                        !directory.gameObject.activeInHierarchy || GameManager.IsGamePaused)
                         yield return null;
                     var route = survey.RouteBetweenPoints(guard.Post, target);
                     if (route.Count >= 2) routes.Add(guard.Id, route);
@@ -118,6 +125,10 @@ namespace LivingCities.DFU
         private void ReportNative(bool immediate)
         {
             if (!OwnsTown()) return;
+            var room = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ? GameManager.Instance.PlayerEnterExit.Interior : null;
+            int? building = room ? (int?)room.EntryDoor.buildingKey : null;
+            var currentReport = Roster.Reports.Find(r => r.Id == reportId);
+            if (currentReport != null && currentReport.BuildingKey != building) reportId = null;
             if (!immediate)
             {
                 bool seen = false;
@@ -128,12 +139,18 @@ namespace LivingCities.DFU
             }
             awaitingSight = false;
             double now = Now();
-            if (reportId == null) reportId = "native:" + directory.MapID + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+            if (reportId == null) reportId = "native:" + directory.MapID + ":" + building + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
             var previous = Roster.Reports.Find(r => r.Id == reportId);
             if (previous != null && previous.GuardIds.Count > 0)
             {
                 if (Roster.Guards.Exists(g => g.IsAlive && g.IncidentId == reportId)) return;
-                reportId = "native:" + directory.MapID + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+                reportId = "native:" + directory.MapID + ":" + building + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+            }
+            if (building.HasValue)
+            {
+                var responders = Roster.DispatchBuilding(reportId, building.Value, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+                Debug.Log("LIVING_CITIES_GUARD_BUILDING_DISPATCH: building=" + building + "; responders=" + responders.Count);
+                return;
             }
             var target = Local(GameManager.Instance.PlayerMotor.transform.position);
             var routes = new Dictionary<string, List<SavedRoutePoint>>();
@@ -153,8 +170,13 @@ namespace LivingCities.DFU
             foreach (var guard in Roster.Guards)
             {
                 if (!guard.IsAlive) continue;
+                bool indoors = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding;
+                if (indoors ? guard.Interior == null || !interior || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey : guard.Interior != null)
+                    continue;
                 var point = Roster.Position(guard.Id, now);
-                var scene = geometry.ScenePoint(new RoutePoint(point.X, point.Z));
+                var indoor = guard.Interior == null ? null : Roster.InteriorPosition(guard.Id, now);
+                var scene = indoor == null ? geometry.ScenePoint(new RoutePoint(point.X, point.Z)) :
+                    interior.transform.TransformPoint(new Vector3((float)indoor.X, (float)indoor.Y, (float)indoor.Z));
                 double d = (scene - position).sqrMagnitude;
                 if (d < distance) { nearest = guard; distance = d; }
             }
@@ -166,7 +188,8 @@ namespace LivingCities.DFU
             GuardActor actor;
             if (!actors.TryGetValue(guard.Id, out actor) || !actor)
             {
-                actor = GuardActor.Create(Roster, guard.Id, directory.transform, geometry, now);
+                actor = guard.Interior != null ? GuardActor.CreateInterior(Roster, guard.Id, interior.transform, now) :
+                    GuardActor.Create(Roster, guard.Id, directory.transform, geometry, now);
                 actors[guard.Id] = actor;
             }
             return actor;
@@ -178,14 +201,23 @@ namespace LivingCities.DFU
             if (!OwnsTown()) { HideViews(); return; }
             if (GameManager.IsGamePaused) return;
             var game = GameManager.Instance; double now = Now();
-            HideNative(); Roster.Advance(now); Roster.Recruit(now);
+            var loaded = game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
+            if (interior != loaded)
+            {
+                ClearViews(); interior = loaded;
+                entryGround = interior ? new InteriorGeometry(interior).EntryGround : null;
+            }
+            Roster.Advance(now); Roster.Recruit(now);
             if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None) { reportId = null; awaitingSight = false; }
             bool routeTick = Time.unscaledTime >= nextRoutes;
             if (routeTick) nextRoutes = Time.unscaledTime + 1;
             if (awaitingSight && routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) ReportNative(false);
+            if (interior) { UpdateInterior(now); return; }
+            HideNative();
             foreach (var guard in Roster.Guards)
             {
                 if (!guard.IsAlive) continue;
+                if (guard.Interior != null) continue;
                 var point = Roster.Position(guard.Id, now);
                 Vector3 scene = geometry.ScenePoint(new RoutePoint(point.X, point.Z));
                 GuardActor actor;
@@ -241,15 +273,57 @@ namespace LivingCities.DFU
                     body.SetActive(false);
                 }
         }
+        private void UpdateInterior(double now)
+        {
+            var game = GameManager.Instance;
+            // Expired interior actors must stop combat before a new exterior view can exist.
+            var expired = new List<string>();
+            foreach (var pair in actors)
+            {
+                var guard = Roster.Guards.Find(g => g.Id == pair.Key);
+                if (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey)
+                { if (pair.Value) { pair.Value.EndCombat(); Destroy(pair.Value.gameObject); } expired.Add(pair.Key); }
+            }
+            foreach (var id in expired) actors.Remove(id);
+            foreach (var guard in Roster.Guards)
+            {
+                if (!guard.IsAlive) continue;
+                var report = Roster.Reports.Find(r => r.Id == guard.IncidentId);
+                if (guard.Interior == null && guard.Duty == GuardDuty.Searching && entryGround.HasValue &&
+                    report != null && report.BuildingKey == interior.EntryDoor.buildingKey)
+                {
+                    var point = interior.transform.InverseTransformPoint(entryGround.Value + Vector3.up);
+                    Roster.EnterBuilding(guard.Id, interior.EntryDoor.buildingKey, now,
+                        new GuardPoint3 { X = point.x, Y = point.y, Z = point.z });
+                }
+                if (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey) continue;
+                var actor = View(guard, now); actor.gameObject.SetActive(true);
+                if (guard.Interior.Returning) { actor.EndCombat(); actor.Place(now); continue; }
+                if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
+                {
+                    actor.EndCombat(); actor.Capture(now);
+                    Roster.EndInteriorSearch(guard.Id, now); actor.Place(now);
+                    continue;
+                }
+                actor.Capture(now);
+                if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None && !game.PlayerEntity.IsInvisible &&
+                    CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
+                    actor.BeginCombat(now);
+            }
+        }
+        private void ClearViews()
+        {
+            Capture();
+            foreach (var pair in actors) if (pair.Value) { pair.Value.EndCombat(); Destroy(pair.Value.gameObject); }
+            actors.Clear();
+        }
         private void HideViews()
         { foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeSelf) { pair.Value.Capture(Now()); pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); } }
         public void Clear()
         {
             if (approachSurvey != null) { StopCoroutine(approachSurvey); approachSurvey = null; }
             if (hooks != null) { hooks.Dispose(); hooks = null; }
-            Capture();
-            foreach (var pair in actors) if (pair.Value) Destroy(pair.Value.gameObject);
-            actors.Clear();
+            ClearViews(); interior = null; entryGround = null;
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);
             nativeGuards.Clear(); directory = null; geometry = null; Roster = null; reportId = null; awaitingSight = false;
         }

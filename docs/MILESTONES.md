@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+0.3.7 guard integration adds surveyed-building alarms, travel-before-entry, indoor combat, persistent 3D location/health, cleared-crime stand-down, and retraced indoor exit followed by exterior return. SAVE31 is the shop-response fixture. M4 remains open: unsurveyed interiors, broader layouts, patrol pairs/torches/walls, full arrest/escape validation and enemy defense remain. Core suite: 150 tests.
+
 Current 0.3.5 checkpoint: 142 core tests and actual-player controller/actor probes pass. Opt-in exterior Gothway Garden guards now have a fixed roster, bounded physical responses, native combat, wounded save/load and last-seen search expiry/return. Indoor guards remain vanilla. Physical shop response and door transitions are next. See GUARDS.md for tested limits. Older checkpoint paragraphs below are historical; all unfinished milestones remain open.
 
 > Current amendment, 14 October 2026: one NPC per bed; maximum household residents equals actual bed count, with no separate five-person cap. Preserve old saves and use a fresh compliant test population. Shared-bed rendering, kill-all-bed logic and separate head/blanket layers are superseded. Keep complete green-blanket/white-pillow single-sleeper sprites. Children may inherit either parent's race; keep existing child sprites now. Gameplay takes priority over art. See [current citizen behavior and next guard work](CIVILIAN-RESPONSES.md). Earlier checkpoint descriptions below remain historical evidence.

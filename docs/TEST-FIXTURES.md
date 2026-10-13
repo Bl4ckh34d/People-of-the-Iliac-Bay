@@ -1,5 +1,9 @@
 # Gothway Garden test saves
 
+## Indoor guard fixture
+
+SAVE31, Living Cities - shop guards, belongs to LivingCitiesTest-f238d317. It stores a wounded responder inside surveyed shop 131342. Enable General / ExperimentalExteriorGuards before loading; this legacy setting name now includes surveyed interiors. The GuardBuildingProbe command overwrites only this dedicated fixture, drives a native indoor guard alarm, accelerates to the travel deadline, verifies doorway placement/native combat and wounded direct-interior save/load, then checks eventual post return.
+
 ## Guard response fixture, 14 October 2026
 
 Character LivingCitiesTest-f238d317 now has SAVE30, named Living Cities - guard response. This disposable slot contains ten roster guards, an active response and a wounded guard. Enable General / ExperimentalExteriorGuards for the exterior controller. Guards / MaximumResponders and ActorRadius tune response size and actor visibility. Indoor guards still use vanilla behavior.

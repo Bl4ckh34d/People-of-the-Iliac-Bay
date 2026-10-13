@@ -22,15 +22,25 @@ namespace LivingCities.DFU
         private float groundOffset;
         private Coroutine combatStart;
         public bool CombatReady { get; private set; }
+        public bool IsInterior { get; private set; }
+        private int? buildingKey;
+        private static GuardPoint3 Point(Vector3 p) { return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
+        private Vector3 Scene(GuardPoint3 p) { return transform.parent.TransformPoint(new Vector3((float)p.X, (float)p.Y, (float)p.Z)); }
+        public static GuardActor CreateInterior(GuardRoster roster, string id, Transform parent, double now)
+        { return Create(roster, id, parent, null, now); }
 
         public static GuardActor Create(GuardRoster roster, string id, Transform parent, TownGeometry geometry, double now)
         {
-            if (roster == null || parent == null || geometry == null) throw new ArgumentNullException();
+            if (roster == null || parent == null) throw new ArgumentNullException();
             var guard = roster.Guards.Find(g => g.Id == id);
             if (guard == null) throw new ArgumentException("Unknown guard identity.");
             if (!guard.IsAlive) return null;
             var point = roster.Position(id, now);
-            var ground = geometry.ScenePoint(new RoutePoint(point.X, point.Z));
+            bool indoors = guard.Interior != null;
+            if (!indoors && geometry == null) throw new ArgumentNullException("geometry");
+            var indoorPoint = indoors ? roster.InteriorPosition(id, now) : null;
+            var ground = indoors ? parent.TransformPoint(new Vector3((float)indoorPoint.X, (float)indoorPoint.Y, (float)indoorPoint.Z)) - Vector3.up :
+                geometry.ScenePoint(new RoutePoint(point.X, point.Z));
             var randomState = UnityEngine.Random.state;
             GameObject body = null;
             try
@@ -47,6 +57,7 @@ namespace LivingCities.DFU
                 body.GetComponent<EnemyAttack>().enabled = false;
                 var actor = body.AddComponent<GuardActor>();
                 actor.GuardId = id; actor.roster = roster; actor.geometry = geometry;
+                actor.IsInterior = indoors; actor.buildingKey = indoors ? (int?)guard.Interior.BuildingKey : null;
                 actor.mobile = body.GetComponentInChildren<MobileUnit>();
                 actor.entity = body.GetComponent<DaggerfallEntityBehaviour>().Entity;
                 actor.entity.SetHealth(Math.Max(1, (int)Math.Ceiling(actor.entity.MaxHealth * guard.HealthFraction)), true);
@@ -65,6 +76,18 @@ namespace LivingCities.DFU
         {
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (!guard.IsAlive) { gameObject.SetActive(false); return; }
+            if (IsInterior)
+            {
+                if (guard.Interior == null) return;
+                if (!guard.Interior.Returning) { Capture(now); return; }
+                var indoor = roster.InteriorPosition(GuardId, now);
+                if (indoor == null) return;
+                var next = Scene(indoor); var facing = next - transform.position; facing.y = 0;
+                if (facing.sqrMagnitude > 0.00000001f) transform.forward = facing.normalized;
+                transform.position = next;
+                if (mobile.EnemyState != MobileStates.Move) mobile.ChangeEnemyState(MobileStates.Move);
+                displayedAt = now; return;
+            }
             if (guard.Duty == GuardDuty.Engaged) { Capture(now); return; }
             var point = roster.Position(GuardId, now);
             var position = geometry.ScenePoint(new RoutePoint(point.X, point.Z)) + Vector3.up * groundOffset;
@@ -81,6 +104,8 @@ namespace LivingCities.DFU
         {
             if (combatStart != null || CombatReady) return;
             var guard = roster.Guards.Find(g => g.Id == GuardId);
+            if (IsInterior && guard.Interior != null && guard.Interior.LastSeenSuspect == null)
+                guard.Interior.LastSeenSuspect = Point(transform.parent.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position));
             if (guard.Duty != GuardDuty.Engaged)
             {
                 roster.Engage(GuardId, now);
@@ -96,7 +121,8 @@ namespace LivingCities.DFU
             yield return null; // Native Start initializes its motor before hostility is assigned.
             GetComponent<EnemyMotor>().MakeEnemyHostileToAttacker(GameManager.Instance.PlayerEntityBehaviour);
             var guard = roster.Guards.Find(g => g.Id == GuardId);
-            var last = geometry.ScenePoint(new RoutePoint(guard.LastSeenSuspect.X, guard.LastSeenSuspect.Z)) + Vector3.up;
+            var last = IsInterior ? Scene(guard.Interior.LastSeenSuspect) :
+                geometry.ScenePoint(new RoutePoint(guard.LastSeenSuspect.X, guard.LastSeenSuspect.Z)) + Vector3.up;
             var senses = GetComponent<EnemySenses>();
             senses.OldLastKnownTargetPos = last; senses.LastKnownTargetPos = last; senses.PredictedTargetPos = last;
             GetComponent<EnemyAttack>().enabled = true;
@@ -107,6 +133,18 @@ namespace LivingCities.DFU
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (!guard.IsAlive || entity.CurrentHealth <= 0) return;
             guard.HealthFraction = (double)entity.CurrentHealth / entity.MaxHealth;
+            if (IsInterior)
+            {
+                if (guard.Interior == null || guard.Interior.Returning) return;
+                var game = GameManager.Instance; var senses = GetComponent<EnemySenses>();
+                bool same = game.PlayerEnterExit.IsPlayerInsideBuilding && game.PlayerEnterExit.Interior &&
+                    game.PlayerEnterExit.Interior.EntryDoor.buildingKey == buildingKey;
+                bool sees = same && senses.Target == game.PlayerEntityBehaviour && senses.TargetInSight &&
+                    !game.PlayerEntity.IsInvisible && CivilianResponses.Sees(transform.position, game.PlayerMotor.transform.position, 20);
+                roster.ObserveInterior(GuardId, Point(transform.parent.InverseTransformPoint(transform.position)), guard.HealthFraction,
+                    now, sees, sees ? Point(transform.parent.InverseTransformPoint(game.PlayerMotor.transform.position)) : null);
+                displayedAt = now; return;
+            }
             if (guard.Duty == GuardDuty.Engaged)
             {
                 var local = transform.parent.InverseTransformPoint(transform.position);
@@ -135,7 +173,9 @@ namespace LivingCities.DFU
         private void Died(DaggerfallEntity ignored)
         {
             var guard = roster.Guards.Find(g => g.Id == GuardId);
-            if (guard.Duty == GuardDuty.Engaged)
+            if (IsInterior && guard.Interior != null)
+                guard.Interior.Position = Point(transform.parent.InverseTransformPoint(transform.position));
+            else if (guard.Duty == GuardDuty.Engaged)
             {
                 var local = transform.parent.InverseTransformPoint(transform.position);
                 guard.EngagementPosition = new SavedRoutePoint { X = local.x, Z = local.z };

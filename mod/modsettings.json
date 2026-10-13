@@ -9,7 +9,7 @@
         {
           "Value": false,
           "Name": "ExperimentalExteriorGuards",
-          "Description": "Gothway Garden exterior preview: fixed guard roster, posts, physical response, native combat and timed search/return. Saves identities, deaths and wounded health. Indoor reinforcements, patrol pairs and wall posts are not integrated yet; interiors still use vanilla guards.",
+          "Description": "Gothway Garden finite guards: posts, physical response, combat and timed search/return. Surveyed buildings receive delayed doorway reinforcements with indoor save/load. Visit the exterior first to survey routes. Unsurveyed interiors still use vanilla guards. Patrol pairs and wall posts remain in development.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
@@ -46,7 +46,7 @@
     },
     {
       "Name": "Guards",
-      "Description": "Controls the experimental exterior guard preview. Existing roster identities and deaths remain saved when settings change.",
+      "Description": "Controls the experimental guard preview in the exterior and surveyed interiors. Existing roster identities and deaths remain saved when settings change.",
       "IsAdvanced": false,
       "Keys": [
         {

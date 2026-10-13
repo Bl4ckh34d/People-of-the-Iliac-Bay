@@ -1,5 +1,19 @@
 # Building guard response implementation
 
+## 0.3.7 gameplay integration
+
+Verified checkpoint: 150 core tests, native build, GuardBuildingProbe, GuardControllerProbe and GuardActorProbe pass. Evidence is retained in work/guard-building-runtime-pass.log, work/guard-controller-runtime-pass.log and work/guard-actor-runtime-pass.log. Clearing the player's crime now explicitly stops indoor combat and starts the doorway return, preventing visible guards from extending hostility indefinitely. The building probe checks this without forcing the deadline.
+
+Surveyed Gothway Garden buildings now use the finite roster for native indoor alarms. Guards retain their street travel deadline and materialize at the interior entry landing only after arrival. Native combat starts on sight. Building-local 3D positions, last-seen positions, health and the path travelled indoors persist through direct interior reloads. On search expiry, guards retrace that path to the entry and then reverse their exterior approach to return to the post. Missing surveys still leave the interior on vanilla guards; visit the exterior with the preview enabled first.
+
+The guard clock now explicitly promotes whole seconds and fractional seconds to double before addition. The former ulong-plus-float expression rounded DFU's approximately 12-billion-second absolute timestamp to 1,024-second increments. StreetPopulation's parenthesized fractional expression was already double and is unchanged.
+
+The new focused command is tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -GuardBuildingProbe. It drives the native SpawnCityGuards entry point inside shop 131342, checks no premature guard body, advances game time to arrival, checks the entry landing and native combat activation, saves a wounded responder to SAVE31 (Living Cities - shop guards), reloads directly inside, and checks eventual exterior return. The time jump accelerates the test; it is not a real-time travel benchmark or an inventory theft interaction test.
+
+Remaining acceptance: more interior layouts, stairways and blocked door landings; whole-town survey/frame-time budgets; full arrest dialogue; player escape before arrival and repeated scene changes during pursuit; active room-search movement when no suspect is visible. Patrol pairs, wall posts, torches and defense against other enemies remain required.
+
+## Earlier implementation notes
+
 The approved behavior is physical reinforcement: shop alarms dispatch existing municipal guards, each travels to the shop door and enters on arrival. Distance produces the escape window. Saving, loading or entering another building must not reset travel, create guards, or move responders to a different incident.
 
 ## Persistence contract

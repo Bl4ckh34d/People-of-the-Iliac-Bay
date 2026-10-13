@@ -16,6 +16,67 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Indoor guard entry waits for physical arrival and saves its interior coordinates", () => {
+                var roster = Roster(1); var id = roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    new Dictionary<string, List<SavedRoutePoint>> { { id, Route(0, 100) } });
+                roster.DispatchBuilding("shop", 73, 0, 1, 2, 10);
+                Check.Throws<ArgumentException>(() => roster.EnterBuilding(id, 73, 499, new GuardPoint3 { Y = 2 }));
+                Check.Throws<ArgumentException>(() => roster.EnterBuilding(id, 74, 500, new GuardPoint3 { Y = 2 }));
+                roster.EnterBuilding(id, 73, 500, new GuardPoint3 { Y = 2 });
+                roster.ObserveInterior(id, new GuardPoint3 { X = 5, Y = 3 }, 0.5, 510, true, new GuardPoint3 { X = 8, Y = 3 });
+                var copy = GuardRoster.CopyValidated(roster);
+                Check.Equal(73, copy.Guards[0].Interior.BuildingKey);
+                Check.Near(5, copy.InteriorPosition(id, 520).X); Check.Near(3, copy.InteriorPosition(id, 520).Y);
+                Check.Near(810, copy.Guards[0].SearchUntil); Check.Near(0.5, copy.Guards[0].HealthFraction);
+                Check.Near(100, copy.Position(id, 520).X);
+            }));
+            cases.Add(("Indoor guards retrace their path before starting exterior return", () => {
+                var roster = Roster(1); var id = roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    new Dictionary<string, List<SavedRoutePoint>> { { id, Route(0, 100) } });
+                roster.DispatchBuilding("shop", 73, 0, 1, 2, 10);
+                roster.EnterBuilding(id, 73, 500, new GuardPoint3());
+                roster.ObserveInterior(id, new GuardPoint3 { X = 10 }, 1, 501, false, null);
+                roster.Advance(800);
+                Check.True(roster.Guards[0].Interior.Returning);
+                Check.Near(10, roster.InteriorPosition(id, 800).X);
+                double exit = roster.Guards[0].Interior.ExitAt;
+                Check.Near(5, roster.InteriorPosition(id, (800 + exit) / 2).X);
+                var restored = GuardRoster.CopyValidated(roster);
+                restored.Advance(exit);
+                Check.True(restored.Guards[0].Interior == null);
+                Check.Equal(GuardDuty.Returning, restored.Guards[0].Duty);
+                Check.Near(100, restored.Position(id, exit).X);
+                restored.Advance(exit + 500);
+                Check.Equal(GuardDuty.Posted, restored.Guards[0].Duty);
+            }));
+            cases.Add(("Indoor stand-down returns through the entrance before the original search deadline", () => {
+                var roster = Roster(1); var id = roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    new Dictionary<string, List<SavedRoutePoint>> { { id, Route(0, 100) } });
+                roster.DispatchBuilding("shop", 73, 0, 1, 2, 10);
+                roster.EnterBuilding(id, 73, 500, new GuardPoint3());
+                roster.ObserveInterior(id, new GuardPoint3 { X = 10 }, 1, 501, true, new GuardPoint3 { X = 12 });
+                roster.EndInteriorSearch(id, 502);
+                Check.True(roster.Guards[0].Interior.Returning); Check.Near(502, roster.Guards[0].Interior.ReturnAt);
+                Check.Near(10, GuardRoster.CopyValidated(roster).InteriorPosition(id, 502).X);
+                Check.Throws<ArgumentException>(() => roster.ObserveInterior(id, new GuardPoint3(), 1, 503, true, new GuardPoint3()));
+            }));
+            cases.Add(("Late indoor materialization preserves deadline and death preserves current room position", () => {
+                var roster = Roster(1); var id = roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    new Dictionary<string, List<SavedRoutePoint>> { { id, Route(0, 100) } });
+                roster.DispatchBuilding("shop", 73, 0, 1, 2, 10);
+                roster.EnterBuilding(id, 73, 700, new GuardPoint3());
+                Check.Near(800, roster.Guards[0].SearchUntil);
+                roster.Guards[0].Interior.Position = new GuardPoint3 { X = 7, Y = 2, Z = 3 };
+                roster.Kill(id, 701);
+                var copy = GuardRoster.CopyValidated(roster);
+                Check.Near(7, copy.InteriorPosition(id, 9999).X);
+                Check.Near(2, copy.InteriorPosition(id, 9999).Y);
+                Check.True(!copy.Guards[0].IsAlive);
+            }));
             cases.Add(("Building responses retain destination and travel deadline through reload", () => {
                 var roster = Roster(2);
                 var routes = roster.Guards.ToDictionary(g => g.Id, g => Route(g.Post.X, 100));

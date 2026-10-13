@@ -11,6 +11,7 @@ namespace LivingCities.DFU
     public sealed class InteriorGeometry
     {
         public readonly List<Vector3> LocalAnchors = new List<Vector3>();
+        public Vector3? EntryGround { get; private set; }
         private readonly DaggerfallInterior interior;
         private const float Radius = 0.24f;
         public InteriorGeometry(DaggerfallInterior interior)
@@ -28,6 +29,7 @@ namespace LivingCities.DFU
                 if (found) break;
             }
             if (!found) return;
+            EntryGround = seed;
             var queue = new Queue<Vector3>(); queue.Enqueue(seed);
             var seen = new HashSet<Vector2Int>(); seen.Add(Vector2Int.zero);
             var occupants = interior.GetComponentsInChildren<StaticNPC>();

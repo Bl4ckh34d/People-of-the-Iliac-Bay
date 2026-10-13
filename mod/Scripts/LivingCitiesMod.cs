@@ -227,8 +227,8 @@ namespace LivingCities.DFU
         private void OnGUI()
         {
             if (!panel) return;
-            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.6 — development diagnostics (F8)");
-            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nExterior guards: " + (exteriorGuardsEnabled ? "experimental, actors " + guards.ActiveCount : "off") + ". Indoor guards still vanilla.");
+            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.7 — development diagnostics (F8)");
+            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nFinite guards: " + (exteriorGuardsEnabled ? "experimental, actors " + guards.ActiveCount : "off") + ". Unsurveyed interiors use vanilla guards.");
         }
         public string TestStatus()
         {
