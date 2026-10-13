@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+0.3.8 connects public citizen witnesses to finite guards: local visibility, immutable crime destination, bounded physical dispatch and persistent report identity. The controlled actual-player witness probe and 151 core tests pass. Autonomous indoor escape/reporting, unwitnessed murder discovery and original stationary-citizen conversion remain next behavior work. Art stays deferred; M3/M4 remain open.
+
 0.3.7 guard integration adds surveyed-building alarms, travel-before-entry, indoor combat, persistent 3D location/health, cleared-crime stand-down, and retraced indoor exit followed by exterior return. SAVE31 is the shop-response fixture. M4 remains open: unsurveyed interiors, broader layouts, patrol pairs/torches/walls, full arrest/escape validation and enemy defense remain. Core suite: 150 tests.
 
 Current 0.3.5 checkpoint: 142 core tests and actual-player controller/actor probes pass. Opt-in exterior Gothway Garden guards now have a fixed roster, bounded physical responses, native combat, wounded save/load and last-seen search expiry/return. Indoor guards remain vanilla. Physical shop response and door transitions are next. See GUARDS.md for tested limits. Older checkpoint paragraphs below are historical; all unfinished milestones remain open.

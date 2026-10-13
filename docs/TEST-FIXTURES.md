@@ -79,3 +79,7 @@ Identity/name/appearance remain unchanged inside. Exit/re-entry leaves exactly o
 Schema 2 saves include route plans; the actual FullSerializer round trip and indoor reload pass. Schema 1 fixtures migrate without changing resident identities. New cache completion can vary between loads, so the fixture comparison covers every population field but excludes the newly derived route cache; dedicated core and interior-load checks cover route persistence.
 
 Screenshots of street and interior actors were inspected. Interior placement currently uses reachable standing anchors, not beds or furniture activities. Quest movement, full leave/return simulation across map boundaries, origin shifts, melee combat and bed allocation remain acceptance work. Logs are retained in ignored `work/town-test.log`.
+
+## Public witness probe (0.3.8)
+
+`tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -GuardWitnessProbe` uses disposable actors after loading the normal town fixture. It creates no save slot. It checks actual native weapon interception, absence of automatic distant guard response, direct witness reporting near a post, immutable crime destination, bounded repeat reporting and native serialization. The witness is repositioned deliberately; autonomous flight-to-guard is not asserted. Run focused probe switches separately: the player harness exits after the selected scenario.

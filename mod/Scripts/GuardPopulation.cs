@@ -125,6 +125,16 @@ namespace LivingCities.DFU
         private void ReportNative(bool immediate)
         {
             if (!OwnsTown()) return;
+            if (!GameManager.Instance.PlayerEnterExit.IsPlayerInside)
+            {
+                var hook = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
+                var hitTarget = hook.GetProperty("CurrentTarget").GetValue(null, null) as Transform;
+                var resident = hitTarget ? hitTarget.GetComponent<ResidentActor>() : null;
+                var streets = GetComponent<StreetPopulation>();
+                // Vanilla reports every mobile-citizen weapon hit immediately.
+                // Our public-space witnesses and guards supply the actual report.
+                if (resident && streets && streets.ReactionsEnabled && streets.FindActor(resident.Resident.Id) == resident) return;
+            }
             var room = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ? GameManager.Instance.PlayerEnterExit.Interior : null;
             int? building = room ? (int?)room.EntryDoor.buildingKey : null;
             var currentReport = Roster.Reports.Find(r => r.Id == reportId);
@@ -182,6 +192,33 @@ namespace LivingCities.DFU
             }
             if (nearest == null) throw new InvalidOperationException("No living roster guard exists for a native actor conversion.");
             return View(nearest, now).gameObject;
+        }
+        public void ReportCivilianCrime(CivilianIncident incident, Vector3 reportFrom)
+        {
+            if (!OwnsTown() || GameManager.Instance.PlayerEnterExit.IsPlayerInside || incident == null ||
+                !incident.HasLocation || incident.BuildingKey != -1 || incident.SettlementId != directory.MapID) return;
+            double now = Now();
+            if (now < incident.StartedAt || now >= incident.ExpiresAt) return;
+            string id = "civilian:" + incident.Id;
+            var reported = Roster.Reports.Find(r => r.Id == id);
+            if (reported != null && reported.GuardIds.Count > 0) return;
+            Roster.Advance(now);
+            var target = new SavedRoutePoint { X = incident.X, Z = incident.Z };
+            var routes = new Dictionary<string, List<SavedRoutePoint>>();
+            foreach (var guard in Roster.Guards)
+            {
+                if (!guard.IsAlive || guard.Duty != GuardDuty.Posted) continue;
+                var standing = geometry.ScenePoint(new RoutePoint(guard.Post.X, guard.Post.Z)) + Vector3.up;
+                if (!CivilianResponses.Sees(reportFrom, standing, 20)) continue;
+                var route = geometry.RouteBetweenPoints(guard.Post, target);
+                if (route.Count >= 2) routes.Add(guard.Id, route);
+            }
+            if (routes.Count == 0) return;
+            var sent = Roster.Dispatch(id, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+            if (sent.Count == 0) return;
+            reportId = id;
+            GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
+            Debug.Log("LIVING_CITIES_GUARD_WITNESS_REPORT: " + id + "; responders=" + sent.Count);
         }
         private GuardActor View(GuardRecord guard, double now)
         {

@@ -1,5 +1,15 @@
 # Citizen response checkpoint
 
+## Current 0.3.8 public reporting
+
+With civilian reactions and experimental guards enabled, an outdoor weapon kill of an owned generated resident no longer automatically dispatches guards. A posted guard must see the crime within 20 metres, or a fleeing direct witness must reach a posted guard within 20 metres and unobstructed sight. Guards receive the immutable crime location, not the player's current position. Dispatch uses the existing finite roster and collision-validated routes; repeated reports cannot replenish the response. Guard reporting does not consume the witness's two-citizen warning allowance. Secondhand witnesses still cannot relay.
+
+The original crime location and spent report survive native serialization. The weapon interception scope restores correctly after normal hits and exceptions. This applies only to supported outdoor generated residents. Indoor native alarms remain active; unwitnessed indoor murder discovery, actual witness exit traversal, stationary NPCs and autonomous offscreen reporting remain unfinished. Earlier checkpoint paragraphs below are historical.
+
+Validation: 151 core tests and native build pass. `TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -GuardWitnessProbe` exercises an actual native weapon kill away from guard posts, a direct witness, local reporting, bounded dispatch to the original crime location, repeated-report suppression and native serialization. The probe deliberately moves the witness to a guard; it does not claim autonomous refuge navigation coverage. Its warning call waits for the real quarter-second polling cadence.
+
+Final 0.3.8 player regressions also pass `-ResponseProbe` (native hit, retreat, counterattack, identity and SAVE29 reload) and `-GuardBuildingProbe` (native indoor alarm, delayed entry, wounded SAVE31 reload and return). Run these switches separately. Logs: `work/guard-witness-runtime-pass.log`, `work/civilian-response-038-pass.log`, `work/guard-building-038-pass.log`. Installed bundle SHA-256: `F9414866227E4950DA47C8F7C8237A845F40A05063D18D8ED1A357FA015892EB`. Upstream tracked source remains unchanged. Read-only Luna/high review found no confirmed important defect; native mobile-civilian weapon hits are lethal at this interception boundary.
+
 ## Current scope
 
 The 0.3.3 implementation starts the approved fight-or-flight behavior with generated residents in Gothway Garden. It does not complete M3 or M4. The user explicitly prioritized behavior over further sprite production on 14 October 2026.

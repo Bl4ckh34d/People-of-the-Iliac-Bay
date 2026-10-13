@@ -7,6 +7,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$GuardActorProbe,
     [switch]$GuardControllerProbe,
     [switch]$GuardBuildingProbe,
+    [switch]$GuardWitnessProbe,
     [switch]$QuestBindingProbe,
     [switch]$DeliveryProbe)
 $ErrorActionPreference = 'Stop'
@@ -30,6 +31,7 @@ if ($ResponseProbe) { $arguments += ' -livingcities-response-probe' }
 if ($GuardActorProbe) { $arguments += ' -livingcities-guard-actor-probe' }
 if ($GuardControllerProbe) { $arguments += ' -livingcities-guard-controller-probe' }
 if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
+if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
 if ($QuestBindingProbe) { $arguments += ' -livingcities-quest-binding-probe' }
 if ($DeliveryProbe) { $arguments += ' -livingcities-delivery-probe' }
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
@@ -57,6 +59,7 @@ try {
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_ACTOR_PASS:') { throw 'Guard actor probe did not complete.' }
     if ($GuardControllerProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_CONTROLLER_PASS:') { throw 'Guard controller probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
+    if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_QUEST_BINDING_PASS:') { throw 'Quest binding probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_LEDGER_PASS:') { throw 'Quest ledger save/load probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_OFFER_PASS:') { throw 'Quest offer accept/reject probe did not complete.' }

@@ -15,6 +15,20 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Crime origin persists independently of a fleeing witness", () => {
+                var store = World(); var people = store.Snapshot().Settlements[0].Households.SelectMany(h => h.Residents).ToArray();
+                var alarm = store.RecordViolence(1, people[0].Id, 100);
+                store.LocateViolence(alarm.Id, -1, 12, 2, 34);
+                var witness = store.Witness(alarm.Id, people[1].Id, 100);
+                witness.HasPosition = true; witness.X = 99;
+                Check.Throws<ArgumentException>(() => store.LocateViolence(alarm.Id, -1, 99, 2, 34));
+                var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+                var saved = restored.ActiveAlarm(people[1].Id, 101);
+                Check.True(saved.HasLocation); Check.Near(12, saved.X); Check.Near(34, saved.Z);
+                Check.Near(99, saved.People[0].X);
+                var broken = store.Snapshot(); broken.AlarmIncidents[0].X = double.NaN;
+                Check.Throws<ArgumentException>(() => restored.Restore(broken));
+            }));
             cases.Add(("Direct witness warns only two distinct people; secondhand cannot relay", () => {
                 var store = World(); var people = store.Snapshot().Settlements[0].Households.SelectMany(h => h.Residents).ToArray();
                 var alarm = store.RecordViolence(1, people[0].Id, 100);

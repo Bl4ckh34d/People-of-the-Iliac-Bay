@@ -8,15 +8,15 @@ using UnityEngine;
 
 namespace LivingCities.DFU
 {
-    // First physical response slice: generated residents only. Native guard spawning
-    // remains native until the finite-roster adapter replaces it as a separate step.
+    // Generated residents witness violence and report it locally to the finite guard adapter.
     public sealed class CivilianResponses
     {
         private readonly WorldStateStore store;
         private readonly int settlementId;
         private float nextWarnings;
-        public CivilianResponses(WorldStateStore store, int settlementId)
-        { this.store = store; this.settlementId = settlementId; }
+        private readonly Action<CivilianIncident, Vector3> tellGuards;
+        public CivilianResponses(WorldStateStore store, int settlementId, Action<CivilianIncident, Vector3> tellGuards = null)
+        { this.store = store; this.settlementId = settlementId; this.tellGuards = tellGuards; }
         public AlarmPerson Active(string id, double now)
         {
             var alarm = store.ActiveAlarm(id, now);
@@ -25,6 +25,12 @@ namespace LivingCities.DFU
         public void Murder(ResidentActor victim, IEnumerable<ResidentActor> actors, Func<string, bool> sleeping, double now, int building)
         {
             var alarm = store.RecordViolence(settlementId, victim.Resident.Id, now);
+            if (!alarm.HasLocation)
+            {
+                var point = victim.transform.parent.InverseTransformPoint(victim.transform.position - Vector3.up);
+                store.LocateViolence(alarm.Id, building, point.x, point.y, point.z);
+            }
+            if (tellGuards != null) tellGuards(alarm, victim.transform.position);
             foreach (var actor in actors)
             {
                 if (!actor || actor == victim || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy || sleeping(actor.Resident.Id)) continue;
@@ -45,7 +51,9 @@ namespace LivingCities.DFU
                 var alarm = store.ActiveAlarm(actor.Resident.Id, now);
                 if (alarm == null) continue;
                 var witness = alarm.People.Find(p => p.ResidentId == actor.Resident.Id);
-                if (!witness.DirectWitness || witness.Reaction != CivilianReaction.Flee || witness.Warned.Count >= 2) continue;
+                if (!witness.DirectWitness || witness.Reaction != CivilianReaction.Flee) continue;
+                if (tellGuards != null) tellGuards(alarm, actor.transform.position);
+                if (witness.Warned.Count >= 2) continue;
                 // Sort a separate candidate list: never mutate the collection being enumerated.
                 var candidates = new List<ResidentActor>(nearby);
                 candidates.Sort((a, b) => Distance(actor, a).CompareTo(Distance(actor, b)));

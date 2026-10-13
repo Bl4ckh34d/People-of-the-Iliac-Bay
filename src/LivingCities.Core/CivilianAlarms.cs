@@ -22,6 +22,9 @@ namespace LivingCities.Core
         public string Id, VictimId;
         public int SettlementId;
         public double StartedAt, ExpiresAt;
+        public bool HasLocation;
+        public int BuildingKey = -1;
+        public double X, Y, Z;
         public List<AlarmPerson> People = new List<AlarmPerson>();
     }
     public static class CivilianAlarms
@@ -35,6 +38,15 @@ namespace LivingCities.Core
     }
     public sealed partial class WorldStateStore
     {
+        public void LocateViolence(string incidentId, int buildingKey, double x, double y, double z)
+        {
+            Require(buildingKey >= -1 && ValidCoordinate(x) && ValidCoordinate(y) && ValidCoordinate(z), "Invalid crime location.");
+            var incident = FindIncident(incidentId);
+            Require(!incident.HasLocation || (incident.BuildingKey == buildingKey && incident.X == x &&
+                incident.Y == y && incident.Z == z), "Crime location cannot change.");
+            incident.HasLocation = true; incident.BuildingKey = buildingKey;
+            incident.X = x; incident.Y = y; incident.Z = z;
+        }
         public CivilianIncident RecordViolence(int settlementId, string victimId, double now)
         {
             Require(ValidTime(now), "Invalid incident time.");
@@ -111,7 +123,10 @@ namespace LivingCities.Core
                 Require(alarm.VictimId != null && residents.ContainsKey(alarm.VictimId) && ValidTime(alarm.StartedAt) &&
                     ValidTime(alarm.ExpiresAt) && alarm.ExpiresAt == alarm.StartedAt + 900 && alarm.People != null, "Invalid incident data.");
                 var copied = new CivilianIncident { Id = alarm.Id, VictimId = alarm.VictimId, SettlementId = alarm.SettlementId,
-                    StartedAt = alarm.StartedAt, ExpiresAt = alarm.ExpiresAt };
+                    StartedAt = alarm.StartedAt, ExpiresAt = alarm.ExpiresAt, HasLocation = alarm.HasLocation,
+                    BuildingKey = alarm.BuildingKey, X = alarm.X, Y = alarm.Y, Z = alarm.Z };
+                Require(alarm.BuildingKey >= -1 && ValidCoordinate(alarm.X) && ValidCoordinate(alarm.Y) && ValidCoordinate(alarm.Z),
+                    "Invalid saved crime location.");
                 var people = new HashSet<string>();
                 foreach (var person in alarm.People)
                 {

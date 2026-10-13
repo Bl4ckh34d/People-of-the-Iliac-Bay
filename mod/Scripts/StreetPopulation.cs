@@ -99,7 +99,10 @@ namespace LivingCities.DFU
             if (town.MapID != 206728581) { Clear(); return; }
             if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
             Clear(); directory = town; navigation = nav; this.population = population;
-            responses = new CivilianResponses(store, population.SettlementId);
+            responses = new CivilianResponses(store, population.SettlementId, (alarm, position) => {
+                var guards = GetComponent<GuardPopulation>();
+                if (guards) guards.ReportCivilianCrime(alarm, position);
+            });
             building = StartCoroutine(Build(population, store, wake, sleep));
         }
         private IEnumerator Build(SettlementPopulation population, WorldStateStore store, int wake, int sleep)
