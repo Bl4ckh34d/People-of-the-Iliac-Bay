@@ -9,6 +9,8 @@ namespace LivingCities.Tests
         {
             var cases = new List<(string Name, Action Body)>();
             PopulationTests.Add(cases);
+            PathTests.Add(cases);
+            ScheduleTests.Add(cases);
             int failures = 0;
             foreach (var test in cases)
             {
