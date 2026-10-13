@@ -1,4 +1,4 @@
-param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent))
+param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent), [switch]$QuestBindingProbe)
 $ErrorActionPreference = 'Stop'
 & (Join-Path $PSScriptRoot 'Deploy.ps1') -DfuRoot $DfuRoot
 $editor = 'C:/Program Files/Unity/Hub/Editor/2019.4.40f1/Editor/Unity.exe'
@@ -8,6 +8,11 @@ if (Get-Process Unity -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq
     throw 'Unity editor is already running; build will not compete with an open editor.'
 }
 $arguments = '-batchmode -nographics -quit -projectPath "' + $project + '" -executeMethod LivingCitiesBuild.VerifyAndBuild -logFile "' + $log + '"'
+if ($QuestBindingProbe) {
+    dotnet build (Join-Path $PSScriptRoot '../probes/quest-binding/QuestBindingProbe.csproj') -c Release --nologo
+    if ($LASTEXITCODE -ne 0) { throw 'Quest binding probe compilation failed.' }
+    $arguments = $arguments.Replace('LivingCitiesBuild.VerifyAndBuild ', 'LivingCitiesBuild.VerifyAndBuildQuestBindingProbe ')
+}
 $owned = Start-Process -FilePath $editor -ArgumentList $arguments -WindowStyle Hidden -PassThru
 Write-Output "Owned Unity build process: $($owned.Id)"
 while (-not $owned.HasExited) { Start-Sleep -Milliseconds 500 }

@@ -17,6 +17,28 @@ using UnityEngine;
 
 public static class LivingCitiesBuild
 {
+    public static void VerifyAndBuildQuestBindingProbe()
+    {
+        VerifyAndBuild();
+        string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+        const string staging = "Assets/Game/Mods/LivingCitiesQuestBindingProbe";
+        Directory.CreateDirectory(staging);
+        File.Copy(Path.Combine(root, "LivingCities/work/Harmony/net472/0Harmony.dll"), staging + "/0Harmony.dll.bytes", true);
+        File.Copy(Path.Combine(root, "LivingCities/probes/quest-binding/bin/Release/net472/QuestBindingProbe.dll"), staging + "/QuestBindingProbe.dll.bytes", true);
+        var info = new ModInfo { ModTitle = "Living Cities Quest Binding Probe", ModVersion = "0.0.1", ModAuthor = "Daniel",
+            DFUnity_Version = "1.1.1", ModDescription = "Opt-in quest binding feasibility test. Not gameplay.",
+            GUID = "17f7edbf-2400-47b3-bd80-d83cbbcdbe69" };
+        File.WriteAllText(staging + "/QuestBindingProbe.dfmod.json", JsonUtility.ToJson(info, true));
+        AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+        string output = Path.Combine(root, "LivingCities/work/QuestBindingProbeBuild"); Directory.CreateDirectory(output);
+        var build = new AssetBundleBuild { assetBundleName = "livingcitiesquestbindingprobe.dfmod", assetNames = new[] {
+            staging + "/0Harmony.dll.bytes", staging + "/QuestBindingProbe.dll.bytes", staging + "/QuestBindingProbe.dfmod.json" } };
+        Require(BuildPipeline.BuildAssetBundles(output, new[] { build }, BuildAssetBundleOptions.ChunkBasedCompression,
+            BuildTarget.StandaloneWindows64) != null, "Quest binding probe bundle");
+        File.Copy(Path.Combine(output, "livingcitiesquestbindingprobe.dfmod"),
+            Path.Combine(root, "Player/DaggerfallUnity_Data/StreamingAssets/Mods/livingcitiesquestbindingprobe.dfmod"), true);
+        Debug.Log("LIVING_CITIES_QUEST_BINDING_PROBE_BUILT");
+    }
     public static void BuildGuardProbe()
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));

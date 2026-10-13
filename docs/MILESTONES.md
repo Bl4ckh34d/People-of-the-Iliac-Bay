@@ -36,6 +36,8 @@ Future speech extension: optional English TTS, investigating the Telegram bot's 
 
 ## Current work
 
+Quest binding checkpoint (14 October): a separate opt-in standard-mod probe now intercepts native parsing before offer expansion, binds a synthetic procedural person/home name to an existing household, checks actual native prompt labels, fixed/partial/unrelated exclusions, a changed dialog destination, and native FullSerializer reconstruction. Persistent population remains unchanged; patches and temporary package are removed. This proves an integration boundary, not production quest compatibility. A reproducible census covers 265 shipped quests and 125 NPC placement actions; see `QUEST-IDENTITY.md` and `QUEST-SOURCE-SURVEY.md`. Persisted semantic bindings and actual actor/hand-in integration remain open.
+
 Sleeping prototype 0.3.1 (14 October): 97 core tests pass; native build checks cover all three classic bed meshes and a five-view blanket atlas. The runtime now places one supported adult male appearance in unshared home beds and restores the same standing actor on waking or disabling sleep poses. A new native setting controls these poses. Shared-bed rendering, remaining appearances, original NPC binding, bed approach and tavern booking remain incomplete. The generated art is a functional prototype, not native-resolution production coverage. See `SLEEPING-CHECKPOINT.md` for actual-player evidence and fixture limitations.
 
 Population foundation implemented and reviewed. Full milestones remain incomplete.

@@ -65,4 +65,23 @@ The compatibility target includes quest packs using DFU's native person/place an
 
 Custom C# quest engines, private placement systems or bypassed macro expansion may require explicit adapters. Inventory and test actual mod-added quest cases before claiming support, including accepted quests loaded from older saves. No quest-pack compatibility or pre-publication interception is implemented or verified yet.
 
+## Pre-publication interception checkpoint, 14 October 2026
+
+The preceding no-interception status is superseded only for a separate opt-in feasibility probe. A standard mod package successfully attaches a Harmony postfix to native `Parser.Parse` in the shipped player. For its synthetic procedural recipient, it selects an existing living male household resident at the native quest-selected local home and sets the native person display name and residence name before offer expansion. This is temporary probe behavior; normal Living Cities gameplay does not rewrite quests yet.
+
+The expanded actual-player test passes:
+
+- Partial header parses create no binding; fixed recipient Meridia and unrelated quests are excluded.
+- Every non-name field in the person save data and site details remains unchanged. Quest UID survives native FullSerializer JSON round-trip and reconstruction.
+- Native message macro output and `QuestMachine.CreateMessagePrompt` text labels contain both bound names before the quest starts.
+- A subsequent explicit tavern assignment changes `GetDialogPlace` and message destination while retaining the person's bound name and original home name. That assigned destination survives serialization.
+- The persistent Living Cities population remains byte-identical in its snapshot. No accepted quest, household allocation or new game save is created by the probe itself.
+- Owner-specific unpatch removes interception; a subsequent parse no longer invokes it. The test runner removes the separate temporary `.dfmod` afterward. Base-game files and tracked engine source remain unchanged.
+
+Reproduce: `tools/Build.ps1 -QuestBindingProbe`, then `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -QuestBindingProbe`. Both commands passed; initial red evidence is `work/quest-binding-red.log` (recipient unchanged without interception), final evidence `work/quest-binding-pass.log`. Core tests remain 97/97; native build checks pass. Read-only Luna/high review found no confirmed critical or important defect. The normal bundle contains only the dormant opt-in test bridge, not Harmony or the binding implementation.
+
+The test constructs a native prompt but does not accept an actual guild quest, place or activate a renamed target, or perform hand-in. FullSerializer reconstruction is not an actual save-slot reload for this new probe. It does not establish native discovered map labels, rumors, concurrent quests, story relationships, semantic residency classification, mod-file/asset loading, or broad main/side quest compatibility. Native macro expansion logs an attempted dialog-link lookup before quest registration; the probe does not claim persisted talk-topic behavior.
+
+The reproducible inventory now covers 265 shipped scripts and 125 explicit NPC placement actions. `QUEST-SOURCE-SURVEY.md` records counts, the merchant relocation counterexample and open coverage groups. `docs/superpowers/plans/2026-10-14-quest-binding.md` records the remaining persisted binding and actual actor/quest integration work.
+
 This tests a synthetic questor binding on an actual original tavern NPC, using the native activation handler directly. It does not test mouse raycasting, door locks/greeting gates, every named individual/main quest, turn-in rewards, shops/services while relocated, scripted placement into another building, death policy, or cross-map actor transfer. M1 probes are complete; the corresponding M2/M3 integration work remains open. No engine changes were required for this probe. Read-only Luna/high review found no confirmed critical or important issue; runtime evidence remains the acceptance authority.

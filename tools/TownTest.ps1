@@ -2,7 +2,8 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [ValidatePattern('^LivingCitiesTest-[a-f0-9]{8}$')][string]$FixtureCharacter,
     [switch]$QuestProbe,
     [switch]$BedProbe,
-    [switch]$SleepProbe)
+    [switch]$SleepProbe,
+    [switch]$QuestBindingProbe)
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
 $player = Join-Path $DfuRoot 'Player/DaggerfallUnity.exe'
@@ -20,6 +21,7 @@ if ($FixtureCharacter) { $arguments += ' -livingcities-fixture-character ' + $Fi
 if ($QuestProbe) { $arguments += ' -livingcities-quest-probe' }
 if ($BedProbe) { $arguments += ' -livingcities-bed-probe' }
 if ($SleepProbe) { $arguments += ' -livingcities-sleep-probe' }
+if ($QuestBindingProbe) { $arguments += ' -livingcities-quest-binding-probe' }
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
 Write-Output "Owned town-test process: $($owned.Id)"
 try {
@@ -41,10 +43,15 @@ try {
     if ($QuestProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_PASS:') { throw 'Quest probe did not complete.' }
     if ($BedProbe -and $body -notmatch 'LIVING_CITIES_TOWN_BEDS_PASS:') { throw 'Bed probe did not complete.' }
     if ($SleepProbe -and $body -notmatch 'LIVING_CITIES_TOWN_SLEEP_PASS:') { throw 'Sleep probe did not complete.' }
+    if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_QUEST_BINDING_PASS:') { throw 'Quest binding probe did not complete.' }
 } finally {
     try {
         if (Test-Path -LiteralPath $log) { Copy-Item -LiteralPath $log -Destination "$repo/work/town-test.log" -Force }
     } finally {
         if (-not $owned.HasExited) { Stop-Process -InputObject $owned }
+        if ($QuestBindingProbe) {
+            $probePackage = Join-Path $playerDir 'DaggerfallUnity_Data/StreamingAssets/Mods/livingcitiesquestbindingprobe.dfmod'
+            if (Test-Path -LiteralPath $probePackage) { Remove-Item -LiteralPath $probePackage }
+        }
     }
 }
