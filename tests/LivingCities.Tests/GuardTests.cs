@@ -16,6 +16,56 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Building responses retain destination and travel deadline through reload", () => {
+                var roster = Roster(2);
+                var routes = roster.Guards.ToDictionary(g => g.Id, g => Route(g.Post.X, 100));
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 }, routes);
+                routes[roster.Guards[0].Id][1].X = 999;
+                var sent = roster.DispatchBuilding("shop", 73, 10, 1, 2, 10);
+                Check.Equal(1, sent.Count); Check.Equal(roster.Guards[1].Id, sent[0].Id);
+                Check.Near(460, sent[0].ArrivesAt);
+                var copy = GuardRoster.CopyValidated(roster);
+                Check.Equal(73, copy.Reports[0].BuildingKey.Value);
+                Check.Near(100, copy.Reports[0].Entrance.X);
+                Check.Near(60, copy.Position(sent[0].Id, 260).X);
+                Check.Equal(1, copy.DispatchBuilding("shop", 73, 270, 4, 2, 10).Count);
+                Check.Near(460, copy.Guards[1].ArrivesAt);
+            }));
+            cases.Add(("Building report cannot retarget or dispatch to mismatched door endpoints", () => {
+                var roster = Roster(2);
+                var routes = roster.Guards.ToDictionary(g => g.Id, g => Route(g.Post.X, 100));
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 }, routes);
+                roster.DispatchBuilding("shop", 73, 0, 1, 2, 10);
+                Check.Throws<ArgumentException>(() => roster.DispatchBuilding("shop", 74, 1, 1, 2, 10));
+                Check.Throws<ArgumentException>(() => roster.CacheBuildingApproach(74, new SavedRoutePoint { X = 101 }, routes));
+                Check.Equal(1, roster.BuildingApproaches.Count); Check.Equal(1, roster.Reports.Count);
+                var broken = GuardRoster.CopyValidated(roster); broken.Reports[0].Entrance.X = double.NaN;
+                Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(broken));
+            }));
+            cases.Add(("Missing building route dispatches nobody and corrupt cached origins reject restore", () => {
+                var roster = Roster(1);
+                Check.Equal(0, roster.DispatchBuilding("unknown", 99, 0, 4, 2, 10).Count);
+                Check.Equal(0, roster.Reports.Count);
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    new Dictionary<string, List<SavedRoutePoint>> { { roster.Guards[0].Id, Route(0, 100) } });
+                var copy = GuardRoster.CopyValidated(roster);
+                copy.BuildingApproaches[0].Routes[0].Points[0].X = 50;
+                Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(copy));
+                Check.Equal(1, roster.DispatchBuilding("shop", 73, 0, 1, 2, 10).Count);
+            }));
+            cases.Add(("Recruited guard uses the saved post approach without reviving its predecessor", () => {
+                var roster = Roster(1); string oldId = roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    new Dictionary<string, List<SavedRoutePoint>> { { oldId, Route(0, 100) } });
+                roster.Kill(oldId, 1); double now = 1 + 7 * 86400;
+                Check.Equal(1, roster.Recruit(now));
+                var restored = GuardRoster.CopyValidated(roster);
+                var sent = restored.DispatchBuilding("later", 73, now, 4, 2, 10);
+                Check.Equal(1, sent.Count); Check.True(sent[0].Id != oldId);
+                Check.True(!restored.Guards[0].IsAlive); Check.Near(now + 500, sent[0].ArrivesAt);
+                var legacy = Roster(1); legacy.BuildingApproaches = null;
+                Check.Equal(0, GuardRoster.CopyValidated(legacy).BuildingApproaches.Count);
+            }));
             cases.Add(("Guard engagement preserves actual position and wounded health through reload", () => {
                 var roster = Roster(1);
                 roster.Dispatch("fight", 10, new Dictionary<string, List<SavedRoutePoint>> { { roster.Guards[0].Id, Route(0, 50) } }, 1, 2, 12);

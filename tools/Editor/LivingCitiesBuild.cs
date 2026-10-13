@@ -279,7 +279,8 @@ public static class LivingCitiesBuild
         var routes = new Dictionary<string, List<SavedRoutePoint>>();
         foreach (var guard in roster.Guards)
             routes.Add(guard.Id, new List<SavedRoutePoint> { new SavedRoutePoint { X = guard.Post.X }, new SavedRoutePoint { X = 100 } });
-        var sent = roster.Dispatch("native-theft", 100, routes, 2, 2, 12);
+        roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 }, routes);
+        var sent = roster.DispatchBuilding("native-theft", 73, 100, 2, 2, 12);
         Require(sent.Count == 2 && sent[0].Id == roster.Guards[3].Id, "Native nearest finite guard selection");
         roster.Kill(sent[0].Id, 310);
         Require(Math.Abs(roster.Position(sent[0].Id, 500).X - 65) < 0.001, "Native guard death location");
@@ -288,6 +289,9 @@ public static class LivingCitiesBuild
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native garrison save round trip");
         var saved = restored.GetOrCreateGuards(99, 200, new List<SavedRoutePoint>());
+        Require(saved.Reports[0].BuildingKey == 73 && saved.Reports[0].Entrance.X == 100 &&
+            saved.BuildingApproaches.Count == 1 && saved.BuildingApproaches[0].Routes.Count == 4,
+            "Native serializer preserves building destination and exterior approach routes");
         Require(saved.Guards.Count == 4 && saved.Dispatch("native-theft", 500, routes, 4, 2, 12).Count == 2,
             "Native reload cannot reroll or replenish a report");
         Require(saved.Recruit(310 + 7 * 86400 - 1) == 0 && saved.Recruit(310 + 7 * 86400) == 1 &&

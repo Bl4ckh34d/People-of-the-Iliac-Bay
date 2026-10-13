@@ -24,16 +24,19 @@ namespace LivingCities.Core
     public sealed class GuardReport
     {
         public string Id;
+        public int? BuildingKey;
+        public SavedRoutePoint Entrance;
         public List<string> GuardIds = new List<string>();
     }
     [Serializable]
-    public sealed class GuardRoster
+    public sealed partial class GuardRoster
     {
         public int SettlementId, Target, NextIdentity;
         public uint Seed;
         public double LastRecruitment = -1;
         public List<GuardRecord> Guards = new List<GuardRecord>();
         public List<GuardReport> Reports = new List<GuardReport>();
+        public List<GuardBuildingApproach> BuildingApproaches = new List<GuardBuildingApproach>();
         public static int TargetCount(SettlementScale scale, int residents)
         {
             Require(residents >= 0 && (scale == SettlementScale.Hamlet || scale == SettlementScale.Town || scale == SettlementScale.City), "Invalid settlement population.");
@@ -260,11 +263,20 @@ namespace LivingCities.Core
             foreach (var report in source.Reports)
             {
                 Require(report != null && !string.IsNullOrWhiteSpace(report.Id) && reports.Add(report.Id) && report.GuardIds != null && report.GuardIds.Count <= 256, "Invalid guard report.");
-                var saved = new GuardReport { Id = report.Id }; var responders = new HashSet<string>();
+                Require(report.BuildingKey.HasValue == (report.Entrance != null), "Incomplete building report.");
+                Require(!report.BuildingKey.HasValue || report.BuildingKey.Value >= 0, "Invalid report building.");
+                var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey,
+                    Entrance = report.Entrance == null ? null : CopyPoint(report.Entrance) }; var responders = new HashSet<string>();
                 foreach (var id in report.GuardIds)
                 { Require(id != null && ids.Contains(id) && responders.Add(id), "Unknown or duplicate responder."); saved.GuardIds.Add(id); }
+                if (saved.BuildingKey.HasValue)
+                    foreach (var guard in copy.Guards)
+                        if (guard.IsAlive && guard.IncidentId == saved.Id && guard.Duty != GuardDuty.Returning)
+                            Require(Distance(guard.Route[guard.Route.Count - 1], saved.Entrance) < 0.05,
+                                "Building response does not reach its reported entrance.");
                 copy.Reports.Add(saved);
             }
+            copy.CopyBuildingApproaches(source.BuildingApproaches);
             return copy;
         }
     }

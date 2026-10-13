@@ -1,5 +1,7 @@
 # Finite guards
 
+The next building-response core now persists validated exterior approaches and immutable building-bound reports. Core tests: 146/146; DFU native serializer verification passes. The installed player remains 0.3.5 while the indoor adapter is unfinished. See [building response implementation](GUARD-BUILDING-RESPONSE.md).
+
 ## Live controller checkpoint, 14 October 2026 — version 0.3.5
 
 Enable General / ExperimentalExteriorGuards to try the exterior Gothway Garden controller. Indoor guards remain vanilla. This supersedes older statements below that guard bodies were test-only.
