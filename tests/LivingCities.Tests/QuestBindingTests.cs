@@ -25,6 +25,18 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Acceptance validation detects death without committing or losing the offer", () => {
+                var store = Filled(); var plan = store.PrepareQuestBindings(new[] { Candidate(store) });
+                string before = Encode(store);
+                store.ValidateQuestBindings(plan); Check.Equal(before, Encode(store));
+                var resident = store.GetOrCreate(100, new[] { 10 }).Households[0].Residents[0]; resident.IsAlive = false;
+                Check.Throws<ArgumentException>(() => store.ValidateQuestBindings(plan));
+                Check.Equal(0, store.Snapshot().QuestBindings.Count);
+                resident.IsAlive = true; store.CommitQuestBindings(plan);
+                Check.Equal(1, store.Snapshot().QuestBindings.Count);
+                store.Restore(store.Snapshot());
+                Check.Throws<ArgumentException>(() => store.ValidateQuestBindings(plan));
+            }));
             cases.Add(("Rejected offer leaves world and future offers unchanged", () => {
                 var store = Filled(); string before = Encode(store);
                 var proposal = Candidate(store); var plan = store.PrepareQuestBindings(new[] { proposal });

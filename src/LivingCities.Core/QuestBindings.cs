@@ -59,12 +59,19 @@ namespace LivingCities.Core
 
         public void CommitQuestBindings(QuestBindingPlan plan)
         {
+            // One assignment after all validation. Keep live actor/population references.
+            state.QuestBindings = ValidatedQuestBindings(plan).QuestBindings;
+        }
+
+        public void ValidateQuestBindings(QuestBindingPlan plan) { ValidatedQuestBindings(plan); }
+
+        private WorldState ValidatedQuestBindings(QuestBindingPlan plan)
+        {
             if (plan == null) throw new ArgumentNullException(nameof(plan));
             Require(ReferenceEquals(bindingEpoch, plan.Epoch), "Quest offer belongs to another world or a previous load.");
             var incoming = Snapshot();
             MergeQuestBindings(incoming, plan.Bindings);
-            // One assignment after all validation. Keep live actor/population references.
-            state.QuestBindings = incoming.QuestBindings;
+            return incoming;
         }
 
         private static string BindingKey(QuestResidentBinding binding)

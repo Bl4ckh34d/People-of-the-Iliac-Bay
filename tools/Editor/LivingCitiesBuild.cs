@@ -23,7 +23,6 @@ public static class LivingCitiesBuild
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         const string staging = "Assets/Game/Mods/LivingCitiesQuestBindingProbe";
         Directory.CreateDirectory(staging);
-        File.Copy(Path.Combine(root, "LivingCities/work/Harmony/net472/0Harmony.dll"), staging + "/0Harmony.dll.bytes", true);
         File.Copy(Path.Combine(root, "LivingCities/probes/quest-binding/bin/Release/net472/QuestBindingProbe.dll"), staging + "/QuestBindingProbe.dll.bytes", true);
         var info = new ModInfo { ModTitle = "Living Cities Quest Binding Probe", ModVersion = "0.0.1", ModAuthor = "Daniel",
             DFUnity_Version = "1.1.1", ModDescription = "Opt-in quest binding feasibility test. Not gameplay.",
@@ -32,7 +31,7 @@ public static class LivingCitiesBuild
         AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
         string output = Path.Combine(root, "LivingCities/work/QuestBindingProbeBuild"); Directory.CreateDirectory(output);
         var build = new AssetBundleBuild { assetBundleName = "livingcitiesquestbindingprobe.dfmod", assetNames = new[] {
-            staging + "/0Harmony.dll.bytes", staging + "/QuestBindingProbe.dll.bytes", staging + "/QuestBindingProbe.dfmod.json" } };
+            staging + "/QuestBindingProbe.dll.bytes", staging + "/QuestBindingProbe.dfmod.json" } };
         Require(BuildPipeline.BuildAssetBundles(output, new[] { build }, BuildAssetBundleOptions.ChunkBasedCompression,
             BuildTarget.StandaloneWindows64) != null, "Quest binding probe bundle");
         File.Copy(Path.Combine(output, "livingcitiesquestbindingprobe.dfmod"),
@@ -81,11 +80,16 @@ public static class LivingCitiesBuild
 
         const string manifestPath = "Assets/Game/Mods/LivingCities/LivingCities.dfmod.json";
         var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText(manifestPath));
+        Require(info.Files.Contains("Assets/Game/Mods/LivingCities/Libraries/0Harmony.dll.bytes") &&
+            info.Files.Contains("Assets/Game/Mods/LivingCities/Libraries/LivingCities.QuestHooks.dll.bytes"),
+            "Editor virtual mod must discover both quest hook libraries from the manifest");
         const string staging = "Assets/Game/Mods/LivingCities/BuildText";
         Directory.CreateDirectory(staging);
         var assets = new List<string> { manifestPath };
         foreach (string source in info.Files)
         {
+            if (source.Contains("/Libraries/") && (source.EndsWith(".dll.bytes") || source.EndsWith("/Harmony-LICENSE.txt")))
+            { assets.Add(source); continue; }
             if (source.EndsWith("/modsettings.json")) { assets.Add(source); continue; }
             if (source.EndsWith(".png.bytes") && source.Contains("/Textures/")) { assets.Add(source); continue; }
             Require(source.EndsWith(".cs") && !source.Contains("/Editor/"), "Only runtime sources may ship");
@@ -93,6 +97,12 @@ public static class LivingCitiesBuild
             File.Copy(source, target, true); assets.Add(target);
         }
         AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
+        // Exercise DFU's real virtual-mod loader, which only discovers libraries listed in Files.
+        var virtualMod = new Mod(); virtualMod.ModInfo.Files = info.Files;
+        var loadedTypes = (Type[])typeof(Mod).GetMethod("GetTypesInEditor", System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.NonPublic).Invoke(virtualMod, null);
+        Require(Array.Exists(loadedTypes, type => type.FullName == "LivingCities.QuestHooks.NativeQuestOfferHooks"),
+            "Native editor loader resolves quest hook library");
         string output = Path.Combine(root, "LivingCities/dist");
         Directory.CreateDirectory(output);
         var build = new AssetBundleBuild { assetBundleName = "livingcities.dfmod", assetNames = assets.ToArray() };

@@ -41,6 +41,8 @@ namespace LivingCities.DFU
         public int PlannedCount { get { return plans.Count; } }
         public bool Ready { get; private set; }
         public bool SleepEnabled { get; set; }
+        public Func<string, bool> QuestOwnsResident { get; set; }
+        private bool QuestOwned(Resident resident) { return QuestOwnsResident != null && QuestOwnsResident(resident.Id); }
         public bool TrySample(double seconds, out string id, out Vector3 ground)
         {
             foreach (var plan in plans)
@@ -224,7 +226,7 @@ namespace LivingCities.DFU
                 actors.TryGetValue(plan.Resident.Id, out actor);
                 Vector3 position = state.Activity == Activity.Travel ? geometry.ScenePoint(state.Position) : Vector3.zero;
                 float limit = actor ? 165 : 140;
-                bool visible = plan.Resident.IsAlive && state.Activity == Activity.Travel &&
+                bool visible = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && state.Activity == Activity.Travel &&
                     (position - player).sqrMagnitude <= limit * limit;
                 if (!visible)
                 {
@@ -253,7 +255,7 @@ namespace LivingCities.DFU
             {
                 var state = plan.Schedule.EvaluateSeconds(seconds);
                 ResidentActor actor; actors.TryGetValue(plan.Resident.Id, out actor);
-                bool present = plan.Resident.IsAlive && state.Activity != Activity.Travel && state.BuildingKey == interior.EntryDoor.buildingKey;
+                bool present = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && state.Activity != Activity.Travel && state.BuildingKey == interior.EntryDoor.buildingKey;
                 if (!present)
                 {
                     if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }

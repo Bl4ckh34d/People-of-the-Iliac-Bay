@@ -16,6 +16,18 @@ namespace LivingCities.DFU
     public sealed class LivingCitiesMod : MonoBehaviour, IHasModSaveData
     {
         private WorldStateStore store = new WorldStateStore(0);
+        private QuestOfferBindings questOffers;
+        // Explicit eligible adapters use this service before their offer is displayed.
+        // No general-purpose residency guessing or automatic quest rewriting is enabled.
+        public QuestOfferBindings QuestOffers
+        {
+            get
+            {
+                if (saveFault) throw new InvalidOperationException("Cannot stage a quest while world restoration is incomplete.");
+                if (questOffers == null) questOffers = new QuestOfferBindings(store);
+                return questOffers;
+            }
+        }
         private RuntimeOptions options = new RuntimeOptions(true, 5, 6, 22, 1, true);
         private Mod mod;
         private StreetPopulation streets;
@@ -34,6 +46,7 @@ namespace LivingCities.DFU
             DontDestroyOnLoad(host);
             var component = host.AddComponent<LivingCitiesMod>();
             component.streets = host.AddComponent<StreetPopulation>();
+            component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
             component.mod = initParams.Mod;
             initParams.Mod.SaveDataInterface = component;
@@ -54,6 +67,7 @@ namespace LivingCities.DFU
         }
         private void OnDestroy()
         {
+            ClearQuestOffers();
             StartGameBehaviour.OnNewGame -= ResetWorld;
             SaveLoadManager.OnStartLoad -= BeforeLoad;
             if (mod != null) mod.LoadSettingsCallback = null;
@@ -91,11 +105,13 @@ namespace LivingCities.DFU
         }
         private void ResetWorld()
         {
+            ClearQuestOffers();
             if (streets) streets.Clear();
             store = new WorldStateStore(NewSeed()); current = null; saveFault = false; nextCheck = 0;
         }
         private void BeforeLoad(SaveData_v1 ignored)
         {
+            ClearQuestOffers();
             if (streets) streets.Clear();
             // DFU catches deserialization failures before calling RestoreSaveData. Stay
             // suspended until a valid restore so one character cannot inherit another's state.
@@ -110,10 +126,17 @@ namespace LivingCities.DFU
         }
         public void RestoreSaveData(object saveData)
         {
+            ClearQuestOffers();
             if (streets) streets.Clear();
             saveFault = true; current = null;
             store.Restore(saveData as WorldState);
+            if (store.Snapshot().QuestBindings.Count > 0) questOffers = new QuestOfferBindings(store);
             saveFault = false; nextCheck = 0;
+        }
+        private void ClearQuestOffers()
+        {
+            if (questOffers == null) return;
+            questOffers.Dispose(); questOffers = null;
         }
         private void Update()
         {

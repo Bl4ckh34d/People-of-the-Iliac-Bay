@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace LivingCities.DFU
 {
-    // Opt-in fixture only. This does not install an offer-acceptance adapter.
+    // Opt-in fixture exercising the offer adapter with a synthetic quest.
     public static class QuestLedgerProbe
     {
         private const string SaveName = "Living Cities - quest binding ledger";
@@ -35,10 +35,8 @@ namespace LivingCities.DFU
             string before = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
             var rejectedOffer = store.PrepareQuestBindings(new[] { candidate });
             Require(before == SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData()), "Unaccepted offer changed saved state.");
-            // Native startup, not a simulated guild UI click. The production acceptance hook is still pending.
-            QuestMachine.Instance.StartQuest(quest);
+            yield return QuestOfferProbe.Run(store, quest, candidate);
             Require(QuestMachine.Instance.GetQuest(quest.UID) == quest, "Native startup failed.");
-            store.CommitQuestBindings(rejectedOffer);
             ulong uid = quest.UID;
             bool saved = false, loaded = false;
             SaveLoadManager.OnSaveEventHandler onSave = ignored => saved = true;
@@ -71,6 +69,24 @@ namespace LivingCities.DFU
                     "Native quest and persistent resident contract disagree after save/load.");
                 var home = state.Settlements.Find(t => t.SettlementId == site.mapId).Households.Find(h => h.BuildingKey == site.buildingKey);
                 Require(home.Residents.Exists(r => r.Id == binding.ResidentId), "Bound household resident was lost.");
+                int targets = 0;
+                foreach (var target in UnityEngine.Object.FindObjectsOfType<QuestResourceBehaviour>())
+                    if (target.QuestUID == uid && target.TargetSymbol.Name == "recipient")
+                    {
+                        targets++;
+                        Require(target.GetComponent<StaticNPC>() && target.GetComponent<StaticNPC>().DisplayName == expected[0],
+                            "Restored native recipient lost its published display name.");
+                        restoredPerson.RearmPlayerClick(); restored.GetTask(new Symbol("_clicked_")).IsTriggered = false;
+                        typeof(PlayerActivate).GetMethod("StaticNPCClick", BindingFlags.Instance | BindingFlags.NonPublic).Invoke(
+                            game.PlayerActivate, new object[] { target.GetComponent<StaticNPC>() }); restored.Update();
+                        Require(restored.GetTask(new Symbol("_clicked_")).IsTriggered, "Restored native target activation failed.");
+                    }
+                Require(targets == 1, "Restored quest must have exactly one native recipient.");
+                var streets = UnityEngine.Object.FindObjectOfType<StreetPopulation>();
+                Require(!streets.FindActor(binding.ResidentId), "Reload duplicated the bound household resident.");
+                restored.EndQuest();
+                yield return new WaitForSecondsRealtime(2);
+                Require(streets.FindActor(binding.ResidentId), "Finished quest did not return the resident to household simulation.");
                 Debug.Log("LIVING_CITIES_TOWN_QUEST_LEDGER_PASS: native quest startup; mod sidecar and quest reconstructed; uid=" + uid +
                     "; resident=" + binding.ResidentId + "; name=" + binding.PersonName + "; schema=" + state.Version +
                     "; save=" + game.SaveLoadManager.GetSaveFolder(key));

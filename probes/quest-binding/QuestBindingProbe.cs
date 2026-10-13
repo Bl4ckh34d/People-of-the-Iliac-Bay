@@ -36,7 +36,8 @@ namespace LivingCities.Probes
                 harmony.Patch(method, postfix: new HarmonyMethod(typeof(QuestBindingProbe).GetMethod("Parsed")));
                 var machine = QuestMachine.Instance;
                 var source = new[] { "Quest: " + QuestName, "DisplayName: Household binding probe", "QRC:",
-                    "Message: 1000", "Deliver to _recipient_ at __recipient_.", "", "QBN:",
+                    "Message: 1000", "Deliver to _recipient_ at __recipient_.", "",
+                    "Message: 1001", "Offer refused.", "", "Message: 1002", "Accepted: _recipient_ at __recipient_.", "", "QBN:",
                     "Person _recipient_ group Resident1 male local", "Person _fixed_ named Meridia", "",
                     "_clicked_ task:", " clicked npc _recipient_" };
                 var partial = machine.ParseQuest(QuestName, source, 0, true);

@@ -1,5 +1,7 @@
 param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent), [switch]$QuestBindingProbe)
 $ErrorActionPreference = 'Stop'
+dotnet build (Join-Path $PSScriptRoot '../src/LivingCities.QuestHooks/LivingCities.QuestHooks.csproj') -c Release --nologo
+if ($LASTEXITCODE -ne 0) { throw 'Quest offer hooks compilation failed.' }
 & (Join-Path $PSScriptRoot 'Deploy.ps1') -DfuRoot $DfuRoot
 $editor = 'C:/Program Files/Unity/Hub/Editor/2019.4.40f1/Editor/Unity.exe'
 $project = Join-Path $DfuRoot 'daggerfall-unity'
