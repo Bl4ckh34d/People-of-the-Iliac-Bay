@@ -10,23 +10,28 @@ namespace LivingCities.DFU
     {
         public sealed class Atlas { public Texture2D Texture; public Rect[] Views; }
         private readonly Mod mod;
-        private Atlas maleBreton0;
+        private readonly Dictionary<int, Atlas> atlases = new Dictionary<int, Atlas>();
         public SleepingArt(Mod mod) { this.mod = mod; }
         public Atlas ForResident(Resident resident)
         {
             // Explicit identity coverage. Never borrow another person's sleeping face.
-            if (resident.AgeGroup != ResidentAgeGroup.Adult || resident.Sex != ResidentSex.Male ||
+            if (resident.AgeGroup != ResidentAgeGroup.Adult ||
                 ((resident.AppearanceSeed >> 1) % 4) != 0) return null;
-            if (maleBreton0 != null) return maleBreton0;
-            var asset = mod.GetAsset<TextAsset>("sleep-mobile-385.png.bytes");
+            // ResidentActor currently uses Breton billboards; variant zero is
+            // archive 385 for men and 453 for women in DFU's native mapping.
+            int archive = resident.Sex == ResidentSex.Male ? 385 : 453;
+            Atlas atlas;
+            if (atlases.TryGetValue(archive, out atlas)) return atlas;
+            var asset = mod.GetAsset<TextAsset>("sleep-mobile-" + archive + ".png.bytes");
             if (!asset) throw new InvalidOperationException("Sleeping atlas missing from mod bundle.");
             var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
             try
             {
                 if (!texture.LoadImage(asset.bytes)) throw new InvalidOperationException("Sleeping atlas is not a valid PNG.");
                 texture.filterMode = FilterMode.Point; texture.wrapMode = TextureWrapMode.Clamp;
-                maleBreton0 = new Atlas { Texture = texture, Views = FindViews(texture) };
-                return maleBreton0;
+                atlas = new Atlas { Texture = texture, Views = FindViews(texture) };
+                atlases.Add(archive, atlas);
+                return atlas;
             }
             catch { UnityEngine.Object.Destroy(texture); throw; }
         }
@@ -56,6 +61,9 @@ namespace LivingCities.DFU
             views.Reverse(); return views.ToArray();
         }
         public void Dispose()
-        { if (maleBreton0 != null) UnityEngine.Object.Destroy(maleBreton0.Texture); maleBreton0 = null; }
+        {
+            foreach (var atlas in atlases.Values) UnityEngine.Object.Destroy(atlas.Texture);
+            atlases.Clear();
+        }
     }
 }

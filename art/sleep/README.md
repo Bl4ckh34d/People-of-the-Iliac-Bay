@@ -1,12 +1,22 @@
 # Sleeping art studies
 
-All images here were generated with the built-in image tool from locally inspected original game references. PNGs in `drafts/` remain unbundled studies. The separate archive-385 atlas described below is bundled for a limited runtime prototype. Original reference PNGs remain under ignored `work/sleep-source`; the committed CSV contains source metadata only. Curate human applicability before claiming coverage.
+All images here were generated with the built-in image tool from locally inspected original game references. PNGs in `drafts/` remain unbundled studies. The separate archive-385 and archive-453 atlases described below are bundled for a limited runtime prototype. Original reference PNGs remain under ignored `work/sleep-source`; the committed CSV contains source metadata only. Curate human applicability before claiming coverage.
+
+## Current color requirement
+
+The user's later amendment changes all sleeping blankets to the original bed cover's muted moss/olive green; pillows remain white. Both bundled atlases (385 and 453) and the current flat-182/1 side study have built-in-tool green edits. The exact edit prompt and generated filenames are in `green-blanket-edit-prompt.txt`. Faces, hair, frame order and transparent surroundings remain appearance-specific. The current unbundled study is `drafts/flat-182-1-blanket-side-green-v2.png`; its white v1 and the older overhead studies are superseded provenance, not production assets. Historical prompts below describe the initial generations and do not override green blankets for future work.
+
+## Archive 453 runtime prototype
+
+Version 0.3.2 adds `mod/Textures/sleep-mobile-453.png.bytes`, a separate five-view blanket atlas for the blonde adult female Breton variant zero. It preserves the built-in tool's 793×1984 green-edit PNG unchanged. The initial white generation is 793×1983 pixels. The original idle reference is archive 453, record 5, 66×173 pixels. Row order matches the male atlas: foot, foot diagonal, side, head diagonal, head. Runtime caches each appearance separately and selects the matching atlas; it does not substitute the male face for women or unsupported appearances. Coverage remains unshared home beds only. Both appearances now pass actual-player sleep/wake/toggle/death/save-reload checks, with side/end screenshots inspected; see `docs/SLEEPING-CHECKPOINT.md`.
+
+Generated source: `exec-6a727df4-fd8b-4bc4-af90-dc9b66455343.png`, 14 October 2026. The complete built-in-tool prompt, source identity and limitations are recorded in `mobile-453-prompt.txt`. The generated sheet was inspected against the original reference for blonde hair, warm skin, blanket coverage and distinct directions. Native-resolution fidelity remains unfinished: requesting a small canvas did not produce one. Actual-player verification belongs in `docs/SLEEPING-CHECKPOINT.md` and is separate from generation or PNG structural checks.
 
 ## Archive 385 runtime prototype
 
-`mod/Textures/sleep-mobile-385.png.bytes` preserves the generated PNG bytes (1024×1536 RGBA). Reference: original mobile archive 385 idle record 5, 72×163 pixels. The atlas contains five views ordered foot, foot diagonal, side, head diagonal, head. The opposite side uses mirrored views. Runtime reads alpha-separated bounds and selects UVs; it does not resample or repair the image. Point filtering and the native billboard shader's 0.5 alpha cutoff preserve transparent gaps.
+`mod/Textures/sleep-mobile-385.png.bytes` preserves the green-edited generated PNG bytes (1024×1536 RGBA). Reference: original mobile archive 385 idle record 5, 72×163 pixels. The atlas contains five views ordered foot, foot diagonal, side, head diagonal, head. The opposite side uses mirrored views. Runtime reads alpha-separated bounds and selects UVs; it does not resample or repair the image. Point filtering and the native billboard shader's 0.5 alpha cutoff preserve transparent gaps.
 
-Coverage is one adult male appearance, selected by the same appearance-seed variant as the existing Breton mobile actor. Unsupported identities receive no substitute face. Shared beds, children and original stationary NPCs remain unsupported. This is a functional prototype, not approval of native pixel resolution/style or complete directional coverage.
+This atlas covers one adult male appearance, selected by the same appearance-seed variant as the existing Breton mobile actor. Version 0.3.2 adds the separate female atlas above. Unsupported identities receive no substitute face. Shared beds, children and original stationary NPCs remain unsupported. These are functional prototypes, not approval of native pixel resolution/style or complete directional coverage.
 
 Generated 14 October 2026 with the built-in image tool, transparent background, source `exec-eee2d629-ad44-4570-9d91-7d65bfb2569d.png` in this task's generated-images directory. Prompt:
 
@@ -14,13 +24,14 @@ Generated 14 October 2026 with the built-in image tool, transparent background, 
 
 | Draft | Source | Dimensions | Status |
 | --- | --- | --- | --- |
-| `drafts/flat-182-1-blanket-side-v1.png` | Flat 182/1, original 61×117 | 2138×736 | Current camera/blanket study; native-scale and in-game review pending |
+| `drafts/flat-182-1-blanket-side-green-v2.png` | Flat 182/1, original 61×117 | 2138×736 | Current green-blanket study; native-scale and in-game review pending |
+| `drafts/flat-182-1-blanket-side-v1.png` | Flat 182/1, original 61×117 | 2138×736 | Superseded white-blanket study |
 | `drafts/flat-182-1-overhead-superseded.png` | Flat 182/1 | 906×1737 | Superseded by side-view blanket decision |
 | `drafts/mobile-385-overhead-superseded.png` | Mobile archive 385, idle record 5, original 72×163 | 834×1885 | Superseded by side-view blanket decision |
 
 The overhead studies aimed to preserve clothes and body identity but used the wrong viewing approach for a standing player. They must not become final sleeping assets. The current study removes outfit-specific sleeping work by covering the body and retains face identity. It still requires lower-resolution/style validation and matching views; generation output size is not native game resolution.
 
-## Current study prompt
+## Historical white study prompt
 
 Built-in tool, `transparent_background: true`, reference `work/sleep-source/flat-182-1.png`:
 

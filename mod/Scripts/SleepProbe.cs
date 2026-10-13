@@ -14,6 +14,14 @@ namespace LivingCities.DFU
     {
         public static IEnumerator Run()
         {
+            yield return RunAppearance(ResidentSex.Male);
+            yield return RunAppearance(ResidentSex.Female);
+        }
+        private static IEnumerator RunAppearance(ResidentSex sex)
+        {
+            string suffix = sex == ResidentSex.Male ? "" : " - female";
+            string previewName = "Living Cities - sleeping preview" + suffix;
+            string deathName = "Living Cities - sleeping death" + suffix;
             var game = GameManager.Instance;
             var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
             var streets = UnityEngine.Object.FindObjectOfType<StreetPopulation>();
@@ -27,7 +35,7 @@ namespace LivingCities.DFU
             {
                 if (home.Residents.Count != 1) continue;
                 var resident = home.Residents[0];
-                if (!resident.IsAlive || resident.AgeGroup != ResidentAgeGroup.Adult || resident.Sex != ResidentSex.Male ||
+                if (!resident.IsAlive || resident.AgeGroup != ResidentAgeGroup.Adult || resident.Sex != sex ||
                     ((resident.AppearanceSeed >> 1) % 4) != 0) continue;
                 foreach (var candidate in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
                     foreach (var entry in candidate.Doors)
@@ -40,13 +48,13 @@ namespace LivingCities.DFU
                     }
                 if (selected != null) break;
             }
-            if (selected == null) throw new InvalidOperationException("No matching sleep-art resident fixture.");
+            if (selected == null) throw new InvalidOperationException("No matching sleep-art resident fixture: " + sex);
             SetHour(23);
             TownSmokeHarness.EnterInterior(owner.transform, door);
             yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
             yield return new WaitForSecondsRealtime(1);
             var actor = streets.FindActor(selected.Id);
-            if (!actor || !actor.IsSleeping) throw new InvalidOperationException("Scheduled resident did not enter bed pose.");
+            if (!actor || !actor.IsSleeping) throw new InvalidOperationException("Scheduled resident did not enter bed pose: " + sex);
             string name = actor.Person.NameNPC;
             var person = actor.Person; var body = actor.GetComponent<CapsuleCollider>();
             var bed = BedGeometry.Read(game.PlayerEnterExit.Interior)[0];
@@ -64,7 +72,7 @@ namespace LivingCities.DFU
             AimCamera(actor.transform.position);
             yield return null;
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-waking.png"));
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-waking" + suffix + ".png"));
             SetHour(23); yield return null;
             if (!actor.IsSleeping) throw new InvalidOperationException("Next bedtime did not restore pose.");
             streets.SleepEnabled = false; yield return null;
@@ -78,12 +86,12 @@ namespace LivingCities.DFU
             SaveLoadManager.OnSave += onSave; SaveLoadManager.OnLoad += onLoad;
             try
             {
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - sleeping preview");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, previewName);
                 float deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Sleep preview save timed out.");
                 yield return null;
-                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - sleeping preview");
+                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, previewName);
                 game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 45;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -97,13 +105,13 @@ namespace LivingCities.DFU
                 if (restored.Resident.IsAlive || streets.FindActor(selected.Id))
                     throw new InvalidOperationException("Sleeping actor death did not remove the resident.");
                 saved = false;
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - sleeping death");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, deathName);
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Sleeping death save timed out.");
                 yield return null;
                 loaded = false;
-                game.SaveLoadManager.Load(game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - sleeping death"));
+                game.SaveLoadManager.Load(game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, deathName));
                 DaggerfallUI.Instance.PopToHUD(); deadline = Time.realtimeSinceStartup + 45;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
                 yield return new WaitForSecondsRealtime(1);
@@ -119,12 +127,13 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Could not restore living preview after death check.");
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
-            Debug.Log("LIVING_CITIES_TOWN_SLEEP_PASS: resident=" + selected.Id + "; name=" + name +
+            Debug.Log("LIVING_CITIES_TOWN_SLEEP_PASS: sex=" + sex + "; resident=" + selected.Id + "; name=" + name +
                 "; building=" + selected.HomeKey + "; bedtime, midnight, waking, toggle, raycast target, death and actual save/load");
         }
         private static IEnumerator FrameSleeper(ResidentActor actor)
         {
             var game = GameManager.Instance;
+            string suffix = actor.Resident.Sex == ResidentSex.Male ? "" : "-female";
             Vector3 target = actor.transform.position + Vector3.up * 0.1f;
             bool found = false;
             var observedViews = new HashSet<int>();
@@ -160,10 +169,19 @@ namespace LivingCities.DFU
                     if (hit.collider.GetComponentInParent<ResidentActor>() == actor) targetable = true;
                 if (!targetable) throw new InvalidOperationException("Sleeping actor has no raycast interaction target.");
                 int index = actor.GetComponent<SleepingPose>().ViewIndex;
+                var blanket = actor.transform.Find("Sleeping blanket");
+                Debug.Log("LIVING_CITIES_SLEEP_FOOTPRINT: sex=" + actor.Resident.Sex + "; view=" + index +
+                    "; scale=" + blanket.localScale + "; centerOffset=" + (blanket.position - actor.transform.position));
+                foreach (var vertex in blanket.GetComponent<MeshFilter>().sharedMesh.vertices)
+                {
+                    Vector3 corner = Camera.main.WorldToViewportPoint(blanket.TransformPoint(vertex));
+                    if (corner.z <= 0 || corner.x < 0 || corner.x > 1 || corner.y < 0 || corner.y > 1)
+                        throw new InvalidOperationException("Sleeping sprite exceeds normal bedside view: " + actor.Resident.Sex + "/" + index);
+                }
                 observedViews.Add(index);
                 if (index == 2) { sidePosition = game.PlayerMotor.transform.position; found = true; }
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,
-                    "LivingCities-sleeping-view-" + index + ".png"));
+                    "LivingCities-sleeping" + suffix + "-view-" + index + ".png"));
                 yield return null;
             }
             if (!found || !observedViews.Contains(0)) throw new InvalidOperationException("Sleeping fixture needs visible side and foot-end views.");
@@ -172,7 +190,7 @@ namespace LivingCities.DFU
             yield return new WaitForSecondsRealtime(0.5f);
             AimCamera(target);
             yield return null; yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-sleeping.png"));
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-sleeping" + suffix + ".png"));
             Debug.Log("LIVING_CITIES_TOWN_SLEEP_VIEW: view=" + actor.GetComponent<SleepingPose>().ViewIndex +
                 "; distinctViews=" + observedViews.Count + "; camera=" + Camera.main.transform.position + "; sleeper=" + actor.transform.position);
             yield return new WaitForEndOfFrame();

@@ -14,6 +14,10 @@ M1 baseline probes are complete. The opt-in `tools/TownTest.ps1 -FixtureCharacte
 
 ## Verified foundation
 
+Current version 0.3.2 adds two appearance-specific sleeping prototypes (male archive 385 and female archive 453), using green blankets and white pillows on unshared home beds. Actual-player sleep/wake/toggle/targeting/death/save-reload checks pass for both. SAVE21 provides the female preview; SAVE17 remains the male preview. Shared-family beds, children and the remaining appearances are still pending. See [sleeping evidence](docs/SLEEPING-CHECKPOINT.md).
+
+The initial automatic quest pilot also passes for unchanged The Delivery Boy in Gothway Garden, including native acceptance, save/reload and delivery/reward. Broader quest coverage remains open while population gameplay and animations resume. There are now nine native menu controls, including sleeping poses and the quest-household pilot. Core tests last passed 119/119; this sleeping increment does not change core code. Earlier foundation details below are historical.
+
 `dotnet run --project tests/LivingCities.Tests` passes 87 behavior tests: family allocation and relationships, household identity/capacity, persistent deaths, deterministic weighted paths, fractional-second schedules, bounded visits, save migration and route persistence, atomic restore rejection, and bounded settings.
 
 The standard `livingcities.dfmod` builds, reopens, and initializes alongside Basic Roads in the isolated player. Unity's integration verifier exercises DFU's real FullSerializer and the mod save adapter. Version 0.3.0 adds family households and home-only child actors to the existing Gothway Garden adult street/interior preview. Nearby actors use a 140-metre activation radius, 165-metre removal radius and an 80-actor exterior cap. Other towns retain vanilla physical populations for now. F8 shows development diagnostics.

@@ -1,5 +1,17 @@
 # Sleeping foundation checkpoint — 14 October 2026
 
+## Version 0.3.2: female appearance and green blankets
+
+Sleeping now supports two generated adult appearances in unshared home beds: Breton male variant zero (archive 385) and female variant zero (archive 453). Each has a separately cached five-view atlas. Both atlases and the current flat-182/1 side study now use green blankets matching the original bed cover, with white pillows, as requested. Historical white studies are superseded. Full generation/edit prompts and source metadata are in `art/sleep/README.md`, `mobile-453-prompt.txt` and `green-blanket-edit-prompt.txt`. The female green PNG is 793×1984 pixels; this is still prototype art, not native-resolution production coverage.
+
+The expanded actual-player `-SleepProbe` passes both appearances through bedtime, midnight, waking with original actor/name restored, sleep-toggle changes, raycast interaction, living save/reload, death and dead save/reload, then restoration of the living preview. Existing street/interior/family tests pass in the same run. The female fixture is Elyzyna Wickford (`s:206728581:h:66049:r:0`), building 66049, character `LivingCitiesTest-126494eb`. SAVE21 is **Living Cities - sleeping preview - female**; SAVE22 is the corresponding disposable death case. SAVE17/SAVE18 remain the male fixtures.
+
+Visual inspection exposed an end-view sizing bug that lifecycle checks did not detect: the tall female atlas frame became a 1.8-metre-high billboard and its center was lifted 0.7 metres above the sleeping actor. The new whole-sprite viewport assertion failed in that exact foot-end view before the fix. The renderer now keeps the drawing centered at the mattress/body anchor and caps image-derived height using the projected bed/body footprint. The corrected foot view is about 1.3 metres high with no additional center offset, fits the bedside camera and was visually inspected alongside both side views. This fixes the oversize/offset defect, not every perspective/art fidelity issue. Near-overhead viewing remains untested; the fallback basis can change orientation at its threshold.
+
+Verification: `tools/Build.ps1` exits 0 with separate five-row/transparency/footprint checks for both PNGs; `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -SleepProbe` exits 0; ordinary `tools/SmokeTest.ps1` startup passes. Evidence: `work/sleep-green-native-pass.log`, `work/sleep-green-runtime-pass.log`, `work/player-smoke.log`. Red evidence is `work/sleep-female-red.log` (unsupported female) and `work/sleep-footprint-red.log` (oversized view). Core code is unchanged from the 119/119 checkpoint. Read-only Luna/high review found no confirmed defect for normal bedside sizing or lifetime; screenshots, rather than structural checks alone, established the new face and blanket appearance.
+
+Built/installed bundle SHA-256: `807DEAD3566DF7C6718D106C297FB4490E0E107ACFA0C9CAAA4007B933B67B06`. Other adult variants, children, shared-family compositions, original stationary NPC mapping, bed approach, tavern bookings and stealth waking remain open. No complete M2/M3 or all-sprite coverage is claimed. The sections below preserve earlier checkpoints.
+
 Version 0.3.1 adds a limited sleeping prototype: generated adult men using mobile archive 385 can sleep in unshared home beds. Other appearances and shared beds still use standing presence. No M2/M3 completion is claimed.
 
 ## Runtime prototype
@@ -31,7 +43,7 @@ Evidence:
 
 ## Current art direction
 
-The user chose a thick white blanket covering the body to the neck, with only the face/head visible. Reusable blanket poses reduce outfit work, while the face and adult/child proportions preserve identity. The camera usually sees a bed from the side and slightly above; directional side/angled/head/foot views are required. A horizontal overhead cutout is not the finished renderer.
+The latest user color amendment requires thick green blankets matching the classic bed cover, with white pillows. This supersedes the original white blankets for all current and future sleeping art. The blanket covers the body to the neck, with only the face/head visible. Reusable blanket poses reduce outfit work, while the face and adult/child proportions preserve identity. The camera usually sees a bed from the side and slightly above; directional side/angled/head/foot views are required. A horizontal overhead cutout is not the finished renderer.
 
 `art/sleep/drafts/flat-182-1-blanket-side-v1.png` is the first side/angled study from original flat 182/1. Built-in image generation produced 2138×736 RGBA pixels with transparent corners, despite the native-scale prompt. It needs native-scale/style review, directional consistency and actual in-engine inspection. Two earlier overhead images are retained as explicitly superseded drafts. None is packed into the playable mod.
 

@@ -12,6 +12,8 @@ Later controls accompany implementation: crowd/activity weights and operating ho
 
 Version 0.3.1 adds the eighth control, `DailyRoutine/SleepingPoses` (default true). It immediately enables/disables supported sleeping visuals while retaining identity and schedule state. Current coverage is explicitly one adult appearance on unshared home beds. Native deserialization/default checks cover this control; runtime tests exercise the underlying live transition. Clicking the actual settings menu remains a separate UI acceptance check.
 
+Version 0.3.2 extends this same sleeping control to one male and one female appearance, each with its own green-blanket/white-pillow atlas. Actual-player toggle and save/reload checks pass for both; it still does not cover other appearances or shared beds. Latest built/installed bundle SHA-256 is `807DEAD3566DF7C6718D106C297FB4490E0E107ACFA0C9CAAA4007B933B67B06`; this supersedes the previous quest-checkpoint hash below.
+
 ## Distribution boundary
 
 The ninth control is `General/QuestHouseholds` (default true). It enables the reviewed vanilla The Delivery Boy household-binding pilot in Gothway Garden. Changes take effect immediately for new bindings; turning it off also prevents an already staged binding from being accepted. Accepted quests keep their published names and targets while disabled. Actual-player tests invoke the real settings callback and verify these transitions across native offers and reload. Clicking the menu remains a separate UI check. Other quest types and modified quest sources keep native behavior.

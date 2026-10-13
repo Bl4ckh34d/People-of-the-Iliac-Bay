@@ -161,10 +161,15 @@ public static class LivingCitiesBuild
     }
     private static void VerifySleepingArt()
     {
+        foreach (int archive in new[] { 385, 453 }) VerifySleepingAtlas(archive);
+        Debug.Log("LIVING_CITIES_SLEEP_ART_VERIFIED: two transparent five-view atlases with distinct side/end footprints.");
+    }
+    private static void VerifySleepingAtlas(int archive)
+    {
         var texture = new Texture2D(2, 2);
         try
         {
-            Require(texture.LoadImage(File.ReadAllBytes("Assets/Game/Mods/LivingCities/Textures/sleep-mobile-385.png.bytes")), "Sleeping PNG decode");
+            Require(texture.LoadImage(File.ReadAllBytes("Assets/Game/Mods/LivingCities/Textures/sleep-mobile-" + archive + ".png.bytes")), "Sleeping PNG decode: " + archive);
             var views = SleepingArt.FindViews(texture);
             Require(views.Length == 5 && views[2].width > views[0].width && views[2].width > views[4].width,
                 "Atlas has distinct broadside and foreshortened end views");
@@ -177,7 +182,6 @@ public static class LivingCitiesBuild
                 Require(texture.GetPixel(0, y).a < 0.5f && texture.GetPixel(texture.width - 1, y).a < 0.5f, "Atlas sides are clipped");
         }
         finally { UnityEngine.Object.DestroyImmediate(texture); }
-        Debug.Log("LIVING_CITIES_SLEEP_ART_VERIFIED: transparent five-view atlas with distinct side/end footprints.");
     }
     public static void VerifyHousing()
     {

@@ -189,8 +189,8 @@ namespace LivingCities.DFU
         private void OnGUI()
         {
             if (!panel) return;
-            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.1 — development diagnostics (F8)");
-            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nSleeping: one adult appearance in unshared beds. Child play/reactions pending.");
+            GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.2 — development diagnostics (F8)");
+            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nSleeping: one male and one female appearance in unshared beds. Child play/reactions pending.");
         }
         public string TestStatus()
         {
