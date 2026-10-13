@@ -1,0 +1,46 @@
+using System;
+using System.Collections.Generic;
+
+namespace LivingCities.Tests
+{
+    internal static class Program
+    {
+        private static int Main()
+        {
+            var cases = new List<(string Name, Action Body)>();
+            PopulationTests.Add(cases);
+            int failures = 0;
+            foreach (var test in cases)
+            {
+                try { test.Body(); Console.WriteLine("PASS " + test.Name); }
+                catch (Exception ex) { failures++; Console.WriteLine("FAIL " + test.Name + ": " + ex.Message); }
+            }
+            Console.WriteLine($"{cases.Count - failures}/{cases.Count} passed; {failures} failed");
+            return failures == 0 ? 0 : 1;
+        }
+    }
+
+    internal static class Check
+    {
+        public static void True(bool value, string message = "Condition was false")
+        {
+            if (!value) throw new Exception(message);
+        }
+        public static void Equal<T>(T expected, T actual)
+        {
+            if (!EqualityComparer<T>.Default.Equals(expected, actual))
+                throw new Exception($"Expected {expected}; got {actual}");
+        }
+        public static void Near(double expected, double actual, double tolerance = 0.000001)
+        {
+            if (double.IsNaN(actual) || Math.Abs(expected - actual) > tolerance)
+                throw new Exception($"Expected {expected}; got {actual}");
+        }
+        public static void Throws<T>(Action action) where T : Exception
+        {
+            try { action(); }
+            catch (T) { return; }
+            throw new Exception("Expected " + typeof(T).Name);
+        }
+    }
+}
