@@ -10,6 +10,28 @@ namespace LivingCities.Tests
             route ?? new[] { new RoutePoint(0, 0), new RoutePoint(100, 0) }, 480, 1020, 20, 360, 1320);
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("On-site worker stays in the same building for work, home and sleep", () => {
+                // On-site work has no commute. Existing Workday rejects this valid keeper case.
+                var schedule = DailySchedule.Workday(10, 10, new RoutePoint[0], 480, 1140, 0, 420, 1320);
+                Check.Equal(Activity.Sleep, schedule.EvaluateSeconds(420 * 60 - 0.1).Activity);
+                Check.Equal(Activity.Home, schedule.Evaluate(420).Activity);
+                Check.Equal(Activity.Home, schedule.EvaluateSeconds(480 * 60 - 0.1).Activity);
+                Check.Equal(Activity.Work, schedule.Evaluate(480).Activity);
+                Check.Equal(Activity.Work, schedule.EvaluateSeconds(1140 * 60 - 0.1).Activity);
+                Check.Equal(Activity.Home, schedule.Evaluate(1140).Activity);
+                Check.Equal(Activity.Sleep, schedule.Evaluate(1320).Activity);
+                foreach (var minute in new[] { 0, 420, 479, 480, 1140, 1320, 1440, 8640000 + 480 })
+                    Check.Equal(10, schedule.Evaluate(minute).BuildingKey);
+                Check.Equal(Activity.Work, schedule.Evaluate(8640000 + 480).Activity);
+            }));
+            cases.Add(("On-site work rejects invented commutes and sleeping through business hours", () => {
+                var route = new[] { new RoutePoint(0, 0), new RoutePoint(100, 0) };
+                Check.Throws<ArgumentException>(() => DailySchedule.Workday(10, 10, route, 480, 1140, 0, 420, 1320));
+                Check.Throws<ArgumentException>(() => DailySchedule.Workday(10, 10, new RoutePoint[0], 480, 1140, 5, 420, 1320));
+                Check.Throws<ArgumentException>(() => DailySchedule.Workday(10, 10, new RoutePoint[0], 480, 1140, 0, 500, 1320));
+                Check.Throws<ArgumentException>(() => DailySchedule.Workday(10, 10, new RoutePoint[0], 480, 1140, 0, 420, 1100));
+                Check.Throws<ArgumentException>(() => DailySchedule.Workday(10, 10, new RoutePoint[0], 1140, 480, 0, 420, 1320));
+            }));
             cases.Add(("Visits arrive while open and leave time for a walking-speed return", () => {
                 var p = DailySchedule.DayVisit(10, 20, new[] { new RoutePoint(0, 0), new RoutePoint(130, 0) },
                     600, 720, 30, 1.3, 12, 0, 360, 1320);

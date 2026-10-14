@@ -41,12 +41,18 @@ namespace LivingCities.Core
             int openMinute, int closeMinute, int commuteMinutes, int wakeMinute, int sleepMinute)
         {
             ValidateHome(homeKey, wakeMinute, sleepMinute);
-            if (workKey < 0 || workKey == homeKey || openMinute < 0 || closeMinute >= 1440 ||
-                openMinute >= closeMinute || commuteMinutes < 1 || commuteMinutes >= 1440 ||
+            bool onSite = workKey == homeKey;
+            if (workKey < 0 || openMinute < 0 || closeMinute >= 1440 ||
+                openMinute >= closeMinute || (onSite ? commuteMinutes != 0 : commuteMinutes < 1) || commuteMinutes >= 1440 ||
                 openMinute - commuteMinutes < wakeMinute || closeMinute + commuteMinutes > sleepMinute)
                 throw new ArgumentException("Work and travel must fit inside waking hours.");
             if (route == null) throw new ArgumentNullException(nameof(route));
             RoutePoint[] copy = new List<RoutePoint>(route).ToArray();
+            if (onSite)
+            {
+                if (copy.Length != 0) throw new ArgumentException("On-site work cannot have an exterior commute.", nameof(route));
+                return new DailySchedule(homeKey, workKey, wakeMinute, sleepMinute, openMinute, closeMinute, 0, copy);
+            }
             if (copy.Length < 2) throw new ArgumentException("A commute requires at least two points.", nameof(route));
             foreach (RoutePoint point in copy)
                 if (!Finite(point.X) || !Finite(point.Z)) throw new ArgumentException("Route coordinates must be finite.", nameof(route));

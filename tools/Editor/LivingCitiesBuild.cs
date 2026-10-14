@@ -497,6 +497,14 @@ public static class LivingCitiesBuild
             "Native identity, appearance and bed reservation survive FullSerializer");
         Require(restored.RegisterNativePerson(99, 2, -123, "Temporary quest label", ResidentSex.Female, 1, 41, 184, 18).Name == person.Name,
             "Repeated registration preserves saved native name");
+        var workday = DailySchedule.Workday(saved.HomeKey, saved.WorkKey, new RoutePoint[0], 480, 1140, 0, 420, 1320);
+        Require(workday.EvaluateSeconds(480 * 60 - 0.1).Activity == Activity.Home &&
+            workday.EvaluateSeconds(480 * 60).Activity == Activity.Work &&
+            workday.EvaluateSeconds(1140 * 60).Activity == Activity.Home &&
+            workday.EvaluateSeconds(1320 * 60).Activity == Activity.Sleep &&
+            workday.EvaluateSeconds(86400 * 1000d + 480 * 60).BuildingKey == saved.WorkKey,
+            "On-site native worker schedule has no invented commute and exact business/sleep boundaries");
+        Debug.Log("LIVING_CITIES_ONSITE_SCHEDULE_PASS: zero commute; exact opening, closing, sleep and later-day reconstruction.");
         var alarm = restored.RecordViolence(99, saved.Id, 100);
         restored.LocateViolence(alarm.Id, 2, 1, 2, 3);
         Require(Population.MarkDead(restored.GetOrCreate(99, new[] { 1 }), saved.Id), "Native head death updates both ledgers");
