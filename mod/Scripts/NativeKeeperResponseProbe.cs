@@ -146,6 +146,101 @@ namespace LivingCities.DFU
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
             yield return VerifyKeeperDeath(character, keeperId);
+            yield return VerifyKeeperSleep(character, keeperId);
+        }
+        private static IEnumerator VerifyKeeperSleep(string character, string keeperId)
+        {
+            var game = GameManager.Instance; var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var streets = adapter.GetComponent<StreetPopulation>();
+            bool loaded = false, saved = false;
+            SaveLoadManager.OnLoadEventHandler onLoad = ignored => loaded = true;
+            SaveLoadManager.OnSaveEventHandler onSave = ignored => saved = true;
+            SaveLoadManager.OnLoad += onLoad;
+            SaveLoadManager.OnSave += onSave;
+            try
+            {
+                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - shopkeeper identity");
+                game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
+                float deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper sleep fixture load timed out.");
+                yield return new WaitForSecondsRealtime(1);
+                var world = (WorldState)adapter.GetSaveData(); var keeper = world.NativePeople.Find(p => p.Id == keeperId);
+                var room = game.PlayerEnterExit.Interior;
+                var npc = Array.Find(room.GetComponentsInChildren<StaticNPC>(true), n => n.Data.hash == keeper.NativeHash);
+                var original = npc.transform.position; streets.SleepEnabled = true;
+                var originalSize = npc.GetComponent<BoxCollider>().size;
+                var originalCenter = npc.GetComponent<BoxCollider>().center;
+                var clock = DaggerfallUnity.Instance.WorldTime.Now;
+                clock.RaiseTime((float)((84600 - clock.ToSeconds() % 86400 + 86400) % 86400));
+                yield return new WaitForSecondsRealtime(1);
+                var pose = npc.GetComponent<SleepingPose>();
+                if (!pose || !pose.Active || !streets.KeeperServiceBlocked(npc))
+                    throw new InvalidOperationException("Native keeper has no reserved-bed sleeping pose/service block at night.");
+                var beds = BedGeometry.Read(room); beds.Sort((a,b) => a.RecordIndex.CompareTo(b.RecordIndex));
+                if (Vector3.Distance(npc.transform.position, room.transform.TransformPoint(beds[keeper.BedSlot].LocalCenter) + Vector3.up * 0.18f) > 0.02f)
+                    throw new InvalidOperationException("Native keeper sleep uses wrong physical bed.");
+                var ui = DaggerfallUI.UIManager.TopWindow; game.TalkManager.TalkToStaticNPC(npc);
+                if (DaggerfallUI.UIManager.TopWindow != ui) throw new InvalidOperationException("Sleeping native keeper opened dialogue.");
+                game.SaveLoadManager.Save(character, "Living Cities - keeper sleeping");
+                deadline = Time.realtimeSinceStartup + 30;
+                while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!saved) throw new InvalidOperationException("Keeper sleeping save timed out.");
+                int sleepSlot = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - keeper sleeping");
+                loaded = false; game.SaveLoadManager.Load(sleepSlot); DaggerfallUI.Instance.PopToHUD();
+                deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper sleeping reload timed out.");
+                yield return new WaitForSecondsRealtime(1);
+                room = game.PlayerEnterExit.Interior;
+                npc = Array.Find(room.GetComponentsInChildren<StaticNPC>(true), n => n.Data.hash == keeper.NativeHash);
+                pose = npc.GetComponent<SleepingPose>();
+                if (!pose || !pose.Active || !streets.KeeperServiceBlocked(npc) || npc.DisplayName != keeper.Name ||
+                    Mathf.Abs(npc.GetComponent<BoxCollider>().size.y - 0.36f) > 0.001f)
+                    throw new InvalidOperationException("Reload lost native sleep identity, pose, collider or service block.");
+                var cameraTarget = npc.transform.position;
+                bool visible = false; game.PlayerMotor.CancelMovement = true;
+                foreach (var direction in new[] { npc.transform.right, -npc.transform.right, npc.transform.forward, -npc.transform.forward })
+                {
+                    var desired = cameraTarget + direction * 1.2f + Vector3.up * 1.1f;
+                    float nearest = float.MaxValue; Vector3 floor = Vector3.zero;
+                    foreach (var hit in Physics.RaycastAll(desired, Vector3.down, 3, ~0, QueryTriggerInteraction.Ignore))
+                        if (hit.normal.y > 0.9f && hit.collider.transform.IsChildOf(room.transform) && hit.distance < nearest)
+                        { floor = hit.point; nearest = hit.distance; }
+                    if (nearest == float.MaxValue) continue;
+                    game.PlayerMotor.transform.position = floor + Vector3.up;
+                    yield return new WaitForSecondsRealtime(0.2f); SleepProbe.AimCamera(cameraTarget);
+                    yield return null; yield return new WaitForEndOfFrame();
+                    var viewport = Camera.main.WorldToViewportPoint(cameraTarget);
+                    bool blocked = false;
+                    foreach (var hit in Physics.RaycastAll(Camera.main.transform.position, cameraTarget - Camera.main.transform.position,
+                        Vector3.Distance(Camera.main.transform.position, cameraTarget), ~0, QueryTriggerInteraction.Ignore))
+                        if (!hit.collider.transform.IsChildOf(npc.transform)) blocked = true;
+                    if (viewport.z > 0 && Mathf.Abs(viewport.x - 0.5f) < 0.05f && Mathf.Abs(viewport.y - 0.5f) < 0.05f && !blocked)
+                    { visible = true; break; }
+                }
+                if (!visible) throw new InvalidOperationException("Native sleeping keeper has no unobstructed camera view beside bed.");
+                if (streets.HasTheftWitness() != false) throw new InvalidOperationException("Sleeping native keeper witnessed theft while all occupants slept.");
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-native-keeper-sleep.png"));
+                yield return new WaitForSecondsRealtime(0.3f);
+                clock = DaggerfallUnity.Instance.WorldTime.Now;
+                clock.RaiseTime((float)((34200 - clock.ToSeconds() % 86400 + 86400) % 86400));
+                yield return new WaitForSecondsRealtime(1);
+                if (pose.Active || streets.KeeperServiceBlocked(npc) || Vector3.Distance(npc.transform.position, original) > 0.02f)
+                    throw new InvalidOperationException("Native keeper failed to restore service position after waking.");
+                if (npc.GetComponent<BoxCollider>().size != originalSize || npc.GetComponent<BoxCollider>().center != originalCenter ||
+                    !npc.GetComponent<Renderer>().enabled) throw new InvalidOperationException("Native keeper wake failed to restore standing collider or renderer.");
+                clock.RaiseTime((float)((84600 - clock.ToSeconds() % 86400 + 86400) % 86400));
+                yield return new WaitForSecondsRealtime(1);
+                var deathPoint = room.transform.InverseTransformPoint(npc.transform.position);
+                game.WeaponManager.WeaponDamage(null, false, false, npc.transform, npc.transform.position, Vector3.forward);
+                var death = ((WorldState)adapter.GetSaveData()).AlarmIncidents.Find(a => a.VictimId == keeperId);
+                if (death == null || death.Corpse == null || Vector3.Distance(deathPoint,
+                    new Vector3((float)death.Corpse.X, (float)death.Corpse.Y, (float)death.Corpse.Z)) > 0.02f || npc.gameObject.activeSelf)
+                    throw new InvalidOperationException("Sleeping native keeper death lost bed position or resurrected flat.");
+                Debug.Log("LIVING_CITIES_KEEPER_SLEEP_PASS: native identity, assigned bed, blocked service, real reload, collider/wake restoration and bed-position death; save=" + sleepSlot);
+            }
+            finally { SaveLoadManager.OnLoad -= onLoad; SaveLoadManager.OnSave -= onSave; }
         }
         private static IEnumerator VerifyKeeperDeath(string character, string keeperId)
         {

@@ -20,9 +20,14 @@ namespace LivingCities.DFU
         private Vector2[] originalUV, viewUV;
         private int lastView = -1;
         private bool lastMirror;
-        public void Begin(ResidentActor owner, Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
+        private Renderer nativeRenderer;
+        private BoxCollider nativeBody;
+        private bool nativeWasVisible;
+        private Vector3 nativePosition, nativeSize, nativeCenter;
+        private Quaternion nativeRotation;
+        private void SetArt(SleepingArt.Atlas atlas)
         {
-            actor = owner; art = atlas;
+            art = atlas;
             if (!quad)
             {
                 quad = GameObject.CreatePrimitive(PrimitiveType.Quad);
@@ -37,6 +42,10 @@ namespace LivingCities.DFU
                 var renderer = quad.GetComponent<MeshRenderer>(); renderer.sharedMaterial = material;
                 renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             }
+        }
+        public void Begin(ResidentActor owner, Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
+        {
+            actor = owner; SetArt(atlas);
             if (!Active)
             {
                 body = GetComponent<CapsuleCollider>();
@@ -49,6 +58,23 @@ namespace LivingCities.DFU
             transform.position = interior.TransformPoint(bed.LocalCenter) + Vector3.up * 0.18f;
             transform.rotation = Quaternion.LookRotation(interior.TransformDirection(bed.LocalHeadDirection));
             body.direction = 2; body.radius = 0.18f; body.height = length; body.center = Vector3.zero;
+        }
+        public void BeginNative(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
+        {
+            SetArt(atlas);
+            if (!Active)
+            {
+                nativeRenderer = GetComponent<Renderer>(); nativeBody = GetComponent<BoxCollider>();
+                if (!nativeRenderer || !nativeBody) throw new System.InvalidOperationException("Native sleeping flat lacks its renderer or collider.");
+                nativePosition = transform.position; nativeRotation = transform.rotation;
+                nativeSize = nativeBody.size; nativeCenter = nativeBody.center;
+                nativeWasVisible = nativeRenderer.enabled; nativeRenderer.enabled = false;
+                Active = true; quad.SetActive(true);
+            }
+            length = bed.Length * 0.9f; width = bed.Width * 0.85f;
+            transform.position = interior.TransformPoint(bed.LocalCenter) + Vector3.up * 0.18f;
+            transform.rotation = Quaternion.LookRotation(interior.TransformDirection(bed.LocalHeadDirection));
+            nativeBody.size = new Vector3(width, 0.36f, length); nativeBody.center = Vector3.zero;
         }
         private void LateUpdate()
         {
@@ -89,6 +115,12 @@ namespace LivingCities.DFU
             Active = false; quad.SetActive(false);
             if (actor && actor.Person.Asset) actor.Person.Asset.gameObject.SetActive(assetWasActive);
             if (body) { body.height = oldHeight; body.radius = oldRadius; body.direction = oldDirection; body.center = oldCenter; }
+            if (nativeRenderer)
+            {
+                nativeRenderer.enabled = nativeWasVisible;
+                transform.position = nativePosition; transform.rotation = nativeRotation;
+                if (nativeBody) { nativeBody.size = nativeSize; nativeBody.center = nativeCenter; }
+            }
         }
         private void OnDisable() { Wake(); }
         private void OnDestroy() { if (material) Destroy(material); if (mesh) Destroy(mesh); }

@@ -40,6 +40,12 @@ namespace LivingCities.DFU
             var entity = candidate.GetComponent<DaggerfallEntityBehaviour>();
             bool alive = entity == null || entity.Entity == null || entity.Entity.CurrentHealth > 0;
             bool awake = true;
+            var keeper = KeeperPerson(candidate.GetComponent<StaticNPC>());
+            if (keeper != null)
+            {
+                alive &= keeper.IsAlive;
+                awake = !KeeperSleeping(keeper, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            }
             var resident = candidate.GetComponent<ResidentActor>();
             if (resident)
             {

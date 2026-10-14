@@ -20,6 +20,40 @@ namespace LivingCities.DFU
             public bool WasActive;
         }
         private readonly Dictionary<string, KeeperView> keeperViews = new Dictionary<string, KeeperView>();
+        private readonly Dictionary<string, DailySchedule> keeperSchedules = new Dictionary<string, DailySchedule>();
+        private DailySchedule KeeperSchedule(NativePerson person)
+        {
+            if (person.HomeKey != person.WorkKey || person.BedSlot < 0 || !Ready || !directory) return null;
+            DailySchedule schedule;
+            if (keeperSchedules.TryGetValue(person.Id, out schedule)) return schedule;
+            BuildingSummary summary;
+            if (!directory.GetBuildingSummary(person.WorkKey, out summary) || !RMBLayout.IsShop(summary.BuildingType)) return null;
+            int type = (int)summary.BuildingType;
+            int opens = PlayerActivate.openHours[type] * 60, closes = PlayerActivate.closeHours[type] * 60;
+            if (closes >= 1440 || closes <= opens) return null;
+            uint seed = StableSeed.Combine(0, (uint)person.SettlementId, (uint)person.WorkKey, unchecked((uint)person.NativeHash));
+            int wake = Mathf.Clamp(wakeHour * 60 + (int)(seed % 31) - 15, 0, Mathf.Max(0, opens - 10 - (int)(seed % 21)));
+            int sleep = Mathf.Clamp(sleepHour * 60 + (int)((seed >> 8) % 31) - 15, Mathf.Min(1439, closes + 10 + (int)((seed >> 8) % 21)), 1439);
+            schedule = DailySchedule.Workday(person.HomeKey, person.WorkKey, new RoutePoint[0], opens, closes, 0, wake, sleep);
+            keeperSchedules.Add(person.Id, schedule); return schedule;
+        }
+        private bool KeeperSleeping(NativePerson person, double now)
+        {
+            var schedule = KeeperSchedule(person);
+            return schedule != null && schedule.EvaluateSeconds(now).Activity == Activity.Sleep &&
+                (!ReactionsEnabled || worldStore.NativeResponse(person.Id) == null);
+        }
+        private void UpdateKeeperSleep(StaticNPC npc, NativePerson person, double now, bool alarmed)
+        {
+            var pose = npc.GetComponent<SleepingPose>();
+            var art = SleepEnabled && !alarmed && person.IsAlive && person.HomeKey == person.WorkKey &&
+                KeeperSleeping(person, now) && sleepingArt != null ? sleepingArt.ForNative(person) : null;
+            if (art == null) { if (pose) pose.Wake(); return; }
+            var records = new List<int>(indoorBeds.Keys); records.Sort();
+            if (person.BedSlot < 0 || person.BedSlot >= records.Count) { if (pose) pose.Wake(); return; }
+            if (!pose) pose = npc.gameObject.AddComponent<SleepingPose>();
+            pose.BeginNative(interior.transform, indoorBeds[records[person.BedSlot]], art);
+        }
         private void InstallKeeperServiceHook()
         {
             var type = System.Type.GetType("LivingCities.QuestHooks.NativeServiceHooks, LivingCities.QuestHooks", true);
@@ -29,7 +63,7 @@ namespace LivingCities.DFU
         public bool KeeperServiceBlocked(StaticNPC npc)
         {
             var person = KeeperPerson(npc);
-            return person != null && (!person.IsAlive || ReactionsEnabled &&
+            return person != null && (!person.IsAlive || KeeperSleeping(person, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()) || ReactionsEnabled &&
                 worldStore.NativeResponse(person.Id) != null);
         }
         private NativePerson KeeperPerson(StaticNPC npc)
@@ -53,7 +87,9 @@ namespace LivingCities.DFU
             if (member != null && member.IsQuestProtected) return null;
             var room = interior; int building = room.EntryDoor.buildingKey;
             var billboard = npc.GetComponent<DaggerfallBillboard>();
-            var ground = npc.transform.position - Vector3.up * (billboard ? billboard.Summary.Size.y * 0.5f : 1);
+            var sleeping = npc.GetComponent<SleepingPose>();
+            var ground = sleeping && sleeping.Active ? npc.transform.position :
+                npc.transform.position - Vector3.up * (billboard ? billboard.Summary.Size.y * 0.5f : 1);
             var local = room.transform.InverseTransformPoint(ground);
             return error => {
                 if (error != null || !keeper.IsAlive) return;
@@ -100,7 +136,7 @@ namespace LivingCities.DFU
             foreach (var npc in interior.GetComponentsInChildren<StaticNPC>())
             {
                 var person = KeeperPerson(npc);
-                if (person == null || !person.IsAlive || !CivilianResponses.Sees(npc.transform.position, victim, 20)) continue;
+                if (person == null || !person.IsAlive || KeeperSleeping(person, now) || !CivilianResponses.Sees(npc.transform.position, victim, 20)) continue;
                 var witness = worldStore.Witness(alarm.Id, person.Id, now);
                 if (witness == null || witness.HasPosition) continue;
                 var billboard = npc.GetComponent<DaggerfallBillboard>();
@@ -118,6 +154,7 @@ namespace LivingCities.DFU
                 var person = KeeperPerson(npc);
                 if (person == null) continue;
                 KeeperView view;
+                UpdateKeeperSleep(npc, person, now, ReactionsEnabled && worldStore.NativeResponse(person.Id) != null);
                 if (!person.IsAlive)
                 {
                     npc.gameObject.SetActive(false);
@@ -164,7 +201,12 @@ namespace LivingCities.DFU
         private static void RestoreKeeperView(KeeperView view)
         { if (view.Npc) { view.Npc.transform.position = view.Position; view.Npc.gameObject.SetActive(view.WasActive); } }
         private void RestoreKeeperViews()
-        { foreach (var view in keeperViews.Values) RestoreKeeperView(view); keeperViews.Clear(); }
+        {
+            if (interior) foreach (var pose in interior.GetComponentsInChildren<SleepingPose>(true))
+                if (pose.GetComponent<StaticNPC>()) pose.Wake();
+            foreach (var view in keeperViews.Values) RestoreKeeperView(view);
+            keeperViews.Clear(); keeperSchedules.Clear();
+        }
         private float nextKeeperSurvey;
         private DaggerfallInterior keeperRoom;
         private HomeProfile keeperHome;

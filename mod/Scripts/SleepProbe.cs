@@ -140,8 +140,9 @@ namespace LivingCities.DFU
             Vector3 sidePosition = Vector3.zero;
             var interior = game.PlayerEnterExit.Interior;
             foreach (var direction in new[] { actor.transform.right, -actor.transform.right, -actor.transform.forward, actor.transform.forward })
+            foreach (float distance in new[] { 2f, 1.2f })
             {
-                Vector3 desired = target + direction * 2 + Vector3.up * 1.1f;
+                Vector3 desired = target + direction * distance + Vector3.up * 1.1f;
                 Vector3 floor = Vector3.zero; float nearestFloor = float.MaxValue;
                 // Standing anchors intentionally do not traverse stairs. This bed
                 // is upstairs, so find its local floor rather than downstairs anchors.

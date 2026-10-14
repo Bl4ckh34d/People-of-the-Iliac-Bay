@@ -164,6 +164,16 @@ public static class LivingCitiesBuild
     private static void VerifySleepingArt()
     {
         foreach (int archive in new[] { 385, 453 }) VerifySleepingAtlas(archive);
+        foreach (int record in new[] { 0, 44 })
+        {
+            var texture = new Texture2D(2, 2);
+            try
+            {
+                Require(texture.LoadImage(File.ReadAllBytes("Assets/Game/Mods/LivingCities/Textures/sleep-flat-182-" + record + ".png.bytes")), "Native sleeping atlas decode");
+                Require(SleepingArt.FindViews(texture).Length == 5 && Array.Exists(texture.GetPixels32(), p => p.a == 0), "Native sleeper has five separated views and real transparency");
+            }
+            finally { UnityEngine.Object.DestroyImmediate(texture); }
+        }
         Debug.Log("LIVING_CITIES_SLEEP_ART_VERIFIED: two transparent five-view atlases with distinct side/end footprints.");
     }
     private static void VerifySleepingAtlas(int archive)
