@@ -361,7 +361,9 @@ namespace LivingCities.Core
                 var refuge=guard.Refuge==null ? null : GuardRefugeJourney.CopyValidated(guard.Refuge);
                 Require((guard.Duty==GuardDuty.Refuge)==(guard.IsAlive && refuge!=null) &&
                     (refuge==null || guard.Interior==null && route.Count==0 && guard.IncidentId==null && returnPath==null &&
-                    Distance(guard.Post,new SavedRoutePoint { X=refuge.Exterior[0].X,Z=refuge.Exterior[0].Z })<0.05),
+                    Distance(guard.Post,new SavedRoutePoint {
+                        X=refuge.ReturnExterior==null ? refuge.Exterior[0].X : refuge.ReturnExterior[refuge.ReturnExterior.Count-1].X,
+                        Z=refuge.ReturnExterior==null ? refuge.Exterior[0].Z : refuge.ReturnExterior[refuge.ReturnExterior.Count-1].Z })<0.05),
                     "Invalid guard refuge state.");
                 copy.Guards.Add(new GuardRecord { Id = guard.Id, IncidentId = guard.IncidentId, ReplacedById = guard.ReplacedById,
                     Refuge = refuge,

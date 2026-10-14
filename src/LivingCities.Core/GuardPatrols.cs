@@ -8,6 +8,7 @@ namespace LivingCities.Core
     {
         public PatrolPairPlan Plan;
         public double? InterruptedAt;
+        public bool LeaderDetached, FollowerDetached;
     }
     public sealed partial class GuardRoster
     {
@@ -42,7 +43,7 @@ namespace LivingCities.Core
         private SavedRoutePoint PositionPreview(string id, double now)
         { return CopyValidated(this).Position(id, now); }
         private static bool Member(GuardPatrolAssignment patrol, string id)
-        { return patrol.Plan.LeaderId == id || patrol.Plan.FollowerId == id; }
+        { return patrol.Plan.LeaderId == id && !patrol.LeaderDetached || patrol.Plan.FollowerId == id && !patrol.FollowerDetached; }
         private GuardPatrolAssignment PatrolFor(string id)
         { return Patrols.Find(p => Member(p, id)); }
         private static double PatrolFinishedAt(GuardPatrolAssignment patrol)
@@ -120,13 +121,17 @@ namespace LivingCities.Core
             {
                 Require(patrol != null, "Missing patrol assignment.");
                 var plan = PatrolPairPlan.CopyValidated(patrol.Plan);
-                var copy = new GuardPatrolAssignment { Plan = plan, InterruptedAt = patrol.InterruptedAt };
+                var copy = new GuardPatrolAssignment { Plan = plan, InterruptedAt = patrol.InterruptedAt,
+                    LeaderDetached=patrol.LeaderDetached, FollowerDetached=patrol.FollowerDetached };
+                Require(!(copy.LeaderDetached || copy.FollowerDetached) || copy.InterruptedAt.HasValue,"Detached patrol must be interrupted.");
                 Require(!copy.InterruptedAt.HasValue || Time(copy.InterruptedAt.Value) && copy.InterruptedAt.Value >= plan.StartsAt &&
                     copy.InterruptedAt.Value <= PatrolFinishedAt(new GuardPatrolAssignment { Plan = plan }), "Invalid patrol interruption time.");
                 Require(Time(PatrolFinishedAt(copy)), "Patrol return overflows time.");
                 foreach (var id in new[] { plan.LeaderId, plan.FollowerId })
                 {
                     var guard = Guards.Find(g => g.Id == id);
+                    Require(guard!=null,"Missing patrol member.");
+                    if(!Member(copy,id)) continue;
                     var join = id == plan.LeaderId ? plan.LeaderJoin : plan.FollowerJoin;
                     Require(guard != null && assigned.Add(id) && Distance(join[0], guard.Post) < 0.05 &&
                         (guard.IsAlive && guard.Duty == GuardDuty.Posted || copy.InterruptedAt.HasValue), "Invalid patrol member or post.");

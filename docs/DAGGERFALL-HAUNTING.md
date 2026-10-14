@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Patrol interruption
+
+Posted-duty guards may now flee from their current patrol position. Admission saves an explicit exterior return route: reverse the surveyed refuge approach, then follow the patrol's existing return path to the original post. The pair is interrupted, while the fleeing member is detached from that assignment so completing refuge travel cannot snap it onto the partner's unfinished return. The partner continues its physical return and can independently flee if it sees the haunting. Invalid admission is checked before mutation. Existing saves without ReturnExterior retain the old reverse-approach behavior.
+
+The new core test first failed admission, then exposed retained patrol membership. It now verifies current-position departure, partner interruption, JSON round-trip, intermediate return positions and both final posts. All 260 tests pass. Native serializer checks and the existing live automatic at-post flight regression also pass; live flight from an actual moving patrol and combat interruption remain unverified/unimplemented respectively. Evidence: `work/RefugePatrol-red.log`, `work/RefugePatrol-detach-red.log`, `work/RefugePatrol-green.log`, `work/RefugePatrol-flight-regression.log`, `../work/guards-persistence.log`. Installed development 0.3.29 SHA-256: `1C89AD6A6CDCB97D48445ECC7DA7B1DC8CB4A634F5AAEF0DC6142F6AF645CDDA`. City admission remains disabled.
+
 ## Automatic guard flight verification
 
 The normal GuardPopulation.Update loop now has a passing live acceptance probe: a native hostile Ghost triggers refuge allocation, the exterior guard is visible during approach and hidden after entry, the same guard is rendered inside the selected wall refuge, LiftedCurse releases it, and it disappears from the interior before returning alive to its post without a crime report. The probe uses a disposable one-guard roster in the real city and advances game time between phases. It does not prove continuous collision traversal, city-wide performance, or a full city save/reload. The outer probe restores the quest flag, and no player save is written.

@@ -10,10 +10,17 @@ namespace LivingCities.Core
             var preview=CopyValidated(this); var position=preview.Position(id,now);
             var guard=preview.Find(id);
             Require(guard.IsAlive && guard.Duty==GuardDuty.Posted && guard.Refuge==null &&
-                guard.Interior==null && !preview.IsOnPatrol(id) && plan.StartsAt==now && !plan.ReleasedAt.HasValue &&
-                Distance(position,guard.Post)<0.05 &&
+                guard.Interior==null && plan.StartsAt==now && !plan.ReleasedAt.HasValue &&
                 Distance(position,new SavedRoutePoint { X=plan.Exterior[0].X,Z=plan.Exterior[0].Z })<0.05,
-                "Refuge departure requires a guard at its post and a matching surveyed route.");
+                "Refuge departure requires an available guard and a matching surveyed route.");
+            var home=preview.PatrolReturn(id,now);
+            plan.ReturnExterior=plan.Exterior.ConvertAll(p=>new GuardPoint3 { X=p.X,Y=p.Y,Z=p.Z });
+            plan.ReturnExterior.Reverse();
+            if(home!=null) for(int i=1;i<home.Count;i++)
+                plan.ReturnExterior.Add(new GuardPoint3 { X=home[i].X,Z=home[i].Z });
+            var last=plan.ReturnExterior[plan.ReturnExterior.Count-1];
+            Require(Distance(guard.Post,new SavedRoutePoint { X=last.X,Z=last.Z })<0.05,"Refuge return must reach the post.");
+            plan=GuardRefugeJourney.CopyValidated(plan);
             var destination=plan.Interior[plan.Interior.Count-1];
             foreach (var other in preview.Guards)
             {
@@ -34,7 +41,14 @@ namespace LivingCities.Core
                 Require(Math.Abs(destination.Y-occupied.Y)>=1.8 || dx*dx+dz*dz>=0.8*0.8,
                     "Refuge standing position is occupied or reserved.");
             }
-            Advance(now); guard=Find(id); guard.Refuge=plan; guard.Duty=GuardDuty.Refuge;
+            Advance(now); InterruptPatrol(id,now);
+            var patrol=PatrolFor(id);
+            if(patrol!=null)
+            {
+                if(patrol.Plan.LeaderId==id) patrol.LeaderDetached=true;
+                else patrol.FollowerDetached=true;
+            }
+            guard=Find(id); guard.Refuge=plan; guard.Duty=GuardDuty.Refuge;
         }
         private static SavedRoutePoint RefugeExteriorPosition(GuardRecord guard,double now)
         {

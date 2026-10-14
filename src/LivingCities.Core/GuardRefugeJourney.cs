@@ -9,6 +9,7 @@ namespace LivingCities.Core
     {
         public int BuildingKey;
         public List<GuardPoint3> Exterior, Interior;
+        public List<GuardPoint3> ReturnExterior;
         public double StartsAt, SecondsPerMetre;
         public double? ReleasedAt;
         public static GuardRefugeJourney Create(int building, IEnumerable<GuardPoint3> exterior,
@@ -24,21 +25,24 @@ namespace LivingCities.Core
                 Finite(source.SecondsPerMetre) && source.SecondsPerMetre > 0);
             var copy = new GuardRefugeJourney { BuildingKey=source.BuildingKey, StartsAt=source.StartsAt,
                 SecondsPerMetre=source.SecondsPerMetre, ReleasedAt=source.ReleasedAt,
-                Exterior=CopyRoute(source.Exterior), Interior=CopyRoute(source.Interior) };
+                Exterior=CopyRoute(source.Exterior), Interior=CopyRoute(source.Interior),
+                ReturnExterior=source.ReturnExterior==null ? null : CopyRoute(source.ReturnExterior) };
+            Require(copy.ReturnExterior==null || Distance(copy.ReturnExterior[0],copy.Exterior[copy.Exterior.Count-1])<0.05);
             Require(Time(copy.ShelteredAt));
             if (copy.ReleasedAt.HasValue)
                 Require(Time(copy.ReleasedAt.Value) && copy.ReleasedAt.Value >= copy.ShelteredAt &&
-                    Time(copy.ReleasedAt.Value + copy.TravelSeconds));
+                    Time(copy.ReleasedAt.Value + copy.ReturnSeconds));
             return copy;
         }
         private double TravelSeconds { get { return (Length(Exterior)+Length(Interior))*SecondsPerMetre; } }
+        private double ReturnSeconds { get { return (Length(ReturnExterior ?? Exterior)+Length(Interior))*SecondsPerMetre; } }
         private double ShelteredAt { get { return StartsAt+TravelSeconds; } }
         public void Release(double now)
         {
             Require(Time(now));
             if (ReleasedAt.HasValue) return;
             double release = Math.Max(now,ShelteredAt);
-            Require(Time(release+TravelSeconds));
+            Require(Time(release+ReturnSeconds));
             ReleasedAt=release;
         }
         public RefugeSnapshot Evaluate(double now)
@@ -49,6 +53,12 @@ namespace LivingCities.Core
             {
                 double travelled=(now-ReleasedAt.Value)/SecondsPerMetre;
                 if (travelled < inside) return Snapshot(RefugePhase.Exiting,Interior,inside-travelled);
+                if (ReturnExterior!=null)
+                {
+                    double length=Length(ReturnExterior);
+                    return Snapshot(travelled<inside+length ? RefugePhase.Returning : RefugePhase.Complete,
+                        ReturnExterior,Math.Min(length,travelled-inside));
+                }
                 if (travelled < inside+outside) return Snapshot(RefugePhase.Returning,Exterior,outside-(travelled-inside));
                 return Snapshot(RefugePhase.Complete,Exterior,0);
             }

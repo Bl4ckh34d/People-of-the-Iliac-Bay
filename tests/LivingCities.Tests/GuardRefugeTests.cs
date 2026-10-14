@@ -10,6 +10,33 @@ namespace LivingCities.Tests
             new[] { new GuardPoint3(),new GuardPoint3 { Z=4 } },100,2,12); }
         internal static void Add(List<(string,Action)> cases)
         {
+            cases.Add(("Patrolling guard takes refuge from current position and physically returns to post",()=>{
+                var roster=GuardRoster.Create(1,42,2,new[] { new SavedRoutePoint { X=-10 },new SavedRoutePoint { X=2,Z=-20 } });
+                var a=roster.Guards[0].Id; var b=roster.Guards[1].Id;
+                roster.StartPatrol(PatrolPairPlan.Create(a,b,
+                    new List<SavedRoutePoint> { new SavedRoutePoint { X=-10 },new SavedRoutePoint() },
+                    new List<SavedRoutePoint> { new SavedRoutePoint { X=2,Z=-20 },new SavedRoutePoint { X=2 } },
+                    new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=20 },new SavedRoutePoint { X=20,Z=20 },new SavedRoutePoint { Z=20 },new SavedRoutePoint() },
+                    100,1000,2,10,2),100);
+                Check.Near(10,roster.Position(a,250).X);
+                var plan=GuardRefugeJourney.Create(7,new[] { new GuardPoint3 { X=10 },new GuardPoint3 { X=30 } },
+                    new[] { new GuardPoint3(),new GuardPoint3 { Z=4 } },250,2,10);
+                roster.TakeRefuge(a,plan,250);
+                Check.Near(10,roster.Position(a,250).X);
+                Check.True(roster.Patrols[0].InterruptedAt==250);
+                Check.True(!roster.IsOnPatrol(a));
+                Check.True(roster.IsOnPatrol(b));
+                var options=new System.Text.Json.JsonSerializerOptions { IncludeFields=true };
+                roster=GuardRoster.CopyValidated(System.Text.Json.JsonSerializer.Deserialize<GuardRoster>(
+                    System.Text.Json.JsonSerializer.Serialize(roster,options),options));
+                roster.Guards[0].Refuge.Release(400);
+                Check.Near(10,roster.Position(a,520).X);
+                Check.Equal(GuardDuty.Refuge,roster.Guards[0].Duty);
+                Check.Near(0,roster.Position(a,570).X);
+                Check.Near(-10,roster.Position(a,620).X);
+                Check.Equal(GuardDuty.Posted,roster.Guards[0].Duty);
+                Check.Near(-20,roster.Position(b,620).Z);
+            }));
             cases.Add(("Refuge destination reservations reject overlapping guards after copying",()=>{
                 var roster=GuardRoster.Create(1,42,3,new[] { new SavedRoutePoint() });
                 roster.TakeRefuge(roster.Guards[0].Id,Plan(),100);

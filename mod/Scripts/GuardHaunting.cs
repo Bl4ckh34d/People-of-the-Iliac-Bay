@@ -35,7 +35,7 @@ namespace LivingCities.DFU
             if(!motor || !motor.IsHostile) return false;
             foreach(var guard in Roster.Guards)
             {
-                if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted || Roster.IsOnPatrol(guard.Id)) continue;
+                if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted) continue;
                 var origin=Roster.Position(guard.Id,now);
                 if(!CivilianResponses.Sees(geometry.ScenePoint(new RoutePoint(origin.X,origin.Z))+Vector3.up,target.transform.position,20)) continue;
                 TryHauntingRefuge(guard,now);
