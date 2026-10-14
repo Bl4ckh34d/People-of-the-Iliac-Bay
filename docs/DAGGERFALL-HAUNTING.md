@@ -1,5 +1,13 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Unloaded refuge geometry
+
+`RefugeGeometry.Survey` synchronously creates a temporary native automap model-only interior100m above its normal position, disables renderers, synchronizes physics and extracts local entry-to-standing routes. It does not call normal DoLayout/AddPeople/AddFlats/AddActionDoors; the temporary object is deactivated and destroyed in finally. This is verified for the original wall models, not arbitrary interiors or overhaul models whose omitted flats/action doors can affect navigation.
+
+Initial unloaded survey destinations failed real-interior RouteToExit validation near an upper floor edge. Reducing the10000m isolation offset to100m did not fix it; no body-overlap collider was present. Requiring level support within a4cm neighborhood rejected unstable stair/ledge destinations. With that conservative filter, every retained destination validates in the actual entered representative interiors: model444 has71 routes,445 has80,446 has21. These are candidate positions, not simultaneous occupancy capacity. The test proves destination reachability, not equality of every isolated route segment to a native traversal. Existing actor/controller and100 exterior-route probe checks also pass in the same run.
+
+Evidence: `work/RefugeGeometry-red.log`, `work/RefugeGeometry-coordinate-mismatch.log`, `work/RefugeGeometry-edge-mismatch.log`, `work/RefugeGeometry-pass.log`. Unity build passed; latest installed development0.3.29 hash `A8CF354094A5809F0CEDBEFB4459A0AE9026DC85117278222644438B224FE033` supersedes earlier hashes. Survey still runs only from the opt-in probe; automatic refuge allocation and ghost detection remain pending.
+
 ## Refuge destination reservations
 
 At-post refuge admission now rejects a destination within0.8m horizontally and1.8m vertically of another same-building reservation. The claim starts before departure and remains through indoor exit; it frees when the owner reaches the exterior return phase. Other buildings do not conflict. A dead guard blocks its actual frozen indoor position; a guard killed outside releases the intended shelter. This does not yet remove indoor corpse claims after corpse cleanup, reserve paths, or provide moving-actor avoidance.

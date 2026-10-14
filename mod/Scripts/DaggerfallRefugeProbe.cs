@@ -73,12 +73,32 @@ namespace LivingCities.DFU
                         { owner = candidate; selected = door; break; }
                 }
                 if (!owner) throw new InvalidOperationException("Surveyed wall entrance disappeared.");
+                var surveyed=RefugeGeometry.Survey(owner.transform,selected);
+                if(surveyed.Count==0) throw new InvalidOperationException("Unloaded refuge survey found no standing routes.");
                 TownSmokeHarness.EnterInterior(owner.transform, selected);
                 yield return new WaitForSecondsRealtime(1);
                 var interior = game.PlayerEnterExit.Interior;
                 if (!interior || !game.PlayerEnterExit.IsPlayerInsideBuilding)
                     throw new InvalidOperationException("Wall interior entry failed.");
                 var inside = new InteriorGeometry(interior);
+                foreach(var route in surveyed)
+                {
+                    var end=route[route.Count-1];
+                    var point=interior.transform.TransformPoint(new Vector3((float)end.X,(float)end.Y,(float)end.Z));
+                    if(inside.RouteToExit(point).Count<2)
+                    {
+                        float nearest=float.MaxValue; Vector3 nearestAnchor=Vector3.zero;
+                        string overlaps="";
+                        foreach(var hit in Physics.OverlapCapsule(point+Vector3.up*0.75f,point+Vector3.up*1.65f,0.24f))
+                            overlaps+=hit.name+"/"+(hit.transform.parent ? hit.transform.parent.name : "root")+";";
+                        foreach(var anchor in inside.LocalAnchors)
+                            if((anchor-new Vector3((float)end.X,(float)end.Y,(float)end.Z)).sqrMagnitude<nearest)
+                            { nearest=(anchor-new Vector3((float)end.X,(float)end.Y,(float)end.Z)).sqrMagnitude; nearestAnchor=anchor; }
+                        throw new InvalidOperationException("Unloaded refuge destination unreachable: local="+end.X+","+end.Y+","+end.Z+
+                            "; nearest="+nearestAnchor.ToString("F5")+"; gap="+Mathf.Sqrt(nearest)+"; entry="+inside.EntryGround+"; overlaps="+overlaps);
+                    }
+                }
+                Debug.Log("LIVING_CITIES_REFUGE_UNLOADED_PASS: model="+representative.Key+"; routes="+surveyed.Count);
                 int reachable = 0;
                 foreach (var anchor in inside.LocalAnchors)
                     if (inside.RouteToExit(interior.transform.TransformPoint(anchor)).Count >= 2) reachable++;
