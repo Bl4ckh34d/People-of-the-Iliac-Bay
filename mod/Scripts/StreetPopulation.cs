@@ -331,6 +331,7 @@ namespace LivingCities.DFU
                 if (interior) Debug.Log("LIVING_CITIES_INTERIOR_ANCHORS: building=" + interior.EntryDoor.buildingKey +
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
+            SurveyKeeperIdentities();
             UpdateEntryReports(seconds);
             UpdateOutdoorScenes(seconds);
             UpdateCorpses(seconds);
@@ -502,6 +503,7 @@ namespace LivingCities.DFU
         public void Clear()
         {
             entryJourneys.Clear();
+            keeperRoom = null;
             RestoreHouseFlats();
             FlushOutdoorDeparture();
             if (building != null) { StopCoroutine(building); building = null; }

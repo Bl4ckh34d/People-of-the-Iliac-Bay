@@ -6,6 +6,17 @@ namespace LivingCities.Core
 {
     public enum ResidentAgeGroup { Adult, Child }
     public enum ResidentSex { Male, Female }
+    // DFU's shipped Mono script compiler needs the serialized enum to be
+    // defined before a new model field uses it; keep these definitions together.
+    [Serializable]
+    public sealed class NativePerson
+    {
+        public string Id, Name;
+        public int SettlementId, WorkKey, NativeHash, Race, FactionId, TextureArchive, TextureRecord;
+        public ResidentSex Sex;
+        public bool IsAlive = true;
+        public int HomeKey = -1, BedSlot = -1, BedCapacity;
+    }
     public sealed class HomeProfile
     {
         public readonly int BuildingKey, BedCount;

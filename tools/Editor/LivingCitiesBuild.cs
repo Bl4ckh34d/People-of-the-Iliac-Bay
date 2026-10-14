@@ -299,6 +299,7 @@ public static class LivingCitiesBuild
         VerifyTheftHook();
         VerifyTheftSight();
         VerifyEntryPersistence();
+        VerifyNativePeoplePersistence();
         VerifyCivilianHitScopes();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
@@ -474,6 +475,22 @@ public static class LivingCitiesBuild
         Require(copied.Messenger.Delivered && copied.Messenger.ArrivesAt == 12597431583,
             "Messenger route and arrival survive native epoch rounding");
         Debug.Log("LIVING_CITIES_ENTRY_PERSISTENCE_PASS: native saved witness route and timed delivery.");
+    }
+    private static void VerifyNativePeoplePersistence()
+    {
+        var store = new WorldStateStore(42); store.GetOrCreate(99, new[] { 1 }, 1);
+        var person = store.RegisterNativePerson(99, 2, -123, "Ysausa Masterham", ResidentSex.Female, 1, 41, 184, 18);
+        Require(store.AssignNativeBed(person.Id, new HomeProfile(2, 1, 10), new HomeProfile[0]), "Keeper reserves on-site bed");
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        var restored = new WorldStateStore(0);
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        var saved = restored.NativePeopleFor(99)[0];
+        Require(saved.Id == person.Id && saved.Name == person.Name && saved.Sex == ResidentSex.Female &&
+            saved.TextureArchive == 184 && saved.TextureRecord == 18 && saved.HomeKey == 2 && saved.BedSlot == 0 && saved.BedCapacity == 1,
+            "Native identity, appearance and bed reservation survive FullSerializer");
+        Require(restored.RegisterNativePerson(99, 2, -123, "Temporary quest label", ResidentSex.Female, 1, 41, 184, 18).Name == person.Name,
+            "Repeated registration preserves saved native name");
+        Debug.Log("LIVING_CITIES_NATIVE_PEOPLE_PERSISTENCE_PASS: named native identity, appearance and single-bed reservation.");
     }
     private static void VerifyTheftSight()
     {

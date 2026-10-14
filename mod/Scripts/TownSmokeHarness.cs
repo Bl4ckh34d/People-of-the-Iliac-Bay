@@ -388,6 +388,33 @@ namespace LivingCities.DFU
                 EnterInterior(shopOwner.transform, shopEntry);
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
                 yield return TheftTransferProbe.Run(streets);
+                var nativePeople = ((WorldState)adapter.GetSaveData()).NativePeople.FindAll(p => p.SettlementId == mapId && p.WorkKey == 131343);
+                int physicalBeds = BedGeometry.Read(game.PlayerEnterExit.Interior).Count;
+                if (nativePeople.Count != 1 || nativePeople[0].HomeKey != 131343 || nativePeople[0].BedSlot != 0 ||
+                    physicalBeds < 1 || nativePeople[0].BedCapacity != physicalBeds)
+                    throw new InvalidOperationException("Shop keeper reservation does not match physical beds: people=" + nativePeople.Count +
+                        "; physical=" + physicalBeds + "; saved=" + (nativePeople.Count == 0 ? -1 : nativePeople[0].BedCapacity));
+                var keeper = nativePeople[0];
+                var shopNpcs = game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>();
+                if (Array.Find(shopNpcs, n => n.Data.hash == keeper.NativeHash && n.DisplayName == keeper.Name) == null)
+                    throw new InvalidOperationException("Registered keeper identity does not match native service NPC.");
+                string keeperId = keeper.Id, keeperName = keeper.Name;
+                saved = false; SaveLoadManager.OnSave += OnSaved;
+                game.SaveLoadManager.Save(character, "Living Cities - shopkeeper identity");
+                deadline = Time.realtimeSinceStartup + 30;
+                while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+                SaveLoadManager.OnSave -= OnSaved;
+                if (!saved) throw new InvalidOperationException("Keeper identity save timed out.");
+                int keeperSave = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - shopkeeper identity");
+                loaded = false; game.SaveLoadManager.Load(keeperSave); DaggerfallUI.Instance.PopToHUD();
+                deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper identity reload timed out.");
+                keeper = ((WorldState)adapter.GetSaveData()).NativePeople.Find(p => p.Id == keeperId);
+                if (keeper == null || keeper.Name != keeperName || keeper.HomeKey != 131343 || keeper.BedSlot != 0 ||
+                    ((WorldState)adapter.GetSaveData()).NativePeople.FindAll(p => p.Id == keeperId).Count != 1)
+                    throw new InvalidOperationException("Keeper name/bed changed or duplicated on real reload.");
+                Debug.Log("LIVING_CITIES_KEEPER_IDENTITY_PASS: " + keeperName + "; beds=" + physicalBeds + "; reserved slot0; save=" + keeperSave + "; native identity preserved on reload.");
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: live housing classification; character=" + character);
                 yield break;
             }

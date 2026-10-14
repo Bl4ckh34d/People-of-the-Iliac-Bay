@@ -14,6 +14,7 @@ namespace LivingCities.Core
         public List<CivilianIncident> AlarmIncidents = new List<CivilianIncident>();
         public List<GuardRoster> Garrisons = new List<GuardRoster>();
         public List<EntryReport> EntryReports = new List<EntryReport>();
+        public List<NativePerson> NativePeople = new List<NativePerson>();
     }
     public sealed partial class WorldStateStore
     {
@@ -167,6 +168,7 @@ namespace LivingCities.Core
                         "Discovered scene lacks matching guard arrival evidence.");
                 }
             copy.EntryReports = CopyEntries(source);
+            copy.NativePeople = CopyNativePeople(source);
             return copy;
         }
         private static void ValidateFamily(Household home)
