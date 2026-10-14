@@ -1,5 +1,11 @@
 # Unwitnessed household murder discovery
 
+## Corpse runtime checkpoint, 14 October 2026
+
+Generated residents killed through the native weapon-damage hook now retain corpse state and a native human corpse placeholder (texture 380, record 1). The saved death position is independent of the first assault position, so a victim who moves before a later lethal hit does not leave a body at the original alarm location. Views are keyed by incident, limited by distance outdoors, rebuilt from saved state, and removed on scene changes. Confirmed investigator arrival clears the body permanently; ordinary corpses use the existing one-day/absence cleanup rule. Legacy deaths without confirmed corpse state do not gain invented bodies.
+
+The actual-player CrimeSceneProbe passes body creation after a native kill, native serialization of its death position, removal after guard arrival, cleared state after real SAVE33 reload, and existing Murder/surrender/one-hour occupation behavior. Evidence: work/CorpseProbe-pass.log. Core suite: 162/162. Native serializer checks include all saved corpse coordinates. The escaping-witness regression also passes. These checks do not establish final visual fidelity: the temporary sprite is not matched to each resident, and specialized bed corpses, loot and non-weapon death paths remain unfinished. Older pending-runtime statements below describe prior checkpoints.
+
 The approved rule is departure-triggered discovery: an unobserved household killing does not immediately identify the player or summon guards. Once the player leaves, finite guards investigate the house. Their arrival clears the corpse and starts one game hour of scene occupation. Returning during that window triggers custody behavior without claiming that guards witnessed the murder. Repeated reports and reloads must not renew the timer.
 
 Implementation order:

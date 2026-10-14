@@ -336,7 +336,7 @@ public static class LivingCitiesBuild
         var victim = town.Households[0].Residents[0];
         var alarm = store.RecordViolence(99, victim.Id, 100);
         store.LocateViolence(alarm.Id, 7, 1, 2, 3);
-        Population.MarkDead(town, victim.Id); store.RegisterUnwitnessedScene(alarm.Id); store.ConfirmCorpse(alarm.Id, 100);
+        Population.MarkDead(town, victim.Id); store.RegisterUnwitnessedScene(alarm.Id); store.ConfirmCorpse(alarm.Id, 100, 7, 4, 5, 6);
         Require(store.ObserveCrimeScenes(99, 7, 10000).Count == 0, "Unseen crime stays undiscovered while player remains inside");
         Require(store.ObserveCrimeScenes(99, -1, 10001).Count == 1, "Departure queues discovery beyond alarm expiry");
         var roster = store.GetOrCreateGuards(99, 1, new List<SavedRoutePoint> { new SavedRoutePoint() });
@@ -351,6 +351,9 @@ public static class LivingCitiesBuild
         var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native scene chronology round trip");
         Require(restored.Snapshot().AlarmIncidents[0].Corpse.Cleared, "Native cleared corpse persists");
+        var body = restored.Snapshot().AlarmIncidents[0].Corpse;
+        Require(body.HasPosition && body.BuildingKey == 7 && body.X == 4 && body.Y == 5 && body.Z == 6,
+            "Native corpse retains actual death position independently of first assault");
         var scene = restored.Snapshot().AlarmIncidents[0].Scene;
         var saved = restored.GetGuards(99);
         Require(scene.DiscoveredAt == arrival && scene.Occupied(arrival + 3599) && !scene.Occupied(arrival + 3600) &&

@@ -60,10 +60,18 @@ namespace LivingCities.DFU
                 game.WeaponManager.WeaponDamage(null, false, false, victim.transform, victim.transform.position, Vector3.forward);
                 var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var scene = store.Snapshot().AlarmIncidents.Find(a => a.VictimId == victimId);
-                if (scene == null || scene.Scene == null || scene.Scene.PlayerLeft || guards.Roster.Reports.Count != 0)
+                if (scene == null || scene.Corpse == null || scene.Scene == null || scene.Scene.PlayerLeft || guards.Roster.Reports.Count != 0)
                     throw new InvalidOperationException("Unwitnessed death did not remain concealed until departure.");
                 if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Theft)
                     throw new InvalidOperationException("Concealment lost previously known crime.");
+                yield return new WaitForSecondsRealtime(0.3f);
+                if (streets.CorpseCount != 1) throw new InvalidOperationException("Confirmed dead resident has no persistent corpse view.");
+                string bodyJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
+                var bodyRestore = new WorldStateStore(0);
+                bodyRestore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), bodyJson));
+                var savedBody = bodyRestore.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse;
+                if (!savedBody.HasPosition || savedBody.BuildingKey != building || savedBody.Cleared)
+                    throw new InvalidOperationException("Visible corpse position did not survive native serialization.");
                 game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;
                 game.PlayerEnterExit.TransitionExterior();
                 if (!store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.PlayerLeft)
@@ -81,6 +89,8 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Physical guard arrival did not discover scene.");
                 TownSmokeHarness.EnterInterior(owner.transform, door);
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
+                if (streets.CorpseCount != 0 || !store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.Cleared)
+                    throw new InvalidOperationException("Guard arrival failed to clear the corpse.");
                 if (!guards.Roster.Guards.Exists(g => g.Interior != null && g.IncidentId == report.Id))
                     throw new InvalidOperationException("Investigators missing on re-entry.");
                 if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
@@ -101,6 +111,8 @@ namespace LivingCities.DFU
                 store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 if (!loadedEvent || Math.Abs(store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.DiscoveredAt - scene.Scene.DiscoveredAt) > 0.001)
                     throw new InvalidOperationException("Real reload changed discovery timing.");
+                if (streets.CorpseCount != 0 || !store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.Cleared)
+                    throw new InvalidOperationException("Real reload resurrected a cleared corpse.");
                 DaggerfallUI.Instance.PopToHUD();
                 var arrestGuard = UnityEngine.Object.FindObjectOfType<GuardActor>();
                 deadline = Time.realtimeSinceStartup + 10;

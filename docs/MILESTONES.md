@@ -1,5 +1,9 @@
 # Living Cities milestones
 
+0.3.12 corpse checkpoint: generated residents killed by native weapon damage leave saved placeholder bodies at their death positions. Guard discovery clears them, including after reload. CrimeSceneProbe and the escaping-witness regression pass; core suite is 162/162. Resident-specific corpse art, bed corpse presentation, loot and other death paths remain pending. See CRIME-SCENE-DISCOVERY.md.
+
+Physical-space requirement: moving NPCs must avoid and pass each other, with bounded local queries, doorway yielding and distinct waiting positions. Direct scheduled placement currently permits overlaps. See NPC-LOCAL-AVOIDANCE.md; implementation pending.
+
 Latest installed 0.3.11: investigation re-entry charges Murder; actual native guard surrender-before-damage and accepting Yes into court are verified. Automated tests disable mouse-look and retain an unlocked visible cursor. Corpse lifecycle core/native serialization passes (161 tests), but runtime corpse presentation remains pending.
 
 Current 0.3.10 work connects unwitnessed home murders to departure-triggered finite guard investigation, prior-crime preservation, arrival discovery and re-entry custody. Occupation is now **one game hour from first arrival**, per the latest user decision. SAVE33 is the investigation fixture. Corpse persistence/cleanup, stationary citizens, patrols and defense remain unfinished. M3/M4 and the overall goal remain active.
@@ -108,6 +112,8 @@ Evidence: `work/unity-build-result.json`, `work/town-test.log`, historical `work
 
 Historical native damage completion prerequisite: per-hit finalizers preserve nested target scope and original exceptions. Actual patched-method checks pass in Unity. Runtime crime concealment, corpse cleanup and custody remain pending; installed 0.3.9 is unchanged.
 
-Household absence locks: when every living owner is away, lock the home even by day until one returns. Witnessed unauthorized entry is reported as trespassing through bounded citizen alarms and physical guard response. Use authoritative location, not actor visibility. See HOUSEHOLD-LOCKS.md; implementation pending.
+Household routine locks: lock whenever no awake living owner is inside, including empty homes and homes containing only sleepers. Release this routine lock when someone inside wakes or an awake owner returns; relock if that owner leaves while others sleep. This supersedes fixed night locking. Witnessed unauthorized entry is reported as trespassing through bounded citizen alarms and physical guard response. Use authoritative location/sleep state, not actor visibility. See HOUSEHOLD-LOCKS.md; implementation pending.
+
+Taverns require separate keepers, employees, local patrons and visiting travelers, without a common surname imposed on all. Paid bookings may sell out; no player bed is guaranteed. Local evening/night patrons may socialize inside and outside, leaving as late as about 03:00. Travelers respect gate closures in walled cities; unwalled settlements allow any-hour travel. All routines need constrained deterministic time variation and spaced waiting positions at closed destinations. See TAVERN-LODGING.md; implementation pending.
 
 Housing report verified: SAVE28 is native House2 despite sharing model 249 with a tavern. All three actual town taverns are excluded from profiles and saved households. SAVE34 provides a clearer residential three-person family fixture. See TEST-FIXTURES.md.

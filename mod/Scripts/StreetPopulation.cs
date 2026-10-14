@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
+using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
@@ -53,22 +54,27 @@ namespace LivingCities.DFU
                 FindActor(actor.Resident.Id) == actor;
             var previousCrime = GameManager.Instance.PlayerEntity.CrimeCommitted;
             BeforeWeaponHit(target);
-            if (!eligible || !interior || actor.Resident.HomeKey != interior.EntryDoor.buildingKey ||
-                indoorGeometry == null || !indoorGeometry.EntryGround.HasValue) return null;
+            if (!eligible) return null;
+            int deathBuilding = interior ? interior.EntryDoor.buildingKey : -1;
+            var deathPosition = actor.transform.parent.InverseTransformPoint(actor.transform.position - Vector3.up);
             var guards = GetComponent<GuardPopulation>();
-            if (!guards || !guards.CanInvestigate(interior.EntryDoor.buildingKey)) return null;
             var alarm = worldStore.RecordViolence(population.SettlementId, actor.Resident.Id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
-            if (alarm.People.Count != 0 || !concealedHits.Add(actor.Resident.Id)) return null;
+            bool concealed = interior && actor.Resident.HomeKey == deathBuilding && alarm.BuildingKey == deathBuilding &&
+                indoorGeometry != null && indoorGeometry.EntryGround.HasValue && guards && guards.CanInvestigate(deathBuilding) &&
+                alarm.People.Count == 0 && concealedHits.Add(actor.Resident.Id);
             return error => {
-                concealedHits.Remove(actor.Resident.Id);
+                if (concealed) concealedHits.Remove(actor.Resident.Id);
                 if (!actor.Resident.IsAlive)
                 {
+                    worldStore.ConfirmCorpse(alarm.Id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),
+                        deathBuilding, deathPosition.x, deathPosition.y, deathPosition.z);
+                    if (!concealed) return;
                     worldStore.RegisterUnwitnessedScene(alarm.Id);
                     if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
                         GameManager.Instance.PlayerEntity.CrimeCommitted = previousCrime;
                     Debug.Log("LIVING_CITIES_CONCEALED_DEATH: " + alarm.Id);
                 }
-                else if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
+                else if (concealed && GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
                     GameManager.Instance.PlayerEntity.SpawnCityGuards(true);
             };
         }
@@ -118,6 +124,8 @@ namespace LivingCities.DFU
         private readonly Dictionary<string, BedAssignment> bedClaims = new Dictionary<string, BedAssignment>();
         public void SetSleepingArt(Mod mod) { if (sleepingArt != null) sleepingArt.Dispose(); sleepingArt = new SleepingArt(mod); }
         public int ActiveCount { get { return actors.Count; } }
+        private readonly Dictionary<string, GameObject> corpses = new Dictionary<string, GameObject>();
+        public int CorpseCount { get { return corpses.Count; } }
         public int PlannedCount { get { return plans.Count; } }
         public bool Ready { get; private set; }
         public bool SleepEnabled { get; set; }
@@ -289,7 +297,7 @@ namespace LivingCities.DFU
             var loadedInterior = game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
             if (interior != loadedInterior)
             {
-                ClearActors(); interior = loadedInterior; indoorSlots.Clear();
+                ClearActors(); ClearCorpses(); interior = loadedInterior; indoorSlots.Clear();
                 indoorGeometry = interior ? new InteriorGeometry(interior) : null;
                 indoorBeds.Clear(); bedClaims.Clear();
                 if (interior && population != null)
@@ -304,6 +312,7 @@ namespace LivingCities.DFU
                 if (interior) Debug.Log("LIVING_CITIES_INTERIOR_ANCHORS: building=" + interior.EntryDoor.buildingKey +
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
+            UpdateCorpses(seconds);
             if (ReactionsEnabled && responses != null)
                 responses.WarnNearby(actors.Values, seconds, interior ? interior.EntryDoor.buildingKey : -1,
                     id => GetState(id, seconds).Activity == Activity.Sleep);
@@ -424,10 +433,48 @@ namespace LivingCities.DFU
             foreach (var actor in actors.Values) if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
             actors.Clear();
         }
+        private void UpdateCorpses(double seconds)
+        {
+            if (worldStore == null || population == null) return;
+            var game = GameManager.Instance;
+            int? current = interior ? (int?)interior.EntryDoor.buildingKey : game.PlayerEnterExit.IsPlayerInside ? null : (int?)-1;
+            var wanted = new HashSet<string>();
+            foreach (var alarm in worldStore.ObserveCorpses(population.SettlementId, current, seconds))
+            {
+                var body = alarm.Corpse;
+                int buildingKey = body.HasPosition ? body.BuildingKey : alarm.BuildingKey;
+                if (!current.HasValue || buildingKey != current.Value) continue;
+                var origin = interior ? interior.transform : directory.transform;
+                var local = body.HasPosition ? new Vector3((float)body.X, (float)body.Y, (float)body.Z) :
+                    new Vector3((float)alarm.X, (float)alarm.Y, (float)alarm.Z);
+                var point = origin.TransformPoint(local);
+                if (!interior && (point - game.PlayerMotor.transform.position).sqrMagnitude > 165 * 165) continue;
+                wanted.Add(alarm.Id);
+                GameObject view;
+                if (corpses.TryGetValue(alarm.Id, out view) && view) continue;
+                // Native human corpse placeholder; resident-specific corpse art is a separate milestone.
+                view = GameObjectHelper.CreateDaggerfallBillboardGameObject(380, 1, origin);
+                view.name = "Living Cities corpse " + alarm.VictimId;
+                view.transform.position = point;
+                view.GetComponent<DaggerfallBillboard>().AlignToBase();
+                corpses[alarm.Id] = view;
+            }
+            foreach (var id in new List<string>(corpses.Keys))
+                if (!wanted.Contains(id))
+                {
+                    if (corpses[id]) { corpses[id].SetActive(false); Destroy(corpses[id]); }
+                    corpses.Remove(id);
+                }
+        }
+        private void ClearCorpses()
+        {
+            foreach (var view in corpses.Values) if (view) { view.SetActive(false); Destroy(view); }
+            corpses.Clear();
+        }
         public void Clear()
         {
             if (building != null) { StopCoroutine(building); building = null; }
-            ClearActors(); plans.Clear(); Ready = false;
+            ClearActors(); ClearCorpses(); plans.Clear(); Ready = false;
             needsExterior = false;
             interior = null; indoorGeometry = null; indoorSlots.Clear();
             population = null; indoorBeds.Clear(); bedClaims.Clear();

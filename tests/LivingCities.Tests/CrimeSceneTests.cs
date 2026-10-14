@@ -39,6 +39,18 @@ namespace LivingCities.Tests
                 Check.Equal(0, restored.ObserveCorpses(1, 7, 200600).Count);
                 Check.True(restored.Snapshot().AlarmIncidents[0].Corpse.Cleared);
             }));
+            cases.Add(("Corpse position follows death rather than the first assault", () => {
+                CivilianIncident alarm; var store = Scene(out alarm); alarm.Scene = null;
+                store.ConfirmCorpse(alarm.Id, 101, 8, 12, 2, 14);
+                var copy = new WorldStateStore(0); copy.Restore(store.Snapshot());
+                var body = copy.Snapshot().AlarmIncidents[0].Corpse;
+                Check.True(body.HasPosition); Check.Equal(8, body.BuildingKey); Check.Near(12, body.X);
+                Check.Equal(1, copy.ObserveCorpses(1, 8, 86502).Count);
+                Check.Equal(0, copy.ObserveCorpses(1, 7, 86502).Count);
+                var invalid = store.Snapshot(); invalid.AlarmIncidents[0].Corpse.X = double.NaN;
+                Check.Throws<ArgumentException>(() => store.Restore(invalid));
+                Check.Near(12, store.Snapshot().AlarmIncidents[0].Corpse.X);
+            }));
             cases.Add(("Ordinary corpses require departure and a day while legacy deaths stay absent", () => {
                 CivilianIncident alarm; var store = Scene(out alarm); alarm.Scene = null;
                 Check.Equal(0, store.ObserveCorpses(1, 7, 100).Count);
