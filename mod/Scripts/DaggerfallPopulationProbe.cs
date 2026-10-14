@@ -8,13 +8,13 @@ namespace LivingCities.DFU
 {
     public static class DaggerfallPopulationProbe
     {
-        public static bool Enabled;
+        internal static bool SuppressCityActors;
         public static IEnumerator Run()
         {
             var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
             var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
             var game=GameManager.Instance; bool oldCurse=game.PlayerEntity.GlobalVars.GetGlobalVar(0);
-            Enabled=true;
+            bool oldSuppression=SuppressCityActors; SuppressCityActors=false;
             try
             {
                 game.PlayerEntity.GlobalVars.SetGlobalVar(0,false);
@@ -40,7 +40,8 @@ namespace LivingCities.DFU
                     "; guards="+guards.Roster.Target+"; initialSeconds="+(Time.realtimeSinceStartup-started));
                 yield return DaggerfallSaveProbe.Run(mod,streets,guards);
             }
-            finally { Enabled=false; game.PlayerEntity.GlobalVars.SetGlobalVar(0,oldCurse); streets.Clear(); guards.Clear(); }
+            finally { SuppressCityActors=oldSuppression;
+                game.PlayerEntity.GlobalVars.SetGlobalVar(0,oldCurse); streets.Clear(); guards.Clear(); }
         }
     }
 }

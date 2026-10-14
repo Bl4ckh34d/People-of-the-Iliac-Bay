@@ -1,5 +1,9 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Automatic city coverage in0.3.30
+
+Daggerfall City now runs automatically alongside Gothway Garden. The proposed city-preview menu option was removed at the user's request; no temporary settlement enablement settings should be added. The final scope remains the whole game world. Test-only suppression isolates synthetic refuge fixtures and is restored in finally; normal sessions never enable suppression. The full city fixture and actual SAVE50 reload pass with this admission path (`work/CityAutomatic-pass.log`). Historical gated/opt-in descriptions below are superseded. Broader world integration and remaining gameplay/performance work are not complete.
+
 ## Actual city save/reload
 
 DaggerfallSaveProbe now writes and reloads the dedicated test character's `Living Cities - Daggerfall city preview` save (SAVE50). It requires a LivingCitiesTest- character name. Native load reconstructs the full city population and guard controller; checks compare serialized household identities/attributes and saved routine routes, all49 guard IDs, daily haunting policy, and all611 managed residents' activities/buildings/route positions sampled at the same noon timestamp. All comparisons passed. The probe does not yet verify continuous rendered movement or steady-state city performance. Normal play still requires the forthcoming city-preview admission setting; loading this fixture alone does not bypass that gate.

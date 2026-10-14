@@ -17,6 +17,12 @@ namespace LivingCities.DFU
     {
         public static IEnumerator Run()
         {
+            DaggerfallPopulationProbe.SuppressCityActors=true;
+            try { yield return RunIsolated(); }
+            finally { DaggerfallPopulationProbe.SuppressCityActors=false; }
+        }
+        private static IEnumerator RunIsolated()
+        {
             var game = GameManager.Instance;
             DFLocation city;
             if (!DaggerfallUnity.Instance.ContentReader.GetLocation("Daggerfall", "Daggerfall", out city))

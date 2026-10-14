@@ -1,5 +1,7 @@
 # Living Cities for Daggerfall Unity
 
+**0.3.30 includes Daggerfall City automatically alongside Gothway Garden.** No city-specific toggle is required. Dedicated test character `LivingCitiesTest-f238d317` has `Living Cities - Daggerfall city preview` (SAVE50). Its611 residents and49 guards survive actual save/reload. Generated civilian travel respects the unresolved haunting; guards flee visible ghosts/wraiths into surveyed wall refuges. Initial city setup measured about12 seconds. Whole-world coverage remains the intended scope; broader settlement integration, movement coverage, native keeper schedules, nightlife and performance remain unfinished. See [city verification](docs/DAGGERFALL-HAUNTING.md).
+
 An in-development standard DFU mod for persistent residents, daily routines, civilian awareness, finite guards, nightlife, and optional local dialogue.
 
 The user approved the scope and recommended architecture on 13 October 2026 and requested continuous implementation, testing, and improvement. The working name is Living Cities.
