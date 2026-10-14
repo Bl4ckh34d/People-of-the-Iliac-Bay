@@ -425,7 +425,7 @@ namespace LivingCities.DFU
                 actor.Capture(now);
                 if (report != null && report.Investigation && game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None &&
                     !game.PlayerEntity.IsInvisible && CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
-                    game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Trespassing;
+                    game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
                 if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None && !game.PlayerEntity.IsInvisible &&
                     CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
                     actor.BeginCombat(now);

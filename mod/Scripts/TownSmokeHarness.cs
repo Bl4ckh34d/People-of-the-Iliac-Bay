@@ -20,6 +20,18 @@ namespace LivingCities.DFU
     public sealed class TownSmokeHarness : MonoBehaviour
     {
         private bool saved, loaded;
+        private void Awake() { ReleaseTestCursor(); }
+        private void LateUpdate() { ReleaseTestCursor(); }
+        private void OnApplicationFocus(bool focused) { ReleaseTestCursor(); }
+        private static void ReleaseTestCursor()
+        {
+            // This component exists only in the explicitly launched test player.
+            // Transitions can reset native cursor settings, so keep ownership here.
+            var game = GameManager.Instance;
+            if (game != null && game.IsReady && game.PlayerMouseLook) game.PlayerMouseLook.enabled = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
         internal static void EnterInterior(Transform owner, StaticDoor door)
         {
             var game = GameManager.Instance;

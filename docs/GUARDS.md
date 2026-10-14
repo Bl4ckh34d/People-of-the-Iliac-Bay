@@ -63,3 +63,7 @@ Paired torch patrols, walls/headquarters, creature defense and wider settlements
 ## Night patrol lighting requirement
 
 Night street patrol guards carry visible torches that emit moving local light. This is part of the planned paired-patrol behavior, not yet implemented. Limit active lights by distance and expose sensible lighting controls in mod settings so large cities remain practical.
+
+## Surrender and arrest contract
+
+Guards must preserve vanilla surrender before damaging the player for a crime. Native EnemyAttack.ApplyDamageToPlayer opens the Yes/No surrender message on the first successful City Watch hit when a crime is active and the dialogue has not already been shown. That branch does not call SendDamageToPlayer. Yes calls SurrenderToCityGuards(true) and opens court; No applies the attack damage. The adapter must not bypass this flow. Actual-player verification now passes: a real roster guard runs the native attack handler with god mode disabled, opens surrender before damage, and accepting Yes enters the native court window. The probe calls the native button handler directly rather than clicking the UI. Evidence: work/SurrenderProbe-pass.log. Full sentencing and imprisonment outcomes remain unverified.

@@ -4,6 +4,7 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using LivingCities.Core;
 using UnityEngine;
 
@@ -48,6 +49,8 @@ namespace LivingCities.DFU
                 if (!owner) throw new InvalidOperationException("No family entrance.");
                 TownSmokeHarness.EnterInterior(owner.transform, door);
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
+                if (Cursor.lockState != CursorLockMode.None || !Cursor.visible || game.PlayerMouseLook.enabled)
+                    throw new InvalidOperationException("Automated test captured the desktop cursor.");
                 var victims = UnityEngine.Object.FindObjectsOfType<ResidentActor>();
                 ResidentActor victim = null;
                 foreach (var actor in victims) if (actor.Resident.HomeKey == building) { victim = actor; break; }
@@ -80,7 +83,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
                 if (!guards.Roster.Guards.Exists(g => g.Interior != null && g.IncidentId == report.Id))
                     throw new InvalidOperationException("Investigators missing on re-entry.");
-                if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Trespassing)
+                if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
                     throw new InvalidOperationException("Investigators did not attempt custody on re-entry sighting.");
                 string json = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
                 var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
@@ -98,6 +101,36 @@ namespace LivingCities.DFU
                 store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 if (!loadedEvent || Math.Abs(store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.DiscoveredAt - scene.Scene.DiscoveredAt) > 0.001)
                     throw new InvalidOperationException("Real reload changed discovery timing.");
+                DaggerfallUI.Instance.PopToHUD();
+                var arrestGuard = UnityEngine.Object.FindObjectOfType<GuardActor>();
+                deadline = Time.realtimeSinceStartup + 10;
+                while (!arrestGuard && Time.realtimeSinceStartup < deadline)
+                { yield return null; arrestGuard = UnityEngine.Object.FindObjectOfType<GuardActor>(); }
+                if (!arrestGuard) throw new InvalidOperationException("No guard available for surrender contract. paused=" + GameManager.IsGamePaused + "; actors=" + guards.ActiveCount + "; all=" + Resources.FindObjectsOfTypeAll<GuardActor>().Length);
+                arrestGuard.EndCombat(); DaggerfallUI.Instance.PopToHUD();
+                game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
+                game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = false;
+                game.PlayerEntity.GodMode = false;
+                int health = game.PlayerEntity.CurrentHealth;
+                var attack = arrestGuard.GetComponent<EnemyAttack>();
+                var apply = typeof(EnemyAttack).GetMethod("ApplyDamageToPlayer", BindingFlags.Instance | BindingFlags.NonPublic);
+                int bestDamage = 0;
+                for (int attempt = 0; attempt < 256 && !game.PlayerEntity.HaveShownSurrenderToGuardsDialogue; attempt++)
+                    bestDamage = Math.Max(bestDamage, (int)apply.Invoke(attack, new object[] { null }));
+                if (game.PlayerEntity.CurrentHealth != health) throw new InvalidOperationException("Damage applied before surrender choice.");
+                game.PlayerEntity.GodMode = true;
+                var surrender = DaggerfallUI.UIManager.TopWindow as DaggerfallMessageBox;
+                if (surrender == null || !game.PlayerEntity.HaveShownSurrenderToGuardsDialogue )
+                    throw new InvalidOperationException("Guard did not offer surrender before damage. damage=" + bestDamage + "; shown=" + game.PlayerEntity.HaveShownSurrenderToGuardsDialogue + "; window=" + DaggerfallUI.UIManager.TopWindow.GetType().Name);
+                typeof(EnemyAttack).GetMethod("SurrenderToGuardsDialogue_OnButtonClick", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(attack, new object[] { surrender, DaggerfallMessageBox.MessageBoxButtons.Yes });
+                yield return null; yield return null;
+                deadline = Time.realtimeSinceStartup + 10;
+                while (!DaggerfallUI.UIManager.ContainsWindow(DaggerfallUI.Instance.DfCourtWindow) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!game.PlayerEntity.Arrested || !DaggerfallUI.UIManager.ContainsWindow(DaggerfallUI.Instance.DfCourtWindow))
+                    throw new InvalidOperationException("Accepting surrender did not enter native court. arrested=" + game.PlayerEntity.Arrested + "; window=" + DaggerfallUI.UIManager.TopWindow.GetType().Name);
+                Debug.Log("LIVING_CITIES_SURRENDER_PASS: actual roster guard opens surrender before damage; Yes enters native court.");
+                DaggerfallUI.Instance.PopToHUD();
                 clock = DaggerfallUnity.Instance.WorldTime.Now;
 
                 game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;

@@ -27,6 +27,35 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Confirmed corpses persist until departure and cleanup without reappearing", () => {
+                CivilianIncident alarm; var store = Scene(out alarm);
+                store.ConfirmCorpse(alarm.Id, 100);
+                Check.Equal(1, store.ObserveCorpses(1, 7, 200000).Count);
+                store.ObserveCrimeScenes(1, -1, 200001); Dispatch(store, alarm);
+                Check.Equal(1, store.ObserveCorpses(1, -1, 200002).Count);
+                store.DiscoverCrimeScene(alarm.Id, 200501);
+                Check.Equal(0, store.ObserveCorpses(1, -1, 200501).Count);
+                var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.Equal(0, restored.ObserveCorpses(1, 7, 200600).Count);
+                Check.True(restored.Snapshot().AlarmIncidents[0].Corpse.Cleared);
+            }));
+            cases.Add(("Ordinary corpses require departure and a day while legacy deaths stay absent", () => {
+                CivilianIncident alarm; var store = Scene(out alarm); alarm.Scene = null;
+                Check.Equal(0, store.ObserveCorpses(1, 7, 100).Count);
+                store.ConfirmCorpse(alarm.Id, 100);
+                Check.Equal(1, store.ObserveCorpses(1, -1, 101).Count);
+                Check.Equal(1, store.ObserveCorpses(1, 7, 86500).Count);
+                Check.Equal(0, store.ObserveCorpses(1, -1, 86501).Count);
+                var broken = store.Snapshot(); broken.AlarmIncidents[0].Corpse.ClearedAt = 99;
+                Check.Throws<ArgumentException>(() => store.Restore(broken));
+                Check.Near(86501, store.Snapshot().AlarmIncidents[0].Corpse.ClearedAt);
+                var early = store.Snapshot(); early.AlarmIncidents[0].Corpse.ClearedAt = 101;
+                Check.Throws<ArgumentException>(() => store.Restore(early));
+                CivilianIncident outside; var exterior = Scene(out outside); outside.Scene = null; outside.BuildingKey = -1;
+                exterior.ConfirmCorpse(outside.Id, 100);
+                Check.Equal(1, exterior.ObserveCorpses(1, null, 86501).Count);
+                Check.Equal(0, exterior.ObserveCorpses(1, -1, 86501).Count);
+            }));
             cases.Add(("Unwitnessed scene waits for departure and occupation starts at guard arrival", () => {
                 CivilianIncident alarm; var store = Scene(out alarm);
                 Check.Equal(0, store.ObserveCrimeScenes(1, null, 9999).Count);

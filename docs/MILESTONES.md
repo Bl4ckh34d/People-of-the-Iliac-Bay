@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+Latest installed 0.3.11: investigation re-entry charges Murder; actual native guard surrender-before-damage and accepting Yes into court are verified. Automated tests disable mouse-look and retain an unlocked visible cursor. Corpse lifecycle core/native serialization passes (161 tests), but runtime corpse presentation remains pending.
+
 Current 0.3.10 work connects unwitnessed home murders to departure-triggered finite guard investigation, prior-crime preservation, arrival discovery and re-entry custody. Occupation is now **one game hour from first arrival**, per the latest user decision. SAVE33 is the investigation fixture. Corpse persistence/cleanup, stationary citizens, patrols and defense remain unfinished. M3/M4 and the overall goal remain active.
 
 
@@ -105,3 +107,5 @@ Evidence: `work/unity-build-result.json`, `work/town-test.log`, historical `work
 
 
 Historical native damage completion prerequisite: per-hit finalizers preserve nested target scope and original exceptions. Actual patched-method checks pass in Unity. Runtime crime concealment, corpse cleanup and custody remain pending; installed 0.3.9 is unchanged.
+
+Household absence locks: when every living owner is away, lock the home even by day until one returns. Witnessed unauthorized entry is reported as trespassing through bounded citizen alarms and physical guard response. Use authoritative location, not actor visibility. See HOUSEHOLD-LOCKS.md; implementation pending.

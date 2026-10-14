@@ -1,0 +1,9 @@
+# Household absence locks
+
+User requirement, 14 October 2026: when every living member of the owning household leaves for their daily routines, the house locks, including during daytime. It stays locked until at least one living household member returns. Use authoritative scheduled/persistent location, not whether an actor happens to be loaded or visible. Residents travelling home have not returned until they cross the home threshold. A family with no living members follows the separate vacancy/repopulation rules rather than unlocking because the household is empty.
+
+Entering the locked, absent household is trespassing when a surrounding NPC witnesses the entry. Use nearby visibility and the bounded citizen report system, followed by finite guards travelling from actual positions. Do not grant guards omniscient knowledge or invent immediate responders. An unwitnessed entry remains unreported until independently discovered. Legitimate ownership or explicit access permission must be respected; merely having a quest in the building is not automatic permission.
+
+Persist lock changes through transitions and save/load. A resident departure/arrival can change lock state independently of time of day. Preserve existing night/security rules; an occupied home is not automatically public property. The implementation must distinguish resident access, player access, native quest-required lock state and the mod's absence lock so it cannot permanently corrupt the native door state.
+
+Acceptance: all residents away at noon; one remains; first returns; temporarily unloaded actors; player crosses town boundaries; reload while absent; witnessed versus unseen entry; nearby guard versus distant/no guard; pending alarm survives transition; player-owned home; explicit permission; quest destination; deceased family/vacancy. This requirement is documented, not implemented yet.
