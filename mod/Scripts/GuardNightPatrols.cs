@@ -104,7 +104,12 @@ namespace LivingCities.DFU
         }
         private void UpdateNightPatrols(double now)
         {
-            bool night = NightPatrols && MaximumPatrolPairs > 0 && DaggerfallUnity.Instance.WorldTime.Now.IsNight;
+            // Read the live save's quest flag on each policy tick. Never retain a
+            // resolved curse across loading a different character or older save.
+            bool haunted = SettlementHaunting.StreetsDangerous(Roster.SettlementId,
+                GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0), now);
+            bool night = NightPatrols && MaximumPatrolPairs > 0 &&
+                DaggerfallUnity.Instance.WorldTime.Now.IsNight && !haunted;
             if (!night)
             {
                 foreach (var pair in new List<GuardPatrolAssignment>(Roster.Patrols)) Roster.StopPatrol(pair.Plan.LeaderId, now);

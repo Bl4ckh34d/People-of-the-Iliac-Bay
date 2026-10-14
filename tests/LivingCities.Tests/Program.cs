@@ -19,6 +19,7 @@ namespace LivingCities.Tests
             OutdoorCorpseTests.Add(cases);
             GuardTests.Add(cases);
             GuardPolicyTests.Add(cases);
+            HauntingTests.Add(cases);
             GuardDefenseTests.Add(cases);
             PatrolPairTests.Add(cases);
             GuardPatrolTests.Add(cases);
