@@ -345,6 +345,7 @@ public static class LivingCitiesBuild
         Require(restored.Snapshot().Version == 6 && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         VerifyPatrolPairPlan();
+        VerifyGuardPatrolRoster();
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
     }
     private static void VerifyPatrolPairPlan()
@@ -367,6 +368,33 @@ public static class LivingCitiesBuild
         Require(Math.Abs(route[0].Z - 12) < 0.000001 && route[route.Count - 1].Z == -20,
             "Patrol interruption retains actual position and post");
         Debug.Log("LIVING_CITIES_PATROL_PAIR_PLAN_PASS: shared join, spaced phase, native fractional save and physical return.");
+    }
+    private static void VerifyGuardPatrolRoster()
+    {
+        var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 7 }, 1);
+        var posts = new[] { new SavedRoutePoint { X = -10 }, new SavedRoutePoint { X = 2, Z = -20 } };
+        var roster = store.GetOrCreateGuards(1, 2, posts);
+        var circuit = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 20 },
+            new SavedRoutePoint { X = 20, Z = 20 }, new SavedRoutePoint { Z = 20 }, new SavedRoutePoint() };
+        roster.StartPatrol(PatrolPairPlan.Create(roster.Guards[0].Id, roster.Guards[1].Id,
+            new List<SavedRoutePoint> { posts[0], new SavedRoutePoint() },
+            new List<SavedRoutePoint> { posts[1], new SavedRoutePoint { X = 2 } }, circuit, 100, 1000, 2, 10, 2), 100);
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        store.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        roster = store.GetGuards(1); string id = roster.Guards[0].Id;
+        Require(json == SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot()) &&
+            Math.Abs(roster.Position(id, 250).X - 10) < 0.000001, "Native world patrol phase");
+        roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+            new Dictionary<string, List<SavedRoutePoint>> { { id, new List<SavedRoutePoint> { posts[0], new SavedRoutePoint { X = 100 } } } });
+        var sent = roster.DispatchBuilding("patrol-shop", 73, 250, 1, 2, 10);
+        Require(sent.Count == 1 && sent[0].Route[0].X == 10 && sent[0].ArrivesAt == 900,
+            "Native patrol dispatch must start at actual position");
+        json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        store.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        roster = store.GetGuards(1); roster.Advance(1200);
+        Require(roster.Guards[0].Duty == GuardDuty.Returning && roster.Guards[0].ArrivesAt == 1750 &&
+            roster.Position(id, 1750).X == -10 && roster.Guards.Count == 2, "Native return reaches post without creating guards");
+        Debug.Log("LIVING_CITIES_GUARD_PATROL_ROSTER_PASS: world save, actual origin, stopped partner, timed response and physical post return.");
     }
     private static void VerifyOutdoorCorpsePersistence()
     {

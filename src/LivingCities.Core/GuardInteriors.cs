@@ -88,9 +88,7 @@ namespace LivingCities.Core
                 room.ExitAt = room.ReturnAt + TrailLength(room.Trail) / 2.8 * 12;
             }
             if (!room.Returning || now < room.ExitAt) return;
-            double duration = guard.ArrivesAt - guard.DepartedAt;
-            guard.Route.Reverse(); guard.DepartedAt = room.ExitAt; guard.ArrivesAt = room.ExitAt + duration;
-            guard.SearchUntil = room.ExitAt; guard.Duty = GuardDuty.Returning;
+            BeginReturn(guard, room.ExitAt);
             guard.Interior = null; guard.EngagementPosition = null; guard.LastSeenSuspect = null;
         }
         private static GuardInteriorState CopyInterior(GuardRecord guard)

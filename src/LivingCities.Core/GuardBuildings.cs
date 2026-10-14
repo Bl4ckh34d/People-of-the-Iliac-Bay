@@ -61,7 +61,16 @@ namespace LivingCities.Core
                 if (!guard.IsAlive || (informedGuards != null && !informedGuards.Contains(guard.Id))) continue;
                 // Recruits inherit the post, not the deceased guard's identity.
                 var route = approach.Routes.Find(r => Distance(r.Points[0], guard.Post) < 0.05);
-                if (route != null) routes.Add(guard.Id, route.Points);
+                if (route != null)
+                {
+                    var joined = PatrolReturn(guard.Id, now);
+                    if (joined == null) routes.Add(guard.Id, route.Points);
+                    else
+                    {
+                        for (int i = 1; i < route.Points.Count; i++) joined.Add(CopyPoint(route.Points[i]));
+                        routes.Add(guard.Id, joined);
+                    }
+                }
             }
             var sent = Dispatch(incidentId, now, routes, maximumResponders, speed, timeScale);
             var report = Reports.Find(r => r.Id == incidentId);

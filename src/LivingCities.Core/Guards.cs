@@ -15,6 +15,9 @@ namespace LivingCities.Core
         public SavedRoutePoint Post, DeathPosition;
         public SavedRoutePoint EngagementPosition;
         public SavedRoutePoint LastSeenSuspect;
+        public SavedRoutePoint ResponseOrigin;
+        public List<SavedRoutePoint> ReturnPath;
+        public double ReturnRate;
         public GuardInteriorState Interior;
         public double HealthFraction = 1;
         public GuardDuty Duty;
@@ -78,12 +81,15 @@ namespace LivingCities.Core
         {
             Require(!string.IsNullOrWhiteSpace(incidentId) && Time(now) && routes != null && maximumResponders >= 0 && maximumResponders <= 256 &&
                 Finite(metresPerRealSecond) && metresPerRealSecond > 0 && Finite(gameSecondsPerRealSecond) && gameSecondsPerRealSecond > 0, "Invalid guard dispatch.");
+            Require(Finite(gameSecondsPerRealSecond / metresPerRealSecond) && gameSecondsPerRealSecond / metresPerRealSecond > 0,
+                "Invalid guard travel rate.");
             var report = Reports.Find(r => r.Id == incidentId);
             if (report != null && report.GuardIds.Count > 0) return ReportGuards(report);
             // Validate and copy all supplied routes before assigning any guard.
             var candidates = new List<GuardRecord>();
             var copies = new Dictionary<string, List<SavedRoutePoint>>();
             var lengths = new Dictionary<string, double>();
+            var returns = new Dictionary<string, List<SavedRoutePoint>>();
             foreach (var pair in routes)
             {
                 var guard = Guards.Find(g => g.Id == pair.Key);
@@ -100,7 +106,12 @@ namespace LivingCities.Core
             foreach (var guard in preview.Guards)
             {
                 if (!guard.IsAlive || guard.Duty != GuardDuty.Posted || !copies.ContainsKey(guard.Id)) continue;
-                Require(Distance(guard.Post, copies[guard.Id][0]) < 0.05, "Route must begin at the guard's actual position.");
+                Require(Distance(preview.Position(guard.Id, now), copies[guard.Id][0]) < 0.05, "Route must begin at the guard's actual position.");
+                var returnPath = ResponseReturn(guard, copies[guard.Id], preview.PatrolReturn(guard.Id, now));
+                Require(returnPath.Count >= 2 && returnPath.Count <= 10000 && Distance(returnPath[returnPath.Count - 1], guard.Post) < 0.05 &&
+                    Time(now + lengths[guard.Id] / metresPerRealSecond * gameSecondsPerRealSecond + 3600 +
+                        Length(returnPath) / metresPerRealSecond * gameSecondsPerRealSecond), "Invalid guard response return.");
+                returns.Add(guard.Id, returnPath);
                 candidates.Add(Find(guard.Id));
             }
             Advance(now);
@@ -110,6 +121,9 @@ namespace LivingCities.Core
             {
                 var guard = candidates[i];
                 guard.Route = copies[guard.Id]; guard.IncidentId = incidentId;
+                guard.ResponseOrigin = CopyPoint(guard.Route[0]);
+                guard.ReturnPath = returns[guard.Id]; guard.ReturnRate = gameSecondsPerRealSecond / metresPerRealSecond;
+                InterruptPatrol(guard.Id, now);
                 guard.DepartedAt = now; guard.ArrivesAt = now + lengths[guard.Id] / metresPerRealSecond * gameSecondsPerRealSecond;
                 guard.SearchUntil = guard.ArrivesAt + 300; guard.Duty = GuardDuty.Responding;
                 report.GuardIds.Add(guard.Id);
@@ -142,13 +156,13 @@ namespace LivingCities.Core
                 }
                 if (guard.Duty == GuardDuty.Searching && now >= guard.SearchUntil)
                 {
-                    double duration = guard.ArrivesAt - guard.DepartedAt;
-                    guard.Route.Reverse(); guard.DepartedAt = guard.SearchUntil;
-                    guard.ArrivesAt = guard.DepartedAt + duration; guard.Duty = GuardDuty.Returning;
+                    BeginReturn(guard, guard.SearchUntil);
                 }
                 if (guard.Duty == GuardDuty.Returning && now >= guard.ArrivesAt)
-                { guard.Duty = GuardDuty.Posted; guard.Route.Clear(); guard.IncidentId = null; }
+                { guard.Duty = GuardDuty.Posted; guard.Route.Clear(); guard.IncidentId = null;
+                    guard.ResponseOrigin = null; guard.ReturnPath = null; guard.ReturnRate = 0; }
             }
+            Patrols.RemoveAll(p => now >= PatrolFinishedAt(p));
         }
         public SavedRoutePoint Position(string id, double now)
         {
@@ -156,7 +170,7 @@ namespace LivingCities.Core
             var guard = Find(id);
             if (!guard.IsAlive) return CopyPoint(guard.DeathPosition);
             if (guard.Duty == GuardDuty.Engaged) return CopyPoint(guard.EngagementPosition);
-            if (guard.Route.Count < 2 || guard.Duty == GuardDuty.Posted) return CopyPoint(guard.Post);
+            if (guard.Route.Count < 2 || guard.Duty == GuardDuty.Posted) return PostedPosition(guard, now);
             if (guard.Duty == GuardDuty.Searching) return SearchPosition(Reports.Find(r => r.Id == guard.IncidentId), guard, now);
             double duration = guard.ArrivesAt - guard.DepartedAt;
             double fraction = duration <= 0 ? 1 : Math.Max(0, Math.Min(1, (now - guard.DepartedAt) / duration));
@@ -182,6 +196,7 @@ namespace LivingCities.Core
                 guard.Interior.Trail = new List<GuardPoint3> { Point3(guard.Interior.Entrance), Point3(indoorDeath) };
             }
             guard.DeathPosition = Position(id, now);
+            InterruptPatrol(id, now);
             guard.IsAlive = false; guard.Duty = GuardDuty.Dead; guard.DiedAt = now; guard.HealthFraction = 0;
             guard.EngagementPosition = null;
             guard.LastSeenSuspect = null;
@@ -218,6 +233,7 @@ namespace LivingCities.Core
             double arrival = now + Length(copy) / speed * timeScale;
             Require(Time(arrival), "Guard return time overflow.");
             guard.Route = copy; guard.DepartedAt = now; guard.ArrivesAt = arrival; guard.SearchUntil = now;
+            guard.ResponseOrigin = null; guard.ReturnPath = null; guard.ReturnRate = 0;
             guard.Duty = GuardDuty.Returning; guard.EngagementPosition = null; guard.LastSeenSuspect = null;
         }
         public int Recruit(double now)
@@ -267,7 +283,12 @@ namespace LivingCities.Core
                 Require(guard.Interior == null || source.Reports.Exists(r => r != null && r.Id == guard.IncidentId &&
                     r.BuildingKey == guard.Interior.BuildingKey), "Indoor guard has no matching building report.");
                 var route = CopyRoute(guard.Route);
-                if (guard.Duty == GuardDuty.Posted) Require(route.Count == 0 && guard.IncidentId == null, "Posted guard has a pending route.");
+                var returnPath = guard.ReturnPath == null ? null : CopyRoute(guard.ReturnPath);
+                Require(returnPath == null ? guard.ResponseOrigin == null && guard.ReturnRate == 0 :
+                    guard.ResponseOrigin != null && Finite(guard.ReturnRate) && guard.ReturnRate > 0 && returnPath.Count >= 2 &&
+                    Distance(returnPath[returnPath.Count - 1], guard.Post) < 0.05 &&
+                    Time(guard.ArrivesAt + 3600 + Length(returnPath) * guard.ReturnRate), "Invalid saved response return.");
+                if (guard.Duty == GuardDuty.Posted) Require(route.Count == 0 && guard.IncidentId == null && returnPath == null, "Posted guard has a pending route.");
                 else if (guard.IsAlive)
                     Require(route.Count >= 2 && guard.IncidentId != null && guard.ArrivesAt >= guard.DepartedAt &&
                         source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.GuardIds != null && r.GuardIds.Contains(guard.Id)), "Invalid responding guard.");
@@ -281,7 +302,8 @@ namespace LivingCities.Core
                     searchUntil = guard.ArrivesAt + UnwitnessedScene.OccupationSeconds;
                 if (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching)
                     Require(searchUntil == guard.ArrivesAt + (source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.Investigation) ? UnwitnessedScene.OccupationSeconds : 300) &&
-                        Distance(CopyPoint(guard.Post), route[0]) < 0.05, "Invalid guard search deadline or route origin.");
+                        Distance(CopyPoint(guard.ResponseOrigin ?? guard.Post), route[0]) < 0.05 &&
+                        (returnPath == null || Distance(returnPath[0], route[route.Count - 1]) < 0.05), "Invalid guard search deadline or route origin.");
                 if (guard.Duty == GuardDuty.Returning)
                     Require(guard.DepartedAt == guard.SearchUntil && Distance(CopyPoint(guard.Post), route[route.Count - 1]) < 0.05, "Return route does not reach the assigned post.");
                 Require(guard.IsAlive == (guard.DeathPosition == null), "Guard death location disagrees with life state.");
@@ -292,6 +314,8 @@ namespace LivingCities.Core
                     HealthFraction = guard.HealthFraction,
                     EngagementPosition = guard.EngagementPosition == null ? null : CopyPoint(guard.EngagementPosition),
                     LastSeenSuspect = guard.LastSeenSuspect == null ? null : CopyPoint(guard.LastSeenSuspect),
+                    ResponseOrigin = guard.ResponseOrigin == null ? null : CopyPoint(guard.ResponseOrigin),
+                    ReturnPath = returnPath, ReturnRate = guard.ReturnRate,
                     Route = route, DepartedAt = guard.DepartedAt, ArrivesAt = guard.ArrivesAt, SearchUntil = searchUntil, DiedAt = guard.DiedAt });
             }
             Require(alive <= source.Target && source.NextIdentity == source.Guards.Count, "Invalid guard allocation count.");
@@ -366,6 +390,7 @@ namespace LivingCities.Core
                 copy.Reports.Add(saved);
             }
             copy.CopyBuildingApproaches(source.BuildingApproaches);
+            copy.CopyPatrols(source.Patrols);
             return copy;
         }
     }
