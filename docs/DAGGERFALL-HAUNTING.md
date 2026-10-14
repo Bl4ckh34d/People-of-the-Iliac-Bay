@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Roster persistence foundation
+
+`GuardRecord.Refuge` and appended `GuardDuty.Refuge` now retain validated journeys in roster copies and native DFU serialization. Legacy absent fields remain null; existing enum numbers are unchanged. At-post admission checks the actual origin transactionally, excludes patrol/incident/interior actors, and marks the guard unavailable to dispatch. Advance keeps the guard sheltered until release and restores Posted only after the reverse route reaches the original post. Death preserves the journey and frozen exterior death position; indoor corpse rendering must use the journey evaluated at DiedAt, not the exterior door coordinate.
+
+Tests:254/254 core pass after three expected missing-implementation failures. Native `VerifyGuards.ps1` passes, including approach/entry/shelter/release serialization and return; evidence `work/GuardRefuge-red.log`, `work/GuardRefuge-green.log`, `work/GuardRefuge-serializer.log`, and the `LIVING_CITIES_REFUGE_PERSISTENCE_PASS` marker in `../work/guards-persistence.log`. Installed player bundle is unchanged; these are source/editor checks. Runtime consumers still need explicit refuge phase handling before enabling this state. Patrol/combat interruption, spatial room claims, actual guard actors and city activation remain required; at-post admission is an intermediate stage, not the complete requested behavior.
+
 ## Refuge journey source foundation
 
 `GuardRefugeJourney` now models separate exterior and interior routes, doorway phase transitions, indefinite shelter, explicit release and a physical reverse journey. Exterior coordinates remain settlement-local and interior coordinates remain building-local; the adapter must switch scenes at the doorway rather than interpolate between unrelated coordinate spaces. Early release waits until shelter arrival; repeated release does not reset the departure clock. Route copies validate coordinates, bounds, rates and deadlines.

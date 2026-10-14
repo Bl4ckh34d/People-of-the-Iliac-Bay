@@ -417,6 +417,7 @@ public static class LivingCitiesBuild
     }
     public static void VerifyGuardPersistence()
     {
+        VerifyRefugePersistence();
         AuditFixtureHousing();
         VerifyCrimeScenePersistence();
         VerifyOutdoorCorpsePersistence();
@@ -466,6 +467,28 @@ public static class LivingCitiesBuild
         VerifyGuardPatrolRoster();
         VerifyGuardDefense();
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
+    }
+    private static void VerifyRefugePersistence()
+    {
+        var roster=GuardRoster.Create(1291010263,42,1,new[] { new SavedRoutePoint() });
+        var id=roster.Guards[0].Id;
+        roster.TakeRefuge(id,GuardRefugeJourney.Create(256,
+            new[] { new GuardPoint3(),new GuardPoint3 { X=10 } },
+            new[] { new GuardPoint3(),new GuardPoint3 { Z=4 } },100,2,12),100);
+        foreach (double now in new[] { 130d,172d,200d })
+        {
+            roster.Advance(now);
+            string json=SaveLoadManager.Serialize(typeof(GuardRoster),roster);
+            roster=GuardRoster.CopyValidated((GuardRoster)SaveLoadManager.Deserialize(typeof(GuardRoster),json));
+            Require(roster.Guards[0].Refuge!=null && roster.Guards[0].Refuge.BuildingKey==256,"Saved refuge identity");
+        }
+        roster.Guards[0].Refuge.Release(200);
+        string released=SaveLoadManager.Serialize(typeof(GuardRoster),roster);
+        roster=GuardRoster.CopyValidated((GuardRoster)SaveLoadManager.Deserialize(typeof(GuardRoster),released));
+        Require(roster.Guards[0].Refuge.Evaluate(212).Phase==RefugePhase.Exiting,"Saved refuge exit");
+        roster.Advance(284);
+        Require(roster.Guards[0].Duty==GuardDuty.Posted && roster.Guards[0].Refuge==null,"Saved refuge return");
+        Debug.Log("LIVING_CITIES_REFUGE_PERSISTENCE_PASS: native serializer preserves approach, entry, shelter and release.");
     }
     private static void VerifyPatrolPairPlan()
     {

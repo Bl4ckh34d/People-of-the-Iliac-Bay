@@ -5,7 +5,7 @@ using System.Globalization;
 namespace LivingCities.Core
 {
     public enum SettlementScale { Hamlet, Town, City }
-    public enum GuardDuty { Posted, Responding, Searching, Returning, Dead, Engaged }
+    public enum GuardDuty { Posted, Responding, Searching, Returning, Dead, Engaged, Refuge }
     [Serializable]
     public sealed class GuardRecord
     {
@@ -19,6 +19,7 @@ namespace LivingCities.Core
         public List<SavedRoutePoint> ReturnPath;
         public double ReturnRate;
         public GuardInteriorState Interior;
+        public GuardRefugeJourney Refuge;
         public double HealthFraction = 1;
         public GuardDuty Duty;
         public List<SavedRoutePoint> Route = new List<SavedRoutePoint>();
@@ -185,6 +186,12 @@ namespace LivingCities.Core
             foreach (var guard in Guards)
             {
                 if (!guard.IsAlive) continue;
+                if (guard.Refuge != null)
+                {
+                    if (guard.Refuge.Evaluate(now).Phase == RefugePhase.Complete)
+                    { guard.Refuge=null; guard.Duty=GuardDuty.Posted; }
+                    else continue;
+                }
                 AdvanceInterior(guard, now);
                 if (guard.Duty == GuardDuty.Responding && now >= guard.ArrivesAt)
                 {
@@ -212,6 +219,7 @@ namespace LivingCities.Core
             Advance(now);
             var guard = Find(id);
             if (!guard.IsAlive) return CopyPoint(guard.DeathPosition);
+            if (guard.Refuge != null) return RefugeExteriorPosition(guard, now);
             if (guard.Duty == GuardDuty.Engaged) return CopyPoint(guard.EngagementPosition);
             if (guard.Route.Count < 2 || guard.Duty == GuardDuty.Posted) return PostedPosition(guard, now);
             if (guard.Duty == GuardDuty.Searching) return SearchPosition(Reports.Find(r => r.Id == guard.IncidentId), guard, now);
@@ -332,7 +340,7 @@ namespace LivingCities.Core
                     Distance(returnPath[returnPath.Count - 1], guard.Post) < 0.05 &&
                     Time(guard.ArrivesAt + 3600 + Length(returnPath) * guard.ReturnRate), "Invalid saved response return.");
                 if (guard.Duty == GuardDuty.Posted) Require(route.Count == 0 && guard.IncidentId == null && returnPath == null, "Posted guard has a pending route.");
-                else if (guard.IsAlive)
+                else if (guard.IsAlive && guard.Duty != GuardDuty.Refuge)
                     Require(route.Count >= 2 && guard.IncidentId != null && guard.ArrivesAt >= guard.DepartedAt &&
                         source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.GuardIds != null && r.GuardIds.Contains(guard.Id)), "Invalid responding guard.");
                 double searchUntil = guard.SearchUntil;
@@ -350,7 +358,13 @@ namespace LivingCities.Core
                 if (guard.Duty == GuardDuty.Returning)
                     Require(guard.DepartedAt == guard.SearchUntil && Distance(CopyPoint(guard.Post), route[route.Count - 1]) < 0.05, "Return route does not reach the assigned post.");
                 Require(guard.IsAlive == (guard.DeathPosition == null), "Guard death location disagrees with life state.");
+                var refuge=guard.Refuge==null ? null : GuardRefugeJourney.CopyValidated(guard.Refuge);
+                Require((guard.Duty==GuardDuty.Refuge)==(guard.IsAlive && refuge!=null) &&
+                    (refuge==null || guard.Interior==null && route.Count==0 && guard.IncidentId==null && returnPath==null &&
+                    Distance(guard.Post,new SavedRoutePoint { X=refuge.Exterior[0].X,Z=refuge.Exterior[0].Z })<0.05),
+                    "Invalid guard refuge state.");
                 copy.Guards.Add(new GuardRecord { Id = guard.Id, IncidentId = guard.IncidentId, ReplacedById = guard.ReplacedById,
+                    Refuge = refuge,
                     Interior = CopyInterior(guard),
                     AppearanceSeed = guard.AppearanceSeed, IsAlive = guard.IsAlive, Post = CopyPoint(guard.Post), Duty = guard.Duty,
                     DeathPosition = guard.DeathPosition == null ? null : CopyPoint(guard.DeathPosition),
