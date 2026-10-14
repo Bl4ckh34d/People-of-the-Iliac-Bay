@@ -8,6 +8,7 @@ namespace LivingCities.Core
     {
         public int Version = 6;
         public uint WorldSeed;
+        public HauntingRoutineDay HauntingDay;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
         public List<TownRoutineState> Routines = new List<TownRoutineState>();
         public List<QuestResidentBinding> QuestBindings = new List<QuestResidentBinding>();
@@ -62,6 +63,12 @@ namespace LivingCities.Core
             Require(source.Version >= 1 && source.Version <= 6, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
+            if(source.HauntingDay!=null)
+            {
+                double day=source.HauntingDay.Day;
+                Require(!double.IsNaN(day) && !double.IsInfinity(day) && day>=0 && day==Math.Floor(day),"Invalid haunting routine day.");
+                copy.HauntingDay=new HauntingRoutineDay { Day=day,Restricted=source.HauntingDay.Restricted };
+            }
             var settlements = new HashSet<int>();
             var identities = new HashSet<string>(StringComparer.Ordinal);
             foreach (SettlementPopulation town in source.Settlements)

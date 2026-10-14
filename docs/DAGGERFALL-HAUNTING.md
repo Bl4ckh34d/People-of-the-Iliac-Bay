@@ -1,5 +1,13 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Saved daily civilian policy and runtime wiring
+
+WorldState now has an optional HauntingDay (day number and restricted flag). First observation of each Daggerfall day chooses from live LiftedCurse; later observations retain that decision until the next day, including after save restore. Other settlements do not create this state. Legacy saves initialize it lazily, and malformed day numbers reject restore transactionally. The native quest offers no historical completion timestamp; first observation is authoritative for previously unseen days.
+
+StreetPopulation builds ordinary and safe-window schedules and routes all schedule evaluations through the saved daily policy. It uses actual world time to commit the day, not forward animation samples. Restricted trips depart no earlier than05:00 and reach home by19:00, preserving normal bedtimes. Lifting the curse releases guards immediately but civilian appointments resume the next day to avoid repositioning an underway trip. This covers generated DayVisit plans; native keepers and broader future tavern/work schedules still need their own integration.
+
+265/265 core tests pass, including same-day resolution/save continuity, next-day recovery, legacy-null and invalid-day restore cases. Native DFU WorldState serialization passes (`LIVING_CITIES_HAUNTING_DAY_SAVE_PASS` in `../work/guards-persistence.log`). Evidence `work/HauntingRoutineDay-{red,green}.log`. Build installed development0.3.29 SHA-256 `D7D0BECD99FC15312711FA12F9231C8D484FF0AFBA069B59D330DCD97A3415BB`. City admission remains disabled; actual city schedule population/save/load validation is pending. This supersedes the source-only limitation below.
+
 ## Civilian travel-window foundation
 
 DailySchedule.DayVisit now accepts an optional exterior travel window. Both the outbound departure and return arrival must fit that window, independently of destination opening hours and the resident's actual sleep hours. Unchanged defaults preserve existing schedules. A 05:00–19:00 window supports the unresolved Daggerfall haunting without putting residents to bed at sunset. Trips whose walking duration and dwell cannot fit become home days rather than teleporting home at the deadline.

@@ -8,6 +8,23 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Legacy saves default daily haunting policy and invalid saved days reject transactionally",()=>{
+                var store=new WorldStateStore(42); store.Restore(new WorldState { WorldSeed=42,HauntingDay=null });
+                Check.True(store.RestrictHauntingRoutines(1291010263,false,600));
+                var bad=store.Snapshot(); bad.HauntingDay.Day=0.5;
+                Check.Throws<ArgumentException>(()=>store.Restore(bad));
+                Check.True(store.RestrictHauntingRoutines(1291010263,true,1200));
+            }));
+            cases.Add(("Civilian haunting policy survives saves and changes only with the next day",()=>{
+                var store=new WorldStateStore(42);
+                Check.True(store.RestrictHauntingRoutines(1291010263,false,600));
+                Check.True(store.RestrictHauntingRoutines(1291010263,true,1200));
+                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.True(restored.RestrictHauntingRoutines(1291010263,true,1800));
+                Check.True(!restored.RestrictHauntingRoutines(1291010263,true,86400));
+                Check.True(!restored.RestrictHauntingRoutines(206728581,false,86400));
+                Check.Throws<ArgumentOutOfRangeException>(()=>restored.RestrictHauntingRoutines(1291010263,false,double.NaN));
+            }));
             cases.Add(("Unloaded refuge release uses first dawn even when revisiting on a later haunted night",()=>{
                 Check.True(!SettlementHaunting.FirstSafeTime(1291010263,false,20*3600,86400+5*3600-0.01).HasValue);
                 Check.Near(86400+5*3600,SettlementHaunting.FirstSafeTime(1291010263,false,20*3600,86400+5*3600).Value);

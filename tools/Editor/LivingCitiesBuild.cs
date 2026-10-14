@@ -470,6 +470,14 @@ public static class LivingCitiesBuild
     }
     private static void VerifyRefugePersistence()
     {
+        var policyStore=new WorldStateStore(42);
+        Require(policyStore.RestrictHauntingRoutines(1291010263,false,600),"Initial haunted routine policy");
+        var policyJson=SaveLoadManager.Serialize(typeof(WorldState),policyStore.Snapshot());
+        var policyRestored=new WorldStateStore(0);
+        policyRestored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),policyJson));
+        Require(policyRestored.RestrictHauntingRoutines(1291010263,true,1200),"Saved same-day haunting policy");
+        Require(!policyRestored.RestrictHauntingRoutines(1291010263,true,86400),"Next-day curse resolution");
+        Debug.Log("LIVING_CITIES_HAUNTING_DAY_SAVE_PASS: native world serialization retains daily curfew policy.");
         var roster=GuardRoster.Create(1291010263,42,2,new[] { new SavedRoutePoint() });
         var id=roster.Guards[0].Id;
         roster.TakeRefuge(id,GuardRefugeJourney.Create(256,
