@@ -29,6 +29,15 @@ public static class DaggerfallCityAudit
                 string kind = building.BuildingType.ToString();
                 if (!counts.ContainsKey(kind)) counts[kind] = 0;
                 counts[kind]++;
+                if (building.BuildingType == DFLocation.BuildingTypes.Town23)
+                {
+                    int bx, by, record;
+                    DaggerfallWorkshop.Game.BuildingDirectory.ReverseBuildingKey(building.buildingKey, out bx, out by, out record);
+                    var interior = block.RmbBlock.SubRecords[record].Interior;
+                    Debug.Log("LIVING_CITIES_WALL_CANDIDATE: key=" + building.buildingKey + "; block=" + name +
+                        "; model=" + building.ModelID + "; interiorObjects=" +
+                        (interior.Block3dObjectRecords == null ? 0 : interior.Block3dObjectRecords.Length));
+                }
                 bool home = building.BuildingType >= DFLocation.BuildingTypes.House1 &&
                     building.BuildingType <= DFLocation.BuildingTypes.House6;
                 bool tavern = building.BuildingType == DFLocation.BuildingTypes.Tavern;

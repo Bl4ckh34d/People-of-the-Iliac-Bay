@@ -10,6 +10,16 @@ Next acceptance work: city admission and scale classification; actual wall refug
 
 ## Curse policy foundation, 15 October 2026
 
+## Exterior wall refuge survey, 15 October 2026
+
+`TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -RefugeProbe` loads only the dedicated exterior fixture, teleports that disposable session to Daggerfall, and performs the existing collision-checked TownGeometry route search. It does not save, enable city actors or modify quest globals. The live player completed successfully: 100 accepted ground-level Town23 entrances, all100 connected from another entrance within100 metres;59 other doors were rejected by the general entrance survey. This does not mean59 wall doors failed, nor does it prove paths from every city post. Evidence: `work/DaggerfallRefuge-exterior-pass.log`.
+
+The original-content wall census records Town23 models444/445/446 with real interior records; the detailed candidate keys/models are in `work/DaggerfallCity-walls.log`. These model IDs and the Town23 type are evidence for this original layout, not a universal classification for city-overhaul mods. Next verify representative actual interiors, safe standing positions and physical guard arrival/retreat before using them as refuges.
+
+The probe is opt-in and retains disabled test input/mouse capture. Owned test process34228 finished and was stopped by TownTest; no user session was interrupted. Unity build passed; latest development0.3.29 bundle hash is `E11E69AA2685B2E47AAC85461CCC164C5D6C68AB175D97CA5B5ECA4C7393B674`, superseding the policy-only build hash below. City admission remains disabled.
+
+## Curse policy evidence
+
 `SettlementHaunting.StreetsDangerous` now evaluates the verified city ID, current LiftedCurse flag and absolute game seconds. Tests cover exact 19:00/05:00 boundaries, midnight on distant days, immediate curse resolution, other settlements and invalid timestamps. Red run: 244/247 passed with three expected missing-implementation failures; green run: 247/247 passed. `GuardNightPatrols` reads the live player global each update and applies the policy before starting patrols; active patrols follow the existing physical return behavior when disabled. This return is to their existing posts, **not yet a wall refuge**.
 
 Unity build/integration checks passed and installed a development rebuild retaining version0.3.29, SHA-256 `1549B2A6189E0A80B21E766ECBDA59722BA464F5AB31F576A453D4A712AEEC71`. Evidence: `work/Haunting-red.log`, `work/Haunting-green.log`, `work/Haunting-build.log`. Daggerfall remains excluded by runtime admission gates, so this is policy wiring, not verified city gameplay or completed haunting behavior. No live city quest-toggle/save test has run. Base-game tracked Assets/Scripts remains unchanged.
