@@ -272,6 +272,7 @@ public static class LivingCitiesBuild
     {
         VerifyCrimeScenePersistence();
         VerifyGuardHooks();
+        VerifyCivilianHitScopes();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
         var posts = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 10 },
@@ -331,6 +332,66 @@ public static class LivingCitiesBuild
         Require(scene.DiscoveredAt == arrival && scene.Occupied(arrival + 21599) && !scene.Occupied(arrival + 21600) &&
             saved.Reports[0].Investigation && saved.Guards[0].SearchUntil == arrival + 21600, "Native six-hour occupation survives reload");
         Debug.Log("LIVING_CITIES_SCENE_PERSISTENCE_PASS: confirmed home death, departure, guard arrival and six-hour investigation survive native serialization.");
+    }
+    private static void VerifyCivilianHitScopes()
+    {
+        var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText("Assets/Game/Mods/LivingCities/LivingCities.dfmod.json"));
+        var mod = new Mod(); mod.ModInfo.Files = info.Files;
+        var types = (Type[])typeof(Mod).GetMethod("GetTypesInEditor", System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.NonPublic).Invoke(mod, null);
+        var type = Array.Find(types, t => t.FullName == "LivingCities.QuestHooks.NativeCivilianHooks");
+        Require(type.GetConstructor(new[] { typeof(Func<Transform, Action<Exception>>) }) != null,
+            "Civilian hook supports per-hit completion scopes");
+        var outer = new GameObject("Outer hit"); var inner = new GameObject("Inner hit");
+        var weapon = (WeaponManager)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(WeaponManager));
+        int begun = 0, ended = 0; bool failBefore = false, failAfter = false;
+        var failure = new InvalidOperationException("expected before-hit failure");
+        Func<Transform> current = () => (Transform)type.GetProperty("CurrentTarget").GetValue(null, null);
+        IDisposable hook = null;
+        try
+        {
+            hook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<Transform, Action<Exception>>(target => {
+                begun++;
+                Require(current() == target, "Prefix exposes current hit target");
+                if (failBefore) throw failure;
+                if (target == outer.transform)
+                {
+                    weapon.WeaponDamage(null, false, false, inner.transform, Vector3.zero, Vector3.forward);
+                    Require(current() == target, "Nested hit restores outer scope");
+                }
+                return error => {
+                    ended++;
+                    if (failAfter) throw failure;
+                    Require(current() == target, "Completion retains its own target");
+                    Require((target == null) == (error != null), "Completion observes original native failure");
+                };
+            }) });
+            weapon.WeaponDamage(null, false, false, outer.transform, Vector3.zero, Vector3.forward);
+            Require(begun == 2 && ended == 2 && current() == null, "Nested successful hits complete once");
+            bool threw = false;
+            try { weapon.WeaponDamage(null, false, false, null, Vector3.zero, Vector3.forward); }
+            catch (NullReferenceException) { threw = true; }
+            Require(threw && begun == 3 && ended == 3 && current() == null, "Native failure propagates and restores scope");
+            failBefore = true; threw = false;
+            try { weapon.WeaponDamage(null, false, false, outer.transform, Vector3.zero, Vector3.forward); }
+            catch (InvalidOperationException ex) { threw = ReferenceEquals(ex, failure); }
+            Require(threw && ended == 3 && current() == null, "Prefix failure also restores scope");
+            failBefore = false; failAfter = true; threw = false;
+            try { weapon.WeaponDamage(null, false, false, inner.transform, Vector3.zero, Vector3.forward); }
+            catch (InvalidOperationException ex) { threw = ReferenceEquals(ex, failure); }
+            Require(threw && ended == 4 && current() == null, "Completion failure restores scope and propagates");
+            threw = false;
+            try { weapon.WeaponDamage(null, false, false, null, Vector3.zero, Vector3.forward); }
+            catch (NullReferenceException) { threw = true; }
+            Require(threw && ended == 5 && current() == null, "Completion cannot replace original native exception");
+            hook.Dispose(); hook = null;
+            int legacy = 0;
+            hook = (IDisposable)Activator.CreateInstance(type, new object[] { new Action<Transform>(target => legacy++) });
+            weapon.WeaponDamage(null, false, false, inner.transform, Vector3.zero, Vector3.forward);
+            Require(legacy == 1 && current() == null, "Existing before-hit constructor remains compatible");
+        }
+        finally { if (hook != null) hook.Dispose(); UnityEngine.Object.DestroyImmediate(outer); UnityEngine.Object.DestroyImmediate(inner); }
+        Debug.Log("LIVING_CITIES_CIVILIAN_SCOPES_PASS: actual patched native method, nested hits, native and prefix failures.");
     }
     private static void VerifyGuardHooks()
     {

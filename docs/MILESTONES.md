@@ -102,3 +102,5 @@ Survey: 175 buildings, 162 candidate homes, 215 doors, and 33,143 walkable cells
 
 Evidence: `work/unity-build-result.json`, `work/town-test.log`, historical `work/player-smoke.log`, sibling `../work/livingcities-build.log`. `tools/Build.ps1` checks build completion before reporting success. See `TEST-FIXTURES.md`, `INTEGRATION.md` and the separate `probes/guard` experiment.
 
+
+Native damage completion prerequisite verified: per-hit finalizers preserve nested target scope and original exceptions. Actual patched-method checks pass in Unity. Runtime crime concealment, corpse cleanup and custody remain pending; installed 0.3.9 is unchanged.
