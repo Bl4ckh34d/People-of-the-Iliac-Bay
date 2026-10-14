@@ -31,7 +31,7 @@ namespace LivingCities.DFU
         {
             defenseEnemies.Clear();
             foreach (var target in UnityEngine.Object.FindObjectsOfType<DaggerfallEntityBehaviour>())
-                if (IsEnemyThreat(target)) defenseEnemies[ThreatKey(target)] = target;
+                if (!ObserveHauntingThreat(target,now) && IsEnemyThreat(target)) defenseEnemies[ThreatKey(target)] = target;
             if (!EnemyDefense) return;
             var keys = new List<string>(defenseEnemies.Keys); keys.Sort(StringComparer.Ordinal);
             foreach (var key in keys)

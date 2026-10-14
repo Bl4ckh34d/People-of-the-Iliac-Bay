@@ -61,6 +61,7 @@ namespace LivingCities.DFU
             Debug.Log("LIVING_CITIES_REFUGE_SURVEY: groundEntrances=" + candidates + "; connected=" + connected +
                 "; rejectedDoors=" + geometry.RejectedDoors);
             if (connected == 0) throw new InvalidOperationException("No reachable Daggerfall wall entrance found.");
+            yield return HauntingThreatProbe.Run(directory,geometry);
             foreach (var representative in representatives)
             {
                 DaggerfallStaticDoors owner = null;

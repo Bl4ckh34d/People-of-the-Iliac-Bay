@@ -1,5 +1,13 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Visible haunting detection and at-post assignment
+
+GuardHaunting now checks live LiftedCurse, the city/time policy, living active hostile Ghost/Wraith entities, and20m line of sight from each eligible guard post. It searches up to8 nearest original Town23 wall entrances (models444/445/446), checks the exterior route, lazily surveys interior routes and tries unoccupied destinations. The selected journey uses3.8m/s and12 game seconds per real second. The enemy-defense survey calls this before normal attackable-target filtering; classified haunting threats never receive defense dispatch even if no refuge route exists. ReleaseSafeRefuges requests return when the policy becomes safe. Caches clear with settlement ownership.
+
+The controlled live test creates actual native Ghost/Wraith bodies beside a real Daggerfall route and invokes the production observer on a disposable at-post roster. Both select building257 with exterior/interior routes and no crime reports; setting LiftedCurse makes classification false. Early fixture failures were caused by disabling native motor startup and failing to activate the native-created foe, not production detection. Evidence: `work/HauntingThreat-red.log`, `work/HauntingThreat-passive-fixture.log`, `work/HauntingThreat-pass.log`. Ordinary GuardDefenseProbe passes (`work/HauntingThreat-defense-regression.log`);257/257 core tests and Unity build pass. Latest installed development0.3.29 hash `8899C3CB2520571B470A77C1D07E8ED55DE734B3CB0BBF54AAD6E52E37678197` supersedes earlier hashes.
+
+Still unverified/incomplete: automatic Update-to-actor end-to-end flight, safe-release timing through unloaded dawn/quest resolution, patrol/combat interruption, route avoidance, corpse claim cleanup, survey frame cost and full city admission. Test invokes the observer directly on a disabled controller with controlled time and restores the quest flag; it does not save the city roster. The declaration that at-post assignment works must not imply Daggerfall is enabled for normal play yet.
+
 ## Unloaded refuge geometry
 
 `RefugeGeometry.Survey` synchronously creates a temporary native automap model-only interior100m above its normal position, disables renderers, synchronizes physics and extracts local entry-to-standing routes. It does not call normal DoLayout/AddPeople/AddFlats/AddActionDoors; the temporary object is deactivated and destroyed in finally. This is verified for the original wall models, not arbitrary interiors or overhaul models whose omitted flats/action doors can affect navigation.

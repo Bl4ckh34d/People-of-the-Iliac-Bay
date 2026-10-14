@@ -392,6 +392,7 @@ namespace LivingCities.DFU
                 entryGround = interior ? new InteriorGeometry(interior).EntryGround : null;
             }
             Roster.Advance(now);
+            ReleaseSafeRefuges(now);
             if (Roster.Recruit(now) > 0)
             {
                 if (patrolSurvey != null) StopCoroutine(patrolSurvey);
@@ -553,6 +554,7 @@ namespace LivingCities.DFU
             if (patrolSurvey != null) { StopCoroutine(patrolSurvey); patrolSurvey = null; }
             patrolTemplates.Clear();
             defenseEnemies.Clear();
+            refugeInteriors.Clear(); refugeGeometry=null;
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);
