@@ -16,14 +16,14 @@ namespace LivingCities.DFU
         private static void AdvanceTo(double when) { DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)Math.Max(0,when-Now())); }
         private static double Length(List<GuardPoint3> route)
         { double n=0; for(int i=1;i<route.Count;i++) { var a=route[i-1]; var b=route[i]; n+=Math.Sqrt(Math.Pow(a.X-b.X,2)+Math.Pow(a.Y-b.Y,2)+Math.Pow(a.Z-b.Z,2)); } return n; }
-        public static IEnumerator Run(BuildingDirectory directory,TownGeometry geometry,List<RoutePoint> route)
+        public static IEnumerator Run(BuildingDirectory directory,TownGeometry geometry,List<RoutePoint> route,bool combat=false)
         {
             var game=GameManager.Instance;
             AdvanceTo(Math.Floor(Now()/86400)*86400+19*3600+(Now()%86400>=19*3600 ? 86400 : 0));
             game.PlayerEntity.GlobalVars.SetGlobalVar(0,false);
             game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
             game.PlayerMotor.transform.position=geometry.ScenePoint(route[0])+Vector3.up*2;
-            var root=new GameObject("Living Cities automatic refuge flight probe"); GameObject foe=null;
+            var root=new GameObject("Living Cities automatic refuge flight probe"); GameObject foe=null,opponent=null;
             var controller=root.AddComponent<GuardPopulation>(); controller.enabled=false; controller.EnemyDefense=false;
             try
             {
@@ -32,12 +32,34 @@ namespace LivingCities.DFU
                 type.GetProperty("Roster").GetSetMethod(true).Invoke(controller,new object[] { roster });
                 type.GetField("directory",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(controller,directory);
                 type.GetField("geometry",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(controller,geometry);
+                GuardActor fighter=null;
+                if(combat)
+                {
+                    roster.Dispatch("probe-existing-defense",Now(),new Dictionary<string,List<SavedRoutePoint>> {
+                        { guard.Id,new List<SavedRoutePoint> { new SavedRoutePoint { X=route[0].X,Z=route[0].Z },
+                            new SavedRoutePoint { X=route[4].X,Z=route[4].Z } } }
+                    },1,2.8,12);
+                    opponent=GameObjectHelper.CreateFoeGameObjects(geometry.ScenePoint(route[4])+Vector3.up,MobileTypes.Rat,1,MobileReactions.Hostile)[0];
+                    opponent.GetComponent<EnemyMotor>().enabled=false; opponent.GetComponent<EnemyAttack>().enabled=false; opponent.SetActive(true);
+                    fighter=GuardActor.Create(roster,guard.Id,directory.transform,geometry,Now());
+                    var views=(Dictionary<string,GuardActor>)type.GetField("actors",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(controller);
+                    views.Add(guard.Id,fighter);
+                    yield return null;
+                    fighter.BeginDefenseCombat(opponent.GetComponent<DaggerfallEntityBehaviour>(),Now());
+                    float ready=Time.realtimeSinceStartup+5;
+                    while(!fighter.CombatReady && Time.realtimeSinceStartup<ready) yield return null;
+                    if(!fighter.CombatReady || !fighter.GetComponent<EnemyAttack>().enabled || guard.Duty!=GuardDuty.Engaged)
+                        throw new InvalidOperationException("Native combat fixture failed to start.");
+                }
                 foe=GameObjectHelper.CreateFoeGameObjects(geometry.ScenePoint(route[2])+Vector3.up,MobileTypes.Ghost,1,MobileReactions.Hostile)[0];
                 foe.GetComponent<EnemyMotor>().enabled=false; foe.GetComponent<EnemyAttack>().enabled=false; foe.SetActive(true);
                 yield return null; foe.GetComponent<EnemyMotor>().IsHostile=true; controller.enabled=true;
                 float deadline=Time.realtimeSinceStartup+10;
                 while(guard.Refuge==null && Time.realtimeSinceStartup<deadline) yield return null;
                 if(guard.Refuge==null) throw new InvalidOperationException("Automatic update did not start refuge flight.");
+                if(combat && (fighter.CombatReady || fighter.DefenseTarget || fighter.GetComponent<EnemyMotor>().enabled ||
+                    fighter.GetComponent<EnemyAttack>().enabled || fighter.GetComponent<EnemySenses>().Target))
+                    throw new InvalidOperationException("Refuge flight retained native combat controls or target.");
                 var journey=guard.Refuge;
                 double outside=Length(journey.Exterior)*journey.SecondsPerMetre, inside=Length(journey.Interior)*journey.SecondsPerMetre;
                 AdvanceTo(journey.StartsAt+outside/2); yield return new WaitForSecondsRealtime(0.2f);
@@ -60,12 +82,14 @@ namespace LivingCities.DFU
                 AdvanceTo(journey.ReleasedAt.Value+inside+1); yield return new WaitForSecondsRealtime(0.2f);
                 if(controller.ActiveCount!=0) throw new InvalidOperationException("Departed guard remained visible inside refuge.");
                 game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(0.5f);
-                AdvanceTo(journey.ReleasedAt.Value+inside+outside+1); yield return new WaitForSecondsRealtime(0.2f);
-                if(guard.Duty!=GuardDuty.Posted || guard.Refuge!=null || roster.Reports.Count!=0 || !guard.IsAlive)
+                double returning=Length(journey.ReturnExterior ?? journey.Exterior)*journey.SecondsPerMetre;
+                AdvanceTo(journey.ReleasedAt.Value+inside+returning+1); yield return new WaitForSecondsRealtime(0.2f);
+                if(guard.Duty!=GuardDuty.Posted || guard.Refuge!=null || roster.Reports.Count!=(combat ? 1 : 0) || !guard.IsAlive)
                     throw new InvalidOperationException("Automatic refuge return did not restore the living post guard.");
+                if(combat) Debug.Log("LIVING_CITIES_HAUNTING_COMBAT_PASS: native combat started, ghost flight disabled motor/attack/target, interior shelter and post return preserved report.");
                 Debug.Log("LIVING_CITIES_HAUNTING_FLIGHT_PASS: normal Update detection, exterior actor, doorway hiding, interior shelter, quest release and post return.");
             }
-            finally { if(foe) UnityEngine.Object.Destroy(foe); UnityEngine.Object.Destroy(root); }
+            finally { if(foe) UnityEngine.Object.Destroy(foe); if(opponent) UnityEngine.Object.Destroy(opponent); UnityEngine.Object.Destroy(root); }
             yield return null;
         }
     }

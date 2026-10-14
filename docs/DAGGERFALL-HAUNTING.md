@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Native combat-to-refuge flight verified
+
+The automatic flight probe now also starts a real GuardActor in native defense combat against a stationary rat, waits for CombatReady and enabled attacks, then introduces a hostile Ghost. Normal controller Update admits refuge and clears CombatReady, DefenseTarget, motor, attacks and sensed target. The guard then passes the existing exterior/interior shelter and curse-release/post-return checks, retaining the existing report. This verifies combat shutdown and subsequent actor phases, not every continuous collision step or response to an actively attacking opponent. All prior refuge checks pass in the same run. No production behavior changed in this verification step.
+
+Evidence: `work/HauntingCombat-flight-pass.log`, marker `LIVING_CITIES_HAUNTING_COMBAT_PASS`. Unity build passes; installed development 0.3.29 SHA-256 `988F4BE8BAB88037D627FA106F166B46B141ADC0E52E75A16712B8733CEF7E1A`. The native combat transition limitation below is superseded. Other response duties, interior evacuation, city admission, actual city save/load and scaling remain open.
+
 ## Exterior combat interruption
 
 An exterior Engaged guard can now take refuge after a visible haunting threat. The observer captures the existing actor's health/position before planning. Admission requires a surveyed current-position-to-post route, appends it after the reversed refuge approach, then clears active engagement and response fields while retaining health and historical reports. Missing/invalid routes reject admission before roster mutation. Existing refuge actor handling ends native combat before placement. This does not implement interior combat evacuation or interruption of Responding/Searching/Returning duties.
