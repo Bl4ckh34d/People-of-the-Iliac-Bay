@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Actual city save/reload
+
+DaggerfallSaveProbe now writes and reloads the dedicated test character's `Living Cities - Daggerfall city preview` save (SAVE50). It requires a LivingCitiesTest- character name. Native load reconstructs the full city population and guard controller; checks compare serialized household identities/attributes and saved routine routes, all49 guard IDs, daily haunting policy, and all611 managed residents' activities/buildings/route positions sampled at the same noon timestamp. All comparisons passed. The probe does not yet verify continuous rendered movement or steady-state city performance. Normal play still requires the forthcoming city-preview admission setting; loading this fixture alone does not bypass that gate.
+
+Evidence: `work/CitySave-pass.log`, marker `LIVING_CITIES_CITY_SAVE_PASS`. Unity build and the combined refuge/city suite pass. Installed development0.3.29 SHA-256 `0A8806CE92C988F75EDC37C651796D63D11F380BD94A3C4079B0420D9E3182FF`. Earlier no-save fixture descriptions below are historical: the suite now deliberately saves only its dedicated test character.
+
 ## Full city population fixture
 
 An opt-in DaggerfallPopulationProbe now temporarily permits actual StreetPopulation and GuardPopulation admission in map1291010263, after the refuge suite. The first run failed because the Gothway-only gates prevented setup. Those gates now accept Daggerfall only while the disposable probe is active; normal player sessions remain gated. Guard target sizing uses SettlementScale.City for Daggerfall. Quest-binding scope is unchanged.
