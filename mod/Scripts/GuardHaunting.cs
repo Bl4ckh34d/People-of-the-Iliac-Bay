@@ -17,9 +17,13 @@ namespace LivingCities.DFU
             GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0),now); }
         private void ReleaseSafeRefuges(double now)
         {
-            if(HauntedNow(now)) return;
+            bool lifted=GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0);
             foreach(var guard in Roster.Guards)
-                if(guard.IsAlive && guard.Refuge!=null) guard.Refuge.Release(now);
+                if(guard.IsAlive && guard.Refuge!=null && !guard.Refuge.ReleasedAt.HasValue)
+                {
+                    var release=SettlementHaunting.FirstSafeTime(Roster.SettlementId,lifted,guard.Refuge.StartsAt,now);
+                    if(release.HasValue) guard.Refuge.Release(release.Value);
+                }
         }
         private bool ObserveHauntingThreat(DaggerfallEntityBehaviour target,double now)
         {

@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Dawn catch-up
+
+Refuge release now uses the first safe05:00 after departure, even when the next evaluation occurs on a later haunted night. This prevents guards remaining sheltered indefinitely while the town is unloaded. When LiftedCurse is first observed before that dawn, release uses the observation time: native global state does not expose its historical completion timestamp. GuardRefugeJourney still clamps release until physical shelter arrival and evaluates the complete reverse journey.
+
+Two core scenarios failed before implementation;259/259 now pass. The live Ghost/Wraith probe also invokes the real release adapter at22:00 three days later, verifies first-dawn release and advances the roster back to Posted. It remains a controlled adapter call, not an actual city save/reload. Full refuge probe and Unity build pass. Evidence: `work/HauntingDawn-red.log`, `work/HauntingDawn-green.log`, `work/HauntingDawn-live-pass.log`. Latest installed development0.3.29 hash `68F3FB86197DB6B1659750B79D4E3396AC117465C10F776509F8C1557891AC6F` supersedes earlier hashes. Automatic full actor flight, interrupted patrol/combat duties and city admission remain pending.
+
 ## Visible haunting detection and at-post assignment
 
 GuardHaunting now checks live LiftedCurse, the city/time policy, living active hostile Ghost/Wraith entities, and20m line of sight from each eligible guard post. It searches up to8 nearest original Town23 wall entrances (models444/445/446), checks the exterior route, lazily surveys interior routes and tries unoccupied destinations. The selected journey uses3.8m/s and12 game seconds per real second. The enemy-defense survey calls this before normal attackable-target filtering; classified haunting threats never receive defense dispatch even if no refuge route exists. ReleaseSafeRefuges requests return when the policy becomes safe. Caches clear with settlement ownership.

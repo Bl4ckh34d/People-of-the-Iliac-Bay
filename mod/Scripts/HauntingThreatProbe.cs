@@ -61,6 +61,13 @@ namespace LivingCities.DFU
                         if((bool)observe.Invoke(controller,new object[] { target,19*3600d }))
                             throw new InvalidOperationException("Resolved curse still classifies haunting threat.");
                         game.PlayerEntity.GlobalVars.SetGlobalVar(0,false);
+                        var release=type.GetMethod("ReleaseSafeRefuges",BindingFlags.Instance|BindingFlags.NonPublic);
+                        release.Invoke(controller,new object[] { 3*86400d+22*3600 });
+                        if(roster.Guards[0].Refuge.ReleasedAt!=86400+5*3600)
+                            throw new InvalidOperationException("Unloaded guard did not depart at its first safe dawn.");
+                        roster.Advance(3*86400d+22*3600);
+                        if(roster.Guards[0].Duty!=GuardDuty.Posted || roster.Guards[0].Refuge!=null)
+                            throw new InvalidOperationException("Unloaded refuge journey failed to complete its return.");
                         Debug.Log("LIVING_CITIES_HAUNTING_THREAT_PASS: "+kind+"; actual exterior and unloaded interior route; no crime report.");
                     }
                     finally { if(foe) UnityEngine.Object.Destroy(foe); UnityEngine.Object.Destroy(root); }
