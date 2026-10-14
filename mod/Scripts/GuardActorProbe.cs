@@ -47,7 +47,7 @@ namespace LivingCities.DFU
                 var light = actor.GetComponentInChildren<Light>();
                 var flame = actor.GetComponentInChildren<DaggerfallBillboard>();
                 if (!light || !light.enabled || light.type != LightType.Point || light.shadows != LightShadows.None ||
-                    Math.Abs(light.range - 8) > 0.01 || !flame || flame.Summary.Archive != 210)
+                    Math.Abs(light.range - 8) > 0.01 || !flame || flame.Summary.Archive != 210 || flame.Summary.Record != 17)
                     throw new InvalidOperationException("Guard torch lacks classic flame or bounded real light.");
                 torch.Invoke(actor, new object[] { true, false, 8f });
                 if (light.enabled || !flame.gameObject.activeInHierarchy)

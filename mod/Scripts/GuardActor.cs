@@ -11,7 +11,7 @@ namespace LivingCities.DFU
 {
     // A physical view of one saved guard. The owning controller supplies time and
     // scene geometry; visibility never creates a new identity or revives a death.
-    public sealed class GuardActor : MonoBehaviour
+    public sealed partial class GuardActor : MonoBehaviour
     {
         public string GuardId { get; private set; }
         private GuardRoster roster;
@@ -30,7 +30,7 @@ namespace LivingCities.DFU
                 torchBody = new GameObject("Living Cities carried torch");
                 torchBody.transform.SetParent(transform, false);
                 torchBody.transform.localPosition = new Vector3(0.38f, 0.3f, 0.15f);
-                var flame = GameObjectHelper.CreateDaggerfallBillboardGameObject(210, 0, torchBody.transform);
+                var flame = GameObjectHelper.CreateDaggerfallBillboardGameObject(210, 17, torchBody.transform);
                 flame.transform.localPosition = Vector3.zero;
                 var size = flame.GetComponent<DaggerfallBillboard>().Summary.Size;
                 flame.transform.localScale = Vector3.one * (0.8f / Mathf.Max(0.01f, size.y));
@@ -130,6 +130,7 @@ namespace LivingCities.DFU
 
         public void BeginCombat(double now)
         {
+            if (DefenseTarget) EndCombat();
             if (combatStart != null || CombatReady) return;
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (IsInterior && guard.Interior != null && guard.Interior.LastSeenSuspect == null)
@@ -161,6 +162,7 @@ namespace LivingCities.DFU
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (!guard.IsAlive || entity.CurrentHealth <= 0) return;
             guard.HealthFraction = (double)entity.CurrentHealth / entity.MaxHealth;
+            if (!IsInterior && DefenseTarget) { CaptureDefense(now); displayedAt = now; return; }
             if (IsInterior)
             {
                 if (guard.Interior == null || guard.Interior.Returning) return;
@@ -188,6 +190,7 @@ namespace LivingCities.DFU
         }
         public void EndCombat()
         {
+            ClearDefenseTarget();
             if (combatStart != null) { StopCoroutine(combatStart); combatStart = null; }
             GetComponent<EnemyMotor>().enabled = false;
             GetComponent<EnemyMotor>().IsHostile = false;

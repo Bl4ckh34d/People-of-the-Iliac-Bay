@@ -34,6 +34,7 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class GuardReport
     {
+        public string ThreatId;
         public List<SavedRoutePoint> SearchRoute;
         public int SearchLaps;
         public CrimeSceneWarning Warning;
@@ -78,12 +79,22 @@ namespace LivingCities.Core
         }
         public List<GuardRecord> Dispatch(string incidentId, double now, IDictionary<string, List<SavedRoutePoint>> routes,
             int maximumResponders, double metresPerRealSecond, double gameSecondsPerRealSecond)
+        { return DispatchGuards(incidentId, null, now, routes, maximumResponders, metresPerRealSecond, gameSecondsPerRealSecond); }
+        public List<GuardRecord> DispatchDefense(string incidentId, string threatId, double now,
+            IDictionary<string, List<SavedRoutePoint>> routes, int maximumResponders, double metresPerRealSecond, double gameSecondsPerRealSecond)
+        {
+            Require(!string.IsNullOrWhiteSpace(threatId) && threatId.Length <= 128, "Invalid defense target.");
+            return DispatchGuards(incidentId, threatId, now, routes, maximumResponders, metresPerRealSecond, gameSecondsPerRealSecond);
+        }
+        private List<GuardRecord> DispatchGuards(string incidentId, string threatId, double now,
+            IDictionary<string, List<SavedRoutePoint>> routes, int maximumResponders, double metresPerRealSecond, double gameSecondsPerRealSecond)
         {
             Require(!string.IsNullOrWhiteSpace(incidentId) && Time(now) && routes != null && maximumResponders >= 0 && maximumResponders <= 256 &&
                 Finite(metresPerRealSecond) && metresPerRealSecond > 0 && Finite(gameSecondsPerRealSecond) && gameSecondsPerRealSecond > 0, "Invalid guard dispatch.");
             Require(Finite(gameSecondsPerRealSecond / metresPerRealSecond) && gameSecondsPerRealSecond / metresPerRealSecond > 0,
                 "Invalid guard travel rate.");
             var report = Reports.Find(r => r.Id == incidentId);
+            Require(report == null || report.ThreatId == threatId, "Report target cannot change.");
             if (report != null && report.GuardIds.Count > 0) return ReportGuards(report);
             // Validate and copy all supplied routes before assigning any guard.
             var candidates = new List<GuardRecord>();
@@ -116,7 +127,8 @@ namespace LivingCities.Core
             }
             Advance(now);
             candidates.Sort((a, b) => { int order = lengths[a.Id].CompareTo(lengths[b.Id]); return order != 0 ? order : string.CompareOrdinal(a.Id, b.Id); });
-            if (report == null) { report = new GuardReport { Id = incidentId }; Reports.Add(report); }
+            if (report == null && threatId != null && (candidates.Count == 0 || maximumResponders == 0)) return new List<GuardRecord>();
+            if (report == null) { report = new GuardReport { Id = incidentId, ThreatId = threatId }; Reports.Add(report); }
             for (int i = 0; i < Math.Min(maximumResponders, candidates.Count); i++)
             {
                 var guard = candidates[i];
@@ -333,6 +345,9 @@ namespace LivingCities.Core
             foreach (var report in source.Reports)
             {
                 Require(report != null && !string.IsNullOrWhiteSpace(report.Id) && reports.Add(report.Id) && report.GuardIds != null && report.GuardIds.Count <= 256, "Invalid guard report.");
+                Require(report.ThreatId == null || !string.IsNullOrWhiteSpace(report.ThreatId) && report.ThreatId.Length <= 128 &&
+                    !report.BuildingKey.HasValue && !report.Investigation && !report.AwaitingApproach &&
+                    report.SearchRoute == null && report.Warning == null, "Invalid saved defense report.");
                 bool outdoorSearch = report.Investigation && !report.BuildingKey.HasValue;
                 Require(report.Warning == null || (report.Investigation && report.BuildingKey.HasValue), "Warning needs an indoor investigation.");
                 Require(!report.AwaitingApproach || report.BuildingKey.HasValue && !report.Investigation &&
@@ -352,6 +367,7 @@ namespace LivingCities.Core
                 Require(Time(report.FirstArrivalAt) && (report.HasArrival ? report.Investigation && report.GuardIds.Count > 0 : report.FirstArrivalAt == 0),
                     "Invalid investigation arrival evidence.");
                 var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey, Investigation = report.Investigation,
+                    ThreatId = report.ThreatId,
                     AwaitingApproach = report.AwaitingApproach,
                     SearchRoute = patrol, SearchLaps = report.SearchLaps,
                     Warning = CrimeSceneWarning.Copy(report.Warning),

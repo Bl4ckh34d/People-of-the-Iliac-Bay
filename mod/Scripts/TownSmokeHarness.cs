@@ -500,6 +500,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: paired guard patrols; character=" + character);
                 yield break;
             }
+            if (Array.IndexOf(probeArguments, "-livingcities-guard-defense-probe") >= 0)
+            {
+                yield return GuardDefenseProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: guard enemy defense; character=" + character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-guard-actor-probe") >= 0)
             {
                 yield return GuardActorProbe.Run();

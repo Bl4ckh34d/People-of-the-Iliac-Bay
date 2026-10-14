@@ -95,6 +95,13 @@
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
         {
+          "Value": true,
+          "Name": "EnemyDefense",
+          "Description": "Finite exterior guards defend against visible hostile creatures and attackers. Native quest AI restrictions apply. Disabling sends defenders physically back to posts.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
           "Min": 0, "Max": 4, "Value": 2,
           "Name": "MaximumPatrolPairs",
           "Description": "Maximum two-person night patrols. At least four available guards stay at stationary posts. Zero disables patrols; unusable circuits leave guards posted.",

@@ -352,6 +352,7 @@ public static class LivingCitiesBuild
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         VerifyPatrolPairPlan();
         VerifyGuardPatrolRoster();
+        VerifyGuardDefense();
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
     }
     private static void VerifyPatrolPairPlan()
@@ -374,6 +375,23 @@ public static class LivingCitiesBuild
         Require(Math.Abs(route[0].Z - 12) < 0.000001 && route[route.Count - 1].Z == -20,
             "Patrol interruption retains actual position and post");
         Debug.Log("LIVING_CITIES_PATROL_PAIR_PLAN_PASS: shared join, spaced phase, native fractional save and physical return.");
+    }
+    private static void VerifyGuardDefense()
+    {
+        var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 7 }, 1);
+        var roster = store.GetOrCreateGuards(1, 1, new[] { new SavedRoutePoint() });
+        string id = roster.Guards[0].Id;
+        roster.DispatchDefense("defense:probe", "native:987654", 10,
+            new Dictionary<string,List<SavedRoutePoint>> { { id, new List<SavedRoutePoint> {
+                new SavedRoutePoint(), new SavedRoutePoint { X = 10 } } } },1,2,12);
+        roster.Engage(id,70); roster.ObserveEngagement(id,new SavedRoutePoint { X = 11 },0.5,71,true,new SavedRoutePoint { X = 12 });
+        var restored = new WorldStateStore(1);
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
+        var copy=restored.GetGuards(1);
+        Require(copy.Reports[0].ThreatId=="native:987654" && copy.Guards[0].Duty==GuardDuty.Engaged &&
+            copy.Guards[0].HealthFraction==0.5 && copy.Guards[0].EngagementPosition.X==11,
+            "Native world save retains defensive enemy target, health and actual position");
+        Debug.Log("LIVING_CITIES_GUARD_DEFENSE_SAVE_PASS: enemy target, engagement position and wounded health survive native world serialization.");
     }
     private static void VerifyGuardPatrolRoster()
     {

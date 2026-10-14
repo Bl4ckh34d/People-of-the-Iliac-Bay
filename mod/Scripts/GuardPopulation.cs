@@ -394,6 +394,7 @@ namespace LivingCities.DFU
             if (awaitingSight && routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) ReportNative(false);
             if (interior) { UpdateInterior(now); return; }
             HideNative();
+            if (routeTick) SurveyEnemyThreats(now);
             foreach (var guard in Roster.Guards)
             {
                 if (!guard.IsAlive) continue;
@@ -409,8 +410,8 @@ namespace LivingCities.DFU
                 if (!close && guard.Duty != GuardDuty.Engaged)
                 { if (actors.TryGetValue(guard.Id, out actor) && actor) actor.gameObject.SetActive(false); continue; }
                 actor = View(guard, now); actor.gameObject.SetActive(true);
-                if (guard.Duty != GuardDuty.Engaged && actor.GetComponent<EnemyMotor>().IsHostile &&
-                    actor.GetComponent<EnemySenses>().Target == game.PlayerEntityBehaviour)
+                if (actor.GetComponent<EnemyMotor>().IsHostile && (actor.DefenseTarget ||
+                    guard.Duty != GuardDuty.Engaged && actor.GetComponent<EnemySenses>().Target == game.PlayerEntityBehaviour))
                 {
                     if (guard.IncidentId == null)
                     {
@@ -420,8 +421,11 @@ namespace LivingCities.DFU
                             { guard.Id, new List<SavedRoutePoint> { actual, actual } } }, 1, 2.8, 12);
                     }
                     if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None) game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
+                    var defense = Roster.Reports.Find(r => r.Id == guard.IncidentId);
+                    if (defense != null) defense.ThreatId = null;
                     actor.BeginCombat(now);
                 }
+                if (UpdateEnemyDefense(guard,actor,now,routeTick)) continue;
                 if (guard.Duty == GuardDuty.Engaged)
                 {
                     actor.Capture(now);
@@ -519,6 +523,7 @@ namespace LivingCities.DFU
             if (approachSurvey != null) { StopCoroutine(approachSurvey); approachSurvey = null; }
             if (patrolSurvey != null) { StopCoroutine(patrolSurvey); patrolSurvey = null; }
             patrolTemplates.Clear();
+            defenseEnemies.Clear();
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);
