@@ -347,9 +347,15 @@ namespace LivingCities.DFU
         private GuardActor View(GuardRecord guard, double now)
         {
             GuardActor actor;
+            bool indoors=guard.Interior!=null || GuardActor.RefugeIndoors(guard,now);
+            if (actors.TryGetValue(guard.Id,out actor) && actor && actor.IsInterior!=indoors)
+            {
+                actor.EndCombat(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);
+                actors.Remove(guard.Id);
+            }
             if (!actors.TryGetValue(guard.Id, out actor) || !actor)
             {
-                actor = guard.Interior != null ? GuardActor.CreateInterior(Roster, guard.Id, interior.transform, now) :
+                actor = indoors ? GuardActor.CreateInterior(Roster, guard.Id, interior.transform, now) :
                     GuardActor.Create(Roster, guard.Id, directory.transform, geometry, now);
                 actors[guard.Id] = actor;
             }
@@ -412,6 +418,8 @@ namespace LivingCities.DFU
             {
                 if (!guard.IsAlive) continue;
                 if (guard.Interior != null) continue;
+                if (GuardActor.RefugeIndoors(guard,now))
+                { GuardActor sheltered; if (actors.TryGetValue(guard.Id,out sheltered) && sheltered) sheltered.gameObject.SetActive(false); continue; }
                 var investigation = Roster.Reports.Find(r => r.Id == guard.IncidentId && r.Investigation);
                 if (investigation != null && investigation.BuildingKey.HasValue && guard.Duty == GuardDuty.Searching)
                 { GuardActor hidden; if (actors.TryGetValue(guard.Id, out hidden) && hidden) hidden.gameObject.SetActive(false); continue; }
@@ -423,6 +431,7 @@ namespace LivingCities.DFU
                 if (!close && guard.Duty != GuardDuty.Engaged)
                 { if (actors.TryGetValue(guard.Id, out actor) && actor) actor.gameObject.SetActive(false); continue; }
                 actor = View(guard, now); actor.gameObject.SetActive(true);
+                if (guard.Refuge!=null) { actor.EndCombat(); actor.Place(now); continue; }
                 if (actor.GetComponent<EnemyMotor>().IsHostile && (actor.DefenseTarget ||
                     guard.Duty != GuardDuty.Engaged && actor.GetComponent<EnemySenses>().Target == game.PlayerEntityBehaviour))
                 {
@@ -487,13 +496,20 @@ namespace LivingCities.DFU
             foreach (var pair in actors)
             {
                 var guard = Roster.Guards.Find(g => g.Id == pair.Key);
-                if (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey)
-                { if (pair.Value) { pair.Value.EndCombat(); Destroy(pair.Value.gameObject); } expired.Add(pair.Key); }
+                bool refugeHere=GuardActor.RefugeIndoors(guard,now) && guard.Refuge.BuildingKey==interior.EntryDoor.buildingKey;
+                if (!refugeHere && (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey))
+                { if (pair.Value) { pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); Destroy(pair.Value.gameObject); } expired.Add(pair.Key); }
             }
             foreach (var id in expired) actors.Remove(id);
             foreach (var guard in Roster.Guards)
             {
                 if (!guard.IsAlive) continue;
+                if (guard.Refuge!=null)
+                {
+                    if (GuardActor.RefugeIndoors(guard,now) && guard.Refuge.BuildingKey==interior.EntryDoor.buildingKey)
+                    { var refugeActor=View(guard,now); refugeActor.gameObject.SetActive(true); refugeActor.EndCombat(); refugeActor.Place(now); }
+                    continue;
+                }
                 var report = Roster.Reports.Find(r => r.Id == guard.IncidentId);
                 if (guard.Interior == null && guard.Duty == GuardDuty.Searching && entryGround.HasValue &&
                     report != null && report.BuildingKey == interior.EntryDoor.buildingKey)

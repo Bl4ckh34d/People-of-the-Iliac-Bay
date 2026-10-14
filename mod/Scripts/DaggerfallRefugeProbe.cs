@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallConnect.Utility;
@@ -103,6 +104,20 @@ namespace LivingCities.DFU
                 if ((actor.transform.position-beforeExit).sqrMagnitude<0.0001f)
                     throw new InvalidOperationException("Released refuge actor did not move.");
                 UnityEngine.Object.Destroy(actor.gameObject);
+                var controllerObject=new GameObject("Living Cities refuge controller probe");
+                var controller=controllerObject.AddComponent<GuardPopulation>(); controller.enabled=false;
+                try
+                {
+                    var type=typeof(GuardPopulation);
+                    type.GetProperty("Roster").GetSetMethod(true).Invoke(controller,new object[] { roster });
+                    type.GetField("interior",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(controller,interior);
+                    var update=type.GetMethod("UpdateInterior",BindingFlags.Instance|BindingFlags.NonPublic);
+                    update.Invoke(controller,new object[] { 100001d });
+                    if(controller.ActiveCount!=1) throw new InvalidOperationException("Controller must show the released refuge guard in its interior.");
+                    update.Invoke(controller,new object[] { 200000d });
+                    if(controller.ActiveCount!=0) throw new InvalidOperationException("Controller retained a refuge guard after it left the interior.");
+                }
+                finally { UnityEngine.Object.Destroy(controllerObject); }
                 Debug.Log("LIVING_CITIES_REFUGE_ACTOR_PASS: model="+representative.Key+"; saved shelter placement and exit movement.");
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(1);

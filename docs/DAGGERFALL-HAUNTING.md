@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Controller refuge views
+
+GuardPopulation now selects refuge indoor views only for the matching building and phase, hides sheltered guards outside, bypasses normal crime/combat handling during refuge travel, and replaces a view whose indoor/exterior ownership changed. Expired views deactivate immediately before deferred destruction, avoiding an extra active body in the same frame.
+
+A live controlled test initially failed because UpdateInterior ignored refuge state. It now shows exactly one actor while exiting and zero after departure for all three representative wall models. The test invokes the disabled controller's UpdateInterior with synthetic roster/time, so it does not prove normal Update sequencing, ghost-triggered flight or a full city save. Evidence `work/RefugeController-red.log` and `work/RefugeController-green.log`. Existing GuardBuildingProbe passes native alarm, delayed finite arrival, doorway entry, wounded interior save/load and return (`work/RefugeController-building-regression.log`). Core254/254 and Unity build pass. Latest installed development0.3.29 SHA-256: `CDC91C12C2DBC8D2474DDCBCB089F3F8C96DFF47DC1E549B2A4BEAB4ECEDD7EE`. Next integrate refuge allocation/ghost detection and interrupted-duty handling; city admission remains disabled.
+
 ## Refuge actor placement foundation
 
 GuardActor now recognizes refuge interior phases, places the native guard body at the saved local floor position with its controller ground offset, uses idle while sheltered and movement while exiting, and deactivates a view when its journey crosses into the other scene. Refuge Capture preserves health/time without invoking crime-search observation. This does not yet wire GuardPopulation view selection or ghost-triggered admission.
