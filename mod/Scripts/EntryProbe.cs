@@ -38,6 +38,8 @@ namespace LivingCities.DFU
             var crime = game.PlayerEntity.CrimeCommitted;
             var guardOption = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.NonPublic | BindingFlags.Instance);
             bool oldGuardOption = (bool)guardOption.GetValue(adapter);
+            guardOption.SetValue(adapter, false);
+            adapter.GetComponent<GuardPopulation>().Clear();
             int before = ((WorldState)adapter.GetSaveData()).EntryReports.Count;
             string witnessId = witness.Resident.Id;
             try

@@ -22,13 +22,20 @@ namespace LivingCities.DFU
             this.interior = interior;
             var markers = new List<Vector3>(interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Enter));
             markers.Sort((a, b) => { int c = a.x.CompareTo(b.x); return c != 0 ? c : a.z.CompareTo(b.z); });
+            // Native enter markers can sit on an upper storey. Use the actual
+            // interior exit door first, as PlayerEnterExit does for player landing.
+            Vector3 door, normal;
+            if (interior.FindClosestInteriorDoor(DaggerfallStaticDoors.GetDoorPosition(interior.EntryDoor), out door, out normal))
+                markers.Insert(0, door + normal * 0.8f);
             Vector3 seed = Vector3.zero; bool found = false;
             foreach (var marker in markers)
             {
                 for (int radius = 0; radius <= 2 && !found; radius++)
                     for (int z = -radius; z <= radius && !found; z++)
                         for (int x = -radius; x <= radius && !found; x++)
-                            found = Floor(marker + new Vector3(x * 0.8f, 0, z * 0.8f), 2, 5, out seed) && Clear(seed);
+                            // Enter markers identify the doorway's floor. Starting the
+                            // ray two metres higher can select the attic above this room.
+                            found = Floor(marker + new Vector3(x * 0.8f, 0, z * 0.8f), 0.2f, 5, out seed) && Clear(seed);
                 if (found) break;
             }
             if (!found) return;

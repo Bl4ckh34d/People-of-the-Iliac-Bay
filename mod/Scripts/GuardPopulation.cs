@@ -133,9 +133,10 @@ namespace LivingCities.DFU
                 var resident = hitTarget ? hitTarget.GetComponent<ResidentActor>() : null;
                 var streets = GetComponent<StreetPopulation>();
                 // Vanilla reports every mobile-citizen weapon hit immediately.
-                // Public witnesses and supported indoor escape plans supply the actual report.
+                // Managed citizens report through witnesses/discovery, including when
+                // no exit route is available. A navigation failure cannot create knowledge.
                 if (resident && streets && streets.ReactionsEnabled && streets.FindActor(resident.Resident.Id) == resident &&
-                    (!GameManager.Instance.PlayerEnterExit.IsPlayerInside || streets.HasEscapingWitness(resident.Resident.Id, Now()) || streets.IsConcealedHit(resident.Resident.Id))) return;
+                    resident.Resident.IsAlive) return;
             }
             var room = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ? GameManager.Instance.PlayerEnterExit.Interior : null;
             int? building = room ? (int?)room.EntryDoor.buildingKey : null;

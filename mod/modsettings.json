@@ -38,7 +38,7 @@
       "IsAdvanced": false,
       "Keys": [
         {
-          "Value": false,
+          "Value": true,
           "Name": "ExperimentalExteriorGuards",
           "Description": "Gothway Garden finite guards: posts, physical response, combat and timed search/return. Surveyed buildings receive delayed doorway reinforcements with indoor save/load. Visit the exterior first to survey routes. Unsurveyed interiors still use vanilla guards. Patrol pairs and wall posts remain in development.",
           "$version": "v1",
@@ -47,7 +47,7 @@
         {
           "Value": true,
           "Name": "CivilianReactions",
-          "Description": "Generated residents flee or counterattack; children flee. Direct witnesses warn at most two people. With experimental guards enabled, supported indoor witnesses run through the door to a guard before reporting; outdoor witnesses report locally. Missing escape routes retain native alarms and room retreat. Stationary NPC reactions remain in development.",
+          "Description": "Generated residents flee or counterattack; children flee. Direct witnesses warn at most two people. With finite guards enabled, indoor witnesses must reach a guard before reporting; outdoor witnesses report locally. Missing paths do not create immediate guard knowledge. Stationary NPC reactions remain in development.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },

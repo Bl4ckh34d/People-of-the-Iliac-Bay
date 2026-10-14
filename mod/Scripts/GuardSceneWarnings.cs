@@ -6,6 +6,13 @@ namespace LivingCities.DFU
 {
     public sealed partial class GuardPopulation
     {
+        public bool OccupiesCrimeScene(int buildingKey, double now)
+        {
+            return Roster != null && directory && GameManager.Instance.PlayerGPS.HasCurrentLocation &&
+                GameManager.Instance.PlayerGPS.CurrentLocation.MapTableData.MapId == Roster.SettlementId &&
+                Roster.Reports.Exists(r => r.BuildingKey == buildingKey && r.Investigation && r.HasArrival &&
+                    now >= r.FirstArrivalAt && now < r.FirstArrivalAt + UnwitnessedScene.OccupationSeconds);
+        }
         private void AdvanceSceneWarnings()
         {
             var game = GameManager.Instance;

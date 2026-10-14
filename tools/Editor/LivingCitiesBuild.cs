@@ -617,7 +617,7 @@ public static class LivingCitiesBuild
         Require(data.GetValue<bool>("Diagnostics", "EnableF8Panel"), "Panel toggle default");
         Require(data.GetValue<bool>("General", "StreetPopulation"), "Street population default");
         Require(data.GetValue<bool>("General", "QuestHouseholds"), "Quest household pilot default");
-        Require(!data.GetValue<bool>("General", "ExperimentalExteriorGuards"), "Exterior guard preview is opt-in");
+        Require(data.GetValue<bool>("General", "ExperimentalExteriorGuards"), "Finite guards default on for supported-town gameplay");
         Require(data.GetValue<int>("Guards", "MaximumResponders") == 4, "Guard response limit default");
         Require(data.GetValue<int>("Guards", "ActorRadius") == 160, "Guard actor radius default");
         Debug.Log("LIVING_CITIES_SETTINGS_VERIFIED: twelve native menu controls deserialize with expected types and defaults.");

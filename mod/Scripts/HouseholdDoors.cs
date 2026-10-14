@@ -23,6 +23,9 @@ namespace LivingCities.DFU
             if (summary.BuildingType < DFLocation.BuildingTypes.House1 ||
                 summary.BuildingType > DFLocation.BuildingTypes.House6 || summary.FactionId != 0)
                 return null;
+            var guards = GetComponent<GuardPopulation>();
+            if (guards && guards.OccupiesCrimeScene(summary.buildingKey, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()))
+                return true; // Entry is governed by the ten-second crime-scene leave warning.
             bool? locked = HouseholdRoutineLocked(summary.buildingKey);
             if (!locked.HasValue || DaggerfallBankManager.IsHouseOwned(summary.buildingKey)) return null;
             return !locked.Value;

@@ -93,17 +93,23 @@ namespace LivingCities.DFU
             double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             responses.Murder(actor, actors.Values, id => GetState(id, now).Activity == Activity.Sleep, now,
                 interior ? interior.EntryDoor.buildingKey : -1);
+            PrepareIndoorEscapes(now);
+        }
+        private float nextEscapePreparation;
+        private void PrepareIndoorEscapes(double now)
+        {
             if (!interior || indoorGeometry == null) return;
             var guards = GetComponent<GuardPopulation>();
             var outside = guards ? guards.WitnessRoute(interior.EntryDoor.buildingKey, now) : null;
             if (outside == null) return;
             foreach (var witness in actors.Values)
             {
-                if (!witness || !witness.Resident.IsAlive || witness == actor) continue;
+                if (!witness || !witness.Resident.IsAlive) continue;
                 var alarm = worldStore.ActiveAlarm(witness.Resident.Id, now);
-                if (alarm == null || alarm.VictimId != actor.Resident.Id) continue;
+                if (alarm == null) continue;
                 var person = alarm.People.Find(p => p.ResidentId == witness.Resident.Id);
-                if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape != null) continue;
+                if (person == null || !person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape != null ||
+                    person.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 var route = indoorGeometry.RouteToExit(witness.transform.position - Vector3.up);
                 if (route.Count < 2) continue;
                 var escape = CivilianEscape.Create(person, now, route, outside, ResidentMovement.FleeSpeed(witness.Resident.AppearanceSeed));
@@ -297,6 +303,11 @@ namespace LivingCities.DFU
             double seconds = now.ToSeconds() + (now.Second - Math.Floor(now.Second));
             if (ReactionsEnabled && worldStore != null && !GameManager.IsGamePaused)
             {
+                if (Time.unscaledTime >= nextEscapePreparation)
+                {
+                    nextEscapePreparation = Time.unscaledTime + 0.5f;
+                    PrepareIndoorEscapes(seconds);
+                }
                 var guards = GetComponent<GuardPopulation>();
                 foreach (var alarm in worldStore.AdvanceEscapes(population.SettlementId, seconds))
                     if (guards) guards.ReportEscapedWitness(alarm, seconds);
@@ -304,7 +315,8 @@ namespace LivingCities.DFU
             var loadedInterior = game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
             if (interior != loadedInterior)
             {
-                ClearActors(); ClearCorpses(); interior = loadedInterior; indoorSlots.Clear();
+                RestoreHouseFlats(); ClearActors(); ClearCorpses(); interior = loadedInterior; indoorSlots.Clear();
+                if (interior) ReconcileHouseFlats(interior);
                 indoorGeometry = interior ? new InteriorGeometry(interior) : null;
                 indoorBeds.Clear(); bedClaims.Clear();
                 if (interior && population != null)
@@ -490,6 +502,7 @@ namespace LivingCities.DFU
         public void Clear()
         {
             entryJourneys.Clear();
+            RestoreHouseFlats();
             FlushOutdoorDeparture();
             if (building != null) { StopCoroutine(building); building = null; }
             ClearActors(); ClearCorpses(); plans.Clear(); Ready = false;

@@ -296,6 +296,42 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Residential fixture is not a three-person family.");
                 foreach (var resident in family.Residents)
                     if (!streets.FindActor(resident.Id)) throw new InvalidOperationException("Residential family actor missing.");
+                int nativeOccupants = 0;
+                foreach (var npc in game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>())
+                {
+                    nativeOccupants++;
+                    Debug.Log("LIVING_CITIES_HOUSE_NATIVE_NPC: " + npc.DisplayName + "; gender=" + npc.Data.gender +
+                        "; flat=" + npc.Data.billboardArchiveIndex + ":" + npc.Data.billboardRecordIndex +
+                        "; position=" + npc.transform.localPosition + "; faction=" + npc.Data.factionID);
+                }
+                foreach (var resident in family.Residents)
+                    Debug.Log("LIVING_CITIES_HOUSE_RESIDENT: " + streets.FindActor(resident.Id).Person.NameNPC +
+                        "; position=" + streets.FindActor(resident.Id).transform.localPosition);
+                if (nativeOccupants + family.Residents.Count > family.BedCapacity)
+                    throw new InvalidOperationException("Native house occupants duplicate the generated family beyond bed capacity.");
+                var homeGeometry = new InteriorGeometry(game.PlayerEnterExit.Interior);
+                if (!homeGeometry.EntryGround.HasValue ||
+                    homeGeometry.EntryGround.Value.y - game.PlayerEnterExit.Interior.transform.position.y > 0.3f)
+                    throw new InvalidOperationException("Residential entrance graph incorrectly starts on the attic floor.");
+                foreach (var resident in family.Residents)
+                {
+                    var familyActor = streets.FindActor(resident.Id);
+                    if (!homeGeometry.EntryGround.HasValue || Mathf.Abs(familyActor.transform.position.y - 1 - homeGeometry.EntryGround.Value.y) > 0.3f ||
+                        homeGeometry.RouteToExit(familyActor.transform.position - Vector3.up).Count < 2)
+                        throw new InvalidOperationException("Awake family spawned above the entrance floor or cannot reach the exit.");
+                }
+                var mother = family.Residents.Find(r => r.AgeGroup == ResidentAgeGroup.Adult && r.Sex == ResidentSex.Female);
+                var motherActor = streets.FindActor(mother.Id);
+                if (motherActor.Person.Gender != Genders.Female || motherActor.Person.PersonFaceRecordId < 0 || motherActor.Person.PersonFaceRecordId >= 96)
+                    throw new InvalidOperationException("Female family resident received a male dialogue identity or portrait.");
+                game.TalkManager.TalkToMobileNPC(motherActor.Person);
+                yield return new WaitForSecondsRealtime(0.3f);
+                if (game.TalkManager.MobileNPC != motherActor.Person || !(DaggerfallUI.UIManager.TopWindow is DaggerfallWorkshop.Game.UserInterface.DaggerfallTalkWindow))
+                    throw new InvalidOperationException("Native family dialogue opened for a different person.");
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-female-dialogue.png"));
+                yield return new WaitForSecondsRealtime(0.5f);
+                DaggerfallUI.Instance.PopToHUD();
+                Debug.Log("LIVING_CITIES_FAMILY_DIALOGUE_PASS: " + motherActor.Person.NameNPC + "; female portrait=" + motherActor.Person.PersonFaceRecordId);
                 var hiddenForTheft = new HashSet<GameObject>();
                 var currentRoom = game.PlayerEnterExit.Interior;
                 foreach (var npc in currentRoom.GetComponentsInChildren<StaticNPC>()) hiddenForTheft.Add(npc.gameObject);

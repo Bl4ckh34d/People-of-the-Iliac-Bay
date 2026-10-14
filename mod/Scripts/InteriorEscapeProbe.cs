@@ -71,10 +71,21 @@ namespace LivingCities.DFU
                 // Controlled placement isolates actual path traversal from the daily anchor assignment.
                 witness.Place(chosen, Vector3.forward, true); victim.Place(chosen, Vector3.forward, true);
                 string id = witness.Resident.Id, name = witness.Person.NameNPC;
-                game.WeaponManager.WeaponDamage(null, false, false, victim.transform, victim.transform.position, Vector3.forward);
+                var graphField = typeof(StreetPopulation).GetField("indoorGeometry", BindingFlags.Instance | BindingFlags.NonPublic);
+                var actualGraph = graphField.GetValue(streets);
+                graphField.SetValue(streets, null);
+                try
+                {
+                    game.WeaponManager.WeaponDamage(null, false, false, victim.transform, victim.transform.position, Vector3.forward);
+                    if (guards.Roster.Reports.Count != 0)
+                        throw new InvalidOperationException("Unavailable escape graph invented an immediate guard report.");
+                }
+                finally { graphField.SetValue(streets, actualGraph); }
                 var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var alarm = store.ActiveAlarm(id, clock.ToSeconds());
                 var person = alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
+                float retryDeadline = Time.realtimeSinceStartup + 2;
+                while (person != null && person.Escape == null && Time.realtimeSinceStartup < retryDeadline) yield return null;
                 if (person == null || person.Escape == null)
                 {
                     var inside = geometry.RouteToExit(chosen);
@@ -95,7 +106,9 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Runtime flight did not use the resident's stable randomized speed.");
                 var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 var saved = restored.ActiveAlarm(id, clock.ToSeconds()).People.Find(p => p.ResidentId == id);
-                if (saved.Escape == null || saved.Escape.ReportAt != person.Escape.ReportAt || saved.Escape.Speed != fleeSpeed)
+                // Native decimal JSON can round fractional absolute epochs by a few
+                // microseconds. Keep a sub-frame timing tolerance, not bit equality.
+                if (saved.Escape == null || Math.Abs(saved.Escape.ReportAt - person.Escape.ReportAt) > 0.001 || saved.Escape.Speed != fleeSpeed)
                     throw new InvalidOperationException("Escape timing or speed lost in native serialization: speed=" + fleeSpeed.ToString("R") +
                         "; saved=" + (saved.Escape == null ? "null" : saved.Escape.Speed.ToString("R")) +
                         "; timingDelta=" + (saved.Escape == null ? 0 : saved.Escape.ReportAt - person.Escape.ReportAt));
@@ -113,7 +126,7 @@ namespace LivingCities.DFU
                 clock = DaggerfallUnity.Instance.WorldTime.Now;
                 store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 alarm = store.ActiveAlarm(id, clock.ToSeconds()); person = alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
-                if (person == null || person.Escape == null || person.Escape.ReportAt != reportAt || person.Escape.Speed != fleeSpeed)
+                if (person == null || person.Escape == null || Math.Abs(person.Escape.ReportAt - reportAt) > 0.001 || person.Escape.Speed != fleeSpeed)
                     throw new InvalidOperationException("Real reload reset witness journey.");
                 clock.RaiseTime((float)Math.Max(0, person.Escape.ExitAt - clock.ToSeconds() + 1));
                 yield return null; yield return null;
