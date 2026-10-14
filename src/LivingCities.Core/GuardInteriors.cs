@@ -42,7 +42,12 @@ namespace LivingCities.Core
                 "Guard is not searching this interior.");
             guard.HealthFraction = health; room.Position = point;
             if (Distance3(room.Trail[room.Trail.Count - 1], point) >= 0.25) room.Trail.Add(Point3(point));
-            if (sees) { room.LastSeenSuspect = seen; guard.SearchUntil = now + 300; }
+            if (sees)
+            {
+                room.LastSeenSuspect = seen;
+                double occupation = Reports.Exists(r => r.Id == guard.IncidentId && r.Investigation) ? guard.ArrivesAt + 21600 : 0;
+                guard.SearchUntil = Math.Max(now + 300, occupation);
+            }
         }
         public GuardPoint3 InteriorPosition(string id, double now)
         {

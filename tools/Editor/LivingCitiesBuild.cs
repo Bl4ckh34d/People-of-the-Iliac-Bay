@@ -270,6 +270,7 @@ public static class LivingCitiesBuild
     }
     public static void VerifyGuardPersistence()
     {
+        VerifyCrimeScenePersistence();
         VerifyGuardHooks();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
@@ -304,6 +305,32 @@ public static class LivingCitiesBuild
         Require(restored.Snapshot().Version == 6 && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
+    }
+    private static void VerifyCrimeScenePersistence()
+    {
+        var store = new WorldStateStore(42);
+        var town = store.GetOrCreate(99, new[] { 7 }, 1);
+        var victim = town.Households[0].Residents[0];
+        var alarm = store.RecordViolence(99, victim.Id, 100);
+        store.LocateViolence(alarm.Id, 7, 1, 2, 3);
+        Population.MarkDead(town, victim.Id); store.RegisterUnwitnessedScene(alarm.Id);
+        Require(store.ObserveCrimeScenes(99, 7, 10000).Count == 0, "Unseen crime stays undiscovered while player remains inside");
+        Require(store.ObserveCrimeScenes(99, -1, 10001).Count == 1, "Departure queues discovery beyond alarm expiry");
+        var roster = store.GetOrCreateGuards(99, 1, new List<SavedRoutePoint> { new SavedRoutePoint() });
+        var guard = roster.Guards[0];
+        roster.CacheBuildingApproach(7, new SavedRoutePoint { X = 100 }, new Dictionary<string, List<SavedRoutePoint>> {
+            { guard.Id, new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 100 } } } });
+        roster.DispatchBuilding("discovery:" + alarm.Id, 7, 10001, 1, 2, 10, true);
+        double arrival = guard.ArrivesAt;
+        store.DiscoverCrimeScene(alarm.Id, arrival);
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native scene chronology round trip");
+        var scene = restored.Snapshot().AlarmIncidents[0].Scene;
+        var saved = restored.GetGuards(99);
+        Require(scene.DiscoveredAt == arrival && scene.Occupied(arrival + 21599) && !scene.Occupied(arrival + 21600) &&
+            saved.Reports[0].Investigation && saved.Guards[0].SearchUntil == arrival + 21600, "Native six-hour occupation survives reload");
+        Debug.Log("LIVING_CITIES_SCENE_PERSISTENCE_PASS: confirmed home death, departure, guard arrival and six-hour investigation survive native serialization.");
     }
     private static void VerifyGuardHooks()
     {

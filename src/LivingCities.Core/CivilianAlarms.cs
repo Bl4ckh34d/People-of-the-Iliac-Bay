@@ -20,6 +20,7 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class CivilianIncident
     {
+        public UnwitnessedScene Scene;
         public string Id, VictimId;
         public int SettlementId;
         public double StartedAt, ExpiresAt;
@@ -135,6 +136,7 @@ namespace LivingCities.Core
                     BuildingKey = alarm.BuildingKey, X = alarm.X, Y = alarm.Y, Z = alarm.Z };
                 Require(alarm.BuildingKey >= -1 && ValidCoordinate(alarm.X) && ValidCoordinate(alarm.Y) && ValidCoordinate(alarm.Z),
                     "Invalid saved crime location.");
+                copied.Scene = CopyScene(alarm, residents[alarm.VictimId]);
                 var people = new HashSet<string>();
                 foreach (var person in alarm.People)
                 {

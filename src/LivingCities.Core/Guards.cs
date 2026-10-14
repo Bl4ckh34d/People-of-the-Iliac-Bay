@@ -22,8 +22,19 @@ namespace LivingCities.Core
         public double DepartedAt, ArrivesAt, SearchUntil, DiedAt;
     }
     [Serializable]
+    public sealed class GuardArrivalEvidence
+    {
+        public string GuardId;
+        public double ScheduledAt;
+        public bool Arrived;
+    }
+    [Serializable]
     public sealed class GuardReport
     {
+        public List<GuardArrivalEvidence> Arrivals = new List<GuardArrivalEvidence>();
+        public bool Investigation;
+        public bool HasArrival;
+        public double FirstArrivalAt;
         public string Id;
         public int? BuildingKey;
         public SavedRoutePoint Entrance;
@@ -114,7 +125,17 @@ namespace LivingCities.Core
             {
                 if (!guard.IsAlive) continue;
                 AdvanceInterior(guard, now);
-                if (guard.Duty == GuardDuty.Responding && now >= guard.ArrivesAt) guard.Duty = GuardDuty.Searching;
+                if (guard.Duty == GuardDuty.Responding && now >= guard.ArrivesAt)
+                {
+                    guard.Duty = GuardDuty.Searching;
+                    var report = Reports.Find(r => r.Id == guard.IncidentId);
+                    if (report != null && report.Investigation)
+                    {
+                        report.Arrivals.Find(a => a.GuardId == guard.Id).Arrived = true;
+                        if (!report.HasArrival || guard.ArrivesAt < report.FirstArrivalAt)
+                        { report.HasArrival = true; report.FirstArrivalAt = guard.ArrivesAt; }
+                    }
+                }
                 if (guard.Duty == GuardDuty.Searching && now >= guard.SearchUntil)
                 {
                     double duration = guard.ArrivesAt - guard.DepartedAt;
@@ -247,7 +268,8 @@ namespace LivingCities.Core
                     Require(route.Count >= 2 && guard.IncidentId != null && guard.ArrivesAt >= guard.DepartedAt &&
                         source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.GuardIds != null && r.GuardIds.Contains(guard.Id)), "Invalid responding guard.");
                 if (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching)
-                    Require(guard.SearchUntil == guard.ArrivesAt + 300 && Distance(CopyPoint(guard.Post), route[0]) < 0.05, "Invalid guard search deadline or route origin.");
+                    Require(guard.SearchUntil == guard.ArrivesAt + (source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.Investigation) ? 21600 : 300) &&
+                        Distance(CopyPoint(guard.Post), route[0]) < 0.05, "Invalid guard search deadline or route origin.");
                 if (guard.Duty == GuardDuty.Returning)
                     Require(guard.DepartedAt == guard.SearchUntil && Distance(CopyPoint(guard.Post), route[route.Count - 1]) < 0.05, "Return route does not reach the assigned post.");
                 Require(guard.IsAlive == (guard.DeathPosition == null), "Guard death location disagrees with life state.");
@@ -277,10 +299,33 @@ namespace LivingCities.Core
                 Require(report != null && !string.IsNullOrWhiteSpace(report.Id) && reports.Add(report.Id) && report.GuardIds != null && report.GuardIds.Count <= 256, "Invalid guard report.");
                 Require(report.BuildingKey.HasValue == (report.Entrance != null), "Incomplete building report.");
                 Require(!report.BuildingKey.HasValue || report.BuildingKey.Value >= 0, "Invalid report building.");
-                var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey,
+                Require(!report.Investigation || report.BuildingKey.HasValue, "Investigation requires a building.");
+                Require(Time(report.FirstArrivalAt) && (report.HasArrival ? report.Investigation && report.GuardIds.Count > 0 : report.FirstArrivalAt == 0),
+                    "Invalid investigation arrival evidence.");
+                var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey, Investigation = report.Investigation,
+                    HasArrival = report.HasArrival, FirstArrivalAt = report.FirstArrivalAt,
                     Entrance = report.Entrance == null ? null : CopyPoint(report.Entrance) }; var responders = new HashSet<string>();
                 foreach (var id in report.GuardIds)
                 { Require(id != null && ids.Contains(id) && responders.Add(id), "Unknown or duplicate responder."); saved.GuardIds.Add(id); }
+                var arrivalIds = new HashSet<string>();
+                double firstArrival = double.MaxValue;
+                foreach (var arrival in report.Arrivals ?? new List<GuardArrivalEvidence>())
+                {
+                    Require(arrival != null && report.Investigation && responders.Contains(arrival.GuardId) &&
+                        arrivalIds.Add(arrival.GuardId) && Time(arrival.ScheduledAt), "Invalid responder arrival evidence.");
+                    var guard = copy.Find(arrival.GuardId);
+                    if (guard.IncidentId == report.Id && (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching))
+                        Require(arrival.ScheduledAt == guard.ArrivesAt && arrival.Arrived == (guard.Duty == GuardDuty.Searching),
+                            "Arrival evidence disagrees with responder travel.");
+                    Require(!arrival.Arrived || guard.IsAlive || guard.DiedAt >= arrival.ScheduledAt,
+                        "Guard died before the recorded arrival.");
+                    if (arrival.Arrived) firstArrival = Math.Min(firstArrival, arrival.ScheduledAt);
+                    saved.Arrivals.Add(new GuardArrivalEvidence { GuardId = arrival.GuardId,
+                        ScheduledAt = arrival.ScheduledAt, Arrived = arrival.Arrived });
+                }
+                Require(!report.Investigation || arrivalIds.Count == responders.Count, "Missing responder arrival evidence.");
+                Require(report.HasArrival == (firstArrival != double.MaxValue) &&
+                    report.FirstArrivalAt == (report.HasArrival ? firstArrival : 0), "Invalid first investigation arrival.");
                 if (saved.BuildingKey.HasValue)
                     foreach (var guard in copy.Guards)
                         if (guard.IsAlive && guard.IncidentId == saved.Id && guard.Duty != GuardDuty.Returning)

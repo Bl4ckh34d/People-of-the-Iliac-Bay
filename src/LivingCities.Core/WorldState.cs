@@ -156,6 +156,15 @@ namespace LivingCities.Core
                     copy.Garrisons.Add(GuardRoster.CopyValidated(garrison));
                 }
             }
+            foreach (var alarm in copy.AlarmIncidents)
+                if (alarm.Scene != null && alarm.Scene.Discovered)
+                {
+                    var roster = copy.Garrisons.Find(g => g.SettlementId == alarm.SettlementId);
+                    var report = roster == null ? null : roster.Reports.Find(r => r.Id == "discovery:" + alarm.Id);
+                    Require(report != null && report.Investigation && report.BuildingKey == alarm.BuildingKey &&
+                        report.HasArrival && report.FirstArrivalAt == alarm.Scene.DiscoveredAt,
+                        "Discovered scene lacks matching guard arrival evidence.");
+                }
             return copy;
         }
         private static void ValidateFamily(Household home)

@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+Next core checkpoint (not installed): confirmed unwitnessed home deaths, first departure/discovery chronology and six-hour finite guard investigations now persist. 159 core tests and DFU serializer checks pass. Discovery requires saved actual guard arrival; unknown location cannot trigger departure. Runtime crime concealment, departure/arrival wiring, corpse presentation and re-entry custody remain required before this becomes playable. Installed build remains 0.3.9. See CRIME-SCENE-DISCOVERY.md.
+
 0.3.9 implements saved indoor witness escape through entry-connected floors, exterior travel to a guard post, delayed finite response to the original house, and real SAVE32 reload/identity continuity. Core suite: 154 tests. Unwitnessed murder discovery, crime-scene occupation, broader interior navigation and stationary-NPC conversion remain open. See INDOOR-WITNESSES.md. M3/M4 are not complete.
 
 0.3.8 connects public citizen witnesses to finite guards: local visibility, immutable crime destination, bounded physical dispatch and persistent report identity. The controlled actual-player witness probe and 151 core tests pass. Autonomous indoor escape/reporting, unwitnessed murder discovery and original stationary-citizen conversion remain next behavior work. Art stays deferred; M3/M4 remain open.

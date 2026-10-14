@@ -32,13 +32,14 @@ namespace LivingCities.Core
             if (index < 0) BuildingApproaches.Add(validated); else BuildingApproaches[index] = validated;
         }
         public List<GuardRecord> DispatchBuilding(string incidentId, int buildingKey, double now,
-            int maximumResponders, double speed, double timeScale)
+            int maximumResponders, double speed, double timeScale, bool investigation = false)
         {
             Require(buildingKey >= 0 && !string.IsNullOrWhiteSpace(incidentId) && Time(now) &&
                 maximumResponders >= 0 && maximumResponders <= 256 && Finite(speed) && speed > 0 &&
                 Finite(timeScale) && timeScale > 0, "Invalid building dispatch.");
             var existing = Reports.Find(r => r.Id == incidentId);
             Require(existing == null || existing.BuildingKey == buildingKey, "Report cannot change its destination.");
+            Require(existing == null || existing.Investigation == investigation, "Report cannot change its investigation policy.");
             if (existing != null && existing.GuardIds.Count > 0) return ReportGuards(existing);
             var approach = BuildingApproaches.Find(a => a.BuildingKey == buildingKey);
             if (approach == null) return new List<GuardRecord>();
@@ -56,6 +57,12 @@ namespace LivingCities.Core
             var sent = Dispatch(incidentId, now, routes, maximumResponders, speed, timeScale);
             var report = Reports.Find(r => r.Id == incidentId);
             report.BuildingKey = buildingKey; report.Entrance = CopyPoint(approach.Entrance);
+            report.Investigation = investigation;
+            if (investigation) foreach (var guard in sent)
+            {
+                guard.SearchUntil = guard.ArrivesAt + 21600;
+                report.Arrivals.Add(new GuardArrivalEvidence { GuardId = guard.Id, ScheduledAt = guard.ArrivesAt });
+            }
             return sent;
         }
         private GuardBuildingApproach ValidateApproach(GuardBuildingApproach source)
