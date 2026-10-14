@@ -87,3 +87,11 @@ Screenshots of street and interior actors were inspected. Interior placement cur
 ## Indoor escape (0.3.9)
 
 `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -InteriorEscapeProbe` creates/replaces **SAVE32 â€” Living Cities - escaping witness** in house 1. It checks blocked-start rejection, a real weapon kill, delayed notification, physical escape movement, actual save/load, identity and movement outside, and finite reporting to the original house. Both guard and civilian-reaction options must be enabled when inspecting this fixture. The probe advances time to later travel deadlines; it does not benchmark all routes or interior layouts. Older character fixtures remain separate.
+
+## Residential family fixture and tavern audit, 14 October 2026
+
+Use **SAVE34 — Living Cities - residential family home**, character **LivingCitiesTest-f238d317**, for family observation. Building 196864 is House2 in residential block RESIAM10.RMB, model 320, with three beds and three residents (two adults, one child). The actual-player HousingProbe verifies all three actors and creates this separate save. SAVE28 and all older saves remain unchanged.
+
+The reported SAVE28 is building 131584. Both raw assets and the loaded native BuildingDirectory classify it as House2, not Tavern. It uses model 249 in TVRNAM00.RMB; actual Tavern 131590 reuses that model. The resemblance is real, but the tested allocation is residential. All three actual taverns (65542, 66061, 131590) are absent from both HousingSurvey profiles and the saved household list. Do not infer building use from exterior model or block-name prefix alone.
+
+Reproduce: `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -HousingProbe`. Evidence: `work/HousingProbe-pass.log`, markers LIVING_CITIES_HOUSING_LIVE_PASS and LIVING_CITIES_RESIDENTIAL_FIXTURE_PASS. Tavern staff homes and paid traveler reservations remain separate unfinished systems; this audit does not claim they are implemented.

@@ -109,3 +109,5 @@ Evidence: `work/unity-build-result.json`, `work/town-test.log`, historical `work
 Historical native damage completion prerequisite: per-hit finalizers preserve nested target scope and original exceptions. Actual patched-method checks pass in Unity. Runtime crime concealment, corpse cleanup and custody remain pending; installed 0.3.9 is unchanged.
 
 Household absence locks: when every living owner is away, lock the home even by day until one returns. Witnessed unauthorized entry is reported as trespassing through bounded citizen alarms and physical guard response. Use authoritative location, not actor visibility. See HOUSEHOLD-LOCKS.md; implementation pending.
+
+Housing report verified: SAVE28 is native House2 despite sharing model 249 with a tavern. All three actual town taverns are excluded from profiles and saved households. SAVE34 provides a clearer residential three-person family fixture. See TEST-FIXTURES.md.

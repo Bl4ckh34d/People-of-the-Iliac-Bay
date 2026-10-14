@@ -211,6 +211,60 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-housing-probe") >= 0)
+            {
+                int key = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - family home");
+                if (key < 0) throw new InvalidOperationException("Missing family fixture for housing audit.");
+                loaded = false; game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
+                float deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Housing fixture load timed out.");
+                var actualDirectory = game.StreamingWorld.GetCurrentBuildingDirectory();
+                var room = game.PlayerEnterExit.Interior;
+                BuildingSummary summary;
+                if (!room || !actualDirectory.GetBuildingSummary(room.EntryDoor.buildingKey, out summary))
+                    throw new InvalidOperationException("Loaded housing fixture has no building metadata.");
+                var profiles = HousingSurvey.Read(actualDirectory);
+                var savedTown = ((WorldState)adapter.GetSaveData()).Settlements.Find(t => t.SettlementId == mapId);
+                foreach (var tavern in actualDirectory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern))
+                    if (profiles.Exists(p => p.BuildingKey == tavern.buildingKey) || savedTown.Households.Exists(h => h.BuildingKey == tavern.buildingKey))
+                        throw new InvalidOperationException("Tavern guest beds entered the household survey.");
+                Debug.Log("LIVING_CITIES_HOUSING_LIVE_PASS: familySave=" + key + "; building=" + summary.buildingKey +
+                    "; type=" + summary.BuildingType + "; model=" + summary.ModelID + "; tavernsExcluded=" +
+                    actualDirectory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern).Count);
+                game.PlayerEnterExit.TransitionExterior();
+                yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
+                var clock = DaggerfallUnity.Instance.WorldTime.Now;
+                clock.RaiseTime((86400 + 7*3600 - (int)(clock.ToSeconds()%86400))%86400);
+                const int residentialKey = 196864;
+                BuildingSummary residential;
+                if (!actualDirectory.GetBuildingSummary(residentialKey, out residential) ||
+                    residential.BuildingType != DFLocation.BuildingTypes.House2 || residential.ModelID != 320)
+                    throw new InvalidOperationException("Residential fixture metadata changed.");
+                DaggerfallStaticDoors owner = null; StaticDoor entry = default(StaticDoor);
+                foreach (var candidate in actualDirectory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                    foreach (var door in candidate.Doors)
+                        if (door.doorType == DoorTypes.Building && door.buildingKey == residentialKey) { owner = candidate; entry = door; }
+                if (!owner) throw new InvalidOperationException("Residential fixture door missing.");
+                EnterInterior(owner.transform, entry);
+                yield return new WaitForSecondsRealtime(1.2f); DaggerfallUI.Instance.PopToHUD();
+                var family = savedTown.Households.Find(h => h.BuildingKey == residentialKey);
+                if (family == null || family.Residents.Count != 3 || family.BedCapacity != 3 ||
+                    family.Residents.FindAll(r => r.AgeGroup == ResidentAgeGroup.Child).Count != 1)
+                    throw new InvalidOperationException("Residential fixture is not a three-person family.");
+                foreach (var resident in family.Residents)
+                    if (!streets.FindActor(resident.Id)) throw new InvalidOperationException("Residential family actor missing.");
+                saved = false; SaveLoadManager.OnSave += OnSaved;
+                game.SaveLoadManager.Save(character, "Living Cities - residential family home");
+                deadline = Time.realtimeSinceStartup + 30;
+                while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+                SaveLoadManager.OnSave -= OnSaved;
+                if (!saved) throw new InvalidOperationException("Residential fixture save timed out.");
+                int residentialSave = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - residential family home");
+                Debug.Log("LIVING_CITIES_RESIDENTIAL_FIXTURE_PASS: save=" + residentialSave + "; building=" + residentialKey + "; beds=3; adults=2; children=1");
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: live housing classification; character=" + character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-crime-scene-probe") >= 0)
             {
                 yield return CrimeSceneProbe.Run();

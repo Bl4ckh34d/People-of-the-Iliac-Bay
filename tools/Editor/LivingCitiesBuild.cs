@@ -185,6 +185,27 @@ public static class LivingCitiesBuild
         }
         finally { UnityEngine.Object.DestroyImmediate(texture); }
     }
+    public static void AuditFixtureHousing()
+    {
+        string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
+        var reader = new ContentReader(Path.Combine(root, "GameFiles/arena2"));
+        DFLocation location;
+        Require(reader.GetLocation("Daggerfall", "Gothway Garden", out location), "Audit location");
+        for (int y = 0; y < location.Exterior.ExteriorData.Height; y++)
+        for (int x = 0; x < location.Exterior.ExteriorData.Width; x++)
+        {
+            string name = reader.BlockFileReader.CheckName(reader.MapFileReader.GetRmbBlockName(location, x, y));
+            var block = reader.BlockFileReader.GetBlock(name);
+            foreach (var summary in RMBLayout.GetBuildingData(block, x, y))
+            {
+                if (summary.BuildingType != DFLocation.BuildingTypes.Tavern && (summary.BuildingType < DFLocation.BuildingTypes.House1 || summary.BuildingType > DFLocation.BuildingTypes.House6)) continue;
+                var profiles = HousingSurvey.Read(reader, location, new[] { summary }, null);
+                if (profiles[0].BedCount < 3) continue;
+                Debug.Log("LIVING_CITIES_HOUSING_AUDIT: key=" + summary.buildingKey + "; type=" + summary.BuildingType +
+                    "; block=" + name + "; model=" + summary.ModelID + "; beds=" + profiles[0].BedCount);
+            }
+        }
+    }
     public static void VerifyHousing()
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
@@ -270,6 +291,7 @@ public static class LivingCitiesBuild
     }
     public static void VerifyGuardPersistence()
     {
+        AuditFixtureHousing();
         VerifyCrimeScenePersistence();
         VerifyGuardHooks();
         VerifyCivilianHitScopes();
