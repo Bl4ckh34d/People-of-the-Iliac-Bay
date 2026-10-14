@@ -64,9 +64,9 @@ namespace LivingCities.DFU
             var deathPosition = actor.transform.parent.InverseTransformPoint(actor.transform.position - Vector3.up);
             var guards = GetComponent<GuardPopulation>();
             var alarm = worldStore.RecordViolence(population.SettlementId, actor.Resident.Id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
-            bool concealed = interior && actor.Resident.HomeKey == deathBuilding && alarm.BuildingKey == deathBuilding &&
+            bool concealed = interior && (actor.Resident.HomeKey == deathBuilding || alarm.People.Exists(p => p.HeardViolence)) && alarm.BuildingKey == deathBuilding &&
                 guards && guards.OwnsSettlement &&
-                alarm.People.Count == 0 && concealedHits.Add(actor.Resident.Id);
+                !alarm.People.Exists(p => p.DirectWitness) && concealedHits.Add(actor.Resident.Id);
             return error => {
                 if (concealed) concealedHits.Remove(actor.Resident.Id);
                 if (!actor.Resident.IsAlive)
@@ -111,7 +111,7 @@ namespace LivingCities.DFU
                 var alarm = worldStore.ActiveAlarm(witness.Resident.Id, now);
                 if (alarm == null) continue;
                 var person = alarm.People.Find(p => p.ResidentId == witness.Resident.Id);
-                if (person == null || !person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape != null ||
+                if (person == null || (!person.DirectWitness && !person.HeardViolence) || person.Reaction != CivilianReaction.Flee || person.Escape != null ||
                     person.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 var route = indoorGeometry.RouteToExit(witness.transform.position - Vector3.up);
                 if (route.Count < 2) continue;
@@ -128,7 +128,7 @@ namespace LivingCities.DFU
                 var alarm = worldStore.ActiveAlarm(plan.Resident.Id, now);
                 if (alarm == null || alarm.VictimId != victimId) continue;
                 var p = alarm.People.Find(person => person.ResidentId == plan.Resident.Id);
-                if (p.Escape != null && p.DirectWitness && p.Reaction == CivilianReaction.Flee) return true;
+                if (p.Escape != null && (p.DirectWitness || p.HeardViolence) && p.Reaction == CivilianReaction.Flee) return true;
             }
             return false;
         }

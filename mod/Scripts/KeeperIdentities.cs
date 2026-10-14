@@ -98,11 +98,11 @@ namespace LivingCities.DFU
                 if (!alarm.HasLocation) worldStore.LocateViolence(alarm.Id, building, local.x, local.y, local.z);
                 foreach (var actor in actors.Values)
                 {
-                    if (!actor || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy ||
-                        GetState(actor.Resident.Id, now).Activity == Activity.Sleep ||
-                        !CivilianResponses.Sees(actor.transform.position, npc.transform.position, 20)) continue;
-                    var witness = worldStore.Witness(alarm.Id, actor.Resident.Id, now);
-                    var point = room.transform.InverseTransformPoint(actor.transform.position - Vector3.up);
+                    if (!actor || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy || actor.transform.parent != room.transform) continue;
+                    var witness = CivilianResponses.Observe(worldStore, alarm, actor.Resident.Id, actor.transform.position,
+                        npc.transform.position, GetState(actor.Resident.Id, now).Activity == Activity.Sleep && Reaction(actor.Resident.Id, now) == null, now, building);
+                    if (witness == null || witness.HasPosition) continue;
+                    var point = room.transform.InverseTransformPoint(actor.IsSleeping ? actor.transform.position : actor.transform.position - Vector3.up);
                     witness.HasPosition = true; witness.BuildingKey = building;
                     witness.X = point.x; witness.Y = point.y; witness.Z = point.z;
                 }
@@ -118,7 +118,7 @@ namespace LivingCities.DFU
                 var guards = GetComponent<GuardPopulation>();
                 var player = GameManager.Instance.PlayerEntity;
                 player.TallyCrimeGuildRequirements(false, 5);
-                bool concealed = alarm.People.Count == 0 && guards && guards.OwnsSettlement;
+                bool concealed = !alarm.People.Exists(p => p.DirectWitness) && guards && guards.OwnsSettlement;
                 if (concealed) worldStore.RegisterUnwitnessedScene(alarm.Id);
                 else player.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
                 PrepareIndoorEscapes(now);
@@ -135,12 +135,14 @@ namespace LivingCities.DFU
             foreach (var npc in interior.GetComponentsInChildren<StaticNPC>())
             {
                 var person = KeeperPerson(npc);
-                if (person == null || !person.IsAlive || KeeperSleeping(person, now) || !CivilianResponses.Sees(npc.transform.position, victim, 20)) continue;
-                var witness = worldStore.Witness(alarm.Id, person.Id, now);
+                if (person == null || !person.IsAlive) continue;
+                var witness = CivilianResponses.Observe(worldStore, alarm, person.Id, npc.transform.position,
+                    victim, KeeperSleeping(person, now), now, interior.EntryDoor.buildingKey);
                 if (witness == null || witness.HasPosition) continue;
                 var billboard = npc.GetComponent<DaggerfallBillboard>();
                 var offset = Vector3.up * (billboard ? billboard.Summary.Size.y * 0.5f : 1);
-                var local = interior.transform.InverseTransformPoint(npc.transform.position - offset);
+                var pose = npc.GetComponent<SleepingPose>();
+                var local = interior.transform.InverseTransformPoint(pose && pose.Active ? npc.transform.position : npc.transform.position - offset);
                 witness.HasPosition = true; witness.BuildingKey = interior.EntryDoor.buildingKey;
                 witness.X = local.x; witness.Y = local.y; witness.Z = local.z;
             }

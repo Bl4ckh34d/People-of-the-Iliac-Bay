@@ -34,6 +34,10 @@ namespace LivingCities.DFU
             var local = room.transform.InverseTransformPoint(npc.transform.position);
             store.LocateViolence(alarm.Id, keeper.WorkKey, local.x, local.y, local.z);
             // Controlled direct sight, not a claim of native keeper death or natural shop killing acceptance.
+            game.PlayerMotor.transform.position = npc.transform.position + Vector3.up * 0.2f;
+            Physics.SyncTransforms();
+            if (!CivilianResponses.Sees(npc.transform.position, game.PlayerMotor.transform.position, 20))
+                throw new InvalidOperationException("Controlled keeper witness cannot see the player.");
             streets.ObserveKeeperViolence(alarm, npc.transform.position, now);
             if (!streets.KeeperServiceBlocked(npc)) throw new InvalidOperationException("Witnessed violence did not block keeper service.");
             var ui = DaggerfallUI.UIManager.TopWindow;
@@ -134,6 +138,8 @@ namespace LivingCities.DFU
                     var visitor = visitorObject.AddComponent<ResidentActor>(); visitor.Initialize(hitResident, surname, navigation);
                     visitor.Place(npc.transform.position - Vector3.up + Vector3.right * 0.8f, Vector3.forward, true);
                     actorMap.Add(hitResident.Id, visitor); Physics.SyncTransforms();
+                    game.PlayerMotor.transform.position = npc.transform.position + Vector3.up * 0.2f;
+                    Physics.SyncTransforms();
                     game.WeaponManager.WeaponDamage(null, false, false, visitor.transform, visitor.transform.position, Vector3.forward);
                     var witnessed = store.NativeResponse(keeperId);
                     if (hitResident.IsAlive || witnessed == null || witnessed.VictimId != hitResident.Id ||
@@ -287,6 +293,7 @@ namespace LivingCities.DFU
                 if (!npc || !partner) throw new InvalidOperationException("Keeper death fixture lacks keeper or partner.");
                 // Controlled partner sight tests identity/violence integration, not general stair navigation.
                 partner.Place(npc.transform.position - Vector3.up + Vector3.right * 0.8f, Vector3.forward, true);
+                game.PlayerMotor.transform.position = npc.transform.position + Vector3.up * 0.2f;
                 streets.ReactionsEnabled = true; Physics.SyncTransforms();
                 int reports = guards.Roster.Reports.Count;
                 game.WeaponManager.WeaponDamage(null, false, false, npc.transform, npc.transform.position, Vector3.forward);

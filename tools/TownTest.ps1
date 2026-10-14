@@ -12,6 +12,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$GuardWitnessProbe,
     [switch]$HousingProbe,
     [switch]$KeeperResponseProbe,
+    [switch]$IndoorNoiseProbe,
     [switch]$CrimeSceneProbe,
     [switch]$OutdoorSceneProbe,
     [switch]$InteriorEscapeProbe,
@@ -43,6 +44,7 @@ if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
 if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
 if ($HousingProbe) { $arguments += ' -livingcities-housing-probe' }
 if ($KeeperResponseProbe) { $arguments += ' -livingcities-keeper-response-probe' }
+if ($IndoorNoiseProbe) { $arguments += ' -livingcities-indoor-noise-probe' }
 if ($CrimeSceneProbe) { $arguments += ' -livingcities-crime-scene-probe' }
 if ($OutdoorSceneProbe) { $arguments += ' -livingcities-outdoor-scene-probe' }
 if ($InteriorEscapeProbe) { $arguments += ' -livingcities-interior-escape-probe' }
@@ -87,6 +89,9 @@ try {
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_FAMILY_PASS:') { throw 'Keeper family/identity probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_RESPONSE_PASS:') { throw 'Keeper response/physical reporting probe did not complete.' }
     if ($KeeperResponseProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_RESPONSE_PASS:') { throw 'Keeper response probe did not complete.' }
+    if ($IndoorNoiseProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_NOISE_PASS:') { throw 'Indoor hearing/waking probe did not complete.' }
+    if ($IndoorNoiseProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_NOISE_REPORT_PASS:') { throw 'Indoor neutral reporting probe did not complete.' }
+    if ($IndoorNoiseProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_NOISE_RELOAD_PASS:') { throw 'Actual indoor wake reload probe did not complete.' }
     if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_KEEPER_WEAPON_PASS:') { throw 'Native weapon keeper witness probe did not complete.' }
     if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_KEEPER_DEATH_PASS:') { throw 'Native keeper death/reload probe did not complete.' }
     if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_KEEPER_SLEEP_PASS:') { throw 'Native keeper sleep/wake/reload probe did not complete.' }

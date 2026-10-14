@@ -8,7 +8,7 @@ Target: DFU 1.1.1, Unity 2019.4.40f1, C# 7.3. The simulation core has no Unity d
 
 See [milestones](docs/MILESTONES.md), [approved design](docs/superpowers/specs/2026-10-13-living-cities-design.md), and [foundation plan](docs/superpowers/plans/2026-10-13-population-foundation.md).
 
-Latest0.3.26 checkpoint: fixed bed-axis sleeper drawing, quiet guard patrols, saved once-only player/human warnings, and preserving guard roster expansion under the8% quota. Core227/227 and native sleeper/keeper/guard regressions pass. Indoor hearing/waking, full stationary NPC mortality and the requested Daggerfall-city extension remain open. See [15 October player follow-up](docs/2026-10-15-PLAYER-TEST-FOLLOWUP.md).
+Latest 0.3.27 checkpoint connects indoor lethal-violence hearing to generated residents and native keepers. Stealth, distance and saved wake checks control sleepers; hearing alone does not identify the attacker. A controlled live keeper test verifies awakening, blocked services, real save/load, awake-origin physical escape, neutral finite-guard reporting and actual guard arrival. Core244/244 pass. Bed-to-floor and attic stair escape, nonlethal/step/theft waking, broader stationary mortality and Daggerfall-city coverage remain unfinished. See [15 October player follow-up](docs/2026-10-15-PLAYER-TEST-FOLLOWUP.md).
 
 This is experimental software. Use the isolated portable player and dedicated test saves. Individual milestone completion is recorded only after its acceptance checks pass.
 

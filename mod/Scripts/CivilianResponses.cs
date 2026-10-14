@@ -33,9 +33,10 @@ namespace LivingCities.DFU
             if (tellGuards != null) tellGuards(alarm, victim.transform.position);
             foreach (var actor in actors)
             {
-                if (!actor || actor == victim || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy || sleeping(actor.Resident.Id)) continue;
-                if (!Sees(actor.transform.position, victim.transform.position, 20)) continue;
-                var person = store.Witness(alarm.Id, actor.Resident.Id, now);
+                if (!actor || actor == victim || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy ||
+                    (building >= 0 && actor.transform.parent != victim.transform.parent)) continue;
+                var person = Observe(store, alarm, actor.Resident.Id, actor.transform.position,
+                    victim.transform.position, sleeping(actor.Resident.Id) && Active(actor.Resident.Id, now) == null, now, building);
                 Locate(person, actor, building);
             }
             Debug.Log("LIVING_CITIES_VIOLENCE: " + alarm.Id + "; witnesses=" + alarm.People.Count);
@@ -66,12 +67,31 @@ namespace LivingCities.DFU
                 }
             }
         }
+        public static AlarmPerson Observe(WorldStateStore world, CivilianIncident alarm, string id,
+            Vector3 from, Vector3 victim, bool sleeping, double now, int building)
+        {
+            if (id == alarm.VictimId) return null;
+            AlarmPerson person = null;
+            if (building >= 0)
+            {
+                int skill = Mathf.Clamp((int)GameManager.Instance.PlayerEntity.Skills.GetLiveSkillValue(
+                    DaggerfallConnect.DFCareer.Skills.Stealth), 0, 100);
+                int roll = sleeping && !alarm.NoiseChecks.Exists(n => n.ResidentId == id) ? UnityEngine.Random.Range(0,100) : 0;
+                person = world.HearViolence(alarm.Id, id, building, now, sleeping, skill, Vector3.Distance(from, victim), roll);
+            }
+            // A sleeper awakened by a lethal blow hears the disturbance; seeing
+            // its aftermath alone does not establish the attacker's identity.
+            if (!sleeping && !GameManager.Instance.PlayerEntity.IsInvisible && Sees(from, victim, 20) &&
+                Sees(from, GameManager.Instance.PlayerMotor.transform.position, 20))
+                person = world.Witness(alarm.Id, id, now);
+            return person;
+        }
         private static float Distance(ResidentActor a, ResidentActor b)
         { return b ? (a.transform.position - b.transform.position).sqrMagnitude : float.PositiveInfinity; }
         private static void Locate(AlarmPerson person, ResidentActor actor, int building)
         {
             if (person == null || person.HasPosition) return;
-            var local = actor.transform.parent.InverseTransformPoint(actor.transform.position - Vector3.up);
+            var local = actor.transform.parent.InverseTransformPoint(actor.IsSleeping ? actor.transform.position : actor.transform.position - Vector3.up);
             person.HasPosition = true; person.BuildingKey = building;
             person.X = local.x; person.Y = local.y; person.Z = local.z;
         }

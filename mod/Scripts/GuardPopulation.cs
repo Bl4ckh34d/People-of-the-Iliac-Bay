@@ -280,6 +280,12 @@ namespace LivingCities.DFU
             bool reached = false;
             foreach (var person in alarm.People)
             {
+                if (!person.DirectWitness && person.HeardViolence && person.Escape != null && person.Escape.Arrived(now) &&
+                    alarm.Scene != null && worldStore.ReportHeardViolence(alarm.Id, person.ResidentId, now))
+                {
+                    UpdateInvestigations(now);
+                    Debug.Log("LIVING_CITIES_GUARD_HEARING_REPORT: " + alarm.Id + "; neutral physical contact");
+                }
                 if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape == null ||
                     !person.Escape.Arrived(now) || !streets.IsLivingResident(person.ResidentId)) continue;
                 if (Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
