@@ -344,7 +344,29 @@ public static class LivingCitiesBuild
         restored.Restore(legacy);
         Require(restored.Snapshot().Version == 6 && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
+        VerifyPatrolPairPlan();
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
+    }
+    private static void VerifyPatrolPairPlan()
+    {
+        var leaderJoin = new List<SavedRoutePoint> { new SavedRoutePoint { X = -10 }, new SavedRoutePoint() };
+        var followerJoin = new List<SavedRoutePoint> { new SavedRoutePoint { X = 2, Z = -20 }, new SavedRoutePoint { X = 2 } };
+        var circuit = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 20 },
+            new SavedRoutePoint { X = 20, Z = 20 }, new SavedRoutePoint { Z = 20 }, new SavedRoutePoint() };
+        double offset = 12000000000;
+        var plan = PatrolPairPlan.Create("leader", "follower", leaderJoin, followerJoin, circuit,
+            offset + 100, offset + 1000, 2, 10, 2);
+        string json = SaveLoadManager.Serialize(typeof(PatrolPairPlan), plan);
+        var copy = PatrolPairPlan.CopyValidated((PatrolPairPlan)SaveLoadManager.Deserialize(typeof(PatrolPairPlan), json));
+        Require(json == SaveLoadManager.Serialize(typeof(PatrolPairPlan), copy), "Native paired patrol round trip");
+        Require(Math.Abs(copy.Position("follower", offset + 250.5).X - 12.1) < 0.000001,
+            "Native fractional patrol phase");
+        Require(Math.Abs(copy.Position("leader", offset + 1025).X + 5) < 0.000001,
+            "Patrol dawn return must move rather than teleport");
+        var route = copy.ReturnRoute("follower", offset + 350);
+        Require(Math.Abs(route[0].Z - 12) < 0.000001 && route[route.Count - 1].Z == -20,
+            "Patrol interruption retains actual position and post");
+        Debug.Log("LIVING_CITIES_PATROL_PAIR_PLAN_PASS: shared join, spaced phase, native fractional save and physical return.");
     }
     private static void VerifyOutdoorCorpsePersistence()
     {

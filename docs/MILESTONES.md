@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+Post-0.3.23 source foundation adds a serializable two-guard patrol plan: separate physical joins, a shared circuit start, stable two-metre route phase, dawn/interruption return along already traversed paths and exact fractional game-time reconstruction. Circuits that let the pair approach within one metre are rejected. Core208/208 and native DFU standalone plan serialization pass. Installed0.3.23 remains unchanged; roster persistence, actual route survey, dispatch from patrol positions and playable pair walking remain unfinished. See superpowers/plans/2026-10-14-paired-guard-patrols.md. M4 stays open.
+
 0.3.23 gives visible exterior roster guards classic animated carried torches at game night, with warm shadow-free light. Menu controls enablement, radius and nearest-light budget (including zero for sprite-only torches). Daytime, interiors and death extinguish them. Night/day and budget controls pass the live controller test alongside combat/wounded reload/return. This advances M4 presentation; actual paired patrol routes and city-wall patrols remain unfinished.
 
 0.3.22 adds durable native building alarms while approaches are missing, original-destination retry, cancellation when crime clears and same-report reuse after reload. `AwaitingApproach` is validated and saved without inventing an entrance or responders. Physical dispatch starts only once a surveyed route and posted guards are available. This closes the native report queue gap listed in0.3.21; broader guard/civilian behavior and M2–M7 remain unfinished.
