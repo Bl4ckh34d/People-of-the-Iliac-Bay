@@ -293,6 +293,7 @@ public static class LivingCitiesBuild
     {
         AuditFixtureHousing();
         VerifyCrimeScenePersistence();
+        VerifyOutdoorCorpsePersistence();
         VerifyGuardHooks();
         VerifyCivilianHitScopes();
         var store = new WorldStateStore(42);
@@ -328,6 +329,31 @@ public static class LivingCitiesBuild
         Require(restored.Snapshot().Version == 6 && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
+    }
+    private static void VerifyOutdoorCorpsePersistence()
+    {
+        var store = new WorldStateStore(42); var town = store.GetOrCreate(99, new[] { 7, 8 }, 1);
+        var victim = town.Households[0].Residents[0]; var witness = town.Households[1].Residents[0];
+        var alarm = store.RecordViolence(99, victim.Id, 100); store.LocateViolence(alarm.Id, -1, 100, 0, 0);
+        Population.MarkDead(town, victim.Id); store.ConfirmCorpse(alarm.Id, 100, -1, 100, 0, 0);
+        store.NoticeOutdoorCorpse(alarm.Id, witness.Id, false, 150);
+        store.ObserveOutdoorCorpse(alarm.Id, false, 160);
+        var roster = store.GetOrCreateGuards(99, 1, new[] { new SavedRoutePoint() }); var guard = roster.Guards[0];
+        var target = new SavedRoutePoint { X = 100 };
+        roster.DispatchOutdoorInvestigation("outdoor:" + alarm.Id, 150,
+            new Dictionary<string, List<SavedRoutePoint>> { { guard.Id, new List<SavedRoutePoint> { guard.Post, target } } },
+            new List<SavedRoutePoint> { target, new SavedRoutePoint { X = 120 }, target }, 1, 2, 10);
+        var expected = roster.Position(guard.Id, 700);
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native exterior scene round trip");
+        var body = restored.Snapshot().AlarmIncidents[0].Corpse;
+        Require(body.Cleared && body.ClearedAt == 160 && body.Discovery.SeenAt == 150 &&
+            body.Discovery.ObserverId == witness.Id && !body.Discovery.PlayerPresent, "Native outdoor discovery retains evidence");
+        var saved = restored.GetGuards(99);
+        Require(saved.Position(guard.Id, 700).X == expected.X && saved.Guards[0].SearchUntil == 4250 &&
+            saved.Reports[0].FirstArrivalAt == 650, "Native outdoor patrol retains position and deadline");
+        Debug.Log("LIVING_CITIES_OUTDOOR_SCENE_PERSISTENCE_PASS: observation, departure cleanup and one-hour patrol survive native serialization.");
     }
     private static void VerifyCrimeScenePersistence()
     {

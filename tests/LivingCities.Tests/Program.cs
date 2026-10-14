@@ -14,6 +14,7 @@ namespace LivingCities.Tests
             AlarmTests.Add(cases);
             EscapeTests.Add(cases);
             CrimeSceneTests.Add(cases);
+            OutdoorCorpseTests.Add(cases);
             GuardTests.Add(cases);
             BedTests.Add(cases);
             SleepViewTests.Add(cases);

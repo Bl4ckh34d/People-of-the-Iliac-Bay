@@ -31,6 +31,8 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class GuardReport
     {
+        public List<SavedRoutePoint> SearchRoute;
+        public int SearchLaps;
         public List<GuardArrivalEvidence> Arrivals = new List<GuardArrivalEvidence>();
         public bool Investigation;
         public bool HasArrival;
@@ -153,7 +155,7 @@ namespace LivingCities.Core
             if (!guard.IsAlive) return CopyPoint(guard.DeathPosition);
             if (guard.Duty == GuardDuty.Engaged) return CopyPoint(guard.EngagementPosition);
             if (guard.Route.Count < 2 || guard.Duty == GuardDuty.Posted) return CopyPoint(guard.Post);
-            if (guard.Duty == GuardDuty.Searching) return CopyPoint(guard.Route[guard.Route.Count - 1]);
+            if (guard.Duty == GuardDuty.Searching) return SearchPosition(Reports.Find(r => r.Id == guard.IncidentId), guard, now);
             double duration = guard.ArrivesAt - guard.DepartedAt;
             double fraction = duration <= 0 ? 1 : Math.Max(0, Math.Min(1, (now - guard.DepartedAt) / duration));
             double along = Length(guard.Route) * fraction;
@@ -305,12 +307,22 @@ namespace LivingCities.Core
             foreach (var report in source.Reports)
             {
                 Require(report != null && !string.IsNullOrWhiteSpace(report.Id) && reports.Add(report.Id) && report.GuardIds != null && report.GuardIds.Count <= 256, "Invalid guard report.");
-                Require(report.BuildingKey.HasValue == (report.Entrance != null), "Incomplete building report.");
+                bool outdoorSearch = report.Investigation && !report.BuildingKey.HasValue;
+                Require((report.BuildingKey.HasValue || outdoorSearch) == (report.Entrance != null), "Incomplete report destination.");
                 Require(!report.BuildingKey.HasValue || report.BuildingKey.Value >= 0, "Invalid report building.");
-                Require(!report.Investigation || report.BuildingKey.HasValue, "Investigation requires a building.");
+                List<SavedRoutePoint> patrol = null;
+                if (outdoorSearch)
+                {
+                    patrol = CopyRoute(report.SearchRoute);
+                    Require(patrol.Count >= 3 && Length(patrol) > 0 && report.SearchLaps >= 1 && report.SearchLaps <= 1000 &&
+                        Distance(patrol[0], report.Entrance) < 0.05 && Distance(patrol[patrol.Count - 1], report.Entrance) < 0.05,
+                        "Invalid saved outdoor search route.");
+                }
+                else Require(report.SearchRoute == null && report.SearchLaps == 0, "Unexpected outdoor search route.");
                 Require(Time(report.FirstArrivalAt) && (report.HasArrival ? report.Investigation && report.GuardIds.Count > 0 : report.FirstArrivalAt == 0),
                     "Invalid investigation arrival evidence.");
                 var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey, Investigation = report.Investigation,
+                    SearchRoute = patrol, SearchLaps = report.SearchLaps,
                     HasArrival = report.HasArrival, FirstArrivalAt = report.FirstArrivalAt,
                     Entrance = report.Entrance == null ? null : CopyPoint(report.Entrance) }; var responders = new HashSet<string>();
                 foreach (var id in report.GuardIds)
@@ -334,14 +346,14 @@ namespace LivingCities.Core
                 Require(!report.Investigation || arrivalIds.Count == responders.Count, "Missing responder arrival evidence.");
                 Require(report.HasArrival == (firstArrival != double.MaxValue) &&
                     report.FirstArrivalAt == (report.HasArrival ? firstArrival : 0), "Invalid first investigation arrival.");
-                if (saved.BuildingKey.HasValue)
+                if (saved.BuildingKey.HasValue || outdoorSearch)
                     foreach (var guard in copy.Guards)
                         if (guard.IsAlive && guard.IncidentId == saved.Id && guard.Duty != GuardDuty.Returning)
                         {
                             Require(guard.Interior == null || guard.Interior.BuildingKey == saved.BuildingKey,
                                 "Indoor guard occupies another report building.");
                             Require(Distance(guard.Route[guard.Route.Count - 1], saved.Entrance) < 0.05,
-                                "Building response does not reach its reported entrance.");
+                                "Response does not reach its reported destination.");
                         }
                 copy.Reports.Add(saved);
             }

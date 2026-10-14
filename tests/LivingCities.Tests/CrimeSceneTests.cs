@@ -66,7 +66,7 @@ namespace LivingCities.Tests
                 CivilianIncident outside; var exterior = Scene(out outside); outside.Scene = null; outside.BuildingKey = -1;
                 exterior.ConfirmCorpse(outside.Id, 100);
                 Check.Equal(1, exterior.ObserveCorpses(1, null, 86501).Count);
-                Check.Equal(0, exterior.ObserveCorpses(1, -1, 86501).Count);
+                Check.Equal(1, exterior.ObserveCorpses(1, -1, 86501).Count);
             }));
             cases.Add(("Unwitnessed scene waits for departure and occupation starts at guard arrival", () => {
                 CivilianIncident alarm; var store = Scene(out alarm);

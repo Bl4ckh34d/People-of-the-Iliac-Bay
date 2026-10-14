@@ -138,7 +138,7 @@ namespace LivingCities.Core
                 Require(alarm.BuildingKey >= -1 && ValidCoordinate(alarm.X) && ValidCoordinate(alarm.Y) && ValidCoordinate(alarm.Z),
                     "Invalid saved crime location.");
                 copied.Scene = CopyScene(alarm, residents[alarm.VictimId]);
-                copied.Corpse = CopyCorpse(alarm, residents[alarm.VictimId]);
+                copied.Corpse = CopyCorpse(alarm, residents[alarm.VictimId], source);
                 var people = new HashSet<string>();
                 foreach (var person in alarm.People)
                 {

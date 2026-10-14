@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+Outdoor corpse amendment: first discovery plus player departure authorizes cleanup; unseen bodies persist. Later passersby are not murder suspects, searching guards refuse conversation, and witnessed corpse interaction triggers Theft. New core discovery evidence and one-hour finite patrol routes pass 170 tests and native serialization; runtime wiring is pending and installed 0.3.12 is unchanged. See OUTDOOR-CRIME-SCENES.md.
+
 0.3.12 corpse checkpoint: generated residents killed by native weapon damage leave saved placeholder bodies at their death positions. Guard discovery clears them, including after reload. CrimeSceneProbe and the escaping-witness regression pass; core suite is 162/162. Resident-specific corpse art, bed corpse presentation, loot and other death paths remain pending. See CRIME-SCENE-DISCOVERY.md.
 
 Physical-space requirement: moving NPCs must avoid and pass each other, with bounded local queries, doorway yielding and distinct waiting positions. Direct scheduled placement currently permits overlaps. See NPC-LOCAL-AVOIDANCE.md; implementation pending.
