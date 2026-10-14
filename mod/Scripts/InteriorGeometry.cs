@@ -122,6 +122,24 @@ namespace LivingCities.DFU
             }
             return route;
         }
+        public bool StandBesideBed(BedAnchor bed, out Vector3 ground)
+        {
+            Vector3 center = interior.transform.TransformPoint(bed.LocalCenter);
+            Vector3 side = interior.transform.TransformDirection(bed.LocalSideDirection);
+            Vector3 head = interior.transform.TransformDirection(bed.LocalHeadDirection);
+            foreach (float sign in new[] { 1f,-1f })
+                foreach (float along in new[] { 0f,-0.25f,0.25f })
+                {
+                    Vector3 candidate = center+side*sign*(bed.Width*0.5f+Radius+0.15f)+head*along*bed.Length;
+                    if (Floor(candidate,0.1f,1.6f,out ground) && ground.y < center.y-0.1f && Clear(ground)) return true;
+                }
+            foreach (float sign in new[] { -1f,1f })
+            {
+                Vector3 candidate = center+head*sign*(bed.Length*0.5f+Radius+0.15f);
+                if (Floor(candidate,0.1f,1.6f,out ground) && ground.y < center.y-0.1f && Clear(ground)) return true;
+            }
+            ground=Vector3.zero; return false;
+        }
         private GuardPoint3 LocalPoint(Vector3 world)
         { var p = interior.transform.InverseTransformPoint(world); return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
         private static Vector3Int Cell(Vector3 point, Vector3 seed)

@@ -27,6 +27,7 @@ namespace LivingCities.DFU
             var npc = Array.Find(room.GetComponentsInChildren<StaticNPC>(true), n=>n.Data.hash == keeper.NativeHash);
             var pose = npc.GetComponent<SleepingPose>();
             if (!pose || !pose.Active) throw new InvalidOperationException("Indoor noise fixture keeper is not sleeping.");
+            Vector3 bedPosition = npc.transform.position;
             var town = store.Snapshot().Settlements.Find(t=>t.SettlementId == keeper.SettlementId);
             Resident victim = null;
             foreach (var home in town.Households) foreach (var person in home.Residents)
@@ -64,6 +65,10 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(0.25f);
                 if (pose.Active || !streets.KeeperServiceBlocked(npc))
                     throw new InvalidOperationException("Heard violence did not wake native keeper and block services.");
+                if (Vector3.Distance(npc.transform.position,bedPosition)>3 || Mathf.Abs(npc.transform.position.y-bedPosition.y)>1.5f)
+                    throw new InvalidOperationException("Awakened keeper teleported away from its bed instead of standing beside it.");
+                if (observer.Escape==null)
+                    throw new InvalidOperationException("Awakened keeper did not prepare an automatic bed-origin escape.");
                 if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Hearing alone accused player of murder.");
                 Debug.Log("LIVING_CITIES_INDOOR_NOISE_PASS: controlled blocked sound wakes real native keeper, retains identity, blocks service and does not identify player");
@@ -97,18 +102,9 @@ namespace LivingCities.DFU
                     Debug.Log("LIVING_CITIES_INDOOR_NOISE_RELOAD_PASS: actual save/load preserves woken keeper and unidentified evidence; save="+slot);
                 }
                 finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
-                // Start the separate reporting check at the keeper's actual awake
-                // standing position. This does not certify upstairs bed-to-floor travel.
+                // Continue the actual automatically planned bed-origin journey.
                 var guards = adapter.GetComponent<GuardPopulation>();
-                var graph = (InteriorGeometry)typeof(StreetPopulation).GetField("indoorGeometry", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(streets);
-                var billboard = npc.GetComponent<DaggerfallBillboard>();
-                Vector3 ground = npc.transform.position - Vector3.up * billboard.Summary.Size.y * 0.5f;
-                var inside = graph.RouteToExit(ground);
-                var outside = guards.WitnessRoute(keeper.WorkKey, clock.ToSeconds());
-                if (inside.Count < 2 || outside == null) throw new InvalidOperationException("Awake noise-report fixture has no physical route.");
-                var point = room.transform.InverseTransformPoint(ground);
-                observer.X = point.x; observer.Y = point.y; observer.Z = point.z; observer.BuildingKey = keeper.WorkKey;
-                observer.Escape = CivilianEscape.Create(observer, clock.ToSeconds(), inside, outside, 4);
+                if (observer.Escape==null) throw new InvalidOperationException("Reload lost automatic bed-origin journey.");
                 var liveTown = store.GetOrCreate(keeper.SettlementId, new int[0]);
                 Population.MarkDead(liveTown, victim.Id); store.ConfirmCorpse(alarm.Id, clock.ToSeconds());
                 store.RegisterUnwitnessedScene(alarm.Id);
@@ -128,7 +124,7 @@ namespace LivingCities.DFU
                 while (!alarm.Scene.Discovered && Time.realtimeSinceStartup < arrivalDeadline) yield return null;
                 if (!alarm.Scene.Discovered || !report.HasArrival || game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Neutral guards failed to arrive without murder accusation.");
-                Debug.Log("LIVING_CITIES_INDOOR_NOISE_REPORT_PASS: controlled awake-origin physical escape, neutral dispatch, actual guard arrival and no murder accusation");
+                Debug.Log("LIVING_CITIES_INDOOR_NOISE_REPORT_PASS: actual automatic bed-origin escape, neutral dispatch, actual guard arrival and no murder accusation");
             }
             finally { UnityEngine.Random.state = randomState; UnityEngine.Object.Destroy(wall); }
         }

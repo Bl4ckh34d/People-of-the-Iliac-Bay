@@ -113,6 +113,7 @@ namespace LivingCities.DFU
                 var person = alarm.People.Find(p => p.ResidentId == witness.Resident.Id);
                 if (person == null || (!person.DirectWitness && !person.HeardViolence) || person.Reaction != CivilianReaction.Flee || person.Escape != null ||
                     person.BuildingKey != interior.EntryDoor.buildingKey) continue;
+                if (!WakeResidentForAlarm(witness,person)) continue;
                 var route = indoorGeometry.RouteToExit(witness.transform.position - Vector3.up);
                 if (route.Count < 2) continue;
                 var escape = CivilianEscape.Create(person, now, route, outside, ResidentMovement.FleeSpeed(witness.Resident.AppearanceSeed));
@@ -131,6 +132,18 @@ namespace LivingCities.DFU
                 if (p.Escape != null && (p.DirectWitness || p.HeardViolence) && p.Reaction == CivilianReaction.Flee) return true;
             }
             return false;
+        }
+        private bool WakeResidentForAlarm(ResidentActor actor, AlarmPerson person)
+        {
+            if (!actor.IsSleeping) return true;
+            var pose=actor.GetComponent<SleepingPose>();
+            if (person.Escape!=null) { pose.Wake(); return true; }
+            Vector3 ground;
+            if (!pose.WakeOnFloor(indoorGeometry,out ground)) return false;
+            var local=interior.transform.InverseTransformPoint(ground);
+            person.HasPosition=true; person.BuildingKey=interior.EntryDoor.buildingKey;
+            person.X=local.x; person.Y=local.y; person.Z=local.z;
+            return true;
         }
         private AlarmPerson Reaction(string id, double now)
         { return ReactionsEnabled && responses != null ? responses.Active(id, now) : null; }
@@ -429,6 +442,7 @@ namespace LivingCities.DFU
                 }
                 if (reaction != null && reaction.HasPosition && !reaction.ReachedRefuge)
                 {
+                    if (!WakeResidentForAlarm(actor,reaction)) continue;
                     if (reaction.Escape != null)
                     {
                         PlaceEscape(actor, reaction, seconds, interior.transform, false);

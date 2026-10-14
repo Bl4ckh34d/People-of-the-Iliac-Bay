@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -125,6 +126,53 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(1);
                 if (!loaded || !streets.FindActor(selected.Id) || !streets.FindActor(selected.Id).IsSleeping)
                     throw new InvalidOperationException("Could not restore living preview after death check.");
+                actor=streets.FindActor(selected.Id); Vector3 bedOrigin=actor.transform.position;
+                var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(adapter);
+                var wakeWorld=store.Snapshot();
+                var live=wakeWorld.Settlements.Find(t=>t.SettlementId==town.SettlementId);
+                Resident soundVictim=null;
+                foreach (var home in live.Households) foreach (var resident in home.Residents)
+                    if (soundVictim==null && resident.Id!=selected.Id && resident.IsAlive && !wakeWorld.AlarmIncidents.Exists(a=>a.VictimId==resident.Id)) soundVictim=resident;
+                double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                var alarm=store.RecordViolence(town.SettlementId,soundVictim.Id,now);
+                Vector3 local=game.PlayerEnterExit.Interior.transform.InverseTransformPoint(bedOrigin);
+                store.LocateViolence(alarm.Id,selected.HomeKey,local.x,local.y,local.z);
+                var response=store.HearViolence(alarm.Id,selected.Id,selected.HomeKey,now,true,0,3,0);
+                response.HasPosition=true; response.BuildingKey=selected.HomeKey; response.X=local.x; response.Y=local.y; response.Z=local.z;
+                streets.ReactionsEnabled=true;
+                deadline=Time.realtimeSinceStartup+2;
+                while (response.Escape==null && Time.realtimeSinceStartup<deadline) yield return null;
+                if (actor.IsSleeping || response.Escape==null)
+                    throw new InvalidOperationException("Generated sleeper did not stand beside bed and plan an automatic escape: " + sex);
+                var start=response.Escape.InteriorRoute[0];
+                Vector3 ground=game.PlayerEnterExit.Interior.transform.TransformPoint(new Vector3((float)start.X,(float)start.Y,(float)start.Z));
+                var bedOffset=game.PlayerEnterExit.Interior.transform.InverseTransformPoint(ground)-bed.LocalCenter;
+                if (Mathf.Abs(Vector3.Dot(bedOffset,bed.LocalSideDirection))<bed.Width*0.5f+0.15f &&
+                    Mathf.Abs(Vector3.Dot(bedOffset,bed.LocalHeadDirection))<bed.Length*0.5f+0.15f)
+                    throw new InvalidOperationException("Generated escape starts on the bed instead of beside it: "+sex);
+                if (Vector3.Distance(ground,bedOrigin)>3 || ground.y>bedOrigin.y-0.1f || ground.y<bedOrigin.y-1.6f)
+                    throw new InvalidOperationException("Generated sleeper escape did not start at bedside floor: " + sex);
+                Debug.Log("LIVING_CITIES_GENERATED_BED_WAKE_PASS: sex="+sex+"; controlled noise; automatic bedside floor/escape; original identity retained.");
+                double reportAt=response.Escape.ReportAt;
+                saved=false;
+                string wakingName="Living Cities - waking escape"+suffix;
+                game.SaveLoadManager.Save(game.PlayerEntity.Name,wakingName);
+                deadline=Time.realtimeSinceStartup+30;
+                while (!saved && Time.realtimeSinceStartup<deadline) yield return null;
+                if (!saved) throw new InvalidOperationException("Generated waking save timed out.");
+                loaded=false;
+                game.SaveLoadManager.Load(game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name,wakingName));
+                DaggerfallUI.Instance.PopToHUD(); deadline=Time.realtimeSinceStartup+45;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup<deadline) yield return null;
+                yield return new WaitForSecondsRealtime(0.25f);
+                store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(adapter);
+                alarm=store.ActiveAlarm(selected.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                response=alarm==null ? null : alarm.People.Find(p=>p.ResidentId==selected.Id);
+                actor=streets.FindActor(selected.Id);
+                if (!loaded || response==null || !response.Awakened || response.Escape==null || Math.Abs(response.Escape.ReportAt-reportAt)>0.001 ||
+                    (response.BuildingKey==selected.HomeKey && (!actor || actor.IsSleeping || actor.Person.NameNPC!=name)))
+                    throw new InvalidOperationException("Generated waking/escape identity or timing lost after reload: "+sex);
+                Debug.Log("LIVING_CITIES_GENERATED_BED_WAKE_RELOAD_PASS: sex="+sex+"; actual reload preserves awake identity and original automatic journey.");
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
             Debug.Log("LIVING_CITIES_TOWN_SLEEP_PASS: sex=" + sex + "; resident=" + selected.Id + "; name=" + name +
@@ -173,6 +221,10 @@ namespace LivingCities.DFU
                 if (!targetable) throw new InvalidOperationException("Sleeping actor has no raycast interaction target.");
                 int index = actor.GetComponent<SleepingPose>().ViewIndex;
                 var blanket = actor.transform.Find("Sleeping blanket");
+                var atlas = (SleepingArt.Atlas)typeof(SleepingPose).GetField("art", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(actor.GetComponent<SleepingPose>());
+                float pixelAspect = atlas.Views[2].height*atlas.Texture.height/(atlas.Views[2].width*atlas.Texture.width);
+                if (Mathf.Abs(blanket.localScale.x/blanket.localScale.y-pixelAspect)>0.001f)
+                    throw new InvalidOperationException("Sleeping drawing stretches source pixels.");
                 if (Mathf.Abs(Vector3.Dot(blanket.forward, Vector3.up)) < 0.999f ||
                     Vector3.Dot(blanket.up, actor.transform.forward) < 0.999f ||
                     (hasRotation && Quaternion.Angle(fixedRotation, blanket.rotation) > 0.01f))

@@ -23,6 +23,8 @@ namespace LivingCities.DFU
         private bool nativeWasVisible;
         private Vector3 nativePosition, nativeSize, nativeCenter;
         private Quaternion nativeRotation;
+        private BedAnchor currentBed;
+        public Vector3 NativeStandingPosition { get { return nativePosition; } }
         private void SetArt(SleepingArt.Atlas atlas)
         {
             art = atlas;
@@ -43,6 +45,7 @@ namespace LivingCities.DFU
         }
         public void Begin(ResidentActor owner, Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
         {
+            currentBed=bed;
             actor = owner; SetArt(atlas);
             if (!Active)
             {
@@ -59,6 +62,7 @@ namespace LivingCities.DFU
         }
         public void BeginNative(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
         {
+            currentBed=bed;
             SetArt(atlas);
             if (!Active)
             {
@@ -79,15 +83,21 @@ namespace LivingCities.DFU
             if (!Active) return;
             // A sleeper belongs to the mattress, not the camera. Keep one complete
             // face/pillow/blanket image on a fixed horizontal bed-aligned surface.
-            // The existing face-on frame puts the head at the top of the image.
-            ViewIndex = 0;
-            Rect rect = art.Views[0];
+            // Rotate the complete broadside drawing so its left-hand head points
+            // toward the bed head. Preserve source pixels' aspect ratio.
+            bool overhead=art.Views.Length==1;
+            ViewIndex = overhead ? 0 : 2;
+            Rect rect = art.Views[ViewIndex];
             for (int i = 0; i < viewUV.Length; i++) viewUV[i] = new Vector2(
-                Mathf.Lerp(rect.xMin, rect.xMax, originalUV[i].x), Mathf.Lerp(rect.yMin, rect.yMax, originalUV[i].y));
+                Mathf.Lerp(rect.xMin, rect.xMax, overhead ? originalUV[i].x : 1-originalUV[i].y),
+                Mathf.Lerp(rect.yMin, rect.yMax, overhead ? originalUV[i].y : originalUV[i].x));
             mesh.uv = viewUV;
             quad.transform.localPosition = Vector3.zero;
             quad.transform.localRotation = Quaternion.Euler(90, 0, 0);
-            quad.transform.localScale = new Vector3(width, length, 1);
+            float aspect = rect.height*art.Texture.height/(rect.width*art.Texture.width);
+            if (overhead) aspect=1/aspect;
+            float fittedLength = Mathf.Min(length,width/aspect);
+            quad.transform.localScale = new Vector3(fittedLength*aspect, fittedLength, 1);
         }
         public void Wake()
         {
@@ -101,6 +111,19 @@ namespace LivingCities.DFU
                 transform.position = nativePosition; transform.rotation = nativeRotation;
                 if (nativeBody) { nativeBody.size = nativeSize; nativeBody.center = nativeCenter; }
             }
+        }
+        public bool WakeOnFloor(InteriorGeometry geometry, out Vector3 ground)
+        {
+            ground=Vector3.zero;
+            if (!Active || currentBed==null || geometry==null || !geometry.StandBesideBed(currentBed,out ground)) return false;
+            Wake();
+            if (actor) actor.Place(ground,transform.forward,true);
+            else
+            {
+                var billboard=GetComponent<DaggerfallWorkshop.DaggerfallBillboard>();
+                transform.position=ground+Vector3.up*(billboard ? billboard.Summary.Size.y*0.5f : 1);
+            }
+            return true;
         }
         private void OnDisable() { Wake(); }
         private void OnDestroy() { if (material) Destroy(material); if (mesh) Destroy(mesh); }

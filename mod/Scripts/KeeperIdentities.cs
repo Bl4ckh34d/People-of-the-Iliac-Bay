@@ -48,7 +48,23 @@ namespace LivingCities.DFU
             var pose = npc.GetComponent<SleepingPose>();
             var art = SleepEnabled && !alarmed && person.IsAlive && person.HomeKey == person.WorkKey &&
                 KeeperSleeping(person, now) && sleepingArt != null ? sleepingArt.ForNative(person) : null;
-            if (art == null) { if (pose) pose.Wake(); return; }
+            if (art == null)
+            {
+                if (pose && pose.Active && alarmed)
+                {
+                    var alarm=worldStore.NativeResponse(person.Id);
+                    var observer=alarm==null ? null : alarm.People.Find(p=>p.ResidentId==person.Id);
+                    Vector3 ground;
+                    if (observer!=null && observer.Escape==null && pose.WakeOnFloor(indoorGeometry,out ground))
+                    {
+                        var local=interior.transform.InverseTransformPoint(ground);
+                        observer.HasPosition=true; observer.BuildingKey=interior.EntryDoor.buildingKey;
+                        observer.X=local.x; observer.Y=local.y; observer.Z=local.z;
+                    }
+                }
+                else if (pose) pose.Wake();
+                return;
+            }
             var records = new List<int>(indoorBeds.Keys); records.Sort();
             if (person.BedSlot < 0 || person.BedSlot >= records.Count) { if (pose) pose.Wake(); return; }
             if (!pose) pose = npc.gameObject.AddComponent<SleepingPose>();
@@ -155,6 +171,14 @@ namespace LivingCities.DFU
                 var person = KeeperPerson(npc);
                 if (person == null) continue;
                 KeeperView view;
+                var sleepingPose=npc.GetComponent<SleepingPose>();
+                if (sleepingPose && sleepingPose.Active && ReactionsEnabled && worldStore.NativeResponse(person.Id)!=null &&
+                    !keeperViews.ContainsKey(person.Id))
+                {
+                    var billboard=npc.GetComponent<DaggerfallBillboard>();
+                    keeperViews.Add(person.Id,new KeeperView { Npc=npc, Position=sleepingPose.NativeStandingPosition,
+                        Offset=Vector3.up*(billboard ? billboard.Summary.Size.y*0.5f : 1), WasActive=npc.gameObject.activeSelf });
+                }
                 UpdateKeeperSleep(npc, person, now, ReactionsEnabled && worldStore.NativeResponse(person.Id) != null);
                 if (!person.IsAlive)
                 {
@@ -179,6 +203,7 @@ namespace LivingCities.DFU
                     keeperViews.Add(person.Id, view);
                 }
                 var witness = alarm.People.Find(p => p.ResidentId == person.Id);
+                if (sleepingPose && sleepingPose.Active) continue;
                 if (!witness.HasPosition || witness.Reaction != CivilianReaction.Flee) continue;
                 if (witness.Escape == null && !GameManager.IsGamePaused && indoorGeometry != null)
                 {

@@ -173,7 +173,7 @@ public static class LivingCitiesBuild
         var room = new GameObject("Sleep alignment room");
         var native = GameObject.CreatePrimitive(PrimitiveType.Cube);
         var cameraObject = new GameObject("Sleep alignment camera");
-        var texture = new Texture2D(2, 2);
+        var texture = new Texture2D(8, 2);
         try
         {
             room.transform.rotation = Quaternion.Euler(0, 37, 0);
@@ -191,10 +191,18 @@ public static class LivingCitiesBuild
                 Require(Mathf.Abs(Vector3.Dot(drawing.forward, Vector3.up)) > 0.999f &&
                     Vector3.Dot(drawing.up, native.transform.forward) > 0.999f,
                     "Sleeping composite stays horizontal along bed axis as camera circles");
+                Require(Mathf.Abs(drawing.localScale.x/drawing.localScale.y-0.25f)<0.001f,
+                    "Full-length sleeper preserves rotated source pixel proportions");
             }
             pose.Wake();
             Require(native.GetComponent<Renderer>().enabled && !drawing.gameObject.activeSelf,
                 "Fixed sleeper restores native renderer on waking");
+            texture.Resize(2,8);
+            atlas.Views=new[] { new Rect(0,0,1,1) };
+            pose.BeginNative(room.transform,new BedAnchor { LocalCenter=Vector3.zero,LocalHeadDirection=Vector3.forward,Length=2,Width=1 },atlas);
+            pose.SendMessage("LateUpdate",SendMessageOptions.DontRequireReceiver);
+            Require(Mathf.Abs(drawing.localScale.x/drawing.localScale.y-0.25f)<0.001f && pose.ViewIndex==0,
+                "Single overhead drawing preserves source proportions and head orientation");
             Debug.Log("LIVING_CITIES_SLEEP_ALIGNMENT_PASS: fixed mattress plane and head axis from four camera positions");
         }
         finally
@@ -205,6 +213,15 @@ public static class LivingCitiesBuild
     }
     private static void VerifySleepingArt()
     {
+        var overhead=new Texture2D(2,2);
+        try
+        {
+            Require(overhead.LoadImage(File.ReadAllBytes("Assets/Game/Mods/LivingCities/Textures/sleep-topdown-flat-182-0.png.bytes")),"Overhead sleeper PNG decode");
+            var footprint=SleepingArt.Footprint(overhead);
+            Require(footprint.height*overhead.height>footprint.width*overhead.width*2 &&
+                Array.Exists(overhead.GetPixels32(),p=>p.a==0),"Single overhead sleeper is elongated and transparent");
+        }
+        finally { UnityEngine.Object.DestroyImmediate(overhead); }
         foreach (int archive in new[] { 385, 453 }) VerifySleepingAtlas(archive);
         foreach (int record in new[] { 0, 44 })
         {

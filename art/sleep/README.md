@@ -1,5 +1,11 @@
 # Sleeping art studies
 
+## Single overhead composite, 15 October 2026
+
+The player now requests a single complete top-down image with no perspective rather than mapping foreshortened angle art onto the mattress. Native182/0 uses `topdown-flat-182-0-v4.png`, copied unchanged with alpha into `mod/Textures/sleep-topdown-flat-182-0.png.bytes`. Its source is built-in image generation `exec-0812b9f9-6c54-479c-bc0e-eecd0d9b7de1.png`. The selected revision starts from the shorter v2 study and modestly extends only the blanket, retaining its stylized head/pillow/width proportions. The earlier very long v1 and shorter v2 remain provenance; the anatomy-driven tall v3 was rejected and is not bundled. Future revisions should follow the player's modest visual adjustment, not impose a new adult-anatomy ratio.
+
+Head, white pillow and green blanket remain one contiguous sprite. The fixed bed plane preserves cropped source pixel proportions and fits within mattress limits; no independent width/length stretching or camera-facing rotation. Only native182/0 has this new overhead source. Native182/44 and mobile385/453 use their fixed complete broadside composite with preserved proportions until their own overhead art is made. This does not claim all NPC appearances or full sleeping-art coverage.
+
 All images here were generated with the built-in image tool from locally inspected original game references. PNGs in `drafts/` remain unbundled studies. The separate archive-385 and archive-453 atlases described below are bundled for a limited runtime prototype. Original reference PNGs remain under ignored `work/sleep-source`; the committed CSV contains source metadata only. Curate human applicability before claiming coverage.
 
 ## Current color requirement
