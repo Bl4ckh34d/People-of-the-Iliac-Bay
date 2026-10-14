@@ -7,6 +7,44 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Native household head death retains family witness, corpse and identity after reload", () => {
+                var store = new WorldStateStore(42); var town = store.GetOrCreate(1, new[] { 8 }, 1);
+                var keeper = store.RegisterNativePerson(1, 4, 11, "Keeper Kinghart", ResidentSex.Male, 1, 41, 182, 1);
+                store.AssignNativeBed(keeper.Id, new HomeProfile(4, 2), new HomeProfile[0]);
+                var home = store.CreateKeeperHousehold(keeper.Id, new HomeProfile(4, 2));
+                var alarm = store.RecordViolence(1, keeper.Id, 100);
+                store.LocateViolence(alarm.Id, 4, 1, 2, 3);
+                store.Witness(alarm.Id, home.Residents[1].Id, 100);
+                Check.True(Population.MarkDead(town, keeper.Id));
+                store.ConfirmCorpse(alarm.Id, 101, 4, 2, 2, 3);
+                var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.True(!restored.NativePeopleFor(1)[0].IsAlive);
+                Check.True(!restored.Snapshot().Settlements[0].Households.Find(h => h.HeadId == keeper.Id).Residents[0].IsAlive);
+                Check.Equal(home.Residents[1].Id, restored.Snapshot().AlarmIncidents[0].People[0].ResidentId);
+                Check.Equal(keeper.Id, restored.ObserveCorpses(1, 4, 200)[0].VictimId);
+                Check.Equal(alarm.Id, restored.RecordViolence(1, keeper.Id, 200).Id);
+                var corrupt = store.Snapshot(); corrupt.NativePeople[0].IsAlive = true;
+                Check.Throws<ArgumentException>(() => restored.Restore(corrupt));
+                Check.True(!restored.NativePeopleFor(1)[0].IsAlive);
+            }));
+            cases.Add(("Unlinked bedless keeper death uses work-site discovery and rejects missing identity", () => {
+                var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);
+                var keeper = store.RegisterNativePerson(1, 4, 11, "Keeper Kinghart", ResidentSex.Female, 1, 41, 182, 1);
+                var alarm = store.RecordViolence(1, keeper.Id, 100);
+                store.LocateViolence(alarm.Id, 4, 1, 2, 3); keeper.IsAlive = false;
+                store.ConfirmCorpse(alarm.Id, 101, 4, 1, 2, 3);
+                store.RegisterUnwitnessedScene(alarm.Id);
+                Check.Equal(0, store.ObserveCrimeScenes(1, 4, 200).Count);
+                Check.Equal(1, store.ObserveCrimeScenes(1, -1, 201).Count);
+                var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.Equal(1, restored.ObserveCrimeScenes(1, -1, 202).Count);
+                Check.Equal(1, restored.ObserveCorpses(1, 4, 90000).Count);
+                Check.True(!restored.NativePeopleFor(1)[0].IsAlive);
+                var corrupt = store.Snapshot(); corrupt.NativePeople.Clear();
+                Check.Throws<ArgumentException>(() => restored.Restore(corrupt));
+                Check.Equal(keeper.Id, restored.Snapshot().AlarmIncidents[0].VictimId);
+                Check.Throws<ArgumentException>(() => restored.RecordViolence(1, "npc:unknown", 203));
+            }));
             cases.Add(("Native keeper heads a bed-limited family with saved surname and parent links", () => {
                 foreach (var sex in new[] { ResidentSex.Male, ResidentSex.Female })
                 {
@@ -124,7 +162,7 @@ namespace LivingCities.Tests
                 Check.True(restored.ActiveAlarm(keeper.Id, CivilianAlarms.ActiveUntil(alarm)) == null);
                 Check.True(restored.ClearNativeResponse(keeper.Id, CivilianAlarms.ActiveUntil(alarm)));
                 Check.True(restored.NativePeopleFor(1)[0].ResponseIncidentId == null);
-                Check.Throws<ArgumentException>(() => restored.RecordViolence(1, keeper.Id, 2000));
+                Check.Equal(keeper.Id, restored.RecordViolence(1, keeper.Id, 2000).VictimId);
             }));
             cases.Add(("Native person identity preserves name and appearance across repeated registration and reload", () => {
                 var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);

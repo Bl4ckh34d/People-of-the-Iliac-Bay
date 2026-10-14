@@ -15,7 +15,7 @@ namespace LivingCities.Core
         public void RegisterUnwitnessedScene(string incidentId)
         {
             var alarm = FindIncident(incidentId); var victim = AlarmResident(alarm.SettlementId, alarm.VictimId);
-            Require(!victim.IsAlive && alarm.HasLocation && alarm.BuildingKey == victim.HomeKey && alarm.People.Count == 0,
+            Require(!victim.IsAlive && alarm.HasLocation && VictimOwnsScene(alarm, victim, state) && alarm.People.Count == 0,
                 "Scene needs a confirmed unwitnessed death in the resident's home.");
             if (alarm.Scene == null) alarm.Scene = new UnwitnessedScene();
         }
@@ -50,11 +50,17 @@ namespace LivingCities.Core
                 "No investigation guard has reached this scene.");
             scene.Discovered = true; scene.DiscoveredAt = report.FirstArrivalAt;
         }
-        private static UnwitnessedScene CopyScene(CivilianIncident alarm, Resident victim)
+        private static bool VictimOwnsScene(CivilianIncident alarm, Resident victim, WorldState world)
+        {
+            if (alarm.BuildingKey < 0) return false;
+            return alarm.BuildingKey == victim.HomeKey || world.NativePeople != null && world.NativePeople.Exists(p =>
+                p.Id == victim.Id && p.SettlementId == alarm.SettlementId && p.WorkKey == alarm.BuildingKey);
+        }
+        private static UnwitnessedScene CopyScene(CivilianIncident alarm, Resident victim, WorldState world)
         {
             var scene = alarm.Scene;
             if (scene == null) return null;
-            Require(!victim.IsAlive && alarm.HasLocation && alarm.BuildingKey == victim.HomeKey && alarm.People.Count == 0,
+            Require(!victim.IsAlive && alarm.HasLocation && VictimOwnsScene(alarm, victim, world) && alarm.People.Count == 0,
                 "Invalid unwitnessed scene ownership.");
             Require(ValidTime(scene.LeftAt) && ValidTime(scene.DiscoveredAt) && ValidTime(scene.DiscoveredAt + UnwitnessedScene.OccupationSeconds) &&
                 (scene.PlayerLeft ? scene.LeftAt >= alarm.StartedAt : scene.LeftAt == 0) &&

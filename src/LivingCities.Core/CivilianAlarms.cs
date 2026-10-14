@@ -63,7 +63,6 @@ namespace LivingCities.Core
         {
             Require(ValidTime(now), "Invalid incident time.");
             var victim = AlarmResident(settlementId, victimId);
-            Require(!state.NativePeople.Exists(p => p.Id == victimId), "Native death integration is not available.");
             foreach (var existing in state.AlarmIncidents)
                 if (existing.VictimId == victimId) return existing;
             Require(victim.IsAlive, "Cannot invent a new killing for a dead resident.");
@@ -145,17 +144,17 @@ namespace LivingCities.Core
                 Require(town != null, "Unknown incident settlement.");
                 var residents = new Dictionary<string, Resident>();
                 foreach (var home in town.Households) foreach (var resident in home.Residents) residents.Add(resident.Id, resident);
-                Require(alarm.VictimId != null && residents.ContainsKey(alarm.VictimId) && ValidTime(alarm.StartedAt) &&
-                    ValidTime(alarm.ExpiresAt) && alarm.ExpiresAt == alarm.StartedAt + 900 && alarm.People != null, "Invalid incident data.");
-                // Native witnesses use the same bounded ledger; native death/corpse integration is separate.
+                // Native staff without a generated household are also persistent victims and witnesses.
                 if (source.NativePeople != null) foreach (var native in source.NativePeople)
                     if (native.SettlementId == alarm.SettlementId && !residents.ContainsKey(native.Id)) residents.Add(native.Id, NativeAlarmResident(native));
+                Require(alarm.VictimId != null && residents.ContainsKey(alarm.VictimId) && ValidTime(alarm.StartedAt) &&
+                    ValidTime(alarm.ExpiresAt) && alarm.ExpiresAt == alarm.StartedAt + 900 && alarm.People != null, "Invalid incident data.");
                 var copied = new CivilianIncident { Id = alarm.Id, VictimId = alarm.VictimId, SettlementId = alarm.SettlementId,
                     StartedAt = alarm.StartedAt, ExpiresAt = alarm.ExpiresAt, HasLocation = alarm.HasLocation,
                     BuildingKey = alarm.BuildingKey, X = alarm.X, Y = alarm.Y, Z = alarm.Z };
                 Require(alarm.BuildingKey >= -1 && ValidCoordinate(alarm.X) && ValidCoordinate(alarm.Y) && ValidCoordinate(alarm.Z),
                     "Invalid saved crime location.");
-                copied.Scene = CopyScene(alarm, residents[alarm.VictimId]);
+                copied.Scene = CopyScene(alarm, residents[alarm.VictimId], source);
                 copied.Corpse = CopyCorpse(alarm, residents[alarm.VictimId], source);
                 var people = new HashSet<string>();
                 foreach (var person in alarm.People)

@@ -59,7 +59,7 @@ namespace LivingCities.DFU
                 FindActor(actor.Resident.Id) == actor;
             var previousCrime = GameManager.Instance.PlayerEntity.CrimeCommitted;
             BeforeWeaponHit(target);
-            if (!eligible) return null;
+            if (!eligible) return BeginKeeperHit(target);
             int deathBuilding = interior ? interior.EntryDoor.buildingKey : -1;
             var deathPosition = actor.transform.parent.InverseTransformPoint(actor.transform.position - Vector3.up);
             var guards = GetComponent<GuardPopulation>();

@@ -145,6 +145,69 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_KEEPER_RESPONSE_PASS: sight, service suppression, physical exit, real reload, delayed finite report and recovery; save=" + slot);
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
+            yield return VerifyKeeperDeath(character, keeperId);
+        }
+        private static IEnumerator VerifyKeeperDeath(string character, string keeperId)
+        {
+            var game = GameManager.Instance;
+            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var streets = adapter.GetComponent<StreetPopulation>();
+            var guards = adapter.GetComponent<GuardPopulation>();
+            var field = typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic);
+            bool loaded = false, saved = false;
+            SaveLoadManager.OnLoadEventHandler onLoad = ignored => loaded = true;
+            SaveLoadManager.OnSaveEventHandler onSave = ignored => saved = true;
+            SaveLoadManager.OnLoad += onLoad; SaveLoadManager.OnSave += onSave;
+            try
+            {
+                int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - shopkeeper identity");
+                game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
+                float deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper death fixture load timed out.");
+                yield return new WaitForSecondsRealtime(1);
+                var store = (WorldStateStore)field.GetValue(adapter);
+                var keeper = store.NativePeopleFor(game.PlayerGPS.CurrentLocation.MapTableData.MapId).Find(p => p.Id == keeperId);
+                var room = game.PlayerEnterExit.Interior;
+                var npc = Array.Find(room.GetComponentsInChildren<StaticNPC>(true), n => n.Data.hash == keeper.NativeHash);
+                var town = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var home = town.Households.Find(h => h.HeadId == keeperId);
+                var partner = streets.FindActor(home.Residents.Find(r => r.Id != keeperId).Id);
+                if (!npc || !partner) throw new InvalidOperationException("Keeper death fixture lacks keeper or partner.");
+                // Controlled partner sight tests identity/violence integration, not general stair navigation.
+                partner.Place(npc.transform.position - Vector3.up + Vector3.right * 0.8f, Vector3.forward, true);
+                streets.ReactionsEnabled = true; Physics.SyncTransforms();
+                int reports = guards.Roster.Reports.Count;
+                game.WeaponManager.WeaponDamage(null, false, false, npc.transform, npc.transform.position, Vector3.forward);
+                if (keeper.IsAlive || home.Residents[0].IsAlive || npc.gameObject.activeSelf)
+                    throw new InvalidOperationException("Native shopkeeper weapon hit did not persist death and hide service body.");
+                var alarm = store.Snapshot().AlarmIncidents.Find(a => a.VictimId == keeperId);
+                if (alarm == null || alarm.Corpse == null || !alarm.People.Exists(p => p.ResidentId == partner.Resident.Id && p.DirectWitness))
+                    throw new InvalidOperationException("Native keeper death lost corpse or family witness.");
+                if (!streets.KeeperServiceBlocked(npc) || guards.Roster.Reports.Count != reports)
+                    throw new InvalidOperationException("Dead keeper permits service or creates instant guard notification.");
+                yield return new WaitForSecondsRealtime(0.5f);
+                if (streets.CorpseCount < 1) throw new InvalidOperationException("Native keeper corpse has no physical view.");
+                game.SaveLoadManager.Save(character, "Living Cities - keeper death");
+                deadline = Time.realtimeSinceStartup + 30;
+                while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!saved) throw new InvalidOperationException("Keeper death save timed out.");
+                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - keeper death");
+                loaded = false; game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
+                deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper death reload timed out.");
+                yield return new WaitForSecondsRealtime(1);
+                store = (WorldStateStore)field.GetValue(adapter);
+                keeper = store.NativePeopleFor(keeper.SettlementId).Find(p => p.Id == keeperId);
+                npc = Array.Find(game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>(true), n => n.Data.hash == keeper.NativeHash);
+                if (keeper.IsAlive || !npc || npc.gameObject.activeSelf || !streets.KeeperServiceBlocked(npc) || streets.CorpseCount < 1)
+                    throw new InvalidOperationException("Reload resurrected native keeper or lost physical corpse/service block.");
+                var ui = DaggerfallUI.UIManager.TopWindow; game.TalkManager.TalkToStaticNPC(npc);
+                if (DaggerfallUI.UIManager.TopWindow != ui) throw new InvalidOperationException("Dead native keeper opened dialogue after reload.");
+                Debug.Log("LIVING_CITIES_KEEPER_DEATH_PASS: native weapon hit; household identity; family witness; no instant guards; corpse; blocked service; real reload; save=" + slot);
+            }
+            finally { SaveLoadManager.OnLoad -= onLoad; SaveLoadManager.OnSave -= onSave; }
         }
         private static IEnumerator VerifyDoorPermissions()
         {

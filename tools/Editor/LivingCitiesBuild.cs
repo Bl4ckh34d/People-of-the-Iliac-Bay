@@ -497,6 +497,24 @@ public static class LivingCitiesBuild
             "Native identity, appearance and bed reservation survive FullSerializer");
         Require(restored.RegisterNativePerson(99, 2, -123, "Temporary quest label", ResidentSex.Female, 1, 41, 184, 18).Name == person.Name,
             "Repeated registration preserves saved native name");
+        var alarm = restored.RecordViolence(99, saved.Id, 100);
+        restored.LocateViolence(alarm.Id, 2, 1, 2, 3);
+        Require(Population.MarkDead(restored.GetOrCreate(99, new[] { 1 }), saved.Id), "Native head death updates both ledgers");
+        restored.ConfirmCorpse(alarm.Id, 101, 2, 1, 2, 3); restored.RegisterUnwitnessedScene(alarm.Id);
+        restored.ObserveCrimeScenes(99, -1, 102);
+        json = SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot());
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(!restored.NativePeopleFor(99)[0].IsAlive && restored.ObserveCrimeScenes(99, -1, 103).Count == 1 &&
+            restored.ObserveCorpses(99, 2, 104).Count == 1, "Native head death, corpse and undiscovered scene survive FullSerializer");
+        var staff = restored.RegisterNativePerson(99, 3, 11, "Staff Kinghart", ResidentSex.Male, 1, 41, 182, 1);
+        var staffAlarm = restored.RecordViolence(99, staff.Id, 105);
+        restored.LocateViolence(staffAlarm.Id, 3, 2, 3, 4); staff.IsAlive = false;
+        restored.ConfirmCorpse(staffAlarm.Id, 106, 3, 2, 3, 4); restored.RegisterUnwitnessedScene(staffAlarm.Id);
+        json = SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot());
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(!restored.NativePeopleFor(99)[1].IsAlive && restored.ObserveCorpses(99, 3, 107).Count == 2,
+            "Unlinked native staff death and work-site scene survive FullSerializer");
+        Debug.Log("LIVING_CITIES_NATIVE_DEATH_PERSISTENCE_PASS: household head and unlinked staff; native serializer; corpse and work-site scene.");
         Debug.Log("LIVING_CITIES_NATIVE_PEOPLE_PERSISTENCE_PASS: named native identity, appearance and single-bed reservation.");
     }
     private static void VerifyTheftSight()

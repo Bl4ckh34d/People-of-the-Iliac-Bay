@@ -39,6 +39,60 @@ namespace LivingCities.DFU
                 npc.Data.context != StaticNPC.Context.Building || npc.Data.buildingKey != interior.EntryDoor.buildingKey) return null;
             return worldStore.NativePeopleFor(population.SettlementId).Find(p => p.WorkKey == npc.Data.buildingKey && p.NativeHash == npc.Data.hash);
         }
+        private System.Action<System.Exception> BeginKeeperHit(Transform target)
+        {
+            if (!ReactionsEnabled || !Ready || !target || !interior || responses == null) return null;
+            // DFU's static merchant flats have no entity damage branch. Retain native
+            // damage ownership if another mod has supplied an entity on this target.
+            if (target.GetComponent<DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour>()) return null;
+            SurveyKeeperIdentities();
+            var npc = target.GetComponent<StaticNPC>(); var keeper = KeeperPerson(npc);
+            if (keeper == null || !keeper.IsAlive || !npc.gameObject.activeInHierarchy) return null;
+            var family = population.Households.Find(h => h.Residents.Exists(r => r.Id == keeper.Id));
+            var member = family == null ? null : family.Residents.Find(r => r.Id == keeper.Id);
+            if (member != null && member.IsQuestProtected) return null;
+            var room = interior; int building = room.EntryDoor.buildingKey;
+            var billboard = npc.GetComponent<DaggerfallBillboard>();
+            var ground = npc.transform.position - Vector3.up * (billboard ? billboard.Summary.Size.y * 0.5f : 1);
+            var local = room.transform.InverseTransformPoint(ground);
+            return error => {
+                if (error != null || !keeper.IsAlive) return;
+                double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                var alarm = worldStore.RecordViolence(population.SettlementId, keeper.Id, now);
+                if (!alarm.HasLocation) worldStore.LocateViolence(alarm.Id, building, local.x, local.y, local.z);
+                foreach (var actor in actors.Values)
+                {
+                    if (!actor || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy ||
+                        GetState(actor.Resident.Id, now).Activity == Activity.Sleep ||
+                        !CivilianResponses.Sees(actor.transform.position, npc.transform.position, 20)) continue;
+                    var witness = worldStore.Witness(alarm.Id, actor.Resident.Id, now);
+                    var point = room.transform.InverseTransformPoint(actor.transform.position - Vector3.up);
+                    witness.HasPosition = true; witness.BuildingKey = building;
+                    witness.X = point.x; witness.Y = point.y; witness.Z = point.z;
+                }
+                ObserveKeeperViolence(alarm, npc.transform.position, now);
+                // Match native mobile civilian lethality. Combat health/capability and
+                // matching battle art are separate work, not supplied by this flat.
+                if (member != null) Population.MarkDead(population, keeper.Id);
+                keeper.IsAlive = false;
+                npc.gameObject.SetActive(false);
+                KeeperView view;
+                if (keeperViews.TryGetValue(keeper.Id, out view)) view.WasActive = false;
+                worldStore.ConfirmCorpse(alarm.Id, now, building, local.x, local.y, local.z);
+                var guards = GetComponent<GuardPopulation>();
+                var player = GameManager.Instance.PlayerEntity;
+                player.TallyCrimeGuildRequirements(false, 5);
+                bool concealed = alarm.People.Count == 0 && indoorGeometry != null && indoorGeometry.EntryGround.HasValue &&
+                    guards && guards.CanInvestigate(building);
+                if (concealed) worldStore.RegisterUnwitnessedScene(alarm.Id);
+                else player.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
+                PrepareIndoorEscapes(now);
+                // Finite guards learn through the existing physical witness/discovery
+                // pipeline. Explicitly disabled finite guards retain native reporting.
+                if (!guards || !guards.OwnsSettlement) player.SpawnCityGuards(true);
+                Debug.Log("LIVING_CITIES_KEEPER_DEATH: " + keeper.Id + "; witnesses=" + alarm.People.Count + "; concealed=" + concealed);
+            };
+        }
         public void ObserveKeeperViolence(CivilianIncident alarm, Vector3 victim, double now)
         {
             if (!ReactionsEnabled || !interior || alarm == null) return;
@@ -64,6 +118,12 @@ namespace LivingCities.DFU
                 var person = KeeperPerson(npc);
                 if (person == null) continue;
                 KeeperView view;
+                if (!person.IsAlive)
+                {
+                    npc.gameObject.SetActive(false);
+                    if (keeperViews.TryGetValue(person.Id, out view)) view.WasActive = false;
+                    continue;
+                }
                 var alarm = ReactionsEnabled ? worldStore.NativeResponse(person.Id) : null;
                 if (alarm != null && GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None &&
                     worldStore.ClearNativeResponse(person.Id, now)) alarm = null;
@@ -127,7 +187,7 @@ namespace LivingCities.DFU
             nextKeeperSurvey = Time.unscaledTime + 1;
             if (keeperHome == null) return;
             var keepers = new List<NativePerson>();
-            foreach (var npc in interior.GetComponentsInChildren<StaticNPC>())
+            foreach (var npc in interior.GetComponentsInChildren<StaticNPC>(true))
             {
                 var data = npc.Data;
                 if (data.context != StaticNPC.Context.Building || data.buildingKey != keeperHome.BuildingKey || npc.IsChildNPC ||

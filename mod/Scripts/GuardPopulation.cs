@@ -30,6 +30,7 @@ namespace LivingCities.DFU
         private Coroutine approachSurvey;
         private DaggerfallInterior interior;
         private Vector3? entryGround;
+        public bool OwnsSettlement { get { return OwnsTown(); } }
         private bool OwnsTown()
         {
             var game = GameManager.Instance;
