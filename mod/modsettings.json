@@ -88,6 +88,20 @@
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
         {
+          "Value": true,
+          "Name": "NightPatrols",
+          "Description": "Pairs of finite guards walk surveyed street circuits at night. Turning this off sends patrols physically back to their posts. Wall patrols remain in development.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Min": 0, "Max": 4, "Value": 2,
+          "Name": "MaximumPatrolPairs",
+          "Description": "Maximum two-person night patrols. At least four available guards stay at stationary posts. Zero disables patrols; unusable circuits leave guards posted.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
+        {
           "Min": 0, "Max": 16, "Value": 8,
           "Name": "TorchLightLimit",
           "Description": "Maximum nearest guard torches emitting real light within 48 metres. Zero keeps visible flames without dynamic lighting. Lights cast no shadows.",

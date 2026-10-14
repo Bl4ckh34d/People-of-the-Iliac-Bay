@@ -88,6 +88,7 @@ public static class LivingCitiesBuild
         const string staging = "Assets/Game/Mods/LivingCities/BuildText";
         Directory.CreateDirectory(staging);
         var assets = new List<string> { manifestPath };
+        var scriptPaths = new List<string>();
         foreach (string source in info.Files)
         {
             if (source.Contains("/Libraries/") && (source.EndsWith(".dll.bytes") || source.EndsWith("/Harmony-LICENSE.txt")))
@@ -95,9 +96,14 @@ public static class LivingCitiesBuild
             if (source.EndsWith("/modsettings.json")) { assets.Add(source); continue; }
             if (source.EndsWith(".png.bytes") && source.Contains("/Textures/")) { assets.Add(source); continue; }
             Require(source.EndsWith(".cs") && !source.Contains("/Editor/"), "Only runtime sources may ship");
-            string target = staging + "/" + Path.GetFileName(source) + ".txt";
-            File.Copy(source, target, true); assets.Add(target);
+            scriptPaths.Add(Path.Combine(Application.dataPath,source.Substring("Assets/".Length)));
         }
+        string runtimeAssembly = staging + "/LivingCities.Runtime.dll.bytes";
+        if(File.Exists(runtimeAssembly)) File.Delete(runtimeAssembly);
+        var compiler=typeof(LivingCitiesBuild).Assembly.GetType("DaggerfallWorkshop.Game.Utility.ModAssemblyBuilder",true);
+        Require((bool)compiler.GetMethod("Compile",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic)
+            .Invoke(null,new object[] { runtimeAssembly,scriptPaths.ToArray() }),"DFU precompiled runtime assembly");
+        assets.Add(runtimeAssembly);
         AssetDatabase.Refresh(ImportAssetOptions.ForceSynchronousImport);
         // Exercise DFU's real virtual-mod loader, which only discovers libraries listed in Files.
         var virtualMod = new Mod(); virtualMod.ModInfo.Files = info.Files;

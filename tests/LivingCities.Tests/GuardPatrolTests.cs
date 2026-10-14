@@ -28,6 +28,15 @@ namespace LivingCities.Tests
                 Check.Near(12, copy.Position(copy.Guards[1].Id, 250).X);
                 Check.Near(-10, copy.Position(copy.Guards[0].Id, 5000).X);
             }));
+            cases.Add(("Patrol animation distinguishes joining and circuit travel from waiting and posted guards", () => {
+                var roster=Roster(); Start(roster); string id=roster.Guards[0].Id;
+                Check.True(roster.IsPatrolMoving(id,125));
+                Check.True(!roster.IsPatrolMoving(id,175));
+                Check.True(roster.IsPatrolMoving(id,250));
+                roster.StopPatrol(id,250);
+                Check.True(roster.IsPatrolMoving(id,275));
+                roster.Advance(500); Check.True(!roster.IsPatrolMoving(id,500));
+            }));
             cases.Add(("Building response starts at actual patrol position and returns to the assigned post", () => {
                 var roster = Roster(); Start(roster); string id = roster.Guards[0].Id;
                 roster.CacheBuildingApproach(73, P(100), new Dictionary<string, List<SavedRoutePoint>> { { id, Path(P(-10), P(100)) } });

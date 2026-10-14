@@ -1,5 +1,19 @@
 # Finite guards
 
+## 0.3.24 paired street patrols
+
+Gothway Garden now starts finite pairs at night on collision-checked native navigation circuits. Both guards physically join separate circuit entries, then share a saved time phase with two metres of path spacing. Formation validation rejects routes that bring them within one metre. Initial survey found two usable circuits of 57.6 and 102.4 metres. Failed surveys leave guards posted; there is no straight-line fallback. Route work yields between searches, with bounded attempts and circuit length.
+
+`NightPatrols` defaults on. `MaximumPatrolPairs` ranges from 0 to 4, default 2; zero disables patrols. Starting a pair preserves at least four available posted guards. Reducing the cap, disabling patrols or reaching dawn sends excess pairs physically back to their posts. Crime responses use actual patrol positions; cached building responses join their existing approaches through physical travel. A fleeing witness targets a stationary posted guard. Existing torch controls remain independent.
+
+Circuit survey is bounded by the pair cap when the town loads. Increasing the cap beyond already surveyed pairs requires reloading the town; a failed survey does not retry every frame. Reducing the cap takes effect during the current session.
+
+Actual-player GuardPatrolProbe checks surveyed pairs, both walking animations, spacing, point light, real save/reload phase, disabling patrols and native crime dispatch from the current returning position without adding guard identities. Evidence: `work/GuardPatrol-0324-pass.log`. SAVE45, `Living Cities - night patrol`, belongs to `LivingCitiesTest-f238d317`. Native JSON timestamps round at this magnitude; reload comparison allows 0.001 game-second while verifying IDs, interruption state and actor positions separately.
+
+Final housing, physical building response and crime-scene regressions also pass with the compiled package. They preserve named keeper families, reserved-bed sleep/services and real reload; delayed guard entry, wounded persistence and return; and native surrender before damage, court, warning and occupation expiry. Evidence: `work/Housing-0324-pass.log`, `work/GuardBuilding-0324-pass.log`, `work/CrimeScene-0324-pass.log`.
+
+The package uses DFU's official precompiled mod assembly support after source-text compilation failed during native navigation. The exact compiler failure is not established. Guards remain classic sprites with attached flame artwork; wall patrols, simultaneous join/response crowd avoidance, additional settlements and large-city frame-time profiling remain unfinished. M4 and the overall goal remain open. Earlier checkpoints below are historical where superseded.
+
 ## 0.3.23 night torches
 
 Visible exterior roster guards now carry Daggerfall's animated210/0 torch flat at night, using the game's dawn/dusk boundary. Each carried sprite follows its guard transform. Daytime, interiors, the setting toggle and guard death extinguish the torch. Torch flats have no active colliders and do not change guard identities, paths or save ownership.

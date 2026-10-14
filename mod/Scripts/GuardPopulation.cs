@@ -61,6 +61,7 @@ namespace LivingCities.DFU
         {
             var game = GameManager.Instance;
             return isActiveAndEnabled && directory && Roster != null && game != null && game.IsPlayingGame() &&
+                !game.SaveLoadManager.LoadInProgress &&
                 game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId == directory.MapID &&
                 (!game.PlayerEnterExit.IsPlayerInside || (game.PlayerEnterExit.IsPlayerInsideBuilding &&
                 game.PlayerEnterExit.Interior));
@@ -90,7 +91,9 @@ namespace LivingCities.DFU
             worldStore = store;
             directory = town; geometry = new TownGeometry(town, navigation, false);
             Roster = store.GetOrCreateGuards(town.MapID, count, selected);
+            foreach (var patrol in Roster.Patrols) patrolTemplates.Add(PatrolPairPlan.CopyValidated(patrol.Plan));
             approachSurvey = StartCoroutine(SurveyApproaches(navigation));
+            patrolSurvey = StartCoroutine(SurveyPatrols());
             foreach (var guard in Roster.Guards)
                 if (guard.IsAlive && guard.IncidentId != null) { reportId = guard.IncidentId; break; }
             var type = Type.GetType("LivingCities.QuestHooks.NativeGuardHooks, LivingCities.QuestHooks", true);
@@ -117,7 +120,7 @@ namespace LivingCities.DFU
         }
         private IEnumerator SurveyApproaches(CityNavigation navigation)
         {
-            while (GameManager.Instance.PlayerEnterExit.IsPlayerInside || !directory.gameObject.activeInHierarchy)
+            while (!OwnsExterior || !directory.gameObject.activeInHierarchy)
                 yield return null;
             // Door discovery and physics queries must run against the active exterior.
             var survey = new TownGeometry(directory, navigation);
@@ -207,7 +210,7 @@ namespace LivingCities.DFU
             foreach (var guard in Roster.Guards)
             {
                 if (!guard.IsAlive || guard.Duty != GuardDuty.Posted) continue;
-                var route = geometry.RouteBetweenPoints(guard.Post, target);
+                var route = geometry.RouteBetweenPoints(Roster.Position(guard.Id, now), target);
                 if (route.Count >= 2) routes.Add(guard.Id, route);
             }
             var sent = Roster.Dispatch(reportId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
@@ -227,7 +230,7 @@ namespace LivingCities.DFU
         private void UpdateInvestigations(double now)
         {
             var game = GameManager.Instance;
-            if (worldStore == null || Roster == null || !directory || game == null || !game.IsPlayingGame()) return;
+            if (worldStore == null || Roster == null || !directory || game == null || !game.IsPlayingGame() || game.SaveLoadManager.LoadInProgress) return;
             Roster.Advance(now);
             bool sameTown = game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId == directory.MapID;
             int location = sameTown && game.PlayerEnterExit.IsPlayerInsideBuilding && game.PlayerEnterExit.Interior ?
@@ -249,7 +252,7 @@ namespace LivingCities.DFU
             List<SavedRoutePoint> best = null; double shortest = double.MaxValue;
             foreach (var route in approach.Routes)
             {
-                if (!Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
+                if (!Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted && !Roster.IsOnPatrol(g.Id) &&
                     Math.Abs(g.Post.X-route.Points[0].X) < 0.05 && Math.Abs(g.Post.Z-route.Points[0].Z) < 0.05)) continue;
                 double length = 0;
                 for (int i = 1; i < route.Points.Count; i++)
@@ -273,7 +276,7 @@ namespace LivingCities.DFU
                 if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape == null ||
                     !person.Escape.Arrived(now) || !streets.IsLivingResident(person.ResidentId)) continue;
                 if (Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
-                    Math.Abs(g.Post.X-person.X) < 0.05 && Math.Abs(g.Post.Z-person.Z) < 0.05)) { reached = true; break; }
+                    Math.Abs(Roster.Position(g.Id,now).X-person.X) < 0.5 && Math.Abs(Roster.Position(g.Id,now).Z-person.Z) < 0.5)) { reached = true; break; }
             }
             if (!reached) return;
             var sent = Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
@@ -315,9 +318,10 @@ namespace LivingCities.DFU
             foreach (var guard in Roster.Guards)
             {
                 if (!guard.IsAlive || guard.Duty != GuardDuty.Posted) continue;
-                var standing = geometry.ScenePoint(new RoutePoint(guard.Post.X, guard.Post.Z)) + Vector3.up;
+                var current = Roster.Position(guard.Id, now);
+                var standing = geometry.ScenePoint(new RoutePoint(current.X, current.Z)) + Vector3.up;
                 if (!CivilianResponses.Sees(reportFrom, standing, 20)) continue;
-                var route = geometry.RouteBetweenPoints(guard.Post, target);
+                var route = geometry.RouteBetweenPoints(current, target);
                 if (route.Count >= 2) routes.Add(guard.Id, route);
             }
             if (routes.Count == 0) return;
@@ -368,7 +372,16 @@ namespace LivingCities.DFU
                 ClearViews(); interior = loaded;
                 entryGround = interior ? new InteriorGeometry(interior).EntryGround : null;
             }
-            Roster.Advance(now); Roster.Recruit(now);
+            Roster.Advance(now);
+            if (Roster.Recruit(now) > 0)
+            {
+                if (patrolSurvey != null) StopCoroutine(patrolSurvey);
+                patrolTemplates.Clear();
+                foreach (var pair in Roster.Patrols) patrolTemplates.Add(PatrolPairPlan.CopyValidated(pair.Plan));
+                patrolSurvey = StartCoroutine(SurveyPatrols());
+            }
+            if (Time.unscaledTime >= nextPatrolTick)
+            { nextPatrolTick = Time.unscaledTime + 1; UpdateNightPatrols(now); }
             if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
             {
                 reportId = null; awaitingSight = false;
@@ -402,8 +415,9 @@ namespace LivingCities.DFU
                     if (guard.IncidentId == null)
                     {
                         string assault = "assault:" + guard.Id + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
+                        var actual = Roster.Position(guard.Id, now);
                         Roster.Dispatch(assault, now, new Dictionary<string, List<SavedRoutePoint>> {
-                            { guard.Id, new List<SavedRoutePoint> { guard.Post, guard.Post } } }, 1, 2.8, 12);
+                            { guard.Id, new List<SavedRoutePoint> { actual, actual } } }, 1, 2.8, 12);
                     }
                     if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None) game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
                     actor.BeginCombat(now);
@@ -503,6 +517,8 @@ namespace LivingCities.DFU
         public void Clear()
         {
             if (approachSurvey != null) { StopCoroutine(approachSurvey); approachSurvey = null; }
+            if (patrolSurvey != null) { StopCoroutine(patrolSurvey); patrolSurvey = null; }
+            patrolTemplates.Clear();
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);

@@ -494,6 +494,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: fixture loads and finite guard controller; character=" + character);
                 yield break;
             }
+            if (Array.IndexOf(probeArguments, "-livingcities-guard-patrol-probe") >= 0)
+            {
+                yield return GuardPatrolProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: paired guard patrols; character=" + character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-guard-actor-probe") >= 0)
             {
                 yield return GuardActorProbe.Run();

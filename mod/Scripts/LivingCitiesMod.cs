@@ -133,6 +133,8 @@ namespace LivingCities.DFU
                 guards.NightTorches = settings.GetBool("Guards", "NightTorches");
                 guards.TorchLightLimit = settings.GetInt("Guards", "TorchLightLimit");
                 guards.TorchRange = settings.GetInt("Guards", "TorchRange");
+                guards.NightPatrols = settings.GetBool("Guards", "NightPatrols");
+                guards.MaximumPatrolPairs = settings.GetInt("Guards", "MaximumPatrolPairs");
             }
             if (streets) streets.Clear();
             streetPopulationEnabled = settings.GetBool("General", "StreetPopulation");

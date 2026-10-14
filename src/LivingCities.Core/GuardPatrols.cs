@@ -12,6 +12,13 @@ namespace LivingCities.Core
     public sealed partial class GuardRoster
     {
         public List<GuardPatrolAssignment> Patrols = new List<GuardPatrolAssignment>();
+        public bool IsOnPatrol(string id) { return PatrolFor(id) != null; }
+        public bool IsPatrolMoving(string id, double now)
+        {
+            var guard = Find(id);
+            return guard.IsAlive && guard.Duty == GuardDuty.Posted && PatrolFor(id) != null &&
+                Distance(PostedPosition(guard, now), PostedPosition(guard, now + 0.05)) > 0.000001;
+        }
         public void StopPatrol(string memberId, double now)
         {
             Require(Time(now), "Invalid patrol stop time."); Find(memberId);

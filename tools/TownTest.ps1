@@ -6,6 +6,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$ResponseProbe,
     [switch]$GuardActorProbe,
     [switch]$GuardControllerProbe,
+    [switch]$GuardPatrolProbe,
     [switch]$GuardBuildingProbe,
     [switch]$GuardWitnessProbe,
     [switch]$HousingProbe,
@@ -35,6 +36,7 @@ if ($SleepProbe) { $arguments += ' -livingcities-sleep-probe' }
 if ($ResponseProbe) { $arguments += ' -livingcities-response-probe' }
 if ($GuardActorProbe) { $arguments += ' -livingcities-guard-actor-probe' }
 if ($GuardControllerProbe) { $arguments += ' -livingcities-guard-controller-probe' }
+if ($GuardPatrolProbe) { $arguments += ' -livingcities-guard-patrol-probe' }
 if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
 if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
 if ($HousingProbe) { $arguments += ' -livingcities-housing-probe' }
@@ -70,6 +72,7 @@ try {
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_GUARD_TORCH_PASS:') { throw 'Guard torch probe did not complete.' }
     if ($GuardControllerProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_CONTROLLER_PASS:') { throw 'Guard controller probe did not complete.' }
     if ($GuardControllerProbe -and $body -notmatch 'LIVING_CITIES_GUARD_TORCH_CONTROLLER_PASS:') { throw 'Guard torch controller probe did not complete.' }
+    if ($GuardPatrolProbe -and $body -notmatch 'LIVING_CITIES_GUARD_PATROL_PASS:') { throw 'Guard patrol probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PENDING_GUARD_PASS:') { throw 'Pending native guard report probe did not complete.' }
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }

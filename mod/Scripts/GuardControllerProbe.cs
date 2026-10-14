@@ -22,6 +22,7 @@ namespace LivingCities.DFU
             var type = typeof(LivingCitiesMod).Assembly.GetType("LivingCities.DFU.GuardPopulation");
             if (type == null) throw new InvalidOperationException("Finite guard controller is missing.");
             var controller = adapter.GetComponent<GuardPopulation>();
+            controller.NightPatrols = false;
             var enabledField = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool originallyEnabled = (bool)enabledField.GetValue(adapter);
             enabledField.SetValue(adapter, true);

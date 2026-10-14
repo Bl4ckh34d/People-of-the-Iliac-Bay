@@ -39,9 +39,10 @@ namespace LivingCities.DFU
             {
                 if (!guard.IsAlive || guard.Duty != GuardDuty.Posted || guard.Interior != null) continue;
                 if (observerGuard != null && guard.Id != observerGuard) continue;
-                var standing = geometry.ScenePoint(new RoutePoint(guard.Post.X, guard.Post.Z)) + Vector3.up;
+                var current = Roster.Position(guard.Id, Now());
+                var standing = geometry.ScenePoint(new RoutePoint(current.X, current.Z)) + Vector3.up;
                 if (!CivilianResponses.Sees(reporter, standing, 20)) continue;
-                var route = geometry.RouteBetweenPoints(guard.Post, target);
+                var route = geometry.RouteBetweenPoints(current, target);
                 if (route.Count >= 2) routes.Add(guard.Id, route);
             }
             return routes;
