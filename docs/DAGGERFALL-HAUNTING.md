@@ -1,5 +1,13 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Full city population fixture
+
+An opt-in DaggerfallPopulationProbe now temporarily permits actual StreetPopulation and GuardPopulation admission in map1291010263, after the refuge suite. The first run failed because the Gothway-only gates prevented setup. Those gates now accept Daggerfall only while the disposable probe is active; normal player sessions remain gated. Guard target sizing uses SettlementScale.City for Daggerfall. Quest-binding scope is unchanged.
+
+The live fixture built611 resident schedules and49 guards (ceil611×8%) in11.61 seconds, then checked every managed resident's20:00 schedule was at home under the unresolved haunting. The fixture uses the actual population created by HousingSurvey, not the prior one-guard synthetic rosters. It restores its quest flag and clears city views afterward without writing a save. This measures setup completion, not worst-frame latency or steady-state FPS; full native city save/reload and actual route/actor continuity remain pending before normal city admission.
+
+Evidence: `work/CityPopulation-red.log`, `work/CityPopulation-pass.log`, `work/CityPopulation-core.log` (265/265). Unity build passes. Installed development0.3.29 SHA-256 `8E9B0A10E7312B7A74C8BC6A065ED2D5327564F5DCF79261270CC27F288CD389`.
+
 ## Saved daily civilian policy and runtime wiring
 
 WorldState now has an optional HauntingDay (day number and restricted flag). First observation of each Daggerfall day chooses from live LiftedCurse; later observations retain that decision until the next day, including after save restore. Other settlements do not create this state. Legacy saves initialize it lazily, and malformed day numbers reject restore transactionally. The native quest offers no historical completion timestamp; first observation is authoritative for previously unseen days.

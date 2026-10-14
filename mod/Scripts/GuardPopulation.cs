@@ -70,7 +70,8 @@ namespace LivingCities.DFU
         {
             if (directory == town && Roster != null) return;
             Clear();
-            if (town.MapID != 206728581 || (GameManager.Instance.PlayerEnterExit.IsPlayerInside && store.GetGuards(town.MapID) == null)) return;
+            if ((town.MapID != 206728581 && !(town.MapID==1291010263 && DaggerfallPopulationProbe.Enabled)) ||
+                (GameManager.Instance.PlayerEnterExit.IsPlayerInside && store.GetGuards(town.MapID) == null)) return;
             var routines = store.GetRoutines(town.MapID);
             if (routines == null) return;
             var posts = new List<SavedRoutePoint>();
@@ -83,7 +84,7 @@ namespace LivingCities.DFU
                 if (!posts.Exists(p => Math.Abs(p.X - point.X) < 10 && Math.Abs(p.Z - point.Z) < 10))
                     posts.Add(point);
             }
-            int count = GuardRoster.TargetCount(SettlementScale.Town, residents);
+            int count = GuardRoster.TargetCount(town.MapID==1291010263 ? SettlementScale.City : SettlementScale.Town, residents);
             var savedRoster = store.GetGuards(town.MapID);
             if (posts.Count < count && savedRoster == null) count = posts.Count;
             if (count == 0 && savedRoster == null) return;

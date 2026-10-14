@@ -195,7 +195,7 @@ namespace LivingCities.DFU
         {
             wakeHour = wake; sleepHour = sleep;
             // M2 preview is deliberately limited to the verified Breton test town.
-            if (town.MapID != 206728581) { Clear(); return; }
+            if (town.MapID != 206728581 && !(town.MapID==1291010263 && DaggerfallPopulationProbe.Enabled)) { Clear(); return; }
             if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
             Clear(); directory = town; navigation = nav; this.population = population; worldStore = store;
             responses = new CivilianResponses(store, population.SettlementId, (alarm, position) => {

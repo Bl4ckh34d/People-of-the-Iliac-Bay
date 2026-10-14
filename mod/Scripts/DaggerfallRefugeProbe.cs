@@ -143,7 +143,8 @@ namespace LivingCities.DFU
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(1);
             }
-            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall wall exterior routes and representative interior floor routes; models=" + representatives.Count);
+            yield return DaggerfallPopulationProbe.Run();
+            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall wall routes, refuge actors and city population; models=" + representatives.Count);
         }
     }
 }
