@@ -86,6 +86,7 @@ namespace LivingCities.DFU
         private static bool Blocker(Collider collider)
         {
             return collider.GetComponentInParent<DaggerfallEntityBehaviour>() == null &&
+                collider.GetComponentInParent<StaticNPC>() == null &&
                 collider.GetComponentInParent<MobilePersonNPC>() == null && collider.GetComponentInParent<PlayerMotor>() == null;
         }
         public static void Move(ResidentActor actor, AlarmPerson person, ResidentRoutine routine, Transform origin,
@@ -143,6 +144,7 @@ namespace LivingCities.DFU
             }
             float speed = person.Reaction == CivilianReaction.Flee ? (float)ResidentMovement.FleeSpeed(actor.Resident.AppearanceSeed) : 2.8f;
             Vector3 deltaMove = Vector3.MoveTowards(ground, target, GameManager.IsGamePaused ? 0 : speed * Time.deltaTime) - ground;
+            if (indoor != null) InteriorGeometry.OpenOrdinaryDoors(ground, ground + deltaMove);
             bool blocked = false;
             if (deltaMove.sqrMagnitude > 0.000001f)
                 foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * 0.3f, ground + Vector3.up * 1.65f,

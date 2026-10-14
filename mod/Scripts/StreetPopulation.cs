@@ -47,6 +47,7 @@ namespace LivingCities.DFU
             InstallHouseholdDoorHook();
             InstallTheftHook();
             InstallEntryAwareness();
+            InstallKeeperServiceHook();
         }
         private readonly HashSet<string> concealedHits = new HashSet<string>();
         public bool IsConcealedHit(string id) { return concealedHits.Contains(id); }
@@ -93,6 +94,7 @@ namespace LivingCities.DFU
             double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             responses.Murder(actor, actors.Values, id => GetState(id, now).Activity == Activity.Sleep, now,
                 interior ? interior.EntryDoor.buildingKey : -1);
+            ObserveKeeperViolence(worldStore.RecordViolence(population.SettlementId, actor.Resident.Id, now), actor.transform.position, now);
             PrepareIndoorEscapes(now);
         }
         private float nextEscapePreparation;
@@ -156,7 +158,8 @@ namespace LivingCities.DFU
             id = null; ground = Vector3.zero; return false;
         }
         public ResidentActor FindActor(string id) { ResidentActor actor; return actors.TryGetValue(id, out actor) ? actor : null; }
-        public bool IsLivingResident(string id) { return plans.Exists(p => p.Resident.Id == id && p.Resident.IsAlive); }
+        public bool IsLivingResident(string id) { return plans.Exists(p => p.Resident.Id == id && p.Resident.IsAlive) ||
+            (worldStore != null && population != null && worldStore.NativePeopleFor(population.SettlementId).Exists(p => p.Id == id && p.IsAlive)); }
         public static bool IsVisitDestination(DFLocation.BuildingTypes buildingType)
         {
             int type = (int)buildingType;
@@ -315,7 +318,7 @@ namespace LivingCities.DFU
             var loadedInterior = game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
             if (interior != loadedInterior)
             {
-                RestoreHouseFlats(); ClearActors(); ClearCorpses(); interior = loadedInterior; indoorSlots.Clear();
+                RestoreKeeperViews(); RestoreHouseFlats(); ClearActors(); ClearCorpses(); interior = loadedInterior; indoorSlots.Clear();
                 if (interior) ReconcileHouseFlats(interior);
                 indoorGeometry = interior ? new InteriorGeometry(interior) : null;
                 indoorBeds.Clear(); bedClaims.Clear();
@@ -332,6 +335,7 @@ namespace LivingCities.DFU
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
             SurveyKeeperIdentities();
+            UpdateKeeperResponses(seconds);
             UpdateEntryReports(seconds);
             UpdateOutdoorScenes(seconds);
             UpdateCorpses(seconds);
@@ -448,6 +452,7 @@ namespace LivingCities.DFU
                 origin.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
             Vector3 direction = next.BuildingKey == person.BuildingKey ?
                 origin.TransformVector(new Vector3((float)(next.X-person.X), (float)(next.Y-person.Y), (float)(next.Z-person.Z))) : actor.transform.forward;
+            if (!outside) InteriorGeometry.OpenOrdinaryDoors(actor.transform.position - Vector3.up, point);
             actor.Place(point, direction, person.Escape.Arrived(now) || GameManager.IsGamePaused);
         }
         private void ClearActors()
@@ -504,6 +509,7 @@ namespace LivingCities.DFU
         {
             entryJourneys.Clear();
             keeperRoom = null;
+            RestoreKeeperViews();
             RestoreHouseFlats();
             FlushOutdoorDeparture();
             if (building != null) { StopCoroutine(building); building = null; }
@@ -519,6 +525,6 @@ namespace LivingCities.DFU
             }
             hiddenVanilla.Clear(); ownsVanilla = false; vanilla = null; directory = null; geometry = null;
         }
-        private void OnDestroy() { RemoveEntryAwareness(); Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); }
+        private void OnDestroy() { RemoveEntryAwareness(); Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); if (keeperServiceHook != null) keeperServiceHook.Dispose(); }
     }
 }

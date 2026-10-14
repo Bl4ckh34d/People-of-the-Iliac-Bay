@@ -9,6 +9,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$GuardBuildingProbe,
     [switch]$GuardWitnessProbe,
     [switch]$HousingProbe,
+    [switch]$KeeperResponseProbe,
     [switch]$CrimeSceneProbe,
     [switch]$OutdoorSceneProbe,
     [switch]$InteriorEscapeProbe,
@@ -37,6 +38,7 @@ if ($GuardControllerProbe) { $arguments += ' -livingcities-guard-controller-prob
 if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
 if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
 if ($HousingProbe) { $arguments += ' -livingcities-housing-probe' }
+if ($KeeperResponseProbe) { $arguments += ' -livingcities-keeper-response-probe' }
 if ($CrimeSceneProbe) { $arguments += ' -livingcities-crime-scene-probe' }
 if ($OutdoorSceneProbe) { $arguments += ' -livingcities-outdoor-scene-probe' }
 if ($InteriorEscapeProbe) { $arguments += ' -livingcities-interior-escape-probe' }
@@ -72,6 +74,10 @@ try {
     if ($HousingProbe -and ($body -notmatch 'LIVING_CITIES_ENTRY_PASS:' -or $body -notmatch 'LIVING_CITIES_ENTRY_GUARD_PASS:')) { throw 'Entry witness probes did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_ENTRY_MESSENGER_PASS:') { throw 'Entry messenger probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_IDENTITY_PASS:') { throw 'Keeper identity/bed reload probe did not complete.' }
+    if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_RESPONSE_PASS:') { throw 'Keeper response/physical reporting probe did not complete.' }
+    if ($KeeperResponseProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_RESPONSE_PASS:') { throw 'Keeper response probe did not complete.' }
+    if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_KEEPER_WEAPON_PASS:') { throw 'Native weapon keeper witness probe did not complete.' }
+    if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_CIVILIAN_DOORS_PASS:') { throw 'Civilian door permission probe did not complete.' }
     if ($CrimeSceneProbe -and $body -notmatch 'LIVING_CITIES_TOWN_CRIME_SCENE_PASS:') { throw 'Crime scene probe did not complete.' }
     if ($OutdoorSceneProbe -and $body -notmatch 'LIVING_CITIES_OUTDOOR_SCENE_PASS:') { throw 'Outdoor scene probe did not complete.' }
     if ($InteriorEscapeProbe -and $body -notmatch 'LIVING_CITIES_TOWN_INTERIOR_ESCAPE_PASS:') { throw 'Interior escape probe did not complete.' }

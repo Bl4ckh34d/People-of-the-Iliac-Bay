@@ -6,6 +6,22 @@ namespace LivingCities.Core
 {
     public sealed partial class WorldStateStore
     {
+        public CivilianIncident NativeResponse(string id)
+        {
+            var person = state.NativePeople.Find(p => p.Id == id);
+            return person == null || person.ResponseIncidentId == null ? null :
+                state.AlarmIncidents.Find(a => a.Id == person.ResponseIncidentId);
+        }
+        // Caller also requires that the game's crime response has cleared.
+        public bool ClearNativeResponse(string id, double now)
+        {
+            Require(ValidTime(now), "Invalid response time.");
+            var person = state.NativePeople.Find(p => p.Id == id);
+            Require(person != null, "Unknown native person.");
+            var alarm = NativeResponse(id);
+            if (alarm != null && now < CivilianAlarms.ActiveUntil(alarm)) return false;
+            person.ResponseIncidentId = null; return true;
+        }
         private static string NativeId(int town, int building, int hash)
         { return string.Format(CultureInfo.InvariantCulture, "npc:{0}:{1}:{2}", town, building, hash); }
         public List<NativePerson> NativePeopleFor(int town)
@@ -86,6 +102,8 @@ namespace LivingCities.Core
             Require(person.HomeKey == -1 ? person.BedSlot == -1 && person.BedCapacity == 0 :
                 person.HomeKey >= 0 && person.BedCapacity > 0 && person.BedCapacity <= 16384 &&
                 person.BedSlot >= 0 && person.BedSlot < person.BedCapacity, "Invalid native bed reservation.");
+            Require(person.ResponseIncidentId == null || world.AlarmIncidents.Exists(a => a.Id == person.ResponseIncidentId &&
+                a.SettlementId == person.SettlementId && a.People.Exists(p => p.ResidentId == person.Id)), "Invalid native response binding.");
             if (person.HomeKey >= 0)
             {
                 var town = world.Settlements.Find(t => t.SettlementId == person.SettlementId);
@@ -114,7 +132,8 @@ namespace LivingCities.Core
                 result.Add(new NativePerson { Id = person.Id, Name = person.Name, SettlementId = person.SettlementId,
                     WorkKey = person.WorkKey, NativeHash = person.NativeHash, Sex = person.Sex, Race = person.Race,
                     FactionId = person.FactionId, TextureArchive = person.TextureArchive, TextureRecord = person.TextureRecord,
-                    IsAlive = person.IsAlive, HomeKey = person.HomeKey, BedSlot = person.BedSlot, BedCapacity = person.BedCapacity });
+                    IsAlive = person.IsAlive, HomeKey = person.HomeKey, BedSlot = person.BedSlot, BedCapacity = person.BedCapacity,
+                    ResponseIncidentId = person.ResponseIncidentId });
             }
             return result;
         }

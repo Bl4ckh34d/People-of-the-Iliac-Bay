@@ -15,6 +15,7 @@ namespace LivingCities.DFU
         public Vector3? EntryGround { get; private set; }
         private readonly DaggerfallInterior interior;
         private const float Radius = 0.24f;
+        private const float GridStep = 0.4f;
         private readonly Dictionary<Vector2Int, Vector3> floors = new Dictionary<Vector2Int, Vector3>();
         private readonly Dictionary<Vector2Int, Vector2Int> parents = new Dictionary<Vector2Int, Vector2Int>();
         public InteriorGeometry(DaggerfallInterior interior)
@@ -45,7 +46,7 @@ namespace LivingCities.DFU
             var seen = new HashSet<Vector2Int>(); seen.Add(Vector2Int.zero);
             var occupants = interior.GetComponentsInChildren<StaticNPC>();
             int visited = 0;
-            while (queue.Count > 0 && visited++ < 900 && LocalAnchors.Count < 80)
+            while (queue.Count > 0 && visited++ < 3600)
             {
                 Vector3 point = queue.Dequeue();
                 bool suitable = true;
@@ -55,12 +56,12 @@ namespace LivingCities.DFU
                     if (Vector3.Distance(point + Vector3.up, npc.transform.position) < 1.2f) { suitable = false; break; }
                 foreach (var anchor in LocalAnchors)
                     if (Vector3.Distance(point, interior.transform.TransformPoint(anchor)) < 1.2f) { suitable = false; break; }
-                if (suitable) LocalAnchors.Add(interior.transform.InverseTransformPoint(point));
+                if (suitable && LocalAnchors.Count < 80) LocalAnchors.Add(interior.transform.InverseTransformPoint(point));
                 foreach (var direction in new[] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left })
                 {
-                    Vector3 candidate = point + direction * 0.8f;
-                    var cell = new Vector2Int(Mathf.RoundToInt((candidate.x - seed.x) / 0.8f), Mathf.RoundToInt((candidate.z - seed.z) / 0.8f));
-                    if (seen.Contains(cell) || Mathf.Abs(cell.x) > 25 || Mathf.Abs(cell.y) > 25) continue;
+                    Vector3 candidate = point + direction * GridStep;
+                    var cell = new Vector2Int(Mathf.RoundToInt((candidate.x - seed.x) / GridStep), Mathf.RoundToInt((candidate.z - seed.z) / GridStep));
+                    if (seen.Contains(cell) || Mathf.Abs(cell.x) > 50 || Mathf.Abs(cell.y) > 50) continue;
                     Vector3 floor;
                     if (!Floor(candidate, 0.5f, 1, out floor) || Mathf.Abs(floor.y - point.y) > 0.3f || !Clear(floor)) continue;
                     Vector3 delta = floor - point; bool blocked = false;
@@ -70,7 +71,7 @@ namespace LivingCities.DFU
                     if (!blocked)
                     {
                         seen.Add(cell); floors.Add(cell, floor);
-                        parents.Add(cell, new Vector2Int(Mathf.RoundToInt((point.x - seed.x) / 0.8f), Mathf.RoundToInt((point.z - seed.z) / 0.8f)));
+                        parents.Add(cell, new Vector2Int(Mathf.RoundToInt((point.x - seed.x) / GridStep), Mathf.RoundToInt((point.z - seed.z) / GridStep)));
                         queue.Enqueue(floor);
                     }
                 }
@@ -127,8 +128,27 @@ namespace LivingCities.DFU
         }
         private static bool Blocker(Collider collider)
         {
+            var door = collider.GetComponentInParent<DaggerfallActionDoor>();
+            if (door && !door.IsLocked && !door.GetComponent<DaggerfallAction>()) return false;
             return collider.GetComponentInParent<DaggerfallEntityBehaviour>() == null &&
+                collider.GetComponentInParent<StaticNPC>() == null &&
                 collider.GetComponentInParent<MobilePersonNPC>() == null && collider.GetComponentInParent<PlayerMotor>() == null;
+        }
+        public static void OpenOrdinaryDoors(Vector3 from, Vector3 to)
+        {
+            if (GameManager.IsGamePaused) return;
+            Vector3 delta = to - from;
+            if (delta.sqrMagnitude < 0.000001f) return;
+            var hits = Physics.SphereCastAll(from + Vector3.up, Radius, delta.normalized,
+                Mathf.Min(2, delta.magnitude + Radius), ~0, QueryTriggerInteraction.Ignore);
+            System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+            foreach (var hit in hits)
+            {
+                var door = hit.collider.GetComponentInParent<DaggerfallActionDoor>();
+                if (door && !door.IsLocked && !door.IsOpen && !door.GetComponent<DaggerfallAction>())
+                    door.SetOpen(true, true);
+                else if (Blocker(hit.collider)) break;
+            }
         }
     }
 }

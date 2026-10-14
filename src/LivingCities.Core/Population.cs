@@ -12,6 +12,7 @@ namespace LivingCities.Core
     public sealed class NativePerson
     {
         public string Id, Name;
+        public string ResponseIncidentId;
         public int SettlementId, WorkKey, NativeHash, Race, FactionId, TextureArchive, TextureRecord;
         public ResidentSex Sex;
         public bool IsAlive = true;

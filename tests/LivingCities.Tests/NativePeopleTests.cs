@@ -7,6 +7,34 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Native keeper witnesses share bounded alarms, escape timing and transactional persistence", () => {
+                var store = new WorldStateStore(42); var town = store.GetOrCreate(1, new[] { 8, 9 }, 3);
+                var victim = town.Households[0].Residents[0];
+                var keeper = store.RegisterNativePerson(1, 4, 1, "Keeper", ResidentSex.Female, 1, 41, 182, 1);
+                var alarm = store.RecordViolence(1, victim.Id, 100);
+                store.LocateViolence(alarm.Id, 4, 0, 0, 0);
+                var witness = store.Witness(alarm.Id, keeper.Id, 100);
+                Check.True(witness.DirectWitness); Check.Equal(CivilianReaction.Flee, witness.Reaction);
+                witness.HasPosition = true; witness.BuildingKey = 4;
+                witness.Escape = CivilianEscape.Create(witness, 100,
+                    new List<GuardPoint3> { new GuardPoint3 { X = 0 }, new GuardPoint3 { X = 3 } },
+                    new List<SavedRoutePoint> { new SavedRoutePoint { X = 0 }, new SavedRoutePoint { X = 10 } }, 3.5);
+                Check.True(store.Warn(alarm.Id, keeper.Id, town.Households[1].Residents[0].Id, 101));
+                var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+                var saved = restored.ActiveAlarm(keeper.Id, 102).People.Find(p => p.ResidentId == keeper.Id);
+                Check.Equal(alarm.Id, restored.NativePeopleFor(1)[0].ResponseIncidentId);
+                Check.True(!restored.ClearNativeResponse(keeper.Id, 102));
+                Check.Equal(1, saved.Warned.Count); Check.Equal(3.5, saved.Escape.Speed);
+                Check.Equal(0, restored.AdvanceEscapes(1, saved.Escape.ReportAt - 1).Count);
+                Check.Equal(1, restored.AdvanceEscapes(1, saved.Escape.ReportAt).Count);
+                var corrupt = store.Snapshot(); corrupt.NativePeople.Clear();
+                Check.Throws<ArgumentException>(() => restored.Restore(corrupt));
+                Check.True(restored.ActiveAlarm(keeper.Id, 102) != null);
+                Check.True(restored.ActiveAlarm(keeper.Id, CivilianAlarms.ActiveUntil(alarm)) == null);
+                Check.True(restored.ClearNativeResponse(keeper.Id, CivilianAlarms.ActiveUntil(alarm)));
+                Check.True(restored.NativePeopleFor(1)[0].ResponseIncidentId == null);
+                Check.Throws<ArgumentException>(() => restored.RecordViolence(1, keeper.Id, 2000));
+            }));
             cases.Add(("Native person identity preserves name and appearance across repeated registration and reload", () => {
                 var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);
                 var person = store.RegisterNativePerson(1, 4, -123, "Ysausa Masterham", ResidentSex.Female, 1, 0, 184, 18);

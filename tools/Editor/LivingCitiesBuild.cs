@@ -297,6 +297,7 @@ public static class LivingCitiesBuild
         VerifyGuardHooks();
         VerifyHouseholdDoorHook();
         VerifyTheftHook();
+        VerifyNativeServiceHook();
         VerifyTheftSight();
         VerifyEntryPersistence();
         VerifyNativePeoplePersistence();
@@ -534,6 +535,31 @@ public static class LivingCitiesBuild
             for (int i = 0; i < 1000; i++) Require(Dice100.FailedRoll(chance), "Zero detection always passes native theft roll");
         }
         Debug.Log("LIVING_CITIES_THEFT_HOOK_PASS: zero native detection for confirmed absence of witnesses.");
+    }
+    private static void VerifyNativeServiceHook()
+    {
+        var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText("Assets/Game/Mods/LivingCities/LivingCities.dfmod.json"));
+        var mod = new Mod(); mod.ModInfo.Files = info.Files;
+        var types = (Type[])typeof(Mod).GetMethod("GetTypesInEditor", System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.NonPublic).Invoke(mod, null);
+        var type = Array.Find(types, t => t.FullName == "LivingCities.QuestHooks.NativeServiceHooks");
+        Require(type != null, "Native service response hook is loadable");
+        var root = new GameObject("Native service hook probe");
+        try
+        {
+            var talk = root.AddComponent<TalkManager>();
+            var npc = root.AddComponent<StaticNPC>();
+            int calls = 0;
+            using ((IDisposable)Activator.CreateInstance(type, new object[] { new Func<StaticNPC, bool>(n => { calls++; return n == npc; }) }))
+            {
+                talk.TalkToStaticNPC(npc);
+                typeof(PlayerActivate).GetMethod("StaticNPCClick", System.Reflection.BindingFlags.Instance |
+                    System.Reflection.BindingFlags.NonPublic).Invoke(root.AddComponent<PlayerActivate>(), new object[] { npc });
+                Require(calls == 2, "Response blocks direct dialogue and native service activation");
+            }
+        }
+        finally { UnityEngine.Object.DestroyImmediate(root); }
+        Debug.Log("LIVING_CITIES_NATIVE_SERVICE_HOOK_PASS");
     }
     private static void VerifyHouseholdDoorHook()
     {

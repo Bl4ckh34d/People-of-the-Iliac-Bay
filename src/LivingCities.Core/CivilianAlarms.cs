@@ -41,6 +41,8 @@ namespace LivingCities.Core
         }
         public static CivilianReaction ChooseReaction(Resident resident)
         {
+            // Native merchant combat capability is not modeled yet. Their first response is flight.
+            if (resident.Id != null && resident.Id.StartsWith("npc:", StringComparison.Ordinal)) return CivilianReaction.Flee;
             // Initial capability policy, until professions and courage are modeled.
             return resident.AgeGroup == ResidentAgeGroup.Child ||
                 StableSeed.Combine(resident.AppearanceSeed, 937, 0, 0) % 4 != 0 ? CivilianReaction.Flee : CivilianReaction.Fight;
@@ -61,6 +63,7 @@ namespace LivingCities.Core
         {
             Require(ValidTime(now), "Invalid incident time.");
             var victim = AlarmResident(settlementId, victimId);
+            Require(!state.NativePeople.Exists(p => p.Id == victimId), "Native death integration is not available.");
             foreach (var existing in state.AlarmIncidents)
                 if (existing.VictimId == victimId) return existing;
             Require(victim.IsAlive, "Cannot invent a new killing for a dead resident.");
@@ -81,6 +84,8 @@ namespace LivingCities.Core
                 incident.People.Add(person);
             }
             person.DirectWitness = true;
+            var native = state.NativePeople.Find(p => p.Id == residentId);
+            if (native != null) native.ResponseIncidentId = incident.Id;
             return person;
         }
         public bool Warn(string incidentId, string fromId, string toId, double now)
@@ -93,6 +98,8 @@ namespace LivingCities.Core
                 incident.People.Exists(p => p.ResidentId == toId)) return false;
             from.Warned.Add(toId);
             incident.People.Add(new AlarmPerson { ResidentId = toId, Reaction = CivilianAlarms.ChooseReaction(target) });
+            var native = state.NativePeople.Find(p => p.Id == toId);
+            if (native != null) native.ResponseIncidentId = incident.Id;
             return true;
         }
         public CivilianIncident ActiveAlarm(string residentId, double now)
@@ -114,7 +121,15 @@ namespace LivingCities.Core
             var town = state.Settlements.Find(t => t.SettlementId == townId);
             if (town != null) foreach (var home in town.Households)
                 foreach (var resident in home.Residents) if (resident.Id == id) return resident;
+            var native = state.NativePeople.Find(p => p.SettlementId == townId && p.Id == id);
+            if (native != null) return NativeAlarmResident(native);
             throw new ArgumentException("Incident resident does not belong to this settlement.");
+        }
+        private static Resident NativeAlarmResident(NativePerson person)
+        {
+            return new Resident { Id = person.Id, HomeKey = person.HomeKey, IsAlive = person.IsAlive,
+                Sex = person.Sex, AppearanceSeed = StableSeed.Combine(0, (uint)person.SettlementId,
+                    (uint)person.WorkKey, unchecked((uint)person.NativeHash)) };
         }
         private static bool ValidTime(double value) { return !double.IsNaN(value) && !double.IsInfinity(value) && value >= 0; }
         private static bool Active(CivilianIncident incident, double now)
@@ -132,6 +147,9 @@ namespace LivingCities.Core
                 foreach (var home in town.Households) foreach (var resident in home.Residents) residents.Add(resident.Id, resident);
                 Require(alarm.VictimId != null && residents.ContainsKey(alarm.VictimId) && ValidTime(alarm.StartedAt) &&
                     ValidTime(alarm.ExpiresAt) && alarm.ExpiresAt == alarm.StartedAt + 900 && alarm.People != null, "Invalid incident data.");
+                // Native witnesses use the same bounded ledger; native death/corpse integration is separate.
+                if (source.NativePeople != null) foreach (var native in source.NativePeople)
+                    if (native.SettlementId == alarm.SettlementId) residents.Add(native.Id, NativeAlarmResident(native));
                 var copied = new CivilianIncident { Id = alarm.Id, VictimId = alarm.VictimId, SettlementId = alarm.SettlementId,
                     StartedAt = alarm.StartedAt, ExpiresAt = alarm.ExpiresAt, HasLocation = alarm.HasLocation,
                     BuildingKey = alarm.BuildingKey, X = alarm.X, Y = alarm.Y, Z = alarm.Z };
