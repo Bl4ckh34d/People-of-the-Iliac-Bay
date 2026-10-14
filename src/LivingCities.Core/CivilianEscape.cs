@@ -120,7 +120,7 @@ namespace LivingCities.Core
                     if (person.Escape == null || person.Reaction != CivilianReaction.Flee ||
                         !AlarmResident(settlementId, person.ResidentId).IsAlive) continue;
                     person.Escape.Advance(person, now);
-                    if (person.DirectWitness && person.Escape.Arrived(now)) ready = true;
+                    if ((person.DirectWitness || person.HeardViolence) && person.Escape.Arrived(now)) ready = true;
                 }
                 if (ready) reports.Add(alarm);
             }

@@ -84,6 +84,10 @@ namespace LivingCities.Core
                 person = new AlarmPerson { ResidentId = residentId, Reaction = CivilianAlarms.ChooseReaction(resident) };
                 incident.People.Add(person);
             }
+            // Hearing alone never authorizes attacking an unidentified player.
+            // Sight can restore the resident's capability before flight starts.
+            if (!person.DirectWitness && person.HeardViolence && person.Escape == null)
+                person.Reaction = CivilianAlarms.ChooseReaction(resident);
             person.DirectWitness = true;
             var native = state.NativePeople.Find(p => p.Id == residentId);
             if (native != null) native.ResponseIncidentId = incident.Id;
@@ -176,7 +180,7 @@ namespace LivingCities.Core
                         Reaction = person.Reaction, HasPosition = person.HasPosition, ReachedRefuge = person.ReachedRefuge,
                         BuildingKey = person.BuildingKey, X = person.X, Y = person.Y, Z = person.Z,
                         Escape = CivilianEscape.Copy(person.Escape) };
-                    Require(copy.Escape == null || (person.DirectWitness && person.HasPosition && person.Reaction == CivilianReaction.Flee &&
+                    Require(copy.Escape == null || ((person.DirectWitness || person.HeardViolence) && person.HasPosition && person.Reaction == CivilianReaction.Flee &&
                         copy.Escape.BuildingKey == alarm.BuildingKey &&
                         copy.Escape.StartedAt >= alarm.StartedAt && copy.Escape.StartedAt < alarm.ExpiresAt), "Invalid witness escape ownership.");
                     var warned = new HashSet<string>();

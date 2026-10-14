@@ -369,6 +369,35 @@ public static class LivingCitiesBuild
             "Legacy native save lacks invented hearing");
         Debug.Log("LIVING_CITIES_INDOOR_NOISE_PERSISTENCE_PASS: failed/successful wake, no reroll, hearing/sight distinction and absent legacy field");
     }
+    private static void VerifyHearingReportPersistence()
+    {
+        var store = new WorldStateStore(1);
+        var town = store.GetOrCreate(1, new[] { 7, 8 }, 1);
+        var victim = town.Households[0].Residents[0];
+        var alarm = store.RecordViolence(1, victim.Id, 12000000100);
+        store.LocateViolence(alarm.Id, 7, 0, 0, 0);
+        var person = store.HearViolence(alarm.Id, town.Households[1].Residents[0].Id, 7, alarm.StartedAt, false, 0, 2, 0);
+        person.HasPosition = true; person.BuildingKey = 7;
+        person.Escape = CivilianEscape.Create(person, alarm.StartedAt,
+            new List<GuardPoint3> { new GuardPoint3(), new GuardPoint3 { X = 2 } },
+            new List<SavedRoutePoint> { new SavedRoutePoint { X = 2 }, new SavedRoutePoint() });
+        Population.MarkDead(town, victim.Id); store.ConfirmCorpse(alarm.Id, alarm.StartedAt);
+        store.RegisterUnwitnessedScene(alarm.Id);
+        var roster = store.GetOrCreateGuards(1, 1, new[] { new SavedRoutePoint() });
+        double time = person.Escape.ReportAt;
+        store.AdvanceEscapes(1, time);
+        Require(store.ReportHeardViolence(alarm.Id, person.ResidentId, time), "Native hearing report reaches posted guard");
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        var restored = new WorldStateStore(0);
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        var scene = restored.Snapshot().AlarmIncidents[0].Scene;
+        Require(scene.Reported && !scene.PlayerLeft && !scene.Discovered && scene.ReporterId == person.ResidentId &&
+            scene.ReportGuardId == roster.Guards[0].Id && Math.Abs(scene.ReportedAt-time) <= 0.001,
+            "Native physical hearing report ownership survives before departure");
+        Require(restored.ObserveCrimeScenes(1, 7, time+1).Count == 1,
+            "Neutral native investigation begins without player departure");
+        Debug.Log("LIVING_CITIES_HEARING_REPORT_PERSISTENCE_PASS: real contact, fractional flight time, neutral scene before departure and native reload");
+    }
     public static void VerifyGuardPersistence()
     {
         AuditFixtureHousing();
@@ -383,6 +412,7 @@ public static class LivingCitiesBuild
         VerifyNativePeoplePersistence();
         VerifyCivilianHitScopes();
         VerifyIndoorNoisePersistence();
+        VerifyHearingReportPersistence();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
         var posts = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 10 },

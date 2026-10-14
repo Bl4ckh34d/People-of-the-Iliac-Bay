@@ -19,6 +19,18 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Seeing attack restores fighter capability after hearing-only flight decision", () => {
+                var store = World(out var victim, out var observer);
+                var resident = store.GetOrCreate(1, new[] { 1, 2, 3 }).Households.SelectMany(h=>h.Residents).First(p=>p.Id == observer);
+                for (uint seed = 0; seed < 100; seed++)
+                { resident.AppearanceSeed = seed; if (CivilianAlarms.ChooseReaction(resident) == CivilianReaction.Fight) break; }
+                Check.Equal(CivilianReaction.Fight, CivilianAlarms.ChooseReaction(resident));
+                var person = store.HearViolence("murder:"+victim, observer, 1, 100, false, 0, 2, 0);
+                Check.Equal(CivilianReaction.Flee, person.Reaction);
+                store.Witness("murder:"+victim, observer, 100);
+                Check.True(person.DirectWitness && person.HeardViolence);
+                Check.Equal(CivilianReaction.Fight, person.Reaction);
+            }));
             cases.Add(("Violence wakes more readily than theft or quiet steps; Stealth and distance matter", () => {
                 Check.True(NoiseAwareness.WakeChance(NoiseLevel.Violence, 30, 2) > NoiseAwareness.WakeChance(NoiseLevel.Theft, 30, 2));
                 Check.True(NoiseAwareness.WakeChance(NoiseLevel.Theft, 30, 2) > NoiseAwareness.WakeChance(NoiseLevel.QuietSteps, 30, 2));
