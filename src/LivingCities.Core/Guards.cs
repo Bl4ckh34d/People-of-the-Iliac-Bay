@@ -36,6 +36,7 @@ namespace LivingCities.Core
         public CrimeSceneWarning Warning;
         public List<GuardArrivalEvidence> Arrivals = new List<GuardArrivalEvidence>();
         public bool Investigation;
+        public bool AwaitingApproach;
         public bool HasArrival;
         public double FirstArrivalAt;
         public string Id;
@@ -310,7 +311,10 @@ namespace LivingCities.Core
                 Require(report != null && !string.IsNullOrWhiteSpace(report.Id) && reports.Add(report.Id) && report.GuardIds != null && report.GuardIds.Count <= 256, "Invalid guard report.");
                 bool outdoorSearch = report.Investigation && !report.BuildingKey.HasValue;
                 Require(report.Warning == null || (report.Investigation && report.BuildingKey.HasValue), "Warning needs an indoor investigation.");
-                Require((report.BuildingKey.HasValue || outdoorSearch) == (report.Entrance != null), "Incomplete report destination.");
+                Require(!report.AwaitingApproach || report.BuildingKey.HasValue && !report.Investigation &&
+                    report.GuardIds.Count == 0 && report.Warning == null && report.Entrance == null,
+                    "Invalid queued building report.");
+                Require((report.BuildingKey.HasValue && !report.AwaitingApproach || outdoorSearch) == (report.Entrance != null), "Incomplete report destination.");
                 Require(!report.BuildingKey.HasValue || report.BuildingKey.Value >= 0, "Invalid report building.");
                 List<SavedRoutePoint> patrol = null;
                 if (outdoorSearch)
@@ -324,6 +328,7 @@ namespace LivingCities.Core
                 Require(Time(report.FirstArrivalAt) && (report.HasArrival ? report.Investigation && report.GuardIds.Count > 0 : report.FirstArrivalAt == 0),
                     "Invalid investigation arrival evidence.");
                 var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey, Investigation = report.Investigation,
+                    AwaitingApproach = report.AwaitingApproach,
                     SearchRoute = patrol, SearchLaps = report.SearchLaps,
                     Warning = CrimeSceneWarning.Copy(report.Warning),
                     HasArrival = report.HasArrival, FirstArrivalAt = report.FirstArrivalAt,

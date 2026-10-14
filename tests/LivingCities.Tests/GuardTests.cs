@@ -16,6 +16,40 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Queued native building alarm survives save and dispatches only after a surveyed route", () => {
+                var roster = Roster(1);
+                roster.QueueBuildingReport("native:shop", 73);
+                roster.QueueBuildingReport("native:shop", 73);
+                Check.Equal(1, roster.Reports.Count);
+                Check.Equal(0, roster.DispatchBuilding("native:shop", 73, 10, 1, 2, 10).Count);
+                var copy = GuardRoster.CopyValidated(JsonSerializer.Deserialize<GuardRoster>(
+                    JsonSerializer.Serialize(roster, new JsonSerializerOptions { IncludeFields = true }),
+                    new JsonSerializerOptions { IncludeFields = true }));
+                Check.Equal(73, copy.Reports[0].BuildingKey.Value);
+                Check.Equal(0, copy.Reports[0].GuardIds.Count);
+                Check.Throws<ArgumentException>(() => copy.QueueBuildingReport("native:shop", 74));
+                copy.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    new Dictionary<string, List<SavedRoutePoint>> { { copy.Guards[0].Id, Route(0, 100) } });
+                Check.Equal(1, copy.DispatchBuilding("native:shop", 73, 100, 1, 2, 10).Count);
+                Check.Near(600, copy.Guards[0].ArrivesAt);
+                Check.Equal(1, copy.DispatchBuilding("native:shop", 73, 110, 4, 2, 10).Count);
+                Check.Near(600, copy.Guards[0].ArrivesAt);
+                GuardRoster.CopyValidated(copy);
+            }));
+            cases.Add(("Queued building report validation rejects fake responders and missing queue markers", () => {
+                var roster = Roster(1); roster.QueueBuildingReport("native:shop", 73);
+                var broken = GuardRoster.CopyValidated(roster);
+                broken.Reports[0].GuardIds.Add(broken.Guards[0].Id);
+                Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(broken));
+                broken = GuardRoster.CopyValidated(roster); broken.Reports[0].AwaitingApproach = false;
+                Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(broken));
+                broken = GuardRoster.CopyValidated(roster); broken.Reports[0].Investigation = true;
+                Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(broken));
+                broken = GuardRoster.CopyValidated(roster); broken.Reports[0].Entrance = new SavedRoutePoint();
+                Check.Throws<ArgumentException>(() => GuardRoster.CopyValidated(broken));
+                Check.Throws<ArgumentException>(() => roster.DispatchBuilding("native:shop", 73, 1, 1, 2, 10, true));
+                Check.Equal(1, roster.Reports.Count);
+            }));
             cases.Add(("Building alarm dispatches only guards who received the report", () => {
                 var roster = Roster();
                 roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },

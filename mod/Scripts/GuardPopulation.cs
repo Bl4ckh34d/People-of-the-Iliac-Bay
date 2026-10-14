@@ -153,6 +153,13 @@ namespace LivingCities.DFU
             }
             awaitingSight = false;
             double now = Now();
+            if (reportId == null && building.HasValue)
+            {
+                var saved = Roster.Reports.Find(r => r.BuildingKey == building && !r.Investigation &&
+                    r.Id.StartsWith("native:", StringComparison.Ordinal) && (r.GuardIds.Count == 0 ||
+                    Roster.Guards.Exists(g => g.IsAlive && g.IncidentId == r.Id)));
+                if (saved != null) reportId = saved.Id;
+            }
             if (reportId == null) reportId = "native:" + directory.MapID + ":" + building + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
             var previous = Roster.Reports.Find(r => r.Id == reportId);
             if (previous != null && previous.GuardIds.Count > 0)
@@ -162,6 +169,8 @@ namespace LivingCities.DFU
             }
             if (building.HasValue)
             {
+                if (!Roster.BuildingApproaches.Exists(a => a.BuildingKey == building.Value))
+                    Roster.QueueBuildingReport(reportId, building.Value);
                 var responders = Roster.DispatchBuilding(reportId, building.Value, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
                 Debug.Log("LIVING_CITIES_GUARD_BUILDING_DISPATCH: building=" + building + "; responders=" + responders.Count);
                 return;
@@ -180,6 +189,15 @@ namespace LivingCities.DFU
         }
         public bool CanInvestigate(int buildingKey)
         { return OwnsTown() && Roster.BuildingApproaches.Exists(a => a.BuildingKey == buildingKey && a.Routes.Count > 0); }
+        private void RetryNativeReports(double now)
+        {
+            // Keep the reported building even when the player changes scenes or reloads.
+            foreach (var report in new List<GuardReport>(Roster.Reports))
+                if (report.Id.StartsWith("native:", StringComparison.Ordinal) && !report.Investigation &&
+                    report.BuildingKey.HasValue && report.GuardIds.Count == 0)
+                    Roster.DispatchBuilding(report.Id, report.BuildingKey.Value, now,
+                        Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+        }
         private void UpdateInvestigations(double now)
         {
             var game = GameManager.Instance;
@@ -325,9 +343,15 @@ namespace LivingCities.DFU
                 entryGround = interior ? new InteriorGeometry(interior).EntryGround : null;
             }
             Roster.Advance(now); Roster.Recruit(now);
-            if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None) { reportId = null; awaitingSight = false; }
+            if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
+            {
+                reportId = null; awaitingSight = false;
+                Roster.Reports.RemoveAll(r => r.Id.StartsWith("native:", StringComparison.Ordinal) &&
+                    !r.Investigation && r.GuardIds.Count == 0);
+            }
             bool routeTick = Time.unscaledTime >= nextRoutes;
             if (routeTick) nextRoutes = Time.unscaledTime + 1;
+            if (routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) RetryNativeReports(now);
             if (awaitingSight && routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) ReportNative(false);
             if (interior) { UpdateInterior(now); return; }
             HideNative();

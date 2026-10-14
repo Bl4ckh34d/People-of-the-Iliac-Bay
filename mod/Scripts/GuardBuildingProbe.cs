@@ -21,6 +21,8 @@ namespace LivingCities.DFU
             bool enabled = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true);
             var controller = adapter.GetComponent<GuardPopulation>();
             bool saved = false, loaded = false;
+            GuardBuildingApproach withheld = null;
+            GuardRoster withheldRoster = null;
             SaveLoadManager.OnSaveEventHandler onSave = ignored => saved = true;
             SaveLoadManager.OnLoadEventHandler onLoad = ignored => loaded = true;
             SaveLoadManager.OnSave += onSave; SaveLoadManager.OnLoad += onLoad;
@@ -55,8 +57,46 @@ namespace LivingCities.DFU
                 TownSmokeHarness.EnterInterior(owner.transform, door);
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = true;
+                withheld = approach; withheldRoster = controller.Roster;
+                withheldRoster.BuildingApproaches.Remove(withheld);
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Theft;
                 game.PlayerEntity.SpawnCityGuards(true); game.PlayerEntity.SpawnCityGuards(true);
+                yield return new WaitForSecondsRealtime(1.2f);
+                var pending = controller.Roster.Reports.Find(r => r.BuildingKey == approach.BuildingKey);
+                if (pending == null || !pending.AwaitingApproach || pending.GuardIds.Count != 0 || controller.ActiveCount != 0)
+                    throw new InvalidOperationException("Missing approach lost native alarm or created immediate responders.");
+                string cancelledId = pending.Id;
+                game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.None;
+                yield return new WaitForSecondsRealtime(1.2f);
+                if (controller.Roster.Reports.Exists(r => r.Id == cancelledId))
+                    throw new InvalidOperationException("Cleared crime retained an unassigned native alarm.");
+                game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Theft;
+                game.PlayerEntity.SpawnCityGuards(true);
+                pending = controller.Roster.Reports.Find(r => r.BuildingKey == approach.BuildingKey);
+                if (pending == null || !pending.AwaitingApproach || pending.GuardIds.Count != 0)
+                    throw new InvalidOperationException("New crime failed to create a fresh pending alarm.");
+                string pendingId = pending.Id;
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - pending shop alarm");
+                deadline = Time.realtimeSinceStartup + 30;
+                while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!saved) throw new InvalidOperationException("Pending alarm save timed out.");
+                int pendingKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - pending shop alarm");
+                game.SaveLoadManager.Load(pendingKey); DaggerfallUI.Instance.PopToHUD();
+                deadline = Time.realtimeSinceStartup + 60;
+                while ((!loaded || controller.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (!loaded || controller.Roster == null) throw new InvalidOperationException("Pending alarm reload timed out.");
+                pending = controller.Roster.Reports.Find(r => r.Id == pendingId);
+                if (!loaded || pending == null || !pending.AwaitingApproach || pending.GuardIds.Count != 0 || !controller.OwnsSettlement)
+                    throw new InvalidOperationException("Real reload lost pending native building alarm.");
+                game.PlayerEntity.SpawnCityGuards(true); game.PlayerEntity.SpawnCityGuards(true);
+                if (controller.Roster.Reports.FindAll(r => r.BuildingKey == approach.BuildingKey &&
+                    r.Id.StartsWith("native:", StringComparison.Ordinal)).Count != 1)
+                    throw new InvalidOperationException("Repeated native alarm after reload duplicated the pending report.");
+                controller.Roster.BuildingApproaches.Add(approach);
+                withheld = null;
+                yield return new WaitForSecondsRealtime(1.2f);
+                saved = false; loaded = false;
+                Debug.Log("LIVING_CITIES_PENDING_GUARD_PASS: repeated native alarm, no instant responders, cleared-crime cancellation, real pending save/reload, automatic surveyed-route retry.");
                 var roster = controller.Roster;
                 GuardReport report = roster.Reports.Find(r => r.BuildingKey == approach.BuildingKey);
                 if (report == null || report.GuardIds.Count < 1 || report.GuardIds.Count > 4)
@@ -124,6 +164,8 @@ namespace LivingCities.DFU
             }
             finally
             {
+                if (withheld != null && !withheldRoster.BuildingApproaches.Exists(a => a.BuildingKey == withheld.BuildingKey))
+                    withheldRoster.BuildingApproaches.Add(withheld);
                 SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad;
                 controller.Clear(); flag.SetValue(adapter, enabled);
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.None;

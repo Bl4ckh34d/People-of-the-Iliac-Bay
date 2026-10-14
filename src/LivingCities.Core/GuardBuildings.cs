@@ -18,6 +18,15 @@ namespace LivingCities.Core
     }
     public sealed partial class GuardRoster
     {
+        public void QueueBuildingReport(string incidentId, int buildingKey)
+        {
+            Require(!string.IsNullOrWhiteSpace(incidentId) && buildingKey >= 0, "Invalid queued building report.");
+            var report = Reports.Find(r => r.Id == incidentId);
+            Require(report == null || report.BuildingKey == buildingKey && !report.Investigation,
+                "Queued report cannot change destination or policy.");
+            if (report == null) Reports.Add(new GuardReport {
+                Id = incidentId, BuildingKey = buildingKey, AwaitingApproach = true });
+        }
         // Exterior adapters survey collision-checked routes before the scene unloads.
         // A missing route is unavailable; never substitute straight-line travel.
         public void CacheBuildingApproach(int buildingKey, SavedRoutePoint entrance,
@@ -44,7 +53,7 @@ namespace LivingCities.Core
             var approach = BuildingApproaches.Find(a => a.BuildingKey == buildingKey);
             if (approach == null) return new List<GuardRecord>();
             approach = ValidateApproach(approach);
-            Require(existing == null || Distance(existing.Entrance, approach.Entrance) < 0.05,
+            Require(existing == null || existing.AwaitingApproach || Distance(existing.Entrance, approach.Entrance) < 0.05,
                 "Pending report entrance cannot change.");
             var routes = new Dictionary<string, List<SavedRoutePoint>>();
             foreach (var guard in Guards)
@@ -57,6 +66,7 @@ namespace LivingCities.Core
             var sent = Dispatch(incidentId, now, routes, maximumResponders, speed, timeScale);
             var report = Reports.Find(r => r.Id == incidentId);
             report.BuildingKey = buildingKey; report.Entrance = CopyPoint(approach.Entrance);
+            report.AwaitingApproach = false;
             report.Investigation = investigation;
             if (investigation) foreach (var guard in sent)
             {

@@ -1,5 +1,15 @@
 # Building guard response implementation
 
+## 0.3.22 durable native building alarms
+
+Native reported crimes now retain their original building when its approach is unavailable. `QueueBuildingReport` saves an explicit `AwaitingApproach` report with no entrance, route or responders. Save validation permits only an unassigned non-investigation building report in this state and rejects fabricated responders or partial destinations. Existing saves default the additive marker to false.
+
+The active controller retries unassigned native building reports once per real second while the player's crime remains active. Once a surveyed approach and available guards exist, normal measured travel starts from the current game time. Reload or entering another building cannot retarget that saved report. Repeated callbacks reuse the saved pending or active report instead of issuing extra responder batches. Clearing the player's crime removes unassigned native reports; assigned guards retain their existing return behavior. Discovery scenes and civilian messenger knowledge retain their separate mechanisms.
+
+This supersedes the earlier native missing-route report limitation. It does not add unsurveyed navigation, patrol pairs, torches, universal crime attribution or missing civilian escape routes.
+
+Verification:198/198 core tests and Unity/native build pass. Actual-player GuardBuildingProbe tests repeated alarms without an approach, no immediate responders, cancellation after crime clears, real pending save/reload, another repeated alarm after reload, automatic route retry, timed doorway arrival, wounded guard persistence and return. `work/PendingGuard-reload-red.log` reproduces duplicate reports after reload before the reuse fix; `work/PendingGuard-0322-pass.log` records the final passing sequence. Read-only Luna/high review found that reload issue and found no remaining confirmed important issue after the fix.
+
 ## 0.3.21 ownership without a cached approach
 
 An active finite roster retains ownership of its supported settlement's loaded building interiors before their exterior approaches are surveyed. Dungeons, other settlements and disabled controllers remain outside that ownership. Navigation readiness must not enable transient vanilla reinforcements or reveal an unwitnessed murder. Resident home deaths and registered native keeper workplace deaths use witness evidence and settlement ownership for concealment, preserving an existing unrelated crime.

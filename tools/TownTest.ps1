@@ -69,6 +69,7 @@ try {
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_ACTOR_PASS:') { throw 'Guard actor probe did not complete.' }
     if ($GuardControllerProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_CONTROLLER_PASS:') { throw 'Guard controller probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
+    if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PENDING_GUARD_PASS:') { throw 'Pending native guard report probe did not complete.' }
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_HOUSING_LIVE_PASS:') { throw 'Housing probe did not complete.' }
     if ($HousingProbe -and ($body -notmatch 'LIVING_CITIES_ENTRY_PASS:' -or $body -notmatch 'LIVING_CITIES_ENTRY_GUARD_PASS:')) { throw 'Entry witness probes did not complete.' }
