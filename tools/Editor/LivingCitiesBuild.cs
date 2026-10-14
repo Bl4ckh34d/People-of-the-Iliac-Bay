@@ -341,6 +341,34 @@ public static class LivingCitiesBuild
             !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
         Debug.Log("LIVING_CITIES_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
     }
+    private static void VerifyIndoorNoisePersistence()
+    {
+        var store = new WorldStateStore(1);
+        var town = store.GetOrCreate(1, new[] { 1, 2, 3 });
+        var people = new List<Resident>();
+        foreach (var home in town.Households) people.AddRange(home.Residents);
+        var incident = store.RecordViolence(1, people[0].Id, 12000000100);
+        store.LocateViolence(incident.Id, 1, 0, 0, 0);
+        store.HearViolence(incident.Id, people[1].Id, 1, incident.StartedAt, true, 100, 8, 99);
+        store.HearViolence(incident.Id, people[2].Id, 1, incident.StartedAt, true, 50, 2, 0);
+        string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        var restored = new WorldStateStore(0);
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native hearing/wake decisions round trip");
+        Require(restored.HearViolence(incident.Id, people[1].Id, 1, incident.StartedAt + 1, true, 0, 0, 0) == null,
+            "Failed native wake cannot reroll after reload");
+        var awakened = restored.ActiveAlarm(people[2].Id, incident.StartedAt + 1).People[0];
+        Require(awakened.Awakened && awakened.HeardViolence && !awakened.DirectWitness,
+            "Native waking preserves hearing without attacker identification");
+        // Exercise actual missing serialized fields, not only null in memory.
+        var legacy = store.Snapshot(); legacy.AlarmIncidents[0].People.Clear(); legacy.AlarmIncidents[0].NoiseChecks.Clear();
+        var parsed = FullSerializer.fsJsonParser.Parse(SaveLoadManager.Serialize(typeof(WorldState), legacy));
+        parsed.AsDictionary["AlarmIncidents"].AsList[0].AsDictionary.Remove("NoiseChecks");
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), FullSerializer.fsJsonPrinter.CompressedJson(parsed)));
+        Require(restored.Snapshot().AlarmIncidents[0].NoiseChecks.Count == 0 && restored.Snapshot().AlarmIncidents[0].People.Count == 0,
+            "Legacy native save lacks invented hearing");
+        Debug.Log("LIVING_CITIES_INDOOR_NOISE_PERSISTENCE_PASS: failed/successful wake, no reroll, hearing/sight distinction and absent legacy field");
+    }
     public static void VerifyGuardPersistence()
     {
         AuditFixtureHousing();
@@ -354,6 +382,7 @@ public static class LivingCitiesBuild
         VerifyEntryPersistence();
         VerifyNativePeoplePersistence();
         VerifyCivilianHitScopes();
+        VerifyIndoorNoisePersistence();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
         var posts = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 10 },

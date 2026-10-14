@@ -9,6 +9,7 @@ namespace LivingCities.Core
     {
         public string ResidentId;
         public bool DirectWitness;
+        public bool HeardViolence, Awakened;
         public CivilianReaction Reaction;
         public List<string> Warned = new List<string>();
         // Position belongs to the current town or interior origin, never the floating world origin.
@@ -29,6 +30,7 @@ namespace LivingCities.Core
         public int BuildingKey = -1;
         public double X, Y, Z;
         public List<AlarmPerson> People = new List<AlarmPerson>();
+        public List<NoiseObservation> NoiseChecks = new List<NoiseObservation>();
     }
     public static class CivilianAlarms
     {
@@ -156,16 +158,21 @@ namespace LivingCities.Core
                     "Invalid saved crime location.");
                 copied.Scene = CopyScene(alarm, residents[alarm.VictimId], source);
                 copied.Corpse = CopyCorpse(alarm, residents[alarm.VictimId], source);
+                copied.NoiseChecks = CopyNoiseChecks(alarm, residents);
                 var people = new HashSet<string>();
                 foreach (var person in alarm.People)
                 {
                     Require(person != null && person.ResidentId != null && person.ResidentId != alarm.VictimId &&
                         residents.ContainsKey(person.ResidentId) && people.Add(person.ResidentId), "Invalid alarm recipient.");
                     Require(person.Reaction == CivilianReaction.Flee || person.Reaction == CivilianReaction.Fight, "Invalid reaction.");
+                    Require(!person.HeardViolence || (copied.NoiseChecks.Exists(n => n.ResidentId == person.ResidentId &&
+                        (!n.Sleeping || n.Woke)) && (person.DirectWitness || person.Reaction == CivilianReaction.Flee)), "Invalid hearing response.");
+                    Require(!person.Awakened || person.HeardViolence, "Awakening lacks hearing evidence.");
                     Require(residents[person.ResidentId].AgeGroup != ResidentAgeGroup.Child || person.Reaction == CivilianReaction.Flee, "Child cannot fight.");
                     Require(person.Warned != null && person.Warned.Count <= (person.DirectWitness ? 2 : 0), "Invalid warning budget.");
                     Require(person.BuildingKey >= -1 && ValidCoordinate(person.X) && ValidCoordinate(person.Y) && ValidCoordinate(person.Z), "Invalid reaction position.");
                     var copy = new AlarmPerson { ResidentId = person.ResidentId, DirectWitness = person.DirectWitness,
+                        HeardViolence = person.HeardViolence, Awakened = person.Awakened,
                         Reaction = person.Reaction, HasPosition = person.HasPosition, ReachedRefuge = person.ReachedRefuge,
                         BuildingKey = person.BuildingKey, X = person.X, Y = person.Y, Z = person.Z,
                         Escape = CivilianEscape.Copy(person.Escape) };

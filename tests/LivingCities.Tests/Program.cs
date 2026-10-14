@@ -12,6 +12,7 @@ namespace LivingCities.Tests
             FamilyTests.Add(cases);
             FamilySaveTests.Add(cases);
             AlarmTests.Add(cases);
+            NoiseTests.Add(cases);
             EscapeTests.Add(cases);
             CrimeSceneTests.Add(cases);
             OutdoorCorpseTests.Add(cases);
