@@ -60,7 +60,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(0.5f);
                 foreach (var hit in Physics.RaycastAll(initial + Vector3.up * 2, Vector3.down, 10, ~0, QueryTriggerInteraction.Ignore))
                     floors += hit.collider.name + "@" + room.transform.InverseTransformPoint(hit.point) + ";";
-                var cells = (System.Collections.Generic.Dictionary<Vector2Int, Vector3>)typeof(InteriorGeometry).GetField("floors", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
+                var cells = (System.Collections.Generic.Dictionary<Vector3Int, Vector3>)typeof(InteriorGeometry).GetField("floors", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(graph);
                 Vector3 ground = room.transform.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
                 float nearest = float.PositiveInfinity;
                 foreach (var cell in cells.Values) nearest = Mathf.Min(nearest, Vector3.Distance(ground, cell));

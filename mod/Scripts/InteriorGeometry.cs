@@ -7,17 +7,20 @@ using LivingCities.Core;
 
 namespace LivingCities.DFU
 {
-    // Conservative reachable standing places for the first interior-presence slice.
-    // Furniture activities, stairs and sleeping anchors are separate later adapters.
+    // Reachable standing places and stair routes, surveyed from the actual exit.
     public sealed class InteriorGeometry
     {
         public readonly List<Vector3> LocalAnchors = new List<Vector3>();
         public Vector3? EntryGround { get; private set; }
         private readonly DaggerfallInterior interior;
         private const float Radius = 0.24f;
-        private const float GridStep = 0.4f;
-        private readonly Dictionary<Vector2Int, Vector3> floors = new Dictionary<Vector2Int, Vector3>();
-        private readonly Dictionary<Vector2Int, Vector2Int> parents = new Dictionary<Vector2Int, Vector2Int>();
+        // Reserve the native controller's 0.5 m step band below the body sweep.
+        private const float BodyBase = 0.5f + Radius + 0.01f;
+        private const float GridStep = 0.2f;
+        private readonly Dictionary<Vector3Int, Vector3> floors = new Dictionary<Vector3Int, Vector3>();
+        private readonly Dictionary<Vector3Int, Vector3Int> parents = new Dictionary<Vector3Int, Vector3Int>();
+        private const float MaximumRise = 0.5f;
+        private readonly Dictionary<Vector3Int, Vector3> stepCorners = new Dictionary<Vector3Int, Vector3>();
         public InteriorGeometry(DaggerfallInterior interior)
         {
             this.interior = interior;
@@ -41,12 +44,12 @@ namespace LivingCities.DFU
             }
             if (!found) return;
             EntryGround = seed;
-            floors.Add(Vector2Int.zero, seed);
+            floors.Add(Vector3Int.zero, seed);
             var queue = new Queue<Vector3>(); queue.Enqueue(seed);
-            var seen = new HashSet<Vector2Int>(); seen.Add(Vector2Int.zero);
+            var seen = new HashSet<Vector3Int>(); seen.Add(Vector3Int.zero);
             var occupants = interior.GetComponentsInChildren<StaticNPC>();
             int visited = 0;
-            while (queue.Count > 0 && visited++ < 3600)
+            while (queue.Count > 0 && visited++ < 12000)
             {
                 Vector3 point = queue.Dequeue();
                 bool suitable = true;
@@ -60,34 +63,42 @@ namespace LivingCities.DFU
                 foreach (var direction in new[] { Vector3.forward, Vector3.right, Vector3.back, Vector3.left })
                 {
                     Vector3 candidate = point + direction * GridStep;
-                    var cell = new Vector2Int(Mathf.RoundToInt((candidate.x - seed.x) / GridStep), Mathf.RoundToInt((candidate.z - seed.z) / GridStep));
-                    if (seen.Contains(cell) || Mathf.Abs(cell.x) > 50 || Mathf.Abs(cell.y) > 50) continue;
                     Vector3 floor;
-                    if (!Floor(candidate, 0.5f, 1, out floor) || Mathf.Abs(floor.y - point.y) > 0.3f || !Clear(floor)) continue;
-                    Vector3 delta = floor - point; bool blocked = false;
-                    foreach (var hit in Physics.CapsuleCastAll(point + Vector3.up * 0.3f, point + Vector3.up * 1.65f,
-                        Radius, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                        if (Blocker(hit.collider)) { blocked = true; break; }
-                    if (!blocked)
+                    if (!Floor(candidate, 0.55f, 1.1f, out floor) || Mathf.Abs(floor.y - point.y) > MaximumRise + 0.001f || !Clear(floor)) continue;
+                    var cell = Cell(floor, seed);
+                    if (seen.Contains(cell) || Mathf.Abs(cell.x) > 100 || Mathf.Abs(cell.z) > 100 || Mathf.Abs(cell.y) > 150) continue;
+                    Vector3 corner = Vector3.zero; bool stepped = false;
+                    bool reachable = false;
+                    if (Mathf.Abs(floor.y-point.y) > 0.01f)
+                    {
+                        // A native-sized step needs vertical clearance before crossing
+                        // the riser. Save the corner so the actor follows that checked path.
+                        corner = floor.y > point.y ? new Vector3(point.x,floor.y,point.z) : new Vector3(floor.x,point.y,floor.z);
+                        stepped = reachable = Clear(corner) && SweepsClear(point,corner) && SweepsClear(corner,floor);
+                    }
+                    else reachable = SweepsClear(point, floor);
+                    if (reachable)
                     {
                         seen.Add(cell); floors.Add(cell, floor);
-                        parents.Add(cell, new Vector2Int(Mathf.RoundToInt((point.x - seed.x) / GridStep), Mathf.RoundToInt((point.z - seed.z) / GridStep)));
+                        parents.Add(cell, Cell(point, seed));
+                        if (stepped) stepCorners.Add(cell, corner);
                         queue.Enqueue(floor);
                     }
                 }
             }
+            if (queue.Count > 0) Debug.LogWarning("LIVING_CITIES_INTERIOR_SURVEY_LIMIT: building=" + interior.EntryDoor.buildingKey + "; nodes=" + floors.Count);
         }
         public List<GuardPoint3> RouteToExit(Vector3 ground)
         {
             var route = new List<GuardPoint3>();
             if (!EntryGround.HasValue || !Clear(ground)) return route;
-            float nearest = 2.25f; Vector2Int cell = Vector2Int.zero; bool found = false;
+            float nearest = 2.25f; Vector3Int cell = Vector3Int.zero; bool found = false;
             foreach (var pair in floors)
             {
                 var delta = pair.Value - ground;
                 if (delta.sqrMagnitude > nearest || Mathf.Abs(delta.y) > 0.3f) continue;
                 bool blocked = false;
-                foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * 0.3f, ground + Vector3.up * 1.65f,
+                foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * BodyBase, ground + Vector3.up * 1.65f,
                     Radius, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                     if (Blocker(hit.collider)) { blocked = true; break; }
                 // Check support between an arbitrary resident position and the surveyed graph.
@@ -104,24 +115,37 @@ namespace LivingCities.DFU
             while (true)
             {
                 route.Add(LocalPoint(floors[cell]));
-                if (cell == Vector2Int.zero) break;
+                if (cell == Vector3Int.zero) break;
+                Vector3 corner;
+                if (stepCorners.TryGetValue(cell, out corner)) route.Add(LocalPoint(corner));
                 cell = parents[cell];
             }
             return route;
         }
         private GuardPoint3 LocalPoint(Vector3 world)
         { var p = interior.transform.InverseTransformPoint(world); return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
+        private static Vector3Int Cell(Vector3 point, Vector3 seed)
+        { return new Vector3Int(Mathf.RoundToInt((point.x-seed.x)/GridStep), Mathf.RoundToInt((point.y-seed.y)/0.2f), Mathf.RoundToInt((point.z-seed.z)/GridStep)); }
+        private static bool SweepsClear(Vector3 from, Vector3 to)
+        {
+            Vector3 delta = to-from;
+            if (delta.sqrMagnitude < 0.000001f) return true;
+            foreach (var hit in Physics.CapsuleCastAll(from+Vector3.up*BodyBase,from+Vector3.up*1.65f,
+                Radius,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
+                if (Blocker(hit.collider)) return false;
+            return true;
+        }
         private bool Floor(Vector3 point, float up, float depth, out Vector3 floor)
         {
             RaycastHit hit;
             if (Physics.Raycast(point + Vector3.up * up, Vector3.down, out hit, depth, ~0, QueryTriggerInteraction.Ignore) &&
-                hit.collider.transform.IsChildOf(interior.transform) && hit.normal.y > 0.9f)
+                hit.collider.transform.IsChildOf(interior.transform) && hit.normal.y > 0.65f)
             { floor = hit.point; return true; }
             floor = Vector3.zero; return false;
         }
         private static bool Clear(Vector3 ground)
         {
-            foreach (var collider in Physics.OverlapCapsule(ground + Vector3.up * 0.3f, ground + Vector3.up * 1.65f,
+            foreach (var collider in Physics.OverlapCapsule(ground + Vector3.up * BodyBase, ground + Vector3.up * 1.65f,
                 Radius, ~0, QueryTriggerInteraction.Ignore))
                 if (Blocker(collider)) return false;
             return true;

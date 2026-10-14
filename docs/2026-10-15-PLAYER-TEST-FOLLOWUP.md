@@ -26,6 +26,16 @@ Sleeping occupants have a chance to wake from noise and subsequently report. Use
 
 Hearing a disturbance does not identify an unseen attacker. Preserve the agreed crime-scene policy, lawful self-defense and bounded outdoor two-person relay. Newly awakened occupants should investigate, with sight establishing direct attacker identification.
 
+## Interior stairs — runtime checkpoint 0.3.28
+
+The original graph fails all124 clear upper bedroom samples in native shop131343 (`work/InteriorStairs-red.log`). Mesh-face inspection shows discrete treads approximately0.3125 metres high/deep. An x/z-only graph merges storeys; coarse0.4-metre sampling and a low capsule sweep reject these narrow treads. The graph now uses distinct height cells,0.2-metre horizontal sampling, native-sized0.5-metre step limits and body clearance above that step band. Every height-changing edge contains a checked vertical/horizontal corner, preventing foot interpolation through solid treads. Walls, head clearance, endpoint floor support, locked/scripted doors and actual exit ownership remain required. Survey work is capped at12000 nodes and logs truncation rather than silently claiming full coverage.
+
+`work/InteriorStairs-feet-red.log` catches tread penetration before explicit corners. `work/InteriorStairs-0328-pass.log` verifies all124 upper samples route to the actual exit without feet cutting treads, plus a controlled awake native keeper physically descending and leaving through its saved path. One survey of this shop measured84ms; this is not a large-city performance result. These tests do not certify all house layouts, natural sleeping-bed transitions, or ordinary routines walking to beds. Bed-to-floor awakening still needs implementation. M2/M3 remain open.
+
+`work/InteriorEscape-0328-pass.log` passes overlapping-obstacle rejection, generated resident movement, physical exit, exterior identity, delayed finite response and actual SAVE32 reload. Its controlled attacker placement now explicitly supplies direct sight, as required by0.3.27's witness policy. Native actor movement advances the transform along the validated saved route; these checks do not certify CharacterController-driven collision resolution. Read-only review found no confirmed important defect after the explicit corner fix.
+
+Final native build, Core244/244, `work/KeeperResponse-0328-pass.log` and `work/IndoorNoise-0328-pass.log` pass. These preserve actual native weapon/death/family/service/sleep/reload and controlled hearing/wake/neutral-report/arrival/reload behavior. Installed0.3.28 SHA-256 `05808C6114AE074C0F547B1CE84367D166FE43C1E6903DD987705CBE60E136F4`; tracked base-game scripts remain unchanged.
+
 ## Shop occupants and unkillable elder — investigation pending
 
 Reported shop: woman named Kinghart, another person named Hearthfield, and a service keeper whose name is not visible. Inspect saved ownership, activity, current building and native hash before deciding whether the differently named person is a shopper or an incorrectly housed resident. Keeper families share the keeper's surname; resident capacity remains one per actual bed. Expose the keeper's full identity while retaining native services.

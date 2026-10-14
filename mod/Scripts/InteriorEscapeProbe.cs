@@ -70,6 +70,8 @@ namespace LivingCities.DFU
                 if (!blocked) throw new InvalidOperationException("Escape route accepts an overlapping obstacle.");
                 // Controlled placement isolates actual path traversal from the daily anchor assignment.
                 witness.Place(chosen, Vector3.forward, true); victim.Place(chosen, Vector3.forward, true);
+                game.PlayerMotor.transform.position = chosen + Vector3.up * 1.2f;
+                Physics.SyncTransforms();
                 string id = witness.Resident.Id, name = witness.Person.NameNPC;
                 var graphField = typeof(StreetPopulation).GetField("indoorGeometry", BindingFlags.Instance | BindingFlags.NonPublic);
                 var actualGraph = graphField.GetValue(streets);
@@ -84,6 +86,8 @@ namespace LivingCities.DFU
                 var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var alarm = store.ActiveAlarm(id, clock.ToSeconds());
                 var person = alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
+                if (person == null || !person.DirectWitness)
+                    throw new InvalidOperationException("Controlled direct escape witness did not identify visible attacker.");
                 float retryDeadline = Time.realtimeSinceStartup + 2;
                 while (person != null && person.Escape == null && Time.realtimeSinceStartup < retryDeadline) yield return null;
                 if (person == null || person.Escape == null)

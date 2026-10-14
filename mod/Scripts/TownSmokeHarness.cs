@@ -169,7 +169,8 @@ namespace LivingCities.DFU
             var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-keeper-response-probe") >= 0 ||
-                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0)
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-stairs-probe") >= 0)
             {
                 game.SaveLoadManager.EnumerateSaves();
                 int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - shopkeeper identity");
@@ -181,7 +182,9 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(1);
                 var keeper = ((WorldState)adapter.GetSaveData()).NativePeople.Find(p => p.WorkKey == 131343);
                 if (keeper == null) throw new InvalidOperationException("Saved keeper missing.");
-                if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0)
+                if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-stairs-probe") >= 0)
+                    yield return InteriorStairsProbe.Run(keeper.Id);
+                else if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0)
                     yield return IndoorNoiseProbe.Run(keeper.Id);
                 else yield return NativeKeeperResponseProbe.Run(character, keeper.Id);
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: native keeper response; character=" + character);
