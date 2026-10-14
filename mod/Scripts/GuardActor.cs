@@ -21,6 +21,32 @@ namespace LivingCities.DFU
         private double displayedAt;
         private float groundOffset;
         private Coroutine combatStart;
+        private GameObject torchBody;
+        private Light torchLight;
+        public void SetTorch(bool visible, bool illuminate, float range)
+        {
+            if (visible && !torchBody)
+            {
+                torchBody = new GameObject("Living Cities carried torch");
+                torchBody.transform.SetParent(transform, false);
+                torchBody.transform.localPosition = new Vector3(0.38f, 0.3f, 0.15f);
+                var flame = GameObjectHelper.CreateDaggerfallBillboardGameObject(210, 0, torchBody.transform);
+                flame.transform.localPosition = Vector3.zero;
+                var size = flame.GetComponent<DaggerfallBillboard>().Summary.Size;
+                flame.transform.localScale = Vector3.one * (0.8f / Mathf.Max(0.01f, size.y));
+                foreach (var collider in flame.GetComponents<Collider>()) collider.enabled = false;
+                torchLight = torchBody.AddComponent<Light>();
+                torchLight.type = LightType.Point;
+                torchLight.color = new Color(1f, 0.65f, 0.28f);
+                torchLight.intensity = 1.25f;
+                torchLight.shadows = LightShadows.None;
+                torchLight.renderMode = LightRenderMode.Auto;
+            }
+            if (!torchBody) return;
+            torchLight.range = Mathf.Clamp(range, 3f, 12f);
+            torchLight.enabled = visible && illuminate;
+            torchBody.SetActive(visible);
+        }
         public bool CombatReady { get; private set; }
         public bool IsInterior { get; private set; }
         private int? buildingKey;
@@ -173,6 +199,7 @@ namespace LivingCities.DFU
 
         private void Died(DaggerfallEntity ignored)
         {
+            SetTorch(false, false, 8f);
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (IsInterior && guard.Interior != null)
                 guard.Interior.Position = Point(transform.parent.InverseTransformPoint(transform.position));

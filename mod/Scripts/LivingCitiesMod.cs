@@ -130,6 +130,9 @@ namespace LivingCities.DFU
             {
                 guards.MaximumResponders = settings.GetInt("Guards", "MaximumResponders");
                 guards.ActorRadius = settings.GetInt("Guards", "ActorRadius");
+                guards.NightTorches = settings.GetBool("Guards", "NightTorches");
+                guards.TorchLightLimit = settings.GetInt("Guards", "TorchLightLimit");
+                guards.TorchRange = settings.GetInt("Guards", "TorchRange");
             }
             if (streets) streets.Clear();
             streetPopulationEnabled = settings.GetBool("General", "StreetPopulation");
@@ -234,7 +237,7 @@ namespace LivingCities.DFU
         {
             if (!panel) return;
             GUI.Box(new Rect(12, 12, 550, 120), "Living Cities 0.3.9 — development diagnostics (F8)");
-            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nFinite guards: " + (exteriorGuardsEnabled ? "experimental, actors " + guards.ActiveCount : "off") + ". Unsurveyed interiors use vanilla guards.");
+            GUI.Label(new Rect(24, 40, 530, 90), diagnostic + "\nFinite guards: " + (exteriorGuardsEnabled ? "experimental, actors " + guards.ActiveCount : "off") + ". Missing approaches delay physical response.");
         }
         public string TestStatus()
         {

@@ -1,5 +1,17 @@
 # Finite guards
 
+## 0.3.23 night torches
+
+Visible exterior roster guards now carry Daggerfall's animated210/0 torch flat at night, using the game's dawn/dusk boundary. Each carried sprite follows its guard transform. Daytime, interiors, the setting toggle and guard death extinguish the torch. Torch flats have no active colliders and do not change guard identities, paths or save ownership.
+
+The mod menu exposes `NightTorches`, `TorchLightLimit` (0–16, default8) and `TorchRange` (3–12 metres, default8). Only the nearest selected guards within48 metres emit actual warm point light. A zero light budget retains visible flames. All guard lights have shadows disabled; light selection refreshes four times per second using a reused candidate list. The carried flat is a presentation attachment, not new guard hand/weapon animation artwork. Paired patrol routes and wall patrols remain unfinished; existing posted/responding guards benefit immediately.
+
+Live GuardActorProbe verifies point-light settings, flame visibility independent of the lighting budget, toggle/death extinction and classic animation. GuardControllerProbe verifies actual game night/day, a one-light cap, zero budget and the toggle, followed by native response/combat, wounded save/load and return. The controller takeover fixture now clears ownership before creating its transient native guard; because finite guards default on, the previous fixture incorrectly received an owned roster guard and expected its destruction. That correction changes only the test setup.
+
+The following version statements are historical. See GUARD-BUILDING-RESPONSE.md for current ownership, persistent missing-route reports and discovery behavior.
+
+Evidence:198/198 core tests, Unity/native build, `work/GuardTorch-red.log` (missing torch presentation), `work/GuardTorch-0323-actor-pass.log` and `work/GuardTorch-0323-controller-pass.log`. The final actor probe also observes multiple rendered flame frames. Read-only Luna/high review found no confirmed important defect. Base DFU tracked Assets/Scripts remains unchanged. Large-city lighting/frame-time profiling remains open.
+
 Current 0.3.9 adds delayed indoor witness reports when a physical exit-and-post route exists. Guard dispatch retains the crime building while the witness crosses scenes; ordinary native indoor alarms still use the 0.3.7 adapter. Unwitnessed discovery is not implemented. See INDOOR-WITNESSES.md for the route, persistence and fallback boundaries.
 
 Current 0.3.8 adds public witness reporting. Outdoor generated-resident kills require a local guard witness or a fleeing direct witness reaching a posted guard; reports retain the original crime position and cannot replenish their finite responder group. Both visibility checks use 20 metres. See CIVILIAN-RESPONSES.md for tested scope and limitations. Indoor alarms retain the 0.3.7 behavior below.

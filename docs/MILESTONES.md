@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+0.3.23 gives visible exterior roster guards classic animated carried torches at game night, with warm shadow-free light. Menu controls enablement, radius and nearest-light budget (including zero for sprite-only torches). Daytime, interiors and death extinguish them. Night/day and budget controls pass the live controller test alongside combat/wounded reload/return. This advances M4 presentation; actual paired patrol routes and city-wall patrols remain unfinished.
+
 0.3.22 adds durable native building alarms while approaches are missing, original-destination retry, cancellation when crime clears and same-report reuse after reload. `AwaitingApproach` is validated and saved without inventing an entrance or responders. Physical dispatch starts only once a surveyed route and posted guards are available. This closes the native report queue gap listed in0.3.21; broader guard/civilian behavior and M2–M7 remain unfinished.
 
 0.3.21 keeps finite guard ownership in supported building interiors independently of cached approaches. Unwitnessed home/workplace deaths remain concealed while navigation is unavailable; prior crimes stay intact. Physical investigation still requires a real route. Already reported non-murder crimes awaiting unavailable routes still need durable queue/retry work. M4 remains open. Shopkeepers remain full-name heads of on-site families sharing their surname within actual one-person-per-bed capacity; bedless commuting remains open under M2.

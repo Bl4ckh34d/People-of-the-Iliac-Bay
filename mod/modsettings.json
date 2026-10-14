@@ -40,7 +40,7 @@
         {
           "Value": true,
           "Name": "ExperimentalExteriorGuards",
-          "Description": "Gothway Garden finite guards: posts, physical response, combat and timed search/return. Surveyed buildings receive delayed doorway reinforcements with indoor save/load. Visit the exterior first to survey routes. Unsurveyed interiors still use vanilla guards. Patrol pairs and wall posts remain in development.",
+          "Description": "Gothway Garden finite guards: posts, physical response, combat and timed search/return. Missing approaches retain reported alarms until surveyed. Night guards carry torches. Patrol pairs and wall posts remain in development.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
@@ -80,6 +80,27 @@
       "Description": "Controls the experimental guard preview in the exterior and surveyed interiors. Existing roster identities and deaths remain saved when settings change.",
       "IsAdvanced": false,
       "Keys": [
+        {
+          "Value": true,
+          "Name": "NightTorches",
+          "Description": "Visible exterior guards carry classic animated torches at night. Torches turn off by day, indoors and on death.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Min": 0, "Max": 16, "Value": 8,
+          "Name": "TorchLightLimit",
+          "Description": "Maximum nearest guard torches emitting real light within 48 metres. Zero keeps visible flames without dynamic lighting. Lights cast no shadows.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
+        {
+          "Min": 3, "Max": 12, "Value": 8,
+          "Name": "TorchRange",
+          "Description": "Guard torch light radius in metres.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
         {
           "Min": 1,
           "Max": 8,

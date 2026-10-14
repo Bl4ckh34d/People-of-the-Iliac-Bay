@@ -31,6 +31,9 @@ namespace LivingCities.DFU
             SaveLoadManager.OnSave += onSave; SaveLoadManager.OnLoad += onLoad;
             try
             {
+                // The preview now defaults on. Create the takeover fixture before
+                // ownership so SpawnCityGuard cannot return an existing roster actor.
+                controller.Clear();
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
                 var transient = game.PlayerEntity.SpawnCityGuard(game.PlayerMotor.transform.position + Vector3.right * 8, Vector3.forward);
                 type.GetMethod("SetTown").Invoke(controller, new object[] { directory, game.StreamingWorld.GetCurrentCityNavigation(), population, store });
@@ -61,6 +64,32 @@ namespace LivingCities.DFU
                 finally { UnityEngine.Object.Destroy(obstacle); }
                 yield return null;
                 game.PlayerMotor.transform.position = geometry.ScenePoint(new RoutePoint(target.X, target.Z)) + Vector3.up;
+                var clock = DaggerfallUnity.Instance.WorldTime.Now;
+                clock.RaiseTime((float)((23 * 3600 - clock.ToSeconds() % 86400 + 86400) % 86400));
+                controller.NightTorches = true; controller.TorchLightLimit = 1;
+                yield return new WaitForSecondsRealtime(0.6f);
+                int lit = 0, carried = 0;
+                foreach (var guardView in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                {
+                    var light = guardView.GetComponentInChildren<Light>();
+                    if (light) { carried++; if (light.enabled) lit++; }
+                }
+                if (carried < 1 || lit != 1) throw new InvalidOperationException("Night guard torch cap did not select one nearest light.");
+                controller.TorchLightLimit = 0;
+                yield return new WaitForSecondsRealtime(0.4f);
+                foreach (var guardView in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                    foreach (var light in guardView.GetComponentsInChildren<Light>())
+                        if (light.enabled) throw new InvalidOperationException("Zero torch budget left a light enabled.");
+                controller.TorchLightLimit = 8; controller.NightTorches = false;
+                yield return new WaitForSecondsRealtime(0.4f);
+                foreach (var guardView in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                    if (guardView.GetComponentInChildren<Light>()) throw new InvalidOperationException("Torch toggle left a carried torch active.");
+                controller.NightTorches = true;
+                clock.RaiseTime((float)((12 * 3600 - clock.ToSeconds() % 86400 + 86400) % 86400));
+                yield return new WaitForSecondsRealtime(0.4f);
+                foreach (var guardView in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                    if (guardView.GetComponentInChildren<Light>()) throw new InvalidOperationException("Daytime guard retained a torch.");
+                Debug.Log("LIVING_CITIES_GUARD_TORCH_CONTROLLER_PASS: real night/day, nearest light cap, zero budget and toggle.");
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = true;
                 game.PlayerEntity.SpawnCityGuards(true);

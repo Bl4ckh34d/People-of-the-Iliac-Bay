@@ -16,6 +16,32 @@ namespace LivingCities.DFU
         public GuardRoster Roster { get; private set; }
         public int MaximumResponders = 4;
         public int ActorRadius = 160;
+        public bool NightTorches = true;
+        public int TorchLightLimit = 8;
+        public int TorchRange = 8;
+        private readonly List<GuardActor> torchCandidates = new List<GuardActor>();
+        private float nextTorchUpdate;
+        private void UpdateTorches()
+        {
+            var nearby = torchCandidates; nearby.Clear();
+            var game = GameManager.Instance;
+            bool night = NightTorches && !game.PlayerEnterExit.IsPlayerInside && DaggerfallUnity.Instance.WorldTime.Now.IsNight;
+            foreach (var pair in actors)
+                if (pair.Value && pair.Value.gameObject.activeInHierarchy && !pair.Value.IsInterior &&
+                    Roster.Guards.Exists(g => g.Id == pair.Key && g.IsAlive)) nearby.Add(pair.Value);
+            var player = game.PlayerMotor.transform.position;
+            nearby.Sort((a, b) => {
+                int order = (a.transform.position - player).sqrMagnitude.CompareTo((b.transform.position - player).sqrMagnitude);
+                return order == 0 ? string.CompareOrdinal(a.GuardId, b.GuardId) : order;
+            });
+            foreach (var pair in actors) if (pair.Value)
+            {
+                int rank = nearby.IndexOf(pair.Value);
+                bool visible = night && rank >= 0;
+                pair.Value.SetTorch(visible, visible && rank < Mathf.Clamp(TorchLightLimit, 0, 16) &&
+                    (pair.Value.transform.position - player).sqrMagnitude <= 48f * 48f, TorchRange);
+            }
+        }
         public int ActiveCount
         { get { int count = 0; foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeInHierarchy) count++; return count; } }
         private WorldStateStore worldStore;
@@ -404,6 +430,11 @@ namespace LivingCities.DFU
                         CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20)) actor.BeginCombat(now);
                 }
             }
+        }
+        private void LateUpdate()
+        {
+            if (OwnsTown() && !GameManager.IsGamePaused && Time.unscaledTime >= nextTorchUpdate)
+            { nextTorchUpdate = Time.unscaledTime + 0.25f; UpdateTorches(); }
         }
         private void HideNative()
         {
