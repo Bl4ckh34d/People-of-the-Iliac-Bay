@@ -215,6 +215,7 @@ namespace LivingCities.DFU
                 current = store.GetOrCreateFamilies(directory.MapID, HousingSurvey.Read(directory));
                 Debug.Log("LIVING_CITIES_SETTLEMENT: " + directory.MapID + "; households=" + current.Households.Count);
             }
+            RegionalIdentityAdapter.Initialize(current);
             if (streets && streetPopulationEnabled)
                 streets.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current,
                     store, options.WakeHour, options.SleepHour);

@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Persistent regional household identity
+
+RegionalIdentityAdapter now initializes missing household surnames, resident full names and race before schedule setup, using native MapsFile.RegionRaces for the name bank and ClimateSettings.People for supported display race. A native household head's explicit race takes precedence for missing family race. Existing explicit names/races/surnames remain unchanged. Name generation retains appearance/surname seeds and restores DFRandom state; assigned names and race use existing save fields, so later actor recreation does not depend on the player's current region. Ordinary initialized actors therefore no longer depend on the old Breton fallback.
+
+267/267 core tests pass after the expected missing-implementation failure. Unity build and actual city save/reload/movement suite pass (`work/RegionalIdentity-{red,green,live-pass}.log`). Read-only inspection of SAVE50 confirms611/611 city residents have FullName and nonnegative Race. Installed0.3.30 SHA-256 `148036724361B18A737B6D3BC82203A81FD4BA19E1A818CBECB0F41877C2BBC0`. Live Redguard/Nord region appearance checks and wider settlement admission remain pending. Generic actor fallback remains for independently created/uninitialized fixtures.
+
 ## Settlement scale follows native category
 
 GuardPopulation now reads LocationData.MapTableData.LocationType rather than identifying Daggerfall by map ID to select a garrison scale. Original DFRegion values0/1/2 map to City/Town/Hamlet; other location types reject classification instead of silently treating dungeons, temples or isolated buildings as towns. Existing8% quota/minimums remain unchanged.266/266 core tests, native build and combined city/save/movement suite pass (`work/SettlementScale-{red,green,live-pass}.log`). Installed0.3.30 hash `7D10A90513D912F659622C797B908D45E2A8063B1FE699C566B283DE811BA6CD`.

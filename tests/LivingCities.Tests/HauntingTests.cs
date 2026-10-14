@@ -8,6 +8,17 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Regional identity persists shared surname and preserves existing names and race",()=>{
+                var home=new Household { SurnameSeed=42 };
+                home.Residents.Add(new Resident { Id="a",AppearanceSeed=1 });
+                home.Residents.Add(new Resident { Id="b",AppearanceSeed=2,FullName="Existing Name",Race=4 });
+                RegionalIdentity.Initialize(home,2,(seed,sex)=>"Given"+seed,seed=>"Family"+seed);
+                Check.Equal("Given1 Family42",home.Residents[0].FullName);
+                Check.Equal(2,home.Residents[0].Race); Check.Equal(4,home.Residents[1].Race);
+                Check.Equal("Existing Name",home.Residents[1].FullName);
+                RegionalIdentity.Initialize(home,3,(seed,sex)=>"Changed",seed=>"Other");
+                Check.Equal("Given1 Family42",home.Residents[0].FullName); Check.Equal(2,home.Residents[0].Race);
+            }));
             cases.Add(("Settlement scale follows location category rather than named city IDs",()=>{
                 Check.Equal(SettlementScale.City,SettlementClassification.FromLocationType(0));
                 Check.Equal(SettlementScale.Town,SettlementClassification.FromLocationType(1));
