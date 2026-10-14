@@ -10,6 +10,27 @@ namespace LivingCities.Tests
             new[] { new GuardPoint3(),new GuardPoint3 { Z=4 } },100,2,12); }
         internal static void Add(List<(string,Action)> cases)
         {
+            cases.Add(("Engaged refuge preserves health and reports and requires a surveyed route home",()=>{
+                var roster=GuardRoster.Create(1,42,1,new[] { new SavedRoutePoint() }); var id=roster.Guards[0].Id;
+                roster.Dispatch("murder",100,new Dictionary<string,List<SavedRoutePoint>> {
+                    { id,new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=10 } } }
+                },1,2,12);
+                roster.Engage(id,130);
+                roster.ObserveEngagement(id,new SavedRoutePoint { X=7 },0.4,131,false);
+                var plan=GuardRefugeJourney.Create(7,new[] { new GuardPoint3 { X=7 },new GuardPoint3 { X=20 } },
+                    new[] { new GuardPoint3(),new GuardPoint3 { Z=4 } },132,2,12);
+                Check.Throws<ArgumentException>(()=>roster.TakeRefuge(id,plan,132));
+                Check.Equal(GuardDuty.Engaged,roster.Guards[0].Duty);
+                roster.TakeRefuge(id,plan,132,new List<SavedRoutePoint> { new SavedRoutePoint { X=7 },new SavedRoutePoint() });
+                roster=GuardRoster.CopyValidated(roster);
+                Check.Near(0.4,roster.Guards[0].HealthFraction);
+                Check.Equal("murder",roster.Reports[0].Id);
+                Check.True(roster.Guards[0].IncidentId==null && roster.Guards[0].EngagementPosition==null);
+                roster.Guards[0].Refuge.Release(300); roster.Advance(1000);
+                Check.Equal(GuardDuty.Posted,roster.Guards[0].Duty);
+                Check.Near(0,roster.Position(id,1000).X);
+                Check.Equal(1,roster.Reports.Count);
+            }));
             cases.Add(("Patrolling guard takes refuge from current position and physically returns to post",()=>{
                 var roster=GuardRoster.Create(1,42,2,new[] { new SavedRoutePoint { X=-10 },new SavedRoutePoint { X=2,Z=-20 } });
                 var a=roster.Guards[0].Id; var b=roster.Guards[1].Id;

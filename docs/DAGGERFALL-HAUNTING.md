@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Exterior combat interruption
+
+An exterior Engaged guard can now take refuge after a visible haunting threat. The observer captures the existing actor's health/position before planning. Admission requires a surveyed current-position-to-post route, appends it after the reversed refuge approach, then clears active engagement and response fields while retaining health and historical reports. Missing/invalid routes reject admission before roster mutation. Existing refuge actor handling ends native combat before placement. This does not implement interior combat evacuation or interruption of Responding/Searching/Returning duties.
+
+The new core case reproduced rejected combat admission, then passed route-required rejection, health/report retention, copy validation and physical return. All 261 core tests pass. The live controlled Wraith adapter now starts with an engaged roster member at a moved position and 40% health, verifies successful refuge admission and preserved prior crime report, then catches up release/return. Automatic at-post and moving-patrol flight regressions also pass. This is not yet a live native-combat-to-refuge actor transition test. Ordinary GuardDefenseProbe passes separately. Evidence: `work/RefugeCombat-{red,green,live-pass,defense-regression}.log`. Unity build installed development 0.3.29, SHA-256 `11A9F576789333FBCB4D473A3DD0E77FCE5ACF51CED999E459FD7D7754A1B159`. City admission remains disabled.
+
 ## Live patrol refuge verification
 
 The live probe now surveys a real Daggerfall circuit (105.6m in the fixture), starts a pair, advances into movement, introduces a native hostile Ghost and enables normal controller updates with the curse unresolved. The leader detaches into refuge without jumping to its post. DFU's native serializer retains the detached assignment and explicit return path; lifting the curse and advancing time returns the guard to its original post. This uses a disposable roster and serialization round-trip, not a disk save/load of an enabled city. Night-policy updates can stop the patrol before the observer runs; this also exercises refuge admission during its physical return. The separate actor-flight and wall-interior checks pass in the same run.

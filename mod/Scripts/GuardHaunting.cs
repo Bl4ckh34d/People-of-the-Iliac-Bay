@@ -35,7 +35,9 @@ namespace LivingCities.DFU
             if(!motor || !motor.IsHostile) return false;
             foreach(var guard in Roster.Guards)
             {
-                if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted) continue;
+                if(!guard.IsAlive || guard.Interior!=null || (guard.Duty!=GuardDuty.Posted && guard.Duty!=GuardDuty.Engaged)) continue;
+                GuardActor body;
+                if(guard.Duty==GuardDuty.Engaged && actors.TryGetValue(guard.Id,out body) && body) body.Capture(now);
                 var origin=Roster.Position(guard.Id,now);
                 if(!CivilianResponses.Sees(geometry.ScenePoint(new RoutePoint(origin.X,origin.Z))+Vector3.up,target.transform.position,20)) continue;
                 TryHauntingRefuge(guard,now);
@@ -47,6 +49,12 @@ namespace LivingCities.DFU
         {
             if(refugeGeometry==null) refugeGeometry=new TownGeometry(directory,GameManager.Instance.StreamingWorld.GetCurrentCityNavigation());
             var origin=Roster.Position(guard.Id,now);
+            List<SavedRoutePoint> home=null;
+            if(guard.Duty==GuardDuty.Engaged)
+            {
+                home=refugeGeometry.RouteBetweenPoints(origin,guard.Post);
+                if(home.Count<2) return false;
+            }
             var candidates=new List<TownGeometry.Entrance>();
             foreach(var entrance in refugeGeometry.Entrances.Values)
             {
@@ -86,7 +94,7 @@ namespace LivingCities.DFU
                 {
                     try
                     {
-                        Roster.TakeRefuge(guard.Id,GuardRefugeJourney.Create(entrance.BuildingKey,exterior,room,now,3.8,12),now);
+                        Roster.TakeRefuge(guard.Id,GuardRefugeJourney.Create(entrance.BuildingKey,exterior,room,now,3.8,12),now,home);
                         Debug.Log("LIVING_CITIES_GUARD_REFUGE: "+guard.Id+"; building="+entrance.BuildingKey); return true;
                     }
                     catch(ArgumentException) { /* Occupied destination: try another surveyed standing place. */ }

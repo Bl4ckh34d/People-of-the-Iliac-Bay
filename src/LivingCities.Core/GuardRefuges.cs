@@ -3,17 +3,20 @@ namespace LivingCities.Core
 {
     public sealed partial class GuardRoster
     {
-        public void TakeRefuge(string id,GuardRefugeJourney journey,double now)
+        public void TakeRefuge(string id,GuardRefugeJourney journey,double now,System.Collections.Generic.List<SavedRoutePoint> surveyedHome=null)
         {
             Require(Time(now),"Invalid refuge departure time.");
             var plan=GuardRefugeJourney.CopyValidated(journey);
             var preview=CopyValidated(this); var position=preview.Position(id,now);
             var guard=preview.Find(id);
-            Require(guard.IsAlive && guard.Duty==GuardDuty.Posted && guard.Refuge==null &&
+            Require(guard.IsAlive && (guard.Duty==GuardDuty.Posted || guard.Duty==GuardDuty.Engaged) && guard.Refuge==null &&
                 guard.Interior==null && plan.StartsAt==now && !plan.ReleasedAt.HasValue &&
                 Distance(position,new SavedRoutePoint { X=plan.Exterior[0].X,Z=plan.Exterior[0].Z })<0.05,
                 "Refuge departure requires an available guard and a matching surveyed route.");
-            var home=preview.PatrolReturn(id,now);
+            var home=guard.Duty==GuardDuty.Engaged ? CopyRoute(surveyedHome) : preview.PatrolReturn(id,now);
+            if(guard.Duty==GuardDuty.Engaged)
+                Require(home.Count>=2 && Distance(home[0],position)<0.05 && Distance(home[home.Count-1],guard.Post)<0.05,
+                    "Combat refuge requires a surveyed return from current position to post.");
             plan.ReturnExterior=plan.Exterior.ConvertAll(p=>new GuardPoint3 { X=p.X,Y=p.Y,Z=p.Z });
             plan.ReturnExterior.Reverse();
             if(home!=null) for(int i=1;i<home.Count;i++)
@@ -49,6 +52,8 @@ namespace LivingCities.Core
                 else patrol.FollowerDetached=true;
             }
             guard=Find(id); guard.Refuge=plan; guard.Duty=GuardDuty.Refuge;
+            guard.IncidentId=null; guard.Route.Clear(); guard.ReturnPath=null; guard.ReturnRate=0;
+            guard.ResponseOrigin=null; guard.EngagementPosition=null; guard.LastSeenSuspect=null;
         }
         private static SavedRoutePoint RefugeExteriorPosition(GuardRecord guard,double now)
         {

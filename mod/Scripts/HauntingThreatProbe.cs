@@ -34,6 +34,17 @@ namespace LivingCities.DFU
                     try
                     {
                         var roster=GuardRoster.Create(directory.MapID,42,1,new[] { new SavedRoutePoint { X=route[0].X,Z=route[0].Z } });
+                        bool combat=kind==MobileTypes.Wraith;
+                        if(combat)
+                        {
+                            string id=roster.Guards[0].Id;
+                            roster.Dispatch("probe-existing-crime",19*3600d,new System.Collections.Generic.Dictionary<string,System.Collections.Generic.List<SavedRoutePoint>> {
+                                { id,new System.Collections.Generic.List<SavedRoutePoint> {
+                                    new SavedRoutePoint { X=route[0].X,Z=route[0].Z },new SavedRoutePoint { X=route[1].X,Z=route[1].Z } } }
+                            },1,2.8,12);
+                            roster.Engage(id,19*3600d);
+                            roster.ObserveEngagement(id,new SavedRoutePoint { X=route[1].X,Z=route[1].Z },0.4,19*3600d,false);
+                        }
                         var type=typeof(GuardPopulation);
                         type.GetProperty("Roster").GetSetMethod(true).Invoke(controller,new object[] { roster });
                         type.GetField("directory",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(controller,directory);
@@ -56,7 +67,10 @@ namespace LivingCities.DFU
                                 "; map="+roster.SettlementId+"; curse="+game.PlayerEntity.GlobalVars.GetGlobalVar(0)+
                                 "; id="+((EnemyEntity)target.Entity).MobileEnemy.ID+"; expected="+(int)kind+
                                 "; team="+target.Entity.Team+"; health="+target.Entity.CurrentHealth);
-                        if(roster.Reports.Count!=0) throw new InvalidOperationException("Haunting flight created a crime report.");
+                        if(roster.Reports.Count!=(combat ? 1 : 0)) throw new InvalidOperationException("Haunting flight changed crime reports.");
+                        if(combat && (roster.Reports[0].Id!="probe-existing-crime" || roster.Guards[0].HealthFraction!=0.4 || roster.Guards[0].IncidentId!=null))
+                            throw new InvalidOperationException("Combat refuge lost health/report or retained active combat assignment.");
+                        GuardRoster.CopyValidated(roster);
                         game.PlayerEntity.GlobalVars.SetGlobalVar(0,true);
                         if((bool)observe.Invoke(controller,new object[] { target,19*3600d }))
                             throw new InvalidOperationException("Resolved curse still classifies haunting threat.");
