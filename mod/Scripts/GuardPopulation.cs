@@ -18,13 +18,14 @@ namespace LivingCities.DFU
         public int ActorRadius = 160;
         public int ActiveCount
         { get { int count = 0; foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeInHierarchy) count++; return count; } }
+        private WorldStateStore worldStore;
         private BuildingDirectory directory;
         private TownGeometry geometry;
         private IDisposable hooks;
         private string reportId;
         private readonly Dictionary<string, GuardActor> actors = new Dictionary<string, GuardActor>();
         private readonly Dictionary<GameObject, bool> nativeGuards = new Dictionary<GameObject, bool>();
-        private float nextRoutes;
+        private float nextRoutes, nextInvestigation;
         private bool awaitingSight;
         private Coroutine approachSurvey;
         private DaggerfallInterior interior;
@@ -59,6 +60,7 @@ namespace LivingCities.DFU
             posts.Sort((a, b) => { int x = a.X.CompareTo(b.X); return x == 0 ? a.Z.CompareTo(b.Z) : x; });
             var selected = new List<SavedRoutePoint>();
             for (int i = 0; i < count; i++) selected.Add(posts[i * posts.Count / count]);
+            worldStore = store;
             directory = town; geometry = new TownGeometry(town, navigation, false);
             Roster = store.GetOrCreateGuards(town.MapID, count, selected);
             approachSurvey = StartCoroutine(SurveyApproaches(navigation));
@@ -133,12 +135,12 @@ namespace LivingCities.DFU
                 // Vanilla reports every mobile-citizen weapon hit immediately.
                 // Public witnesses and supported indoor escape plans supply the actual report.
                 if (resident && streets && streets.ReactionsEnabled && streets.FindActor(resident.Resident.Id) == resident &&
-                    (!GameManager.Instance.PlayerEnterExit.IsPlayerInside || streets.HasEscapingWitness(resident.Resident.Id, Now()))) return;
+                    (!GameManager.Instance.PlayerEnterExit.IsPlayerInside || streets.HasEscapingWitness(resident.Resident.Id, Now()) || streets.IsConcealedHit(resident.Resident.Id))) return;
             }
             var room = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ? GameManager.Instance.PlayerEnterExit.Interior : null;
             int? building = room ? (int?)room.EntryDoor.buildingKey : null;
             var currentReport = Roster.Reports.Find(r => r.Id == reportId);
-            if (currentReport != null && currentReport.BuildingKey != building) reportId = null;
+            if (currentReport != null && (currentReport.BuildingKey != building || currentReport.Investigation)) reportId = null;
             if (!immediate)
             {
                 bool seen = false;
@@ -173,6 +175,24 @@ namespace LivingCities.DFU
             }
             var sent = Roster.Dispatch(reportId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
             Debug.Log("LIVING_CITIES_GUARD_DISPATCH: " + reportId + "; responders=" + sent.Count);
+        }
+        public bool CanInvestigate(int buildingKey)
+        { return OwnsTown() && Roster.BuildingApproaches.Exists(a => a.BuildingKey == buildingKey && a.Routes.Count > 0); }
+        private void UpdateInvestigations(double now)
+        {
+            var game = GameManager.Instance;
+            if (worldStore == null || Roster == null || !directory || game == null || !game.IsPlayingGame()) return;
+            Roster.Advance(now);
+            bool sameTown = game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId == directory.MapID;
+            int location = sameTown && game.PlayerEnterExit.IsPlayerInsideBuilding && game.PlayerEnterExit.Interior ?
+                game.PlayerEnterExit.Interior.EntryDoor.buildingKey : -1;
+            foreach (var alarm in worldStore.ObserveCrimeScenes(directory.MapID, location, now))
+            {
+                string id = "discovery:" + alarm.Id;
+                Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12, true);
+                var report = Roster.Reports.Find(r => r.Id == id);
+                if (report != null && report.HasArrival) worldStore.DiscoverCrimeScene(alarm.Id, now);
+            }
         }
         public List<SavedRoutePoint> WitnessRoute(int buildingKey, double now)
         {
@@ -274,8 +294,24 @@ namespace LivingCities.DFU
         }
         public void Capture()
         { foreach (var pair in actors) if (pair.Value) pair.Value.Capture(Now()); }
+        private void OnEnable()
+        {
+            PlayerEnterExit.OnTransitionExterior += ObserveTransition;
+            PlayerEnterExit.OnTransitionInterior += ObserveTransition;
+            PlayerEnterExit.OnTransitionDungeonInterior += ObserveTransition;
+        }
+        private void OnDisable()
+        {
+            PlayerEnterExit.OnTransitionExterior -= ObserveTransition;
+            PlayerEnterExit.OnTransitionInterior -= ObserveTransition;
+            PlayerEnterExit.OnTransitionDungeonInterior -= ObserveTransition;
+        }
+        private void ObserveTransition(PlayerEnterExit.TransitionEventArgs args)
+        { if (worldStore != null && Roster != null && directory) UpdateInvestigations(Now()); }
         private void Update()
         {
+            if (worldStore != null && !GameManager.IsGamePaused && Time.unscaledTime >= nextInvestigation)
+            { nextInvestigation = Time.unscaledTime + 1; UpdateInvestigations(Now()); }
             if (!OwnsTown()) { HideViews(); return; }
             if (GameManager.IsGamePaused) return;
             var game = GameManager.Instance; double now = Now();
@@ -296,6 +332,9 @@ namespace LivingCities.DFU
             {
                 if (!guard.IsAlive) continue;
                 if (guard.Interior != null) continue;
+                var investigation = Roster.Reports.Find(r => r.Id == guard.IncidentId && r.Investigation);
+                if (investigation != null && guard.Duty == GuardDuty.Searching)
+                { GuardActor hidden; if (actors.TryGetValue(guard.Id, out hidden) && hidden) hidden.gameObject.SetActive(false); continue; }
                 var point = Roster.Position(guard.Id, now);
                 Vector3 scene = geometry.ScenePoint(new RoutePoint(point.X, point.Z));
                 GuardActor actor;
@@ -377,13 +416,16 @@ namespace LivingCities.DFU
                 if (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 var actor = View(guard, now); actor.gameObject.SetActive(true);
                 if (guard.Interior.Returning) { actor.EndCombat(); actor.Place(now); continue; }
-                if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
+                if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None && (report == null || !report.Investigation))
                 {
                     actor.EndCombat(); actor.Capture(now);
                     Roster.EndInteriorSearch(guard.Id, now); actor.Place(now);
                     continue;
                 }
                 actor.Capture(now);
+                if (report != null && report.Investigation && game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None &&
+                    !game.PlayerEntity.IsInvisible && CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
+                    game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Trespassing;
                 if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None && !game.PlayerEntity.IsInvisible &&
                     CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
                     actor.BeginCombat(now);
@@ -403,7 +445,7 @@ namespace LivingCities.DFU
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);
-            nativeGuards.Clear(); directory = null; geometry = null; Roster = null; reportId = null; awaitingSight = false;
+            nativeGuards.Clear(); worldStore = null; directory = null; geometry = null; Roster = null; reportId = null; awaitingSight = false;
         }
         private void OnDestroy() { Clear(); }
     }

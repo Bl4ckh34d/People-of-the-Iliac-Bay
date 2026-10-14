@@ -60,7 +60,7 @@ namespace LivingCities.Core
             report.Investigation = investigation;
             if (investigation) foreach (var guard in sent)
             {
-                guard.SearchUntil = guard.ArrivesAt + 21600;
+                guard.SearchUntil = guard.ArrivesAt + UnwitnessedScene.OccupationSeconds;
                 report.Arrivals.Add(new GuardArrivalEvidence { GuardId = guard.Id, ScheduledAt = guard.ArrivesAt });
             }
             return sent;

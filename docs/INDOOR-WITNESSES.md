@@ -23,7 +23,7 @@ The base alarm window stays 900 game seconds. An escape plan extends effective a
 
 Core coverage: interior/exterior interpolation and timing, defensive copies, native-data validation, persisted progress, dead witness suppression, long journeys and expiry. The actual-player probe rejects a temporary overlapping obstacle, uses a native weapon kill in house 1, checks no immediate response, observes interior movement, saves/reloads SAVE32, follows the same named NPC outside, observes exterior movement, and verifies a bounded report to the original building. Travel deadlines are accelerated in the test; this is not a full real-time benchmark or a multi-layout certification.
 
-Outstanding: stair/door coverage, dynamic obstructions, alternative guard targets, catch-up of newly dispatched guard reports after a whole-town absence, return-to-schedule transitions, unwitnessed discovery, six-hour crime-scene occupation, original stationary actors and remaining guard behaviors. No new art was generated.
+Outstanding: stair/door coverage, dynamic obstructions, alternative guard targets, catch-up of newly dispatched guard reports after a whole-town absence, return-to-schedule transitions, unwitnessed discovery, one-hour crime-scene occupation, original stationary actors and remaining guard behaviors. No new art was generated.
 
 ## Verified release evidence
 

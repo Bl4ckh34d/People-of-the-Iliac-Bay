@@ -5,9 +5,10 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class UnwitnessedScene
     {
+        public const double OccupationSeconds = 3600;
         public bool PlayerLeft, Discovered;
         public double LeftAt, DiscoveredAt;
-        public bool Occupied(double now) { return Discovered && now >= DiscoveredAt && now < DiscoveredAt + 21600; }
+        public bool Occupied(double now) { return Discovered && now >= DiscoveredAt && now < DiscoveredAt + UnwitnessedScene.OccupationSeconds; }
     }
     public sealed partial class WorldStateStore
     {
@@ -37,7 +38,7 @@ namespace LivingCities.Core
         public void DiscoverCrimeScene(string incidentId, double now)
         {
             var alarm = FindIncident(incidentId); var scene = alarm.Scene;
-            Require(scene != null && scene.PlayerLeft && ValidTime(now) && ValidTime(now + 21600) && now >= scene.LeftAt,
+            Require(scene != null && scene.PlayerLeft && ValidTime(now) && ValidTime(now + UnwitnessedScene.OccupationSeconds) && now >= scene.LeftAt,
                 "Scene discovery requires departure and a valid guard arrival time.");
             if (scene.Discovered) return;
             var roster = state.Garrisons.Find(g => g.SettlementId == alarm.SettlementId);
@@ -55,7 +56,7 @@ namespace LivingCities.Core
             if (scene == null) return null;
             Require(!victim.IsAlive && alarm.HasLocation && alarm.BuildingKey == victim.HomeKey && alarm.People.Count == 0,
                 "Invalid unwitnessed scene ownership.");
-            Require(ValidTime(scene.LeftAt) && ValidTime(scene.DiscoveredAt) && ValidTime(scene.DiscoveredAt + 21600) &&
+            Require(ValidTime(scene.LeftAt) && ValidTime(scene.DiscoveredAt) && ValidTime(scene.DiscoveredAt + UnwitnessedScene.OccupationSeconds) &&
                 (scene.PlayerLeft ? scene.LeftAt >= alarm.StartedAt : scene.LeftAt == 0) &&
                 (scene.Discovered ? scene.PlayerLeft && scene.DiscoveredAt >= scene.LeftAt : scene.DiscoveredAt == 0),
                 "Invalid scene chronology.");

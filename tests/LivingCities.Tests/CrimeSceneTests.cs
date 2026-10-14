@@ -48,8 +48,8 @@ namespace LivingCities.Tests
                 Check.Throws<ArgumentException>(() => store.DiscoverCrimeScene(alarm.Id, 10500));
                 store.DiscoverCrimeScene(alarm.Id, 11000);
                 Check.Near(10501, alarm.Scene.DiscoveredAt);
-                Check.True(alarm.Scene.Occupied(10501)); Check.True(alarm.Scene.Occupied(32100));
-                Check.True(!alarm.Scene.Occupied(32101));
+                Check.True(alarm.Scene.Occupied(10501)); Check.True(alarm.Scene.Occupied(14100));
+                Check.True(!alarm.Scene.Occupied(14101));
                 store.DiscoverCrimeScene(alarm.Id, 12000); Check.Near(10501, alarm.Scene.DiscoveredAt);
                 Check.Equal(0, store.ObserveCrimeScenes(1, -1, 12000).Count);
             }));
@@ -92,24 +92,28 @@ namespace LivingCities.Tests
                 Check.Throws<ArgumentException>(() => store.RegisterUnwitnessedScene(alarm.Id));
                 Check.Equal(0, store.ObserveCrimeScenes(1, -1, 500).Count);
             }));
-            cases.Add(("Investigation guards occupy for six hours without extending repeated reports", () => {
+            cases.Add(("Investigation guards occupy for one hour without extending repeated reports", () => {
                 var roster = GuardRoster.Create(1, 1, 1, new[] { new SavedRoutePoint() });
                 var guard = roster.Guards[0];
                 roster.CacheBuildingApproach(7, new SavedRoutePoint { X = 100 },
                     new Dictionary<string, List<SavedRoutePoint>> { { guard.Id, new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 100 } } } });
                 roster.DispatchBuilding("discovery", 7, 100, 1, 2, 10, true);
-                Check.Near(600, guard.ArrivesAt); Check.Near(22200, guard.SearchUntil);
+                Check.Near(600, guard.ArrivesAt); Check.Near(4200, guard.SearchUntil);
+                var legacy = GuardRoster.CopyValidated(roster);
+                legacy.Guards[0].SearchUntil = legacy.Guards[0].ArrivesAt + 21600;
+                Check.Near(4200, GuardRoster.CopyValidated(legacy).Guards[0].SearchUntil);
+                Check.Near(22200, legacy.Guards[0].SearchUntil);
                 var copy = GuardRoster.CopyValidated(roster);
                 copy.DispatchBuilding("discovery", 7, 1000, 1, 2, 10, true);
-                Check.Near(22200, copy.Guards[0].SearchUntil);
+                Check.Near(4200, copy.Guards[0].SearchUntil);
                 Check.Throws<ArgumentException>(() => copy.DispatchBuilding("discovery", 7, 1000, 1, 2, 10));
-                copy.Advance(22199); Check.Equal(GuardDuty.Searching, copy.Guards[0].Duty);
-                copy.Advance(22200); Check.Equal(GuardDuty.Returning, copy.Guards[0].Duty);
-                copy.Advance(22700); Check.Equal(GuardDuty.Posted, copy.Guards[0].Duty);
+                copy.Advance(4199); Check.Equal(GuardDuty.Searching, copy.Guards[0].Duty);
+                copy.Advance(4200); Check.Equal(GuardDuty.Returning, copy.Guards[0].Duty);
+                copy.Advance(4700); Check.Equal(GuardDuty.Posted, copy.Guards[0].Duty);
                 roster.EnterBuilding(guard.Id, 7, 600, new GuardPoint3());
                 roster.ObserveInterior(guard.Id, new GuardPoint3(), 1, 601, true, new GuardPoint3 { X = 2 });
-                Check.Near(22200, guard.SearchUntil);
-                Check.Near(22200, GuardRoster.CopyValidated(roster).Guards[0].SearchUntil);
+                Check.Near(4200, guard.SearchUntil);
+                Check.Near(4200, GuardRoster.CopyValidated(roster).Guards[0].SearchUntil);
             }));
         }
     }

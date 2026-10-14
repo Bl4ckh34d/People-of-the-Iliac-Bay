@@ -45,7 +45,7 @@ namespace LivingCities.Core
             if (sees)
             {
                 room.LastSeenSuspect = seen;
-                double occupation = Reports.Exists(r => r.Id == guard.IncidentId && r.Investigation) ? guard.ArrivesAt + 21600 : 0;
+                double occupation = Reports.Exists(r => r.Id == guard.IncidentId && r.Investigation) ? guard.ArrivesAt + UnwitnessedScene.OccupationSeconds : 0;
                 guard.SearchUntil = Math.Max(now + 300, occupation);
             }
         }

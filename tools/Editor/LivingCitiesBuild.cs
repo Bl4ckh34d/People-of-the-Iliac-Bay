@@ -329,9 +329,9 @@ public static class LivingCitiesBuild
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native scene chronology round trip");
         var scene = restored.Snapshot().AlarmIncidents[0].Scene;
         var saved = restored.GetGuards(99);
-        Require(scene.DiscoveredAt == arrival && scene.Occupied(arrival + 21599) && !scene.Occupied(arrival + 21600) &&
-            saved.Reports[0].Investigation && saved.Guards[0].SearchUntil == arrival + 21600, "Native six-hour occupation survives reload");
-        Debug.Log("LIVING_CITIES_SCENE_PERSISTENCE_PASS: confirmed home death, departure, guard arrival and six-hour investigation survive native serialization.");
+        Require(scene.DiscoveredAt == arrival && scene.Occupied(arrival + 3599) && !scene.Occupied(arrival + 3600) &&
+            saved.Reports[0].Investigation && saved.Guards[0].SearchUntil == arrival + 3600, "Native one-hour occupation survives reload");
+        Debug.Log("LIVING_CITIES_SCENE_PERSISTENCE_PASS: confirmed home death, departure, guard arrival and one-hour investigation survive native serialization.");
     }
     private static void VerifyCivilianHitScopes()
     {

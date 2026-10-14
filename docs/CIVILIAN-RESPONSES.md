@@ -32,7 +32,7 @@ Each fleeing direct witness can warn at most two nearby, previously uninformed r
 2. Add shared indoor/exterior movement through real doors, witness guard reports and discovery of unwitnessed household murders.
 3. Add guard sight loss, last-seen search, escape and return to duty, then patrol pairs, torches and hostile-creature defense.
 4. Extend reactions to original stationary citizens while preserving native service and quest identity.
-5. Add corpse persistence, six-hour crime-scene occupation, recruitment and household recovery.
+5. Add corpse persistence, one-hour crime-scene occupation, recruitment and household recovery.
 
 Native static NPCs, spells, sleep detection, theft dispatch, guard warning radius, full indoor exit pathfinding, additional safe refuges and offscreen emergency movement are not covered by this first slice. Core and actual-player results are recorded below only after execution.
 

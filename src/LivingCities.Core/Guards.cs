@@ -267,8 +267,16 @@ namespace LivingCities.Core
                 else if (guard.IsAlive)
                     Require(route.Count >= 2 && guard.IncidentId != null && guard.ArrivesAt >= guard.DepartedAt &&
                         source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.GuardIds != null && r.GuardIds.Contains(guard.Id)), "Invalid responding guard.");
+                double searchUntil = guard.SearchUntil;
+                // The unpublished discovery preview used six hours. Normalize only
+                // that exact occupation floor; preserve active pursuit and history.
+                if (source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.Investigation) &&
+                    (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching ||
+                    (guard.Duty == GuardDuty.Engaged && guard.Interior != null && !guard.Interior.Returning)) &&
+                    searchUntil == guard.ArrivesAt + 21600)
+                    searchUntil = guard.ArrivesAt + UnwitnessedScene.OccupationSeconds;
                 if (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching)
-                    Require(guard.SearchUntil == guard.ArrivesAt + (source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.Investigation) ? 21600 : 300) &&
+                    Require(searchUntil == guard.ArrivesAt + (source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.Investigation) ? UnwitnessedScene.OccupationSeconds : 300) &&
                         Distance(CopyPoint(guard.Post), route[0]) < 0.05, "Invalid guard search deadline or route origin.");
                 if (guard.Duty == GuardDuty.Returning)
                     Require(guard.DepartedAt == guard.SearchUntil && Distance(CopyPoint(guard.Post), route[route.Count - 1]) < 0.05, "Return route does not reach the assigned post.");
@@ -280,7 +288,7 @@ namespace LivingCities.Core
                     HealthFraction = guard.HealthFraction,
                     EngagementPosition = guard.EngagementPosition == null ? null : CopyPoint(guard.EngagementPosition),
                     LastSeenSuspect = guard.LastSeenSuspect == null ? null : CopyPoint(guard.LastSeenSuspect),
-                    Route = route, DepartedAt = guard.DepartedAt, ArrivesAt = guard.ArrivesAt, SearchUntil = guard.SearchUntil, DiedAt = guard.DiedAt });
+                    Route = route, DepartedAt = guard.DepartedAt, ArrivesAt = guard.ArrivesAt, SearchUntil = searchUntil, DiedAt = guard.DiedAt });
             }
             Require(alive <= source.Target && source.NextIdentity == source.Guards.Count, "Invalid guard allocation count.");
             var sequence = new Dictionary<string, int>();

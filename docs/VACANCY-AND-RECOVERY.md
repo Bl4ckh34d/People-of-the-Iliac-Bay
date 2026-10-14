@@ -2,7 +2,7 @@
 
 User requirement, 14 October 2026. This refines gradual replacement rather than resurrecting killed NPCs.
 
-Later same-day refinement: `CRIME-SCENES.md` governs silent single-occupant murders and guard discovery. In that case cleanup occurs when dispatched guards arrive after player departure, and guards occupy the scene for six hours. This is a specific override of the general cleanup timing below. Other occupants may fight or flee to raise an alarm, including previously stationary NPCs.
+Later same-day refinement: `CRIME-SCENES.md` governs silent single-occupant murders and guard discovery. In that case cleanup occurs when dispatched guards arrive after player departure, and guards occupy the scene for one hour. This is a specific override of the general cleanup timing below. Other occupants may fight or flee to raise an alarm, including previously stationary NPCs.
 
 When every permanent resident of a household dies, preserve their death records and mark the dwelling vacant. Living residents who are at work or traveling still own the household; an empty room is not an extinct household. Offscreen death processing must not erase relationships or bereavement memories elsewhere.
 

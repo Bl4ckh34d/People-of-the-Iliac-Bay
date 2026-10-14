@@ -42,7 +42,35 @@ namespace LivingCities.DFU
         public void InstallReactionHook()
         {
             var type = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
-            reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Action<Transform>(BeforeWeaponHit) });
+            reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<Transform, Action<Exception>>(BeginWeaponHit) });
+        }
+        private readonly HashSet<string> concealedHits = new HashSet<string>();
+        public bool IsConcealedHit(string id) { return concealedHits.Contains(id); }
+        private Action<Exception> BeginWeaponHit(Transform target)
+        {
+            var actor = target ? target.GetComponent<ResidentActor>() : null;
+            bool eligible = ReactionsEnabled && Ready && responses != null && actor && actor.Resident.IsAlive &&
+                FindActor(actor.Resident.Id) == actor;
+            var previousCrime = GameManager.Instance.PlayerEntity.CrimeCommitted;
+            BeforeWeaponHit(target);
+            if (!eligible || !interior || actor.Resident.HomeKey != interior.EntryDoor.buildingKey ||
+                indoorGeometry == null || !indoorGeometry.EntryGround.HasValue) return null;
+            var guards = GetComponent<GuardPopulation>();
+            if (!guards || !guards.CanInvestigate(interior.EntryDoor.buildingKey)) return null;
+            var alarm = worldStore.RecordViolence(population.SettlementId, actor.Resident.Id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            if (alarm.People.Count != 0 || !concealedHits.Add(actor.Resident.Id)) return null;
+            return error => {
+                concealedHits.Remove(actor.Resident.Id);
+                if (!actor.Resident.IsAlive)
+                {
+                    worldStore.RegisterUnwitnessedScene(alarm.Id);
+                    if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
+                        GameManager.Instance.PlayerEntity.CrimeCommitted = previousCrime;
+                    Debug.Log("LIVING_CITIES_CONCEALED_DEATH: " + alarm.Id);
+                }
+                else if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
+                    GameManager.Instance.PlayerEntity.SpawnCityGuards(true);
+            };
         }
         private void BeforeWeaponHit(Transform target)
         {

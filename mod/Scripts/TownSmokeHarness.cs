@@ -199,6 +199,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-crime-scene-probe") >= 0)
+            {
+                yield return CrimeSceneProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: crime scene discovery; character=" + character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-interior-escape-probe") >= 0)
             {
                 yield return InteriorEscapeProbe.Run();

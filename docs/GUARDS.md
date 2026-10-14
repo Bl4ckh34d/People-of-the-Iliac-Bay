@@ -59,3 +59,7 @@ The controller must also take ownership of native mobile guards. `WeaponManager`
 5. Test repeated reports, exhausted/dead roster, nearby/far reinforcements, escape, shop entry, save/load mid-response and old-save compatibility in the actual player.
 
 Paired torch patrols, walls/headquarters, creature defense and wider settlements remain part of M4 after the first dispatch adapter. They are not optional replacements for the above requirements.
+
+## Night patrol lighting requirement
+
+Night street patrol guards carry visible torches that emit moving local light. This is part of the planned paired-patrol behavior, not yet implemented. Limit active lights by distance and expose sensible lighting controls in mod settings so large cities remain practical.

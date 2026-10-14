@@ -1,8 +1,9 @@
 # Living Cities milestones
 
-Next core checkpoint (not installed): confirmed unwitnessed home deaths, first departure/discovery chronology and six-hour finite guard investigations now persist. 159 core tests and DFU serializer checks pass. Discovery requires saved actual guard arrival; unknown location cannot trigger departure. Runtime crime concealment, departure/arrival wiring, corpse presentation and re-entry custody remain required before this becomes playable. Installed build remains 0.3.9. See CRIME-SCENE-DISCOVERY.md.
+Current 0.3.10 work connects unwitnessed home murders to departure-triggered finite guard investigation, prior-crime preservation, arrival discovery and re-entry custody. Occupation is now **one game hour from first arrival**, per the latest user decision. SAVE33 is the investigation fixture. Corpse persistence/cleanup, stationary citizens, patrols and defense remain unfinished. M3/M4 and the overall goal remain active.
 
-0.3.9 implements saved indoor witness escape through entry-connected floors, exterior travel to a guard post, delayed finite response to the original house, and real SAVE32 reload/identity continuity. Core suite: 154 tests. Unwitnessed murder discovery, crime-scene occupation, broader interior navigation and stationary-NPC conversion remain open. See INDOOR-WITNESSES.md. M3/M4 are not complete.
+
+Historical 0.3.9 checkpoint implements saved indoor witness escape through entry-connected floors, exterior travel to a guard post, delayed finite response to the original house, and real SAVE32 reload/identity continuity. Core suite: 154 tests. Unwitnessed murder discovery, crime-scene occupation, broader interior navigation and stationary-NPC conversion remain open. See INDOOR-WITNESSES.md. M3/M4 are not complete.
 
 0.3.8 connects public citizen witnesses to finite guards: local visibility, immutable crime destination, bounded physical dispatch and persistent report identity. The controlled actual-player witness probe and 151 core tests pass. Autonomous indoor escape/reporting, unwitnessed murder discovery and original stationary-citizen conversion remain next behavior work. Art stays deferred; M3/M4 remain open.
 
@@ -34,7 +35,7 @@ Tavern amendment: nonlocal travelers rent for one or several nights, visit town,
 
 Death/recovery amendment: extinct households stay vacant; corpse cleanup waits for elapsed time and an unobserved interior. New families use new identities. Dense-city recovery or bank listing takes 3–7 days; other settlements 7–30 days, with emptied isolated hamlets toward 30. Preserve ownership, deceased identities and memories. See `VACANCY-AND-RECOVERY.md`.
 
-Indoor-crime refinement: a silent one-blow kill of the lone occupant raises no alarm until player departure. Guards travel to the house, clear the body upon arrival, and occupy it for six game hours; player return during occupation triggers attempted custody without magically identifying the unwitnessed killer. Other present occupants, including stationary NPCs, can mobilize to fight or flee and alert guards. Use actual finite responders and preserve quest identities. See `CRIME-SCENES.md`.
+Indoor-crime refinement: a silent one-blow kill of the lone occupant raises no alarm until player departure. Guards travel to the house, clear the body upon arrival, and occupy it for one game hour; player return during occupation triggers attempted custody without magically identifying the unwitnessed killer. Other present occupants, including stationary NPCs, can mobilize to fight or flee and alert guards. Use actual finite responders and preserve quest identities. See `CRIME-SCENES.md`.
 
 Public-crime refinement: direct witnesses flee to reachable safe interiors, alert nearby guards and warn at most two encountered NPCs. Recipients flee or fight but do not relay secondhand warnings. Incident IDs and persisted budgets prevent repeated or unbounded propagation. Player-caused deaths may include important quest NPCs and break their quests; preserve technical bindings and saves, with separate default protection from random background events. These amendments supersede the goal's original blanket quest-protection clause. See `CRIME-SCENES.md`.
 
@@ -103,4 +104,4 @@ Survey: 175 buildings, 162 candidate homes, 215 doors, and 33,143 walkable cells
 Evidence: `work/unity-build-result.json`, `work/town-test.log`, historical `work/player-smoke.log`, sibling `../work/livingcities-build.log`. `tools/Build.ps1` checks build completion before reporting success. See `TEST-FIXTURES.md`, `INTEGRATION.md` and the separate `probes/guard` experiment.
 
 
-Native damage completion prerequisite verified: per-hit finalizers preserve nested target scope and original exceptions. Actual patched-method checks pass in Unity. Runtime crime concealment, corpse cleanup and custody remain pending; installed 0.3.9 is unchanged.
+Historical native damage completion prerequisite: per-hit finalizers preserve nested target scope and original exceptions. Actual patched-method checks pass in Unity. Runtime crime concealment, corpse cleanup and custody remain pending; installed 0.3.9 is unchanged.
