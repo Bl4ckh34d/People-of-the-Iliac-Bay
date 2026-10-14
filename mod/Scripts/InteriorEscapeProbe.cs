@@ -89,9 +89,16 @@ namespace LivingCities.DFU
                 if (!witness || Vector3.Distance(before, witness.transform.position) < 0.1f || witness.Person.NameNPC != name)
                     throw new InvalidOperationException("Witness did not physically follow escape route.");
                 string json = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
+                double fleeSpeed = ResidentMovement.FleeSpeed(witness.Resident.AppearanceSeed);
+                if (person.Escape.Speed != fleeSpeed || fleeSpeed < ResidentMovement.WalkSpeed * 2.5 ||
+                    fleeSpeed > ResidentMovement.WalkSpeed * 3.5)
+                    throw new InvalidOperationException("Runtime flight did not use the resident's stable randomized speed.");
                 var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 var saved = restored.ActiveAlarm(id, clock.ToSeconds()).People.Find(p => p.ResidentId == id);
-                if (saved.Escape == null || saved.Escape.ReportAt != person.Escape.ReportAt) throw new InvalidOperationException("Escape timing lost in native serialization.");
+                if (saved.Escape == null || saved.Escape.ReportAt != person.Escape.ReportAt || saved.Escape.Speed != fleeSpeed)
+                    throw new InvalidOperationException("Escape timing or speed lost in native serialization: speed=" + fleeSpeed.ToString("R") +
+                        "; saved=" + (saved.Escape == null ? "null" : saved.Escape.Speed.ToString("R")) +
+                        "; timingDelta=" + (saved.Escape == null ? 0 : saved.Escape.ReportAt - person.Escape.ReportAt));
                 double reportAt = person.Escape.ReportAt;
                 game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - escaping witness");
                 deadline = Time.realtimeSinceStartup + 30;
@@ -106,7 +113,7 @@ namespace LivingCities.DFU
                 clock = DaggerfallUnity.Instance.WorldTime.Now;
                 store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 alarm = store.ActiveAlarm(id, clock.ToSeconds()); person = alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
-                if (person == null || person.Escape == null || person.Escape.ReportAt != reportAt)
+                if (person == null || person.Escape == null || person.Escape.ReportAt != reportAt || person.Escape.Speed != fleeSpeed)
                     throw new InvalidOperationException("Real reload reset witness journey.");
                 clock.RaiseTime((float)Math.Max(0, person.Escape.ExitAt - clock.ToSeconds() + 1));
                 yield return null; yield return null;

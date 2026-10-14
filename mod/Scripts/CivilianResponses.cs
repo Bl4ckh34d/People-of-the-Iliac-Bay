@@ -141,7 +141,8 @@ namespace LivingCities.DFU
                     if (distance > best && Sees(ground + Vector3.up, candidate + Vector3.up, 15)) { target = candidate; best = distance; }
                 }
             }
-            Vector3 deltaMove = Vector3.MoveTowards(ground, target, GameManager.IsGamePaused ? 0 : 2.8f * Time.deltaTime) - ground;
+            float speed = person.Reaction == CivilianReaction.Flee ? (float)ResidentMovement.FleeSpeed(actor.Resident.AppearanceSeed) : 2.8f;
+            Vector3 deltaMove = Vector3.MoveTowards(ground, target, GameManager.IsGamePaused ? 0 : speed * Time.deltaTime) - ground;
             bool blocked = false;
             if (deltaMove.sqrMagnitude > 0.000001f)
                 foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * 0.3f, ground + Vector3.up * 1.65f,

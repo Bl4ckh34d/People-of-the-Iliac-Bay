@@ -9,6 +9,26 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Fleeing speed varies persistently between 2.5 and 3.5 times walking speed", () => {
+                var speeds = new HashSet<double>();
+                for (uint seed = 0; seed < 1000; seed++)
+                {
+                    double speed = ResidentMovement.FleeSpeed(seed);
+                    Check.True(speed >= ResidentMovement.WalkSpeed * 2.5 && speed <= ResidentMovement.WalkSpeed * 3.5);
+                    Check.Equal(speed, ResidentMovement.FleeSpeed(seed)); speeds.Add(speed);
+                }
+                Check.True(speeds.Count > 100);
+                var person = new AlarmPerson { HasPosition = true, BuildingKey = 1, Reaction = CivilianReaction.Flee };
+                var escape = CivilianEscape.Create(person, 100,
+                    new List<GuardPoint3> { new GuardPoint3(), new GuardPoint3 { X = 3.9 } },
+                    new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 3.9 } }, 3.9);
+                Check.Near(112, escape.ExitAt); Check.Near(124, escape.ReportAt);
+                var copy = CivilianEscape.Copy(escape); Check.Near(3.9, copy.Speed);
+                copy.Advance(person, 106); Check.Near(1.95, person.X);
+                var legacy = CivilianEscape.Copy(escape); legacy.Speed = 0;
+                Check.Near(100 + 3.9 / 2.8 * 12, CivilianEscape.Copy(legacy).ExitAt);
+                copy.Speed = double.NaN; Check.Throws<ArgumentException>(() => CivilianEscape.Copy(copy));
+            }));
             cases.Add(("Fleeing witness reaches door then guard using elapsed game time", () => {
                 var person = new AlarmPerson { ResidentId = "w", DirectWitness = true, Reaction = CivilianReaction.Flee,
                     HasPosition = true, BuildingKey = 12, X = 2 };

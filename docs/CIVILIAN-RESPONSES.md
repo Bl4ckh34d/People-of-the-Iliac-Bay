@@ -1,5 +1,11 @@
 # Citizen response checkpoint
 
+## Flight speed amendment, 14 October 2026
+
+New flight uses a stable per-resident speed between 2.5 and 3.5 times the normal 1.3 m/s walking baseline, or 3.25–4.55 m/s. The multiplier derives from the resident's persisted appearance seed, so it does not change on each flight, scene transition or reload. Physical retreat and new planned indoor/exterior escape journeys use this speed. Planned escape speed is saved with the route and controls both interpolation and guard-report arrival time. Existing active escape saves with no speed field retain their historical 2.8 m/s timing. Four-decimal physical values survive DFU's decimal JSON conversion exactly; a live test initially showed 4.2341000000000006 becoming 4.2341 while arrival time remained unchanged.
+
+Validation: 182 core tests and native build pass. The actual-player InteriorEscapeProbe checks the resident-specific speed, native serialization, real SAVE32 reload, physical indoor/exterior movement, delayed reporting and finite building response. Evidence: work/FleeSpeed-pass.log. Current walking artwork is reused; distinct running frames remain pending. This supersedes the fixed 2.8 m/s description below for new flight.
+
 ## Current 0.3.9 indoor escape
 
 Supported direct fleeing witnesses now follow saved interior exit paths and surveyed streets to a posted guard. The same actor identity appears outside; progress survives real save/load and scene unloading. These planned escapes delay the native indoor alarm until reporting. No-route and unwitnessed indoor cases retain native alarm behavior pending discovery work. Long journeys extend the incident through arrival plus five game minutes. See [indoor witness implementation and limits](INDOOR-WITNESSES.md); earlier scope statements below are historical.

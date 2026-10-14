@@ -46,6 +46,7 @@ namespace LivingCities.DFU
             reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<Transform, Action<Exception>>(BeginWeaponHit) });
             InstallHouseholdDoorHook();
             InstallTheftHook();
+            InstallEntryAwareness();
         }
         private readonly HashSet<string> concealedHits = new HashSet<string>();
         public bool IsConcealedHit(string id) { return concealedHits.Contains(id); }
@@ -105,7 +106,7 @@ namespace LivingCities.DFU
                 if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape != null) continue;
                 var route = indoorGeometry.RouteToExit(witness.transform.position - Vector3.up);
                 if (route.Count < 2) continue;
-                var escape = CivilianEscape.Create(person, now, route, outside);
+                var escape = CivilianEscape.Create(person, now, route, outside, ResidentMovement.FleeSpeed(witness.Resident.AppearanceSeed));
                 person.Escape = escape;
             }
         }
@@ -164,7 +165,7 @@ namespace LivingCities.DFU
         {
             var plan = plans.Find(item => item.Resident.Id == id);
             if (plan == null) throw new ArgumentException("Unknown resident schedule.");
-            return plan.Schedule.EvaluateSeconds(seconds);
+            return EntryState(id, seconds, plan.Schedule.EvaluateSeconds(seconds));
         }
         public void SetTown(BuildingDirectory town, CityNavigation nav, SettlementPopulation population, WorldStateStore store, int wake, int sleep)
         {
@@ -263,7 +264,7 @@ namespace LivingCities.DFU
             foreach (var point in routine.Route) points.Add(new RoutePoint(point.X, point.Z));
             var schedule = routine.DestinationKey < 0 ? DailySchedule.HomeDay(resident.HomeKey, wake * 60, sleep * 60) :
                 DailySchedule.DayVisit(resident.HomeKey, routine.DestinationKey, points, routine.OpenMinute, routine.CloseMinute,
-                    20 + (int)(resident.AppearanceSeed % 41), 1.3, 12, resident.AppearanceSeed, wake * 60, sleep * 60);
+                    20 + (int)(resident.AppearanceSeed % 41), ResidentMovement.WalkSpeed, 12, resident.AppearanceSeed, wake * 60, sleep * 60);
             plans.Add(new Plan { Resident = resident, Schedule = schedule, Routine = routine,
                 SurnameSeed = surnameSeed });
         }
@@ -318,6 +319,7 @@ namespace LivingCities.DFU
                 if (interior) Debug.Log("LIVING_CITIES_INTERIOR_ANCHORS: building=" + interior.EntryDoor.buildingKey +
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
+            UpdateEntryReports(seconds);
             UpdateOutdoorScenes(seconds);
             UpdateCorpses(seconds);
             if (ReactionsEnabled && responses != null)
@@ -331,7 +333,7 @@ namespace LivingCities.DFU
             Vector3 player = game.PlayerMotor.transform.position;
             foreach (var plan in plans)
             {
-                var state = plan.Schedule.EvaluateSeconds(seconds);
+                var state = EntryState(plan.Resident.Id, seconds, plan.Schedule.EvaluateSeconds(seconds));
                 ResidentActor actor;
                 actors.TryGetValue(plan.Resident.Id, out actor);
                 var reaction = Reaction(plan.Resident.Id, seconds);
@@ -367,7 +369,7 @@ namespace LivingCities.DFU
                     CivilianResponses.Move(actor, reaction, plan.Routine, directory.transform, geometry, null);
                     continue;
                 }
-                var next = plan.Schedule.EvaluateSeconds(seconds + 0.1);
+                var next = EntryState(plan.Resident.Id, seconds + 0.1, plan.Schedule.EvaluateSeconds(seconds + 0.1));
                 Vector3 direction = next.Activity == Activity.Travel ? geometry.ScenePoint(next.Position) - position :
                     position - geometry.ScenePoint(plan.Schedule.EvaluateSeconds(Math.Max(0, seconds - 0.1)).Position);
                 actor.Place(position, direction);
@@ -377,7 +379,7 @@ namespace LivingCities.DFU
         {
             foreach (var plan in plans)
             {
-                var state = plan.Schedule.EvaluateSeconds(seconds);
+                var state = EntryState(plan.Resident.Id, seconds, plan.Schedule.EvaluateSeconds(seconds));
                 ResidentActor actor; actors.TryGetValue(plan.Resident.Id, out actor);
                 var reaction = Reaction(plan.Resident.Id, seconds);
                 bool atHome = reaction != null && reaction.HasPosition ? reaction.BuildingKey == interior.EntryDoor.buildingKey :
@@ -487,6 +489,7 @@ namespace LivingCities.DFU
         }
         public void Clear()
         {
+            entryJourneys.Clear();
             FlushOutdoorDeparture();
             if (building != null) { StopCoroutine(building); building = null; }
             ClearActors(); ClearCorpses(); plans.Clear(); Ready = false;
@@ -501,6 +504,6 @@ namespace LivingCities.DFU
             }
             hiddenVanilla.Clear(); ownsVanilla = false; vanilla = null; directory = null; geometry = null;
         }
-        private void OnDestroy() { Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); }
+        private void OnDestroy() { RemoveEntryAwareness(); Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); }
     }
 }

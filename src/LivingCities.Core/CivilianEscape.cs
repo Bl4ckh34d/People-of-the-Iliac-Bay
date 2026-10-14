@@ -7,23 +7,25 @@ namespace LivingCities.Core
     {
         public int BuildingKey;
         public double StartedAt;
+        public double Speed;
         public List<GuardPoint3> InteriorRoute;
         public List<SavedRoutePoint> ExteriorRoute;
         // Routes are immutable after creation/validated restore. Avoid scanning or allocating
         // a long street route for every resident's alarm query on every frame.
         [NonSerialized] private double? insideLength, outsideLength;
-        public static CivilianEscape Create(AlarmPerson person, double now, List<GuardPoint3> inside, List<SavedRoutePoint> outside)
+        public static CivilianEscape Create(AlarmPerson person, double now, List<GuardPoint3> inside, List<SavedRoutePoint> outside, double speed = 2.8)
         {
             if (person == null || !person.HasPosition || person.BuildingKey < 0 || person.Reaction != CivilianReaction.Flee)
                 throw new ArgumentException("Witness cannot flee this interior.");
-            var result = Copy(new CivilianEscape { BuildingKey = person.BuildingKey, StartedAt = now,
+            var result = Copy(new CivilianEscape { BuildingKey = person.BuildingKey, StartedAt = now, Speed = speed,
                 InteriorRoute = inside, ExteriorRoute = outside });
             if (Distance(inside[0], new GuardPoint3 { X = person.X, Y = person.Y, Z = person.Z }) > 0.05)
                 throw new ArgumentException("Escape must start at witness position.");
             return result;
         }
-        // Running speed is 2.8 metres per real second at the normal 12x world clock.
-        public double ExitAt { get { if (!insideLength.HasValue) insideLength = Length(InteriorRoute); return StartedAt + insideLength.Value / 2.8 * 12; } }
+        // Zero is the additive-field default in historical saves; keep their timing.
+        private double EffectiveSpeed { get { return Speed == 0 ? 2.8 : Speed; } }
+        public double ExitAt { get { if (!insideLength.HasValue) insideLength = Length(InteriorRoute); return StartedAt + insideLength.Value / EffectiveSpeed * 12; } }
         public double ReportAt
         {
             get
@@ -35,7 +37,7 @@ namespace LivingCities.Core
                     { double x = ExteriorRoute[i].X-ExteriorRoute[i-1].X, z = ExteriorRoute[i].Z-ExteriorRoute[i-1].Z; length += Math.Sqrt(x*x+z*z); }
                     outsideLength = length;
                 }
-                return ExitAt + outsideLength.Value / 2.8 * 12;
+                return ExitAt + outsideLength.Value / EffectiveSpeed * 12;
             }
         }
         public bool Arrived(double now) { return now >= ReportAt; }
@@ -43,7 +45,7 @@ namespace LivingCities.Core
         {
             if (now < StartedAt) return;
             bool inside = now < ExitAt;
-            double distance = (now - (inside ? StartedAt : ExitAt)) / 12 * 2.8;
+            double distance = (now - (inside ? StartedAt : ExitAt)) / 12 * EffectiveSpeed;
             var point = inside ? Along(InteriorRoute, distance) : AlongExterior(distance);
             person.HasPosition = true; person.BuildingKey = inside ? BuildingKey : -1;
             person.X = point.X; person.Y = point.Y; person.Z = point.Z;
@@ -51,11 +53,11 @@ namespace LivingCities.Core
         public static CivilianEscape Copy(CivilianEscape source)
         {
             if (source == null) return null;
-            if (source.BuildingKey < 0 || !Finite(source.StartedAt) || source.StartedAt < 0 ||
+            if (source.BuildingKey < 0 || !Finite(source.StartedAt) || source.StartedAt < 0 || !Finite(source.Speed) || source.Speed < 0 || source.Speed > 20 ||
                 source.InteriorRoute == null || source.InteriorRoute.Count < 2 || source.InteriorRoute.Count > 1000 ||
                 source.ExteriorRoute == null || source.ExteriorRoute.Count < 2 || source.ExteriorRoute.Count > 10000)
                 throw new ArgumentException("Invalid witness escape plan.");
-            var result = new CivilianEscape { BuildingKey = source.BuildingKey, StartedAt = source.StartedAt,
+            var result = new CivilianEscape { BuildingKey = source.BuildingKey, StartedAt = source.StartedAt, Speed = source.Speed,
                 InteriorRoute = new List<GuardPoint3>(), ExteriorRoute = new List<SavedRoutePoint>() };
             foreach (var p in source.InteriorRoute)
             {

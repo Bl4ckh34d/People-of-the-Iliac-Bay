@@ -271,6 +271,7 @@ namespace LivingCities.DFU
                                 throw new InvalidOperationException("Disabling household locks did not restore daytime native access.");
                         }
                         finally { streets.HouseholdLocksEnabled = locksEnabled; }
+                        yield return EntryProbe.Run(adapter, streets, home.BuildingKey);
                         absentChecked = true; break;
                     }
                 }

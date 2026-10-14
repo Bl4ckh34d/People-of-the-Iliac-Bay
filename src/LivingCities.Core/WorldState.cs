@@ -13,6 +13,7 @@ namespace LivingCities.Core
         public List<QuestResidentBinding> QuestBindings = new List<QuestResidentBinding>();
         public List<CivilianIncident> AlarmIncidents = new List<CivilianIncident>();
         public List<GuardRoster> Garrisons = new List<GuardRoster>();
+        public List<EntryReport> EntryReports = new List<EntryReport>();
     }
     public sealed partial class WorldStateStore
     {
@@ -165,6 +166,7 @@ namespace LivingCities.Core
                         report.HasArrival && report.FirstArrivalAt == alarm.Scene.DiscoveredAt,
                         "Discovered scene lacks matching guard arrival evidence.");
                 }
+            copy.EntryReports = CopyEntries(source);
             return copy;
         }
         private static void ValidateFamily(Household home)

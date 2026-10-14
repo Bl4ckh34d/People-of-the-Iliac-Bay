@@ -69,6 +69,8 @@ try {
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_HOUSING_LIVE_PASS:') { throw 'Housing probe did not complete.' }
+    if ($HousingProbe -and ($body -notmatch 'LIVING_CITIES_ENTRY_PASS:' -or $body -notmatch 'LIVING_CITIES_ENTRY_GUARD_PASS:')) { throw 'Entry witness probes did not complete.' }
+    if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_ENTRY_MESSENGER_PASS:') { throw 'Entry messenger probe did not complete.' }
     if ($CrimeSceneProbe -and $body -notmatch 'LIVING_CITIES_TOWN_CRIME_SCENE_PASS:') { throw 'Crime scene probe did not complete.' }
     if ($OutdoorSceneProbe -and $body -notmatch 'LIVING_CITIES_OUTDOOR_SCENE_PASS:') { throw 'Outdoor scene probe did not complete.' }
     if ($InteriorEscapeProbe -and $body -notmatch 'LIVING_CITIES_TOWN_INTERIOR_ESCAPE_PASS:') { throw 'Interior escape probe did not complete.' }

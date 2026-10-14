@@ -298,6 +298,7 @@ public static class LivingCitiesBuild
         VerifyHouseholdDoorHook();
         VerifyTheftHook();
         VerifyTheftSight();
+        VerifyEntryPersistence();
         VerifyCivilianHitScopes();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
@@ -452,6 +453,27 @@ public static class LivingCitiesBuild
         }
         finally { if (hook != null) hook.Dispose(); UnityEngine.Object.DestroyImmediate(outer); UnityEngine.Object.DestroyImmediate(inner); }
         Debug.Log("LIVING_CITIES_CIVILIAN_SCOPES_PASS: actual patched native method, nested hits, native and prefix failures.");
+    }
+    private static void VerifyEntryPersistence()
+    {
+        var store = new WorldStateStore(42);
+        var town = store.GetOrCreate(99, new[] { 1, 2 }, 1);
+        var citizen = town.Households[1].Residents[0].Id;
+        var roster = store.GetOrCreateGuards(99, 1, new List<SavedRoutePoint> { new SavedRoutePoint() });
+        var report = store.RecordEntry(99, 1, 12597431462.259386, new[] { citizen }, new string[0]);
+        store.PlanEntryMessenger(report.Id, citizen, roster.Guards[0].Id, 12597431463,
+            new List<SavedRoutePoint> { new SavedRoutePoint { X = 28 }, new SavedRoutePoint() });
+        var json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
+        var restored = new WorldStateStore(0);
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+        Require(restored.AdvanceEntryMessengers(99, 12597431582).Count == 0, "Messenger cannot report before arrival");
+        Require(restored.AdvanceEntryMessengers(99, 12597431583).Count == 1, "Messenger reports at saved arrival time");
+        var copied = restored.Snapshot().EntryReports[0];
+        Require(copied.Id == report.Id && copied.EnteredAt == 12597431462 && copied.InformedGuards.Count == 1,
+            "Entry evidence survives native epoch rounding and later guard notification");
+        Require(copied.Messenger.Delivered && copied.Messenger.ArrivesAt == 12597431583,
+            "Messenger route and arrival survive native epoch rounding");
+        Debug.Log("LIVING_CITIES_ENTRY_PERSISTENCE_PASS: native saved witness route and timed delivery.");
     }
     private static void VerifyTheftSight()
     {
