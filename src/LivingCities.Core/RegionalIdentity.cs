@@ -8,6 +8,10 @@ namespace LivingCities.Core
             if(home==null || home.Residents==null || race<0 || race>255 || firstName==null || surname==null)
                 throw new ArgumentException("Invalid household identity inputs.");
             string family=home.Surname ?? surname(home.SurnameSeed);
+            // Native Redguard names have no surname. Use a separately seeded
+            // regional name for the household rather than borrowing another culture's surname.
+            if(home.Surname==null && string.IsNullOrWhiteSpace(family))
+                family=firstName(home.SurnameSeed,ResidentSex.Male);
             if(string.IsNullOrWhiteSpace(family)) throw new ArgumentException("Missing family surname.");
             var names=new string[home.Residents.Count];
             for(int i=0;i<names.Length;i++)

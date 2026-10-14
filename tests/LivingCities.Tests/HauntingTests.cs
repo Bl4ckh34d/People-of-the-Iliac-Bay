@@ -8,6 +8,17 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Single-name cultures get a stable shared family name",()=>{
+                var home=new Household { SurnameSeed=42 };
+                home.Residents.Add(new Resident { AppearanceSeed=1 });
+                home.Residents.Add(new Resident { AppearanceSeed=2 });
+                RegionalIdentity.Initialize(home,2,(seed,sex)=>"Name"+seed,seed=>string.Empty);
+                Check.Equal("Name42",home.Surname);
+                Check.Equal("Name1 Name42",home.Residents[0].FullName);
+                Check.Equal("Name2 Name42",home.Residents[1].FullName);
+                RegionalIdentity.Initialize(home,2,(seed,sex)=>"Changed",seed=>string.Empty);
+                Check.Equal("Name1 Name42",home.Residents[0].FullName);
+            }));
             cases.Add(("Regional identity persists shared surname and preserves existing names and race",()=>{
                 var home=new Household { SurnameSeed=42 };
                 home.Residents.Add(new Resident { Id="a",AppearanceSeed=1 });

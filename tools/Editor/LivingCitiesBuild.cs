@@ -418,6 +418,7 @@ public static class LivingCitiesBuild
     public static void VerifyGuardPersistence()
     {
         VerifyRefugePersistence();
+        VerifyRegionalNames();
         AuditFixtureHousing();
         VerifyCrimeScenePersistence();
         VerifyOutdoorCorpsePersistence();
@@ -467,6 +468,29 @@ public static class LivingCitiesBuild
         VerifyGuardPatrolRoster();
         VerifyGuardDefense();
         Debug.Log("LIVING_CITIES_GUARDS_PERSISTENCE_PASS: finite identities, dispatch, timed death location, native save, recruitment and schema-five migration.");
+    }
+    private static void VerifyRegionalNames()
+    {
+        var names=new NameHelper();
+        uint previous=DFRandom.Seed;
+        try
+        {
+            foreach(var bank in new[] { NameHelper.BankTypes.Breton,NameHelper.BankTypes.Redguard,NameHelper.BankTypes.Nord })
+            {
+                var home=new Household { SurnameSeed=42 };
+                home.Residents.Add(new Resident { AppearanceSeed=1,Sex=ResidentSex.Male });
+                home.Residents.Add(new Resident { AppearanceSeed=2,Sex=ResidentSex.Female });
+                RegionalIdentity.Initialize(home,2,(seed,sex)=>{
+                    DFRandom.Seed=seed;
+                    return names.FirstName(bank,sex==ResidentSex.Male ? Genders.Male : Genders.Female);
+                },seed=>{ DFRandom.Seed=seed; return names.Surname(bank); });
+                Require(!string.IsNullOrWhiteSpace(home.Surname),"Native regional family name "+bank);
+                foreach(var resident in home.Residents)
+                    Require(resident.FullName.EndsWith(" "+home.Surname) && resident.FullName.Length>home.Surname.Length+1,"Native regional full name "+bank);
+                Debug.Log("LIVING_CITIES_REGIONAL_NAMES_PASS: "+bank+" "+home.Residents[0].FullName+" / "+home.Residents[1].FullName);
+            }
+        }
+        finally { DFRandom.Seed=previous; }
     }
     private static void VerifyRefugePersistence()
     {

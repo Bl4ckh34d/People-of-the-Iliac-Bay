@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Single-name regional households
+
+Native NameHelper.Surname(Redguard) returns an empty string. The previous initializer rejected it and would interrupt initialization in Redguard regions. Missing surnames now use a separately seeded regional first name as the shared household surname, retaining the requested family naming convention without borrowing Breton names. Existing identities remain unchanged.
+
+268/268 core tests pass, including a previously failing single-name culture case. Native editor verification exercises Breton, Redguard and Nord banks (`work/SingleName-native.log`); Redguard produces C'ozom Caogur and Stirt-e Caogur. The headless Nord output contains a LocaleText-NotFound suffix because localization is not initialized there; this is not proof of valid in-game Nord display. Live regional appearance/localization verification remains pending. Unity build passed and installed bundle SHA-256 is `3F7E16886B492438264C840784E43131CFD8167C644F5408A9AE7F2D9B1569A4` (development 0.3.30).
+
 ## Persistent regional household identity
 
 RegionalIdentityAdapter now initializes missing household surnames, resident full names and race before schedule setup, using native MapsFile.RegionRaces for the name bank and ClimateSettings.People for supported display race. A native household head's explicit race takes precedence for missing family race. Existing explicit names/races/surnames remain unchanged. Name generation retains appearance/surname seeds and restores DFRandom state; assigned names and race use existing save fields, so later actor recreation does not depend on the player's current region. Ordinary initialized actors therefore no longer depend on the old Breton fallback.
