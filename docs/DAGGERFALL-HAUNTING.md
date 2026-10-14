@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Refuge journey source foundation
+
+`GuardRefugeJourney` now models separate exterior and interior routes, doorway phase transitions, indefinite shelter, explicit release and a physical reverse journey. Exterior coordinates remain settlement-local and interior coordinates remain building-local; the adapter must switch scenes at the doorway rather than interpolate between unrelated coordinate spaces. Early release waits until shelter arrival; repeated release does not reset the departure clock. Route copies validate coordinates, bounds, rates and deadlines.
+
+Core tests first failed on all three unimplemented journey scenarios, then passed; the final suite including corrupt-state checks is251/251. Evidence: `work/RefugeJourney-red.log` and `work/RefugeJourney-green.log`. This class is not yet attached to GuardRecord, native save serialization, ghost detection, actor movement or room occupancy allocation. It must not be described as working guard flight. Its return endpoint is the original departure point; the runtime must resume the interrupted post/patrol journey after completion. Installed bundle remains the prior interior-probe build. Next attach validated journey state to the roster, preserve deaths and interrupted duties, reserve non-overlapping refuge positions, then connect and test live actors before city activation.
+
 ## Verified content census, 15 October 2026
 
 `DaggerfallCityAudit.Run` reads the installed original data through DFU's ContentReader without spawning actors or changing saves. Unity completed with exit 0; evidence: `work/DaggerfallCity-census.log`. Daggerfall city has map ID **1291010263**, location type **TownCity**, and 8×8 exterior blocks. There are 484 House1–House6 buildings containing 714 beds, plus 20 taverns containing 134 beds. These are content counts, not an allocated resident population: quest reservations, ownership and shop households still affect allocation. One separate HouseForSale is excluded from the house total. The audit does not prove usable wall refuges or route connectivity.
