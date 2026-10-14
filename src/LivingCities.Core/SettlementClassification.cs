@@ -3,6 +3,7 @@ namespace LivingCities.Core
 {
     public static class SettlementClassification
     {
+        public static bool SupportsPopulation(int locationType) { return locationType>=0 && locationType<=2; }
         // Original DFRegion.LocationTypes values. Keep the core independent of DFU.
         public static SettlementScale FromLocationType(int locationType)
         {

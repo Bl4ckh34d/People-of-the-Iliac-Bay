@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Settlement coverage and live regional verification (0.3.31)
+
+StreetPopulation and GuardPopulation now admit native city/town/village categories0/1/2 rather than two named map IDs. Unsupported location types retain native behavior; the Daggerfall-specific test isolation remains internal.269/269 core tests pass. `TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -RegionalProbe` passes with470 schedules/38 guards in Berbaaqnia and435 schedules/35 guards in Bubogureg. Each city validates every generated name/race and constructs two adult actors to check race, gender, identity and billboard asset. This is not a visual portrait audit or continuous movement acceptance for all layouts.
+
+The native RegionRaces table only supplies Breton/Redguard names; Nord appearance comes from mountain climate independently. Live generated names contain no missing-localization placeholder. Probe evidence: `work/WorldCoverage-regional-pass.log`. A dedicated command-line probe avoids rerunning the entire refuge suite for regional diagnostics; no menu option was added. The initial combined probe failed because gameplay had not resumed after travel; returning the disposable session to HUD and waiting for population initialization resolves that fixture issue. The full combined refuge suite still needs rerunning after this expansion; its prior city checks passed before regional failure. Regional fixtures are not saved.
+
 ## Single-name regional households
 
 Native NameHelper.Surname(Redguard) returns an empty string. The previous initializer rejected it and would interrupt initialization in Redguard regions. Missing surnames now use a separately seeded regional first name as the shared household surname, retaining the requested family naming convention without borrowing Breton names. Existing identities remain unchanged.

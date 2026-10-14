@@ -3,7 +3,7 @@
   "Sections": [
     {
       "Name": "Awareness",
-      "Description": "Household access and theft detection in the supported town. Disabling restores native behavior without deleting saved residents.",
+      "Description": "Household access and theft detection in settlements. Disabling restores native behavior without deleting saved residents.",
       "IsAdvanced": false,
       "Keys": [
         {
@@ -40,7 +40,7 @@
         {
           "Value": true,
           "Name": "ExperimentalExteriorGuards",
-          "Description": "Gothway Garden finite guards: posts, physical response, combat and timed search/return. Missing approaches retain reported alarms until surveyed. Night guards carry torches. Patrol pairs and wall posts remain in development.",
+          "Description": "Finite settlement guards: posts, physical response, combat and timed search/return. Missing approaches retain reported alarms until surveyed. Night patrol pairs carry torches. Wall patrols remain in development.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
@@ -68,7 +68,7 @@
         {
           "Value": true,
           "Name": "StreetPopulation",
-          "Description": "Adult visits and family interior presence using classic sprites in supported preview towns. Replaces random street civilians while active. Children stay home until play and movement animations are ready.",
+          "Description": "Adult visits and family interior presence using classic sprites in cities, towns and villages. Replaces random street civilians while active. Children stay home until play and movement animations are ready.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         }
@@ -151,7 +151,7 @@
         {
           "Value": true,
           "Name": "SleepingPoses",
-          "Description": "Experimental complete single-sleeper poses in Gothway Garden. One NPC per bed. Currently covers one male and one female appearance; other appearances remain in development. Turning this off restores standing sprites without changing schedules or saved identities.",
+          "Description": "Complete single-sleeper poses, one NPC per bed. Appearance coverage remains incomplete. Turning this off restores standing sprites without changing schedules or saved identities.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },

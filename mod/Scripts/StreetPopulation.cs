@@ -194,8 +194,8 @@ namespace LivingCities.DFU
         public void SetTown(BuildingDirectory town, CityNavigation nav, SettlementPopulation population, WorldStateStore store, int wake, int sleep)
         {
             wakeHour = wake; sleepHour = sleep;
-            // Expand normal coverage as settlement integration is implemented.
-            if (town.MapID != 206728581 && !(town.MapID==1291010263 && !DaggerfallPopulationProbe.SuppressCityActors)) { Clear(); return; }
+            if (!SettlementClassification.SupportsPopulation((int)town.LocationData.MapTableData.LocationType) ||
+                (town.MapID==1291010263 && DaggerfallPopulationProbe.SuppressCityActors)) { Clear(); return; }
             if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
             Clear(); directory = town; navigation = nav; this.population = population; worldStore = store;
             responses = new CivilianResponses(store, population.SettlementId, (alarm, position) => {

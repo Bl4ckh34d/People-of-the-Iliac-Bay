@@ -8,6 +8,11 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Settlement coverage admits native cities towns and villages only",()=>{
+                for(int category=-1;category<=15;category++)
+                    Check.Equal(category>=0 && category<=2,SettlementClassification.SupportsPopulation(category));
+                Check.Equal(false,SettlementClassification.SupportsPopulation(65535));
+            }));
             cases.Add(("Single-name cultures get a stable shared family name",()=>{
                 var home=new Household { SurnameSeed=42 };
                 home.Residents.Add(new Resident { AppearanceSeed=1 });

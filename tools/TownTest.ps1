@@ -19,7 +19,8 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$InteriorEscapeProbe,
     [switch]$QuestBindingProbe,
     [switch]$DeliveryProbe,
-    [switch]$RefugeProbe)
+    [switch]$RefugeProbe,
+    [switch]$RegionalProbe)
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
 $player = Join-Path $DfuRoot 'Player/DaggerfallUnity.exe'
@@ -56,6 +57,10 @@ if ($DeliveryProbe) { $arguments += ' -livingcities-delivery-probe' }
 if ($RefugeProbe) {
     if (-not $FixtureCharacter) { throw 'Refuge survey requires a dedicated fixture character.' }
     $arguments += ' -livingcities-refuge-probe'
+}
+if ($RegionalProbe) {
+    if (-not $FixtureCharacter) { throw 'Regional probe requires the dedicated fixture character.' }
+    $arguments += ' -livingcities-regional-probe'
 }
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
 Write-Output "Owned town-test process: $($owned.Id)"

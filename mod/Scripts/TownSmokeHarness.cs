@@ -168,7 +168,8 @@ namespace LivingCities.DFU
             var adapter = GetComponent<LivingCitiesMod>();
             var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
-            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-refuge-probe") >= 0)
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-refuge-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-regional-probe") >= 0)
             {
                 game.SaveLoadManager.EnumerateSaves();
                 int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - inside Gothway Garden");
@@ -177,7 +178,12 @@ namespace LivingCities.DFU
                 float limit = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Exterior fixture load timed out.");
-                yield return DaggerfallRefugeProbe.Run();
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-regional-probe") >= 0)
+                {
+                    yield return RegionalIdentityProbe.Run();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: live regional identities.");
+                }
+                else yield return DaggerfallRefugeProbe.Run();
                 yield break;
             }
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-keeper-response-probe") >= 0 ||

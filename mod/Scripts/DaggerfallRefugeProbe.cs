@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace LivingCities.DFU
 {
-    // Disposable test-session survey. Does not alter saves or enable city actors.
+    // Disposable test-session survey; city save checks use only the dedicated test character.
     public static class DaggerfallRefugeProbe
     {
         public static IEnumerator Run()
@@ -150,6 +150,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(1);
             }
             yield return DaggerfallPopulationProbe.Run();
+            yield return RegionalIdentityProbe.Run();
             Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall wall routes, refuge actors and city population; models=" + representatives.Count);
         }
     }

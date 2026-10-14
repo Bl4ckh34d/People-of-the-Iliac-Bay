@@ -68,7 +68,8 @@ namespace LivingCities.DFU
         }
         public void SetTown(BuildingDirectory town, CityNavigation navigation, SettlementPopulation population, WorldStateStore store)
         {
-            if(town.MapID!=206728581 && !(town.MapID==1291010263 && !DaggerfallPopulationProbe.SuppressCityActors)) { Clear(); return; }
+            if(!SettlementClassification.SupportsPopulation((int)town.LocationData.MapTableData.LocationType) ||
+                (town.MapID==1291010263 && DaggerfallPopulationProbe.SuppressCityActors)) { Clear(); return; }
             if (directory == town && Roster != null) return;
             Clear();
             if (GameManager.Instance.PlayerEnterExit.IsPlayerInside && store.GetGuards(town.MapID) == null) return;
