@@ -31,6 +31,22 @@ namespace LivingCities.Core
             var result = new List<BedAssignment>();
             if (beds.Count == 0) return result;
             var assigned = new HashSet<string>(StringComparer.Ordinal);
+            var records = new List<int>(beds.Keys);
+            foreach (var resident in home.Residents)
+                if (resident.BedSlot >= 0)
+                {
+                    assigned.Add(resident.Id);
+                    if (resident.BedSlot >= records.Count) continue;
+                    var occupants = beds[records[resident.BedSlot]];
+                    if (occupants.Count != 0) throw new ArgumentException("Duplicate explicit resident bed.", nameof(home));
+                    occupants.Add(resident);
+                }
+            Resident head;
+            if (home.HeadId != null && residents.TryGetValue(home.HeadId, out head) && assigned.Add(head.Id))
+            {
+                foreach (var occupants in beds.Values)
+                { if (occupants.Count != 0) throw new ArgumentException("Head bed already occupied.", nameof(home)); occupants.Add(head); break; }
+            }
             // Allocate against permanent membership, including deceased residents.
             // This reserves their old slots so survivors do not shift on death/load.
             // Replacement households have new identities and receive new assignments.

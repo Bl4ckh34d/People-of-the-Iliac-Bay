@@ -419,6 +419,17 @@ namespace LivingCities.DFU
                 if (Array.Find(shopNpcs, n => n.Data.hash == keeper.NativeHash && n.DisplayName == keeper.Name) == null)
                     throw new InvalidOperationException("Registered keeper identity does not match native service NPC.");
                 string keeperId = keeper.Id, keeperName = keeper.Name;
+                var keeperFamily = ((WorldState)adapter.GetSaveData()).Settlements.Find(t => t.SettlementId == mapId).Households.Find(h => h.BuildingKey == 131343);
+                if (keeperFamily == null || keeperFamily.HeadId != keeperId || keeperFamily.Residents.Count != 2 ||
+                    keeperFamily.Residents.Count > physicalBeds || streets.FindActor(keeperId))
+                    throw new InvalidOperationException("Keeper is not unique native head of a bed-limited family.");
+                var partner = keeperFamily.Residents.Find(r => r.Id != keeperId);
+                var partnerActor = streets.FindActor(partner.Id);
+                if (!partnerActor || partner.PartnerId != keeperId || partnerActor.Person.NameNPC != partner.FullName ||
+                    !partner.FullName.EndsWith(" " + keeperFamily.Surname, StringComparison.Ordinal) || partner.Race != keeper.Race ||
+                    partnerActor.Person.Gender == (keeper.Sex == ResidentSex.Female ? Genders.Female : Genders.Male))
+                    throw new InvalidOperationException("Native keeper family name, partner identity, race or gender disagrees with live actor.");
+                string partnerId = partner.Id, partnerName = partner.FullName;
                 saved = false; SaveLoadManager.OnSave += OnSaved;
                 game.SaveLoadManager.Save(character, "Living Cities - shopkeeper identity");
                 deadline = Time.realtimeSinceStartup + 30;
@@ -434,6 +445,14 @@ namespace LivingCities.DFU
                 if (keeper == null || keeper.Name != keeperName || keeper.HomeKey != 131343 || keeper.BedSlot != 0 ||
                     ((WorldState)adapter.GetSaveData()).NativePeople.FindAll(p => p.Id == keeperId).Count != 1)
                     throw new InvalidOperationException("Keeper name/bed changed or duplicated on real reload.");
+                keeperFamily = ((WorldState)adapter.GetSaveData()).Settlements.Find(t => t.SettlementId == mapId).Households.Find(h => h.BuildingKey == 131343);
+                partner = keeperFamily == null ? null : keeperFamily.Residents.Find(r => r.Id == partnerId);
+                yield return new WaitForSecondsRealtime(0.5f);
+                partnerActor = streets.FindActor(partnerId);
+                if (partner == null || partner.FullName != partnerName || partner.PartnerId != keeperId || !partnerActor ||
+                    partnerActor.Person.NameNPC != partnerName || streets.FindActor(keeperId))
+                    throw new InvalidOperationException("Real reload lost family identity or duplicated native head.");
+                Debug.Log("LIVING_CITIES_KEEPER_FAMILY_PASS: " + keeperName + " and " + partnerName + "; two people/two beds; native head preserved; real reload.");
                 Debug.Log("LIVING_CITIES_KEEPER_IDENTITY_PASS: " + keeperName + "; beds=" + physicalBeds + "; reserved slot0; save=" + keeperSave + "; native identity preserved on reload.");
                 yield return NativeKeeperResponseProbe.Run(character, keeperId);
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: live housing classification; character=" + character);

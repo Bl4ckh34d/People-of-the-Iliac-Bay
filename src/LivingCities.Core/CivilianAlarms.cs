@@ -149,7 +149,7 @@ namespace LivingCities.Core
                     ValidTime(alarm.ExpiresAt) && alarm.ExpiresAt == alarm.StartedAt + 900 && alarm.People != null, "Invalid incident data.");
                 // Native witnesses use the same bounded ledger; native death/corpse integration is separate.
                 if (source.NativePeople != null) foreach (var native in source.NativePeople)
-                    if (native.SettlementId == alarm.SettlementId) residents.Add(native.Id, NativeAlarmResident(native));
+                    if (native.SettlementId == alarm.SettlementId && !residents.ContainsKey(native.Id)) residents.Add(native.Id, NativeAlarmResident(native));
                 var copied = new CivilianIncident { Id = alarm.Id, VictimId = alarm.VictimId, SettlementId = alarm.SettlementId,
                     StartedAt = alarm.StartedAt, ExpiresAt = alarm.ExpiresAt, HasLocation = alarm.HasLocation,
                     BuildingKey = alarm.BuildingKey, X = alarm.X, Y = alarm.Y, Z = alarm.Z };

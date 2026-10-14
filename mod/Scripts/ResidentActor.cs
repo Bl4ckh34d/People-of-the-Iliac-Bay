@@ -56,7 +56,7 @@ namespace LivingCities.DFU
                 UnityEngine.Random.InitState(unchecked((int)resident.AppearanceSeed));
                 DFRandom.Seed = resident.AppearanceSeed;
                 Person.IsGuard = false;
-                Person.raceToBeSet = Races.Breton;
+                Person.raceToBeSet = resident.Race >= 0 && Enum.IsDefined(typeof(Races), resident.Race) ? (Races)resident.Race : Races.Breton;
                 Person.genderToBeSet = resident.Sex == ResidentSex.Male ? Genders.Male : Genders.Female;
                 Person.outfitVariantToBeSet = (int)((resident.AppearanceSeed >> 1) % 4);
                 Person.ApplyPersonSettingsViaInspector();
@@ -65,7 +65,7 @@ namespace LivingCities.DFU
                 DFRandom.Seed = resident.AppearanceSeed;
                 string given = names.FirstName(NameHelper.BankTypes.Breton, Person.Gender);
                 DFRandom.Seed = surnameSeed;
-                Person.NameNPC = given + " " + names.Surname(NameHelper.BankTypes.Breton);
+                Person.NameNPC = resident.FullName ?? given + " " + names.Surname(NameHelper.BankTypes.Breton);
             }
             finally { UnityEngine.Random.state = randomState; DFRandom.Seed = dfSeed; }
             Person.Asset.transform.localPosition = Vector3.up * ((Person.Asset.GetSize().y - 2f) *
@@ -75,7 +75,7 @@ namespace LivingCities.DFU
         }
         private void Died(DaggerfallEntity ignored)
         {
-            if (Resident != null) Resident.IsAlive = false;
+            if (Resident != null) { Resident.IsAlive = false; if (Resident.NativeIdentity != null) Resident.NativeIdentity.IsAlive = false; }
             Debug.Log("LIVING_CITIES_RESIDENT_DEATH: " + Resident.Id);
             gameObject.SetActive(false);
         }

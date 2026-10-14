@@ -80,6 +80,7 @@ namespace LivingCities.Core
                     Require(home.Residents != null && home.Residents.Count <=
                         (source.Version < 3 ? 3 : bedCapacity >= 0 ? bedCapacity : 5), "Missing or overcrowded household residents.");
                     var homeCopy = new Household { BuildingKey = home.BuildingKey,
+                        HeadId = home.HeadId, Surname = home.Surname,
                         BedCapacity = bedCapacity,
                         SurnameSeed = source.Version < 3 ? StableSeed.Combine(source.WorldSeed, (uint)town.SettlementId,
                             (uint)home.BuildingKey, 0xfffffffe) : home.SurnameSeed };
@@ -90,6 +91,7 @@ namespace LivingCities.Core
                         Require(resident.HomeKey == home.BuildingKey, "Resident belongs to a different home.");
                         Require(resident.IsAlive || !resident.IsQuestProtected, "Protected resident cannot be dead.");
                         homeCopy.Residents.Add(new Resident { Id = resident.Id, HomeKey = resident.HomeKey,
+                            FullName = resident.FullName, Race = resident.Race, BedSlot = resident.BedSlot,
                             AppearanceSeed = resident.AppearanceSeed, IsAlive = resident.IsAlive, IsQuestProtected = resident.IsQuestProtected,
                             AgeGroup = source.Version < 3 ? ResidentAgeGroup.Adult : resident.AgeGroup,
                             Sex = source.Version < 3 ? ((resident.AppearanceSeed & 1) == 0 ? ResidentSex.Male : ResidentSex.Female) : resident.Sex,
@@ -169,10 +171,24 @@ namespace LivingCities.Core
                 }
             copy.EntryReports = CopyEntries(source);
             copy.NativePeople = CopyNativePeople(source);
+            foreach (var native in copy.NativePeople)
+            {
+                var home = copy.Settlements.Find(t => t.SettlementId == native.SettlementId).Households.Find(h => h.HeadId == native.Id);
+                if (home != null) home.Residents.Find(r => r.Id == native.Id).NativeIdentity = native;
+            }
             return copy;
         }
         private static void ValidateFamily(Household home)
         {
+            Require(home.Surname == null || !string.IsNullOrWhiteSpace(home.Surname) && home.Surname.Length <= 256, "Invalid household surname.");
+            Require(home.HeadId == null || home.Surname != null && home.Residents.Exists(r => r.Id == home.HeadId && r.AgeGroup == ResidentAgeGroup.Adult), "Invalid household head.");
+            foreach (var person in home.Residents)
+            {
+                Require(person.Race >= -1 && person.Race <= 255 && (person.FullName == null || !string.IsNullOrWhiteSpace(person.FullName) && person.FullName.Length <= 256 &&
+                    (home.Surname == null || person.FullName.EndsWith(" " + home.Surname, StringComparison.Ordinal))), "Invalid resident identity metadata.");
+                Require(person.BedSlot >= -1 && (person.BedSlot < 0 || home.BedCapacity >= 0 && person.BedSlot < home.BedCapacity), "Invalid explicit resident bed.");
+            }
+            Require(FamilyBedSlots(home).Count == home.Residents.Count, "Household residents share a bed slot.");
             var members = new Dictionary<string, Resident>(StringComparer.Ordinal);
             foreach (var resident in home.Residents) members.Add(resident.Id, resident);
             foreach (var resident in home.Residents)

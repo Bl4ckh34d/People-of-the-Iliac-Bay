@@ -74,6 +74,7 @@ try {
     if ($HousingProbe -and ($body -notmatch 'LIVING_CITIES_ENTRY_PASS:' -or $body -notmatch 'LIVING_CITIES_ENTRY_GUARD_PASS:')) { throw 'Entry witness probes did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_ENTRY_MESSENGER_PASS:') { throw 'Entry messenger probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_IDENTITY_PASS:') { throw 'Keeper identity/bed reload probe did not complete.' }
+    if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_FAMILY_PASS:') { throw 'Keeper family/identity probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_RESPONSE_PASS:') { throw 'Keeper response/physical reporting probe did not complete.' }
     if ($KeeperResponseProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_RESPONSE_PASS:') { throw 'Keeper response probe did not complete.' }
     if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_KEEPER_WEAPON_PASS:') { throw 'Native weapon keeper witness probe did not complete.' }

@@ -7,6 +7,97 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Native keeper heads a bed-limited family with saved surname and parent links", () => {
+                foreach (var sex in new[] { ResidentSex.Male, ResidentSex.Female })
+                {
+                    var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);
+                    var keeper = store.RegisterNativePerson(1, 4, 11, "Peryrick Kinghart", sex, 2, 41, 182, 1);
+                    var profile = new HomeProfile(4, 5, 300);
+                    store.AssignNativeBed(keeper.Id, profile, new HomeProfile[0]);
+                    var home = store.CreateKeeperHousehold(keeper.Id, profile);
+                    Check.Equal(4, home.Residents.Count); Check.Equal(keeper.Id, home.HeadId); Check.Equal("Kinghart", home.Surname);
+                    var head = home.Residents.Find(r => r.Id == keeper.Id);
+                    Check.Equal("Peryrick Kinghart", head.FullName); Check.Equal(sex, head.Sex); Check.Equal(2, head.Race);
+                    Check.Equal(1, home.Residents.FindAll(r => r.Id == keeper.Id).Count);
+                    Check.Equal(2, home.Residents.FindAll(r => r.AgeGroup == ResidentAgeGroup.Child).Count);
+                    foreach (var child in home.Residents.FindAll(r => r.AgeGroup == ResidentAgeGroup.Child))
+                        Check.Equal(keeper.Id, sex == ResidentSex.Male ? child.FatherId : child.MotherId);
+                    foreach (var member in home.Residents) Check.Equal(2, member.Race);
+                    var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+                    var saved = restored.CreateKeeperHousehold(keeper.Id, new HomeProfile(4, 1, 10));
+                    Check.Equal(4, saved.Residents.Count); Check.Equal(head.PartnerId, saved.Residents.Find(r => r.Id == keeper.Id).PartnerId);
+                    Check.Equal(keeper.Id, HomeBeds.Assign(saved, new[] { 10, 20, 30, 40, 50 })[0].ResidentId);
+                    Check.True(Population.MarkDead(restored.GetOrCreate(1, new[] { 8 }), keeper.Id));
+                    Check.True(!restored.NativePeopleFor(1)[0].IsAlive);
+                    var dead = new WorldStateStore(0); dead.Restore(restored.Snapshot());
+                    Check.True(!dead.NativePeopleFor(1)[0].IsAlive);
+                    Check.True(!dead.GetOrCreate(1, new[] { 8 }).Households.Find(h => h.HeadId == keeper.Id).Residents[0].IsAlive);
+                }
+            }));
+            cases.Add(("Two-bed keeper households have one opposite-sex partner and retain legacy identities", () => {
+                foreach (var sex in new[] { ResidentSex.Male, ResidentSex.Female })
+                {
+                    var store = new WorldStateStore(42); var old = store.GetOrCreate(1, new[] { 8 }, 1).Households[0].Residents[0];
+                    string oldId = old.Id;
+                    var keeper = store.RegisterNativePerson(1, 4, 11, "Keeper Kinghart", sex, 1, 41, 182, 1);
+                    store.AssignNativeBed(keeper.Id, new HomeProfile(4, 2), new HomeProfile[0]);
+                    var home = store.CreateKeeperHousehold(keeper.Id, new HomeProfile(4, 2));
+                    Check.Equal(2, home.Residents.Count);
+                    Check.True(home.Residents.Find(r => r.Id != keeper.Id).Sex != sex);
+                    Check.Equal(keeper.Id, home.Residents.Find(r => r.Id != keeper.Id).PartnerId);
+                    Check.Equal(oldId, store.Snapshot().Settlements[0].Households[0].Residents[0].Id);
+                }
+            }));
+            cases.Add(("One-bed keeper household has only native head and cannot overwrite another saved family", () => {
+                var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);
+                var keeper = store.RegisterNativePerson(1, 4, 11, "Keeper Kinghart", ResidentSex.Female, 1, 41, 182, 1);
+                store.AssignNativeBed(keeper.Id, new HomeProfile(4, 1), new HomeProfile[0]);
+                var home = store.CreateKeeperHousehold(keeper.Id, new HomeProfile(4, 1));
+                Check.Equal(1, home.Residents.Count); Check.Equal(keeper.Id, home.Residents[0].Id);
+                Check.True(home.Residents[0].PartnerId == null);
+                Check.Equal(0, keeper.BedSlot); Check.Equal(1, store.NativePeopleFor(1).Count);
+                var corrupt = store.Snapshot(); corrupt.Settlements[0].Households.Find(h => h.BuildingKey == 4).HeadId = "missing";
+                Check.Throws<ArgumentException>(() => store.Restore(corrupt));
+                Check.Equal(keeper.Id, store.Snapshot().Settlements[0].Households.Find(h => h.BuildingKey == 4).HeadId);
+            }));
+            cases.Add(("Keeper family uses spare beds while preserving saved on-site staff reservations", () => {
+                var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);
+                var keeper = store.RegisterNativePerson(1, 4, 1, "Keeper Kinghart", ResidentSex.Male, 1, 41, 182, 1);
+                var employee = store.RegisterNativePerson(1, 4, 2, "Employee Coppercroft", ResidentSex.Female, 1, 41, 182, 2);
+                var profile = new HomeProfile(4, 3, 300);
+                store.AssignNativeBed(keeper.Id, profile, new HomeProfile[0]);
+                store.AssignNativeBed(employee.Id, profile, new HomeProfile[0]);
+                Check.Equal(1, employee.BedSlot);
+                var home = store.CreateKeeperHousehold(keeper.Id, profile);
+                Check.True(home != null); Check.Equal(2, home.Residents.Count);
+                var claims = HomeBeds.Assign(home, new[] { 10, 20, 30 });
+                Check.Equal(10, claims.Find(c => c.ResidentId == keeper.Id).BedRecordIndex);
+                Check.Equal(30, claims.Find(c => c.ResidentId != keeper.Id).BedRecordIndex);
+                var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.Equal(1, restored.NativePeopleFor(1).Find(p => p.Id == employee.Id).BedSlot);
+                Check.True(restored.CreateKeeperHousehold(employee.Id, profile) == null);
+                var third = restored.RegisterNativePerson(1, 4, 3, "Third Employee", ResidentSex.Male, 1, 41, 182, 3);
+                Check.True(!restored.AssignNativeBed(third.Id, profile, new HomeProfile[0]));
+                Check.Equal(-1, restored.Snapshot().NativePeople.Find(p => p.Id == third.Id).HomeKey);
+            }));
+            cases.Add(("Dead unlinked keeper does not create a new living family", () => {
+                var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);
+                var keeper = store.RegisterNativePerson(1, 4, 1, "Keeper Kinghart", ResidentSex.Male, 1, 41, 182, 1);
+                var profile = new HomeProfile(4, 3);
+                store.AssignNativeBed(keeper.Id, profile, new HomeProfile[0]); keeper.IsAlive = false;
+                Check.True(store.CreateKeeperHousehold(keeper.Id, profile) == null);
+                Check.Equal(1, store.Snapshot().Settlements[0].Households.Count);
+            }));
+            cases.Add(("Native head cannot claim a second bed through sparse household validation", () => {
+                var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 8 }, 1);
+                var keeper = store.RegisterNativePerson(1, 4, 1, "Keeper Kinghart", ResidentSex.Male, 1, 41, 182, 1);
+                store.AssignNativeBed(keeper.Id, new HomeProfile(4, 1), new HomeProfile[0]);
+                store.CreateKeeperHousehold(keeper.Id, new HomeProfile(4, 1));
+                var corrupt = store.Snapshot(); corrupt.NativePeople[0].BedSlot = 1; corrupt.NativePeople[0].BedCapacity = 2;
+                corrupt.Settlements[0].Households.Find(h => h.BuildingKey == 4).BedCapacity = 2;
+                Check.Throws<ArgumentException>(() => store.Restore(corrupt));
+                Check.Equal(0, store.NativePeopleFor(1)[0].BedSlot);
+            }));
             cases.Add(("Native keeper witnesses share bounded alarms, escape timing and transactional persistence", () => {
                 var store = new WorldStateStore(42); var town = store.GetOrCreate(1, new[] { 8, 9 }, 3);
                 var victim = town.Households[0].Residents[0];

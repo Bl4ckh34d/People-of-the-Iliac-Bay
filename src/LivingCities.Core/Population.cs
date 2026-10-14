@@ -29,6 +29,10 @@ namespace LivingCities.Core
     public sealed class Resident
     {
         public string Id;
+        public string FullName;
+        public int Race = -1;
+        public int BedSlot = -1;
+        [NonSerialized] public NativePerson NativeIdentity;
         public int HomeKey;
         public uint AppearanceSeed;
         public bool IsAlive = true;
@@ -42,6 +46,7 @@ namespace LivingCities.Core
     public sealed class Household
     {
         public int BuildingKey;
+        public string HeadId, Surname;
         public uint SurnameSeed;
         public int BedCapacity = -1; // Unknown for legacy households; never invent capacity.
         public List<Resident> Residents = new List<Resident>();
@@ -157,6 +162,7 @@ namespace LivingCities.Core
                 if (resident.Id != residentId) continue;
                 if (!resident.IsAlive || resident.IsQuestProtected) return false;
                 resident.IsAlive = false;
+                if (resident.NativeIdentity != null) resident.NativeIdentity.IsAlive = false;
                 return true;
             }
             throw new KeyNotFoundException("No resident with ID " + residentId);

@@ -482,10 +482,16 @@ public static class LivingCitiesBuild
         var store = new WorldStateStore(42); store.GetOrCreate(99, new[] { 1 }, 1);
         var person = store.RegisterNativePerson(99, 2, -123, "Ysausa Masterham", ResidentSex.Female, 1, 41, 184, 18);
         Require(store.AssignNativeBed(person.Id, new HomeProfile(2, 1, 10), new HomeProfile[0]), "Keeper reserves on-site bed");
+        var family = store.CreateKeeperHousehold(person.Id, new HomeProfile(2, 1, 10));
         string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
         var restored = new WorldStateStore(0);
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
         var saved = restored.NativePeopleFor(99)[0];
+        var savedHome = restored.GetOrCreate(99, new[] { 1 }).Households.Find(h => h.HeadId == person.Id);
+        Require(savedHome != null && savedHome.Surname == "Masterham" && savedHome.Residents.Count == 1 &&
+            savedHome.Residents[0].FullName == person.Name && savedHome.Residents[0].Race == person.Race &&
+            object.ReferenceEquals(savedHome.Residents[0].NativeIdentity, saved), "Native household head metadata and lifetime binding survive FullSerializer");
+        Require(!json.Contains("NativeIdentity"), "Live native identity binding is not serialized twice");
         Require(saved.Id == person.Id && saved.Name == person.Name && saved.Sex == ResidentSex.Female &&
             saved.TextureArchive == 184 && saved.TextureRecord == 18 && saved.HomeKey == 2 && saved.BedSlot == 0 && saved.BedCapacity == 1,
             "Native identity, appearance and bed reservation survive FullSerializer");

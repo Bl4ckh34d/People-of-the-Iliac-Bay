@@ -126,6 +126,7 @@ namespace LivingCities.DFU
             }
             nextKeeperSurvey = Time.unscaledTime + 1;
             if (keeperHome == null) return;
+            var keepers = new List<NativePerson>();
             foreach (var npc in interior.GetComponentsInChildren<StaticNPC>())
             {
                 var data = npc.Data;
@@ -139,6 +140,38 @@ namespace LivingCities.DFU
                     (int)data.race, data.factionID, data.billboardArchiveIndex, data.billboardRecordIndex);
                 if (keeper.HomeKey < 0 && worldStore.AssignNativeBed(keeper.Id, keeperHome, keeperHomes))
                     Debug.Log("LIVING_CITIES_KEEPER_HOME: " + keeper.Id + "; " + keeper.Name + "; home=" + keeper.HomeKey + "; bed=" + keeper.BedSlot);
+                keepers.Add(keeper);
+            }
+            // Preserve all original staff reservations before adding a family to spare beds.
+            foreach (var keeper in keepers)
+            {
+                var family = worldStore.CreateKeeperHousehold(keeper.Id, keeperHome);
+                if (family != null)
+                {
+                    uint previousSeed = DFRandom.Seed;
+                    try
+                    {
+                        foreach (var member in family.Residents)
+                        {
+                            if (member.FullName == null)
+                            {
+                                DFRandom.Seed = member.AppearanceSeed;
+                                member.FullName = DaggerfallUnity.Instance.NameHelper.FirstName(NameHelper.BankTypes.Breton,
+                                    member.Sex == ResidentSex.Female ? DaggerfallWorkshop.Game.Entity.Genders.Female : DaggerfallWorkshop.Game.Entity.Genders.Male) + " " + family.Surname;
+                            }
+                            if (member.Id != keeper.Id && !plans.Exists(p => p.Resident.Id == member.Id))
+                                AddPlan(member, new ResidentRoutine { ResidentId = member.Id }, family.SurnameSeed, wakeHour, sleepHour);
+                        }
+                    }
+                    finally { DFRandom.Seed = previousSeed; }
+                    // Creation can happen after initial room setup; reserve the native head's bed before any family sleep actor.
+                    if (bedClaims.Count == 0)
+                    {
+                        indoorBeds.Clear();
+                        foreach (var bed in BedGeometry.Read(interior)) indoorBeds.Add(bed.RecordIndex, bed);
+                        foreach (var claim in HomeBeds.Assign(family, indoorBeds.Keys)) bedClaims.Add(claim.ResidentId, claim);
+                    }
+                }
             }
         }
     }

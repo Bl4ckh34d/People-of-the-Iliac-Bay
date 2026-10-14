@@ -39,6 +39,7 @@ namespace LivingCities.DFU
         private CivilianResponses responses;
         private IDisposable reactionHook;
         private WorldStateStore worldStore;
+        private int wakeHour, sleepHour;
         public bool ReactionsEnabled { get; set; }
         public void InstallReactionHook()
         {
@@ -178,6 +179,7 @@ namespace LivingCities.DFU
         }
         public void SetTown(BuildingDirectory town, CityNavigation nav, SettlementPopulation population, WorldStateStore store, int wake, int sleep)
         {
+            wakeHour = wake; sleepHour = sleep;
             // M2 preview is deliberately limited to the verified Breton test town.
             if (town.MapID != 206728581) { Clear(); return; }
             if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
@@ -269,6 +271,8 @@ namespace LivingCities.DFU
         }
         private void AddPlan(Resident resident, ResidentRoutine routine, uint surnameSeed, int wake, int sleep)
         {
+            // The native actor already represents this exact household member.
+            if (worldStore.NativePeopleFor(population.SettlementId).Exists(p => p.Id == resident.Id)) return;
             var points = new List<RoutePoint>();
             foreach (var point in routine.Route) points.Add(new RoutePoint(point.X, point.Z));
             var schedule = routine.DestinationKey < 0 ? DailySchedule.HomeDay(resident.HomeKey, wake * 60, sleep * 60) :

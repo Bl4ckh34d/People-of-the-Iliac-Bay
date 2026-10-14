@@ -26,7 +26,9 @@ namespace LivingCities.DFU
             var site = person.GetHomePlace().SiteDetails;
             if (site.mapId != town.SettlementId) return null;
             var home = town.Households.Find(h => h.BuildingKey == site.buildingKey);
-            if (home == null) return null;
+            // Service households retain native quest placement until a service-aware
+            // binding rule can preserve the original actor and trade role together.
+            if (home == null || home.HeadId != null) return null;
             var resident = home.Residents.Find(r => r.IsAlive && r.AgeGroup == ResidentAgeGroup.Adult &&
                 (r.Sex == ResidentSex.Male) == (person.Gender == Genders.Male));
             if (resident == null) return null;
