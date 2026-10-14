@@ -74,6 +74,7 @@ namespace LivingCities.DFU
                     yield return null;
                 }
                 yield return HauntingFlightProbe.Run(directory,geometry,route);
+                yield return HauntingPatrolProbe.Run(directory,geometry,route);
             }
             finally { game.PlayerEntity.GlobalVars.SetGlobalVar(0,oldCurse); }
         }

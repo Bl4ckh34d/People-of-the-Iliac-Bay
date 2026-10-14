@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Live patrol refuge verification
+
+The live probe now surveys a real Daggerfall circuit (105.6m in the fixture), starts a pair, advances into movement, introduces a native hostile Ghost and enables normal controller updates with the curse unresolved. The leader detaches into refuge without jumping to its post. DFU's native serializer retains the detached assignment and explicit return path; lifting the curse and advancing time returns the guard to its original post. This uses a disposable roster and serialization round-trip, not a disk save/load of an enabled city. Night-policy updates can stop the patrol before the observer runs; this also exercises refuge admission during its physical return. The separate actor-flight and wall-interior checks pass in the same run.
+
+Evidence: `work/HauntingPatrol-pass.log`, marker `LIVING_CITIES_HAUNTING_PATROL_PASS`. Unity build passes. Installed development 0.3.29 SHA-256: `89740329C251A96A2BCC2363991C570526CF57152AABC4AB2BD2BAF72C3BB4EB`. Combat interruption, full city admission, actual city save/reload and scaling remain pending.
+
 ## Patrol interruption
 
 Posted-duty guards may now flee from their current patrol position. Admission saves an explicit exterior return route: reverse the surveyed refuge approach, then follow the patrol's existing return path to the original post. The pair is interrupted, while the fleeing member is detached from that assignment so completing refuge travel cannot snap it onto the partner's unfinished return. The partner continues its physical return and can independently flee if it sees the haunting. Invalid admission is checked before mutation. Existing saves without ReturnExterior retain the old reverse-approach behavior.
