@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Initial rendered movement sample
+
+After the real city save/reload, the fixture advances to a daytime journey, positions the test player near its analytical location, and requires that resident's real ResidentActor to appear and remain active while moving for three seconds. Resident s:1291010263:h:65796:r:0 moved1.053m net displacement;11 nearby actors were active, below the80 actor cap. The195 sampled frames measured median13.383ms and p95 28.774ms. This is one hidden automated run with the whole game active, not isolated mod CPU cost, a crowded-market benchmark, continuous collision validation or a player-visible FPS guarantee.
+
+Evidence: `work/CityMovement-pass.log`, marker `LIVING_CITIES_CITY_MOVEMENT_PASS`. Unity build and combined city/refuge/save suite pass. Installed0.3.30 SHA-256 `0867F31ADFEE80EE4BB5E1FC944F0B99727175D3232E4813D8C9356EF3C45D2C`. Broader crowd, movement and performance acceptance remains open.
+
 ## Automatic city coverage in0.3.30
 
 Daggerfall City now runs automatically alongside Gothway Garden. The proposed city-preview menu option was removed at the user's request; no temporary settlement enablement settings should be added. The final scope remains the whole game world. Test-only suppression isolates synthetic refuge fixtures and is restored in finally; normal sessions never enable suppression. The full city fixture and actual SAVE50 reload pass with this admission path (`work/CityAutomatic-pass.log`). Historical gated/opt-in descriptions below are superseded. Broader world integration and remaining gameplay/performance work are not complete.

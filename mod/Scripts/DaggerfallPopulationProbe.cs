@@ -39,6 +39,7 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_CITY_POPULATION_PASS: residents="+residents+"; plans="+streets.PlannedCount+
                     "; guards="+guards.Roster.Target+"; initialSeconds="+(Time.realtimeSinceStartup-started));
                 yield return DaggerfallSaveProbe.Run(mod,streets,guards);
+                yield return DaggerfallMovementProbe.Run(mod,streets);
             }
             finally { SuppressCityActors=oldSuppression;
                 game.PlayerEntity.GlobalVars.SetGlobalVar(0,oldCurse); streets.Clear(); guards.Clear(); }
