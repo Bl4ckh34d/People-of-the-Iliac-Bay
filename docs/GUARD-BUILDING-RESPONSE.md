@@ -1,5 +1,15 @@
 # Building guard response implementation
 
+## 0.3.21 ownership without a cached approach
+
+An active finite roster retains ownership of its supported settlement's loaded building interiors before their exterior approaches are surveyed. Dungeons, other settlements and disabled controllers remain outside that ownership. Navigation readiness must not enable transient vanilla reinforcements or reveal an unwitnessed murder. Resident home deaths and registered native keeper workplace deaths use witness evidence and settlement ownership for concealment, preserving an existing unrelated crime.
+
+Physical dispatch still needs an actual approach; no missing-route teleport or invented path was added. Departure-triggered concealed scenes can retry discovery as surveyed routes become available. Durable queuing/retrying of already reported non-murder crimes without a cached approach remains unfinished. This checkpoint does not claim that every known crime survives unavailable navigation.
+
+The regression removes a real residential approach while indoors, tests concealment and ownership, restores the approach, then verifies timed arrival, cleanup, ten-second warning, native surrender/court, real save/load and one-hour expiry. A separate native sleeper regression removes its workplace approach during a lethal hit. Both probes restore temporary cache changes in `finally` even when assertions fail. The older missing-survey vanilla fallback statement below is superseded.
+
+Verification: 196/196 core tests and the Unity build pass. `work/UncachedGuard-owner-red.log` reproduces lost ownership; `work/UncachedGuard-conceal-red.log` reproduces lost concealment after ownership alone was fixed. Final passing residential and native keeper evidence is in `work/UncachedGuard-0321-pass.log` and `work/Housing-0321-pass.log`. The latter also verifies the two-person/two-bed Kinghart household, preserved native head, native services, sleep/wake and real reload. Base DFU tracked `Assets/Scripts` remains unchanged.
+
 ## 0.3.7 gameplay integration
 
 Verified checkpoint: 150 core tests, native build, GuardBuildingProbe, GuardControllerProbe and GuardActorProbe pass. Evidence is retained in work/guard-building-runtime-pass.log, work/guard-controller-runtime-pass.log and work/guard-actor-runtime-pass.log. Clearing the player's crime now explicitly stops indoor combat and starts the doorway return, preventing visible guards from extending hostility indefinitely. The building probe checks this without forcing the deadline.

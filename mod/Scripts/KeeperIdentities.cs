@@ -118,8 +118,7 @@ namespace LivingCities.DFU
                 var guards = GetComponent<GuardPopulation>();
                 var player = GameManager.Instance.PlayerEntity;
                 player.TallyCrimeGuildRequirements(false, 5);
-                bool concealed = alarm.People.Count == 0 && indoorGeometry != null && indoorGeometry.EntryGround.HasValue &&
-                    guards && guards.CanInvestigate(building);
+                bool concealed = alarm.People.Count == 0 && guards && guards.OwnsSettlement;
                 if (concealed) worldStore.RegisterUnwitnessedScene(alarm.Id);
                 else player.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
                 PrepareIndoorEscapes(now);

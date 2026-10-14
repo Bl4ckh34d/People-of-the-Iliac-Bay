@@ -82,6 +82,8 @@ try {
     if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_KEEPER_SLEEP_PASS:') { throw 'Native keeper sleep/wake/reload probe did not complete.' }
     if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_CIVILIAN_DOORS_PASS:') { throw 'Civilian door permission probe did not complete.' }
     if ($CrimeSceneProbe -and $body -notmatch 'LIVING_CITIES_TOWN_CRIME_SCENE_PASS:') { throw 'Crime scene probe did not complete.' }
+    if ($CrimeSceneProbe -and $body -notmatch 'LIVING_CITIES_UNCACHED_GUARD_PASS:') { throw 'Uncached residential guard probe did not complete.' }
+    if (($HousingProbe -or $KeeperResponseProbe) -and $body -notmatch 'LIVING_CITIES_UNCACHED_KEEPER_PASS:') { throw 'Uncached native keeper guard probe did not complete.' }
     if ($OutdoorSceneProbe -and $body -notmatch 'LIVING_CITIES_OUTDOOR_SCENE_PASS:') { throw 'Outdoor scene probe did not complete.' }
     if ($InteriorEscapeProbe -and $body -notmatch 'LIVING_CITIES_TOWN_INTERIOR_ESCAPE_PASS:') { throw 'Interior escape probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_QUEST_BINDING_PASS:') { throw 'Quest binding probe did not complete.' }

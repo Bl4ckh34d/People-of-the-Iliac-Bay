@@ -37,7 +37,7 @@ namespace LivingCities.DFU
             return isActiveAndEnabled && directory && Roster != null && game != null && game.IsPlayingGame() &&
                 game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId == directory.MapID &&
                 (!game.PlayerEnterExit.IsPlayerInside || (game.PlayerEnterExit.IsPlayerInsideBuilding &&
-                game.PlayerEnterExit.Interior && Roster.BuildingApproaches.Exists(a => a.BuildingKey == game.PlayerEnterExit.Interior.EntryDoor.buildingKey)));
+                game.PlayerEnterExit.Interior));
         }
         public void SetTown(BuildingDirectory town, CityNavigation navigation, SettlementPopulation population, WorldStateStore store)
         {

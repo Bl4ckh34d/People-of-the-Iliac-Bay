@@ -233,11 +233,27 @@ namespace LivingCities.DFU
                 clock.RaiseTime((float)((84600 - clock.ToSeconds() % 86400 + 86400) % 86400));
                 yield return new WaitForSecondsRealtime(1);
                 var deathPoint = room.transform.InverseTransformPoint(npc.transform.position);
-                game.WeaponManager.WeaponDamage(null, false, false, npc.transform, npc.transform.position, Vector3.forward);
-                var death = ((WorldState)adapter.GetSaveData()).AlarmIncidents.Find(a => a.VictimId == keeperId);
-                if (death == null || death.Corpse == null || Vector3.Distance(deathPoint,
-                    new Vector3((float)death.Corpse.X, (float)death.Corpse.Y, (float)death.Corpse.Z)) > 0.02f || npc.gameObject.activeSelf)
-                    throw new InvalidOperationException("Sleeping native keeper death lost bed position or resurrected flat.");
+                var guards = adapter.GetComponent<GuardPopulation>();
+                var missing = guards.Roster.BuildingApproaches.Find(a => a.BuildingKey == keeper.WorkKey);
+                guards.Roster.BuildingApproaches.Remove(missing);
+                try
+                {
+                    var priorCrime = game.PlayerEntity.CrimeCommitted;
+                    int priorReports = guards.Roster.Reports.Count;
+                    game.WeaponManager.WeaponDamage(null, false, false, npc.transform, npc.transform.position, Vector3.forward);
+                    var death = ((WorldState)adapter.GetSaveData()).AlarmIncidents.Find(a => a.VictimId == keeperId);
+                    if (death == null || death.Corpse == null || Vector3.Distance(deathPoint,
+                        new Vector3((float)death.Corpse.X, (float)death.Corpse.Y, (float)death.Corpse.Z)) > 0.02f || npc.gameObject.activeSelf)
+                        throw new InvalidOperationException("Sleeping native keeper death lost bed position or resurrected flat.");
+                    if (!guards.OwnsSettlement || death.Scene == null || death.Scene.PlayerLeft || guards.Roster.Reports.Count != priorReports ||
+                        game.PlayerEntity.CrimeCommitted != priorCrime)
+                        throw new InvalidOperationException("Uncached sleeping keeper death lost concealment or finite ownership.");
+                    Debug.Log("LIVING_CITIES_UNCACHED_KEEPER_PASS: sleeping native keeper retains concealed workplace death and finite ownership.");
+                }
+                finally
+                {
+                    if (missing != null) guards.Roster.BuildingApproaches.Add(missing);
+                }
                 Debug.Log("LIVING_CITIES_KEEPER_SLEEP_PASS: native identity, assigned bed, blocked service, real reload, collider/wake restoration and bed-position death; save=" + sleepSlot);
             }
             finally { SaveLoadManager.OnLoad -= onLoad; SaveLoadManager.OnSave -= onSave; }

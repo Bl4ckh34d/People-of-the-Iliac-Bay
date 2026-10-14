@@ -65,7 +65,7 @@ namespace LivingCities.DFU
             var guards = GetComponent<GuardPopulation>();
             var alarm = worldStore.RecordViolence(population.SettlementId, actor.Resident.Id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
             bool concealed = interior && actor.Resident.HomeKey == deathBuilding && alarm.BuildingKey == deathBuilding &&
-                indoorGeometry != null && indoorGeometry.EntryGround.HasValue && guards && guards.CanInvestigate(deathBuilding) &&
+                guards && guards.OwnsSettlement &&
                 alarm.People.Count == 0 && concealedHits.Add(actor.Resident.Id);
             return error => {
                 if (concealed) concealedHits.Remove(actor.Resident.Id);

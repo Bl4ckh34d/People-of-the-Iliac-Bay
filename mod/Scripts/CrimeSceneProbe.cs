@@ -20,6 +20,8 @@ namespace LivingCities.DFU
             var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool previous = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true); streets.ReactionsEnabled = true;
             bool savedEvent = false, loadedEvent = false;
+            GuardBuildingApproach uncached = null;
+            GuardRoster uncachedRoster = null;
             SaveLoadManager.OnSaveEventHandler onSave = ignored => savedEvent = true;
             SaveLoadManager.OnLoadEventHandler onLoad = ignored => loadedEvent = true;
             SaveLoadManager.OnSave += onSave; SaveLoadManager.OnLoad += onLoad;
@@ -56,6 +58,11 @@ namespace LivingCities.DFU
                 foreach (var actor in victims) if (actor.Resident.HomeKey == building) { victim = actor; break; }
                 if (!victim) throw new InvalidOperationException("No resident present for discovery test.");
                 string victimId = victim.Resident.Id;
+                // Navigation readiness must not hand the town back to transient vanilla guards.
+                uncachedRoster = guards.Roster;
+                uncached = uncachedRoster.BuildingApproaches.Find(a => a.BuildingKey == building);
+                uncachedRoster.BuildingApproaches.Remove(uncached);
+                if (!guards.OwnsSettlement) throw new InvalidOperationException("Uncached interior lost finite guard ownership.");
                 game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Theft;
                 game.WeaponManager.WeaponDamage(null, false, false, victim.transform, victim.transform.position, Vector3.forward);
                 var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
@@ -73,6 +80,9 @@ namespace LivingCities.DFU
                 if (!savedBody.HasPosition || savedBody.BuildingKey != building || savedBody.Cleared)
                     throw new InvalidOperationException("Visible corpse position did not survive native serialization.");
                 game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;
+                guards.Roster.BuildingApproaches.Add(uncached);
+                uncached = null;
+                Debug.Log("LIVING_CITIES_UNCACHED_GUARD_PASS: uncached residential interior retains ownership, concealed death and prior crime.");
                 game.PlayerEnterExit.TransitionExterior();
                 if (!store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.PlayerLeft)
                     throw new InvalidOperationException("Departure event was lost before the next frame.");
@@ -166,6 +176,8 @@ namespace LivingCities.DFU
             }
             finally
             {
+                if (uncached != null && !uncachedRoster.BuildingApproaches.Exists(a => a.BuildingKey == uncached.BuildingKey))
+                    uncachedRoster.BuildingApproaches.Add(uncached);
                 SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad;
                 guards.Clear(); flag.SetValue(adapter, previous); game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;
             }
