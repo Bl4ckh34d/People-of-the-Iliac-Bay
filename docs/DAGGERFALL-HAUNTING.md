@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Automatic guard flight verification
+
+The normal GuardPopulation.Update loop now has a passing live acceptance probe: a native hostile Ghost triggers refuge allocation, the exterior guard is visible during approach and hidden after entry, the same guard is rendered inside the selected wall refuge, LiftedCurse releases it, and it disappears from the interior before returning alive to its post without a crime report. The probe uses a disposable one-guard roster in the real city and advances game time between phases. It does not prove continuous collision traversal, city-wide performance, or a full city save/reload. The outer probe restores the quest flag, and no player save is written.
+
+Evidence: `work/HauntingFlight-pass.log`, marker `LIVING_CITIES_HAUNTING_FLIGHT_PASS`. All 259 core tests and the Unity build pass. Installed development 0.3.29 SHA-256: `162C4B86D7872557D3E768A83964BC8FEAD252F0AAC6C02E0759D7A0BD8C7E70`. This supersedes the automatic-flight limitation below; interrupted patrol/combat duties, full city admission and its save/reload/performance checks remain pending.
+
 ## Dawn catch-up
 
 Refuge release now uses the first safe05:00 after departure, even when the next evaluation occurs on a later haunted night. This prevents guards remaining sheltered indefinitely while the town is unloaded. When LiftedCurse is first observed before that dawn, release uses the observation time: native global state does not expose its historical completion timestamp. GuardRefugeJourney still clamps release until physical shelter arrival and evaluates the complete reverse journey.

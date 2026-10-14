@@ -73,6 +73,7 @@ namespace LivingCities.DFU
                     finally { if(foe) UnityEngine.Object.Destroy(foe); UnityEngine.Object.Destroy(root); }
                     yield return null;
                 }
+                yield return HauntingFlightProbe.Run(directory,geometry,route);
             }
             finally { game.PlayerEntity.GlobalVars.SetGlobalVar(0,oldCurse); }
         }
