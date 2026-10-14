@@ -85,6 +85,25 @@ namespace LivingCities.DFU
                     "; anchors=" + inside.LocalAnchors.Count + "; reachable=" + reachable);
                 if (!inside.EntryGround.HasValue || reachable == 0)
                     throw new InvalidOperationException("Wall interior has no checked refuge floor: " + representative.Key);
+                var shelter=interior.transform.TransformPoint(inside.LocalAnchors[inside.LocalAnchors.Count-1]);
+                var indoorRoute=inside.RouteToExit(shelter); indoorRoute.Reverse();
+                var roster=GuardRoster.Create(city.MapTableData.MapId,42,1,new[] { new SavedRoutePoint() });
+                string guardId=roster.Guards[0].Id;
+                roster.TakeRefuge(guardId,GuardRefugeJourney.Create(representative.Value,
+                    new[] { new GuardPoint3(),new GuardPoint3 { X=10 } },indoorRoute,100,2,12),100);
+                var actor=GuardActor.CreateInterior(roster,guardId,interior.transform,100000);
+                yield return null;
+                actor.Place(100000);
+                var difference=actor.transform.position-shelter;
+                if (!actor.IsInterior || new Vector2(difference.x,difference.z).magnitude>0.05f || difference.y<0.4f || difference.y>2)
+                    throw new InvalidOperationException("Refuge guard not standing at its saved interior destination.");
+                roster.Guards[0].Refuge.Release(100000);
+                var beforeExit=actor.transform.position;
+                actor.Place(100001);
+                if ((actor.transform.position-beforeExit).sqrMagnitude<0.0001f)
+                    throw new InvalidOperationException("Released refuge actor did not move.");
+                UnityEngine.Object.Destroy(actor.gameObject);
+                Debug.Log("LIVING_CITIES_REFUGE_ACTOR_PASS: model="+representative.Key+"; saved shelter placement and exit movement.");
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(1);
             }

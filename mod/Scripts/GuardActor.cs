@@ -55,6 +55,13 @@ namespace LivingCities.DFU
         public static GuardActor CreateInterior(GuardRoster roster, string id, Transform parent, double now)
         { return Create(roster, id, parent, null, now); }
 
+        public static bool RefugeIndoors(GuardRecord guard,double now)
+        {
+            if (guard.Refuge==null) return false;
+            var phase=guard.Refuge.Evaluate(now).Phase;
+            return phase==RefugePhase.Entering || phase==RefugePhase.Sheltered || phase==RefugePhase.Exiting;
+        }
+
         public static GuardActor Create(GuardRoster roster, string id, Transform parent, TownGeometry geometry, double now)
         {
             if (roster == null || parent == null) throw new ArgumentNullException();
@@ -62,9 +69,10 @@ namespace LivingCities.DFU
             if (guard == null) throw new ArgumentException("Unknown guard identity.");
             if (!guard.IsAlive) return null;
             var point = roster.Position(id, now);
-            bool indoors = guard.Interior != null;
+            bool refugeIndoors = RefugeIndoors(guard,now);
+            bool indoors = guard.Interior != null || refugeIndoors;
             if (!indoors && geometry == null) throw new ArgumentNullException("geometry");
-            var indoorPoint = indoors ? roster.InteriorPosition(id, now) : null;
+            var indoorPoint = refugeIndoors ? guard.Refuge.Evaluate(now).Position : indoors ? roster.InteriorPosition(id, now) : null;
             var ground = indoors ? parent.TransformPoint(new Vector3((float)indoorPoint.X, (float)indoorPoint.Y, (float)indoorPoint.Z)) - Vector3.up :
                 geometry.ScenePoint(new RoutePoint(point.X, point.Z));
             var randomState = UnityEngine.Random.state;
@@ -84,7 +92,7 @@ namespace LivingCities.DFU
                 body.GetComponent<EnemySounds>().enabled = false;
                 var actor = body.AddComponent<GuardActor>();
                 actor.GuardId = id; actor.roster = roster; actor.geometry = geometry;
-                actor.IsInterior = indoors; actor.buildingKey = indoors ? (int?)guard.Interior.BuildingKey : null;
+                actor.IsInterior = indoors; actor.buildingKey = refugeIndoors ? (int?)guard.Refuge.BuildingKey : indoors ? (int?)guard.Interior.BuildingKey : null;
                 actor.mobile = body.GetComponentInChildren<MobileUnit>();
                 actor.entity = body.GetComponent<DaggerfallEntityBehaviour>().Entity;
                 actor.entity.SetHealth(Math.Max(1, (int)Math.Ceiling(actor.entity.MaxHealth * guard.HealthFraction)), true);
@@ -103,6 +111,20 @@ namespace LivingCities.DFU
         {
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (!guard.IsAlive) { gameObject.SetActive(false); return; }
+            if (guard.Refuge!=null)
+            {
+                bool indoors=RefugeIndoors(guard,now);
+                if (indoors!=IsInterior) { gameObject.SetActive(false); return; }
+                var snapshot=guard.Refuge.Evaluate(now);
+                var target=indoors ? Scene(snapshot.Position)+Vector3.up*groundOffset :
+                    geometry.ScenePoint(new RoutePoint(snapshot.Position.X,snapshot.Position.Z))+Vector3.up*groundOffset;
+                var facing=target-transform.position; facing.y=0;
+                if (facing.sqrMagnitude>0.00000001f) transform.forward=facing.normalized;
+                transform.position=target;
+                var refugeState=snapshot.Phase==RefugePhase.Sheltered ? MobileStates.Idle : MobileStates.Move;
+                if (mobile.EnemyState!=refugeState) mobile.ChangeEnemyState(refugeState);
+                displayedAt=now; return;
+            }
             if (IsInterior)
             {
                 if (guard.Interior == null) return;
@@ -164,6 +186,7 @@ namespace LivingCities.DFU
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (!guard.IsAlive || entity.CurrentHealth <= 0) return;
             guard.HealthFraction = (double)entity.CurrentHealth / entity.MaxHealth;
+            if (guard.Refuge!=null) { displayedAt=now; return; }
             if (!IsInterior && DefenseTarget) { CaptureDefense(now); displayedAt = now; return; }
             if (IsInterior)
             {

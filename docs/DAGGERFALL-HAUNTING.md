@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Refuge actor placement foundation
+
+GuardActor now recognizes refuge interior phases, places the native guard body at the saved local floor position with its controller ground offset, uses idle while sheltered and movement while exiting, and deactivates a view when its journey crosses into the other scene. Refuge Capture preserves health/time without invoking crime-search observation. This does not yet wire GuardPopulation view selection or ghost-triggered admission.
+
+Live red test reproduced `ArgumentNullException: geometry` when creating an indoor refuge actor. After the adapter change, controlled actors in original wall models444/445/446 pass destination placement and initial release movement checks. The synthetic roster uses a dummy exterior leg; the separate real exterior survey still checks100 wall connections. Do not describe this as an end-to-end flight from a ghost or complete exterior/interior transition. Evidence: `work/RefugeActor-red.log`, `work/RefugeActor-green.log`. Ordinary guard actor regression passes native body, timed route, walking animation, death/no resurrection and fixture loads (`work/RefugeActor-regression-pass.log`);254/254 core pass. Unity build passes. Latest installed development0.3.29 hash: `8EA69C290B8EA3DB79E8071065D1B69ED45BA54D7DE0DD9E8CF05DA373D5F2FC`. This supersedes earlier hashes.
+
 ## Roster persistence foundation
 
 `GuardRecord.Refuge` and appended `GuardDuty.Refuge` now retain validated journeys in roster copies and native DFU serialization. Legacy absent fields remain null; existing enum numbers are unchanged. At-post admission checks the actual origin transactionally, excludes patrol/incident/interior actors, and marks the guard unavailable to dispatch. Advance keeps the guard sheltered until release and restores Posted only after the reverse route reaches the original post. Death preserves the journey and frozen exterior death position; indoor corpse rendering must use the journey evaluated at DiedAt, not the exterior door coordinate.
