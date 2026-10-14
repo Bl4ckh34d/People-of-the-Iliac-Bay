@@ -135,6 +135,12 @@ namespace LivingCities.DFU
             streetPopulationEnabled = settings.GetBool("General", "StreetPopulation");
             if (streets) streets.SleepEnabled = settings.GetBool("DailyRoutine", "SleepingPoses");
             if (streets) streets.ReactionsEnabled = settings.GetBool("General", "CivilianReactions");
+            if (streets)
+            {
+                streets.HouseholdLocksEnabled = settings.GetBool("Awareness", "HouseholdLocks");
+                streets.TheftAwarenessEnabled = settings.GetBool("Awareness", "TheftWitnesses");
+                streets.TheftWitnessRange = Mathf.Clamp(settings.GetInt("Awareness", "WitnessRange"), 5, 40);
+            }
             options = new RuntimeOptions(settings.GetBool("General", "Enabled"),
                 settings.GetInt("DailyRoutine", "WakeHour"),
                 settings.GetInt("DailyRoutine", "SleepHour"), settings.GetInt("Diagnostics", "RefreshSeconds"),

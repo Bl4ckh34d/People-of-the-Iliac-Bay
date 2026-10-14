@@ -93,8 +93,20 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Guard arrival failed to clear the corpse.");
                 if (!guards.Roster.Guards.Exists(g => g.Interior != null && g.IncidentId == report.Id))
                     throw new InvalidOperationException("Investigators missing on re-entry.");
-                if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
-                    throw new InvalidOperationException("Investigators did not attempt custody on re-entry sighting.");
+                if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None ||
+                    report.Warning == null || !report.Warning.Issued || report.Warning.Violated)
+                    throw new InvalidOperationException("Unidentified visitor did not receive a leave warning before accusation.");
+                var warningCopy = CrimeSceneWarning.Copy(report.Warning);
+                string warningJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
+                var warningStore = new WorldStateStore(0);
+                warningStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), warningJson));
+                if (Math.Abs(warningStore.GetGuards(scene.SettlementId).Reports.Find(r => r.Id == report.Id).Warning.Remaining - warningCopy.Remaining) > 0.001)
+                    throw new InvalidOperationException("Warning countdown changed on native serialization.");
+                deadline = Time.realtimeSinceStartup + 15;
+                while (game.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None && Time.realtimeSinceStartup < deadline)
+                    yield return null;
+                if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Trespassing)
+                    throw new InvalidOperationException("Refusing the ten-second warning did not cause Trespassing.");
                 string json = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
                 var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 if (Math.Abs(restored.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.DiscoveredAt - scene.Scene.DiscoveredAt) > 0.001)
@@ -120,7 +132,7 @@ namespace LivingCities.DFU
                 { yield return null; arrestGuard = UnityEngine.Object.FindObjectOfType<GuardActor>(); }
                 if (!arrestGuard) throw new InvalidOperationException("No guard available for surrender contract. paused=" + GameManager.IsGamePaused + "; actors=" + guards.ActiveCount + "; all=" + Resources.FindObjectsOfTypeAll<GuardActor>().Length);
                 arrestGuard.EndCombat(); DaggerfallUI.Instance.PopToHUD();
-                game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
+                game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Trespassing;
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = false;
                 game.PlayerEntity.GodMode = false;
                 int health = game.PlayerEntity.CurrentHealth;

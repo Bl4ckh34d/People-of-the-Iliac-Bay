@@ -94,7 +94,8 @@ namespace LivingCities.DFU
             Vector3 direction = position - transform.position; direction.y = 0;
             if (direction.sqrMagnitude > 0.00000001f) transform.forward = direction.normalized;
             transform.position = position;
-            bool moving = guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Returning;
+            bool moving = guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Returning ||
+                (guard.Duty == GuardDuty.Searching && roster.Reports.Exists(r => r.Id == guard.IncidentId && r.SearchRoute != null));
             var state = moving ? MobileStates.Move : MobileStates.Idle;
             if (mobile.EnemyState != state) mobile.ChangeEnemyState(state);
             displayedAt = now;

@@ -11,7 +11,7 @@ using UnityEngine;
 namespace LivingCities.DFU
 {
     // Physical roster controller for the supported town and surveyed buildings.
-    public sealed class GuardPopulation : MonoBehaviour
+    public sealed partial class GuardPopulation : MonoBehaviour
     {
         public GuardRoster Roster { get; private set; }
         public int MaximumResponders = 4;
@@ -310,6 +310,7 @@ namespace LivingCities.DFU
         { if (worldStore != null && Roster != null && directory) UpdateInvestigations(Now()); }
         private void Update()
         {
+            AdvanceSceneWarnings();
             if (worldStore != null && !GameManager.IsGamePaused && Time.unscaledTime >= nextInvestigation)
             { nextInvestigation = Time.unscaledTime + 1; UpdateInvestigations(Now()); }
             if (!OwnsTown()) { HideViews(); return; }
@@ -333,7 +334,7 @@ namespace LivingCities.DFU
                 if (!guard.IsAlive) continue;
                 if (guard.Interior != null) continue;
                 var investigation = Roster.Reports.Find(r => r.Id == guard.IncidentId && r.Investigation);
-                if (investigation != null && guard.Duty == GuardDuty.Searching)
+                if (investigation != null && investigation.BuildingKey.HasValue && guard.Duty == GuardDuty.Searching)
                 { GuardActor hidden; if (actors.TryGetValue(guard.Id, out hidden) && hidden) hidden.gameObject.SetActive(false); continue; }
                 var point = Roster.Position(guard.Id, now);
                 Vector3 scene = geometry.ScenePoint(new RoutePoint(point.X, point.Z));
@@ -425,7 +426,10 @@ namespace LivingCities.DFU
                 actor.Capture(now);
                 if (report != null && report.Investigation && game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None &&
                     !game.PlayerEntity.IsInvisible && CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
-                    game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
+                {
+                    if (report.Warning == null) report.Warning = new CrimeSceneWarning();
+                    if (report.Warning.Begin()) DaggerfallUI.AddHUDText("Leave this crime scene. You have ten seconds to exit the house.");
+                }
                 if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None && !game.PlayerEntity.IsInvisible &&
                     CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
                     actor.BeginCombat(now);

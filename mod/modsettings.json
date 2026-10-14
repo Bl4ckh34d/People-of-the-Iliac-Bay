@@ -2,6 +2,37 @@
   "Version": "1.0",
   "Sections": [
     {
+      "Name": "Awareness",
+      "Description": "Household access and theft detection in the supported town. Disabling restores native behavior without deleting saved residents.",
+      "IsAdvanced": false,
+      "Keys": [
+        {
+          "Value": true,
+          "Name": "HouseholdLocks",
+          "Description": "Ordinary homes lock when no living awake owner is inside. Includes daytime absence. Owned/faction access stays native; explicit quest permissions are still in development.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
+          "Name": "TheftWitnesses",
+          "Description": "Unobserved theft always succeeds. Living awake nearby witnesses retain native skill checks; walls block sight and dead NPCs cannot witness theft. Disabling restores native theft probability.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Min": 5,
+          "Max": 40,
+          "Value": 20,
+          "Name": "WitnessRange",
+          "Description": "Maximum theft witness distance in metres. Sight must still be unobstructed. Applies to theft only, not combat or guard pursuit.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        }
+      ],
+      "$version": "v1"
+    },
+    {
       "Name": "General",
       "Description": "Development build with persistent families and scheduled adult visits. Children stay home; play, sleep poses and reactions remain in development.",
       "IsAdvanced": false,

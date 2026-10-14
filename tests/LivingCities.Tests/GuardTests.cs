@@ -16,6 +16,22 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Building alarm dispatches only guards who received the report", () => {
+                var roster = Roster();
+                roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    roster.Guards.ToDictionary(g => g.Id, g => Route(g.Post.X, 100)));
+                var informed = new HashSet<string> { roster.Guards[0].Id };
+                var sent = roster.DispatchBuilding("witnessed-entry", 73, 0, 4, 2, 12, false, informed);
+                Check.Equal(1, sent.Count);
+                Check.Equal(roster.Guards[0].Id, sent[0].Id);
+                Check.True(roster.Guards.Skip(1).All(g => g.Duty == GuardDuty.Posted));
+                var copy = GuardRoster.CopyValidated(roster);
+                Check.Equal(1, copy.Reports.Single().GuardIds.Count);
+                var none = Roster();
+                none.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },
+                    none.Guards.ToDictionary(g => g.Id, g => Route(g.Post.X, 100)));
+                Check.Equal(0, none.DispatchBuilding("unseen-entry", 73, 0, 4, 2, 12, false, new HashSet<string>()).Count);
+            }));
             cases.Add(("Indoor guard entry waits for physical arrival and saves its interior coordinates", () => {
                 var roster = Roster(1); var id = roster.Guards[0].Id;
                 roster.CacheBuildingApproach(73, new SavedRoutePoint { X = 100 },

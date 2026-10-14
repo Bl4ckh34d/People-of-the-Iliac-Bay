@@ -1,5 +1,7 @@
 # Unwitnessed household murder discovery
 
+Latest approved policy: returning to a scene does not prove Murder. An unidentified indoor visitor receives a ten-second unpaused-real-time order to leave. Refusal triggers Trespassing and normal surrender/arrest. Already witnessed murder remains Murder. This supersedes the immediate-Murder re-entry statements in the historical checkpoints below. Save/load must preserve an active warning's remaining time; leaving ends that visit's warning.
+
 ## Corpse runtime checkpoint, 14 October 2026
 
 Generated residents killed through the native weapon-damage hook now retain corpse state and a native human corpse placeholder (texture 380, record 1). The saved death position is independent of the first assault position, so a victim who moves before a later lethal hit does not leave a body at the original alarm location. Views are keyed by incident, limited by distance outdoors, rebuilt from saved state, and removed on scene changes. Confirmed investigator arrival clears the body permanently; ordinary corpses use the existing one-day/absence cleanup rule. Legacy deaths without confirmed corpse state do not gain invented bodies.

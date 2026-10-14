@@ -18,6 +18,7 @@ namespace LivingCities.Tests
             GuardTests.Add(cases);
             BedTests.Add(cases);
             SleepViewTests.Add(cases);
+            HouseholdAccessTests.Add(cases);
             PathTests.Add(cases);
             ScheduleTests.Add(cases);
             SaveTests.Add(cases);

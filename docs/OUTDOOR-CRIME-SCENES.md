@@ -1,6 +1,14 @@
 # Outdoor corpse discovery and investigation
 
-User amendments, 14 October 2026: an outdoor corpse clears after the player leaves its area only if an NPC or guard has seen it. An unseen body does not clear merely because time elapsed. Player presence at first discovery is distinct from arriving later: the former triggers the requested murder response, but later arrival alone never creates a murder accusation. A previously witnessed murder still applies. If the player is absent, guards patrol the area for one game hour. Searching guards cannot be talked to. Interacting with the corpse while an NPC or guard sees the interaction triggers Theft, without inventing Murder. This supersedes the previous generic one-day outdoor cleanup rule; indoor rules remain separate.
+## Current runtime evidence
+
+The development bundle now connects outdoor discovery and absence cleanup, finite responders and patrol views. OutdoorSceneProbe passes actual-player discovery, cleanup, harmless return/examination, native serialization and patrol state. CrimeSceneProbe separately passes the revised indoor warning, Trespassing surrender and real save/reload. Evidence: work/OutdoorSceneProbe-pass.log and work/CrimeSceneWarning-review-pass.log. Current core suite: 176 tests. Actual corpse inventory/loot is still absent. Citizens can notify nearby guards but do not yet make a dedicated trip to report an outdoor corpse. Full end-to-end outdoor patrol/save/reload and all witness combinations remain open.
+
+## Latest approved policy
+
+The user approved a revised policy after the initial amendments below: mere presence at discovery is not evidence of murder either. Examining a body is harmless; only witnessed taking of belongings triggers Theft. Later arrival remains innocent. Known murderers retain their existing witnessed-murder accusation. Unidentified visitors to an indoor scene receive ten seconds of unpaused real time to leave; refusal causes Trespassing and native surrender/arrest. This supersedes both the first-discovery-presence accusation and the earlier immediate indoor Murder accusation. Searching outdoor guards do not converse. Placeholder corpses currently have no inventory, so there is no actual item-taking action yet; do not charge for examining them.
+
+Historical initial amendment (superseded on accusation and examination by the approved policy above): outdoor cleanup requires discovery followed by departure. The initial request treated presence at discovery as Murder and any corpse interaction as Theft; neither of those accusation rules remains approved. One-hour investigation and unseen-body persistence remain required.
 
 Implementation sequence:
 
@@ -21,4 +29,4 @@ CleanupVersion 1 marks newly confirmed bodies. Unseen version-1 exterior cleanup
 
 Migration validation is not tamper-proof provenance: deliberately relabeling an edited record as version 0 makes it a legacy record. This is the explicit compatibility branch, not a claim that arbitrary save edits can be detected. The current runtime always creates version-1 records.
 
-Runtime detection, physical reporting, patrol views, evidence-based arrest, conversation refusal and witnessed corpse-interaction Theft are not connected yet. The installed 0.3.12 bundle remains unchanged; do not treat these core tests as evidence that the new outdoor behavior is available in the game.
+Historical core-only checkpoint: runtime integration was pending at that stage. Use the current runtime evidence above for installed behavior and remaining limits.

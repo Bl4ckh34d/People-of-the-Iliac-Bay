@@ -295,6 +295,9 @@ public static class LivingCitiesBuild
         VerifyCrimeScenePersistence();
         VerifyOutdoorCorpsePersistence();
         VerifyGuardHooks();
+        VerifyHouseholdDoorHook();
+        VerifyTheftHook();
+        VerifyTheftSight();
         VerifyCivilianHitScopes();
         var store = new WorldStateStore(42);
         store.GetOrCreate(99, new[] { 1, 2 });
@@ -372,6 +375,8 @@ public static class LivingCitiesBuild
         roster.DispatchBuilding("discovery:" + alarm.Id, 7, 10001, 1, 2, 10, true);
         double arrival = guard.ArrivesAt;
         store.DiscoverCrimeScene(alarm.Id, arrival);
+        roster.Reports[0].Warning = new CrimeSceneWarning(); roster.Reports[0].Warning.Begin();
+        roster.Reports[0].Warning.Advance(4, true, false);
         Require(store.ObserveCorpses(99, -1, arrival).Count == 0, "Guard arrival clears confirmed corpse");
         string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
         var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
@@ -382,6 +387,8 @@ public static class LivingCitiesBuild
             "Native corpse retains actual death position independently of first assault");
         var scene = restored.Snapshot().AlarmIncidents[0].Scene;
         var saved = restored.GetGuards(99);
+        Require(saved.Reports[0].Warning.Issued && saved.Reports[0].Warning.Remaining == 6,
+            "Native scene warning preserves remaining unpaused seconds");
         Require(scene.DiscoveredAt == arrival && scene.Occupied(arrival + 3599) && !scene.Occupied(arrival + 3600) &&
             saved.Reports[0].Investigation && saved.Guards[0].SearchUntil == arrival + 3600, "Native one-hour occupation survives reload");
         Debug.Log("LIVING_CITIES_SCENE_PERSISTENCE_PASS: confirmed home death, departure, guard arrival and one-hour investigation survive native serialization.");
@@ -445,6 +452,73 @@ public static class LivingCitiesBuild
         }
         finally { if (hook != null) hook.Dispose(); UnityEngine.Object.DestroyImmediate(outer); UnityEngine.Object.DestroyImmediate(inner); }
         Debug.Log("LIVING_CITIES_CIVILIAN_SCOPES_PASS: actual patched native method, nested hits, native and prefix failures.");
+    }
+    private static void VerifyTheftSight()
+    {
+        var witness = new GameObject("Theft sight witness");
+        var wall = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        try
+        {
+            witness.transform.position = new Vector3(0, 10000, 0);
+            var target = witness.transform.position + Vector3.right * 5 + Vector3.up;
+            wall.transform.position = witness.transform.position + new Vector3(2.5f, 1, 0);
+            wall.transform.localScale = new Vector3(1, 4, 4);
+            wall.SetActive(false); Physics.SyncTransforms();
+            Require(TheftWitnessSight.CanSee(witness.transform, target, true, true), "Living nearby witness can see theft");
+            Require(!TheftWitnessSight.CanSee(witness.transform, target, false, true), "Dead witness never sees theft");
+            Require(!TheftWitnessSight.CanSee(witness.transform, target, true, false), "Unaware sleeper never sees theft");
+            Require(!TheftWitnessSight.CanSee(witness.transform, target + Vector3.right*30, true, true), "Distant NPC cannot witness theft");
+            wall.SetActive(true); Physics.SyncTransforms();
+            Require(!TheftWitnessSight.CanSee(witness.transform, target, true, true), "Wall blocks theft sight");
+        }
+        finally { UnityEngine.Object.DestroyImmediate(wall); UnityEngine.Object.DestroyImmediate(witness); }
+        Debug.Log("LIVING_CITIES_THEFT_SIGHT_PASS: range, walls, death and sleeping.");
+    }
+    private static void VerifyTheftHook()
+    {
+        var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText("Assets/Game/Mods/LivingCities/LivingCities.dfmod.json"));
+        var mod = new Mod(); mod.ModInfo.Files = info.Files;
+        var types = (Type[])typeof(Mod).GetMethod("GetTypesInEditor", System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.NonPublic).Invoke(mod, null);
+        var type = Array.Find(types, t => t.FullName == "LivingCities.QuestHooks.NativeTheftHooks");
+        Require(type != null, "Theft witness hook is loadable");
+        var player = new PlayerEntity(null);
+        int normal = DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateShopliftingChance(player, 3, 2);
+        foreach (bool? observed in new bool?[] { true, null })
+            using ((IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool?>(() => observed) }))
+                Require(DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateShopliftingChance(player, 3, 2) == normal,
+                    "Witnessed or unknown theft retains native skill calculation");
+        using ((IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool?>(() => false) }))
+        {
+            int chance = DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateShopliftingChance(null, 100, 100);
+            Require(chance == 0, "Confirmed unobserved theft has zero detection chance");
+            for (int i = 0; i < 1000; i++) Require(Dice100.FailedRoll(chance), "Zero detection always passes native theft roll");
+        }
+        Debug.Log("LIVING_CITIES_THEFT_HOOK_PASS: zero native detection for confirmed absence of witnesses.");
+    }
+    private static void VerifyHouseholdDoorHook()
+    {
+        var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText("Assets/Game/Mods/LivingCities/LivingCities.dfmod.json"));
+        var mod = new Mod(); mod.ModInfo.Files = info.Files;
+        var types = (Type[])typeof(Mod).GetMethod("GetTypesInEditor", System.Reflection.BindingFlags.Instance |
+            System.Reflection.BindingFlags.NonPublic).Invoke(mod, null);
+        var type = Array.Find(types, t => t.FullName == "LivingCities.QuestHooks.NativeHouseholdDoorHooks");
+        Require(type != null, "Household door hook is loadable");
+        var player = (PlayerActivate)System.Runtime.Serialization.FormatterServices.GetUninitializedObject(typeof(PlayerActivate));
+        bool unlocked = false; int calls = 0;
+        using ((IDisposable)Activator.CreateInstance(type, new object[] {
+            new Func<BuildingSummary, bool?>(summary => {
+                Require(summary.buildingKey == 42, "Door hook preserves building identity");
+                calls++; return unlocked;
+            }) }))
+        {
+            var building = new BuildingSummary { buildingKey = 42 };
+            Require(!player.BuildingIsUnlocked(building), "Absent household locks native door query");
+            unlocked = true;
+            Require(player.BuildingIsUnlocked(building), "Awake owner unlocks native door query");
+            Require(calls == 2, "Every native door query reevaluates occupancy");
+        }
+        Debug.Log("LIVING_CITIES_HOUSEHOLD_DOOR_HOOK_PASS: actual patched native lock query.");
     }
     private static void VerifyGuardHooks()
     {

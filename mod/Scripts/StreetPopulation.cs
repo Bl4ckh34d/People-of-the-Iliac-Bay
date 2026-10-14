@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace LivingCities.DFU
 {
-    public sealed class StreetPopulation : MonoBehaviour
+    public sealed partial class StreetPopulation : MonoBehaviour
     {
         private sealed class Plan
         {
@@ -44,6 +44,8 @@ namespace LivingCities.DFU
         {
             var type = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
             reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<Transform, Action<Exception>>(BeginWeaponHit) });
+            InstallHouseholdDoorHook();
+            InstallTheftHook();
         }
         private readonly HashSet<string> concealedHits = new HashSet<string>();
         public bool IsConcealedHit(string id) { return concealedHits.Contains(id); }
@@ -68,6 +70,10 @@ namespace LivingCities.DFU
                 {
                     worldStore.ConfirmCorpse(alarm.Id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),
                         deathBuilding, deathPosition.x, deathPosition.y, deathPosition.z);
+                    if (deathBuilding == -1 && guards && guards.OwnsExterior && alarm.People.Count == 0 &&
+                        !guards.Roster.Reports.Exists(r => r.Id == "civilian:" + alarm.Id && r.GuardIds.Count > 0) &&
+                        GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
+                        GameManager.Instance.PlayerEntity.CrimeCommitted = previousCrime;
                     if (!concealed) return;
                     worldStore.RegisterUnwitnessedScene(alarm.Id);
                     if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
@@ -312,6 +318,7 @@ namespace LivingCities.DFU
                 if (interior) Debug.Log("LIVING_CITIES_INTERIOR_ANCHORS: building=" + interior.EntryDoor.buildingKey +
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
+            UpdateOutdoorScenes(seconds);
             UpdateCorpses(seconds);
             if (ReactionsEnabled && responses != null)
                 responses.WarnNearby(actors.Values, seconds, interior ? interior.EntryDoor.buildingKey : -1,
@@ -457,6 +464,13 @@ namespace LivingCities.DFU
                 view.name = "Living Cities corpse " + alarm.VictimId;
                 view.transform.position = point;
                 view.GetComponent<DaggerfallBillboard>().AlignToBase();
+                if (buildingKey == -1)
+                {
+                    var collider = view.GetComponent<BoxCollider>() ?? view.AddComponent<BoxCollider>();
+                    collider.isTrigger = true;
+                    var action = view.AddComponent<CorpseInteraction>();
+                    action.Streets = this; action.IncidentId = alarm.Id;
+                }
                 corpses[alarm.Id] = view;
             }
             foreach (var id in new List<string>(corpses.Keys))
@@ -473,6 +487,7 @@ namespace LivingCities.DFU
         }
         public void Clear()
         {
+            FlushOutdoorDeparture();
             if (building != null) { StopCoroutine(building); building = null; }
             ClearActors(); ClearCorpses(); plans.Clear(); Ready = false;
             needsExterior = false;
@@ -486,6 +501,6 @@ namespace LivingCities.DFU
             }
             hiddenVanilla.Clear(); ownsVanilla = false; vanilla = null; directory = null; geometry = null;
         }
-        private void OnDestroy() { Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); }
+        private void OnDestroy() { Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); }
     }
 }

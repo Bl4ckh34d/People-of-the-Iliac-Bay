@@ -32,7 +32,7 @@ namespace LivingCities.Core
             if (index < 0) BuildingApproaches.Add(validated); else BuildingApproaches[index] = validated;
         }
         public List<GuardRecord> DispatchBuilding(string incidentId, int buildingKey, double now,
-            int maximumResponders, double speed, double timeScale, bool investigation = false)
+            int maximumResponders, double speed, double timeScale, bool investigation = false, ISet<string> informedGuards = null)
         {
             Require(buildingKey >= 0 && !string.IsNullOrWhiteSpace(incidentId) && Time(now) &&
                 maximumResponders >= 0 && maximumResponders <= 256 && Finite(speed) && speed > 0 &&
@@ -49,7 +49,7 @@ namespace LivingCities.Core
             var routes = new Dictionary<string, List<SavedRoutePoint>>();
             foreach (var guard in Guards)
             {
-                if (!guard.IsAlive) continue;
+                if (!guard.IsAlive || (informedGuards != null && !informedGuards.Contains(guard.Id))) continue;
                 // Recruits inherit the post, not the deceased guard's identity.
                 var route = approach.Routes.Find(r => Distance(r.Points[0], guard.Post) < 0.05);
                 if (route != null) routes.Add(guard.Id, route.Points);

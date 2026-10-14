@@ -23,6 +23,12 @@ namespace LivingCities.Core
     }
     public sealed partial class WorldStateStore
     {
+        public List<CivilianIncident> OutdoorCorpses(int settlementId)
+        {
+            Require(settlementId >= 0, "Invalid corpse settlement.");
+            return state.AlarmIncidents.FindAll(a => a.SettlementId == settlementId && a.Corpse != null && a.Scene == null &&
+                (a.Corpse.HasPosition ? a.Corpse.BuildingKey : a.BuildingKey) == -1);
+        }
         public void NoticeOutdoorCorpse(string incidentId, string observerId, bool guard, double now, bool playerPresent = false)
         {
             var alarm = FindIncident(incidentId);

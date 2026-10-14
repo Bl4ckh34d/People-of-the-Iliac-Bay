@@ -10,6 +10,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$GuardWitnessProbe,
     [switch]$HousingProbe,
     [switch]$CrimeSceneProbe,
+    [switch]$OutdoorSceneProbe,
     [switch]$InteriorEscapeProbe,
     [switch]$QuestBindingProbe,
     [switch]$DeliveryProbe)
@@ -37,6 +38,7 @@ if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
 if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
 if ($HousingProbe) { $arguments += ' -livingcities-housing-probe' }
 if ($CrimeSceneProbe) { $arguments += ' -livingcities-crime-scene-probe' }
+if ($OutdoorSceneProbe) { $arguments += ' -livingcities-outdoor-scene-probe' }
 if ($InteriorEscapeProbe) { $arguments += ' -livingcities-interior-escape-probe' }
 if ($QuestBindingProbe) { $arguments += ' -livingcities-quest-binding-probe' }
 if ($DeliveryProbe) { $arguments += ' -livingcities-delivery-probe' }
@@ -68,6 +70,7 @@ try {
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_HOUSING_LIVE_PASS:') { throw 'Housing probe did not complete.' }
     if ($CrimeSceneProbe -and $body -notmatch 'LIVING_CITIES_TOWN_CRIME_SCENE_PASS:') { throw 'Crime scene probe did not complete.' }
+    if ($OutdoorSceneProbe -and $body -notmatch 'LIVING_CITIES_OUTDOOR_SCENE_PASS:') { throw 'Outdoor scene probe did not complete.' }
     if ($InteriorEscapeProbe -and $body -notmatch 'LIVING_CITIES_TOWN_INTERIOR_ESCAPE_PASS:') { throw 'Interior escape probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_QUEST_BINDING_PASS:') { throw 'Quest binding probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_LEDGER_PASS:') { throw 'Quest ledger save/load probe did not complete.' }

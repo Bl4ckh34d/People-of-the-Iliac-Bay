@@ -241,6 +241,47 @@ namespace LivingCities.DFU
                 if (!actualDirectory.GetBuildingSummary(residentialKey, out residential) ||
                     residential.BuildingType != DFLocation.BuildingTypes.House2 || residential.ModelID != 320)
                     throw new InvalidOperationException("Residential fixture metadata changed.");
+                var activation = game.PlayerObject.GetComponent<PlayerActivate>();
+                if (streets.HouseholdRoutineLocked(residentialKey) != false || !activation.BuildingIsUnlocked(residential))
+                    throw new InvalidOperationException("Awake residential household did not unlock native door.");
+                bool absentChecked = false;
+                for (int minute = 9*60; minute < 18*60 && !absentChecked; minute += 10)
+                {
+                    double at = Math.Floor((double)clock.ToSeconds()/86400)*86400 + minute*60;
+                    foreach (var home in savedTown.Households)
+                    {
+                        if (home.Residents.Count == 0 || home.Residents.Exists(r => !r.IsAlive || r.IsQuestProtected || streets.IsAlarmed(r.Id))) continue;
+                        BuildingSummary absentHouse;
+                        if (!actualDirectory.GetBuildingSummary(home.BuildingKey, out absentHouse) || absentHouse.FactionId != 0) continue;
+                        bool away = true;
+                        foreach (var resident in home.Residents)
+                        {
+                            var location = streets.GetState(resident.Id, at);
+                            if (location.BuildingKey == home.BuildingKey) { away = false; break; }
+                        }
+                        if (!away) continue;
+                        clock.RaiseTime((float)(at-clock.ToSeconds()));
+                        if (streets.HouseholdRoutineLocked(home.BuildingKey) != true || activation.BuildingIsUnlocked(absentHouse))
+                            throw new InvalidOperationException("Empty daytime household did not lock native door.");
+                        bool locksEnabled = streets.HouseholdLocksEnabled;
+                        try
+                        {
+                            streets.HouseholdLocksEnabled = false;
+                            if (!activation.BuildingIsUnlocked(absentHouse))
+                                throw new InvalidOperationException("Disabling household locks did not restore daytime native access.");
+                        }
+                        finally { streets.HouseholdLocksEnabled = locksEnabled; }
+                        absentChecked = true; break;
+                    }
+                }
+                if (!absentChecked) throw new InvalidOperationException("No fully absent daytime household found for lock test.");
+                clock.RaiseTime((86400 + 2*3600 - (int)(clock.ToSeconds()%86400))%86400);
+                if (streets.HouseholdRoutineLocked(residentialKey) != true || activation.BuildingIsUnlocked(residential))
+                    throw new InvalidOperationException("Sleeping residential household did not lock native door.");
+                clock.RaiseTime(5*3600);
+                if (!activation.BuildingIsUnlocked(residential))
+                    throw new InvalidOperationException("Waking household did not release routine lock.");
+                Debug.Log("LIVING_CITIES_HOUSEHOLD_LOCK_PASS: actual native door follows awake, sleeping and waking owners.");
                 DaggerfallStaticDoors owner = null; StaticDoor entry = default(StaticDoor);
                 foreach (var candidate in actualDirectory.GetComponentsInChildren<DaggerfallStaticDoors>())
                     foreach (var door in candidate.Doors)
@@ -254,6 +295,44 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Residential fixture is not a three-person family.");
                 foreach (var resident in family.Residents)
                     if (!streets.FindActor(resident.Id)) throw new InvalidOperationException("Residential family actor missing.");
+                var hiddenForTheft = new HashSet<GameObject>();
+                var currentRoom = game.PlayerEnterExit.Interior;
+                foreach (var npc in currentRoom.GetComponentsInChildren<StaticNPC>()) hiddenForTheft.Add(npc.gameObject);
+                foreach (var npc in currentRoom.GetComponentsInChildren<MobilePersonNPC>()) hiddenForTheft.Add(npc.gameObject);
+                foreach (var npc in currentRoom.GetComponentsInChildren<GuardActor>()) hiddenForTheft.Add(npc.gameObject);
+                var theftWitness = streets.FindActor(family.Residents[0].Id);
+                var oldPosition = theftWitness.transform.position;
+                bool oldAlive = theftWitness.Resident.IsAlive;
+                try
+                {
+                    foreach (var obj in hiddenForTheft) obj.SetActive(false);
+                    if (streets.HasTheftWitness() != false || DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateShopliftingChance(game.PlayerEntity, 10, 10) != 0)
+                        throw new InvalidOperationException("Empty interior theft retained a detection roll.");
+                    bool awarenessEnabled = streets.TheftAwarenessEnabled;
+                    try
+                    {
+                        streets.TheftAwarenessEnabled = false;
+                        if (streets.HasTheftWitness() != null || DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateShopliftingChance(game.PlayerEntity, 10, 10) <= 0)
+                            throw new InvalidOperationException("Disabling theft awareness did not restore native probability.");
+                    }
+                    finally { streets.TheftAwarenessEnabled = awarenessEnabled; }
+                    theftWitness.gameObject.SetActive(true);
+                    theftWitness.transform.position = game.PlayerMotor.transform.position - Vector3.up;
+                    Physics.SyncTransforms();
+                    if (streets.HasTheftWitness() != true || DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateShopliftingChance(game.PlayerEntity, 10, 10) <= 0)
+                        throw new InvalidOperationException("Living nearby theft witness did not retain skill check.");
+                    theftWitness.Resident.IsAlive = false;
+                    if (streets.HasTheftWitness() != false)
+                        throw new InvalidOperationException("Dead resident counted as theft witness.");
+                }
+                finally
+                {
+                    theftWitness.Resident.IsAlive = oldAlive; theftWitness.transform.position = oldPosition;
+                    foreach (var obj in hiddenForTheft) obj.SetActive(true);
+                    Physics.SyncTransforms();
+                }
+                Debug.Log("LIVING_CITIES_THEFT_RUNTIME_PASS: empty interior zero detection, living witness skill check, dead witness excluded.");
+                yield return TheftTransferProbe.Run(streets, false);
                 saved = false; SaveLoadManager.OnSave += OnSaved;
                 game.SaveLoadManager.Save(character, "Living Cities - residential family home");
                 deadline = Time.realtimeSinceStartup + 30;
@@ -262,6 +341,16 @@ namespace LivingCities.DFU
                 if (!saved) throw new InvalidOperationException("Residential fixture save timed out.");
                 int residentialSave = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - residential family home");
                 Debug.Log("LIVING_CITIES_RESIDENTIAL_FIXTURE_PASS: save=" + residentialSave + "; building=" + residentialKey + "; beds=3; adults=2; children=1");
+                game.PlayerEnterExit.TransitionExterior();
+                yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
+                DaggerfallStaticDoors shopOwner = null; StaticDoor shopEntry = default(StaticDoor);
+                foreach (var candidate in actualDirectory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                    foreach (var door in candidate.Doors)
+                        if (door.doorType == DoorTypes.Building && door.buildingKey == 131343) { shopOwner = candidate; shopEntry = door; }
+                if (!shopOwner) throw new InvalidOperationException("General store theft fixture door missing.");
+                EnterInterior(shopOwner.transform, shopEntry);
+                yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
+                yield return TheftTransferProbe.Run(streets);
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: live housing classification; character=" + character);
                 yield break;
             }
@@ -269,6 +358,12 @@ namespace LivingCities.DFU
             {
                 yield return CrimeSceneProbe.Run();
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: crime scene discovery; character=" + character);
+                yield break;
+            }
+            if (Array.IndexOf(probeArguments, "-livingcities-outdoor-scene-probe") >= 0)
+            {
+                yield return OutdoorSceneProbe.Run(adapter, streets, adapter.GetComponent<GuardPopulation>());
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: outdoor crime scene; character=" + character);
                 yield break;
             }
             if (Array.IndexOf(probeArguments, "-livingcities-interior-escape-probe") >= 0)

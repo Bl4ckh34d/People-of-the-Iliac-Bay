@@ -33,6 +33,7 @@ namespace LivingCities.Core
     {
         public List<SavedRoutePoint> SearchRoute;
         public int SearchLaps;
+        public CrimeSceneWarning Warning;
         public List<GuardArrivalEvidence> Arrivals = new List<GuardArrivalEvidence>();
         public bool Investigation;
         public bool HasArrival;
@@ -308,6 +309,7 @@ namespace LivingCities.Core
             {
                 Require(report != null && !string.IsNullOrWhiteSpace(report.Id) && reports.Add(report.Id) && report.GuardIds != null && report.GuardIds.Count <= 256, "Invalid guard report.");
                 bool outdoorSearch = report.Investigation && !report.BuildingKey.HasValue;
+                Require(report.Warning == null || (report.Investigation && report.BuildingKey.HasValue), "Warning needs an indoor investigation.");
                 Require((report.BuildingKey.HasValue || outdoorSearch) == (report.Entrance != null), "Incomplete report destination.");
                 Require(!report.BuildingKey.HasValue || report.BuildingKey.Value >= 0, "Invalid report building.");
                 List<SavedRoutePoint> patrol = null;
@@ -323,6 +325,7 @@ namespace LivingCities.Core
                     "Invalid investigation arrival evidence.");
                 var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey, Investigation = report.Investigation,
                     SearchRoute = patrol, SearchLaps = report.SearchLaps,
+                    Warning = CrimeSceneWarning.Copy(report.Warning),
                     HasArrival = report.HasArrival, FirstArrivalAt = report.FirstArrivalAt,
                     Entrance = report.Entrance == null ? null : CopyPoint(report.Entrance) }; var responders = new HashSet<string>();
                 foreach (var id in report.GuardIds)
