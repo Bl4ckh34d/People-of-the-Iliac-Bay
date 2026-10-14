@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+0.3.32 connects timed shop visitor activities to normal interior updates: checked shelf/counter routes, browsing, haggling and exit before the saved visit ends.272/272 core tests, actual rendered shop phases/departure and indoor hearing/waking/native save/physical guard-arrival regression pass. This advances M2/M3 without completing them. Full crowd avoidance, richer activities, social/tavern behavior and complete artwork remain open. See [shop activities](SHOP-VISITS.md).
+
 0.3.31 replaces map-ID admission with native city/town/village categories for population and guards.269/269 core tests pass. Live Berbaaqnia and Bubogureg probes verify regional identities, nonempty schedules, finite rosters and two constructed adult actors each. Native RegionRaces contains only Breton/Redguard name banks; mountain climate selects Nord appearance independently. These checks advance M2/M7, not comprehensive world acceptance. Taverns/travelers, social routines, events, LLM and full animation coverage remain open.
 
 0.3.30 expands normal operation to Daggerfall City automatically, without a temporary city-specific setting. The user rejected such rollout toggles; the intended final scope is the entire game world. Actual city save/reload verifies611 residents,49 guards, identities, routes and daily curfew. Ghost/wraith refuge behavior has live actor/patrol/combat checks. This advances M5/M7; full-world integration, complete routines and performance acceptance remain open. See [Daggerfall evidence](DAGGERFALL-HAUNTING.md).

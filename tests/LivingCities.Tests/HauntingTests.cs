@@ -8,6 +8,39 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Visit windows retain exact arrival and departure across calendar days",()=>{
+                var schedule=DailySchedule.DayVisit(1,2,new[] { new RoutePoint(0,0),new RoutePoint(10,0) },540,1080,30,1,12,0,360,1320);
+                double start,end;
+                Check.Equal(false,schedule.TryVisitWindow(539*60,out start,out end));
+                Check.Equal(true,schedule.TryVisitWindow(86400+540*60+0.5,out start,out end));
+                Check.Equal(86400d+540*60,start); Check.Equal(86400d+570*60,end);
+                Check.Equal(false,schedule.TryVisitWindow(end,out start,out end));
+            }));
+            cases.Add(("Shop journeys reject disconnected routes and insufficient activity time",()=>{
+                var paths=new List<List<GuardPoint3>>();
+                for(int i=0;i<4;i++) paths.Add(new List<GuardPoint3> { new GuardPoint3(),new GuardPoint3() });
+                Check.Throws<ArgumentException>(()=>ShopVisitJourney.Create(0,59,paths,1,12));
+                paths[1][0].X=1;
+                Check.Throws<ArgumentException>(()=>ShopVisitJourney.Create(0,600,paths,1,12));
+            }));
+            cases.Add(("Shop journey reconstructs browsing haggling and departure without frame history",()=>{
+                var routes=new List<List<GuardPoint3>> {
+                    new List<GuardPoint3> { new GuardPoint3(),new GuardPoint3 { X=10 } },
+                    new List<GuardPoint3> { new GuardPoint3 { X=10 },new GuardPoint3 { X=20 } },
+                    new List<GuardPoint3> { new GuardPoint3 { X=20 },new GuardPoint3 { X=30 } },
+                    new List<GuardPoint3> { new GuardPoint3 { X=30 },new GuardPoint3() } };
+                var journey=ShopVisitJourney.Create(100,460,routes,1,1);
+                Check.Equal(ShopVisitPhase.Walking,journey.Evaluate(105).Phase);
+                Check.Equal(5d,journey.Evaluate(105).Position.X);
+                Check.Equal(ShopVisitPhase.Browsing,journey.Evaluate(115).Phase);
+                Check.Equal(ShopVisitPhase.Haggling,journey.Evaluate(420).Phase);
+                Check.Equal(ShopVisitPhase.Leaving,journey.Evaluate(445).Phase);
+                Check.Equal(15d,journey.Evaluate(445).Position.X);
+                Check.Equal(ShopVisitPhase.Complete,journey.Evaluate(460).Phase);
+                Check.Equal(journey.Evaluate(445).Position.X,ShopVisitJourney.Create(100,460,routes,1,1).Evaluate(445).Position.X);
+                routes[0][1].X=999;
+                Check.Equal(10d,journey.Evaluate(115).Position.X);
+            }));
             cases.Add(("Settlement coverage admits native cities towns and villages only",()=>{
                 for(int category=-1;category<=15;category++)
                     Check.Equal(category>=0 && category<=2,SettlementClassification.SupportsPopulation(category));

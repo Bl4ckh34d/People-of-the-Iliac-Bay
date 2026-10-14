@@ -34,6 +34,9 @@ namespace LivingCities.DFU
         private bool needsExterior;
         private DaggerfallInterior interior;
         private InteriorGeometry indoorGeometry;
+        private ShopVisitGeometry shopGeometry;
+        private readonly Dictionary<string,ShopVisitJourney> shopJourneys=new Dictionary<string,ShopVisitJourney>();
+        private double shopVisitDay=-1;
         private readonly Dictionary<string, int> indoorSlots = new Dictionary<string, int>();
         private SettlementPopulation population;
         private SleepingArt sleepingArt;
@@ -300,10 +303,14 @@ namespace LivingCities.DFU
         }
         private ActivitySnapshot Scheduled(Plan plan,double seconds)
         {
+            return ActiveSchedule(plan).EvaluateSeconds(seconds);
+        }
+        private DailySchedule ActiveSchedule(Plan plan)
+        {
             // Use the actual world day, not a look-ahead animation sample, to commit policy.
             bool restricted=population.SettlementId==1291010263 && worldStore.RestrictHauntingRoutines(population.SettlementId,
                 GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0),DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
-            return (restricted ? plan.HauntedSchedule : plan.Schedule).EvaluateSeconds(seconds);
+            return restricted ? plan.HauntedSchedule : plan.Schedule;
         }
         private void FinishBuild(int settlementId)
         {
@@ -349,6 +356,9 @@ namespace LivingCities.DFU
                 RestoreKeeperViews(); RestoreHouseFlats(); ClearActors(); ClearCorpses(); interior = loadedInterior; indoorSlots.Clear();
                 if (interior) ReconcileHouseFlats(interior);
                 indoorGeometry = interior ? new InteriorGeometry(interior) : null;
+                shopGeometry=interior ? new ShopVisitGeometry(interior,indoorGeometry) : null;
+                shopJourneys.Clear();
+                shopVisitDay=-1;
                 indoorBeds.Clear(); bedClaims.Clear();
                 if (interior && population != null)
                 {
@@ -422,6 +432,7 @@ namespace LivingCities.DFU
         }
         private void UpdateInterior(double seconds)
         {
+            PrepareShopVisits(seconds);
             foreach (var plan in plans)
             {
                 var state = EntryState(plan.Resident.Id, seconds, Scheduled(plan,seconds));
@@ -433,7 +444,8 @@ namespace LivingCities.DFU
                 if (!present)
                 {
                     if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
-                    actors.Remove(plan.Resident.Id); indoorSlots.Remove(plan.Resident.Id); continue;
+                    actors.Remove(plan.Resident.Id); indoorSlots.Remove(plan.Resident.Id);
+                    continue;
                 }
                 int slot;
                 if (!indoorSlots.TryGetValue(plan.Resident.Id, out slot))
@@ -471,7 +483,39 @@ namespace LivingCities.DFU
                     bedClaim = bedClaims[plan.Resident.Id];
                     actor.Sleep(interior.transform, indoorBeds[bedClaim.BedRecordIndex], art);
                 }
+                else if(reaction==null && state.Activity==Activity.Visit && PlaceShopVisit(actor,plan,seconds)) { }
                 else actor.Place(interior.transform.TransformPoint(indoorGeometry.LocalAnchors[slot]), Vector3.forward, true);
+            }
+        }
+        private bool PlaceShopVisit(ResidentActor actor,Plan plan,double seconds)
+        {
+            if(shopGeometry==null) return false;
+            ShopVisitJourney journey;
+            if(!shopJourneys.TryGetValue(plan.Resident.Id,out journey)) return false;
+            if(journey==null) return false;
+            var state=journey.Evaluate(seconds); var next=journey.Evaluate(seconds+0.5);
+            var local=new Vector3((float)state.Position.X,(float)state.Position.Y,(float)state.Position.Z);
+            bool idle=state.Phase==ShopVisitPhase.Browsing || state.Phase==ShopVisitPhase.Haggling || state.Phase==ShopVisitPhase.Complete;
+            var direction=idle ? shopGeometry.Face(local,state.Phase) : new Vector3((float)(next.Position.X-state.Position.X),
+                (float)(next.Position.Y-state.Position.Y),(float)(next.Position.Z-state.Position.Z));
+            var ground=interior.transform.TransformPoint(local);
+            InteriorGeometry.OpenOrdinaryDoors(actor.transform.position-Vector3.up,ground);
+            actor.Place(ground,interior.transform.TransformDirection(direction),idle);
+            return true;
+        }
+        private void PrepareShopVisits(double seconds)
+        {
+            double day=Math.Floor(seconds/86400);
+            if(shopGeometry==null || day==shopVisitDay) return;
+            shopVisitDay=day; shopJourneys.Clear(); shopGeometry.ResetReservations();
+            // Assign all planned visitors in stable population order, including those
+            // currently offscreen. Re-entry therefore reconstructs the same stops.
+            foreach(var plan in plans)
+            {
+                var schedule=ActiveSchedule(plan);
+                if(!plan.Resident.IsAlive || plan.Routine.DestinationKey!=interior.EntryDoor.buildingKey || !schedule.HasVisit) continue;
+                double start,end; schedule.TryVisitWindow(seconds,out start,out end);
+                shopJourneys[plan.Resident.Id]=shopGeometry.Create(plan.Resident.Id,plan.Resident.AppearanceSeed,start,end);
             }
         }
         private void PlaceEscape(ResidentActor actor, AlarmPerson person, double now, Transform origin, bool outside)
@@ -545,6 +589,7 @@ namespace LivingCities.DFU
             ClearActors(); ClearCorpses(); plans.Clear(); Ready = false;
             needsExterior = false;
             interior = null; indoorGeometry = null; indoorSlots.Clear();
+            shopGeometry=null; shopJourneys.Clear(); shopVisitDay=-1;
             population = null; indoorBeds.Clear(); bedClaims.Clear();
             responses = null; worldStore = null;
             if (ownsVanilla && vanilla)

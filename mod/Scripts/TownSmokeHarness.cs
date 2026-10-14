@@ -187,6 +187,7 @@ namespace LivingCities.DFU
                 yield break;
             }
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-keeper-response-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-shop-visit-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-stairs-probe") >= 0)
             {
@@ -198,6 +199,12 @@ namespace LivingCities.DFU
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper fixture load timed out.");
                 yield return new WaitForSecondsRealtime(1);
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-shop-visit-probe") >= 0)
+                {
+                    yield return ShopVisitProbe.Run();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: shop visit activities.");
+                    yield break;
+                }
                 var keeper = ((WorldState)adapter.GetSaveData()).NativePeople.Find(p => p.WorkKey == 131343);
                 if (keeper == null) throw new InvalidOperationException("Saved keeper missing.");
                 if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-stairs-probe") >= 0)

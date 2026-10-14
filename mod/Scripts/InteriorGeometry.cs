@@ -140,6 +140,20 @@ namespace LivingCities.DFU
             }
             ground=Vector3.zero; return false;
         }
+        public List<GuardPoint3> RouteBetween(Vector3 localFrom,Vector3 localTo)
+        {
+            var a=RouteToExit(interior.transform.TransformPoint(localFrom));
+            var b=RouteToExit(interior.transform.TransformPoint(localTo));
+            if(a.Count<2 || b.Count<2) return new List<GuardPoint3>();
+            int ai=a.Count-1,bi=b.Count-1;
+            while(ai>0 && bi>0 && Vector3.Distance(Point(a[ai-1]),Point(b[bi-1]))<0.001f) { ai--; bi--; }
+            var route=new List<GuardPoint3>();
+            for(int i=0;i<=ai;i++) route.Add(a[i]);
+            for(int i=bi-1;i>=0;i--) route.Add(b[i]);
+            if(route.Count==1) route.Add(new GuardPoint3 { X=route[0].X,Y=route[0].Y,Z=route[0].Z });
+            return route;
+        }
+        private static Vector3 Point(GuardPoint3 point) { return new Vector3((float)point.X,(float)point.Y,(float)point.Z); }
         private GuardPoint3 LocalPoint(Vector3 world)
         { var p = interior.transform.InverseTransformPoint(world); return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
         private static Vector3Int Cell(Vector3 point, Vector3 seed)

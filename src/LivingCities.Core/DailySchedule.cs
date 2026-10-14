@@ -106,6 +106,14 @@ namespace LivingCities.Core
             // at large game-calendar epochs. No frame-by-frame catch-up is needed.
             return EvaluateMinuteOfDay((absoluteSeconds % 86400) / 60);
         }
+        public bool TryVisitWindow(double now,out double startsAt,out double endsAt)
+        {
+            var state=EvaluateSeconds(now);
+            double day=Math.Floor(now/86400)*86400;
+            startsAt=day+open*60; endsAt=day+close*60;
+            return awayActivity==Activity.Visit && state.Activity==Activity.Visit;
+        }
+        public bool HasVisit { get { return awayActivity==Activity.Visit && work>=0; } }
         public ActivitySnapshot Evaluate(long absoluteMinute)
         {
             if (absoluteMinute < 0) throw new ArgumentOutOfRangeException(nameof(absoluteMinute));

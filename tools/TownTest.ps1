@@ -20,7 +20,8 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$QuestBindingProbe,
     [switch]$DeliveryProbe,
     [switch]$RefugeProbe,
-    [switch]$RegionalProbe)
+    [switch]$RegionalProbe,
+    [switch]$ShopVisitProbe)
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
 $player = Join-Path $DfuRoot 'Player/DaggerfallUnity.exe'
@@ -62,6 +63,10 @@ if ($RegionalProbe) {
     if (-not $FixtureCharacter) { throw 'Regional probe requires the dedicated fixture character.' }
     $arguments += ' -livingcities-regional-probe'
 }
+if ($ShopVisitProbe) {
+    if (-not $FixtureCharacter) { throw 'Shop visit probe requires the dedicated fixture character.' }
+    $arguments += ' -livingcities-shop-visit-probe'
+}
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
 Write-Output "Owned town-test process: $($owned.Id)"
 try {
@@ -82,6 +87,7 @@ try {
     if (-not $passed) { throw 'Town test did not finish within 180 seconds.' }
     if ($QuestProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_PASS:') { throw 'Quest probe did not complete.' }
     if ($BedProbe -and $body -notmatch 'LIVING_CITIES_TOWN_BEDS_PASS:') { throw 'Bed probe did not complete.' }
+    if ($ShopVisitProbe -and $body -notmatch 'LIVING_CITIES_SHOP_VISIT_PASS:') { throw 'Shop activity probe did not complete.' }
     if ($SleepProbe -and $body -notmatch 'LIVING_CITIES_TOWN_SLEEP_PASS:') { throw 'Sleep probe did not complete.' }
     if ($ResponseProbe -and $body -notmatch 'LIVING_CITIES_TOWN_RESPONSE_PASS:') { throw 'Response probe did not complete.' }
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_ACTOR_PASS:') { throw 'Guard actor probe did not complete.' }
