@@ -188,6 +188,8 @@ namespace LivingCities.DFU
             }
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-keeper-response-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-shop-visit-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-crowd-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-citizen-threat-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-stairs-probe") >= 0)
             {
@@ -199,6 +201,18 @@ namespace LivingCities.DFU
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper fixture load timed out.");
                 yield return new WaitForSecondsRealtime(1);
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-citizen-threat-probe") >= 0)
+                {
+                    yield return CitizenThreatProbe.Run();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: citizen threat flight.");
+                    yield break;
+                }
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-crowd-probe") >= 0)
+                {
+                    yield return CrowdProbe.Run();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: crowd movement.");
+                    yield break;
+                }
                 if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-shop-visit-probe") >= 0)
                 {
                     yield return ShopVisitProbe.Run();

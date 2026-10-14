@@ -1,5 +1,7 @@
 # Living Cities for Daggerfall Unity
 
+**0.3.33 development checkpoint:** guards defend against existing hostile quest-tagged enemies; awake generated residents and registered native merchants flee. No separate random-incursion spawner. Core279/279 and native guard damage/citizen flight checks pass. Interior enemy defense, complete stationary coverage and dynamic blocked-route replanning remain unfinished. See [threat response evidence](docs/THREAT-RESPONSE.md).
+
 **0.3.32 adds timed shop browsing and haggling:** visitors walk between surveyed shelf/merchant stops and leave when their appointment ends.272 core tests, an actual shop activity probe and indoor hearing/save/guard-arrival regression pass. Busy-shop crowd movement, complete idle art and actual NPC purchases remain unfinished. See [shop activities](docs/SHOP-VISITS.md).
 
 **0.3.31 enables population and finite guards across native cities, towns and villages**, replacing the two-map restriction without adding settings. Live regional checks pass in Berbaaqnia (470 resident schedules,38 guards, Redguard appearance) and Bubogureg (435 schedules,35 guards, Nord appearance). Names follow native regional banks; appearance follows native climate population. This is broader activation, not exhaustive layout, quest or performance validation. Isolated farms/taverns, wilderness travelers, richer social routines and complete artwork remain unfinished.

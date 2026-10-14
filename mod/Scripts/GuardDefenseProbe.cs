@@ -145,20 +145,26 @@ namespace LivingCities.DFU
                 if (enemy) UnityEngine.Object.Destroy(enemy);
                 enemy = GameObjectHelper.CreateFoeGameObjects(ground+Vector3.up+Vector3.right*2,MobileTypes.Thief)[0];
                 enemy.GetComponent<DaggerfallEnemy>().LoadID = 0; enemy.SetActive(true);
+                var questEnemy=enemy.AddComponent<DaggerfallWorkshop.Game.Questing.QuestResourceBehaviour>();
+                questEnemy.enabled=false; questEnemy.IsAttackableByAI=false;
+                enemy.GetComponent<EnemySenses>().QuestBehaviour=questEnemy;
                 yield return null;
                 enemy.GetComponent<DaggerfallEntityBehaviour>().Entity.MaxHealth = 500;
                 enemy.GetComponent<DaggerfallEntityBehaviour>().Entity.SetHealth(500,true);
                 enemy.GetComponent<EnemyMotor>().enabled = false; enemy.GetComponent<EnemySenses>().enabled = false;
                 enemy.GetComponent<EnemyAttack>().enabled = false;
-                deadline = Time.realtimeSinceStartup + 8; defender = null;
+                deadline = Time.realtimeSinceStartup + 20; defender = null;
                 while (Time.realtimeSinceStartup < deadline)
                 {
                     foreach (var actor in UnityEngine.Object.FindObjectsOfType<GuardActor>())
                         if (actor.DefenseTarget && actor.CombatReady) defender = actor;
-                    if (defender) break;
+                    if (defender && enemy.GetComponent<DaggerfallEntityBehaviour>().Entity.CurrentHealth<500) break;
                     yield return null;
                 }
                 if (!defender) throw new InvalidOperationException("Assault check has no active defender.");
+                if(enemy.GetComponent<DaggerfallEntityBehaviour>().Entity.CurrentHealth>=500 || questEnemy.IsAttackableByAI)
+                    throw new InvalidOperationException("Guard did not damage hostile quest-owned attacker while preserving its AI flag.");
+                Debug.Log("LIVING_CITIES_QUEST_ATTACKER_DEFENSE_PASS: native damage to hostile quest-tagged human; quest AI flag preserved.");
                 if (defender.HaltWarnings != 1 || defender.GetComponent<EnemySounds>().enabled)
                     throw new InvalidOperationException("Hostile human did not receive exactly one initial Halt warning.");
                 enemy.transform.position = defender.transform.position + Vector3.forward;

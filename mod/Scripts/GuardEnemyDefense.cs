@@ -18,14 +18,48 @@ namespace LivingCities.DFU
             var enemy = target.GetComponent<DaggerfallEnemy>();
             return enemy && enemy.LoadID != 0 ? "native:" + enemy.LoadID : "session:" + defenseSession + ":" + target.GetInstanceID();
         }
-        private static bool IsEnemyThreat(DaggerfallEntityBehaviour target)
+        internal static bool IsEnemyThreat(DaggerfallEntityBehaviour target)
         {
             if (!target || !target.gameObject.activeInHierarchy || target.GetComponent<GuardActor>() ||
                 !(target.Entity is EnemyEntity) || target.Entity.CurrentHealth <= 0 || target.Entity.Team == MobileTeams.PlayerAlly) return false;
             var enemy = (EnemyEntity)target.Entity;
             if (enemy.MobileEnemy.ID == (int)MobileTypes.Knight_CityWatch) return false;
-            var motor = target.GetComponent<EnemyMotor>(); var senses = target.GetComponent<EnemySenses>();
-            return motor && motor.IsHostile && (!senses || !senses.QuestBehaviour || senses.QuestBehaviour.IsAttackableByAI);
+            var motor = target.GetComponent<EnemyMotor>();
+            // Quest ownership does not excuse an active hostile attacker. The guard
+            // explicitly targets this foe; preserve the quest's global infighting flag.
+            return motor && motor.IsHostile;
+        }
+        public string RegisterHostileThreat(DaggerfallEntityBehaviour target)
+        {
+            if(!IsEnemyThreat(target)) return null;
+            string key=ThreatKey(target); defenseEnemies[key]=target; return key;
+        }
+        public bool TryHostileThreatPosition(string key,out Vector3 position)
+        {
+            DaggerfallEntityBehaviour target;
+            if(key!=null && defenseEnemies.TryGetValue(key,out target) && IsEnemyThreat(target))
+            { position=target.transform.position; return true; }
+            position=Vector3.zero; return false;
+        }
+        private void ReportHostileThreat(CivilianIncident alarm,Vector3 from,double now)
+        {
+            if(!OwnsTown() || !EnemyDefense || GameManager.Instance.PlayerEnterExit.IsPlayerInside) return;
+            if(alarm.SettlementId!=directory.MapID || !alarm.HasLocation || now<alarm.StartedAt || now>=CivilianAlarms.ActiveUntil(alarm)) return;
+            DaggerfallEntityBehaviour target;
+            if(!defenseEnemies.TryGetValue(alarm.ThreatId,out target) || !IsEnemyThreat(target) || ObserveHauntingThreat(target,now)) return;
+            if(Roster.Reports.Exists(r=>r.ThreatId==alarm.ThreatId && Roster.Guards.Exists(g=>g.IsAlive && g.IncidentId==r.Id))) return;
+            var local=directory.transform.InverseTransformPoint(target.transform.position);
+            var destination=new SavedRoutePoint { X=local.x,Z=local.z };
+            var routes=new Dictionary<string,List<SavedRoutePoint>>();
+            foreach(var guard in Roster.Guards)
+            {
+                if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted || guard.Interior!=null) continue;
+                var origin=Roster.Position(guard.Id,now);
+                if(!CivilianResponses.Sees(from,geometry.ScenePoint(new RoutePoint(origin.X,origin.Z))+Vector3.up,20)) continue;
+                var route=geometry.RouteBetweenPoints(origin,destination);
+                if(route.Count>=2) routes.Add(guard.Id,route);
+            }
+            Roster.DispatchDefense("danger:"+alarm.Id,alarm.ThreatId,now,routes,Mathf.Clamp(MaximumResponders,1,2),2.8,12);
         }
         private void SurveyEnemyThreats(double now)
         {

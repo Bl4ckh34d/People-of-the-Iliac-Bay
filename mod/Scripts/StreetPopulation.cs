@@ -44,6 +44,7 @@ namespace LivingCities.DFU
         private IDisposable reactionHook;
         private WorldStateStore worldStore;
         private int wakeHour, sleepHour;
+        private float nextThreatSurvey;
         public bool ReactionsEnabled { get; set; }
         public void InstallReactionHook()
         {
@@ -377,6 +378,21 @@ namespace LivingCities.DFU
             UpdateEntryReports(seconds);
             UpdateOutdoorScenes(seconds);
             UpdateCorpses(seconds);
+            if(ReactionsEnabled && responses!=null && Time.unscaledTime>=nextThreatSurvey)
+            {
+                nextThreatSurvey=Time.unscaledTime+0.5f;
+                var guards=GetComponent<GuardPopulation>();
+                if(guards) foreach(var target in UnityEngine.Object.FindObjectsOfType<DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour>())
+                {
+                    string key=guards.RegisterHostileThreat(target);
+                    if(key!=null)
+                    {
+                        responses.Threat(target,key,actors.Values,seconds,interior ? interior.EntryDoor.buildingKey : -1,
+                            id=>GetState(id,seconds).Activity==Activity.Sleep);
+                        ObserveKeeperThreat(target,key,seconds);
+                    }
+                }
+            }
             if (ReactionsEnabled && responses != null)
                 responses.WarnNearby(actors.Values, seconds, interior ? interior.EntryDoor.buildingKey : -1,
                     id => GetState(id, seconds).Activity == Activity.Sleep);
@@ -471,7 +487,19 @@ namespace LivingCities.DFU
                         PlaceEscape(actor, reaction, seconds, interior.transform, false);
                         continue;
                     }
-                    CivilianResponses.Move(actor, reaction, plan.Routine, interior.transform, geometry, indoorGeometry);
+                    var alarm=worldStore.ActiveAlarm(plan.Resident.Id,seconds);
+                    Vector3? danger=null;
+                    if(alarm!=null && alarm.ThreatId!=null)
+                    {
+                        Vector3 current;
+                        var guards=GetComponent<GuardPopulation>();
+                        // A saved alarm can originate in another scene. Prefer the
+                        // live foe; never reinterpret exterior coordinates indoors.
+                        danger=guards && guards.TryHostileThreatPosition(alarm.ThreatId,out current) ? current :
+                            alarm.HasLocation && alarm.BuildingKey==interior.EntryDoor.buildingKey ?
+                            interior.transform.TransformPoint(new Vector3((float)alarm.X,(float)alarm.Y,(float)alarm.Z)) : actor.transform.position;
+                    }
+                    CivilianResponses.Move(actor, reaction, plan.Routine, interior.transform, geometry, indoorGeometry,danger);
                     continue;
                 }
                 BedAssignment bedClaim;

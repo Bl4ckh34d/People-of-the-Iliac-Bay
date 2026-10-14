@@ -17,17 +17,20 @@ namespace LivingCities.DFU
         public MobilePersonNPC Person { get; private set; }
         private DaggerfallEntity entity;
         private SleepingPose sleeping;
+        private CrowdMotion crowd;
         public float NextCounterattack;
         public int Counterattacks;
         public bool IsSleeping { get { return sleeping && sleeping.Active; } }
         public void Sleep(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
         {
+            if(crowd) crowd.ResetPlacement();
             if (!sleeping) sleeping = gameObject.AddComponent<SleepingPose>();
             sleeping.Begin(this, interior, bed, atlas);
         }
         public void Initialize(Resident resident, uint surnameSeed, CityNavigation navigation)
         {
             Resident = resident;
+            crowd=GetComponent<CrowdMotion>(); if(!crowd) crowd=gameObject.AddComponent<CrowdMotion>(); crowd.Configure(1);
             Person = GetComponent<MobilePersonNPC>();
             var motor = GetComponent<MobilePersonMotor>();
             motor.cityNavigation = navigation;
@@ -83,10 +86,17 @@ namespace LivingCities.DFU
         public void Place(Vector3 ground, Vector3 direction, bool standing = false)
         {
             if (sleeping) sleeping.Wake();
-            transform.position = ground + Vector3.up;
+            var before=transform.position;
+            Vector3 actual;
+            if(crowd && !crowd.Place(ground,out actual)) { gameObject.SetActive(false); return; }
+            if(!crowd) transform.position=ground+Vector3.up;
+            if(!gameObject.activeSelf) gameObject.SetActive(true);
+            var moved=transform.position-before;
+            if(moved.sqrMagnitude>0.000001f && moved.sqrMagnitude<1) direction=moved;
             direction.y = 0;
             if (direction.sqrMagnitude > 0.00001f) transform.rotation = Quaternion.LookRotation(direction);
-            bool idle = standing || GameManager.IsGamePaused;
+            bool idle = GameManager.IsGamePaused || moved.sqrMagnitude<0.000001f ||
+                (standing && Vector3.Distance(transform.position,ground+Vector3.up)<0.15f);
             // DFU's setter restarts the animation even when the value is unchanged.
             if (Person.Asset.IsIdle != idle) Person.Asset.IsIdle = idle;
         }

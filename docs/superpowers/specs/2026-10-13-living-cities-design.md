@@ -65,7 +65,7 @@ Vanilla `PlayerEntity.SpawnCityGuards` and `SpawnCityGuard` are called directly 
 
 ### Nightlife and dangerous events
 
-Fewer ordinary residents travel at night, often in small groups around taverns. Evening and nighttime tavern occupancy comes from scheduled residents, not a separate duplicate crowd. Random thieves, thugs, and creature incursions use deterministic event seeds, bounded attacker counts, entry routes, cooldowns, and a higher night-time probability. Events must not snowball into constant population collapse. Quest-critical actors are protected, and official scripted events have priority.
+Fewer ordinary residents travel at night, often in small groups around taverns. Evening and nighttime tavern occupancy comes from scheduled residents, not a separate duplicate crowd. The later threat-response clarification uses attackers from vanilla quests and installed mods; this mod does not add a separate random-incursion spawner. Guards intervene against active hostile assassins, thieves, creatures and other attackers, including quest-owned enemies. Nearby citizens flee to safe interiors and report the threat. Lawful defense does not accuse the player of murder; existing crimes remain independently enforceable. Official scripted placement and technical quest bindings retain ownership.
 
 While Daggerfall's haunting is active, civilians overwhelmingly stay indoors. Guards still patrol but flee recognized haunting threats toward reachable unlocked shelters or safe wall access. Do not treat every building or wall as a valid refuge. Read the relevant quest state so ordinary nightlife can return after the haunting is resolved. Do not replace or multiply the main quest's supernatural encounters.
 
@@ -87,7 +87,7 @@ DFU supplies the authoritative answer, known facts, disposition, social role, lo
 2. **One-town population slice:** assign households; implement work, travel, and sleep; render persistent residents; save/load state. Verify household caps, no duplicates, no visible spawning, plausible arrival times, and identical progress after leave/return and time skips.
 3. **Civilian awareness and activities:** burglary, wake-up behavior, doors, meetings, tavern groups, and sprite poses. Test reachable anchors, closed shops, quest accessibility, and sleeping detection.
 4. **Finite guard service:** settlement-specific rosters, posts, patrol pairs, reinforcement travel, pursuit/search/return, hostility response, and bounded replacements. Test repeated crimes without roster growth, wall and interior routes, surrender, deaths, and escaped pursuit.
-5. **Night events and haunting:** bounded incursions, nightlife distribution, refuges, and the main-quest override. Test event cooldowns, protected NPCs, fear behavior, and haunting resolution.
+5. **Threat responses and haunting:** guard intervention and citizen flight for existing vanilla/quest/mod attackers, nightlife distribution, refuges, and the main-quest override. Test threat ownership, innocent-player handling, fear behavior, and haunting resolution.
 6. **Local dialogue and broader rollout:** add free-text UI and model service, then test mixed towns and nearby settlements, profiler budgets, save migration, other mods, and fallback behavior.
 
 Implementation is authorized across the seven milestones. Each subsystem receives focused design and integration tests. Current acceptance evidence lives in `docs/MILESTONES.md`; this approved design is not a claim that all gameplay or engine hooks are complete.

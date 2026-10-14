@@ -1,5 +1,7 @@
 # Finite guards
 
+Current development correction: hostile quest ownership no longer blocks exterior guard defense. Awake generated citizens and registered merchants also flee existing hostile enemies. The quest's native AI flag is preserved, and threat reports do not accuse an innocent player. See [verification and limits](THREAT-RESPONSE.md); historical quest exclusions below describe earlier versions.
+
 ## 0.3.26 quiet patrols and increased garrisons
 
 Native EnemySounds plays City Watch's Halt as a periodic proximity bark even without a crime. Managed guards disable that automatic callback while preserving explicit hit/parry/attack sound methods. A guard may give one visible, in-range warning per saved report to a wanted player or hostile human NPC; creatures receive none, and combat does not repeat the warning. Saved speaker IDs prevent duplicate warnings after reload.

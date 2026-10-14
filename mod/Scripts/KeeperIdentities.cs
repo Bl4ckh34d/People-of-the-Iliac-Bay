@@ -21,6 +21,30 @@ namespace LivingCities.DFU
         }
         private readonly Dictionary<string, KeeperView> keeperViews = new Dictionary<string, KeeperView>();
         private readonly Dictionary<string, DailySchedule> keeperSchedules = new Dictionary<string, DailySchedule>();
+        private void ObserveKeeperThreat(DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour target,string key,double now)
+        {
+            if(!interior) return;
+            foreach(var npc in interior.GetComponentsInChildren<StaticNPC>())
+            {
+                var person=KeeperPerson(npc);
+                var pose=npc.GetComponent<SleepingPose>();
+                if(person==null || !person.IsAlive || (pose && pose.Active) || KeeperSleeping(person,now) ||
+                    !CivilianResponses.Sees(npc.transform.position,target.transform.position,20)) continue;
+                var alarm=worldStore.RecordHostileThreat(population.SettlementId,key,now);
+                if(!alarm.HasLocation)
+                {
+                    var location=interior.transform.InverseTransformPoint(target.transform.position-Vector3.up);
+                    worldStore.LocateViolence(alarm.Id,interior.EntryDoor.buildingKey,location.x,location.y,location.z);
+                }
+                var witness=worldStore.Witness(alarm.Id,person.Id,now);
+                if(witness==null || witness.HasPosition) continue;
+                var billboard=npc.GetComponent<DaggerfallBillboard>();
+                var offset=Vector3.up*(billboard ? billboard.Summary.Size.y*0.5f : 1);
+                var ground=interior.transform.InverseTransformPoint(npc.transform.position-offset);
+                witness.HasPosition=true; witness.BuildingKey=interior.EntryDoor.buildingKey;
+                witness.X=ground.x; witness.Y=ground.y; witness.Z=ground.z;
+            }
+        }
         private DailySchedule KeeperSchedule(NativePerson person)
         {
             if (person.HomeKey != person.WorkKey || person.BedSlot < 0 || !Ready || !directory) return null;

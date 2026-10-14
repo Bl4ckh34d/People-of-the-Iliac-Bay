@@ -24,6 +24,8 @@ namespace LivingCities.Core
         public CorpseState Corpse;
         public UnwitnessedScene Scene;
         public string Id, VictimId;
+        // Null retains legacy player-crime semantics.
+        public string ThreatId;
         public int SettlementId;
         public double StartedAt, ExpiresAt;
         public bool HasLocation;
@@ -52,6 +54,21 @@ namespace LivingCities.Core
     }
     public sealed partial class WorldStateStore
     {
+        public CivilianIncident RecordHostileThreat(int settlementId,string threatId,double now)
+        {
+            Require(!string.IsNullOrWhiteSpace(threatId) && threatId.Length<=256 && ValidTime(now) && ValidTime(now+900) &&
+                state.Settlements.Exists(s=>s.SettlementId==settlementId),"Invalid hostile threat.");
+            string id="threat:"+settlementId+":"+threatId;
+            var existing=state.AlarmIncidents.Find(a=>a.Id==id);
+            if(existing!=null && Active(existing,now)) return existing;
+            if(existing!=null)
+            {
+                state.AlarmIncidents.Remove(existing);
+                foreach(var native in state.NativePeople) if(native.ResponseIncidentId==id) native.ResponseIncidentId=null;
+            }
+            var incident=new CivilianIncident { Id=id,ThreatId=threatId,SettlementId=settlementId,StartedAt=now,ExpiresAt=now+900 };
+            state.AlarmIncidents.Add(incident); return incident;
+        }
         public void LocateViolence(string incidentId, int buildingKey, double x, double y, double z)
         {
             Require(buildingKey >= -1 && ValidCoordinate(x) && ValidCoordinate(y) && ValidCoordinate(z), "Invalid crime location.");
@@ -81,7 +98,7 @@ namespace LivingCities.Core
             var person = incident.People.Find(p => p.ResidentId == residentId);
             if (person == null)
             {
-                person = new AlarmPerson { ResidentId = residentId, Reaction = CivilianAlarms.ChooseReaction(resident) };
+                person = new AlarmPerson { ResidentId = residentId, Reaction = incident.ThreatId!=null ? CivilianReaction.Flee : CivilianAlarms.ChooseReaction(resident) };
                 incident.People.Add(person);
             }
             // Hearing alone never authorizes attacking an unidentified player.
@@ -102,7 +119,7 @@ namespace LivingCities.Core
                 !AlarmResident(incident.SettlementId, fromId).IsAlive || !target.IsAlive || toId == incident.VictimId ||
                 incident.People.Exists(p => p.ResidentId == toId)) return false;
             from.Warned.Add(toId);
-            incident.People.Add(new AlarmPerson { ResidentId = toId, Reaction = CivilianAlarms.ChooseReaction(target) });
+            incident.People.Add(new AlarmPerson { ResidentId = toId, Reaction = incident.ThreatId!=null ? CivilianReaction.Flee : CivilianAlarms.ChooseReaction(target) });
             var native = state.NativePeople.Find(p => p.Id == toId);
             if (native != null) native.ResponseIncidentId = incident.Id;
             return true;
@@ -145,7 +162,10 @@ namespace LivingCities.Core
             var result = new List<CivilianIncident>(); var incidentIds = new HashSet<string>(); var victims = new HashSet<string>();
             foreach (var alarm in source.AlarmIncidents)
             {
-                Require(alarm != null && alarm.Id == "murder:" + alarm.VictimId && incidentIds.Add(alarm.Id) && victims.Add(alarm.VictimId), "Invalid or duplicate incident.");
+                bool threat=alarm!=null && alarm.ThreatId!=null;
+                Require(alarm != null && incidentIds.Add(alarm.Id) && (threat ?
+                    !string.IsNullOrWhiteSpace(alarm.ThreatId) && alarm.ThreatId.Length<=256 && alarm.Id=="threat:"+alarm.SettlementId+":"+alarm.ThreatId :
+                    alarm.Id == "murder:" + alarm.VictimId && victims.Add(alarm.VictimId)), "Invalid or duplicate incident.");
                 var town = source.Settlements.Find(t => t.SettlementId == alarm.SettlementId);
                 Require(town != null, "Unknown incident settlement.");
                 var residents = new Dictionary<string, Resident>();
@@ -153,15 +173,19 @@ namespace LivingCities.Core
                 // Native staff without a generated household are also persistent victims and witnesses.
                 if (source.NativePeople != null) foreach (var native in source.NativePeople)
                     if (native.SettlementId == alarm.SettlementId && !residents.ContainsKey(native.Id)) residents.Add(native.Id, NativeAlarmResident(native));
-                Require(alarm.VictimId != null && residents.ContainsKey(alarm.VictimId) && ValidTime(alarm.StartedAt) &&
+                Require((threat ? alarm.VictimId==null && alarm.Scene==null && alarm.Corpse==null && alarm.NoiseChecks!=null && alarm.NoiseChecks.Count==0 :
+                    alarm.VictimId != null && residents.ContainsKey(alarm.VictimId)) && ValidTime(alarm.StartedAt) &&
                     ValidTime(alarm.ExpiresAt) && alarm.ExpiresAt == alarm.StartedAt + 900 && alarm.People != null, "Invalid incident data.");
-                var copied = new CivilianIncident { Id = alarm.Id, VictimId = alarm.VictimId, SettlementId = alarm.SettlementId,
+                var copied = new CivilianIncident { Id = alarm.Id, VictimId = alarm.VictimId, ThreatId=alarm.ThreatId,SettlementId = alarm.SettlementId,
                     StartedAt = alarm.StartedAt, ExpiresAt = alarm.ExpiresAt, HasLocation = alarm.HasLocation,
                     BuildingKey = alarm.BuildingKey, X = alarm.X, Y = alarm.Y, Z = alarm.Z };
                 Require(alarm.BuildingKey >= -1 && ValidCoordinate(alarm.X) && ValidCoordinate(alarm.Y) && ValidCoordinate(alarm.Z),
                     "Invalid saved crime location.");
-                copied.Scene = CopyScene(alarm, residents[alarm.VictimId], source);
-                copied.Corpse = CopyCorpse(alarm, residents[alarm.VictimId], source);
+                if(!threat)
+                {
+                    copied.Scene = CopyScene(alarm, residents[alarm.VictimId], source);
+                    copied.Corpse = CopyCorpse(alarm, residents[alarm.VictimId], source);
+                }
                 copied.NoiseChecks = CopyNoiseChecks(alarm, residents);
                 var people = new HashSet<string>();
                 foreach (var person in alarm.People)
@@ -169,6 +193,7 @@ namespace LivingCities.Core
                     Require(person != null && person.ResidentId != null && person.ResidentId != alarm.VictimId &&
                         residents.ContainsKey(person.ResidentId) && people.Add(person.ResidentId), "Invalid alarm recipient.");
                     Require(person.Reaction == CivilianReaction.Flee || person.Reaction == CivilianReaction.Fight, "Invalid reaction.");
+                    Require(!threat || person.Reaction==CivilianReaction.Flee,"Hostile threat recipient must flee.");
                     Require(!person.HeardViolence || (copied.NoiseChecks.Exists(n => n.ResidentId == person.ResidentId &&
                         (!n.Sleeping || n.Woke)) && (person.DirectWitness || person.Reaction == CivilianReaction.Flee)), "Invalid hearing response.");
                     Require(!person.Awakened || person.HeardViolence, "Awakening lacks hearing evidence.");

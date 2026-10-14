@@ -274,6 +274,7 @@ namespace LivingCities.DFU
         }
         public void ReportEscapedWitness(CivilianIncident alarm, double now)
         {
+            if(alarm!=null && alarm.ThreatId!=null) return;
             if (!OwnsTown() || alarm.SettlementId != directory.MapID || alarm.BuildingKey < 0 || now >= CivilianAlarms.ActiveUntil(alarm)) return;
             string id = "civilian:" + alarm.Id;
             if (Roster.Reports.Exists(r => r.Id == id && r.GuardIds.Count > 0)) return;
@@ -320,6 +321,7 @@ namespace LivingCities.DFU
         }
         public void ReportCivilianCrime(CivilianIncident incident, Vector3 reportFrom)
         {
+            if(incident!=null && incident.ThreatId!=null) { ReportHostileThreat(incident,reportFrom,Now()); return; }
             if (!OwnsTown() || GameManager.Instance.PlayerEnterExit.IsPlayerInside || incident == null ||
                 !incident.HasLocation || incident.BuildingKey != -1 || incident.SettlementId != directory.MapID) return;
             double now = Now();

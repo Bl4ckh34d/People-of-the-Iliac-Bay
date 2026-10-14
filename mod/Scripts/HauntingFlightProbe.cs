@@ -49,7 +49,10 @@ namespace LivingCities.DFU
                     float ready=Time.realtimeSinceStartup+5;
                     while(!fighter.CombatReady && Time.realtimeSinceStartup<ready) yield return null;
                     if(!fighter.CombatReady || !fighter.GetComponent<EnemyAttack>().enabled || guard.Duty!=GuardDuty.Engaged)
-                        throw new InvalidOperationException("Native combat fixture failed to start.");
+                        throw new InvalidOperationException("Native combat fixture failed to start: ready="+fighter.CombatReady+
+                            "; attack="+fighter.GetComponent<EnemyAttack>().enabled+"; duty="+guard.Duty+
+                            "; active="+fighter.gameObject.activeInHierarchy+"; position="+fighter.transform.position+
+                            "; target="+(bool)fighter.DefenseTarget+"; health="+fighter.GetComponent<DaggerfallEntityBehaviour>().Entity.CurrentHealth);
                 }
                 foe=GameObjectHelper.CreateFoeGameObjects(geometry.ScenePoint(route[2])+Vector3.up,MobileTypes.Ghost,1,MobileReactions.Hostile)[0];
                 foe.GetComponent<EnemyMotor>().enabled=false; foe.GetComponent<EnemyAttack>().enabled=false; foe.SetActive(true);

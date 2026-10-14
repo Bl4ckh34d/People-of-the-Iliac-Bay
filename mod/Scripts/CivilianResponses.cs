@@ -22,6 +22,27 @@ namespace LivingCities.DFU
             var alarm = store.ActiveAlarm(id, now);
             return alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
         }
+        public void Threat(DaggerfallEntityBehaviour target,string threatId,IEnumerable<ResidentActor> actors,double now,int building,Func<string,bool> sleeping)
+        {
+            CivilianIncident alarm=null;
+            foreach(var actor in actors)
+            {
+                if(!actor || !actor.Resident.IsAlive || actor.IsSleeping || sleeping(actor.Resident.Id) || !actor.gameObject.activeInHierarchy ||
+                    actor.Resident.IsQuestProtected || !Sees(actor.transform.position,target.transform.position,20)) continue;
+                if(alarm==null)
+                {
+                    alarm=store.RecordHostileThreat(settlementId,threatId,now);
+                    if(!alarm.HasLocation)
+                    {
+                        var point=actor.transform.parent.InverseTransformPoint(target.transform.position-Vector3.up);
+                        store.LocateViolence(alarm.Id,building,point.x,point.y,point.z);
+                    }
+                }
+                var person=store.Witness(alarm.Id,actor.Resident.Id,now);
+                Locate(person,actor,building);
+                if(tellGuards!=null) tellGuards(alarm,actor.transform.position);
+            }
+        }
         public void Murder(ResidentActor victim, IEnumerable<ResidentActor> actors, Func<string, bool> sleeping, double now, int building)
         {
             var alarm = store.RecordViolence(settlementId, victim.Resident.Id, now);
@@ -110,12 +131,12 @@ namespace LivingCities.DFU
                 collider.GetComponentInParent<MobilePersonNPC>() == null && collider.GetComponentInParent<PlayerMotor>() == null;
         }
         public static void Move(ResidentActor actor, AlarmPerson person, ResidentRoutine routine, Transform origin,
-            TownGeometry geometry, InteriorGeometry indoor)
+            TownGeometry geometry, InteriorGeometry indoor,Vector3? danger=null)
         {
             Vector3 ground = origin.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
             Vector3 target = ground;
             var game = GameManager.Instance;
-            Vector3 player = game.PlayerMotor.transform.position;
+            Vector3 player = danger ?? game.PlayerMotor.transform.position;
             if (person.Reaction == CivilianReaction.Fight)
             {
                 if (!game.PlayerEntity.IsInvisible && Sees(ground + Vector3.up, player, 20))

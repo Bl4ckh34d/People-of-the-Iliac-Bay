@@ -8,6 +8,63 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Renewed threat clears expired native response links before reacquiring witnesses",()=>{
+                var store=new WorldStateStore(42); store.GetOrCreate(99,new[] { 1 });
+                var native=store.RegisterNativePerson(99,1,123,"Sample Name",ResidentSex.Male,0,0,182,0);
+                var alarm=store.RecordHostileThreat(99,"native:123",100);
+                store.Witness(alarm.Id,native.Id,101);
+                store.RecordHostileThreat(99,"native:123",1001);
+                Check.True(store.NativeResponse(native.Id)==null);
+                Check.Equal(1,store.Snapshot().AlarmIncidents.Count);
+            }));
+            cases.Add(("Hostile threat saves reject fighting or a fabricated murder victim",()=>{
+                var store=new WorldStateStore(42); var town=store.GetOrCreate(99,new[] { 1 });
+                var alarm=store.RecordHostileThreat(99,"native:123",100); string id=town.Households[0].Residents[0].Id;
+                store.Witness(alarm.Id,id,101);
+                var bad=store.Snapshot(); bad.AlarmIncidents[0].People[0].Reaction=CivilianReaction.Fight;
+                Check.Throws<ArgumentException>(()=>store.Restore(bad));
+                bad=store.Snapshot(); bad.AlarmIncidents[0].VictimId=id;
+                Check.Throws<ArgumentException>(()=>store.Restore(bad));
+            }));
+            cases.Add(("Hostile attacker alarms make citizens flee without a murder victim and survive reload",()=>{
+                var store=new WorldStateStore(42); var town=store.GetOrCreate(99,new[] { 1,2,3 });
+                string first=town.Households[0].Residents[0].Id,second=town.Households[1].Residents[0].Id,third=town.Households[2].Residents[0].Id;
+                var alarm=store.RecordHostileThreat(99,"native:123",100);
+                Check.True(alarm.VictimId==null && alarm.Corpse==null && alarm.Scene==null);
+                Check.Equal(CivilianReaction.Flee,store.Witness(alarm.Id,first,101).Reaction);
+                Check.Equal(true,store.Warn(alarm.Id,first,second,102));
+                Check.Equal(false,store.Warn(alarm.Id,second,third,103));
+                var restored=new WorldStateStore(42); restored.Restore(store.Snapshot());
+                Check.Equal("native:123",restored.ActiveAlarm(second,104).ThreatId);
+                Check.Equal(CivilianReaction.Flee,restored.ActiveAlarm(second,104).People.Find(p=>p.ResidentId==second).Reaction);
+            }));
+            cases.Add(("Crowd sweeps cannot jump through a walker in a narrow corridor",()=>{
+                var result=CrowdSteering.Move(new GuardPoint3 { X=-2 },new GuardPoint3 { X=2 },
+                    new[] { new GuardPoint3() },0.82,4,p=>Math.Abs(p.Z)<0.00001);
+                Check.Equal(-2d,result.X);
+            }));
+            cases.Add(("Crowd bodies on separate floors do not obstruct one another",()=>{
+                var result=CrowdSteering.Move(new GuardPoint3(),new GuardPoint3 { X=1 },
+                    new[] { new GuardPoint3 { Y=3 } },0.82,0.1,p=>true);
+                Check.Equal(0.1,result.X);
+            }));
+            cases.Add(("Crowd steering passes opposite walkers without crossing occupied space",()=>{
+                var a=new GuardPoint3 { X=-2 }; var b=new GuardPoint3 { X=2 };
+                double minimum=4;
+                for(int step=0;step<100;step++)
+                {
+                    a=CrowdSteering.Move(a,new GuardPoint3 { X=2 },new[] { b },0.6,0.1,p=>true);
+                    b=CrowdSteering.Move(b,new GuardPoint3 { X=-2 },new[] { a },0.6,0.1,p=>true);
+                    double dx=a.X-b.X,dz=a.Z-b.Z;
+                    minimum=Math.Min(minimum,Math.Sqrt(dx*dx+dz*dz));
+                }
+                Check.True(minimum>=0.6-0.00001);
+                Check.True(a.X>1.8 && b.X< -1.8);
+            }));
+            cases.Add(("Crowd steering waits when every step is blocked",()=>{
+                var position=CrowdSteering.Move(new GuardPoint3(),new GuardPoint3 { X=1 },new GuardPoint3[0],0.6,0.1,p=>false);
+                Check.Equal(0d,position.X); Check.Equal(0d,position.Z);
+            }));
             cases.Add(("Visit windows retain exact arrival and departure across calendar days",()=>{
                 var schedule=DailySchedule.DayVisit(1,2,new[] { new RoutePoint(0,0),new RoutePoint(10,0) },540,1080,30,1,12,0,360,1320);
                 double start,end;
