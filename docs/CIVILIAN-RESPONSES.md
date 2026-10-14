@@ -1,5 +1,9 @@
 # Citizen response checkpoint
 
+## Current 0.3.9 indoor escape
+
+Supported direct fleeing witnesses now follow saved interior exit paths and surveyed streets to a posted guard. The same actor identity appears outside; progress survives real save/load and scene unloading. These planned escapes delay the native indoor alarm until reporting. No-route and unwitnessed indoor cases retain native alarm behavior pending discovery work. Long journeys extend the incident through arrival plus five game minutes. See [indoor witness implementation and limits](INDOOR-WITNESSES.md); earlier scope statements below are historical.
+
 ## Current 0.3.8 public reporting
 
 With civilian reactions and experimental guards enabled, an outdoor weapon kill of an owned generated resident no longer automatically dispatches guards. A posted guard must see the crime within 20 metres, or a fleeing direct witness must reach a posted guard within 20 metres and unobstructed sight. Guards receive the immutable crime location, not the player's current position. Dispatch uses the existing finite roster and collision-validated routes; repeated reports cannot replenish the response. Guard reporting does not consume the witness's two-citizen warning allowance. Secondhand witnesses still cannot relay.

@@ -83,3 +83,7 @@ Screenshots of street and interior actors were inspected. Interior placement cur
 ## Public witness probe (0.3.8)
 
 `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -GuardWitnessProbe` uses disposable actors after loading the normal town fixture. It creates no save slot. It checks actual native weapon interception, absence of automatic distant guard response, direct witness reporting near a post, immutable crime destination, bounded repeat reporting and native serialization. The witness is repositioned deliberately; autonomous flight-to-guard is not asserted. Run focused probe switches separately: the player harness exits after the selected scenario.
+
+## Indoor escape (0.3.9)
+
+`tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -InteriorEscapeProbe` creates/replaces **SAVE32 — Living Cities - escaping witness** in house 1. It checks blocked-start rejection, a real weapon kill, delayed notification, physical escape movement, actual save/load, identity and movement outside, and finite reporting to the original house. Both guard and civilian-reaction options must be enabled when inspecting this fixture. The probe advances time to later travel deadlines; it does not benchmark all routes or interior layouts. Older character fixtures remain separate.

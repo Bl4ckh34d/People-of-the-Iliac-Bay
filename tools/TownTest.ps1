@@ -8,6 +8,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$GuardControllerProbe,
     [switch]$GuardBuildingProbe,
     [switch]$GuardWitnessProbe,
+    [switch]$InteriorEscapeProbe,
     [switch]$QuestBindingProbe,
     [switch]$DeliveryProbe)
 $ErrorActionPreference = 'Stop'
@@ -32,6 +33,7 @@ if ($GuardActorProbe) { $arguments += ' -livingcities-guard-actor-probe' }
 if ($GuardControllerProbe) { $arguments += ' -livingcities-guard-controller-probe' }
 if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
 if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
+if ($InteriorEscapeProbe) { $arguments += ' -livingcities-interior-escape-probe' }
 if ($QuestBindingProbe) { $arguments += ' -livingcities-quest-binding-probe' }
 if ($DeliveryProbe) { $arguments += ' -livingcities-delivery-probe' }
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
@@ -60,6 +62,7 @@ try {
     if ($GuardControllerProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_CONTROLLER_PASS:') { throw 'Guard controller probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
+    if ($InteriorEscapeProbe -and $body -notmatch 'LIVING_CITIES_TOWN_INTERIOR_ESCAPE_PASS:') { throw 'Interior escape probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_QUEST_BINDING_PASS:') { throw 'Quest binding probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_LEDGER_PASS:') { throw 'Quest ledger save/load probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_OFFER_PASS:') { throw 'Quest offer accept/reject probe did not complete.' }
@@ -70,6 +73,7 @@ try {
         if (Test-Path -LiteralPath $log) { Copy-Item -LiteralPath $log -Destination "$repo/work/town-test.log" -Force }
     } finally {
         if (-not $owned.HasExited) { Stop-Process -InputObject $owned }
+        if (-not $owned.WaitForExit(10000)) { throw 'Owned test player did not exit within 10 seconds.' }
         if ($QuestBindingProbe) {
             $probePackage = Join-Path $playerDir 'DaggerfallUnity_Data/StreamingAssets/Mods/livingcitiesquestbindingprobe.dfmod'
             if (Test-Path -LiteralPath $probePackage) { Remove-Item -LiteralPath $probePackage }

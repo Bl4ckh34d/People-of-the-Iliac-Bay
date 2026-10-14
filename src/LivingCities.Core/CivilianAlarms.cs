@@ -15,6 +15,7 @@ namespace LivingCities.Core
         public bool HasPosition, ReachedRefuge;
         public int BuildingKey = -1;
         public double X, Y, Z;
+        public CivilianEscape Escape;
     }
     [Serializable]
     public sealed class CivilianIncident
@@ -29,6 +30,13 @@ namespace LivingCities.Core
     }
     public static class CivilianAlarms
     {
+        public static double ActiveUntil(CivilianIncident incident)
+        {
+            double until = incident.ExpiresAt;
+            foreach (var person in incident.People)
+                if (person.Escape != null) until = Math.Max(until, person.Escape.ReportAt + 300);
+            return until;
+        }
         public static CivilianReaction ChooseReaction(Resident resident)
         {
             // Initial capability policy, until professions and courage are modeled.
@@ -108,7 +116,7 @@ namespace LivingCities.Core
         }
         private static bool ValidTime(double value) { return !double.IsNaN(value) && !double.IsInfinity(value) && value >= 0; }
         private static bool Active(CivilianIncident incident, double now)
-        { return ValidTime(now) && now >= incident.StartedAt && now < incident.ExpiresAt; }
+        { return ValidTime(now) && now >= incident.StartedAt && now < CivilianAlarms.ActiveUntil(incident); }
         private static List<CivilianIncident> CopyAlarms(WorldState source)
         {
             Require(source.AlarmIncidents != null, "Missing alarm ledger.");
@@ -138,7 +146,11 @@ namespace LivingCities.Core
                     Require(person.BuildingKey >= -1 && ValidCoordinate(person.X) && ValidCoordinate(person.Y) && ValidCoordinate(person.Z), "Invalid reaction position.");
                     var copy = new AlarmPerson { ResidentId = person.ResidentId, DirectWitness = person.DirectWitness,
                         Reaction = person.Reaction, HasPosition = person.HasPosition, ReachedRefuge = person.ReachedRefuge,
-                        BuildingKey = person.BuildingKey, X = person.X, Y = person.Y, Z = person.Z };
+                        BuildingKey = person.BuildingKey, X = person.X, Y = person.Y, Z = person.Z,
+                        Escape = CivilianEscape.Copy(person.Escape) };
+                    Require(copy.Escape == null || (person.DirectWitness && person.HasPosition && person.Reaction == CivilianReaction.Flee &&
+                        copy.Escape.BuildingKey == alarm.BuildingKey &&
+                        copy.Escape.StartedAt >= alarm.StartedAt && copy.Escape.StartedAt < alarm.ExpiresAt), "Invalid witness escape ownership.");
                     var warned = new HashSet<string>();
                     foreach (var recipient in person.Warned)
                     {

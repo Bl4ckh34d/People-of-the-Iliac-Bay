@@ -1,5 +1,7 @@
 # Finite guards
 
+Current 0.3.9 adds delayed indoor witness reports when a physical exit-and-post route exists. Guard dispatch retains the crime building while the witness crosses scenes; ordinary native indoor alarms still use the 0.3.7 adapter. Unwitnessed discovery is not implemented. See INDOOR-WITNESSES.md for the route, persistence and fallback boundaries.
+
 Current 0.3.8 adds public witness reporting. Outdoor generated-resident kills require a local guard witness or a fleeing direct witness reaching a posted guard; reports retain the original crime position and cannot replenish their finite responder group. Both visibility checks use 20 metres. See CIVILIAN-RESPONSES.md for tested scope and limitations. Indoor alarms retain the 0.3.7 behavior below.
 
 Current 0.3.7 adds finite indoor responses for surveyed Gothway Garden buildings: delayed doorway entry, native combat, wounded direct-interior reload and path-based exit/return. The same existing ExperimentalExteriorGuards setting now enables both supported contexts. Unsurveyed interiors remain vanilla. See GUARD-BUILDING-RESPONSE.md; historical limitations below are superseded only where that checkpoint provides evidence.

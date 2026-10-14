@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+0.3.9 implements saved indoor witness escape through entry-connected floors, exterior travel to a guard post, delayed finite response to the original house, and real SAVE32 reload/identity continuity. Core suite: 154 tests. Unwitnessed murder discovery, crime-scene occupation, broader interior navigation and stationary-NPC conversion remain open. See INDOOR-WITNESSES.md. M3/M4 are not complete.
+
 0.3.8 connects public citizen witnesses to finite guards: local visibility, immutable crime destination, bounded physical dispatch and persistent report identity. The controlled actual-player witness probe and 151 core tests pass. Autonomous indoor escape/reporting, unwitnessed murder discovery and original stationary-citizen conversion remain next behavior work. Art stays deferred; M3/M4 remain open.
 
 0.3.7 guard integration adds surveyed-building alarms, travel-before-entry, indoor combat, persistent 3D location/health, cleared-crime stand-down, and retraced indoor exit followed by exterior return. SAVE31 is the shop-response fixture. M4 remains open: unsurveyed interiors, broader layouts, patrol pairs/torches/walls, full arrest/escape validation and enemy defense remain. Core suite: 150 tests.

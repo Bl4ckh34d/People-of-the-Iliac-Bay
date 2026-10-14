@@ -3,6 +3,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using UnityEngine;
+using LivingCities.Core;
 
 namespace LivingCities.DFU
 {
@@ -14,6 +15,8 @@ namespace LivingCities.DFU
         public Vector3? EntryGround { get; private set; }
         private readonly DaggerfallInterior interior;
         private const float Radius = 0.24f;
+        private readonly Dictionary<Vector2Int, Vector3> floors = new Dictionary<Vector2Int, Vector3>();
+        private readonly Dictionary<Vector2Int, Vector2Int> parents = new Dictionary<Vector2Int, Vector2Int>();
         public InteriorGeometry(DaggerfallInterior interior)
         {
             this.interior = interior;
@@ -30,6 +33,7 @@ namespace LivingCities.DFU
             }
             if (!found) return;
             EntryGround = seed;
+            floors.Add(Vector2Int.zero, seed);
             var queue = new Queue<Vector3>(); queue.Enqueue(seed);
             var seen = new HashSet<Vector2Int>(); seen.Add(Vector2Int.zero);
             var occupants = interior.GetComponentsInChildren<StaticNPC>();
@@ -49,17 +53,56 @@ namespace LivingCities.DFU
                 {
                     Vector3 candidate = point + direction * 0.8f;
                     var cell = new Vector2Int(Mathf.RoundToInt((candidate.x - seed.x) / 0.8f), Mathf.RoundToInt((candidate.z - seed.z) / 0.8f));
-                    if (!seen.Add(cell) || Mathf.Abs(cell.x) > 25 || Mathf.Abs(cell.y) > 25) continue;
+                    if (seen.Contains(cell) || Mathf.Abs(cell.x) > 25 || Mathf.Abs(cell.y) > 25) continue;
                     Vector3 floor;
                     if (!Floor(candidate, 0.5f, 1, out floor) || Mathf.Abs(floor.y - point.y) > 0.3f || !Clear(floor)) continue;
                     Vector3 delta = floor - point; bool blocked = false;
                     foreach (var hit in Physics.CapsuleCastAll(point + Vector3.up * 0.3f, point + Vector3.up * 1.65f,
                         Radius, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                         if (Blocker(hit.collider)) { blocked = true; break; }
-                    if (!blocked) queue.Enqueue(floor);
+                    if (!blocked)
+                    {
+                        seen.Add(cell); floors.Add(cell, floor);
+                        parents.Add(cell, new Vector2Int(Mathf.RoundToInt((point.x - seed.x) / 0.8f), Mathf.RoundToInt((point.z - seed.z) / 0.8f)));
+                        queue.Enqueue(floor);
+                    }
                 }
             }
         }
+        public List<GuardPoint3> RouteToExit(Vector3 ground)
+        {
+            var route = new List<GuardPoint3>();
+            if (!EntryGround.HasValue || !Clear(ground)) return route;
+            float nearest = 2.25f; Vector2Int cell = Vector2Int.zero; bool found = false;
+            foreach (var pair in floors)
+            {
+                var delta = pair.Value - ground;
+                if (delta.sqrMagnitude > nearest || Mathf.Abs(delta.y) > 0.3f) continue;
+                bool blocked = false;
+                foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * 0.3f, ground + Vector3.up * 1.65f,
+                    Radius, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                    if (Blocker(hit.collider)) { blocked = true; break; }
+                // Check support between an arbitrary resident position and the surveyed graph.
+                for (float t = 0; !blocked && t <= 1; t += 0.2f)
+                {
+                    Vector3 sample = Vector3.Lerp(ground, pair.Value, t), floor;
+                    if (!Floor(sample, 0.4f, 0.8f, out floor) || Mathf.Abs(floor.y - sample.y) > 0.3f) blocked = true;
+                }
+                if (blocked) continue;
+                nearest = delta.sqrMagnitude; cell = pair.Key; found = true;
+            }
+            if (!found) return route;
+            route.Add(LocalPoint(ground));
+            while (true)
+            {
+                route.Add(LocalPoint(floors[cell]));
+                if (cell == Vector2Int.zero) break;
+                cell = parents[cell];
+            }
+            return route;
+        }
+        private GuardPoint3 LocalPoint(Vector3 world)
+        { var p = interior.transform.InverseTransformPoint(world); return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
         private bool Floor(Vector3 point, float up, float depth, out Vector3 floor)
         {
             RaycastHit hit;

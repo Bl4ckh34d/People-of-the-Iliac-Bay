@@ -125,15 +125,15 @@ namespace LivingCities.DFU
         private void ReportNative(bool immediate)
         {
             if (!OwnsTown()) return;
-            if (!GameManager.Instance.PlayerEnterExit.IsPlayerInside)
             {
                 var hook = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
                 var hitTarget = hook.GetProperty("CurrentTarget").GetValue(null, null) as Transform;
                 var resident = hitTarget ? hitTarget.GetComponent<ResidentActor>() : null;
                 var streets = GetComponent<StreetPopulation>();
                 // Vanilla reports every mobile-citizen weapon hit immediately.
-                // Our public-space witnesses and guards supply the actual report.
-                if (resident && streets && streets.ReactionsEnabled && streets.FindActor(resident.Resident.Id) == resident) return;
+                // Public witnesses and supported indoor escape plans supply the actual report.
+                if (resident && streets && streets.ReactionsEnabled && streets.FindActor(resident.Resident.Id) == resident &&
+                    (!GameManager.Instance.PlayerEnterExit.IsPlayerInside || streets.HasEscapingWitness(resident.Resident.Id, Now()))) return;
             }
             var room = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ? GameManager.Instance.PlayerEnterExit.Interior : null;
             int? building = room ? (int?)room.EntryDoor.buildingKey : null;
@@ -173,6 +173,47 @@ namespace LivingCities.DFU
             }
             var sent = Roster.Dispatch(reportId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
             Debug.Log("LIVING_CITIES_GUARD_DISPATCH: " + reportId + "; responders=" + sent.Count);
+        }
+        public List<SavedRoutePoint> WitnessRoute(int buildingKey, double now)
+        {
+            if (!OwnsTown()) return null;
+            var approach = Roster.BuildingApproaches.Find(a => a.BuildingKey == buildingKey);
+            if (approach == null) return null;
+            Roster.Advance(now);
+            List<SavedRoutePoint> best = null; double shortest = double.MaxValue;
+            foreach (var route in approach.Routes)
+            {
+                if (!Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
+                    Math.Abs(g.Post.X-route.Points[0].X) < 0.05 && Math.Abs(g.Post.Z-route.Points[0].Z) < 0.05)) continue;
+                double length = 0;
+                for (int i = 1; i < route.Points.Count; i++)
+                { double x = route.Points[i].X-route.Points[i-1].X, z = route.Points[i].Z-route.Points[i-1].Z; length += Math.Sqrt(x*x+z*z); }
+                if (length >= shortest) continue;
+                shortest = length; best = route.Points.ConvertAll(p => new SavedRoutePoint { X = p.X, Z = p.Z });
+            }
+            if (best != null) best.Reverse();
+            return best;
+        }
+        public void ReportEscapedWitness(CivilianIncident alarm, double now)
+        {
+            if (!OwnsTown() || alarm.SettlementId != directory.MapID || alarm.BuildingKey < 0 || now >= CivilianAlarms.ActiveUntil(alarm)) return;
+            string id = "civilian:" + alarm.Id;
+            if (Roster.Reports.Exists(r => r.Id == id && r.GuardIds.Count > 0)) return;
+            var streets = GetComponent<StreetPopulation>();
+            Roster.Advance(now);
+            bool reached = false;
+            foreach (var person in alarm.People)
+            {
+                if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape == null ||
+                    !person.Escape.Arrived(now) || !streets.IsLivingResident(person.ResidentId)) continue;
+                if (Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
+                    Math.Abs(g.Post.X-person.X) < 0.05 && Math.Abs(g.Post.Z-person.Z) < 0.05)) { reached = true; break; }
+            }
+            if (!reached) return;
+            var sent = Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+            if (sent.Count == 0) return;
+            reportId = id; GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
+            Debug.Log("LIVING_CITIES_GUARD_ESCAPE_REPORT: " + id + "; building=" + alarm.BuildingKey + "; responders=" + sent.Count);
         }
         private GameObject ResolveNative(Vector3 position, Vector3 direction)
         {

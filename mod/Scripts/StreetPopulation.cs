@@ -37,6 +37,7 @@ namespace LivingCities.DFU
         private SleepingArt sleepingArt;
         private CivilianResponses responses;
         private IDisposable reactionHook;
+        private WorldStateStore worldStore;
         public bool ReactionsEnabled { get; set; }
         public void InstallReactionHook()
         {
@@ -51,6 +52,35 @@ namespace LivingCities.DFU
             double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             responses.Murder(actor, actors.Values, id => GetState(id, now).Activity == Activity.Sleep, now,
                 interior ? interior.EntryDoor.buildingKey : -1);
+            if (!interior || indoorGeometry == null) return;
+            var guards = GetComponent<GuardPopulation>();
+            var outside = guards ? guards.WitnessRoute(interior.EntryDoor.buildingKey, now) : null;
+            if (outside == null) return;
+            foreach (var witness in actors.Values)
+            {
+                if (!witness || !witness.Resident.IsAlive || witness == actor) continue;
+                var alarm = worldStore.ActiveAlarm(witness.Resident.Id, now);
+                if (alarm == null || alarm.VictimId != actor.Resident.Id) continue;
+                var person = alarm.People.Find(p => p.ResidentId == witness.Resident.Id);
+                if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape != null) continue;
+                var route = indoorGeometry.RouteToExit(witness.transform.position - Vector3.up);
+                if (route.Count < 2) continue;
+                var escape = CivilianEscape.Create(person, now, route, outside);
+                person.Escape = escape;
+            }
+        }
+        public bool HasEscapingWitness(string victimId, double now)
+        {
+            if (!ReactionsEnabled || worldStore == null) return false;
+            foreach (var plan in plans)
+            {
+                if (!plan.Resident.IsAlive) continue;
+                var alarm = worldStore.ActiveAlarm(plan.Resident.Id, now);
+                if (alarm == null || alarm.VictimId != victimId) continue;
+                var p = alarm.People.Find(person => person.ResidentId == plan.Resident.Id);
+                if (p.Escape != null && p.DirectWitness && p.Reaction == CivilianReaction.Flee) return true;
+            }
+            return false;
         }
         private AlarmPerson Reaction(string id, double now)
         { return ReactionsEnabled && responses != null ? responses.Active(id, now) : null; }
@@ -77,6 +107,7 @@ namespace LivingCities.DFU
             id = null; ground = Vector3.zero; return false;
         }
         public ResidentActor FindActor(string id) { ResidentActor actor; return actors.TryGetValue(id, out actor) ? actor : null; }
+        public bool IsLivingResident(string id) { return plans.Exists(p => p.Resident.Id == id && p.Resident.IsAlive); }
         public static bool IsVisitDestination(DFLocation.BuildingTypes buildingType)
         {
             int type = (int)buildingType;
@@ -98,7 +129,7 @@ namespace LivingCities.DFU
             // M2 preview is deliberately limited to the verified Breton test town.
             if (town.MapID != 206728581) { Clear(); return; }
             if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
-            Clear(); directory = town; navigation = nav; this.population = population;
+            Clear(); directory = town; navigation = nav; this.population = population; worldStore = store;
             responses = new CivilianResponses(store, population.SettlementId, (alarm, position) => {
                 var guards = GetComponent<GuardPopulation>();
                 if (guards) guards.ReportCivilianCrime(alarm, position);
@@ -221,6 +252,12 @@ namespace LivingCities.DFU
             if (!Ready || game == null || !game.IsReady || !game.IsPlayingGame()) return;
             var now = DaggerfallUnity.Instance.WorldTime.Now;
             double seconds = now.ToSeconds() + (now.Second - Math.Floor(now.Second));
+            if (ReactionsEnabled && worldStore != null && !GameManager.IsGamePaused)
+            {
+                var guards = GetComponent<GuardPopulation>();
+                foreach (var alarm in worldStore.AdvanceEscapes(population.SettlementId, seconds))
+                    if (guards) guards.ReportEscapedWitness(alarm, seconds);
+            }
             var loadedInterior = game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
             if (interior != loadedInterior)
             {
@@ -278,6 +315,11 @@ namespace LivingCities.DFU
                 }
                 if (reaction != null && reaction.HasPosition)
                 {
+                    if (reaction.Escape != null)
+                    {
+                        PlaceEscape(actor, reaction, seconds, directory.transform, true);
+                        continue;
+                    }
                     CivilianResponses.Move(actor, reaction, plan.Routine, directory.transform, geometry, null);
                     continue;
                 }
@@ -320,6 +362,11 @@ namespace LivingCities.DFU
                 }
                 if (reaction != null && reaction.HasPosition && !reaction.ReachedRefuge)
                 {
+                    if (reaction.Escape != null)
+                    {
+                        PlaceEscape(actor, reaction, seconds, interior.transform, false);
+                        continue;
+                    }
                     CivilianResponses.Move(actor, reaction, plan.Routine, interior.transform, geometry, indoorGeometry);
                     continue;
                 }
@@ -335,6 +382,15 @@ namespace LivingCities.DFU
                 else actor.Place(interior.transform.TransformPoint(indoorGeometry.LocalAnchors[slot]), Vector3.forward, true);
             }
         }
+        private void PlaceEscape(ResidentActor actor, AlarmPerson person, double now, Transform origin, bool outside)
+        {
+            var next = new AlarmPerson(); person.Escape.Advance(next, now + 0.1);
+            Vector3 point = outside ? geometry.ScenePoint(new RoutePoint(person.X, person.Z)) :
+                origin.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
+            Vector3 direction = next.BuildingKey == person.BuildingKey ?
+                origin.TransformVector(new Vector3((float)(next.X-person.X), (float)(next.Y-person.Y), (float)(next.Z-person.Z))) : actor.transform.forward;
+            actor.Place(point, direction, person.Escape.Arrived(now) || GameManager.IsGamePaused);
+        }
         private void ClearActors()
         {
             foreach (var actor in actors.Values) if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
@@ -347,7 +403,7 @@ namespace LivingCities.DFU
             needsExterior = false;
             interior = null; indoorGeometry = null; indoorSlots.Clear();
             population = null; indoorBeds.Clear(); bedClaims.Clear();
-            responses = null;
+            responses = null; worldStore = null;
             if (ownsVanilla && vanilla)
             {
                 foreach (var pair in hiddenVanilla) if (pair.Key) pair.Key.SetActive(pair.Value);
