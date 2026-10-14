@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Settlement scale follows native category
+
+GuardPopulation now reads LocationData.MapTableData.LocationType rather than identifying Daggerfall by map ID to select a garrison scale. Original DFRegion values0/1/2 map to City/Town/Hamlet; other location types reject classification instead of silently treating dungeons, temples or isolated buildings as towns. Existing8% quota/minimums remain unchanged.266/266 core tests, native build and combined city/save/movement suite pass (`work/SettlementScale-{red,green,live-pass}.log`). Installed0.3.30 hash `7D10A90513D912F659622C797B908D45E2A8063B1FE699C566B283DE811BA6CD`.
+
+Wider settlement admission remains pending. Inspection found generated ResidentActor fallback appearance and first/surnames are hardcoded Breton; these must follow native regional identity rules before expanding to Redguard/Nord regions. Native PopulationManager uses PlayerGPS.ClimateSettings.People for display race, while MobilePersonNPC uses MapsFile.RegionRaces[CurrentRegionIndex] for the name bank. Persist identity choices independently of transient actors and preserve explicit native identities.
+
 ## Initial rendered movement sample
 
 After the real city save/reload, the fixture advances to a daytime journey, positions the test player near its analytical location, and requires that resident's real ResidentActor to appear and remain active while moving for three seconds. Resident s:1291010263:h:65796:r:0 moved1.053m net displacement;11 nearby actors were active, below the80 actor cap. The195 sampled frames measured median13.383ms and p95 28.774ms. This is one hidden automated run with the whole game active, not isolated mod CPU cost, a crowded-market benchmark, continuous collision validation or a player-visible FPS guarantee.

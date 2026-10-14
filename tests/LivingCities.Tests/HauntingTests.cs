@@ -8,6 +8,16 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Settlement scale follows location category rather than named city IDs",()=>{
+                Check.Equal(SettlementScale.City,SettlementClassification.FromLocationType(0));
+                Check.Equal(SettlementScale.Town,SettlementClassification.FromLocationType(1));
+                Check.Equal(SettlementScale.Hamlet,SettlementClassification.FromLocationType(2));
+                Check.Equal(16,GuardRoster.TargetCount(SettlementClassification.FromLocationType(0),10));
+                Check.Equal(8,GuardRoster.TargetCount(SettlementClassification.FromLocationType(1),10));
+                Check.Equal(1,GuardRoster.TargetCount(SettlementClassification.FromLocationType(2),10));
+                foreach(int other in new[] { -1,3,4,5,6,7,8,9,10,11,12,13,14,65535 })
+                    Check.Throws<ArgumentOutOfRangeException>(()=>SettlementClassification.FromLocationType(other));
+            }));
             cases.Add(("Legacy saves default daily haunting policy and invalid saved days reject transactionally",()=>{
                 var store=new WorldStateStore(42); store.Restore(new WorldState { WorldSeed=42,HauntingDay=null });
                 Check.True(store.RestrictHauntingRoutines(1291010263,false,600));

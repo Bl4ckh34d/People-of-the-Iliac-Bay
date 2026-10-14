@@ -84,7 +84,7 @@ namespace LivingCities.DFU
                 if (!posts.Exists(p => Math.Abs(p.X - point.X) < 10 && Math.Abs(p.Z - point.Z) < 10))
                     posts.Add(point);
             }
-            int count = GuardRoster.TargetCount(town.MapID==1291010263 ? SettlementScale.City : SettlementScale.Town, residents);
+            int count = GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType), residents);
             var savedRoster = store.GetGuards(town.MapID);
             if (posts.Count < count && savedRoster == null) count = posts.Count;
             if (count == 0 && savedRoster == null) return;
