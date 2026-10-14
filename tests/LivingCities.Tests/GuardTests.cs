@@ -207,11 +207,15 @@ namespace LivingCities.Tests
                 Check.Equal(GuardDuty.Posted, roster.Guards[0].Duty);
                 Check.Equal(0.5, roster.Guards[0].HealthFraction);
             }));
-            cases.Add(("Guard policy gives small towns a handful and tiny hamlets none", () => {
-                Check.Equal(0, GuardRoster.TargetCount(SettlementScale.Hamlet, 12));
-                Check.Equal(4, GuardRoster.TargetCount(SettlementScale.Town, 30));
-                Check.Equal(8, GuardRoster.TargetCount(SettlementScale.City, 80));
-                Check.Equal(50, GuardRoster.TargetCount(SettlementScale.City, 1000));
+            cases.Add(("Guard policy uses eight percent with one tiny-hamlet guard and larger settlement floors", () => {
+                Check.Equal(1, GuardRoster.TargetCount(SettlementScale.Hamlet, 12));
+                Check.Equal(8, GuardRoster.TargetCount(SettlementScale.Town, 30));
+                Check.Equal(16, GuardRoster.TargetCount(SettlementScale.City, 80));
+                Check.Equal(80, GuardRoster.TargetCount(SettlementScale.City, 1000));
+                Check.Equal(1, GuardRoster.TargetCount(SettlementScale.Hamlet, 39));
+                Check.Equal(8, GuardRoster.TargetCount(SettlementScale.Hamlet, 40));
+                Check.Equal(15, GuardRoster.TargetCount(SettlementScale.Town, 181));
+                Check.Equal(350, GuardRoster.TargetCount(SettlementScale.City, int.MaxValue));
             }));
             cases.Add(("Roster has permanent unique deterministic identities", () => {
                 var a = Roster(); var b = Roster();

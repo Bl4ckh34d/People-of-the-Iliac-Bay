@@ -74,6 +74,7 @@ try {
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_GUARD_TORCH_PASS:') { throw 'Guard torch probe did not complete.' }
     if ($GuardControllerProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_CONTROLLER_PASS:') { throw 'Guard controller probe did not complete.' }
     if ($GuardControllerProbe -and $body -notmatch 'LIVING_CITIES_GUARD_TORCH_CONTROLLER_PASS:') { throw 'Guard torch controller probe did not complete.' }
+    if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_GUARD_QUIET_PASS:') { throw 'Peaceful guard audio probe did not complete.' }
     if ($GuardPatrolProbe -and $body -notmatch 'LIVING_CITIES_GUARD_PATROL_PASS:') { throw 'Guard patrol probe did not complete.' }
     if ($GuardDefenseProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DEFENSE_PASS:') { throw 'Guard defense probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }

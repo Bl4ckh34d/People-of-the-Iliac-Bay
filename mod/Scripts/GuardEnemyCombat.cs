@@ -40,6 +40,7 @@ namespace LivingCities.DFU
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             var last = geometry.ScenePoint(new RoutePoint(guard.LastSeenSuspect.X,guard.LastSeenSuspect.Z)) + Vector3.up;
             senses.OldLastKnownTargetPos = last; senses.LastKnownTargetPos = last; senses.PredictedTargetPos = last;
+            SayHaltOnce(DefenseTarget);
             GetComponent<EnemyAttack>().enabled = true;
             CombatReady = true; combatStart = null;
         }

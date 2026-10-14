@@ -84,13 +84,20 @@ namespace LivingCities.DFU
                     posts.Add(point);
             }
             int count = GuardRoster.TargetCount(SettlementScale.Town, residents);
-            if (posts.Count < count) return;
+            var savedRoster = store.GetGuards(town.MapID);
+            if (posts.Count < count && savedRoster == null) count = posts.Count;
+            if (count == 0 && savedRoster == null) return;
             posts.Sort((a, b) => { int x = a.X.CompareTo(b.X); return x == 0 ? a.Z.CompareTo(b.Z) : x; });
             var selected = new List<SavedRoutePoint>();
-            for (int i = 0; i < count; i++) selected.Add(posts[i * posts.Count / count]);
+            for (int i = 0; i < Math.Min(count,posts.Count); i++) selected.Add(posts[i * posts.Count / Math.Min(count,posts.Count)]);
             worldStore = store;
             directory = town; geometry = new TownGeometry(town, navigation, false);
             Roster = store.GetOrCreateGuards(town.MapID, count, selected);
+            if (count > Roster.Target)
+            {
+                try { Roster.IncreaseTarget(count,posts); }
+                catch (ArgumentException) { Debug.Log("LIVING_CITIES_GARRISON_EXPANSION_PENDING: insufficient distinct reachable posts."); }
+            }
             foreach (var patrol in Roster.Patrols) patrolTemplates.Add(PatrolPairPlan.CopyValidated(patrol.Plan));
             approachSurvey = StartCoroutine(SurveyApproaches(navigation));
             patrolSurvey = StartCoroutine(SurveyPatrols());

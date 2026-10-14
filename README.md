@@ -8,6 +8,8 @@ Target: DFU 1.1.1, Unity 2019.4.40f1, C# 7.3. The simulation core has no Unity d
 
 See [milestones](docs/MILESTONES.md), [approved design](docs/superpowers/specs/2026-10-13-living-cities-design.md), and [foundation plan](docs/superpowers/plans/2026-10-13-population-foundation.md).
 
+Latest0.3.26 checkpoint: fixed bed-axis sleeper drawing, quiet guard patrols, saved once-only player/human warnings, and preserving guard roster expansion under the8% quota. Core227/227 and native sleeper/keeper/guard regressions pass. Indoor hearing/waking, full stationary NPC mortality and the requested Daggerfall-city extension remain open. See [15 October player follow-up](docs/2026-10-15-PLAYER-TEST-FOLLOWUP.md).
+
 This is experimental software. Use the isolated portable player and dedicated test saves. Individual milestone completion is recorded only after its acceptance checks pass.
 
 M1 baseline probes are complete. The opt-in `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-126494eb -QuestProbe` verifies native quest activation, in-place original-NPC movement, hide/show and actual save/load reconstruction. See [quest identity evidence](docs/QUEST-IDENTITY.md) for boundaries; broad quest/service compatibility remains part of later milestones.

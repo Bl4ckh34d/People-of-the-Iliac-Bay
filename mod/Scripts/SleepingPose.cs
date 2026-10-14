@@ -18,8 +18,6 @@ namespace LivingCities.DFU
         private Material material;
         private SleepingArt.Atlas art;
         private Vector2[] originalUV, viewUV;
-        private int lastView = -1;
-        private bool lastMirror;
         private Renderer nativeRenderer;
         private BoxCollider nativeBody;
         private bool nativeWasVisible;
@@ -78,36 +76,18 @@ namespace LivingCities.DFU
         }
         private void LateUpdate()
         {
-            var camera = Camera.main;
-            if (!Active || !camera) return;
-            Vector3 delta = camera.transform.position - transform.position;
-            Vector3 horizontal = new Vector3(delta.x, 0, delta.z).normalized;
-            var view = SleepView.Select(Vector3.Dot(horizontal, transform.forward), Vector3.Dot(horizontal, transform.right));
-            ViewIndex = view.Index;
-            Rect rect = art.Views[view.Index];
-            float left = view.Mirror ? rect.xMax : rect.xMin, right = view.Mirror ? rect.xMin : rect.xMax;
-            if (lastView != view.Index || lastMirror != view.Mirror)
-            {
-                for (int i = 0; i < viewUV.Length; i++) viewUV[i] = new Vector2(
-                    Mathf.Lerp(left, right, originalUV[i].x), Mathf.Lerp(rect.yMin, rect.yMax, originalUV[i].y));
-                mesh.uv = viewUV; lastView = view.Index; lastMirror = view.Mirror;
-            }
-            Vector3 sight = transform.position - camera.transform.position;
-            if (sight.sqrMagnitude < 0.000001f) return;
-            Vector3 referenceUp = Mathf.Abs(Vector3.Dot(sight.normalized, Vector3.up)) > 0.99f ? transform.forward : Vector3.up;
-            quad.transform.position = transform.position;
-            quad.transform.rotation = Quaternion.LookRotation(sight, referenceUp);
-            Vector3 cameraRight = quad.transform.right, cameraUp = quad.transform.up;
-            float span = length * Mathf.Abs(Vector3.Dot(transform.forward, cameraRight)) +
-                width * Mathf.Abs(Vector3.Dot(transform.right, cameraRight)) + 0.36f * Mathf.Abs(Vector3.Dot(Vector3.up, cameraRight));
-            float height = span * (rect.height * art.Texture.height) / (rect.width * art.Texture.width);
-            // A tall generated end-view must not become an upright person or be
-            // lifted off the bed. Preserve aspect where it fits, otherwise bound
-            // the drawing by the projected mattress footprint and body thickness.
-            float projectedHeight = length * Mathf.Abs(Vector3.Dot(transform.forward, cameraUp)) +
-                width * Mathf.Abs(Vector3.Dot(transform.right, cameraUp)) + 0.36f * Mathf.Abs(Vector3.Dot(Vector3.up, cameraUp));
-            height = Mathf.Min(height, projectedHeight);
-            quad.transform.localScale = new Vector3(span, height, 1);
+            if (!Active) return;
+            // A sleeper belongs to the mattress, not the camera. Keep one complete
+            // face/pillow/blanket image on a fixed horizontal bed-aligned surface.
+            // The existing face-on frame puts the head at the top of the image.
+            ViewIndex = 0;
+            Rect rect = art.Views[0];
+            for (int i = 0; i < viewUV.Length; i++) viewUV[i] = new Vector2(
+                Mathf.Lerp(rect.xMin, rect.xMax, originalUV[i].x), Mathf.Lerp(rect.yMin, rect.yMax, originalUV[i].y));
+            mesh.uv = viewUV;
+            quad.transform.localPosition = Vector3.zero;
+            quad.transform.localRotation = Quaternion.Euler(90, 0, 0);
+            quad.transform.localScale = new Vector3(width, length, 1);
         }
         public void Wake()
         {

@@ -71,6 +71,7 @@ public static class LivingCitiesBuild
         VerifyHousing();
         VerifyBeds();
         VerifySleepingArt();
+        VerifySleepingAlignment();
         Require(!StreetPopulation.IsVisitDestination(DaggerfallConnect.DFLocation.BuildingTypes.House1), "House1 is not an open shop destination");
         Require(typeof(IHasModSaveData).IsAssignableFrom(typeof(LivingCitiesMod)), "Save adapter contract");
         Require(typeof(BuildingDirectory).GetMethod("GetBuildingsOfType") != null, "Building enumeration hook");
@@ -166,6 +167,41 @@ public static class LivingCitiesBuild
                 "Prop bed bottom offset follows DFU layout");
         }
         Debug.Log("LIVING_CITIES_BEDS_VERIFIED: original mattresses, canopy exclusion, rotation and prop offsets passed.");
+    }
+    private static void VerifySleepingAlignment()
+    {
+        var room = new GameObject("Sleep alignment room");
+        var native = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        var cameraObject = new GameObject("Sleep alignment camera");
+        var texture = new Texture2D(2, 2);
+        try
+        {
+            room.transform.rotation = Quaternion.Euler(0, 37, 0);
+            cameraObject.tag = "MainCamera"; cameraObject.AddComponent<Camera>();
+            var pose = native.AddComponent<SleepingPose>();
+            var atlas = new SleepingArt.Atlas { Texture = texture, Views = new[] {
+                new Rect(0,0,1,1), new Rect(0,0,1,1), new Rect(0,0,1,1), new Rect(0,0,1,1), new Rect(0,0,1,1) } };
+            pose.BeginNative(room.transform, new BedAnchor { LocalCenter = Vector3.zero,
+                LocalHeadDirection = Vector3.forward, Length = 2, Width = 1 }, atlas);
+            var drawing = native.transform.Find("Sleeping blanket");
+            foreach (var offset in new[] { Vector3.forward, Vector3.back, Vector3.right, Vector3.left })
+            {
+                cameraObject.transform.position = native.transform.position + offset * 2 + Vector3.up;
+                pose.SendMessage("LateUpdate", SendMessageOptions.DontRequireReceiver);
+                Require(Mathf.Abs(Vector3.Dot(drawing.forward, Vector3.up)) > 0.999f &&
+                    Vector3.Dot(drawing.up, native.transform.forward) > 0.999f,
+                    "Sleeping composite stays horizontal along bed axis as camera circles");
+            }
+            pose.Wake();
+            Require(native.GetComponent<Renderer>().enabled && !drawing.gameObject.activeSelf,
+                "Fixed sleeper restores native renderer on waking");
+            Debug.Log("LIVING_CITIES_SLEEP_ALIGNMENT_PASS: fixed mattress plane and head axis from four camera positions");
+        }
+        finally
+        {
+            UnityEngine.Object.DestroyImmediate(native); UnityEngine.Object.DestroyImmediate(room);
+            UnityEngine.Object.DestroyImmediate(cameraObject); UnityEngine.Object.DestroyImmediate(texture);
+        }
     }
     private static void VerifySleepingArt()
     {

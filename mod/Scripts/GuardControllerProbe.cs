@@ -41,7 +41,7 @@ namespace LivingCities.DFU
                 yield return null; yield return null;
                 if (transient) throw new InvalidOperationException("Transient native guard survived municipal roster takeover.");
                 var roster = (GuardRoster)type.GetProperty("Roster").GetValue(controller, null);
-                if (roster == null || roster.Guards.Count != 10) throw new InvalidOperationException("Test town must receive ten persistent guards.");
+                if (roster == null || roster.Guards.Count != 15) throw new InvalidOperationException("Test town must receive fifteen persistent guards under the eight-percent policy.");
                 float surveyDeadline = Time.realtimeSinceStartup + 20;
                 while (roster.BuildingApproaches.Count == 0 && Time.realtimeSinceStartup < surveyDeadline) yield return null;
                 if (roster.BuildingApproaches.Count == 0) throw new InvalidOperationException("Exterior guard approaches were not surveyed.");
@@ -98,7 +98,7 @@ namespace LivingCities.DFU
                 yield return null;
                 int responding = 0;
                 foreach (var guard in roster.Guards) if (guard.Duty != GuardDuty.Posted) responding++;
-                if (responding < 1 || responding > 4 || roster.Reports.Count != 1 || roster.Guards.Count != 10)
+                if (responding < 1 || responding > 4 || roster.Reports.Count != 1 || roster.Guards.Count != 15)
                     throw new InvalidOperationException("Repeated native reports did not stay within the finite response group.");
                 var actors = UnityEngine.Object.FindObjectsOfType<GuardActor>();
                 if (actors.Length == 0 || actors.Length > 10) throw new InvalidOperationException("Physical roster views missing or duplicated.");
@@ -115,6 +115,8 @@ namespace LivingCities.DFU
                     yield return null;
                 }
                 if (!fighter) throw new InvalidOperationException("Nearby responding guard did not enter native combat.");
+                if (fighter.GetComponent<EnemySounds>().enabled || fighter.HaltWarnings != 1)
+                    throw new InvalidOperationException("Criminal pursuit did not issue exactly one initial Halt warning.");
                 var entity = fighter.GetComponent<DaggerfallEntityBehaviour>().Entity;
                 entity.SetHealth(Math.Max(1, entity.MaxHealth / 2), true); controller.Capture();
                 string woundedId = fighter.GuardId;
@@ -131,7 +133,7 @@ namespace LivingCities.DFU
                 roster = controller.Roster;
                 if (!roster.BuildingApproaches.Exists(a => a.BuildingKey == surveyedBuilding))
                     throw new InvalidOperationException("Real reload lost the exterior approach cache.");
-                if (roster.Guards.Count != 10 || Math.Abs(roster.Guards.Find(g => g.Id == woundedId).HealthFraction - health) > 0.02)
+                if (roster.Guards.Count != 15 || Math.Abs(roster.Guards.Find(g => g.Id == woundedId).HealthFraction - health) > 0.02)
                     throw new InvalidOperationException("Real reload changed guard allocation or healed the wounded guard.");
                 game.PlayerMotor.transform.position += Vector3.right * 100;
                 var wounded = roster.Guards.Find(g => g.Id == woundedId);

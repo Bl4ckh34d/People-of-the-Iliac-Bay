@@ -47,6 +47,7 @@ namespace LivingCities.Core
         public int? BuildingKey;
         public SavedRoutePoint Entrance;
         public List<string> GuardIds = new List<string>();
+        public List<string> HaltGuardIds = new List<string>();
     }
     [Serializable]
     public sealed partial class GuardRoster
@@ -60,12 +61,12 @@ namespace LivingCities.Core
         public static int TargetCount(SettlementScale scale, int residents)
         {
             Require(residents >= 0 && (scale == SettlementScale.Hamlet || scale == SettlementScale.Town || scale == SettlementScale.City), "Invalid settlement population.");
-            if (scale == SettlementScale.Hamlet && residents < 40) return 0;
-            return Math.Min(256, Math.Max(scale == SettlementScale.City ? 8 : 4, (int)Math.Ceiling(residents * 0.05)));
+            if (scale == SettlementScale.Hamlet && residents < 40) return 1;
+            return Math.Min(350, Math.Max(scale == SettlementScale.City ? 16 : 8, (int)Math.Ceiling(residents * 0.08)));
         }
         public static GuardRoster Create(int settlementId, uint seed, int count, IList<SavedRoutePoint> posts)
         {
-            Require(settlementId >= 0 && count >= 0 && count <= 256 && posts != null && (count == 0 || posts.Count > 0), "Invalid garrison allocation.");
+            Require(settlementId >= 0 && count >= 0 && count <= 350 && posts != null && (count == 0 || posts.Count > 0), "Invalid garrison allocation.");
             foreach (var post in posts) CopyPoint(post);
             var roster = new GuardRoster { SettlementId = settlementId, Seed = seed, Target = count };
             for (int i = 0; i < count; i++) roster.Guards.Add(roster.NewGuard(posts[i % posts.Count]));
@@ -76,6 +77,36 @@ namespace LivingCities.Core
             int identity = NextIdentity++;
             return new GuardRecord { Id = string.Format(CultureInfo.InvariantCulture, "g:{0}:n:{1}", SettlementId, identity),
                 AppearanceSeed = StableSeed.Combine(Seed, (uint)SettlementId, (uint)identity, 0x67756172), Post = CopyPoint(post) };
+        }
+        public int IncreaseTarget(int requested, IList<SavedRoutePoint> posts)
+        {
+            Require(requested >= 0 && requested <= 350 && posts != null,"Invalid garrison expansion.");
+            if (requested <= Target) return 0;
+            var unused = new List<SavedRoutePoint>();
+            foreach (var post in posts)
+            {
+                var copy = CopyPoint(post);
+                if (!Guards.Exists(g => Distance(g.Post,copy)<0.05) && !unused.Exists(p => Distance(p,copy)<0.05)) unused.Add(copy);
+            }
+            int added = requested-Target;
+            Require(unused.Count >= added,"Expansion needs distinct unoccupied posts.");
+            var preview = CopyValidated(this); preview.Target = requested;
+            for (int i=0;i<added;i++) preview.Guards.Add(preview.NewGuard(unused[i]));
+            CopyValidated(preview);
+            int oldCount = Guards.Count;
+            for (int i=oldCount;i<preview.Guards.Count;i++) Guards.Add(preview.Guards[i]);
+            Target = preview.Target; NextIdentity = preview.NextIdentity;
+            return added;
+        }
+        public bool TryGuardHalt(string id)
+        {
+            var guard = Find(id);
+            if (!guard.IsAlive || guard.IncidentId == null || guard.Duty == GuardDuty.Posted || guard.Duty == GuardDuty.Returning) return false;
+            var report = Reports.Find(r => r.Id == guard.IncidentId);
+            if (report == null || !report.GuardIds.Contains(id)) return false;
+            if (report.HaltGuardIds == null) report.HaltGuardIds = new List<string>();
+            if (report.HaltGuardIds.Contains(id)) return false;
+            report.HaltGuardIds.Add(id); return true;
         }
         public List<GuardRecord> Dispatch(string incidentId, double now, IDictionary<string, List<SavedRoutePoint>> routes,
             int maximumResponders, double metresPerRealSecond, double gameSecondsPerRealSecond)
@@ -277,7 +308,7 @@ namespace LivingCities.Core
         private static void Require(bool condition, string message) { if (!condition) throw new ArgumentException(message); }
         public static GuardRoster CopyValidated(GuardRoster source)
         {
-            Require(source != null && source.SettlementId >= 0 && source.Target >= 0 && source.Target <= 256 && source.NextIdentity >= 0 &&
+            Require(source != null && source.SettlementId >= 0 && source.Target >= 0 && source.Target <= 350 && source.NextIdentity >= 0 &&
                 source.Guards != null && source.Reports != null && (source.LastRecruitment == -1 || Time(source.LastRecruitment)), "Invalid garrison.");
             var copy = new GuardRoster { SettlementId = source.SettlementId, Target = source.Target, NextIdentity = source.NextIdentity,
                 Seed = source.Seed, LastRecruitment = source.LastRecruitment };
@@ -375,6 +406,9 @@ namespace LivingCities.Core
                     Entrance = report.Entrance == null ? null : CopyPoint(report.Entrance) }; var responders = new HashSet<string>();
                 foreach (var id in report.GuardIds)
                 { Require(id != null && ids.Contains(id) && responders.Add(id), "Unknown or duplicate responder."); saved.GuardIds.Add(id); }
+                var speakers = new HashSet<string>();
+                foreach (var id in report.HaltGuardIds ?? new List<string>())
+                { Require(id != null && responders.Contains(id) && speakers.Add(id),"Unknown or duplicate Halt speaker."); saved.HaltGuardIds.Add(id); }
                 var arrivalIds = new HashSet<string>();
                 double firstArrival = double.MaxValue;
                 foreach (var arrival in report.Arrivals ?? new List<GuardArrivalEvidence>())

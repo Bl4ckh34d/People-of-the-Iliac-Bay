@@ -1,5 +1,13 @@
 # Finite guards
 
+## 0.3.26 quiet patrols and increased garrisons
+
+Native EnemySounds plays City Watch's Halt as a periodic proximity bark even without a crime. Managed guards disable that automatic callback while preserving explicit hit/parry/attack sound methods. A guard may give one visible, in-range warning per saved report to a wanted player or hostile human NPC; creatures receive none, and combat does not repeat the warning. Saved speaker IDs prevent duplicate warnings after reload.
+
+Quota is ceil(residents × 8%), with one guard in tiny hamlets under40 residents, minimum8 in larger hamlets/towns, minimum16 in cities and maximum350. Existing rosters can grow using distinct surveyed posts without renaming guards or reviving deaths. Insufficient survey capacity leaves expansion pending; actual quota/coverage must be checked per settlement. Gothway Garden's current census181 requests15 guards. Default night patrol assignment remains two pairs; a larger roster alone does not expand patrol circuits.
+
+Verification:227/227 core tests, official Unity/native build, ten-second peaceful actor/audio check, wanted-player once-only warning and final creature/human defense probe pass. Evidence: `work/GuardQuiet-0326-pass.log`, `work/GuardController-0326-initial-pass.log`, `work/GuardDefense-0326-pass.log`. Daggerfall city support and quest-aware haunting remain pending in `DAGGERFALL-HAUNTING.md`.
+
 ## 0.3.25 exterior enemy defense and actual torch
 
 Finite guards now detect visible active hostile enemy bodies within20 metres in the supported exterior. Dead, inactive, pacified, player-allied and City Watch bodies are excluded. Native quest foes retain their AI attackability restriction. All eligible reachable routes start at actual guard positions; core route-length sorting selects up to two closest available responders. Guards already responding to another incident are not reassigned.

@@ -138,6 +138,8 @@ namespace LivingCities.DFU
             bool found = false;
             var observedViews = new HashSet<int>();
             Vector3 sidePosition = Vector3.zero;
+            Quaternion fixedRotation = Quaternion.identity;
+            bool hasRotation = false;
             var interior = game.PlayerEnterExit.Interior;
             foreach (var direction in new[] { actor.transform.right, -actor.transform.right, -actor.transform.forward, actor.transform.forward })
             foreach (float distance in new[] { 2f, 1.2f })
@@ -171,21 +173,31 @@ namespace LivingCities.DFU
                 if (!targetable) throw new InvalidOperationException("Sleeping actor has no raycast interaction target.");
                 int index = actor.GetComponent<SleepingPose>().ViewIndex;
                 var blanket = actor.transform.Find("Sleeping blanket");
+                if (Mathf.Abs(Vector3.Dot(blanket.forward, Vector3.up)) < 0.999f ||
+                    Vector3.Dot(blanket.up, actor.transform.forward) < 0.999f ||
+                    (hasRotation && Quaternion.Angle(fixedRotation, blanket.rotation) > 0.01f))
+                    throw new InvalidOperationException("Sleeper rotates away from mattress as player moves.");
+                fixedRotation = blanket.rotation; hasRotation = true;
                 Debug.Log("LIVING_CITIES_SLEEP_FOOTPRINT: sex=" + actor.Resident.Sex + "; view=" + index +
                     "; scale=" + blanket.localScale + "; centerOffset=" + (blanket.position - actor.transform.position));
                 foreach (var vertex in blanket.GetComponent<MeshFilter>().sharedMesh.vertices)
                 {
-                    Vector3 corner = Camera.main.WorldToViewportPoint(blanket.TransformPoint(vertex));
-                    if (corner.z <= 0 || corner.x < 0 || corner.x > 1 || corner.y < 0 || corner.y > 1)
-                        throw new InvalidOperationException("Sleeping sprite exceeds normal bedside view: " + actor.Resident.Sex + "/" + index);
+                    Vector3 corner = actor.transform.InverseTransformPoint(blanket.TransformPoint(vertex));
+                    // A close camera may legitimately crop a real mattress. The
+                    // relevant invariant is the body's fixed physical footprint.
+                    var bed = BedGeometry.Read(interior)[0];
+                    if (Mathf.Abs(corner.x) > bed.Width * 0.5f + 0.001f ||
+                        Mathf.Abs(corner.z) > bed.Length * 0.5f + 0.001f || Mathf.Abs(corner.y) > 0.001f)
+                        throw new InvalidOperationException("Sleeping composite extends beyond mattress: " + actor.Resident.Sex);
                 }
                 observedViews.Add(index);
-                if (index == 2) { sidePosition = game.PlayerMotor.transform.position; found = true; }
+                if (Mathf.Abs(Vector3.Dot(direction, actor.transform.right)) > 0.99f)
+                { sidePosition = game.PlayerMotor.transform.position; found = true; }
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,
-                    "LivingCities-sleeping" + suffix + "-view-" + index + ".png"));
+                    "LivingCities-sleeping" + suffix + "-position-" + direction + "-" + distance + ".png"));
                 yield return null;
             }
-            if (!found || !observedViews.Contains(0)) throw new InvalidOperationException("Sleeping fixture needs visible side and foot-end views.");
+            if (!found || !hasRotation) throw new InvalidOperationException("Sleeping fixture needs a visible bedside position.");
             game.PlayerMotor.CancelMovement = true;
             game.PlayerMotor.transform.position = sidePosition;
             yield return new WaitForSecondsRealtime(0.5f);

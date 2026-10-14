@@ -40,6 +40,9 @@ namespace LivingCities.DFU
                 if (DFRandom.Seed != originalSeed || !UnityEngine.Random.state.Equals(originalRandom))
                     throw new InvalidOperationException("Guard materialization changed shared random state.");
                 yield return null;
+                var ambient = actor.GetComponent<EnemySounds>();
+                if (!ambient || ambient.enabled)
+                    throw new InvalidOperationException("Peaceful roster guard still runs native proximity Halt audio.");
                 var torch = type.GetMethod("SetTorch");
                 if (torch == null) throw new InvalidOperationException("Guard torch presentation is missing.");
                 torch.Invoke(actor, new object[] { true, true, 8f });
@@ -71,16 +74,19 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Guard failed to follow the timed route with walking animation.");
                 var frames = new HashSet<int>();
                 var torchFrames = new HashSet<int>();
-                float until = Time.realtimeSinceStartup + 1;
+                float until = Time.realtimeSinceStartup + 10.1f;
                 while (Time.realtimeSinceStartup < until)
                 {
                     place.Invoke(actor, new object[] { middle });
                     frames.Add(((DaggerfallMobileUnit)mobile).CurrentFrame);
                     torchFrames.Add(flame.Summary.CurrentFrame);
+                    if (actor.GetComponent<DaggerfallAudioSource>().AudioSource.isPlaying)
+                        throw new InvalidOperationException("Peaceful moving guard emitted native proximity audio.");
                     yield return null;
                 }
                 if (frames.Count < 2) throw new InvalidOperationException("Guard walking sprite did not animate across rendered frames.");
                 if (torchFrames.Count < 2) throw new InvalidOperationException("Carried torch flame did not animate across rendered frames.");
+                Debug.Log("LIVING_CITIES_GUARD_QUIET_PASS: peaceful moving guard stayed silent beyond maximum native attraction delay.");
                 if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Guard lifecycle test requires a crime-free fixture.");
                 var vanilla = GameObjectHelper.CreateFoeGameObjects(start, MobileTypes.Knight_CityWatch)[0];

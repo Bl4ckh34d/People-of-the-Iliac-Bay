@@ -82,7 +82,9 @@ namespace LivingCities.DFU
                 }
                 if (!defender || target.Entity.CurrentHealth >= 500)
                     throw new InvalidOperationException("Finite guard did not deal native damage to hostile enemy; reports=" + roster.Reports.Count + "; health=" + target.Entity.CurrentHealth);
-                if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None || roster.Guards.Count != 10)
+                if (defender.HaltWarnings != 0 || defender.GetComponent<EnemySounds>().enabled)
+                    throw new InvalidOperationException("Guard shouted Halt at a creature.");
+                if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None || roster.Guards.Count != 15)
                     throw new InvalidOperationException("Defense charged innocent player or created extra guards.");
                 string id = defender.GuardId;
                 var assigned = roster.Guards.Find(g => g.Id == id);
@@ -141,7 +143,7 @@ namespace LivingCities.DFU
                 geometry = new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation(),false);
                 ground = geometry.ScenePoint(new RoutePoint(assigned.Post.X,assigned.Post.Z));
                 if (enemy) UnityEngine.Object.Destroy(enemy);
-                enemy = GameObjectHelper.CreateFoeGameObjects(ground+Vector3.up+Vector3.right*2,MobileTypes.Rat)[0];
+                enemy = GameObjectHelper.CreateFoeGameObjects(ground+Vector3.up+Vector3.right*2,MobileTypes.Thief)[0];
                 enemy.GetComponent<DaggerfallEnemy>().LoadID = 0; enemy.SetActive(true);
                 yield return null;
                 enemy.GetComponent<DaggerfallEntityBehaviour>().Entity.MaxHealth = 500;
@@ -157,6 +159,8 @@ namespace LivingCities.DFU
                     yield return null;
                 }
                 if (!defender) throw new InvalidOperationException("Assault check has no active defender.");
+                if (defender.HaltWarnings != 1 || defender.GetComponent<EnemySounds>().enabled)
+                    throw new InvalidOperationException("Hostile human did not receive exactly one initial Halt warning.");
                 enemy.transform.position = defender.transform.position + Vector3.forward;
                 Physics.SyncTransforms();
                 var assaultSenses = defender.GetComponent<EnemySenses>();
@@ -171,7 +175,7 @@ namespace LivingCities.DFU
                 if (defender.DefenseTarget || defender.GetComponent<EnemySenses>().Target != game.PlayerEntityBehaviour ||
                     game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.Assault)
                     throw new InvalidOperationException("Player assault did not transfer defender to native criminal response.");
-                Debug.Log("LIVING_CITIES_GUARD_DEFENSE_PASS: pacified/inactive/blocked ignored; native enemy damage with infighting off; real enemy/guard reload and wounded health; innocent player uncharged; death return; prior crime retained; player assault takeover; save="+key);
+                Debug.Log("LIVING_CITIES_GUARD_DEFENSE_PASS: pacified/inactive/blocked ignored; native enemy damage with infighting off; real enemy/guard reload and wounded health; innocent player uncharged; death return; prior crime retained; creatures silent; human Halt once; player assault takeover; save="+key);
             }
             finally
             {

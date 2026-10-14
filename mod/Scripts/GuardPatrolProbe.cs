@@ -108,7 +108,7 @@ namespace LivingCities.DFU
                 if(guard.IncidentId==null||guard.ResponseOrigin==null||
                     Vector2.Distance(new Vector2((float)point.X,(float)point.Z),new Vector2((float)guard.ResponseOrigin.X,(float)guard.ResponseOrigin.Z))>0.25f)
                     throw new InvalidOperationException("Crime response did not use the actual returning patrol position.");
-                if(controller.Roster.Guards.Count!=10) throw new InvalidOperationException("Patrol or alarm created extra guard identities.");
+                if(controller.Roster.Guards.Count!=15) throw new InvalidOperationException("Patrol or alarm changed the fifteen-guard allocation.");
                 Debug.Log("LIVING_CITIES_GUARD_PATROL_PASS: surveyed pair, spacing, both walking animations, torch, real phase reload, toggle return and crime from actual position; save="+key);
             }
             finally { SaveLoadManager.OnSave-=onSave; SaveLoadManager.OnLoad-=onLoad; game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None; }

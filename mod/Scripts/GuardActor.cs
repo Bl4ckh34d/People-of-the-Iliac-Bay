@@ -81,6 +81,7 @@ namespace LivingCities.DFU
                 body.GetComponent<EnemyMotor>().enabled = false;
                 body.GetComponent<EnemySenses>().enabled = false;
                 body.GetComponent<EnemyAttack>().enabled = false;
+                body.GetComponent<EnemySounds>().enabled = false;
                 var actor = body.AddComponent<GuardActor>();
                 actor.GuardId = id; actor.roster = roster; actor.geometry = geometry;
                 actor.IsInterior = indoors; actor.buildingKey = indoors ? (int?)guard.Interior.BuildingKey : null;
@@ -154,6 +155,7 @@ namespace LivingCities.DFU
                 geometry.ScenePoint(new RoutePoint(guard.LastSeenSuspect.X, guard.LastSeenSuspect.Z)) + Vector3.up;
             var senses = GetComponent<EnemySenses>();
             senses.OldLastKnownTargetPos = last; senses.LastKnownTargetPos = last; senses.PredictedTargetPos = last;
+            SayHaltOnce(GameManager.Instance.PlayerEntityBehaviour);
             GetComponent<EnemyAttack>().enabled = true;
             CombatReady = true; combatStart = null;
         }
@@ -198,6 +200,7 @@ namespace LivingCities.DFU
             GetComponent<EnemySenses>().Target = null;
             GetComponent<EnemySenses>().SecondaryTarget = null;
             GetComponent<EnemyAttack>().enabled = false;
+            GetComponent<EnemySounds>().enabled = false;
             CombatReady = false;
         }
 
