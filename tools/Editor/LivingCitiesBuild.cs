@@ -470,7 +470,7 @@ public static class LivingCitiesBuild
     }
     private static void VerifyRefugePersistence()
     {
-        var roster=GuardRoster.Create(1291010263,42,1,new[] { new SavedRoutePoint() });
+        var roster=GuardRoster.Create(1291010263,42,2,new[] { new SavedRoutePoint() });
         var id=roster.Guards[0].Id;
         roster.TakeRefuge(id,GuardRefugeJourney.Create(256,
             new[] { new GuardPoint3(),new GuardPoint3 { X=10 } },
@@ -482,6 +482,15 @@ public static class LivingCitiesBuild
             roster=GuardRoster.CopyValidated((GuardRoster)SaveLoadManager.Deserialize(typeof(GuardRoster),json));
             Require(roster.Guards[0].Refuge!=null && roster.Guards[0].Refuge.BuildingKey==256,"Saved refuge identity");
         }
+        bool overlapRejected=false;
+        try
+        {
+            roster.TakeRefuge(roster.Guards[1].Id,GuardRefugeJourney.Create(256,
+                new[] { new GuardPoint3(),new GuardPoint3 { X=10 } },
+                new[] { new GuardPoint3(),new GuardPoint3 { Z=4 } },200,2,12),200);
+        }
+        catch (ArgumentException) { overlapRejected=true; }
+        Require(overlapRejected && roster.Guards[1].Duty==GuardDuty.Posted,"Serialized refuge reservation");
         roster.Guards[0].Refuge.Release(200);
         string released=SaveLoadManager.Serialize(typeof(GuardRoster),roster);
         roster=GuardRoster.CopyValidated((GuardRoster)SaveLoadManager.Deserialize(typeof(GuardRoster),released));

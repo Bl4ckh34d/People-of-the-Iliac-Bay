@@ -10,6 +10,34 @@ namespace LivingCities.Tests
             new[] { new GuardPoint3(),new GuardPoint3 { Z=4 } },100,2,12); }
         internal static void Add(List<(string,Action)> cases)
         {
+            cases.Add(("Refuge destination reservations reject overlapping guards after copying",()=>{
+                var roster=GuardRoster.Create(1,42,3,new[] { new SavedRoutePoint() });
+                roster.TakeRefuge(roster.Guards[0].Id,Plan(),100);
+                roster=GuardRoster.CopyValidated(roster);
+                var overlap=Plan(); overlap.Interior[1].X=0.5;
+                Check.Throws<ArgumentException>(()=>roster.TakeRefuge(roster.Guards[1].Id,overlap,100));
+                Check.Equal(GuardDuty.Posted,roster.Guards[1].Duty);
+                var separate=Plan(); separate.Interior[1].X=1;
+                roster.TakeRefuge(roster.Guards[1].Id,separate,100);
+                var otherBuilding=Plan(); otherBuilding.BuildingKey=8;
+                roster.TakeRefuge(roster.Guards[2].Id,otherBuilding,100);
+            }));
+            cases.Add(("Refuge reservation remains during exit but frees after the guard reaches the exterior",()=>{
+                var roster=GuardRoster.Create(1,42,2,new[] { new SavedRoutePoint() });
+                roster.TakeRefuge(roster.Guards[0].Id,Plan(),100); roster.Guards[0].Refuge.Release(200);
+                var later=Plan(); later.StartsAt=212;
+                Check.Throws<ArgumentException>(()=>roster.TakeRefuge(roster.Guards[1].Id,later,212));
+                later.StartsAt=224; roster.TakeRefuge(roster.Guards[1].Id,later,224);
+            }));
+            cases.Add(("Refuge indoor corpse blocks its actual position while exterior death frees reservation",()=>{
+                var roster=GuardRoster.Create(1,42,2,new[] { new SavedRoutePoint() });
+                roster.TakeRefuge(roster.Guards[0].Id,Plan(),100); roster.Kill(roster.Guards[0].Id,200);
+                var later=Plan(); later.StartsAt=201;
+                Check.Throws<ArgumentException>(()=>roster.TakeRefuge(roster.Guards[1].Id,later,201));
+                roster=GuardRoster.Create(1,42,2,new[] { new SavedRoutePoint() });
+                roster.TakeRefuge(roster.Guards[0].Id,Plan(),100); roster.Kill(roster.Guards[0].Id,130);
+                roster.TakeRefuge(roster.Guards[1].Id,later,201);
+            }));
             cases.Add(("Refuge roster state survives copying and blocks dispatch until physical return",()=>{
                 var roster=GuardRoster.Create(1,42,1,new[] { new SavedRoutePoint() }); var id=roster.Guards[0].Id;
                 roster.TakeRefuge(id,Plan(),100);

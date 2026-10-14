@@ -1,5 +1,13 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Refuge destination reservations
+
+At-post refuge admission now rejects a destination within0.8m horizontally and1.8m vertically of another same-building reservation. The claim starts before departure and remains through indoor exit; it frees when the owner reaches the exterior return phase. Other buildings do not conflict. A dead guard blocks its actual frozen indoor position; a guard killed outside releases the intended shelter. This does not yet remove indoor corpse claims after corpse cleanup, reserve paths, or provide moving-actor avoidance.
+
+Three new scenarios failed before implementation;257/257 core tests now pass. Native DFU serializer verification also confirms a sheltered reservation still blocks a second guard after reload into a roster copy. Evidence: `work/RefugeClaims-red.log`, `work/RefugeClaims-green.log`, `work/RefugeClaims-serializer.log`. Installed player bundle unchanged. Runtime allocation must try other checked anchors when admission rejects a crowded destination.
+
+Additional verified quest detail: shipped S0000977 spawns both Ghost (`_F.00_`, every31 minutes with50% success) and Wraith (`_wraith_`, every21 minutes with50% success) during the haunting task. Detection must account for both, not only a single named Lysandus actor. Current GuardEnemyDefense still treats eligible hostile ghosts as enemies; city admission must not precede the fear/defense override.
+
 ## Controller refuge views
 
 GuardPopulation now selects refuge indoor views only for the matching building and phase, hides sheltered guards outside, bypasses normal crime/combat handling during refuge travel, and replaces a view whose indoor/exterior ownership changed. Expired views deactivate immediately before deferred destruction, avoiding an extra active body in the same frame.
