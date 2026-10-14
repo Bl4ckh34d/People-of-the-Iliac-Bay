@@ -1,5 +1,11 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## Civilian travel-window foundation
+
+DailySchedule.DayVisit now accepts an optional exterior travel window. Both the outbound departure and return arrival must fit that window, independently of destination opening hours and the resident's actual sleep hours. Unchanged defaults preserve existing schedules. A 05:00–19:00 window supports the unresolved Daggerfall haunting without putting residents to bed at sunset. Trips whose walking duration and dwell cannot fit become home days rather than teleporting home at the deadline.
+
+Two tests reproduced travel outside safe hours and impossible-trip admission before implementation. All 263 core tests pass; the new coverage checks 800 deterministic seeds on a two-hour commute, bedtime preservation and rejection of invalid windows. Evidence `work/HauntedVisits-{red,green}.log`. This is source-only foundation; runtime StreetPopulation has not yet supplied the window, and the installed bundle is unchanged. Integration must persist a daily policy choice so resolving the curse cannot suddenly reposition an ongoing trip. Daggerfall city admission remains disabled.
+
 ## Native combat-to-refuge flight verified
 
 The automatic flight probe now also starts a real GuardActor in native defense combat against a stationary rat, waits for CombatReady and enabled attacks, then introduces a hostile Ghost. Normal controller Update admits refuge and clears CombatReady, DefenseTarget, motor, attacks and sensed target. The guard then passes the existing exterior/interior shelter and curse-release/post-return checks, retaining the existing report. This verifies combat shutdown and subsequent actor phases, not every continuous collision step or response to an actively attacking opponent. All prior refuge checks pass in the same run. No production behavior changed in this verification step.

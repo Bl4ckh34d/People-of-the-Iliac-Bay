@@ -65,9 +65,11 @@ namespace LivingCities.Core
         }
         public static DailySchedule DayVisit(int homeKey, int destinationKey, IEnumerable<RoutePoint> route,
             int opens, int closes, int dwellMinutes, double metresPerRealSecond, double gameSecondsPerRealSecond,
-            uint seed, int wakeMinute, int sleepMinute)
+            uint seed, int wakeMinute, int sleepMinute, int streetsOpenMinute=0, int streetsCloseMinute=1440)
         {
             ValidateHome(homeKey, wakeMinute, sleepMinute);
+            if(streetsOpenMinute<0 || streetsCloseMinute>1440 || streetsOpenMinute>=streetsCloseMinute)
+                throw new ArgumentException("Invalid exterior travel window.");
             if (!Finite(metresPerRealSecond) || metresPerRealSecond <= 0 ||
                 !Finite(gameSecondsPerRealSecond) || gameSecondsPerRealSecond <= 0)
                 throw new ArgumentOutOfRangeException(nameof(metresPerRealSecond));
@@ -87,8 +89,8 @@ namespace LivingCities.Core
             if (copy.Length < 2 || length <= 0 || !Finite(travel) || travel >= 1440)
                 return HomeDay(homeKey, wakeMinute, sleepMinute);
             int commuteMinutes = Math.Max(1, (int)travel);
-            int earliest = Math.Max(opens, wakeMinute + commuteMinutes);
-            int latest = Math.Min(closes, sleepMinute - commuteMinutes) - dwellMinutes;
+            int earliest = Math.Max(opens, Math.Max(wakeMinute,streetsOpenMinute) + commuteMinutes);
+            int latest = Math.Min(closes, Math.Min(sleepMinute,streetsCloseMinute) - commuteMinutes) - dwellMinutes;
             if (latest < earliest) return HomeDay(homeKey, wakeMinute, sleepMinute);
             int arrival = earliest + (int)(seed % (uint)(latest - earliest + 1));
             var schedule = Workday(homeKey, destinationKey, copy, arrival, arrival + dwellMinutes,

@@ -10,6 +10,22 @@ namespace LivingCities.Tests
             route ?? new[] { new RoutePoint(0, 0), new RoutePoint(100, 0) }, 480, 1020, 20, 360, 1320);
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Haunted visit window fits both commutes without changing bedtime",()=>{
+                var route=new[] { new RoutePoint(0,0),new RoutePoint(780,0) };
+                for(uint seed=0;seed<800;seed++)
+                {
+                    var schedule=DailySchedule.DayVisit(10,20,route,240,1320,30,1.3,12,seed,180,1380,300,1140);
+                    for(int minute=180;minute<300;minute++) Check.Equal(Activity.Home,schedule.Evaluate(minute).Activity);
+                    for(int minute=1140;minute<1380;minute++) Check.Equal(Activity.Home,schedule.Evaluate(minute).Activity);
+                    Check.Equal(Activity.Sleep,schedule.Evaluate(1380).Activity);
+                }
+            }));
+            cases.Add(("Travel curfew skips impossible trips and rejects invalid windows",()=>{
+                var route=new[] { new RoutePoint(0,0),new RoutePoint(780,0) };
+                var schedule=DailySchedule.DayVisit(10,20,route,1080,1320,30,1.3,12,0,360,1380,300,1140);
+                for(int minute=360;minute<1380;minute++) Check.Equal(Activity.Home,schedule.Evaluate(minute).Activity);
+                Check.Throws<ArgumentException>(()=>DailySchedule.DayVisit(10,20,route,600,1000,30,1.3,12,0,360,1380,1200,300));
+            }));
             cases.Add(("On-site worker stays in the same building for work, home and sleep", () => {
                 // On-site work has no commute. Existing Workday rejects this valid keeper case.
                 var schedule = DailySchedule.Workday(10, 10, new RoutePoint[0], 480, 1140, 0, 420, 1320);
