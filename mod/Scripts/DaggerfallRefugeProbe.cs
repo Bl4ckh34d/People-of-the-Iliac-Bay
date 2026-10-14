@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallConnect.Utility;
@@ -33,6 +34,7 @@ namespace LivingCities.DFU
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             var geometry = new TownGeometry(directory, game.StreamingWorld.GetCurrentCityNavigation());
             int candidates = 0, connected = 0;
+            var representatives = new SortedDictionary<uint, int>();
             foreach (var entrance in geometry.Entrances.Values)
             {
                 BuildingSummary building;
@@ -47,6 +49,7 @@ namespace LivingCities.DFU
                     var route = geometry.RouteBetween(other, entrance);
                     if (route.Count < 2) continue;
                     connected++; reached = true;
+                    if (!representatives.ContainsKey(building.ModelID)) representatives.Add(building.ModelID, entrance.BuildingKey);
                     Debug.Log("LIVING_CITIES_REFUGE_ROUTE: key=" + entrance.BuildingKey + "; model=" + building.ModelID +
                         "; from=" + other.BuildingKey + "; points=" + route.Count + "; door=" + entrance.LocalDoor);
                     break;
@@ -57,7 +60,35 @@ namespace LivingCities.DFU
             Debug.Log("LIVING_CITIES_REFUGE_SURVEY: groundEntrances=" + candidates + "; connected=" + connected +
                 "; rejectedDoors=" + geometry.RejectedDoors);
             if (connected == 0) throw new InvalidOperationException("No reachable Daggerfall wall entrance found.");
-            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall exterior refuge survey only; no interior safety claim.");
+            foreach (var representative in representatives)
+            {
+                DaggerfallStaticDoors owner = null;
+                StaticDoor selected = default(StaticDoor);
+                foreach (var candidate in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                {
+                    if (owner || candidate.Doors == null) continue;
+                    foreach (var door in candidate.Doors)
+                        if (door.doorType == DoorTypes.Building && door.buildingKey == representative.Value)
+                        { owner = candidate; selected = door; break; }
+                }
+                if (!owner) throw new InvalidOperationException("Surveyed wall entrance disappeared.");
+                TownSmokeHarness.EnterInterior(owner.transform, selected);
+                yield return new WaitForSecondsRealtime(1);
+                var interior = game.PlayerEnterExit.Interior;
+                if (!interior || !game.PlayerEnterExit.IsPlayerInsideBuilding)
+                    throw new InvalidOperationException("Wall interior entry failed.");
+                var inside = new InteriorGeometry(interior);
+                int reachable = 0;
+                foreach (var anchor in inside.LocalAnchors)
+                    if (inside.RouteToExit(interior.transform.TransformPoint(anchor)).Count >= 2) reachable++;
+                Debug.Log("LIVING_CITIES_REFUGE_INTERIOR: model=" + representative.Key + "; key=" + representative.Value +
+                    "; anchors=" + inside.LocalAnchors.Count + "; reachable=" + reachable);
+                if (!inside.EntryGround.HasValue || reachable == 0)
+                    throw new InvalidOperationException("Wall interior has no checked refuge floor: " + representative.Key);
+                game.PlayerEnterExit.TransitionExterior();
+                yield return new WaitForSecondsRealtime(1);
+            }
+            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall wall exterior routes and representative interior floor routes; models=" + representatives.Count);
         }
     }
 }

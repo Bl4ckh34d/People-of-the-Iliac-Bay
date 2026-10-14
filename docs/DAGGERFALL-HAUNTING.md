@@ -8,8 +8,6 @@ Current runtime admission gates remain in `StreetPopulation.SetTown` and `GuardP
 
 Next acceptance work: city admission and scale classification; actual wall refuge survey; dedicated city save/reload and unresolved/resolved nighttime tests.
 
-## Curse policy foundation, 15 October 2026
-
 ## Exterior wall refuge survey, 15 October 2026
 
 `TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -RefugeProbe` loads only the dedicated exterior fixture, teleports that disposable session to Daggerfall, and performs the existing collision-checked TownGeometry route search. It does not save, enable city actors or modify quest globals. The live player completed successfully: 100 accepted ground-level Town23 entrances, all100 connected from another entrance within100 metres;59 other doors were rejected by the general entrance survey. This does not mean59 wall doors failed, nor does it prove paths from every city post. Evidence: `work/DaggerfallRefuge-exterior-pass.log`.
@@ -19,6 +17,12 @@ The original-content wall census records Town23 models444/445/446 with real inte
 The probe is opt-in and retains disabled test input/mouse capture. Owned test process34228 finished and was stopped by TownTest; no user session was interrupted. Unity build passed; latest development0.3.29 bundle hash is `E11E69AA2685B2E47AAC85461CCC164C5D6C68AB175D97CA5B5ECA4C7393B674`, superseding the policy-only build hash below. City admission remains disabled.
 
 ## Curse policy evidence
+
+### Representative interior verification
+
+The expanded `-RefugeProbe` physically enters and exits one connected original building per wall model. Live checks pass for model444/key1792 (80 checked anchors with exit routes), model445/key256 (80), and model446/key1536 (22). These are sampled standing points, not guard capacity: nearby anchors can overlap a guard's footprint. No survey-limit warning occurred. All100 exterior connections still pass in the same run. Evidence: `work/DaggerfallRefuge-interior-pass.log`; owned player32788 completed and stopped normally. No fixture saves were changed.
+
+Unity build passed; latest development0.3.29 bundle hash is `46567F4E2B8BD4942D2B8B80BED2CF6FEFF610FC407FCF493496C99AC97EF369`, superseding the earlier hashes. This verifies the three entered interiors, not every wall interior or actor retreat. Next implement persistent refuge travel/occupancy/return and ghost-triggered guard flight, then activate city simulation with dedicated gameplay saves.
 
 `SettlementHaunting.StreetsDangerous` now evaluates the verified city ID, current LiftedCurse flag and absolute game seconds. Tests cover exact 19:00/05:00 boundaries, midnight on distant days, immediate curse resolution, other settlements and invalid timestamps. Red run: 244/247 passed with three expected missing-implementation failures; green run: 247/247 passed. `GuardNightPatrols` reads the live player global each update and applies the policy before starting patrols; active patrols follow the existing physical return behavior when disabled. This return is to their existing posts, **not yet a wall refuge**.
 
