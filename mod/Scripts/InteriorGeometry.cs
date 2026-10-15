@@ -12,6 +12,8 @@ namespace LivingCities.DFU
     {
         public readonly List<Vector3> LocalAnchors = new List<Vector3>();
         public Vector3? EntryGround { get; private set; }
+        public bool IsComplete { get; private set; }
+        private readonly System.Func<Vector3,Vector3,bool> boundary;
         private readonly DaggerfallInterior interior;
         private readonly float Radius;
         // Reserve the native controller's 0.5 m step band below the body sweep.
@@ -22,26 +24,29 @@ namespace LivingCities.DFU
         private readonly Dictionary<Vector3Int, Vector3Int> parents = new Dictionary<Vector3Int, Vector3Int>();
         private const float MaximumRise = 0.5f;
         private readonly Dictionary<Vector3Int, Vector3> stepCorners = new Dictionary<Vector3Int, Vector3>();
-        public InteriorGeometry(DaggerfallInterior interior,float bodyRadius=0.24f,float top=1.65f)
+        public InteriorGeometry(DaggerfallInterior interior,float bodyRadius=0.24f,float top=1.65f,
+            Vector3? surveySeed=null,System.Func<Vector3,Vector3,bool> boundary=null)
         {
             this.interior = interior;
+            this.boundary=boundary;
             Radius=bodyRadius; bodyTop=top;
             var markers = new List<Vector3>(interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Enter));
             markers.Sort((a, b) => { int c = a.x.CompareTo(b.x); return c != 0 ? c : a.z.CompareTo(b.z); });
             // Native enter markers can sit on an upper storey. Use the actual
             // interior exit door first, as PlayerEnterExit does for player landing.
             Vector3 door, normal;
-            if (interior.FindClosestInteriorDoor(DaggerfallStaticDoors.GetDoorPosition(interior.EntryDoor), out door, out normal))
+            if (!surveySeed.HasValue && interior.FindClosestInteriorDoor(DaggerfallStaticDoors.GetDoorPosition(interior.EntryDoor), out door, out normal))
                 markers.Insert(0, door + normal * 0.8f);
+            if(surveySeed.HasValue) { markers.Clear(); markers.Add(surveySeed.Value); }
             Vector3 seed = Vector3.zero; bool found = false;
             foreach (var marker in markers)
             {
-                for (int radius = 0; radius <= 2 && !found; radius++)
+                for (int radius = 0; radius <= (surveySeed.HasValue ? 0 : 2) && !found; radius++)
                     for (int z = -radius; z <= radius && !found; z++)
                         for (int x = -radius; x <= radius && !found; x++)
                             // Enter markers identify the doorway's floor. Starting the
                             // ray two metres higher can select the attic above this room.
-                            found = Floor(marker + new Vector3(x * 0.8f, 0, z * 0.8f), 0.2f, 5, out seed) && Clear(seed);
+                            found = Floor(marker + new Vector3(x * 0.8f, 0, z * 0.8f), 0.2f, surveySeed.HasValue ? 0.4f : 5, out seed) && Clear(seed);
                 if (found) break;
             }
             if (!found) return;
@@ -89,6 +94,7 @@ namespace LivingCities.DFU
                 }
             }
             if (queue.Count > 0) Debug.LogWarning("LIVING_CITIES_INTERIOR_SURVEY_LIMIT: building=" + interior.EntryDoor.buildingKey + "; nodes=" + floors.Count);
+            IsComplete=queue.Count==0;
         }
         public List<GuardPoint3> RouteToExit(Vector3 ground)
         {
@@ -99,10 +105,11 @@ namespace LivingCities.DFU
             {
                 var delta = pair.Value - ground;
                 if (delta.sqrMagnitude > nearest || Mathf.Abs(delta.y) > 0.3f) continue;
+                if(boundary!=null && !boundary(ground,pair.Value)) continue;
                 bool blocked = false;
                 foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * BodyBase, ground + Vector3.up * bodyTop,
                     Radius, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
-                    if (Blocker(hit.collider)) { blocked = true; break; }
+                    if (SurveyBlocker(hit.collider)) { blocked = true; break; }
                 // Check support between an arbitrary resident position and the surveyed graph.
                 for (float t = 0; !blocked && t <= 1; t += 0.2f)
                 {
@@ -162,11 +169,12 @@ namespace LivingCities.DFU
         { return new Vector3Int(Mathf.RoundToInt((point.x-seed.x)/GridStep), Mathf.RoundToInt((point.y-seed.y)/0.2f), Mathf.RoundToInt((point.z-seed.z)/GridStep)); }
         private bool SweepsClear(Vector3 from, Vector3 to)
         {
+            if(boundary!=null && !boundary(from,to)) return false;
             Vector3 delta = to-from;
             if (delta.sqrMagnitude < 0.000001f) return true;
             foreach (var hit in Physics.CapsuleCastAll(from+Vector3.up*BodyBase,from+Vector3.up*bodyTop,
                 Radius,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
-                if (Blocker(hit.collider)) return false;
+                if (SurveyBlocker(hit.collider)) return false;
             return true;
         }
         private bool Floor(Vector3 point, float up, float depth, out Vector3 floor)
@@ -179,11 +187,14 @@ namespace LivingCities.DFU
         }
         private bool Clear(Vector3 ground)
         {
+            if(boundary!=null && !boundary(ground,ground)) return false;
             foreach (var collider in Physics.OverlapCapsule(ground + Vector3.up * BodyBase, ground + Vector3.up * bodyTop,
                 Radius, ~0, QueryTriggerInteraction.Ignore))
-                if (Blocker(collider)) return false;
+                if (SurveyBlocker(collider)) return false;
             return true;
         }
+        private bool SurveyBlocker(Collider collider)
+        { return boundary!=null && collider.GetComponentInParent<DaggerfallActionDoor>() ? false : Blocker(collider); }
         private static bool Blocker(Collider collider)
         {
             var door = collider.GetComponentInParent<DaggerfallActionDoor>();

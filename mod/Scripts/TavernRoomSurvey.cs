@@ -1,0 +1,73 @@
+using System;
+using System.Collections.Generic;
+using DaggerfallWorkshop;
+using LivingCities.Core;
+using UnityEngine;
+
+namespace LivingCities.DFU
+{
+    // Room identity comes from original bed records, not current door animation or actor positions.
+    public static class TavernRoomSurvey
+    {
+        private sealed class DoorBoundary
+        {
+            public Matrix4x4 Inverse;
+            public Bounds Bounds;
+            public bool Blocks(Vector3 from,Vector3 to)
+            {
+                var a=Inverse.MultiplyPoint3x4(from+Vector3.up);
+                var b=Inverse.MultiplyPoint3x4(to+Vector3.up);
+                if(Bounds.Contains(a) || Bounds.Contains(b)) return true;
+                var delta=b-a; float distance;
+                return delta.sqrMagnitude>0.000001f && Bounds.IntersectRay(new Ray(a,delta.normalized),out distance) && distance<=delta.magnitude;
+            }
+        }
+        public static List<LodgingRoom> Read(DaggerfallInterior interior)
+        {
+            var barriers=new List<DoorBoundary>();
+            foreach(var door in interior.GetComponentsInChildren<DaggerfallActionDoor>())
+            {
+                var meshes=door.GetComponentsInChildren<MeshFilter>();
+                if(meshes.Length==0) throw new InvalidOperationException("Door lacks surveyable mesh.");
+                var closed=Matrix4x4.TRS(door.transform.position,door.ClosedRotation,door.transform.lossyScale);
+                foreach(var mesh in meshes)
+                {
+                    if(!mesh.sharedMesh) throw new InvalidOperationException("Door mesh missing.");
+                    var matrix=closed*door.transform.worldToLocalMatrix*mesh.transform.localToWorldMatrix;
+                    var bounds=mesh.sharedMesh.bounds;
+                    var scale=new Vector3(matrix.MultiplyVector(Vector3.right).magnitude,
+                        matrix.MultiplyVector(Vector3.up).magnitude,matrix.MultiplyVector(Vector3.forward).magnitude);
+                    if(scale.x<=0 || scale.y<=0 || scale.z<=0) throw new InvalidOperationException("Invalid door scale.");
+                    bounds.Expand(new Vector3(0.5f/scale.x,0.5f/scale.y,0.5f/scale.z));
+                    barriers.Add(new DoorBoundary { Inverse=matrix.inverse,Bounds=bounds });
+                }
+            }
+            Func<Vector3,Vector3,bool> allowed=(a,b)=>!barriers.Exists(d=>d.Blocks(a,b));
+            var beds=BedGeometry.Read(interior); beds.Sort((a,b)=>a.RecordIndex.CompareTo(b.RecordIndex));
+            var general=new InteriorGeometry(interior);
+            var points=new Dictionary<int,Vector3>();
+            foreach(var bed in beds)
+            {
+                Vector3 ground;
+                if(!general.StandBesideBed(bed,out ground)) throw new InvalidOperationException("No safe floor beside lodging bed "+bed.RecordIndex);
+                points.Add(bed.RecordIndex,ground);
+            }
+            var assigned=new HashSet<int>(); var result=new List<LodgingRoom>();
+            foreach(var bed in beds)
+            {
+                if(assigned.Contains(bed.RecordIndex)) continue;
+                var seed=points[bed.RecordIndex];
+                var region=new InteriorGeometry(interior,0.24f,1.65f,seed,allowed);
+                if(!region.IsComplete) throw new InvalidOperationException("Incomplete lodging room floor survey: "+bed.RecordIndex);
+                var room=new LodgingRoom { Id="room:"+bed.RecordIndex };
+                foreach(var candidate in beds)
+                    if(!assigned.Contains(candidate.RecordIndex) && region.RouteBetween(interior.transform.InverseTransformPoint(seed),
+                        interior.transform.InverseTransformPoint(points[candidate.RecordIndex])).Count>=2)
+                    { assigned.Add(candidate.RecordIndex); room.Beds.Add("bed:"+candidate.RecordIndex); }
+                if(room.Beds.Count==0) throw new InvalidOperationException("Lodging bed disconnected from its own floor.");
+                result.Add(room);
+            }
+            return result;
+        }
+    }
+}

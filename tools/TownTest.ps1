@@ -139,6 +139,7 @@ try {
     if ($GuardDefenseProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DEFENSE_PASS:') { throw 'Guard defense probe did not complete.' }
     if ($GuardDefenseProbe -and $body -notmatch 'LIVING_CITIES_OUTDOOR_WELFARE_PASS:') { throw 'Outdoor welfare encounter did not complete.' }
     if ($TavernSurveyProbe -and $body -notmatch 'LIVING_CITIES_TAVERN_SURVEY_PASS:') { throw 'Tavern interior survey did not complete.' }
+    if ($TavernSurveyProbe -and $body -notmatch 'LIVING_CITIES_TAVERN_ROOMS_PASS:') { throw 'Stable tavern room partition did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PUBLIC_POSTS_PASS:') { throw 'Public guard post check did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DOOR_PURSUIT_PASS:') { throw 'Doorway pursuit check did not complete.' }

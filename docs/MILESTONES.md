@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 room partition: loaded floor connectivity with canonical closed-door boundaries now groups tavern beds independently of current door animation. All13 beds in Gothway's3 taverns partition once into11 groups; open/closed invariance passes. Guest eligibility, rest-marker mapping and staff allocation remain unconnected. See [tavern evidence and the intermittent guard-combat regression](TAVERN-LODGING.md).
+
 M3 tavern foundation: schema8 now persists exclusive room reservations, protected paid intervals, atomic overlap/extension checks and duration-aware earliest availability. Schemas1–7 migrate empty lodging;316/316 core, Unity native serialization and real save/load regression pass. This is not yet connected to room survey, native rental/payment/rest UI or traveler spawning. See [tavern lodging](TAVERN-LODGING.md).
 
 M4 outdoor welfare acceptance: a real street defender witnesses the player's lawful native kill, physically approaches, completes courtesy without charging the player, then returns to its post. Existing native enemy/guard reload, creature silence, quest-owned attacker defense and assault takeover regressions also pass (`work/OutdoorWelfare-pass.log`). Basic indoor and outdoor welfare paths are now verified; dense crowds, blocked routes and broader settlements remain open. Next major gameplay gap is tavern lodging/travelers and social routines, not another random-event spawner.
