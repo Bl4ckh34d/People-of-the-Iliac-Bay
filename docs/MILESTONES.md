@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 traveler itinerary core: absolute-time gate-aware arrival, one/multiple nights, deterministic sleep/checkout, route reversal and departure now pass327/327 core tests and Unity build. No visible travelers yet: persisted nonlocal identity/admission and actor/crime integration are next. See [traveler implementation plan](superpowers/plans/2026-10-15-travelers.md).
+
 M3 occupied-bed access: managed tavern reservations now block conflicting native rest destinations and rest-in-place over another guest's bed; own allocated rooms remain usable. Invalid markers refuse instead of silently moving to marker0.322/322 core, Unity build and all3 Gothway native rest/payment/import probes pass. Travelers, full timed-sleep/disk-slot tests and broader layouts remain pending.
 
 M3 rental payment: native paid confirmation and free-room path now enforce full-stay capacity, exact room allocation and extension conflicts before charging. Full inns provide a date for the next vacancy.322/322 core and live callback cases in all3 Gothway inns pass; final bundle installed. Occupied-bed/rest enforcement, actual traveler demand, full disk reload and broader layout coverage remain pending.

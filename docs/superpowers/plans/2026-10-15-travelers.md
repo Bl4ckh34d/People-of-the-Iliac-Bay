@@ -1,0 +1,16 @@
+# Nonlocal travelers implementation plan
+
+**Goal:** Nonlocal adult NPCs physically arrive, obtain first-come lodging, visit town, sleep in their assigned beds, and leave after their stay. Preserve identities, death and journey progress across save/load and unloading.
+
+**Architecture:** Travelers are separate from residential households and garrison population. A deterministic core itinerary uses surveyed entrance-to-inn routes and absolute game time. Persisted visit identities and booking outcomes drive the same civilian actor, collision, crime and sleeping systems used by residents; they must not become decorative invulnerable crowds. Lodging remains authoritative even while a traveler is outside.
+
+Current authority: `docs/TAVERN-LODGING.md`, native `DaggerfallCityGate.Update` (06:00 open, 18:00 closed), existing `Lodging.cs`, `StreetPopulation.cs`, and civilian/death persistence. No random enemy generator is part of this work.
+
+- [x] Implement and test absolute-time itinerary in `TravelerJourney.cs`: deterministic checkout/sleep variation, one/multiple nights, supplied-route interpolation, gate-aware entry/exit, checkout ending the stay before any gate wait, and reconstruction after time skips.327/327 core tests and Unity build pass (`work/TravelerJourney-green.log`, `work/TravelerJourney-build.log`). This accepts a proposed arrival time; generation of staggered arrival demand belongs to admission below. No runtime actors or persisted visits exist yet.
+- [ ] Add versioned traveler visit persistence and atomic admission with lodging. Import native paid receipts before allocating NPC rooms. Persist rejected arrivals so reloading does not retry until success. Use actual nonlocal settlement IDs, distinct adult identities, bounded active visits and explicit historical retention; preserve deaths without respawning a departed identity.
+- [ ] Survey inn inventory and usable settlement entry/exit routes without requiring player rental. Keep private guest rooms, staff beds and unclassified areas distinct. Identify physical gates rather than assuming every settlement is walled. Preserve unsupported-layout compatibility and report missing geometry.
+- [ ] Integrate traveler actors with `StreetPopulation` and resident resolution in crime/defense/death systems. Reuse path collision and speed handling, same-person interior/exterior transitions, consistent portraits/names and bed poses. A rejected booking sends the traveler onward rather than making them a permanent lobby resident.
+- [ ] Add deterministic local visits during a paid stay, gate and haunting constraints, staggered sleep and departure. Travelers and local tavern patrons remain separate; neither inherits the keeper's surname.
+- [ ] Add meaningful settings for demand/stay ranges and profiler counters. Test native slots mid-arrival, sleeping, away from paid room, rejected booking, death and departure; test closed walled gates versus unwalled night arrivals and bounded large time skips. Never interrupt the user's game or capture their mouse.
+
+Each step uses failing behavioral tests before implementation, then the relevant core/native build and live checks. Core-only itinerary results do not establish that travelers are visible in gameplay. Keep incomplete integration explicit until native arrival, sleep, visit and exit are observed.

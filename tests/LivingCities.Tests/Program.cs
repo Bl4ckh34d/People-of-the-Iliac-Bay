@@ -28,6 +28,7 @@ namespace LivingCities.Tests
             GuardPatrolTests.Add(cases);
             BedTests.Add(cases);
             LodgingTests.Add(cases);
+            TravelerJourneyTests.Add(cases);
             SleepViewTests.Add(cases);
             HouseholdAccessTests.Add(cases);
             EntryReportTests.Add(cases);
