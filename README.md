@@ -1,5 +1,7 @@
 # Living Cities for Daggerfall Unity
 
+Latest development0.3.34 checkpoint connects indoor enemy defense: an escaped keeper contacts a finite guard, which travels to the shop, enters, searches around shelves and fights the reported attacker without blaming the player. Native shop defense and separate doorway pursuit/effect/save regression pass;289 core tests pass. Broader layouts and moving-target transitions remain unfinished. See [threat response evidence](docs/THREAT-RESPONSE.md).
+
 Latest development0.3.34 rebuild preserves guard spell bundles across body recreation, actual shop exit and game save/load, with elapsed native effect ticks.289 core tests and targeted native checks pass. See [effect persistence evidence and limits](docs/GUARD-EFFECTS.md).
 
 **0.3.34 moves guard posts to public junctions, paved squares and gate approaches**, clear of building entrances and facing open streets. Saved guards keep their identities and walk to new posts when available. A guard pursuing the player inside a shop now follows through the doorway and physically resumes pursuit outside.286 core tests, native shop/save/pursuit checks and Daggerfall/city/refuge regression pass. Elevated wall posts and broader layout acceptance remain unfinished. See [post and doorway evidence](docs/GUARD-POSTS-AND-DOORWAYS.md).

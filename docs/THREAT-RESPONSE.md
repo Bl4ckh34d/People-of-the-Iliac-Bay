@@ -33,7 +33,21 @@ The guard actor now supports native enemy combat inside buildings and captures t
 
 Building defense now tolerates an unavailable roster without dereferencing a missing report. Regression covers zero allowed responders, busy guards, and a successful later retry. All 287 core tests pass (`work/IndoorDefender-core.log`), as do the Unity build and exterior enemy-defense regression (`work/IndoorDefender-exterior-pass.log`). Installed development0.3.34 bundle hash: `E270863B7B0252FC9525DD2B11720A13D7B5E62FE7195E40449052B5626299AC`.
 
-Remaining integration: escaped witnesses must dispatch guards to the threatened building; the interior controller must resolve the enemy rather than use player-crime handling. Automatic indoor enemy defense remains unfinished.
+The automatic dispatch gap is superseded by the checkpoint below.
+
+## Automatic indoor enemy defense, 15 October 2026
+
+An escaped registered keeper now contacts an available finite guard at its actual post. The report retains the hostile enemy identity and dispatches only contacted guards, without charging the player. The guard takes its surveyed exterior travel time, enters the reported building, searches toward the witness location, and uses native combat once it sees the attacker. Disabled defense, an invalid target, or search expiry ends the response; existing player crimes remain actionable.
+
+The native shop fixture verifies keeper flight, guard contact, delayed arrival, actual enemy damage, no innocent-player hostility, and standing down when defense is disabled. Evidence: `work/IndoorResponse-clearance-pass.log` and final-bundle `work/IndoorResponse-final-native.log`. The latter combined invocation completed the citizen fixture but rejected the unexecuted doorway fixture: this harness branch returns early, so doorway regression must run separately.
+
+Two routing defects were reproduced: alarm ground coordinates were treated as actor-origin coordinates, placing the destination one metre below the floor; then civilian clearance admitted a route too narrow for the native guard's 0.4-metre capsule radius. Alarm conversion now preserves the actor-origin convention. The interior survey accepts actor dimensions, and guard movement uses its actual ground offset and CharacterController. Default civilian survey dimensions are unchanged.
+
+Core tests: 289/289 (`work/IndoorResponse-core-final.log`). Unity build: `work/IndoorResponse-final-build.log`. Installed development0.3.34 SHA-256: `9EFE142996512076627218F79A852B02DDBD9D738FEF280EEA4B8A78350ABA91`.
+
+Separate native doorway regression passes (`work/IndoorResponse-door-regression-pass.log`): existing crime response, same wounded guard physically pursuing outside, player spell retained across exit, and actual effect save/reload. Tests use only the dedicated fixture character and hidden owned processes.
+
+Broader interiors, dynamic obstruction replanning, enemies crossing scene boundaries, player-assault takeover during defense, and welfare/loot dialogue still need dedicated acceptance tests or implementation. This checkpoint does not establish complete indoor defense coverage.
 
 ## Guard spell effects across transitions
 

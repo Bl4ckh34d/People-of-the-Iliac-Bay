@@ -13,17 +13,19 @@ namespace LivingCities.DFU
         public readonly List<Vector3> LocalAnchors = new List<Vector3>();
         public Vector3? EntryGround { get; private set; }
         private readonly DaggerfallInterior interior;
-        private const float Radius = 0.24f;
+        private readonly float Radius;
         // Reserve the native controller's 0.5 m step band below the body sweep.
-        private const float BodyBase = 0.5f + Radius + 0.01f;
+        private float BodyBase { get { return 0.5f + Radius + 0.01f; } }
+        private readonly float bodyTop;
         private const float GridStep = 0.2f;
         private readonly Dictionary<Vector3Int, Vector3> floors = new Dictionary<Vector3Int, Vector3>();
         private readonly Dictionary<Vector3Int, Vector3Int> parents = new Dictionary<Vector3Int, Vector3Int>();
         private const float MaximumRise = 0.5f;
         private readonly Dictionary<Vector3Int, Vector3> stepCorners = new Dictionary<Vector3Int, Vector3>();
-        public InteriorGeometry(DaggerfallInterior interior)
+        public InteriorGeometry(DaggerfallInterior interior,float bodyRadius=0.24f,float top=1.65f)
         {
             this.interior = interior;
+            Radius=bodyRadius; bodyTop=top;
             var markers = new List<Vector3>(interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Enter));
             markers.Sort((a, b) => { int c = a.x.CompareTo(b.x); return c != 0 ? c : a.z.CompareTo(b.z); });
             // Native enter markers can sit on an upper storey. Use the actual
@@ -98,7 +100,7 @@ namespace LivingCities.DFU
                 var delta = pair.Value - ground;
                 if (delta.sqrMagnitude > nearest || Mathf.Abs(delta.y) > 0.3f) continue;
                 bool blocked = false;
-                foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * BodyBase, ground + Vector3.up * 1.65f,
+                foreach (var hit in Physics.CapsuleCastAll(ground + Vector3.up * BodyBase, ground + Vector3.up * bodyTop,
                     Radius, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
                     if (Blocker(hit.collider)) { blocked = true; break; }
                 // Check support between an arbitrary resident position and the surveyed graph.
@@ -158,11 +160,11 @@ namespace LivingCities.DFU
         { var p = interior.transform.InverseTransformPoint(world); return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
         private static Vector3Int Cell(Vector3 point, Vector3 seed)
         { return new Vector3Int(Mathf.RoundToInt((point.x-seed.x)/GridStep), Mathf.RoundToInt((point.y-seed.y)/0.2f), Mathf.RoundToInt((point.z-seed.z)/GridStep)); }
-        private static bool SweepsClear(Vector3 from, Vector3 to)
+        private bool SweepsClear(Vector3 from, Vector3 to)
         {
             Vector3 delta = to-from;
             if (delta.sqrMagnitude < 0.000001f) return true;
-            foreach (var hit in Physics.CapsuleCastAll(from+Vector3.up*BodyBase,from+Vector3.up*1.65f,
+            foreach (var hit in Physics.CapsuleCastAll(from+Vector3.up*BodyBase,from+Vector3.up*bodyTop,
                 Radius,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
                 if (Blocker(hit.collider)) return false;
             return true;
@@ -175,9 +177,9 @@ namespace LivingCities.DFU
             { floor = hit.point; return true; }
             floor = Vector3.zero; return false;
         }
-        private static bool Clear(Vector3 ground)
+        private bool Clear(Vector3 ground)
         {
-            foreach (var collider in Physics.OverlapCapsule(ground + Vector3.up * BodyBase, ground + Vector3.up * 1.65f,
+            foreach (var collider in Physics.OverlapCapsule(ground + Vector3.up * BodyBase, ground + Vector3.up * bodyTop,
                 Radius, ~0, QueryTriggerInteraction.Ignore))
                 if (Blocker(collider)) return false;
             return true;
@@ -195,8 +197,8 @@ namespace LivingCities.DFU
             if (GameManager.IsGamePaused) return;
             Vector3 delta = to - from;
             if (delta.sqrMagnitude < 0.000001f) return;
-            var hits = Physics.SphereCastAll(from + Vector3.up, Radius, delta.normalized,
-                Mathf.Min(2, delta.magnitude + Radius), ~0, QueryTriggerInteraction.Ignore);
+            var hits = Physics.SphereCastAll(from + Vector3.up, 0.24f, delta.normalized,
+                Mathf.Min(2, delta.magnitude + 0.24f), ~0, QueryTriggerInteraction.Ignore);
             System.Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
             foreach (var hit in hits)
             {

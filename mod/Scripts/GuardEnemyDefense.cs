@@ -117,5 +117,39 @@ namespace LivingCities.DFU
                 actor.BeginDefenseCombat(target,now);
             return true;
         }
+        private void RefreshInteriorThreats()
+        {
+            defenseEnemies.Clear();
+            foreach(var target in UnityEngine.Object.FindObjectsOfType<DaggerfallEntityBehaviour>())
+                if(IsEnemyThreat(target)) defenseEnemies[ThreatKey(target)]=target;
+        }
+        private bool UpdateInteriorEnemyDefense(GuardRecord guard,GuardActor actor,GuardReport report,double now)
+        {
+            if(report==null || report.ThreatId==null) return false;
+            actor.Capture(now);
+            // A real assault on the guard remains a player crime even while it
+            // is defending against someone else, matching exterior behavior.
+            if(actor.DefenseTarget && actor.GetComponent<EnemyMotor>().IsHostile)
+            {
+                if(GameManager.Instance.PlayerEntity.CrimeCommitted==PlayerEntity.Crimes.None)
+                    GameManager.Instance.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Assault;
+                actor.EndCombat(); report.ThreatId=null; return false;
+            }
+            DaggerfallEntityBehaviour target;
+            defenseEnemies.TryGetValue(report.ThreatId,out target);
+            if(!EnemyDefense || !IsEnemyThreat(target) || now>=guard.SearchUntil)
+            {
+                actor.EndCombat();
+                if(GameManager.Instance.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
+                { report.ThreatId=null; return false; }
+                Roster.EndInteriorSearch(guard.Id,now); actor.Place(now);
+                return true;
+            }
+            if(CivilianResponses.Sees(actor.transform.position,target.transform.position,20))
+                actor.BeginDefenseCombat(target,now);
+            else if(!actor.CombatReady && guard.Interior.LastSeenSuspect!=null)
+                actor.SearchInterior(interior,now);
+            return true;
+        }
     }
 }

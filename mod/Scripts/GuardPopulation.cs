@@ -309,13 +309,14 @@ namespace LivingCities.DFU
         }
         public void ReportEscapedWitness(CivilianIncident alarm, double now)
         {
-            if(alarm!=null && alarm.ThreatId!=null) return;
-            if (!OwnsTown() || alarm.SettlementId != directory.MapID || alarm.BuildingKey < 0 || now >= CivilianAlarms.ActiveUntil(alarm)) return;
+            if (alarm==null || !OwnsTown() || alarm.SettlementId != directory.MapID || alarm.BuildingKey < 0 || now >= CivilianAlarms.ActiveUntil(alarm)) return;
+            if(alarm.ThreatId!=null && !EnemyDefense) return;
             string id = "civilian:" + alarm.Id;
             if (Roster.Reports.Exists(r => r.Id == id && r.GuardIds.Count > 0)) return;
             var streets = GetComponent<StreetPopulation>();
             Roster.Advance(now);
             bool reached = false;
+            var informed=new HashSet<string>();
             foreach (var person in alarm.People)
             {
                 if (!person.DirectWitness && person.HeardViolence && person.Escape != null && person.Escape.Arrived(now) &&
@@ -326,13 +327,16 @@ namespace LivingCities.DFU
                 }
                 if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape == null ||
                     !person.Escape.Arrived(now) || !streets.IsLivingResident(person.ResidentId)) continue;
-                if (Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
-                    Math.Abs(Roster.Position(g.Id,now).X-person.X) < 0.5 && Math.Abs(Roster.Position(g.Id,now).Z-person.Z) < 0.5)) { reached = true; break; }
+                foreach(var guard in Roster.Guards)
+                    if(guard.IsAlive && guard.Duty==GuardDuty.Posted && guard.Interior==null &&
+                        Math.Abs(Roster.Position(guard.Id,now).X-person.X)<0.5 && Math.Abs(Roster.Position(guard.Id,now).Z-person.Z)<0.5)
+                    { reached=true; informed.Add(guard.Id); }
             }
             if (!reached) return;
-            var sent = Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+            var sent = Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12,
+                false,alarm.ThreatId==null ? null : informed,alarm.ThreatId);
             if (sent.Count == 0) return;
-            reportId = id; GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
+            if(alarm.ThreatId==null) { reportId = id; GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder; }
             Debug.Log("LIVING_CITIES_GUARD_ESCAPE_REPORT: " + id + "; building=" + alarm.BuildingKey + "; responders=" + sent.Count);
         }
         private GameObject ResolveNative(Vector3 position, Vector3 direction)
@@ -476,7 +480,7 @@ namespace LivingCities.DFU
             if (routeTick) nextRoutes = Time.unscaledTime + 1;
             if (routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) RetryNativeReports(now);
             if (awaitingSight && routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) ReportNative(false);
-            if (interior) { UpdateInterior(now); return; }
+            if (interior) { if(routeTick) RefreshInteriorThreats(); UpdateInterior(now); return; }
             if(Time.unscaledTime>=nextPostMigration)
             {
                 nextPostMigration=Time.unscaledTime+5;
@@ -587,10 +591,18 @@ namespace LivingCities.DFU
                     var point = interior.transform.InverseTransformPoint(entryGround.Value + Vector3.up);
                     Roster.EnterBuilding(guard.Id, interior.EntryDoor.buildingKey, now,
                         new GuardPoint3 { X = point.x, Y = point.y, Z = point.z });
+                    if(report.ThreatId!=null && worldStore!=null)
+                    {
+                        var incident=worldStore.Snapshot().AlarmIncidents.Find(a=>a.ThreatId==report.ThreatId &&
+                            a.BuildingKey==report.BuildingKey && a.HasLocation);
+                        // Alarms store ground points; observations store actor origins one metre above ground.
+                        if(incident!=null) guard.Interior.LastSeenSuspect=new GuardPoint3 { X=incident.X,Y=incident.Y+1,Z=incident.Z };
+                    }
                 }
                 if (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 var actor = View(guard, now); actor.gameObject.SetActive(true);
                 if (guard.Interior.Returning) { actor.EndCombat(); actor.Place(now); continue; }
+                if(UpdateInteriorEnemyDefense(guard,actor,report,now)) continue;
                 if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None && (report == null || !report.Investigation))
                 {
                     actor.EndCombat(); actor.Capture(now);

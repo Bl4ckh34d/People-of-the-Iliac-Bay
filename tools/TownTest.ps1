@@ -103,6 +103,8 @@ try {
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_CITIZEN_THREAT_PASS:') { throw 'Citizen threat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_THREAT_PASS:') { throw 'Keeper threat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENDER_PASS:') { throw 'Indoor defender combat probe did not complete.' }
+    if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENSE_REPORT_PASS:') { throw 'Indoor witness defense report did not complete.' }
+    if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENSE_ARRIVAL_PASS:') { throw 'Indoor defense arrival did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_GUARD_EFFECT_RECREATE_PASS:') { throw 'Guard effect recreation probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_GUARD_EFFECT_ELAPSED_PASS:') { throw 'Guard effect elapsed-time probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DOOR_EFFECT_PASS:') { throw 'Guard doorway effect probe did not complete.' }

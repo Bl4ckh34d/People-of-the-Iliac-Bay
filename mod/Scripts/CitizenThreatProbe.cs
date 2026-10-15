@@ -118,6 +118,46 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Native keeper did not flee a visible hostile foe.");
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None) throw new InvalidOperationException("Keeper threat response accused player.");
                 Debug.Log("LIVING_CITIES_KEEPER_THREAT_PASS: native registered merchant sees hostile foe and physically flees without blaming player.");
+                guards.EnemyDefense=true;
+                var messenger=alarm.People.Find(p=>p.ResidentId==keeper.Id);
+                deadline=Time.realtimeSinceStartup+10;
+                while(messenger.Escape==null && Time.realtimeSinceStartup<deadline) yield return null;
+                if(messenger.Escape==null) throw new InvalidOperationException("Keeper defense fixture has no checked escape to a guard.");
+                clock.RaiseTime((float)Math.Max(0,messenger.Escape.ReportAt-clock.ToSeconds()+1));
+                deadline=Time.realtimeSinceStartup+8; GuardReport defenseReport=null;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    defenseReport=guards.Roster.Reports.Find(r=>r.ThreatId==alarm.ThreatId && r.BuildingKey==room.EntryDoor.buildingKey && r.GuardIds.Count>0);
+                    if(defenseReport!=null) break; yield return null;
+                }
+                if(defenseReport==null) throw new InvalidOperationException("Escaped keeper did not summon guards against indoor enemy.");
+                if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None) throw new InvalidOperationException("Indoor enemy report blamed player.");
+                Debug.Log("LIVING_CITIES_INDOOR_DEFENSE_REPORT_PASS: escaped native keeper contacts guard and summons finite building response against enemy.");
+                var summoned=guards.Roster.Guards.Find(g=>g.Id==defenseReport.GuardIds[0]);
+                if(summoned.ArrivesAt<=clock.ToSeconds() || summoned.Interior!=null)
+                    throw new InvalidOperationException("Indoor defender skipped physical exterior travel.");
+                var target=enemy.GetComponent<DaggerfallEntityBehaviour>(); target.Entity.MaxHealth=500; target.Entity.SetHealth(500,true);
+                clock.RaiseTime((float)(summoned.ArrivesAt-clock.ToSeconds()+1));
+                deadline=Time.realtimeSinceStartup+20; GuardActor responder=null;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    foreach(var candidate in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                        if(candidate.GuardId==summoned.Id && candidate.IsInterior) responder=candidate;
+                    if(responder && responder.CombatReady && target.Entity.CurrentHealth<500) break;
+                    yield return null;
+                }
+                if(!responder || !responder.CombatReady || target.Entity.CurrentHealth>=500 || responder.DefenseTarget!=target)
+                    throw new InvalidOperationException("Summoned guard did not enter shop and damage reported enemy; duty="+summoned.Duty+
+                        "; interior="+(summoned.Interior!=null)+"; actor="+(responder!=null)+"; combat="+(responder && responder.CombatReady)+
+                        "; health="+target.Entity.CurrentHealth+"; sight="+(responder && CivilianResponses.Sees(responder.transform.position,target.transform.position,20))+
+                        "; distance="+(responder ? Vector3.Distance(responder.transform.position,target.transform.position) : -1)+
+                        "; known="+(summoned.Interior!=null && summoned.Interior.LastSeenSuspect!=null)+"; alarmLocation="+alarm.HasLocation);
+                if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None || responder.GetComponent<EnemyMotor>().IsHostile)
+                    throw new InvalidOperationException("Summoned defender attacked innocent player.");
+                guards.EnemyDefense=false; yield return null; yield return null;
+                if(summoned.Interior!=null && !summoned.Interior.Returning)
+                    throw new InvalidOperationException("Disabled indoor defense did not stand down.");
+                Debug.Log("LIVING_CITIES_INDOOR_DEFENSE_ARRIVAL_PASS: finite guard travels, enters and damages reported hostile enemy without blaming player.");
                 yield return CheckIndoorDefender(enemy,room.transform,room.EntryDoor.buildingKey);
             }
             finally { guards.EnemyDefense=defense; UnityEngine.Object.Destroy(enemy); }
