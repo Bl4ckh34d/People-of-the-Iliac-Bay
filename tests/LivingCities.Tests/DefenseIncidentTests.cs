@@ -6,11 +6,15 @@ namespace LivingCities.Tests
 {
     internal static class DefenseIncidentTests
     {
-        private static WorldStateStore Store(out string resident, out string guard)
+        private static WorldStateStore Store(out string resident, out string guard,bool responding=true)
         {
             var store = new WorldStateStore(42); var town = store.GetOrCreate(1,new[] { 7 },1);
             resident = town.Households[0].Residents[0].Id;
-            guard = store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint() }).Guards[0].Id;
+            var roster=store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint() });
+            guard = roster.Guards[0].Id;
+            if(responding) roster.DispatchDefense("response:1","enemy:1",100,
+                new Dictionary<string,List<SavedRoutePoint>> { [guard]=new List<SavedRoutePoint> {
+                    new SavedRoutePoint(),new SavedRoutePoint { X=1 } } },1,2.8,12);
             store.RegisterDefenseCombatant("enemy:1",1,CombatOrigin.HostileAttacker,100);
             return store;
         }
@@ -21,6 +25,37 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string,Action)> cases)
         {
+            cases.Add(("Welfare requires living player health strictly below sixty-six percent",()=>{
+                foreach(double health in new[] { 0.0,0.65,0.65999,0.66,0.75,1.0 })
+                {
+                    string witness,guard; var store=Store(out witness,out guard);
+                    store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
+                    var record=Death(store);
+                    bool eligible=health>0 && health<0.66;
+                    Check.Equal(eligible,store.CompleteDefenseWelfare("enemy:1",guard,130,true,true,health).Completed);
+                    Check.Equal(eligible,record.Death.PotionGranted);
+                    Check.True(record.Death.LootEntitled);
+                }
+            }));
+            cases.Add(("An informed guard cannot offer welfare without responding to this threat",()=>{
+                string witness,guard; var store=Store(out witness,out guard,false);
+                store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
+                var record=Death(store);
+                Check.True(!store.CompleteDefenseWelfare("enemy:1",guard,130,true,true,0.5).Completed);
+                Check.True(!record.Death.WelfareConsumed && !record.Death.PotionGranted);
+            }));
+            cases.Add(("Wrong-threat and returning responders cannot consume welfare",()=>{
+                foreach(bool wrongThreat in new[] { true,false })
+                {
+                    string witness,guard; var store=Store(out witness,out guard);
+                    store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
+                    Death(store);
+                    var roster=store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint() });
+                    if(wrongThreat) roster.Reports[0].ThreatId="another-enemy";
+                    else roster.Advance(410);
+                    Check.True(!store.CompleteDefenseWelfare("enemy:1",guard,wrongThreat?130:410,true,true,0.5).Completed);
+                }
+            }));
             cases.Add(("Welfare presence requires same settlement building and local radius",()=>{
                 for(int scenario=0;scenario<5;scenario++)
                 {
@@ -94,27 +129,27 @@ namespace LivingCities.Tests
                 var record=store.ConfirmDefenseDeath("enemy:1",500,-1,0,0,0,true,300,100);
                 Check.True(!record.Death.WelfareEligible);
                 Check.Throws<ArgumentException>(()=>store.RecordDefenseWitness("enemy:1",guard,true,501));
-                Check.True(!store.CompleteDefenseWelfare("enemy:1",guard,501,true,true).Completed);
+                Check.True(!store.CompleteDefenseWelfare("enemy:1",guard,501,true,true,0.5).Completed);
             }));
             cases.Add(("Actual witness handoff permits one bounded welfare gift across reload",()=>{
                 string witness,guard; var store=Store(out witness,out guard);
                 store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",witness,false,111);
                 var record=store.ConfirmDefenseDeath("enemy:1",120,7,1,2,3,true,300,100);
-                Check.True(!store.CompleteDefenseWelfare(record.Id,guard,130,true,true).Completed);
+                Check.True(!store.CompleteDefenseWelfare(record.Id,guard,130,true,true,0.5).Completed);
                 store.InformDefenseGuard(record.Id,witness,guard,131);
-                var result=store.CompleteDefenseWelfare(record.Id,guard,132,true,true);
+                var result=store.CompleteDefenseWelfare(record.Id,guard,132,true,true,0.5);
                 Check.True(result.Completed && result.PotionGranted && record.Death.WelfareConsumed);
                 var copy=new WorldStateStore(0); copy.Restore(store.Snapshot());
-                Check.True(!copy.CompleteDefenseWelfare(record.Id,guard,133,true,true).Completed);
+                Check.True(!copy.CompleteDefenseWelfare(record.Id,guard,133,true,true,0.5).Completed);
                 Check.True(copy.GetDefenseCombatant(record.Id).Death.PotionGranted);
             }));
             cases.Add(("Declining gift consumes courtesy and does not permit a later potion",()=>{
                 string witness,guard; var store=Store(out witness,out guard);
                 store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
                 var record=store.ConfirmDefenseDeath("enemy:1",120,-1,1,0,2,true,300,100);
-                var result=store.CompleteDefenseWelfare(record.Id,guard,130,true,false);
+                var result=store.CompleteDefenseWelfare(record.Id,guard,130,true,false,0.5);
                 Check.True(result.Completed && !result.PotionGranted);
-                Check.True(!store.CompleteDefenseWelfare(record.Id,guard,131,true,true).Completed);
+                Check.True(!store.CompleteDefenseWelfare(record.Id,guard,131,true,true,0.5).Completed);
             }));
             cases.Add(("Courtesy expires at exact deadline or departure without revoking loot",()=>{
                 foreach(bool leave in new[] { false,true })
@@ -124,7 +159,7 @@ namespace LivingCities.Tests
                     var record=store.ConfirmDefenseDeath("enemy:1",120,-1,1,0,2,true,300,100);
                     store.ObserveDefenseScene(record.Id,!leave,leave?130:420);
                     var copy=new WorldStateStore(0); copy.Restore(store.Snapshot());
-                    Check.True(!copy.CompleteDefenseWelfare(record.Id,guard,leave?131:420,true,true).Completed);
+                    Check.True(!copy.CompleteDefenseWelfare(record.Id,guard,leave?131:420,true,true,0.5).Completed);
                     Check.True(copy.GetDefenseCombatant(record.Id).Death.WelfareExpired);
                     Check.True(copy.GetDefenseCombatant(record.Id).Death.LootEntitled);
                 }
@@ -132,7 +167,7 @@ namespace LivingCities.Tests
             cases.Add(("Completing welfare outside the scene expires rather than handing out gifts",()=>{
                 string witness,guard; var store=Store(out witness,out guard);
                 store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
-                Death(store); var result=store.CompleteDefenseWelfare("enemy:1",guard,130,false,true);
+                Death(store); var result=store.CompleteDefenseWelfare("enemy:1",guard,130,false,true,0.5);
                 Check.True(!result.Completed && store.GetDefenseCombatant("enemy:1").Death.WelfareExpired);
             }));
             cases.Add(("Guard finishing a witnessed player fight permits welfare but does not invent a player kill",()=>{
@@ -140,7 +175,7 @@ namespace LivingCities.Tests
                 store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
                 var record=store.ConfirmDefenseDeath("enemy:1",120,-1,1,0,2,false,300,100);
                 Check.True(record.Death.Lawful && record.Death.WelfareEligible && !record.Death.LootEntitled);
-                Check.True(store.CompleteDefenseWelfare(record.Id,guard,130,true,true).Completed);
+                Check.True(store.CompleteDefenseWelfare(record.Id,guard,130,true,true,0.5).Completed);
             }));
             cases.Add(("Witness death preserves earned rights while preventing a new physical handoff",()=>{
                 string witness,guard; var store=Store(out witness,out guard);
@@ -214,11 +249,11 @@ namespace LivingCities.Tests
                 store.RecordDefenseWitness("enemy:1",guard,true,110);
                 var record=store.ConfirmDefenseDeath("enemy:1",120,-1,0,0,0,false,300,100);
                 Check.True(!record.Death.WelfareEligible && !record.Death.LootEntitled);
-                Check.True(!store.CompleteDefenseWelfare(record.Id,guard,121,true,true).Completed);
+                Check.True(!store.CompleteDefenseWelfare(record.Id,guard,121,true,true,0.5).Completed);
                 store=Store(out witness,out guard); store.RecordDefensePlayerHit("enemy:1",110,true);
                 store.RecordDefenseWitness("enemy:1",guard,true,111); Death(store);
                 var state=store.Snapshot(); state.Garrisons[0].Kill(guard,125); store.Restore(state);
-                Check.True(!store.CompleteDefenseWelfare("enemy:1",guard,130,true,true).Completed);
+                Check.True(!store.CompleteDefenseWelfare("enemy:1",guard,130,true,true,0.5).Completed);
                 Check.True(store.GetDefenseCombatant("enemy:1").Death.LootEntitled);
             }));
         }

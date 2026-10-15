@@ -136,13 +136,22 @@ namespace LivingCities.Core
                 ObserveDefenseScene(c.Id,present,now);
             }
         }
-        public WelfareResult CompleteDefenseWelfare(string id,string guardId,double now,bool playerOnSite,bool acceptPotion)
+        public WelfareResult CompleteDefenseWelfare(string id,string guardId,double now,bool playerOnSite,bool acceptPotion,double playerHealthFraction)
         {
+            Require(!double.IsNaN(playerHealthFraction) && playerHealthFraction>=0 && playerHealthFraction<=1,"Invalid player welfare health.");
             var c=DefenseRecord(id); ObserveDefenseScene(id,playerOnSite,now); var d=c.Death;
-            if(!d.WelfareEligible || d.WelfareExpired || d.WelfareConsumed || !d.InformedGuards.Contains(guardId) ||
-                !DefenseObserver(state,c.SettlementId,guardId,true,true)) return new WelfareResult();
+            if(playerHealthFraction<=0 || playerHealthFraction>=0.66 || !d.WelfareEligible || d.WelfareExpired || d.WelfareConsumed || !d.InformedGuards.Contains(guardId) ||
+                !DefenseObserver(state,c.SettlementId,guardId,true,true) || !IsDefenseResponder(c,guardId)) return new WelfareResult();
             d.WelfareConsumed=true; d.ConsumedAt=now; d.WelfareGuardId=guardId; d.PotionGranted=d.PotionOffered && acceptPotion;
             return new WelfareResult { Completed=true,PotionGranted=d.PotionGranted };
+        }
+        private bool IsDefenseResponder(DefenseCombatant c,string guardId)
+        {
+            var roster=state.Garrisons.Find(r=>r.SettlementId==c.SettlementId);
+            var guard=roster==null ? null : roster.Guards.Find(g=>g.Id==guardId && g.IsAlive);
+            if(guard==null || guard.IncidentId==null || (guard.Duty!=GuardDuty.Responding &&
+                guard.Duty!=GuardDuty.Searching && guard.Duty!=GuardDuty.Engaged)) return false;
+            return roster.Reports.Exists(r=>r.Id==guard.IncidentId && r.ThreatId==c.Id && r.GuardIds.Contains(guardId));
         }
         private static bool DefenseId(string value) { return !string.IsNullOrWhiteSpace(value) && value.Length<=512; }
         private static bool DefenseTime(double value) { return !double.IsNaN(value) && !double.IsInfinity(value) && value>=0; }

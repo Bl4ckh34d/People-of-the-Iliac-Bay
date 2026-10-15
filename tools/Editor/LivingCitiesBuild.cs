@@ -362,21 +362,25 @@ public static class LivingCitiesBuild
     private static void VerifyDefenseLedger()
     {
         var store=new WorldStateStore(42); store.GetOrCreate(1,new[] { 7 },1);
-        string guard=store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint() }).Guards[0].Id;
+        var roster=store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint() });
+        string guard=roster.Guards[0].Id;
+        roster.DispatchDefense("response:12345","native:12345",12000000100,
+            new Dictionary<string,List<SavedRoutePoint>> { [guard]=new List<SavedRoutePoint> {
+                new SavedRoutePoint(),new SavedRoutePoint { X=1 } } },1,2.8,12);
         store.RegisterDefenseCombatant("native:12345",1,CombatOrigin.PassiveEnemy,12000000100);
         store.RecordDefenseUnprovokedAttack("native:12345",12000000105);
         store.RecordDefensePlayerHit("native:12345",12000000110,true);
         store.RecordDefenseWitness("native:12345",guard,true,12000000111);
         store.ConfirmDefenseDeath("native:12345",12000000120,7,1,2,3,true,300,100);
         store.BindDefenseCorpse("native:12345","loot:12345");
-        Require(store.CompleteDefenseWelfare("native:12345",guard,12000000130,true,true).PotionGranted,"Defense gift fixture");
+        Require(store.CompleteDefenseWelfare("native:12345",guard,12000000130,true,true,0.5).PotionGranted,"Defense gift fixture");
         string json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
         var restored=new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
         var record=restored.GetDefenseCombatant("native:12345");
         Require(record.Origin==CombatOrigin.PassiveEnemy && record.UnprovokedAttackAt==12000000105 &&
             record.Death.LootEntitled && record.Death.CorpseId=="loot:12345" && record.Death.WelfareExpiresAt==12000000420 &&
             record.Death.WelfareConsumed && record.Death.PotionGranted && record.Witnesses[0].ObserverId==guard &&
-            !restored.CompleteDefenseWelfare(record.Id,guard,12000000131,true,true).Completed,"Native defense ledger roundtrip");
+            !restored.CompleteDefenseWelfare(record.Id,guard,12000000131,true,true,0.5).Completed,"Native defense ledger roundtrip");
         Debug.Log("LIVING_CITIES_DEFENSE_LEDGER_SERIALIZATION_PASS: provenance, corpse entitlement, expiry and consumed gift survive native JSON.");
     }
     private static void VerifyIndoorNoisePersistence()
