@@ -81,3 +81,9 @@ At this earlier checkpoint the core was not connected to gameplay hit/death/loot
 Installed development0.3.34 bundle SHA-256: `0B32E17C6F5907A99C49FFED9BE74A72392BEF3567B47618B398947FDE470276`.
 
 Like the existing world/guard records, ledger records are mutable objects for trusted mod code; adapters must use the mutation methods to preserve provenance. Restore checks structural and derived-state consistency, not authenticity against deliberate save editing. Observer sight and physical contact are authoritative adapter inputs, not inferred from timestamps by the core.
+# Welfare recognition update — 15 October 2026
+
+The `Living Cities - Welfare approach` test save deliberately includes outstanding Theft to verify courtesy followed by native surrender. Lawful self-defense does not create that charge. Guards now interrupt the welfare greeting with "Wait, don't I know your face?" when an existing crime is present, then resume native surrender when the message closes. This recognition branch does not offer or grant a healing potion. Innocent-player dialogue retains the explicit optional potion question; eligibility requires living player health strictly below 66%, with a 20% offer chance.
+
+Verification: 332/332 core tests, Unity build/install, native welfare encounter with actual save/reload and surrender (`work/WelfareRecognition-pass.log`), and native defense ledger/recognition inventory regression (`work/WelfareRecognition-ledger-pass.log`). Earlier potion-grant tests remain historical evidence; this latest recognition test asserts no reward and no duplicate exchange after serialization.
+

@@ -83,7 +83,8 @@ namespace LivingCities.DFU
             }
             if(!approached.Value) return true;
             var expectedStore=worldStore;
-            welfareWindow=new WelfareWindow(record.Death.PotionOffered,record.Death.LootEntitled,accept=> {
+            bool recognized=game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None;
+            welfareWindow=new WelfareWindow(record.Death.PotionOffered,record.Death.LootEntitled,recognized,accept=> {
                 welfareWindow=null;
                 if(worldStore!=expectedStore || !actor) return;
                 var result=worldStore.CompleteDefenseWelfare(record.Id,guard.Id,Now(),WelfareOnSite(record),accept,WelfareHealth());
@@ -100,13 +101,14 @@ namespace LivingCities.DFU
         {
             private Action<bool> finished;
             private bool accepted;
-            public WelfareWindow(bool potion,bool loot,Action<bool> completion):base(DaggerfallUI.UIManager)
+            public WelfareWindow(bool potion,bool loot,bool recognized,Action<bool> completion):base(DaggerfallUI.UIManager)
             {
                 finished=completion;
-                SetText(new[] { "Are you all right? That attacker has been dealt with.",
+                SetText(recognized ? new[] { "Are you all right? That attacker—",
+                    "Wait, don't I know your face?" } : new[] { "Are you all right? That attacker has been dealt with.",
                     loot ? "Their belongings are yours to take, if you wish." : "You helped us stop that attacker.",
                     potion ? "You look hurt. Would you like a healing potion?" : "Take care of those wounds." });
-                if(potion)
+                if(potion && !recognized)
                 {
                     AddButton(MessageBoxButtons.Yes); AddButton(MessageBoxButtons.No,true);
                     OnButtonClick+=(sender,button)=> { accepted=button==MessageBoxButtons.Yes; CloseWindow(); };

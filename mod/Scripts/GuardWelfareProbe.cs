@@ -145,22 +145,23 @@ namespace LivingCities.DFU
                         "; paused="+GameManager.IsGamePaused+"; elapsed="+(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()-now)+
                         "; route="+((List<Vector3>)typeof(GuardActor).GetField("welfareRoute",flags).GetValue(actor))?.Count+
                         "; step="+typeof(GuardActor).GetField("welfareStep",flags).GetValue(actor)+"; position="+actor.transform.position);
-                typeof(DaggerfallMessageBox).GetMethod("RaiseOnButtonClickEvent",flags).Invoke(window,new object[] { window,DaggerfallMessageBox.MessageBoxButtons.Yes });
+                if(!window.ClickAnywhereToClose) throw new InvalidOperationException("Recognized offender was offered a potion instead of recognition.");
+                window.CloseWindow();
                 yield return null; yield return null;
                 int after=0;
                 for(int i=0;i<game.PlayerEntity.Items.Count;i++)
                 { var item=game.PlayerEntity.Items.GetItem(i); if(item.PotionRecipeKey==4975678) after+=item.stackCount; }
-                if(!record.Death.WelfareConsumed || !record.Death.PotionGranted || after!=potionCount+1 ||
+                if(!record.Death.WelfareConsumed || record.Death.PotionGranted || after!=potionCount ||
                     game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft || roster.Reports[0].ThreatId!=null)
-                    throw new InvalidOperationException("Welfare exchange lost potion or prior-bounty handoff.");
-                Debug.Log("LIVING_CITIES_GUARD_WELFARE_PASS: surveyed physical approach, peaceful dialogue, one native potion and prior-crime handoff.");
+                    throw new InvalidOperationException("Recognition granted a potion or lost prior-bounty handoff.");
+                Debug.Log("LIVING_CITIES_GUARD_WELFARE_PASS: surveyed physical approach, recognition interrupts welfare, no potion and prior-crime handoff.");
                 var completedStore=new WorldStateStore(0);
                 completedStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
                     SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
                 var completed=completedStore.GetDefenseCombatant(record.Id);
                 var duplicate=completedStore.CompleteDefenseWelfare(record.Id,guard.Id,
                     DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),true,true,0.5);
-                if(!completed.Death.WelfareConsumed || !completed.Death.PotionGranted || duplicate.Completed || duplicate.PotionGranted)
+                if(!completed.Death.WelfareConsumed || completed.Death.PotionGranted || duplicate.Completed || duplicate.PotionGranted)
                     throw new InvalidOperationException("Completed welfare repeated or lost reward state after serialization.");
                 Debug.Log("LIVING_CITIES_WELFARE_RECREATE_PASS: native JSON and actor recreation resume approach; completed exchange cannot repeat.");
             }
