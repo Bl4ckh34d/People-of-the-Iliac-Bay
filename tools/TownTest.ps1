@@ -142,6 +142,7 @@ try {
     if ($TavernSurveyProbe -and $body -notmatch 'LIVING_CITIES_TAVERN_ROOMS_PASS:') { throw 'Stable tavern room partition did not complete.' }
     if ($TavernSurveyProbe -and $body -notmatch 'LIVING_CITIES_TAVERN_MARKER_PASS:') { throw 'Native rental-marker room mapping did not complete.' }
     if ($TavernSurveyProbe -and ([regex]::Matches($body, 'LIVING_CITIES_NATIVE_RENTAL_PASS:').Count -ne 3)) { throw 'Native paid rental import did not pass in all three taverns.' }
+    if ($TavernSurveyProbe -and ([regex]::Matches($body, 'LIVING_CITIES_RENTAL_PAYMENT_PASS:').Count -ne 3)) { throw 'Rental payment/vacancy checks did not pass in all three taverns.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PUBLIC_POSTS_PASS:') { throw 'Public guard post check did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DOOR_PURSUIT_PASS:') { throw 'Doorway pursuit check did not complete.' }

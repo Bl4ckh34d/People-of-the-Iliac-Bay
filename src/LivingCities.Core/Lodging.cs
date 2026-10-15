@@ -132,6 +132,13 @@ namespace LivingCities.Core
             }
             return earliest;
         }
+        public string AvailableLodgingRoom(int town,int building,int party,double start,double end)
+        {
+            Require(party>0 && DefenseTime(start) && DefenseTime(end) && end>start,"Invalid lodging offer.");
+            var tavern=Lodging(town,building);
+            var room=tavern.Rooms.Find(r=>r.Beds.Count>=party && !tavern.Bookings.Exists(b=>b.RoomId==r.Id && Overlap(start,end,b)));
+            return room==null ? null : room.Id;
+        }
         private static bool Overlap(double start,double end,LodgingBooking booking)
         { return start<booking.EndsAt && booking.StartsAt<end; }
         private static TavernLodging CopyLodging(TavernLodging source,WorldState world,HashSet<string> ids)

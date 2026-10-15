@@ -16,6 +16,14 @@ namespace LivingCities.Tests
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Room offer checks whole stay without reserving or promising a future gap",()=>{
+                var store=Store();
+                store.TryBookLodging(1,7,"future","guest",2,false,2,150,300,"double");
+                Check.Equal("single",store.AvailableLodgingRoom(1,7,1,100,200));
+                Check.Equal("double",store.AvailableLodgingRoom(1,7,2,100,150));
+                Check.True(store.AvailableLodgingRoom(1,7,2,100,151)==null);
+                Check.Equal(1,store.Snapshot().Lodgings[0].Bookings.Count);
+            }));
             cases.Add(("Native paid rental reconciliation preserves identity room and original interval on repeat and extension",()=>{
                 var store=Store();
                 Check.True(store.ReconcilePlayerLodging(1,7,"single",100,200));

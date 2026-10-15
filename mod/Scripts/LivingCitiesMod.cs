@@ -62,6 +62,7 @@ namespace LivingCities.DFU
             component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
             component.streets.InstallReactionHook();
+            component.nativeRentals.Install(()=>component.store,()=>!component.saveFault && component.options.Enabled);
             host.AddComponent<DefenseCombatAdapter>().Install(()=>component.store,
                 ()=>!component.saveFault && component.options.Enabled && component.guards.OwnsSettlement);
             var lifetimeType = Type.GetType("LivingCities.QuestHooks.NativeGuardLifetimeHooks, LivingCities.QuestHooks", true);
@@ -86,6 +87,7 @@ namespace LivingCities.DFU
         }
         private void OnDestroy()
         {
+            nativeRentals.Dispose();
             if (guardLifetimeHook != null) guardLifetimeHook.Dispose();
             ClearQuestOffers();
             StartGameBehaviour.OnNewGame -= ResetWorld;
