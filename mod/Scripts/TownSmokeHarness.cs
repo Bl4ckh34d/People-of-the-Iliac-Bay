@@ -286,6 +286,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-city-traveler-probe") >= 0)
+            {
+                yield return DaggerfallTravelerProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall traveler gates; character="+character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-tavern-survey-probe") >= 0)
             {
                 yield return TavernSurveyProbe.Run();

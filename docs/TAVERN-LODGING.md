@@ -1,5 +1,11 @@
 # Tavern lodging and travelers
 
+## Daggerfall gate routes, 15 October 2026
+
+Daggerfall City is now the primary traveler acceptance location; Gothway remains the unwalled comparison. Its20 inns exposed a failure hidden by Gothway: navigation-boundary road starts yielded no usable route through the walls. Walled surveys now derive outside approaches from actual gate mesh bounds and connect to the inner street grid, retaining physical waypoint/segment sweeps across the full gate opening. This bridges the native grid discontinuity without bypassing collision. Unwalled road-boundary behavior is unchanged.
+
+`TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -CityTravelerProbe` passes actual Daggerfall geometry:4 gates, all20 inns reachable at noon, every inn rejects physical routes after20:00 closure, a representative route recovers at06:00, and the core itinerary delays a proposed20:00 arrival until06:00. Evidence: `work/CityTraveler-runtime-red.log`, `work/CityTraveler-gates-red.log`, `work/CityTraveler-final-pass.log`;333 core tests and final Unity build pass. This validates routes and scheduled gating, not visible NPC gate crossing or a rendered waiting queue. Traveler demand/actors, paid city lodging and haunting-aware visits remain pending.
+
 ## Traveler approach routes, 15 October 2026
 
 `TownGeometry.SurveyTravelerRoutes` identifies contiguous native road runs at the navigation-grid boundary, chooses stable midpoint approaches, and finds up to4 collision-checked routes to a surveyed inn door. Candidate attempts are bounded to32 per inn. The shared A* and physical waypoint/segment checks reject blocked paths. Walled status is read from actual `DaggerfallCityGate` components. These are local town approaches; regional Roads of Daggerfall routes remain unconnected.

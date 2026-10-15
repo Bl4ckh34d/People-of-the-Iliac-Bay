@@ -2,6 +2,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [ValidatePattern('^LivingCitiesTest-[a-f0-9]{8}$')][string]$FixtureCharacter,
     [switch]$QuestProbe,
     [switch]$TavernSurveyProbe,
+    [switch]$CityTravelerProbe,
     [switch]$BedProbe,
     [switch]$SleepProbe,
     [switch]$ResponseProbe,
@@ -50,6 +51,7 @@ if ($GuardControllerProbe) { $arguments += ' -livingcities-guard-controller-prob
 if ($GuardPatrolProbe) { $arguments += ' -livingcities-guard-patrol-probe' }
 if ($GuardDefenseProbe) { $arguments += ' -livingcities-guard-defense-probe' }
 if ($TavernSurveyProbe) { $arguments += ' -livingcities-tavern-survey-probe' }
+if ($CityTravelerProbe) { $arguments += ' -livingcities-city-traveler-probe' }
 if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
 if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
 if ($HousingProbe) { $arguments += ' -livingcities-housing-probe' }
@@ -107,6 +109,7 @@ try {
         Start-Sleep -Milliseconds 500
     }
     if (-not $passed) { throw 'Town test did not finish within 180 seconds.' }
+    if ($CityTravelerProbe -and $body -notmatch 'LIVING_CITIES_CITY_TRAVELER_PASS:') { throw 'Daggerfall traveler gate test did not complete.' }
     if ($QuestProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_PASS:') { throw 'Quest probe did not complete.' }
     if ($BedProbe -and $body -notmatch 'LIVING_CITIES_TOWN_BEDS_PASS:') { throw 'Bed probe did not complete.' }
     if ($ShopVisitProbe -and $body -notmatch 'LIVING_CITIES_SHOP_VISIT_PASS:') { throw 'Shop activity probe did not complete.' }

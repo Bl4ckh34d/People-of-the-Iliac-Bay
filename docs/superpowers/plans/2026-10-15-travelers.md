@@ -2,6 +2,8 @@
 
 **Goal:** Nonlocal adult NPCs physically arrive, obtain first-come lodging, visit town, sleep in their assigned beds, and leave after their stay. Preserve identities, death and journey progress across save/load and unloading.
 
+**Primary acceptance location:** Daggerfall City (user direction,15 October2026); Gothway is the unwalled comparison. Native city gate route fixture now verifies4 gates,20/20 daytime inn routes, all-inn night rejection and representative dawn recovery (`work/CityTraveler-final-pass.log`). Physical traveler actors/waiting and haunting-aware itinerary behavior still require integration.
+
 **Architecture:** Travelers are separate from residential households and garrison population. A deterministic core itinerary uses surveyed entrance-to-inn routes and absolute game time. Persisted visit identities and booking outcomes drive the same civilian actor, collision, crime and sleeping systems used by residents; they must not become decorative invulnerable crowds. Lodging remains authoritative even while a traveler is outside.
 
 Current authority: `docs/TAVERN-LODGING.md`, native `DaggerfallCityGate.Update` (06:00 open, 18:00 closed), existing `Lodging.cs`, `StreetPopulation.cs`, and civilian/death persistence. No random enemy generator is part of this work.

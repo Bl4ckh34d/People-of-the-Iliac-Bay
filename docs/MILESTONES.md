@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 primary traveler test moved to Daggerfall City per user direction. Native gate approaches fix the previously disconnected wall crossing: all20 inns have daytime routes through4 gates, every inn rejects routes at night, and a dawn route recovers. Proposed night arrival waits until06:00.333 core tests and Unity build pass; visible travelers/queues and haunting-aware town visits are not implemented by this checkpoint.
+
 M3 traveler route helper: native road-boundary approaches now yield4 collision-checked paths to each of Gothway's3 inns, with actual gate-component classification marking the town unwalled. Full tavern suite,333 core tests and Unity build pass. Controller integration, nonlocal arrivals, walled gates and large-city timing remain pending.
 
 M3 exterior lodging inventory is now live: one cached inn survey per refresh registers rooms while the player stays outside and reconciles existing native payment. All3 Gothway inns plus full rental/payment/rest regressions pass;333 core tests and Unity build pass. Physical gate/road routes, nonlocal traveler generation and actors are next. Initial synchronous survey performance in large/modded settlements remains unverified.
