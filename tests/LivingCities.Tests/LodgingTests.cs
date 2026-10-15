@@ -16,6 +16,29 @@ namespace LivingCities.Tests
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Player retains concurrent paid rooms in different inns through extension and reload",()=>{
+                var store=Store();
+                store.RegisterLodging(1,8,new[] { new LodgingRoom { Id="room",Beds=new List<string> { "bed" } } });
+                Check.True(store.TryBookLodging(1,7,"first","player",1,true,1,100,200));
+                Check.True(store.TryBookLodging(1,8,"second","player",1,true,1,150,300));
+                Check.True(!store.TryBookLodging(1,7,"duplicate","player",1,true,1,150,250));
+                Check.True(store.TryExtendLodging("first",250));
+                var copy=new WorldStateStore(0); copy.Restore(store.Snapshot());
+                Check.Equal(250d,copy.Snapshot().Lodgings[0].Bookings[0].EndsAt);
+                Check.True(copy.IsLodgingBedReserved(1,8,"bed",200,"traveler"));
+            }));
+            cases.Add(("Travelers cannot overlap inns or change guest role to bypass reservations",()=>{
+                var store=Store();
+                store.RegisterLodging(1,8,new[] { new LodgingRoom { Id="room",Beds=new List<string> { "bed" } } });
+                Check.True(store.TryBookLodging(1,7,"first","guest",2,false,1,100,200));
+                Check.True(!store.TryBookLodging(1,8,"overlap","guest",2,false,1,150,250));
+                Check.Throws<ArgumentException>(()=>store.TryBookLodging(1,8,"changed","guest",2,true,1,200,300));
+                Check.True(store.TryBookLodging(1,8,"next","guest",2,false,1,200,300));
+                Check.True(!store.TryExtendLodging("first",201));
+                var malformed=store.Snapshot(); malformed.Lodgings[1].Bookings[0].Player=true;
+                Check.Throws<ArgumentException>(()=>store.Restore(malformed));
+                Check.True(!store.Snapshot().Lodgings[1].Bookings[0].Player);
+            }));
             cases.Add(("Native allocated room is preserved without fallback to another vacancy",()=>{
                 var store=Store();
                 Check.True(store.TryBookLodging(1,7,"player","player",1,true,1,100,200,"single"));

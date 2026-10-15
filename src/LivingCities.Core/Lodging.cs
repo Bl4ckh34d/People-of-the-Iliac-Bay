@@ -66,9 +66,12 @@ namespace LivingCities.Core
                     (allocatedRoom==null || prior.RoomId==allocatedRoom),"Booking identity changed.");
                 return true;
             }
-            // A guest cannot occupy two paid rooms over the same interval.
+            // Vanilla permits the player to retain paid rooms in different inns.
             foreach(var other in state.Lodgings)
-                if(other.Bookings.Exists(b=>b.GuestId==guest && Overlap(start,end,b))) return false;
+            {
+                Require(!other.Bookings.Exists(b=>b.GuestId==guest && b.Player!=player),"Lodging guest role changed.");
+                if(other.Bookings.Exists(b=>b.GuestId==guest && (!player || other==tavern) && Overlap(start,end,b))) return false;
+            }
             foreach(var room in tavern.Rooms)
             {
                 if((allocatedRoom!=null && room.Id!=allocatedRoom) || room.Beds.Count<party ||
@@ -86,7 +89,7 @@ namespace LivingCities.Core
                 var booking=tavern.Bookings.Find(b=>b.Id==id); if(booking==null) continue;
                 Require(DefenseTime(end) && end>=booking.EndsAt,"Invalid lodging extension.");
                 foreach(var other in state.Lodgings)
-                    if(other.Bookings.Exists(b=>b!=booking && (b.GuestId==booking.GuestId ||
+                    if(other.Bookings.Exists(b=>b!=booking && (b.GuestId==booking.GuestId && (!booking.Player || other==tavern) ||
                         other==tavern && b.RoomId==booking.RoomId) && Overlap(booking.StartsAt,end,b))) return false;
                 booking.EndsAt=end; return true;
             }
@@ -136,6 +139,7 @@ namespace LivingCities.Core
                     booking.PartySize>0 && copy.Rooms.Exists(r=>r.Id==booking.RoomId && r.Beds.Count>=booking.PartySize) &&
                     DefenseTime(booking.StartsAt) && DefenseTime(booking.EndsAt) && booking.EndsAt>booking.StartsAt,
                     "Invalid lodging booking.");
+                Require(!copy.Bookings.Exists(b=>b.GuestId==booking.GuestId && b.Player!=booking.Player),"Lodging guest role changed.");
                 Require(!copy.Bookings.Exists(b=>(b.RoomId==booking.RoomId || b.GuestId==booking.GuestId) &&
                     Overlap(booking.StartsAt,booking.EndsAt,b)),"Overlapping lodging bookings.");
                 copy.Bookings.Add(new LodgingBooking { Id=booking.Id,GuestId=booking.GuestId,RoomId=booking.RoomId,
@@ -153,8 +157,12 @@ namespace LivingCities.Core
                 var copy=CopyLodging(tavern,world,ids);
                 Require(!result.Exists(t=>t.SettlementId==copy.SettlementId && t.BuildingKey==copy.BuildingKey),"Duplicate tavern lodging.");
                 foreach(var booking in copy.Bookings)
-                    Require(!result.Exists(t=>t.Bookings.Exists(b=>b.GuestId==booking.GuestId &&
+                {
+                    Require(!result.Exists(t=>t.Bookings.Exists(b=>b.GuestId==booking.GuestId && b.Player!=booking.Player)),
+                        "Lodging guest role changed.");
+                    Require(!result.Exists(t=>t.Bookings.Exists(b=>b.GuestId==booking.GuestId && !booking.Player &&
                         Overlap(booking.StartsAt,booking.EndsAt,b))),"Guest has simultaneous lodging in different taverns.");
+                }
                 result.Add(copy);
             }
             return result;
