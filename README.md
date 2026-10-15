@@ -1,5 +1,7 @@
 # Living Cities for Daggerfall Unity
 
+**0.3.34 moves guard posts to public junctions, paved squares and gate approaches**, clear of building entrances and facing open streets. Saved guards keep their identities and walk to new posts when available. A guard pursuing the player inside a shop now follows through the doorway and physically resumes pursuit outside.286 core tests, native shop/save/pursuit checks and Daggerfall/city/refuge regression pass. Elevated wall posts and broader layout acceptance remain unfinished. See [post and doorway evidence](docs/GUARD-POSTS-AND-DOORWAYS.md).
+
 **0.3.33 development checkpoint:** guards defend against existing hostile quest-tagged enemies; awake generated residents and registered native merchants flee. No separate random-incursion spawner. Core279/279 and native guard damage/citizen flight checks pass. Interior enemy defense, complete stationary coverage and dynamic blocked-route replanning remain unfinished. See [threat response evidence](docs/THREAT-RESPONSE.md).
 
 **0.3.32 adds timed shop browsing and haggling:** visitors walk between surveyed shelf/merchant stops and leave when their appointment ends.272 core tests, an actual shop activity probe and indoor hearing/save/guard-arrival regression pass. Busy-shop crowd movement, complete idle art and actual NPC purchases remain unfinished. See [shop activities](docs/SHOP-VISITS.md).

@@ -89,7 +89,7 @@ try {
             foreach ($line in ($body -split "`n" | Where-Object { $_ -match 'LIVING_CITIES_TOWN_|LIVING_CITIES_TEST_SAVE:' })) {
                 if ($reported.Add($line)) { Write-Output $line.Trim() }
             }
-            if ($body -match 'error CS\d+|Exception:|LIVING_CITIES_TOWN_FAIL') { throw 'Town test failed; inspect work/town-test.log.' }
+            if ($body -match 'error CS\d+|(?:^|[\r\n])(?:System\.)?\w*Exception\b|LIVING_CITIES_TOWN_FAIL') { throw 'Town test failed; inspect work/town-test.log.' }
             if ($body -match 'LIVING_CITIES_TOWN_TEST_PASS:') { $passed = $true; break }
         }
         Start-Sleep -Milliseconds 500
@@ -112,6 +112,8 @@ try {
     if ($GuardPatrolProbe -and $body -notmatch 'LIVING_CITIES_GUARD_PATROL_PASS:') { throw 'Guard patrol probe did not complete.' }
     if ($GuardDefenseProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DEFENSE_PASS:') { throw 'Guard defense probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
+    if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PUBLIC_POSTS_PASS:') { throw 'Public guard post check did not complete.' }
+    if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DOOR_PURSUIT_PASS:') { throw 'Doorway pursuit check did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PENDING_GUARD_PASS:') { throw 'Pending native guard report probe did not complete.' }
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_HOUSING_LIVE_PASS:') { throw 'Housing probe did not complete.' }

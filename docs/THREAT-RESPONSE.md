@@ -33,4 +33,6 @@ Building dispatch and queued building reports now accept a separate enemy target
 
 ## Daggerfall doorway-post report
 
+The placement and shop doorway-pursuit corrections are now in development0.3.34; see [verified post and doorway behavior](GUARD-POSTS-AND-DOORWAYS.md). The following paragraph preserves the original diagnosis.
+
 The player reported a guard standing facing a house door, then observed the guard run to city-wall shelter when a ghost appeared. SAVE50 stores guard `g:1291010263:n:4` as `Posted`, with no refuge/interior and post `(139.824996948242, 703.400024414063)`. The current player log later records that guard taking refuge in building67329. This supports a stationary doorway post followed by working ghost flight, rather than proving a stuck patrol. Current post selection samples resident commute starts, which are building entrances. Post selection needs an offset to reachable clear space; existing saved rosters need safe migration without renaming guards or rewriting active journeys. That placement correction is not implemented yet.

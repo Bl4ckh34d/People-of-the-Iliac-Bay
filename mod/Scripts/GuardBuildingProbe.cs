@@ -20,6 +20,14 @@ namespace LivingCities.DFU
             var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool enabled = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true);
             var controller = adapter.GetComponent<GuardPopulation>();
+            var postDirectory=game.StreamingWorld.GetCurrentBuildingDirectory();
+            var postSites=new TownGeometry(postDirectory,game.StreamingWorld.GetCurrentCityNavigation(),false).SurveyGuardPosts(350);
+            if(postSites.Count==0) throw new InvalidOperationException("No public guard post sites surveyed.");
+            foreach(var posted in controller.Roster.Guards)
+                if(posted.IsAlive && posted.Duty==GuardDuty.Posted && !controller.Roster.IsOnPatrol(posted.Id) &&
+                    !postSites.Exists(p=>Math.Abs(p.X-posted.Post.X)<0.05 && Math.Abs(p.Z-posted.Post.Z)<0.05))
+                    throw new InvalidOperationException("Idle saved guard retained a doorway post: "+posted.Id);
+            Debug.Log("LIVING_CITIES_PUBLIC_POSTS_PASS: available="+postSites.Count+"; roster="+controller.Roster.Guards.Count);
             bool saved = false, loaded = false;
             GuardBuildingApproach withheld = null;
             GuardRoster withheldRoster = null;
@@ -161,6 +169,62 @@ namespace LivingCities.DFU
                 if (first.Interior != null || first.Duty != GuardDuty.Posted)
                     throw new InvalidOperationException("Guard failed to leave the interior and return to its post.");
                 Debug.Log("LIVING_CITIES_TOWN_GUARD_BUILDING_PASS: native indoor alarm, finite delayed arrival, doorway entry, wounded interior save/load and return; save=" + key);
+                // Reuse this real shop to exercise the player's reported escape.
+                roster=controller.Roster;
+                now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                var pursuit=roster.DispatchBuilding("probe-door-pursuit",approach.BuildingKey,now,1,2.8,12,
+                    false,new System.Collections.Generic.HashSet<string> { id });
+                if(pursuit.Count!=1) throw new InvalidOperationException("Door pursuit fixture could not dispatch original guard.");
+                first=pursuit[0];
+                game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Theft;
+                // Native save/reload reconstructs exterior objects; do not reuse
+                // the pre-reload door component reference.
+                owner=null;
+                foreach(var candidate in game.StreamingWorld.GetCurrentBuildingDirectory().GetComponentsInChildren<DaggerfallStaticDoors>())
+                    if(candidate.Doors!=null) foreach(var item in candidate.Doors)
+                        if(item.doorType==DoorTypes.Building && item.buildingKey==approach.BuildingKey)
+                        { owner=candidate; door=item; break; }
+                if(!owner) throw new InvalidOperationException("Reloaded pursuit shop door absent.");
+                TownSmokeHarness.EnterInterior(owner.transform,door); DaggerfallUI.Instance.PopToHUD();
+                DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(first.ArrivesAt-now+1));
+                deadline=Time.realtimeSinceStartup+10; actor=null;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    foreach(var item in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                        if(item.GuardId==id && item.IsInterior) actor=item;
+                    if(actor && actor.CombatReady) break; yield return null;
+                }
+                if(!actor || !actor.CombatReady) throw new InvalidOperationException("Door pursuit fixture guard did not engage indoors.");
+                game.PlayerEnterExit.TransitionExterior(false); DaggerfallUI.Instance.PopToHUD(); yield return null;
+                if(first.Interior!=null && first.Interior.ExteriorPursuit==null)
+                    throw new InvalidOperationException("Departing player did not start guard doorway pursuit.");
+                if(first.Interior!=null) DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)Math.Max(0,
+                    first.Interior.ExitAt-DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()+1));
+                deadline=Time.realtimeSinceStartup+10; actor=null;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    foreach(var item in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                        if(item.GuardId==id && !item.IsInterior) actor=item;
+                    if(actor && actor.CombatReady) break; yield return null;
+                }
+                if(first.Interior!=null || first.Duty!=GuardDuty.Engaged || !actor || !actor.CombatReady ||
+                    actor.GetComponent<EnemySenses>().Target!=game.PlayerEntityBehaviour)
+                    throw new InvalidOperationException("Original guard did not emerge and resume native exterior pursuit.");
+                var outsideGeometry=new TownGeometry(game.StreamingWorld.GetCurrentBuildingDirectory(),game.StreamingWorld.GetCurrentCityNavigation(),false);
+                var chaseRoute=outsideGeometry.RouteBetweenPoints(first.EngagementPosition,first.Post);
+                LivingCities.Core.SavedRoutePoint chasePoint=null;
+                foreach(var point in chaseRoute)
+                    if(Math.Pow(point.X-first.EngagementPosition.X,2)+Math.Pow(point.Z-first.EngagementPosition.Z,2)>=36)
+                    { chasePoint=point; break; }
+                if(chasePoint==null) throw new InvalidOperationException("No checked exterior chase destination for doorway fixture.");
+                game.PlayerMotor.transform.position=outsideGeometry.ScenePoint(new RoutePoint(chasePoint.X,chasePoint.Z))+Vector3.up*2;
+                var beforeChase=actor.transform.position; deadline=Time.realtimeSinceStartup+4;
+                while(Time.realtimeSinceStartup<deadline && Vector3.Distance(beforeChase,actor.transform.position)<0.5f)
+                { DaggerfallUI.Instance.PopToHUD(); yield return null; }
+                if(Vector3.Distance(beforeChase,actor.transform.position)<0.5f)
+                    throw new InvalidOperationException("Exterior pursuer targets player but does not physically move.");
+                if(Math.Abs(first.HealthFraction-health)>0.02) throw new InvalidOperationException("Doorway pursuit healed the guard.");
+                Debug.Log("LIVING_CITIES_GUARD_DOOR_PURSUIT_PASS: same wounded guard follows player through shop door and physically pursues outside.");
             }
             finally
             {

@@ -11,7 +11,7 @@ using UnityEngine;
 namespace LivingCities.DFU
 {
     // Scene adapter only. Persistent identities and route evaluation stay in Core.
-    public sealed class TownGeometry : IWalkGrid
+    public sealed partial class TownGeometry : IWalkGrid
     {
         public sealed class Entrance
         {

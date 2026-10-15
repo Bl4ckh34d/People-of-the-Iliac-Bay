@@ -1,5 +1,7 @@
 # Finite guards
 
+0.3.34 replaces entrance posts with surveyed public junction/square/gate sites and gives stationary guards a cached open-street facing. Saved idle guards walk to reassigned posts; active journeys finish first. A hostile indoor pursuer retraces its trail through the door and resumes native exterior pursuit with the same identity and health. Core286/286, native physical shop chase/save/load and Daggerfall/city/refuge/regional checks pass. Elevated wall posts remain open. See [evidence and limits](GUARD-POSTS-AND-DOORWAYS.md).
+
 Current development correction: hostile quest ownership no longer blocks exterior guard defense. Awake generated citizens and registered merchants also flee existing hostile enemies. The quest's native AI flag is preserved, and threat reports do not accuse an innocent player. See [verification and limits](THREAT-RESPONSE.md); historical quest exclusions below describe earlier versions.
 
 ## 0.3.26 quiet patrols and increased garrisons

@@ -16,6 +16,66 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Live post reassignment walks the checked route and survives reload",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.MovePost(id,Route(0,20),100,2,10);
+                Check.Equal(GuardDuty.Returning,roster.Guards[0].Duty);
+                Check.Near(0,roster.Position(id,100).X);
+                roster=GuardRoster.CopyValidated(roster);
+                Check.Near(10,roster.Position(id,150).X);
+                roster.Advance(200); Check.Equal(GuardDuty.Posted,roster.Guards[0].Duty);
+                Check.Near(20,roster.Position(id,200).X);
+            }));
+            cases.Add(("Indoor pursuer retraces to doorway then resumes exterior pursuit after reload",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73,new SavedRoutePoint { X=100 },
+                    new Dictionary<string,List<SavedRoutePoint>> { { id,Route(0,100) } });
+                roster.DispatchBuilding("shop",73,0,1,2,10);
+                roster.EnterBuilding(id,73,500,new GuardPoint3());
+                roster.ObserveInterior(id,new GuardPoint3 { X=10 },0.5,501,true,new GuardPoint3 { X=12 });
+                roster.PursueOutside(id,502);
+                Check.True(roster.Guards[0].Interior.Returning);
+                double exit=roster.Guards[0].Interior.ExitAt;
+                Check.True(exit>502);
+                roster=GuardRoster.CopyValidated(roster);
+                var dead=GuardRoster.CopyValidated(roster); dead.Kill(id,503);
+                Check.True(GuardRoster.CopyValidated(dead).Guards[0].Interior.ExteriorPursuit==null);
+                var forged=GuardRoster.CopyValidated(roster); forged.Guards[0].Interior.ExteriorPursuit.X+=1;
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(forged));
+                Check.Near(5,roster.InteriorPosition(id,(502+exit)/2).X);
+                roster.Advance(exit);
+                Check.True(roster.Guards[0].Interior==null);
+                Check.Equal(GuardDuty.Engaged,roster.Guards[0].Duty);
+                Check.Near(100,roster.Position(id,exit).X);
+                Check.Near(100,roster.Guards[0].LastSeenSuspect.X);
+                Check.Near(0.5,roster.Guards[0].HealthFraction);
+                Check.Equal("shop",GuardRoster.CopyValidated(roster).Guards[0].IncidentId);
+                roster.ReturnFromEngagement(id,exit+1,Route(100,0),2,10);
+                roster.Advance(exit+501); Check.Equal(GuardDuty.Posted,roster.Guards[0].Duty);
+            }));
+            cases.Add(("Post reassignment preserves identity and health and rejects active duties",()=>{
+                var roster=Roster(1); var guard=roster.Guards[0]; guard.HealthFraction=0.5;
+                roster.CacheBuildingApproach(73,new SavedRoutePoint { X=100 },
+                    new Dictionary<string,List<SavedRoutePoint>> { { guard.Id,Route(0,100) } });
+                string id=guard.Id; uint appearance=guard.AppearanceSeed;
+                roster.ReassignPost(id,new SavedRoutePoint { X=20 },0);
+                var copy=GuardRoster.CopyValidated(roster);
+                Check.Equal(id,copy.Guards[0].Id); Check.Equal(appearance,copy.Guards[0].AppearanceSeed);
+                Check.Near(0.5,copy.Guards[0].HealthFraction); Check.Near(20,copy.Position(id,0).X);
+                Check.Equal(0,copy.BuildingApproaches.Count);
+                copy.Dispatch("busy",0,new Dictionary<string,List<SavedRoutePoint>> { { id,Route(20,100) } },1,2,10);
+                Check.Throws<ArgumentException>(()=>copy.ReassignPost(id,new SavedRoutePoint { X=30 },0));
+                Check.Near(20,copy.Guards[0].Post.X);
+                copy.Kill(id,1);
+                Check.Throws<ArgumentException>(()=>copy.ReassignPost(id,new SavedRoutePoint { X=40 },2));
+            }));
+            cases.Add(("Junction posts require three paved branches and exclude a straight road",()=>{
+                Func<int,int,int> cross=(x,z)=>x==0 || z==0 ? 15 : 0;
+                Check.True(GuardPostSites.IsJunction(0,0,cross,6));
+                Check.True(!GuardPostSites.IsJunction(0,0,(x,z)=>z==0 ? 15 : 0,6));
+                Check.True(GuardPostSites.IsJunction(0,0,(x,z)=>4,6));
+                Check.True(!GuardPostSites.IsJunction(0,0,(x,z)=>12,6));
+            }));
             cases.Add(("Building defense preserves target through delayed entry and return", () => {
                 var roster=Roster(1); var id=roster.Guards[0].Id;
                 roster.CacheBuildingApproach(73,new SavedRoutePoint { X=100 },

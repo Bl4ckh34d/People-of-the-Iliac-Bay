@@ -242,7 +242,7 @@ namespace LivingCities.Core
             var indoorDeath = InteriorPosition(id, now);
             if (guard.Interior != null)
             {
-                guard.Interior.Position = indoorDeath; guard.Interior.Returning = false;
+                guard.Interior.Position = indoorDeath; guard.Interior.Returning = false; guard.Interior.ExteriorPursuit=null;
                 guard.Interior.ReturnAt = guard.Interior.ExitAt = 0;
                 guard.Interior.Trail = new List<GuardPoint3> { Point3(guard.Interior.Entrance), Point3(indoorDeath) };
             }
@@ -333,6 +333,10 @@ namespace LivingCities.Core
                 Require((guard.Duty == GuardDuty.Engaged) == (guard.LastSeenSuspect != null), "Invalid last-seen position.");
                 Require(guard.Interior == null || source.Reports.Exists(r => r != null && r.Id == guard.IncidentId &&
                     r.BuildingKey == guard.Interior.BuildingKey), "Indoor guard has no matching building report.");
+                Require(guard.Interior==null || guard.Interior.ExteriorPursuit==null ||
+                    guard.IsAlive && source.Reports.Exists(r=>r!=null && r.Id==guard.IncidentId && r.ThreatId==null &&
+                        r.Entrance!=null && Distance(r.Entrance,CopyPoint(guard.Interior.ExteriorPursuit))<0.05),
+                    "Invalid saved doorway pursuit destination.");
                 var route = CopyRoute(guard.Route);
                 var returnPath = guard.ReturnPath == null ? null : CopyRoute(guard.ReturnPath);
                 Require(returnPath == null ? guard.ResponseOrigin == null && guard.ReturnRate == 0 :

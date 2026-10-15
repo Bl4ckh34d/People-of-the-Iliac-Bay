@@ -12,6 +12,7 @@ namespace LivingCities.Core
         public GuardPoint3 Entrance, Position, LastSeenSuspect;
         public List<GuardPoint3> Trail = new List<GuardPoint3>();
         public bool Returning;
+        public SavedRoutePoint ExteriorPursuit;
         public double ReturnAt, ExitAt;
     }
     public sealed partial class GuardRoster
@@ -76,6 +77,17 @@ namespace LivingCities.Core
             guard.SearchUntil = now;
             AdvanceInterior(guard, now);
         }
+        public void PursueOutside(string id,double now)
+        {
+            Require(Time(now) && Time(now+300),"Invalid exterior pursuit time.");
+            var guard=Find(id); var room=guard.Interior;
+            var report=Reports.Find(r=>r.Id==guard.IncidentId);
+            Require(guard.IsAlive && guard.Duty==GuardDuty.Engaged && room!=null && !room.Returning &&
+                report!=null && report.ThreatId==null && report.BuildingKey==room.BuildingKey,
+                "Guard cannot pursue outside from this state.");
+            room.ExteriorPursuit=CopyPoint(report.Entrance);
+            EndInteriorSearch(id,now);
+        }
         private static void AdvanceInterior(GuardRecord guard, double now)
         {
             var room = guard.Interior;
@@ -88,6 +100,14 @@ namespace LivingCities.Core
                 room.ExitAt = room.ReturnAt + TrailLength(room.Trail) / 2.8 * 12;
             }
             if (!room.Returning || now < room.ExitAt) return;
+            if(room.ExteriorPursuit!=null)
+            {
+                guard.EngagementPosition=CopyPoint(room.ExteriorPursuit);
+                guard.LastSeenSuspect=CopyPoint(room.ExteriorPursuit);
+                guard.SearchUntil=room.ExitAt+300;
+                guard.Interior=null;
+                return;
+            }
             BeginReturn(guard, room.ExitAt);
             guard.Interior = null; guard.EngagementPosition = null; guard.LastSeenSuspect = null;
         }
@@ -101,6 +121,8 @@ namespace LivingCities.Core
             var copy = new GuardInteriorState { BuildingKey = source.BuildingKey, Entrance = Point3(source.Entrance),
                 Position = Point3(source.Position), LastSeenSuspect = source.LastSeenSuspect == null ? null : Point3(source.LastSeenSuspect),
                 Returning = source.Returning, ReturnAt = source.ReturnAt, ExitAt = source.ExitAt };
+            Require(source.ExteriorPursuit==null || source.Returning && Time(source.ExitAt+300),"Invalid doorway pursuit.");
+            copy.ExteriorPursuit=source.ExteriorPursuit==null ? null : CopyPoint(source.ExteriorPursuit);
             foreach (var point in source.Trail) copy.Trail.Add(Point3(point));
             Require(source.Returning ? source.ReturnAt == guard.SearchUntil && source.ExitAt >= source.ReturnAt &&
                 Math.Abs(source.ExitAt - source.ReturnAt - TrailLength(copy.Trail) / 2.8 * 12) < 0.001 &&

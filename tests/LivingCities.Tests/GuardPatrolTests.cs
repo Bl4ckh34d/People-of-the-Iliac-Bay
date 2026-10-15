@@ -19,6 +19,14 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Public post migration leaves active patrol journeys intact",()=>{
+                var roster=Roster(); Start(roster); string id=roster.Guards[0].Id;
+                var before=roster.Position(id,105);
+                Check.Throws<ArgumentException>(()=>roster.ReassignPost(id,P(-20),105));
+                Check.Throws<ArgumentException>(()=>roster.MovePost(id,Path(P(-10),P(-20)),105,1.3,12));
+                Check.Near(before.X,roster.Position(id,105).X); Check.Near(before.Z,roster.Position(id,105).Z);
+                Check.Equal(1,GuardRoster.CopyValidated(roster).Patrols.Count);
+            }));
             cases.Add(("Roster patrol positions survive world-shaped save without adding guard identities", () => {
                 var roster = Roster(); Start(roster);
                 Check.Near(10, roster.Position(roster.Guards[0].Id, 250).X);

@@ -46,6 +46,9 @@ namespace LivingCities.DFU
         { get { int count = 0; foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeInHierarchy) count++; return count; } }
         private WorldStateStore worldStore;
         private BuildingDirectory directory;
+        private bool publicPostSurveyPending;
+        private List<SavedRoutePoint> publicPostSites=new List<SavedRoutePoint>();
+        private float nextPostMigration;
         private TownGeometry geometry;
         private IDisposable hooks;
         private string reportId;
@@ -70,31 +73,63 @@ namespace LivingCities.DFU
         {
             if(!SettlementClassification.SupportsPopulation((int)town.LocationData.MapTableData.LocationType) ||
                 (town.MapID==1291010263 && DaggerfallPopulationProbe.SuppressCityActors)) { Clear(); return; }
-            if (directory == town && Roster != null) return;
+            if (directory == town && Roster != null)
+            {
+                if(publicPostSurveyPending && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)
+                {
+                    // Finishing a deferred survey must not destroy active pursuers.
+                    publicPostSites=new TownGeometry(town,navigation,false).SurveyGuardPosts(350);
+                    publicPostSurveyPending=false;
+                    int occupants=0; foreach(var home in population.Households) occupants+=home.Residents.Count;
+                    int target=GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType),occupants);
+                    if(target>Roster.Target)
+                        try { Roster.IncreaseTarget(target,publicPostSites); }
+                        catch(ArgumentException) { Debug.Log("LIVING_CITIES_GARRISON_EXPANSION_PENDING: insufficient public posts."); }
+                }
+                return;
+            }
             Clear();
             if (GameManager.Instance.PlayerEnterExit.IsPlayerInside && store.GetGuards(town.MapID) == null) return;
             var routines = store.GetRoutines(town.MapID);
             if (routines == null) return;
-            var posts = new List<SavedRoutePoint>();
             int residents = 0;
             foreach (var home in population.Households) residents += home.Residents.Count;
-            foreach (var routine in routines.Residents)
-            {
-                if (routine.Route.Count < 2) continue;
-                var point = routine.Route[0];
-                if (!posts.Exists(p => Math.Abs(p.X - point.X) < 10 && Math.Abs(p.Z - point.Z) < 10))
-                    posts.Add(point);
-            }
             int count = GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType), residents);
             var savedRoster = store.GetGuards(town.MapID);
+            var postSurvey=new TownGeometry(town,navigation,false);
+            publicPostSurveyPending=GameManager.Instance.PlayerEnterExit.IsPlayerInside;
+            var posts=new List<SavedRoutePoint>();
+            if(publicPostSurveyPending)
+            { foreach(var guard in savedRoster.Guards) if(guard.IsAlive) posts.Add(guard.Post); }
+            else posts=postSurvey.SurveyGuardPosts(350);
+            publicPostSites=publicPostSurveyPending ? new List<SavedRoutePoint>() : posts;
             if (posts.Count < count && savedRoster == null) count = posts.Count;
             if (count == 0 && savedRoster == null) return;
             posts.Sort((a, b) => { int x = a.X.CompareTo(b.X); return x == 0 ? a.Z.CompareTo(b.Z) : x; });
             var selected = new List<SavedRoutePoint>();
             for (int i = 0; i < Math.Min(count,posts.Count); i++) selected.Add(posts[i * posts.Count / Math.Min(count,posts.Count)]);
             worldStore = store;
-            directory = town; geometry = new TownGeometry(town, navigation, false);
+            directory = town; geometry = postSurvey;
             Roster = store.GetOrCreateGuards(town.MapID, count, selected);
+            Roster.Advance(Now());
+            // Reconstruct idle saved guards at valid public posts. Preserve active
+            // patrols, responses, refuge journeys, deaths and all identities.
+            if(savedRoster!=null && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)
+                foreach(var guard in Roster.Guards)
+                {
+                    if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted || Roster.IsOnPatrol(guard.Id) ||
+                        posts.Exists(p=>Math.Abs(p.X-guard.Post.X)<0.05 && Math.Abs(p.Z-guard.Post.Z)<0.05)) continue;
+                    List<SavedRoutePoint> relocation=null; double best=double.MaxValue;
+                    foreach(var post in posts)
+                    {
+                        if(Roster.Guards.Exists(g=>g.Id!=guard.Id && g.IsAlive && Math.Pow(g.Post.X-post.X,2)+Math.Pow(g.Post.Z-post.Z,2)<0.64)) continue;
+                        double distance=Math.Pow(post.X-guard.Post.X,2)+Math.Pow(post.Z-guard.Post.Z,2);
+                        if(distance>=best) continue;
+                        var route=geometry.RouteBetweenPoints(guard.Post,post);
+                        if(route.Count>=2) { best=distance; relocation=route; }
+                    }
+                    if(relocation!=null) Roster.MovePost(guard.Id,relocation,Now(),1.3,12);
+                }
             if (count > Roster.Target)
             {
                 try { Roster.IncreaseTarget(count,posts); }
@@ -380,7 +415,24 @@ namespace LivingCities.DFU
             PlayerEnterExit.OnTransitionDungeonInterior -= ObserveTransition;
         }
         private void ObserveTransition(PlayerEnterExit.TransitionEventArgs args)
-        { if (worldStore != null && Roster != null && directory) UpdateInvestigations(Now()); }
+        {
+            if(worldStore==null || Roster==null || !directory) return;
+            double now=Now();
+            if(args.TransitionType==PlayerEnterExit.TransitionType.ToBuildingExterior &&
+                GameManager.Instance.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
+                foreach(var pair in actors)
+                {
+                    var actor=pair.Value;
+                    var guard=Roster.Guards.Find(g=>g.Id==pair.Key);
+                    if(!actor || !actor.IsInterior || !actor.CombatReady || actor.DefenseTarget ||
+                        !actor.GetComponent<EnemyMotor>().IsHostile || guard==null || !guard.IsAlive ||
+                        guard.Interior==null || guard.Interior.Returning) continue;
+                    actor.Capture(now); Roster.PursueOutside(guard.Id,now); actor.EndCombat();
+                    Debug.Log("LIVING_CITIES_GUARD_DOOR_PURSUIT: "+guard.Id+"; exitAt="+
+                        (guard.Interior==null ? now : guard.Interior.ExitAt));
+                }
+            UpdateInvestigations(now);
+        }
         private void Update()
         {
             AdvanceSceneWarnings();
@@ -417,6 +469,11 @@ namespace LivingCities.DFU
             if (routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) RetryNativeReports(now);
             if (awaitingSight && routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) ReportNative(false);
             if (interior) { UpdateInterior(now); return; }
+            if(Time.unscaledTime>=nextPostMigration)
+            {
+                nextPostMigration=Time.unscaledTime+5;
+                MigrateDeferredPost(now);
+            }
             HideNative();
             if (routeTick) SurveyEnemyThreats(now);
             foreach (var guard in Roster.Guards)

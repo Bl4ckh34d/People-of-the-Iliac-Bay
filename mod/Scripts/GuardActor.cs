@@ -146,6 +146,7 @@ namespace LivingCities.DFU
             bool moving = guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Returning ||
                 roster.IsPatrolMoving(GuardId, now) ||
                 (guard.Duty == GuardDuty.Searching && roster.Reports.Exists(r => r.Id == guard.IncidentId && r.SearchRoute != null));
+            if(!moving && guard.Duty==GuardDuty.Posted) transform.forward=geometry.GuardPostFacing(guard.Post);
             var state = moving ? MobileStates.Move : MobileStates.Idle;
             if (mobile.EnemyState != state) mobile.ChangeEnemyState(state);
             displayedAt = now;
