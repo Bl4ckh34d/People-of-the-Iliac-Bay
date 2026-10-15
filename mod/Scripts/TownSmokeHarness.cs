@@ -286,6 +286,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-tavern-survey-probe") >= 0)
+            {
+                yield return TavernSurveyProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: tavern survey; character="+character);
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-housing-probe") >= 0)
             {
                 int key = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - family home");
