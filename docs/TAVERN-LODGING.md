@@ -1,5 +1,13 @@
 # Tavern lodging and travelers
 
+## Traveler persistence checkpoint, 15 October 2026
+
+Schema9 stores traveler identities separately from households, proposed visits, admission outcomes and deaths. Admission reserves the itinerary's exact paid interval once; refusals remain refused after reload or later vacancy. A traveler cannot originate in the destination settlement, overlap their own visits, revive through repeated registration, or have a death timestamp before an admitted visit. Restore rejects malformed booking links and chronology atomically. Existing schemas1–8 gain empty traveler ledgers. Direct lodging extension cannot desynchronize a linked traveler itinerary.
+
+Verification:333/333 core tests (`work/TravelerChronology-green.log`, chronology regression red in `TravelerChronology-red.log`), Unity native serializer (`work/TravelerSave-final-unity.log`, `LIVING_CITIES_TRAVELER_SAVE_PASS`), and all3 Gothway inn rental/payment/rest regressions (`work/TravelerSave-regression-pass.log`). Review identified the backdated-death gap; both mutation and restore now reject it before changing state.
+
+This is persistence and admission infrastructure, not visible traveler gameplay. Actual origin selection, arrival generation, bounded history retention, importing native receipts before NPC demand, route survey and actor/crime/sleep integration remain pending. Refused visits still retain their proposed itinerary for overlap validation; early physical departure is not implemented. Death preserves the paid room until checkout; early corpse-cleanup release is not implemented.
+
 ## Implementation checkpoint, 15 October 2026
 
 Traveler itinerary core now models a proposed visit separately from residential households and payment (`src/LivingCities.Core/TravelerJourney.cs`). Given an arrival, night count and surveyed entrance-to-inn route, it evaluates absolute-time arrival, inn stay/sleep, gate wait, return journey and departure. Walled entry/exit obey vanilla06:00–18:00 gates; unwalled arrivals can enter at night. Early check-in before06:00 uses that morning's checkout; later check-in uses the next morning. Seeded checkout09:00–10:59 and sleep/wake times remain stable after reconstruction. The stay interval ends at checkout even if a closed outbound gate delays departure. Route input is copied and interpolation follows segment lengths in both directions.

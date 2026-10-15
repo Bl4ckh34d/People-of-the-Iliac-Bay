@@ -216,7 +216,7 @@ namespace LivingCities.Tests
                 var store=new WorldStateStore(42); var town=store.GetOrCreate(1,new[] { 7 },1);
                 string id=town.Households[0].Residents[0].Id; var legacy=store.Snapshot();
                 legacy.Version=6; legacy.DefenseCombatants=null;
-                store.Restore(legacy); Check.Equal(8, store.Snapshot().Version);
+                store.Restore(legacy); Check.Equal(9, store.Snapshot().Version);
                 Check.Equal(0,store.Snapshot().DefenseCombatants.Count);
                 Check.Equal(id,store.Snapshot().Settlements[0].Households[0].Residents[0].Id);
             }));

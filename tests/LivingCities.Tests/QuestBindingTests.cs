@@ -128,7 +128,7 @@ namespace LivingCities.Tests
                 old.Routines.Add(new TownRoutineState { SettlementId = 100, Residents = new List<ResidentRoutine> {
                     new ResidentRoutine { ResidentId = actor.Id } } });
                 store.Restore(old); var saved = store.Snapshot();
-                Check.Equal(8, saved.Version); Check.Equal(0, saved.QuestBindings.Count);
+                Check.Equal(9, saved.Version); Check.Equal(0, saved.QuestBindings.Count);
                 Check.Equal(actor.Id, saved.Routines[0].Residents[0].ResidentId);
                 Check.True(!saved.Settlements[0].Households[0].Residents[0].IsAlive);
                 Check.Equal(old.Settlements[0].Households[0].SurnameSeed, saved.Settlements[0].Households[0].SurnameSeed);

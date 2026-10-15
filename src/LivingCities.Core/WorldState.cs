@@ -6,7 +6,7 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 8;
+        public int Version = 9;
         public uint WorldSeed;
         public HauntingRoutineDay HauntingDay;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
@@ -18,6 +18,8 @@ namespace LivingCities.Core
         public List<NativePerson> NativePeople = new List<NativePerson>();
         public List<DefenseCombatant> DefenseCombatants = new List<DefenseCombatant>();
         public List<TavernLodging> Lodgings = new List<TavernLodging>();
+        public List<TravelerPerson> Travelers = new List<TravelerPerson>();
+        public List<TravelerVisit> TravelerVisits = new List<TravelerVisit>();
     }
     public sealed partial class WorldStateStore
     {
@@ -62,7 +64,7 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 8, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 9, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             if(source.HauntingDay!=null)
@@ -182,6 +184,7 @@ namespace LivingCities.Core
             copy.NativePeople = CopyNativePeople(source);
             copy.DefenseCombatants = CopyDefense(source,copy);
             copy.Lodgings = CopyLodgings(source,copy);
+            CopyTravelers(source,copy,identities);
             foreach (var native in copy.NativePeople)
             {
                 var home = copy.Settlements.Find(t => t.SettlementId == native.SettlementId).Households.Find(h => h.HeadId == native.Id);

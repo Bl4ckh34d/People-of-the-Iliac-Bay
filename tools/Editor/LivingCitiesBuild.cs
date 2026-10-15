@@ -69,6 +69,7 @@ public static class LivingCitiesBuild
         VerifyGuardPersistence();
         VerifyDefenseLedger();
         VerifyLodging();
+        VerifyTravelers();
         VerifySettings();
         VerifyHousing();
         VerifyBeds();
@@ -349,13 +350,13 @@ public static class LivingCitiesBuild
             string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
             var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
-            Require(migrated.Version == 8 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
+            Require(migrated.Version == 9 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
                 resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
                 home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
         }
         string schemaThree = "{\"Version\":3,\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"SurnameSeed\":876,\"Residents\":[{\"Id\":\"legacy-family\",\"HomeKey\":10,\"AppearanceSeed\":3,\"Sex\":1,\"IsAlive\":false}]}]}],\"Routines\":[]}";
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), schemaThree));
-        Require(restored.Snapshot().Version == 8 && restored.Snapshot().QuestBindings.Count == 0 &&
+        Require(restored.Snapshot().Version == 9 && restored.Snapshot().QuestBindings.Count == 0 &&
             restored.Snapshot().Settlements[0].Households[0].SurnameSeed == 876 &&
             !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
         Debug.Log("LIVING_CITIES_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
@@ -373,6 +374,24 @@ public static class LivingCitiesBuild
         var legacy=restored.Snapshot(); legacy.Version=7; legacy.Lodgings=null;
         restored.Restore(legacy); Require(restored.Snapshot().Lodgings.Count==0,"Schema seven gains empty lodging ledger");
         Debug.Log("LIVING_CITIES_LODGING_SAVE_PASS: native paid-room serialization, protected player interval and schema-seven migration.");
+    }
+    private static void VerifyTravelers()
+    {
+        var store=new WorldStateStore(42); store.GetOrCreate(1,new int[0]);
+        store.RegisterLodging(1,7,new[] { new LodgingRoom { Id="room",Beds=new List<string> { "bed" } } });
+        store.RegisterTraveler(new TravelerPerson { Id="traveler:test",Name="Travel Test",HomeSettlement=2,AppearanceSeed=12 });
+        store.RegisterTravelerVisit(new TravelerVisit { Id="visit",PersonId="traveler:test",SettlementId=1,TavernKey=7,Nights=2,
+            DesiredArrival=43200,CommuteSeconds=600,Route=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=30 } } });
+        Require(store.TryAdmitTraveler("visit",43800),"Traveler admitted to paid room");
+        store.KillTraveler("traveler:test",45000);
+        string json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
+        var restored=new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+        Require(restored.Snapshot().Version==9 && !restored.Snapshot().Travelers[0].IsAlive &&
+            restored.Snapshot().TravelerVisits[0].Admission==TravelerAdmission.Admitted &&
+            restored.IsLodgingBedReserved(1,7,"bed",50000,"player"),"Traveler native serialization preserves death and booking");
+        var old=restored.Snapshot(); old.Version=8; old.Travelers=null; old.TravelerVisits=null;
+        restored.Restore(old); Require(restored.Snapshot().Travelers.Count==0 && restored.Snapshot().TravelerVisits.Count==0,"Schema eight gains empty travelers");
+        Debug.Log("LIVING_CITIES_TRAVELER_SAVE_PASS: native schema-nine traveler identity, visit, death, admission and room ownership.");
     }
     private static void VerifyDefenseLedger()
     {
@@ -502,7 +521,7 @@ public static class LivingCitiesBuild
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Recruitment and replacement lineage persist");
         var legacy = restored.Snapshot(); legacy.Version = 5; legacy.Garrisons = null;
         restored.Restore(legacy);
-        Require(restored.Snapshot().Version == 8 && restored.Snapshot().Garrisons.Count == 0 &&
+        Require(restored.Snapshot().Version == 9 && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         VerifyPatrolPairPlan();
         VerifyGuardPatrolRoster();
@@ -1005,7 +1024,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 8 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
+            Require(saved.Version == 9 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }

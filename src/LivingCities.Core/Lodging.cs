@@ -88,6 +88,7 @@ namespace LivingCities.Core
             {
                 var booking=tavern.Bookings.Find(b=>b.Id==id); if(booking==null) continue;
                 Require(DefenseTime(end) && end>=booking.EndsAt,"Invalid lodging extension.");
+                if(end!=booking.EndsAt && state.TravelerVisits.Exists(v=>v.BookingId==id)) return false;
                 foreach(var other in state.Lodgings)
                     if(other.Bookings.Exists(b=>b!=booking && (b.GuestId==booking.GuestId && (!booking.Player || other==tavern) ||
                         other==tavern && b.RoomId==booking.RoomId) && Overlap(booking.StartsAt,end,b))) return false;
