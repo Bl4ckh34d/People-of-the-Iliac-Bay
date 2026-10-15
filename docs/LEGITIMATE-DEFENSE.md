@@ -24,6 +24,16 @@ The live probe also transfers an item from the victim's inventory through its ac
 
 This is partial Stage2 integration, not completed lawful-defense gameplay. Target-owned scene/building context and cross-settlement tracking remain incomplete; changed settlements are skipped instead of rewriting provenance. Broader spell/mod coverage, outdoor acceptance, indirect group provocation, physical scene security, welfare dialogue, potion delivery and post-courtesy bounty enforcement remain pending. The native attack probe validates the event path used by quest-activated enemies, not every quest package.
 
+### Target scene ownership follow-up
+
+Death coordinates now use the victim's owning interior or exterior building directory, including inactive parents. Restored interiors can have no exterior DoorOwner; their exact canonical DFU scene key supplies the saved map/building identity instead. An unowned or unrecognized scene is not assigned the player's current location. A controlled relocation probe keeps the player in the original room while moving the victim to another interior: death coordinates and the native corpse parent follow the victim. A separate inactive exterior owner produces an exterior death with no indoor-player witnesses. These checks, native combat, inventory pickup and actual slot reload pass together in `work/NativeDefense-flight-origin-pass.log` after `work/NativeDefense-flight-origin-build.log`.
+
+This closes the basic target-coordinate gap, not all transitions. Interior-to-interior corpse parenting is corrected; cross-world-context corpse creation/tracking, cross-settlement deaths and explicit ownership for unparented mod actors still need work. Active overlapping observer scenes also need an ownership filter/test; current scene checks establish the player and victim share a scene but global observer lookup remains.
+
+The extended run exposed `Escape must start at witness position` from resident escape planning. The route used the rendered actor position while `CivilianEscape` validates against authoritative saved alarm coordinates. Resident planning now uses the same saved coordinates, matching native-keeper planning. The failing run is `work/NativeDefense-flight-origin-red.log`; the corrected combined run is `work/NativeDefense-flight-origin-pass.log`.
+
+Keeper escape/reporting, finite guard arrival and combat, assault/death handoff, effect recreation/expiry and outdoor citizen flight also pass on this build (`work/NativeDefense-scene-citizen-pass.log`). Installed0.3.34 SHA-256: `E970AC27BAAE5A6D74E4DC6316436A51E0E7DA0A48AD9385CFEBE41A799BB066`.
+
 With the adapter active, the native civilian-flight regression also passes: keeper escape and physical reporting, finite indoor arrival/combat, player-assault handoff, attacker-death return, guard effect recreation and elapsed-time expiry (`work/NativeDefense-citizen-pass.log`).
 
 Final native doorway regression passes with the expanded hooks: the same wounded guard preserves its player-cast effect through save/load and shop exit, then physically pursues outside (`work/NativeDefense-door-regression-pass.log`). Installed development0.3.34 SHA-256: `77087CDDBB2BA33181FA176DEB3F7AFDCF5113D2D65D90C439ABA252611CE163`.

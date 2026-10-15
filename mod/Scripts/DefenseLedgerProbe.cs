@@ -29,6 +29,7 @@ namespace LivingCities.DFU
                 game.PlayerEntity.GodMode=true;
                 VerifyObserverIsolation(mod.GetComponent<DefenseCombatAdapter>());
                 VerifyInvisibleWitnesses(mod.GetComponent<DefenseCombatAdapter>(),store);
+                yield return DefenseSceneProbe.Run(store);
                 yield return VerifyDisintegrate(store);
                 yield return VerifyActivatedAttacker(store);
                 foreach(int scenario in new[] { 2,0,1 })

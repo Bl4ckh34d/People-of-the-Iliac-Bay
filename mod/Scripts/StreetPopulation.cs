@@ -119,7 +119,10 @@ namespace LivingCities.DFU
                 if (person == null || (!person.DirectWitness && !person.HeardViolence) || person.Reaction != CivilianReaction.Flee || person.Escape != null ||
                     person.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 if (!WakeResidentForAlarm(witness,person)) continue;
-                var route = indoorGeometry.RouteToExit(witness.transform.position - Vector3.up);
+                // Rendering can lag the authoritative alarm position while actors move.
+                // Start the route at the same saved position used by CivilianEscape.
+                var ground = interior.transform.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
+                var route = indoorGeometry.RouteToExit(ground);
                 if (route.Count < 2) continue;
                 var escape = CivilianEscape.Create(person, now, route, outside, ResidentMovement.FleeSpeed(witness.Resident.AppearanceSeed));
                 person.Escape = escape;

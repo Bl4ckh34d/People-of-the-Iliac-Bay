@@ -34,7 +34,8 @@ namespace LivingCities.DFU
             if(available==null || !available() || !target || target.Entity.CurrentHealth<=0) return null;
             if(target==GameManager.Instance.PlayerEntityBehaviour) return BeginAttackOnPlayer(source);
             string id=Identity(target); if(id==null) return null;
-            var game=GameManager.Instance; var store=getStore(); int town=game.PlayerGPS.CurrentLocation.MapTableData.MapId;
+            var scene=DefenseScene.For(target); if(scene==null) return null;
+            var game=GameManager.Instance; var store=getStore(); int town=scene.SettlementId;
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var existing=store.GetDefenseCombatant(id);
             // Cross-settlement encounters need a separate death-location contract.
@@ -48,7 +49,7 @@ namespace LivingCities.DFU
             var record=store.RegisterDefenseCombatant(id,town,hostile ? CombatOrigin.HostileAttacker : CombatOrigin.PassiveEnemy,now);
             if(record.Death!=null) return null;
             bool player=source==game.PlayerEntityBehaviour;
-            var witnesses=player ? Witnesses(store,town,target.transform.position) : new List<DefenseWitness>();
+            var witnesses=player && scene.PlayerPresent ? Witnesses(store,town,target.transform.position) : new List<DefenseWitness>();
             return error=> {
                 if(error!=null || !target || getStore()!=store || record.Death!=null) return;
                 if(player)
@@ -63,7 +64,8 @@ namespace LivingCities.DFU
         {
             string id=Identity(source); if(id==null || source.Entity.CurrentHealth<=0) return null;
             var motor=source.GetComponent<EnemyMotor>(); if(!motor || !motor.IsHostile) return null;
-            var store=getStore(); int town=GameManager.Instance.PlayerGPS.CurrentLocation.MapTableData.MapId;
+            var scene=DefenseScene.For(source); if(scene==null || !scene.PlayerPresent) return null;
+            var store=getStore(); int town=scene.SettlementId;
             var existing=store.GetDefenseCombatant(id);
             if(existing!=null && (existing.SettlementId!=town || existing.Death!=null)) return null;
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
@@ -101,10 +103,10 @@ namespace LivingCities.DFU
         }
         private static void ConfirmDeath(WorldStateStore store,DefenseCombatant record,DaggerfallEntityBehaviour target,bool player)
         {
-            var game=GameManager.Instance; var room=game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
-            var parent=room ? room.transform : game.StreamingWorld.GetCurrentBuildingDirectory().transform;
-            Vector3 point=parent.InverseTransformPoint(target.transform.position-Vector3.up);
-            store.ConfirmDefenseDeath(record.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),room ? room.EntryDoor.buildingKey : -1,
+            var scene=DefenseScene.For(target);
+            if(scene==null || scene.SettlementId!=record.SettlementId) return;
+            Vector3 point=scene.Root.InverseTransformPoint(target.transform.position-Vector3.up);
+            store.ConfirmDefenseDeath(record.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),scene.BuildingKey,
                 point.x,point.y,point.z,player,300,20);
         }
         private void EnemyDied(object sender,EventArgs args)
@@ -118,9 +120,12 @@ namespace LivingCities.DFU
             var death=sender as EnemyDeath; if(!death) return;
             var target=death.GetComponent<DaggerfallEntityBehaviour>(); string id=Identity(target); if(id==null) return;
             var store=getStore(); var record=store.GetDefenseCombatant(id); if(record==null) return;
-            if(record.SettlementId!=GameManager.Instance.PlayerGPS.CurrentLocation.MapTableData.MapId) return;
+            var scene=DefenseScene.For(target);
+            if(scene==null || record.SettlementId!=scene.SettlementId) return;
             if(record.Death==null) ConfirmDeath(store,record,target,false);
             var loot=target.CorpseLootContainer;
+            if(loot && scene.Interior && loot.WorldContext==WorldContext.Interior && loot.transform.parent!=scene.Root)
+                loot.transform.SetParent(scene.Root,true);
             if(loot && loot.LoadID!=0) store.BindDefenseCorpse(id,"loot:"+loot.LoadID.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
         private void OnDestroy() { EnemyDeath.OnEnemyDeath-=EnemyDied; if(hooks!=null) hooks.Dispose(); }
