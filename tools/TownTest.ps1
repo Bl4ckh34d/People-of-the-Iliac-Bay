@@ -145,6 +145,7 @@ try {
     if ($TavernSurveyProbe -and ([regex]::Matches($body, 'LIVING_CITIES_UNRENTED_INVENTORY_PASS:').Count -ne 3)) { throw 'Unrented guest inventory did not pass in all three taverns.' }
     if ($TavernSurveyProbe -and ([regex]::Matches($body, 'LIVING_CITIES_UNLOADED_TAVERN_PASS:').Count -ne 3)) { throw 'Unloaded tavern inventory did not match all three actual interiors.' }
     if ($TavernSurveyProbe -and $body -notmatch 'LIVING_CITIES_EXTERIOR_INVENTORY_PASS:') { throw 'Exterior inventory and paid receipt import did not complete.' }
+    if ($TavernSurveyProbe -and ([regex]::Matches($body, 'LIVING_CITIES_TRAVELER_ROUTE_PASS:').Count -ne 3)) { throw 'Physical traveler road routes did not reach all three taverns.' }
     if ($TavernSurveyProbe -and ([regex]::Matches($body, 'LIVING_CITIES_RENTAL_PAYMENT_PASS:').Count -ne 3)) { throw 'Rental payment/vacancy checks did not pass in all three taverns.' }
     if ($TavernSurveyProbe -and ([regex]::Matches($body, 'LIVING_CITIES_TAVERN_REST_PASS:').Count -ne 3)) { throw 'Occupied-bed rest checks did not pass in all three taverns.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }

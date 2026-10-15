@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 traveler route helper: native road-boundary approaches now yield4 collision-checked paths to each of Gothway's3 inns, with actual gate-component classification marking the town unwalled. Full tavern suite,333 core tests and Unity build pass. Controller integration, nonlocal arrivals, walled gates and large-city timing remain pending.
+
 M3 exterior lodging inventory is now live: one cached inn survey per refresh registers rooms while the player stays outside and reconciles existing native payment. All3 Gothway inns plus full rental/payment/rest regressions pass;333 core tests and Unity build pass. Physical gate/road routes, nonlocal traveler generation and actors are next. Initial synchronous survey performance in large/modded settlements remains unverified.
 
 M3 unloaded tavern survey: model-only temporary geometry plus passive door/marker records now reproduces room/bed/marker assignments in all3 actual Gothway inns. Live comparison preserves player scene/position and native NPC count; rental/payment/rest regressions and333 core tests pass. Helper is not yet wired into automatic settlement-wide inventory; modded replacement layouts remain unverified.

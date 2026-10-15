@@ -20,6 +20,7 @@ namespace LivingCities.DFU
             var taverns=directory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern);
             if(taverns.Count==0) throw new InvalidOperationException("No taverns to survey.");
             yield return VerifyExteriorInventory(directory,taverns.Count,taverns[0].buildingKey);
+            var streetGeometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation());
             int totalBeds=0;
             foreach(var tavern in taverns)
             {
@@ -29,6 +30,16 @@ namespace LivingCities.DFU
                         if(door.doorType==DoorTypes.Building && door.buildingKey==tavern.buildingKey)
                         { owner=candidate; entry=door; break; }
                 if(!owner) throw new InvalidOperationException("Tavern entrance missing.");
+                var travelerRoutes=streetGeometry.SurveyTravelerRoutes(tavern.buildingKey);
+                if(travelerRoutes.Count==0) throw new InvalidOperationException("No physical road-edge route to tavern "+tavern.buildingKey);
+                bool walled=directory.GetComponentsInChildren<DaggerfallCityGate>().Length>0;
+                foreach(var route in travelerRoutes)
+                {
+                    if(route.Walled!=walled || route.Points.Count<2) throw new InvalidOperationException("Invalid traveler route or wall classification.");
+                    var end=route.Points[route.Points.Count-1]; var target=streetGeometry.Entrances[tavern.buildingKey].LocalDoor;
+                    if(Math.Abs(end.X-target.x)>.01 || Math.Abs(end.Z-target.z)>.01) throw new InvalidOperationException("Traveler route misses inn entrance.");
+                }
+                Debug.Log("LIVING_CITIES_TRAVELER_ROUTE_PASS: building="+tavern.buildingKey+"; routes="+travelerRoutes.Count+"; walled="+walled);
                 var playerPosition=game.PlayerMotor.transform.position;
                 int people=UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length;
                 Dictionary<int,string> unloadedMarkers;

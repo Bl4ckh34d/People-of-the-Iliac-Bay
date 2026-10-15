@@ -1,5 +1,11 @@
 # Tavern lodging and travelers
 
+## Traveler approach routes, 15 October 2026
+
+`TownGeometry.SurveyTravelerRoutes` identifies contiguous native road runs at the navigation-grid boundary, chooses stable midpoint approaches, and finds up to4 collision-checked routes to a surveyed inn door. Candidate attempts are bounded to32 per inn. The shared A* and physical waypoint/segment checks reject blocked paths. Walled status is read from actual `DaggerfallCityGate` components. These are local town approaches; regional Roads of Daggerfall routes remain unconnected.
+
+Live Gothway testing finds4 routes to each of its3 inns and correctly classifies the settlement as unwalled (`work/TravelerRoutes-pass.log`). Routes terminate at the surveyed inn door, and the full inventory/payment/rest suite remains green.333 core tests and Unity build pass. This helper is not yet called by a traveler population controller. Walled-city gate crossings, closed-gate retry/persistence, selected-route reconstruction, physical travelers and large-city timing remain unverified; do not treat this unwalled fixture as proof of those cases.
+
 ## Automatic exterior inventory checkpoint, 15 October 2026
 
 The running rental controller now surveys one tavern per refresh while the player is outside. Results are cached for the current `BuildingDirectory`; each cycle re-registers the cached layout against the current world state, so save restoration does not leave a stale cache without ledger entries. Native paid receipts are reconciled by their allocated marker and expiry without charging again. Geometry failures are logged once and retried when the settlement layout reloads; reconciliation conflicts retain existing bookings and receipts. No traveler admission is called yet.
