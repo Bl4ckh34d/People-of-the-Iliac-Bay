@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
@@ -11,6 +12,27 @@ namespace LivingCities.DFU
     public sealed partial class GuardPopulation
     {
         private WelfareWindow welfareWindow;
+        private readonly List<FailedWelfareApproach> failedWelfareApproaches=new List<FailedWelfareApproach>();
+        private sealed class FailedWelfareApproach
+        {
+            public WorldStateStore Store;
+            public string Threat,Guard;
+            public Vector3 Destination;
+        }
+        private bool MayAttemptWelfare(string threat,string guard)
+        {
+            var destination=GameManager.Instance.PlayerMotor.transform.position;
+            return !failedWelfareApproaches.Exists(f=>f.Store==worldStore && f.Threat==threat && f.Guard==guard &&
+                (f.Destination-destination).sqrMagnitude<=1);
+        }
+        private bool WaitForWelfareResponder(DefenseCombatant record,GuardRecord guard,GuardActor actor,GuardReport report,double now)
+        {
+            foreach(var other in report.GuardIds)
+                if(other!=guard.Id && MayAttemptWelfare(record.Id,other) &&
+                    worldStore.CanOfferDefenseWelfare(record.Id,other,now,WelfareOnSite(record),WelfareHealth()))
+                { actor.EndCombat(); return true; }
+            return false;
+        }
         private static double WelfareHealth()
         {
             var player=GameManager.Instance.PlayerEntity;
@@ -34,11 +56,23 @@ namespace LivingCities.DFU
             }
             var record=worldStore.GetDefenseCombatant(report.ThreatId);
             if(record==null || record.Death==null) return false;
+            failedWelfareApproaches.RemoveAll(f=> {
+                var old=f.Store==worldStore ? worldStore.GetDefenseCombatant(f.Threat) : null;
+                return old==null || old.Death==null || old.Death.WelfareConsumed || old.Death.WelfareExpired || now>=old.Death.WelfareExpiresAt;
+            });
             if(welfareWindow!=null) { actor.EndCombat(); return true; }
-            if(!worldStore.CanOfferDefenseWelfare(record.Id,guard.Id,now,WelfareOnSite(record),WelfareHealth())) return false;
             if(game.PlayerEntity.IsInvisible || GameManager.IsGamePaused) return false;
+            if(!MayAttemptWelfare(record.Id,guard.Id) ||
+                !worldStore.CanOfferDefenseWelfare(record.Id,guard.Id,now,WelfareOnSite(record),WelfareHealth()))
+                return WaitForWelfareResponder(record,guard,actor,report,now);
             var approached=actor.ApproachWelfare(record.Id,game.PlayerMotor.transform.position,actor.IsInterior ? interior : null,now);
-            if(!approached.HasValue) return false;
+            if(!approached.HasValue)
+            {
+                failedWelfareApproaches.RemoveAll(f=>f.Store==worldStore && f.Threat==record.Id && f.Guard==guard.Id);
+                failedWelfareApproaches.Add(new FailedWelfareApproach { Store=worldStore,Threat=record.Id,Guard=guard.Id,
+                    Destination=game.PlayerMotor.transform.position });
+                return WaitForWelfareResponder(record,guard,actor,report,now);
+            }
             if(!approached.Value) return true;
             var expectedStore=worldStore;
             welfareWindow=new WelfareWindow(record.Death.PotionOffered,record.Death.LootEntitled,accept=> {

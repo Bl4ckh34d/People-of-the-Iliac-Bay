@@ -28,13 +28,17 @@ namespace LivingCities.DFU
                 { origin=anchor; break; }
             if(!origin.HasValue) throw new InvalidOperationException("No surveyed welfare approach fixture.");
             var store=new WorldStateStore(42); store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
-            var roster=store.GetOrCreateGuards(scene.SettlementId,1,new[] { new SavedRoutePoint() });
+            var roster=store.GetOrCreateGuards(scene.SettlementId,2,new[] { new SavedRoutePoint(),new SavedRoutePoint { X=2 } });
             var guard=roster.Guards[0]; double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            var companion=roster.Guards[1];
             roster.CacheBuildingApproach(scene.BuildingKey,new SavedRoutePoint { X=1 },
-                new Dictionary<string,List<SavedRoutePoint>> { [guard.Id]=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=1 } } });
-            roster.DispatchBuilding("welfare-probe",scene.BuildingKey,now-20,1,2,12,threatId:"probe:welfare");
+                new Dictionary<string,List<SavedRoutePoint>> {
+                    [guard.Id]=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=1 } },
+                    [companion.Id]=new List<SavedRoutePoint> { new SavedRoutePoint { X=2 },new SavedRoutePoint { X=1 } } });
+            roster.DispatchBuilding("welfare-probe",scene.BuildingKey,now-20,2,2,12,threatId:"probe:welfare");
             var point=origin.Value+Vector3.up;
             roster.EnterBuilding(guard.Id,scene.BuildingKey,now,new GuardPoint3 { X=point.x,Y=point.y,Z=point.z });
+            roster.EnterBuilding(companion.Id,scene.BuildingKey,now,new GuardPoint3 { X=point.x+1,Y=point.y,Z=point.z });
             store.RegisterDefenseCombatant("probe:welfare",scene.SettlementId,CombatOrigin.HostileAttacker,now);
             store.RecordDefensePlayerHit("probe:welfare",now,true); store.RecordDefenseWitness("probe:welfare",guard.Id,true,now);
             var record=store.ConfirmDefenseDeath("probe:welfare",now,scene.BuildingKey,destination.x,destination.y,destination.z,true,300,100);
@@ -45,7 +49,7 @@ namespace LivingCities.DFU
             typeof(GuardPopulation).GetField("<Roster>k__BackingField",flags).SetValue(controller,roster);
             var method=typeof(GuardPopulation).GetMethod("TryDefenseWelfare",flags);
             var windowField=typeof(GuardPopulation).GetField("welfareWindow",flags);
-            GuardActor actor=null; DaggerfallMessageBox window=null;
+            GuardActor actor=null,otherActor=null; DaggerfallMessageBox window=null;
             var seededPotion=ItemBuilder.CreatePotion(4975678,2);
             game.PlayerEntity.Items.AddItem(seededPotion,noStack:true);
             var inventoryBefore=new HashSet<ulong>();
@@ -86,6 +90,20 @@ namespace LivingCities.DFU
                 actor.EndCombat(); roster.Reports[0].ThreatId=record.Id;
                 Debug.Log("LIVING_CITIES_WELFARE_ASSAULT_PASS: native assault notification cancels courtesy for crime handling.");
                 game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Theft;
+                otherActor=GuardActor.CreateInterior(roster,companion.Id,room.transform,now);
+                yield return null;
+                var response=typeof(GuardPopulation).GetMethod("UpdateInteriorEnemyDefense",flags);
+                bool held=(bool)response.Invoke(controller,new object[] { companion,otherActor,roster.Reports[0],now });
+                if(!held || roster.Reports[0].ThreatId!=record.Id || otherActor.GetComponent<EnemyMotor>().IsHostile)
+                    throw new InvalidOperationException("Uninformed responder preempted another guard's eligible welfare.");
+                game.PlayerEntity.SetHealth(game.PlayerEntity.MaxHealth,true);
+                held=(bool)response.Invoke(controller,new object[] { companion,otherActor,roster.Reports[0],now });
+                if(held || roster.Reports[0].ThreatId!=null)
+                    throw new InvalidOperationException("Responder deferred existing crime after health made welfare ineligible.");
+                roster.Reports[0].ThreatId=record.Id;
+                game.PlayerEntity.SetHealth(Math.Max(1,game.PlayerEntity.MaxHealth/2),true);
+                UnityEngine.Object.Destroy(otherActor.gameObject); otherActor=null;
+                Debug.Log("LIVING_CITIES_WELFARE_COMPANION_PASS: uninformed responder preserves courtesy before prior-crime handling.");
                 float deadline=Time.realtimeSinceStartup+23;
                 while(Time.realtimeSinceStartup<deadline && window==null)
                 {
@@ -115,6 +133,7 @@ namespace LivingCities.DFU
             {
                 if(window!=null && DaggerfallUI.UIManager.TopWindow==window) window.CloseWindow();
                 if(actor) UnityEngine.Object.Destroy(actor.gameObject);
+                if(otherActor) UnityEngine.Object.Destroy(otherActor.gameObject);
                 UnityEngine.Object.Destroy(host);
                 for(int i=game.PlayerEntity.Items.Count-1;i>=0;i--)
                 {

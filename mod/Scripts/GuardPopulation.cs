@@ -639,6 +639,7 @@ namespace LivingCities.DFU
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);
+            failedWelfareApproaches.Clear();
             nativeGuards.Clear(); worldStore = null; directory = null; geometry = null; Roster = null; reportId = null; awaitingSight = false;
         }
         private void OnDestroy() { Clear(); }
