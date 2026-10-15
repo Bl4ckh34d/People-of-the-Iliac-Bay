@@ -212,11 +212,11 @@ namespace LivingCities.Tests
                 broken=store.Snapshot(); broken.DefenseCombatants[0].Origin=CombatOrigin.Civilian;
                 Check.Throws<ArgumentException>(()=>store.Restore(broken));
             }));
-            cases.Add(("Legacy schema six migrates to seven without inventing combat or loot entitlements",()=>{
+            cases.Add(("Legacy schema six migrates to current schema without inventing combat or loot entitlements",()=>{
                 var store=new WorldStateStore(42); var town=store.GetOrCreate(1,new[] { 7 },1);
                 string id=town.Households[0].Residents[0].Id; var legacy=store.Snapshot();
                 legacy.Version=6; legacy.DefenseCombatants=null;
-                store.Restore(legacy); Check.Equal(7,store.Snapshot().Version);
+                store.Restore(legacy); Check.Equal(8, store.Snapshot().Version);
                 Check.Equal(0,store.Snapshot().DefenseCombatants.Count);
                 Check.Equal(id,store.Snapshot().Settlements[0].Households[0].Residents[0].Id);
             }));

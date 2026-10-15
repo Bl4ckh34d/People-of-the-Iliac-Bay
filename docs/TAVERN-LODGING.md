@@ -1,5 +1,15 @@
 # Tavern lodging and travelers
 
+## Implementation checkpoint, 15 October 2026
+
+Schema8 adds a persisted room/booking ledger in `src/LivingCities.Core/Lodging.cs`. An accepted reservation exclusively reserves every bed in its room for a half-open check-in/check-out interval, even while the guest is away. Requests are first-come, deterministic by room ID, idempotent by booking ID and cannot overlap another booking for the room or the same guest. Player reservations receive the same occupancy protection; no reserved vacancy is invented. Non-player travelers must have a home settlement different from the tavern's. Party size cannot exceed room bed count.
+
+Extensions fail atomically when they conflict with another accepted booking. Earliest vacancy considers requested stay duration, including future bookings and exact checkout boundaries. Unknown beds fail explicitly. Room layout changes are rejected until explicit reconciliation exists, preserving old entitlements instead of silently deleting them. Snapshots validate ownership, unique room/bed/booking IDs and overlapping intervals and deep-copy the ledger. Schemas1–7 migrate with no invented reservations.
+
+Verification:316/316 core tests (`work/Lodging-green.log`), Unity build/native WorldState serialization (`work/Lodging-build.log`, `LIVING_CITIES_LODGING_SAVE_PASS` in the Unity build log), and actual existing-fixture save/load plus welfare/surrender regression (`work/Lodging-save-regression-pass.log`). Read-only review found no confirmed defects; its migration-coverage gap was addressed with explicit schema1–7 tests.
+
+This is a persistence foundation, not active tavern occupancy. Next: survey stable private-room groups and staff bed exclusions; reconcile native `RoomRental_v1` tavern-wide paid expiry before allocating any traveler; intercept rental payment/extension atomically; enforce bed/rest access and earliest-vacancy dialogue; then add deterministic nonlocal traveler journeys and reservations. Native vanilla rental stores tavern and expiry, not a specific room. Cancellation/death/layout reconciliation, bounded historical retention, traveler generation and local social patrons remain unfinished. No runtime fake guests or arbitrary room assignments are enabled.
+
 User amendment on 14 October 2026. The initial suggestion to keep one bed free was explicitly withdrawn. Do not reserve a guaranteed player bed.
 
 Taverns are commercial establishments, not residential households. Separate the keeper/owner, employees, local social visitors and overnight travelers. These people do not inherit one household surname merely because they share the tavern. Preserve the keeper's food, drink and rental services. Town locals may drink, eat, socialize and gather immediately outside the entrance without renting a bed. Visits increase from late afternoon through evening and early night; varied departures continue into late night, approximately 03:00. Do not place every patron on the same arrival/departure schedule.
