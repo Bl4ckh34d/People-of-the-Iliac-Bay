@@ -23,6 +23,7 @@ namespace LivingCities.Tests
             RefugeJourneyTests.Add(cases);
             GuardRefugeTests.Add(cases);
             GuardDefenseTests.Add(cases);
+            DefenseIncidentTests.Add(cases);
             PatrolPairTests.Add(cases);
             GuardPatrolTests.Add(cases);
             BedTests.Add(cases);

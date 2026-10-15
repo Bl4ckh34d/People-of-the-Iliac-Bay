@@ -1,5 +1,7 @@
 # Living Cities for Daggerfall Unity
 
+Lawful-defense foundation adds a schema7 ledger with persistent provenance, loot rights and bounded welfare/gift state.305 core tests and native serialization checks pass; existing save migration/pursuit regression passes. Gameplay combat/corpse hooks and welfare dialogue are not connected yet. See [scope and evidence](docs/LEGITIMATE-DEFENSE.md).
+
 Indoor defense follow-up preserves native attacker knowledge when the player assaults a defending guard. Live tests verify Assault takeover and return after the enemy dies, alongside effect persistence and citizen flight.289 core tests pass; broader encounter coverage remains open. See [verification](docs/THREAT-RESPONSE.md).
 
 Latest development0.3.34 checkpoint connects indoor enemy defense: an escaped keeper contacts a finite guard, which travels to the shop, enters, searches around shelves and fights the reported attacker without blaming the player. Native shop defense and separate doorway pursuit/effect/save regression pass;289 core tests pass. Broader layouts and moving-target transitions remain unfinished. See [threat response evidence](docs/THREAT-RESPONSE.md).

@@ -58,7 +58,7 @@ namespace LivingCities.Tests
                     if (version == 1) old.Routines = null;
                     else old.Routines.Add(Visit("old1"));
                     var store = new WorldStateStore(0); store.Restore(old); var saved = store.Snapshot();
-                    Check.Equal(6, saved.Version); var home = saved.Settlements[0].Households[0];
+                    Check.Equal(7, saved.Version); var home = saved.Settlements[0].Households[0];
                     Check.Equal(2, home.Residents.Count);
                     Check.Equal(StableSeed.Combine(42, 100, 10, 0xfffffffe), home.SurnameSeed);
                     Check.Equal("old0", home.Residents[0].Id); Check.Equal(2u, home.Residents[0].AppearanceSeed);

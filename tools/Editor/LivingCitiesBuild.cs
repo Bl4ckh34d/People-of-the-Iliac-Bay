@@ -67,6 +67,7 @@ public static class LivingCitiesBuild
         VerifySerialization();
         VerifyAlarmSerialization();
         VerifyGuardPersistence();
+        VerifyDefenseLedger();
         VerifySettings();
         VerifyHousing();
         VerifyBeds();
@@ -347,16 +348,36 @@ public static class LivingCitiesBuild
             string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
             var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
-            Require(migrated.Version == 6 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
+            Require(migrated.Version == 7 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
                 resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
                 home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
         }
         string schemaThree = "{\"Version\":3,\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"SurnameSeed\":876,\"Residents\":[{\"Id\":\"legacy-family\",\"HomeKey\":10,\"AppearanceSeed\":3,\"Sex\":1,\"IsAlive\":false}]}]}],\"Routines\":[]}";
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), schemaThree));
-        Require(restored.Snapshot().Version == 6 && restored.Snapshot().QuestBindings.Count == 0 &&
+        Require(restored.Snapshot().Version == 7 && restored.Snapshot().QuestBindings.Count == 0 &&
             restored.Snapshot().Settlements[0].Households[0].SurnameSeed == 876 &&
             !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
         Debug.Log("LIVING_CITIES_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
+    }
+    private static void VerifyDefenseLedger()
+    {
+        var store=new WorldStateStore(42); store.GetOrCreate(1,new[] { 7 },1);
+        string guard=store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint() }).Guards[0].Id;
+        store.RegisterDefenseCombatant("native:12345",1,CombatOrigin.PassiveEnemy,12000000100);
+        store.RecordDefenseUnprovokedAttack("native:12345",12000000105);
+        store.RecordDefensePlayerHit("native:12345",12000000110,true);
+        store.RecordDefenseWitness("native:12345",guard,true,12000000111);
+        store.ConfirmDefenseDeath("native:12345",12000000120,7,1,2,3,true,300,100);
+        store.BindDefenseCorpse("native:12345","loot:12345");
+        Require(store.CompleteDefenseWelfare("native:12345",guard,12000000130,true,true).PotionGranted,"Defense gift fixture");
+        string json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
+        var restored=new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+        var record=restored.GetDefenseCombatant("native:12345");
+        Require(record.Origin==CombatOrigin.PassiveEnemy && record.UnprovokedAttackAt==12000000105 &&
+            record.Death.LootEntitled && record.Death.CorpseId=="loot:12345" && record.Death.WelfareExpiresAt==12000000420 &&
+            record.Death.WelfareConsumed && record.Death.PotionGranted && record.Witnesses[0].ObserverId==guard &&
+            !restored.CompleteDefenseWelfare(record.Id,guard,12000000131,true,true).Completed,"Native defense ledger roundtrip");
+        Debug.Log("LIVING_CITIES_DEFENSE_LEDGER_SERIALIZATION_PASS: provenance, corpse entitlement, expiry and consumed gift survive native JSON.");
     }
     private static void VerifyIndoorNoisePersistence()
     {
@@ -462,7 +483,7 @@ public static class LivingCitiesBuild
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Recruitment and replacement lineage persist");
         var legacy = restored.Snapshot(); legacy.Version = 5; legacy.Garrisons = null;
         restored.Restore(legacy);
-        Require(restored.Snapshot().Version == 6 && restored.Snapshot().Garrisons.Count == 0 &&
+        Require(restored.Snapshot().Version == 7 && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         VerifyPatrolPairPlan();
         VerifyGuardPatrolRoster();
@@ -965,7 +986,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 6 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
+            Require(saved.Version == 7 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }

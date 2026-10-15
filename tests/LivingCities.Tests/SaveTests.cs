@@ -21,7 +21,7 @@ namespace LivingCities.Tests
                 var s = Filled(); var old = s.Snapshot(); old.Version = 1; old.Routines = null;
                 string identity = old.Settlements[0].Households[0].Residents[0].Id;
                 s.Restore(old);
-                Check.Equal(6, s.Snapshot().Version);
+                Check.Equal(7, s.Snapshot().Version);
                 Check.Equal(identity, s.Snapshot().Settlements[0].Households[0].Residents[0].Id);
                 Check.Equal(0, s.Snapshot().Routines.Count);
             }));
