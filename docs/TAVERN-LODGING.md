@@ -1,5 +1,11 @@
 # Tavern lodging and travelers
 
+## Unrented inventory checkpoint, 15 October 2026
+
+Entering a supported tavern now registers its marker-backed guest rooms even when the player has no rental receipt. No booking or payment is invented. Existing paid player reservations are still reconciled immediately afterward. Survey results remain cached for the loaded interior, and room-layout validation still runs after save restoration. This removes a rental prerequisite for future traveler admission, but does not yet survey inns the player has never entered.
+
+Native red test reproduced the missing inventory (`work/UnrentedInventory-runtime-red.log`). The fixed live test passes all3 Gothway inns with3/2/2 guest rooms and no receipt, booking or gold change, followed by all existing import/payment/rest cases (`work/UnrentedInventory-pass.log`).333/333 core tests and Unity build/install pass. Offscreen surveys require more than vanilla `DoLayoutAutomap`: that method adds models only, omitting rest markers and action doors needed for room partitioning. Do not reuse it unmodified as a complete lodging survey.
+
 ## Traveler persistence checkpoint, 15 October 2026
 
 Schema9 stores traveler identities separately from households, proposed visits, admission outcomes and deaths. Admission reserves the itinerary's exact paid interval once; refusals remain refused after reload or later vacancy. A traveler cannot originate in the destination settlement, overlap their own visits, revive through repeated registration, or have a death timestamp before an admitted visit. Restore rejects malformed booking links and chronology atomically. Existing schemas1–8 gain empty traveler ledgers. Direct lodging extension cannot desynchronize a linked traveler itinerary.

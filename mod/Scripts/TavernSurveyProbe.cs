@@ -49,6 +49,7 @@ namespace LivingCities.DFU
                 }
                 var doors=room.GetComponentsInChildren<DaggerfallActionDoor>();
                 VerifyRooms(room,beds,doors);
+                yield return VerifyUnrentedInventory(room,directory.MapID);
                 yield return VerifyNativeRental(room,directory.MapID);
                 TavernPaymentProbe.Run(room,directory.MapID);
                 TavernRestProbe.Run(room,directory.MapID);
@@ -64,6 +65,38 @@ namespace LivingCities.DFU
                 game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(1);
             }
             Debug.Log("LIVING_CITIES_TAVERN_SURVEY_PASS: taverns="+taverns.Count+"; beds="+totalBeds+"; native interior census complete.");
+        }
+        private static IEnumerator VerifyUnrentedInventory(DaggerfallInterior interior,int town)
+        {
+            var player=GameManager.Instance.PlayerEntity;
+            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var priorLodgings=((WorldState)host.GetSaveData()).Lodgings;
+            var receipts=new List<DaggerfallWorkshop.Game.Serialization.RoomRental_v1>(player.RentedRooms);
+            int building=interior.EntryDoor.buildingKey,gold=player.GetGoldAmount();
+            try
+            {
+                player.RentedRooms.RemoveAll(r=>r.mapID==town && r.buildingKey==building);
+                var clean=(WorldState)host.GetSaveData();
+                clean.Lodgings.RemoveAll(t=>t.SettlementId==town && t.BuildingKey==building);
+                host.RestoreSaveData(clean);
+                TavernLodging lodging=null; float deadline=Time.realtimeSinceStartup+15;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    lodging=((WorldState)host.GetSaveData()).Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==building);
+                    if(lodging!=null) break;
+                    yield return null;
+                }
+                Dictionary<int,string> mapping; TavernRoomSurvey.Read(interior,out mapping);
+                if(lodging==null || lodging.Rooms.Count!=new HashSet<string>(mapping.Values).Count || lodging.Bookings.Count!=0 ||
+                    player.GetGoldAmount()!=gold || player.GetRentedRoom(town,building)!=null)
+                    throw new InvalidOperationException("Unrented tavern did not register guest inventory without payment or bookings.");
+                Debug.Log("LIVING_CITIES_UNRENTED_INVENTORY_PASS: building="+building+"; guestRooms="+lodging.Rooms.Count+"; no receipt, booking or charge.");
+            }
+            finally
+            {
+                player.RentedRooms.Clear(); player.RentedRooms.AddRange(receipts);
+                var restored=(WorldState)host.GetSaveData(); restored.Lodgings=priorLodgings; host.RestoreSaveData(restored);
+            }
         }
         private static IEnumerator VerifyNativeRental(DaggerfallInterior interior,int town)
         {

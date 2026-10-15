@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 traveler inventory prerequisite: loaded taverns now register guest capacity without a player rental. All3 Gothway inns pass no-receipt/no-charge inventory checks plus import/payment/rest regressions;333 core tests and Unity build pass. Unvisited-inn surveys and actual traveler demand/actors remain pending.
+
 M3 traveler persistence: schema9 now retains separate nonlocal identities, visits, admission/refusal outcomes, linked paid rooms and deaths; old schemas migrate empty traveler ledgers.333/333 core tests, native Unity serialization and rental/payment/rest regressions in all3 Gothway inns pass. Review's backdated-death inconsistency is fixed with mutation/restore regression coverage. Visible travelers, runtime demand/origins/routes, bounded history and actor/crime integration remain pending; see [tavern evidence](TAVERN-LODGING.md).
 
 M3 traveler itinerary core: absolute-time gate-aware arrival, one/multiple nights, deterministic sleep/checkout, route reversal and departure now pass327/327 core tests and Unity build. No visible travelers yet: persisted nonlocal identity/admission and actor/crime integration are next. See [traveler implementation plan](superpowers/plans/2026-10-15-travelers.md).

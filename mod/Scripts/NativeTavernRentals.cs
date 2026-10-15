@@ -165,10 +165,12 @@ namespace LivingCities.DFU
             if(!directory.GetBuildingSummary(building,out summary) || summary.BuildingType!=DFLocation.BuildingTypes.Tavern) return;
             var receipt=game.PlayerEntity.GetRentedRoom(directory.MapID,building);
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
-            if(receipt==null || receipt.expiryTime<=now) return;
             try
             {
                 Prepare(store,directory,interior);
+                // Guest capacity exists independently of whether the player rented.
+                // Reconcile any native payment before future NPC admission uses it.
+                if(receipt==null || receipt.expiryTime<=now) { lastFailure=null; return; }
                 string allocated;
                 if(!markers.TryGetValue(receipt.allocatedBedIndex,out allocated))
                     throw new InvalidOperationException("Native allocated bed marker has no surveyed guest room.");
