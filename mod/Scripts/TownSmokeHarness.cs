@@ -190,6 +190,7 @@ namespace LivingCities.DFU
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-shop-visit-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-crowd-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-citizen-threat-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-welfare-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-defense-ledger-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-stairs-probe") >= 0)
@@ -212,6 +213,12 @@ namespace LivingCities.DFU
                 {
                     yield return CitizenThreatProbe.Run();
                     Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: citizen threat flight.");
+                    yield break;
+                }
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-welfare-probe") >= 0)
+                {
+                    yield return CitizenThreatProbe.RunWelfare();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: welfare encounter chain.");
                     yield break;
                 }
                 if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-crowd-probe") >= 0)

@@ -38,4 +38,6 @@ Extend outdoor/indoor guard reports with lawful-scene policy rather than using g
 
 ## Stage4: live acceptance and release
 
+Integrated shop acceptance now passes through keeper flight/reporting, finite guard travel and combat, native player kill and witness capture, automatic welfare and the actual native surrender popup for prior Theft (`work/WelfareChain-pass.log`). The dedicated `-WelfareProbe` fixture controls setup and travel time but uses the running world store/controller. Remaining acceptance includes outdoor and multiple-responder encounters, unavailable/dynamically blocked routes, mid-approach reload and broader quest/mod attackers.
+
 Test unprovoked hostile and player-provoked civilian/enemy, indoor/outdoor scenes, witnessed/unwitnessed kills, real weapon/spell provenance, immediate native loot transfer, real guard travel, prior bounty after welfare, one gift across reload, expiry/departure and unavailable routes. Re-run civilian murder/theft, native surrender, keeper and patrol regressions. Update milestones, README and Obsidian from verified scope. The overall goal and remaining broader event/quest/settlement requirements stay active.

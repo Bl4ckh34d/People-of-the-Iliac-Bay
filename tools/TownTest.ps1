@@ -24,7 +24,8 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$ShopVisitProbe,
     [switch]$CrowdProbe,
     [switch]$CitizenThreatProbe,
-    [switch]$DefenseLedgerProbe)
+    [switch]$DefenseLedgerProbe,
+    [switch]$WelfareProbe)
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
 $player = Join-Path $DfuRoot 'Player/DaggerfallUnity.exe'
@@ -82,6 +83,10 @@ if ($DefenseLedgerProbe) {
     if (-not $FixtureCharacter) { throw 'Defense ledger probe requires the dedicated fixture character.' }
     $arguments += ' -livingcities-defense-ledger-probe'
 }
+if ($WelfareProbe) {
+    if (-not $FixtureCharacter) { throw 'Welfare probe requires a dedicated fixture character.' }
+    $arguments += ' -livingcities-welfare-probe'
+}
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
 Write-Output "Owned town-test process: $($owned.Id)"
 try {
@@ -107,6 +112,7 @@ try {
     if ($CrowdProbe -and $body -notmatch 'LIVING_CITIES_CROWD_WALL_PASS:') { throw 'Crowd wall collision check did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_CITIZEN_THREAT_PASS:') { throw 'Citizen threat probe did not complete.' }
     if ($DefenseLedgerProbe -and $body -notmatch 'LIVING_CITIES_NATIVE_DEFENSE_LEDGER_PASS:') { throw 'Native defense ledger probe did not complete.' }
+    if ($WelfareProbe -and $body -notmatch 'LIVING_CITIES_WELFARE_CHAIN_PASS:') { throw 'Welfare encounter chain did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_THREAT_PASS:') { throw 'Keeper threat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENDER_PASS:') { throw 'Indoor defender combat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENSE_REPORT_PASS:') { throw 'Indoor witness defense report did not complete.' }

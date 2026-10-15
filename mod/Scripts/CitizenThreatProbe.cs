@@ -73,7 +73,8 @@ namespace LivingCities.DFU
             }
             finally { field.SetValue(selected,original); guards.EnemyDefense=defense; if(enemy) UnityEngine.Object.Destroy(enemy); }
         }
-        private static IEnumerator CheckKeeper()
+        public static IEnumerator RunWelfare() { yield return CheckKeeper(true); }
+        private static IEnumerator CheckKeeper(bool welfare=false)
         {
             var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;
             var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var guards=mod.GetComponent<GuardPopulation>();
@@ -154,6 +155,11 @@ namespace LivingCities.DFU
                         "; known="+(summoned.Interior!=null && summoned.Interior.LastSeenSuspect!=null)+"; alarmLocation="+alarm.HasLocation);
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None || responder.GetComponent<EnemyMotor>().IsHostile)
                     throw new InvalidOperationException("Summoned defender attacked innocent player.");
+                if(welfare)
+                {
+                    yield return WelfareEncounterProbe.Finish(store,guards,responder,summoned,defenseReport,target);
+                    yield break;
+                }
                 // Exercise native assault notification while the guard already has an enemy target.
                 var originalThreat=defenseReport.ThreatId;
                 bool assaultVisible=false;

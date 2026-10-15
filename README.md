@@ -1,5 +1,7 @@
 # Living Cities for Daggerfall Unity
 
+Integrated shop welfare acceptance now passes: keeper reports a threat, a finite guard arrives and fights, the player kills the witnessed attacker, welfare occurs, then the native surrender prompt handles prior Theft. See `work/WelfareChain-pass.log` and [scope](docs/LEGITIMATE-DEFENSE.md). Outdoor, multiple-responder and mid-approach reload coverage remain open.
+
 Guard welfare now has a first native runtime implementation: matching threat responders physically approach an injured player, offer a one-time exchange and sometimes a healing potion, then resume existing crime handling. Health must be above zero and strictly below 66%; departure or five game minutes ends the opportunity. Core310/310 and a controlled indoor movement/dialogue/inventory fixture pass. Natural encounter acceptance, outdoor approach coverage and save/load during the approach remain open. See [current welfare evidence](docs/LEGITIMATE-DEFENSE.md). Older checkpoint paragraphs below are historical.
 
 Lawful-defense work adds a schema7 ledger with persistent provenance, loot rights and bounded welfare/gift state.305 core tests pass. Native weapon, sourced-damage, Disintegrate, attacker-activation and corpse-binding probes pass. Actual corpse pickup and real save/load preserve loot rights and prior crimes. Broader spell/mod coverage, cross-scene tracking and welfare dialogue remain incomplete. See [scope and evidence](docs/LEGITIMATE-DEFENSE.md).
