@@ -81,7 +81,10 @@ namespace LivingCities.DFU
         {
             var result=new List<DefenseWitness>(); var ids=new HashSet<string>();
             if(GameManager.Instance.PlayerEntity.IsInvisible) return result;
-            Action<string,bool,Vector3> add=(id,guard,position)=> {
+            Action<string,bool,Component> add=(id,guard,observer)=> {
+                var scene=DefenseScene.For(observer);
+                if(scene==null || scene.SettlementId!=town || !scene.PlayerPresent) return;
+                var position=observer.transform.position;
                 if(ids.Contains(id) || !CivilianResponses.Sees(position,target,20) ||
                     !CivilianResponses.Sees(position,GameManager.Instance.PlayerMotor.transform.position,20)) return;
                 ids.Add(id); result.Add(new DefenseWitness { ObserverId=id,Guard=guard });
@@ -89,15 +92,15 @@ namespace LivingCities.DFU
             var guards=GetComponent<GuardPopulation>();
             var streets=GetComponent<StreetPopulation>();
             foreach(var actor in UnityEngine.Object.FindObjectsOfType<GuardActor>())
-                if(guards.Roster!=null && guards.Roster.Guards.Exists(g=>g.Id==actor.GuardId && g.IsAlive)) add(actor.GuardId,true,actor.transform.position);
+                if(guards.Roster!=null && guards.Roster.Guards.Exists(g=>g.Id==actor.GuardId && g.IsAlive)) add(actor.GuardId,true,actor);
             foreach(var actor in UnityEngine.Object.FindObjectsOfType<ResidentActor>())
-                if(actor.Resident!=null && actor.Resident.IsAlive && !actor.IsSleeping && streets.IsLivingResident(actor.Resident.Id)) add(actor.Resident.Id,false,actor.transform.position);
+                if(actor.Resident!=null && actor.Resident.IsAlive && !actor.IsSleeping && streets.IsLivingResident(actor.Resident.Id)) add(actor.Resident.Id,false,actor);
             var people=store.NativePeopleFor(town);
             foreach(var npc in UnityEngine.Object.FindObjectsOfType<StaticNPC>())
             {
                 var pose=npc.GetComponent<SleepingPose>(); if(pose && pose.Active) continue;
                 var person=people.Find(p=>p.NativeHash==npc.Data.hash && p.WorkKey==npc.Data.buildingKey && p.IsAlive);
-                if(person!=null) add(person.Id,false,npc.transform.position);
+                if(person!=null) add(person.Id,false,npc);
             }
             return result;
         }

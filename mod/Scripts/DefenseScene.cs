@@ -16,7 +16,7 @@ namespace LivingCities.DFU
         public int BuildingKey { get { return Interior ? Interior.EntryDoor.buildingKey : -1; } }
         public int SettlementId { get { return settlementId; } }
 
-        public static DefenseScene For(DaggerfallEntityBehaviour target)
+        public static DefenseScene For(Component target)
         {
             if(!target || Ancestor<DaggerfallDungeon>(target.transform)) return null;
             var room=Ancestor<DaggerfallInterior>(target.transform);

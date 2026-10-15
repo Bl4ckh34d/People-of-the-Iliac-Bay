@@ -233,6 +233,7 @@ namespace LivingCities.DFU
             if(!npc) throw new InvalidOperationException("Witness fixture has no known native resident.");
             var method=typeof(DefenseCombatAdapter).GetMethod("Witnesses",BindingFlags.Instance|BindingFlags.NonPublic);
             var oldPosition=game.PlayerMotor.transform.position; var oldFlags=game.PlayerEntity.MagicalConcealmentFlags;
+            var originalParent=npc.transform.parent; GameObject otherRoom=null;
             try
             {
                 game.PlayerMotor.transform.position=npc.transform.position;
@@ -242,9 +243,22 @@ namespace LivingCities.DFU
                 game.PlayerEntity.MagicalConcealmentFlags=MagicalConcealmentFlags.InvisibleTrue;
                 var hidden=(System.Collections.ICollection)method.Invoke(adapter,new object[] { store,town,npc.transform.position });
                 if(hidden.Count!=0) throw new InvalidOperationException("Invisible player incorrectly gained fight witnesses.");
+                game.PlayerEntity.MagicalConcealmentFlags=MagicalConcealmentFlags.None;
+                otherRoom=new GameObject("Overlapping witness scene fixture");
+                otherRoom.AddComponent<DaggerfallInterior>();
+                npc.transform.SetParent(otherRoom.transform,true);
+                var separated=(System.Collections.Generic.List<DefenseWitness>)method.Invoke(adapter,new object[] { store,town,npc.transform.position });
+                var identity=people.Find(p=>p.NativeHash==npc.Data.hash && p.WorkKey==npc.Data.buildingKey && p.IsAlive);
+                if(identity==null || separated.Exists(w=>w.ObserverId==identity.Id))
+                    throw new InvalidOperationException("Another interior's observer witnessed combat through overlapping scene coordinates.");
             }
-            finally { game.PlayerMotor.transform.position=oldPosition; game.PlayerEntity.MagicalConcealmentFlags=oldFlags; }
+            finally
+            {
+                npc.transform.SetParent(originalParent,true); if(otherRoom) UnityEngine.Object.Destroy(otherRoom);
+                game.PlayerMotor.transform.position=oldPosition; game.PlayerEntity.MagicalConcealmentFlags=oldFlags;
+            }
             Debug.Log("LIVING_CITIES_DEFENSE_INVISIBLE_WITNESS_PASS: visible control observed; invisible player not identified.");
+            Debug.Log("LIVING_CITIES_DEFENSE_WITNESS_SCENE_PASS: overlapping coordinates do not make observers in another interior witnesses.");
         }
     }
 }
