@@ -32,6 +32,8 @@ namespace LivingCities.Tests
                     store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
                     var record=Death(store);
                     bool eligible=health>0 && health<0.66;
+                    Check.Equal(eligible,store.CanOfferDefenseWelfare("enemy:1",guard,130,true,health));
+                    Check.True(!record.Death.WelfareConsumed);
                     Check.Equal(eligible,store.CompleteDefenseWelfare("enemy:1",guard,130,true,true,health).Completed);
                     Check.Equal(eligible,record.Death.PotionGranted);
                     Check.True(record.Death.LootEntitled);

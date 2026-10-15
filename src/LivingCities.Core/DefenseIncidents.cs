@@ -136,12 +136,20 @@ namespace LivingCities.Core
                 ObserveDefenseScene(c.Id,present,now);
             }
         }
-        public WelfareResult CompleteDefenseWelfare(string id,string guardId,double now,bool playerOnSite,bool acceptPotion,double playerHealthFraction)
+        public bool CanOfferDefenseWelfare(string id,string guardId,double now,bool playerOnSite,double playerHealthFraction)
         {
             Require(!double.IsNaN(playerHealthFraction) && playerHealthFraction>=0 && playerHealthFraction<=1,"Invalid player welfare health.");
-            var c=DefenseRecord(id); ObserveDefenseScene(id,playerOnSite,now); var d=c.Death;
-            if(playerHealthFraction<=0 || playerHealthFraction>=0.66 || !d.WelfareEligible || d.WelfareExpired || d.WelfareConsumed || !d.InformedGuards.Contains(guardId) ||
-                !DefenseObserver(state,c.SettlementId,guardId,true,true) || !IsDefenseResponder(c,guardId)) return new WelfareResult();
+            var c=DefenseRecord(id); var d=c.Death;
+            return d!=null && DefenseTime(now) && now>=d.DiedAt && now<d.WelfareExpiresAt && playerOnSite &&
+                playerHealthFraction>0 && playerHealthFraction<0.66 && d.WelfareEligible && !d.WelfareExpired && !d.WelfareConsumed &&
+                d.InformedGuards.Contains(guardId) && DefenseObserver(state,c.SettlementId,guardId,true,true) && IsDefenseResponder(c,guardId);
+        }
+        public WelfareResult CompleteDefenseWelfare(string id,string guardId,double now,bool playerOnSite,bool acceptPotion,double playerHealthFraction)
+        {
+            bool eligible=CanOfferDefenseWelfare(id,guardId,now,playerOnSite,playerHealthFraction);
+            ObserveDefenseScene(id,playerOnSite,now);
+            if(!eligible) return new WelfareResult();
+            var d=DefenseRecord(id).Death;
             d.WelfareConsumed=true; d.ConsumedAt=now; d.WelfareGuardId=guardId; d.PotionGranted=d.PotionOffered && acceptPotion;
             return new WelfareResult { Completed=true,PotionGranted=d.PotionGranted };
         }

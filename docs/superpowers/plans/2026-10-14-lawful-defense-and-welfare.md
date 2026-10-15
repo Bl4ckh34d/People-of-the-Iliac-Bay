@@ -30,6 +30,8 @@ Register original native enemy hostility before a player hit can change it. Pres
 
 ## Stage3: physical scene security and guard courtesy
 
+Partial runtime checkpoint: native controller now approaches, opens the welfare message, awards a bounded native potion and preserves crime handoff. A controlled indoor fixture verifies these paths and assault cancellation; core310/310, native build and citizen-defense regression pass. Full natural encounter, outdoor/mid-approach reload acceptance, civilian witness relay and scene-security policy remain unfinished. See the current checkpoint in `docs/LEGITIMATE-DEFENSE.md` for exact evidence and limits.
+
 User correction, 15 October: gate the entire welfare exchange on current player health strictly below 66% (not 75%) and above zero. Recheck health and the responding guard's specific threat-report membership before dialogue and completion. Loot entitlement and existing bounty are independent of this health gate.
 
 Extend outdoor/indoor guard reports with lawful-scene policy rather than using guilty-suspect investigation behavior. Welfare uses only guards who responded to fight this particular threat, as clarified by the user on 15 October. Do not dispatch separate courtesy responders or choose unrelated nearby guards. Retain the threat-response identity after the enemy dies. Approach the player only within the live local courtesy window, then show the brief welfare/loot dialogue and optionally add one native healing potion. Consume the saved exchange once; restore normal native bounty surrender afterward. Departure or expiry prevents late greetings/gifts while preserving loot rights and continuing legitimate scene security.

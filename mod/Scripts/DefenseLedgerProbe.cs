@@ -27,6 +27,7 @@ namespace LivingCities.DFU
             try
             {
                 game.PlayerEntity.GodMode=true;
+                yield return GuardWelfareProbe.Run();
                 yield return VerifyWelfarePresence(store);
                 VerifyObserverIsolation(mod.GetComponent<DefenseCombatAdapter>());
                 VerifyInvisibleWitnesses(mod.GetComponent<DefenseCombatAdapter>(),store);

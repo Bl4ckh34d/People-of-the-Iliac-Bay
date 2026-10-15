@@ -99,6 +99,7 @@ namespace LivingCities.DFU
             else actor.Capture(now);
             if (!valid || now >= guard.SearchUntil)
             {
+                if(EnemyDefense && !valid && TryDefenseWelfare(guard,actor,report,now)) return true;
                 actor.EndCombat();
                 if (routeTick)
                 {
@@ -143,6 +144,7 @@ namespace LivingCities.DFU
             defenseEnemies.TryGetValue(report.ThreatId,out target);
             if(!EnemyDefense || !IsEnemyThreat(target) || now>=guard.SearchUntil)
             {
+                if(EnemyDefense && !IsEnemyThreat(target) && TryDefenseWelfare(guard,actor,report,now)) return true;
                 actor.EndCombat();
                 if(GameManager.Instance.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
                 { report.ThreatId=null; return false; }

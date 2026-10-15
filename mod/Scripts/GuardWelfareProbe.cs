@@ -1,0 +1,130 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Reflection;
+using DaggerfallWorkshop;
+using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
+using LivingCities.Core;
+using UnityEngine;
+
+namespace LivingCities.DFU
+{
+    public static class GuardWelfareProbe
+    {
+        public static IEnumerator Run()
+        {
+            var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;
+            var scene=DefenseScene.For(room); var navigation=new InteriorGeometry(room);
+            var original=game.PlayerMotor.transform.position; int health=game.PlayerEntity.CurrentHealth;
+            bool godMode=game.PlayerEntity.GodMode;
+            var crime=game.PlayerEntity.CrimeCommitted;
+            var destination=room.transform.InverseTransformPoint(original-Vector3.up);
+            Vector3? origin=null;
+            foreach(var anchor in navigation.LocalAnchors)
+                if(Vector3.Distance(anchor,destination)>4 && Vector3.Distance(anchor,destination)<9 && navigation.RouteBetween(anchor,destination).Count>=2)
+                { origin=anchor; break; }
+            if(!origin.HasValue) throw new InvalidOperationException("No surveyed welfare approach fixture.");
+            var store=new WorldStateStore(42); store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
+            var roster=store.GetOrCreateGuards(scene.SettlementId,1,new[] { new SavedRoutePoint() });
+            var guard=roster.Guards[0]; double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            roster.CacheBuildingApproach(scene.BuildingKey,new SavedRoutePoint { X=1 },
+                new Dictionary<string,List<SavedRoutePoint>> { [guard.Id]=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=1 } } });
+            roster.DispatchBuilding("welfare-probe",scene.BuildingKey,now-20,1,2,12,threatId:"probe:welfare");
+            var point=origin.Value+Vector3.up;
+            roster.EnterBuilding(guard.Id,scene.BuildingKey,now,new GuardPoint3 { X=point.x,Y=point.y,Z=point.z });
+            store.RegisterDefenseCombatant("probe:welfare",scene.SettlementId,CombatOrigin.HostileAttacker,now);
+            store.RecordDefensePlayerHit("probe:welfare",now,true); store.RecordDefenseWitness("probe:welfare",guard.Id,true,now);
+            var record=store.ConfirmDefenseDeath("probe:welfare",now,scene.BuildingKey,destination.x,destination.y,destination.z,true,300,100);
+            var host=new GameObject("Welfare fixture controller"); var controller=host.AddComponent<GuardPopulation>(); controller.enabled=false;
+            var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+            typeof(GuardPopulation).GetField("worldStore",flags).SetValue(controller,store);
+            typeof(GuardPopulation).GetField("interior",flags).SetValue(controller,room);
+            typeof(GuardPopulation).GetField("<Roster>k__BackingField",flags).SetValue(controller,roster);
+            var method=typeof(GuardPopulation).GetMethod("TryDefenseWelfare",flags);
+            var windowField=typeof(GuardPopulation).GetField("welfareWindow",flags);
+            GuardActor actor=null; DaggerfallMessageBox window=null;
+            var seededPotion=ItemBuilder.CreatePotion(4975678,2);
+            game.PlayerEntity.Items.AddItem(seededPotion,noStack:true);
+            var inventoryBefore=new HashSet<ulong>();
+            var potionStacks=new Dictionary<ulong,int>(); int potionCount=0;
+            for(int i=0;i<game.PlayerEntity.Items.Count;i++)
+            {
+                var item=game.PlayerEntity.Items.GetItem(i); inventoryBefore.Add(item.UID);
+                if(item.PotionRecipeKey==4975678) { potionStacks[item.UID]=item.stackCount; potionCount+=item.stackCount; }
+            }
+            try
+            {
+                actor=GuardActor.CreateInterior(roster,guard.Id,room.transform,now);
+                yield return null;
+                var capsule=actor.GetComponent<CharacterController>();
+                var nativeNavigation=new InteriorGeometry(room,capsule.radius+capsule.skinWidth,capsule.height-capsule.radius+capsule.skinWidth);
+                float offset=(float)typeof(GuardActor).GetField("groundOffset",flags).GetValue(actor);
+                bool placed=false;
+                foreach(var anchor in nativeNavigation.LocalAnchors)
+                {
+                    if(placed) break;
+                    if(Vector3.Distance(anchor,destination)>4 && Vector3.Distance(anchor,destination)<9)
+                        foreach(var near in nativeNavigation.LocalAnchors)
+                            if(Vector3.Distance(near,destination)<2 && nativeNavigation.RouteBetween(anchor,near).Count>=2)
+                            {
+                                actor.transform.position=room.transform.TransformPoint(anchor+Vector3.up*offset);
+                                placed=true; break;
+                            }
+                }
+                if(!placed) throw new InvalidOperationException("No native-sized welfare approach fixture.");
+                var start=actor.transform.position;
+                game.PlayerEntity.GodMode=false;
+                game.PlayerEntity.SetHealth(Math.Max(1,game.PlayerEntity.MaxHealth/2),true);
+                game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
+                actor.GetComponent<EnemyMotor>().MakeEnemyHostileToAttacker(game.PlayerEntityBehaviour);
+                method.Invoke(controller,new object[] { guard,actor,roster.Reports[0],now });
+                if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Assault || roster.Reports[0].ThreatId!=null || record.Death.WelfareConsumed)
+                    throw new InvalidOperationException("Assaulted welfare guard did not cancel courtesy for crime handling.");
+                actor.EndCombat(); roster.Reports[0].ThreatId=record.Id;
+                Debug.Log("LIVING_CITIES_WELFARE_ASSAULT_PASS: native assault notification cancels courtesy for crime handling.");
+                game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Theft;
+                float deadline=Time.realtimeSinceStartup+23;
+                while(Time.realtimeSinceStartup<deadline && window==null)
+                {
+                    method.Invoke(controller,new object[] { guard,actor,roster.Reports[0],DaggerfallUnity.Instance.WorldTime.Now.ToSeconds() });
+                    window=windowField.GetValue(controller) as DaggerfallMessageBox;
+                    yield return null;
+                }
+                if(window==null || Vector3.Distance(start,actor.transform.position)<1 ||
+                    Vector3.Distance(actor.transform.position,game.PlayerMotor.transform.position)>=2.5f || actor.GetComponent<EnemyMotor>().IsHostile)
+                    throw new InvalidOperationException("Welfare guard failed peaceful physical approach; window="+(window!=null)+
+                        "; moved="+Vector3.Distance(start,actor.transform.position)+"; distance="+Vector3.Distance(actor.transform.position,game.PlayerMotor.transform.position)+
+                        "; health="+game.PlayerEntity.CurrentHealth+"/"+game.PlayerEntity.MaxHealth+"; duty="+guard.Duty+
+                        "; paused="+GameManager.IsGamePaused+"; elapsed="+(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()-now)+
+                        "; route="+((List<Vector3>)typeof(GuardActor).GetField("welfareRoute",flags).GetValue(actor))?.Count+
+                        "; step="+typeof(GuardActor).GetField("welfareStep",flags).GetValue(actor)+"; position="+actor.transform.position);
+                typeof(DaggerfallMessageBox).GetMethod("RaiseOnButtonClickEvent",flags).Invoke(window,new object[] { window,DaggerfallMessageBox.MessageBoxButtons.Yes });
+                yield return null; yield return null;
+                int after=0;
+                for(int i=0;i<game.PlayerEntity.Items.Count;i++)
+                { var item=game.PlayerEntity.Items.GetItem(i); if(item.PotionRecipeKey==4975678) after+=item.stackCount; }
+                if(!record.Death.WelfareConsumed || !record.Death.PotionGranted || after!=potionCount+1 ||
+                    game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft || roster.Reports[0].ThreatId!=null)
+                    throw new InvalidOperationException("Welfare exchange lost potion or prior-bounty handoff.");
+                Debug.Log("LIVING_CITIES_GUARD_WELFARE_PASS: surveyed physical approach, peaceful dialogue, one native potion and prior-crime handoff.");
+            }
+            finally
+            {
+                if(window!=null && DaggerfallUI.UIManager.TopWindow==window) window.CloseWindow();
+                if(actor) UnityEngine.Object.Destroy(actor.gameObject);
+                UnityEngine.Object.Destroy(host);
+                for(int i=game.PlayerEntity.Items.Count-1;i>=0;i--)
+                {
+                    var item=game.PlayerEntity.Items.GetItem(i);
+                    if(!inventoryBefore.Contains(item.UID) && item.PotionRecipeKey==4975678) game.PlayerEntity.Items.RemoveItem(item);
+                    else if(potionStacks.ContainsKey(item.UID)) item.stackCount=potionStacks[item.UID];
+                }
+                game.PlayerEntity.Items.RemoveItem(seededPotion);
+                game.PlayerEntity.GodMode=godMode; game.PlayerEntity.SetHealth(health,true); game.PlayerEntity.CrimeCommitted=crime; game.PlayerMotor.transform.position=original;
+            }
+        }
+    }
+}
