@@ -127,6 +127,7 @@ namespace LivingCities.DFU
                     roster.Reports.Find(r => r.Id == assigned.IncidentId).ThreatId != threatId ||
                     game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Reload lost defensive target/health or accused innocent player.");
+                yield return VerifyOutdoorWelfare(adapter,controller,defender,target);
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Theft;
                 target.Entity.SetHealth(0);
                 deadline = Time.realtimeSinceStartup + 8;
@@ -190,6 +191,54 @@ namespace LivingCities.DFU
                 if (blocker) UnityEngine.Object.Destroy(blocker);
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.None;
                 if (enemy) UnityEngine.Object.Destroy(enemy);
+            }
+        }
+        private static IEnumerator VerifyOutdoorWelfare(LivingCitiesMod mod,GuardPopulation controller,GuardActor guard,DaggerfallEntityBehaviour target)
+        {
+            var game=GameManager.Instance; var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
+            var geometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation(),false);
+            var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",flags).GetValue(mod);
+            var origin=directory.transform.InverseTransformPoint(guard.transform.position);
+            bool placed=false; bool god=game.PlayerEntity.GodMode; int health=game.PlayerEntity.CurrentHealth;
+            var windowField=typeof(GuardPopulation).GetField("welfareWindow",flags);
+            try
+            {
+                for(int direction=0;direction<8;direction++)
+                {
+                    float angle=direction*Mathf.PI/4;
+                    var destination=new SavedRoutePoint { X=origin.x+Math.Cos(angle)*6,Z=origin.z+Math.Sin(angle)*6 };
+                    var candidate=geometry.ScenePoint(new RoutePoint(destination.X,destination.Z))+Vector3.up;
+                    if(!CivilianResponses.Sees(guard.transform.position,candidate,20) ||
+                        !CivilianResponses.Sees(guard.transform.position,target.transform.position,20) ||
+                        geometry.RouteBetweenPoints(new SavedRoutePoint { X=origin.x,Z=origin.z },destination).Count<2) continue;
+                    game.PlayerMotor.transform.position=candidate; placed=true; break;
+                }
+                if(!placed) throw new InvalidOperationException("No surveyed outdoor welfare player position.");
+                game.PlayerEntity.GodMode=false; game.PlayerEntity.SetHealth(Math.Max(1,game.PlayerEntity.MaxHealth/2),true);
+                Physics.SyncTransforms();
+                var start=guard.transform.position;
+                target.DamageHealthFromSource(game.PlayerEntityBehaviour,target.Entity.CurrentHealth,false,Vector3.zero);
+                string id="native:"+target.GetComponent<DaggerfallEnemy>().LoadID;
+                var record=store.GetDefenseCombatant(id);
+                if(record==null || record.Death==null || !record.Death.LootEntitled ||
+                    !record.Death.InformedGuards.Contains(guard.GuardId))
+                    throw new InvalidOperationException("Outdoor witnessed kill did not establish welfare eligibility.");
+                DaggerfallWorkshop.Game.UserInterfaceWindows.DaggerfallMessageBox window=null;
+                float deadline=Time.realtimeSinceStartup+22;
+                while(window==null && Time.realtimeSinceStartup<deadline)
+                { window=windowField.GetValue(controller) as DaggerfallWorkshop.Game.UserInterfaceWindows.DaggerfallMessageBox; yield return null; }
+                if(window==null || Vector3.Distance(start,guard.transform.position)<1 ||
+                    Vector3.Distance(guard.transform.position,game.PlayerMotor.transform.position)>=2.5f)
+                    throw new InvalidOperationException("Outdoor responder failed physical welfare approach.");
+                window.CloseWindow(); yield return null; yield return null;
+                if(!record.Death.WelfareConsumed || record.Death.PotionGranted || game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
+                    throw new InvalidOperationException("Outdoor welfare changed innocence or failed once-only decline.");
+                Debug.Log("LIVING_CITIES_OUTDOOR_WELFARE_PASS: actual defender witnesses native lawful kill, physically approaches and completes courtesy without charging player.");
+            }
+            finally
+            {
+                DaggerfallUI.Instance.PopToHUD(); game.PlayerEntity.GodMode=god; game.PlayerEntity.SetHealth(health,true);
             }
         }
     }

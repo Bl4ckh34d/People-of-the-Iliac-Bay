@@ -135,6 +135,7 @@ try {
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_GUARD_QUIET_PASS:') { throw 'Peaceful guard audio probe did not complete.' }
     if ($GuardPatrolProbe -and $body -notmatch 'LIVING_CITIES_GUARD_PATROL_PASS:') { throw 'Guard patrol probe did not complete.' }
     if ($GuardDefenseProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DEFENSE_PASS:') { throw 'Guard defense probe did not complete.' }
+    if ($GuardDefenseProbe -and $body -notmatch 'LIVING_CITIES_OUTDOOR_WELFARE_PASS:') { throw 'Outdoor welfare encounter did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_BUILDING_PASS:') { throw 'Guard building probe did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PUBLIC_POSTS_PASS:') { throw 'Public guard post check did not complete.' }
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DOOR_PURSUIT_PASS:') { throw 'Doorway pursuit check did not complete.' }

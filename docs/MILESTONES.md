@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M4 outdoor welfare acceptance: a real street defender witnesses the player's lawful native kill, physically approaches, completes courtesy without charging the player, then returns to its post. Existing native enemy/guard reload, creature silence, quest-owned attacker defense and assault takeover regressions also pass (`work/OutdoorWelfare-pass.log`). Basic indoor and outdoor welfare paths are now verified; dense crowds, blocked routes and broader settlements remain open. Next major gameplay gap is tavern lodging/travelers and social routines, not another random-event spawner.
+
 M3/M4 witness handoff: existing threat responders can now receive recorded lawful-defense evidence from nearby awake civilians in the same scene with clear sight. Native contact tests reject distant, dead and other-room witnesses and verify successful local handoff (`work/DefenseRelay-pass.log`). This advances civilian-to-guard knowledge without spawning courtesy guards; full fleeing-messenger journeys and broader contact layouts remain open.
 
 M4 actual reload acceptance: the integrated keeper/guard encounter now saves and loads a real dedicated test slot while the responder approaches for welfare. The same guard resumes, retains the opportunity and prior Theft, completes courtesy and opens native surrender (`work/WelfareSlot-pass.log`). This closes the real-slot gap in earlier checkpoints; outdoor and broader layout acceptance remain unfinished.
