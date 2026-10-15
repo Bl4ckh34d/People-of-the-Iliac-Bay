@@ -30,7 +30,7 @@ Register original native enemy hostility before a player hit can change it. Pres
 
 ## Stage3: physical scene security and guard courtesy
 
-Extend outdoor/indoor guard reports with lawful-scene policy rather than using guilty-suspect investigation behavior. A witness physically informs a finite guard; already present witnesses can respond locally. Responders travel to the real scene. Approach the player only within the live local courtesy window, then show the brief welfare/loot dialogue and optionally add one native healing potion. Consume the saved exchange once; restore normal native bounty surrender afterward. Departure or expiry prevents late greetings/gifts while preserving loot rights and continuing legitimate scene security.
+Extend outdoor/indoor guard reports with lawful-scene policy rather than using guilty-suspect investigation behavior. Welfare uses only guards who responded to fight this particular threat, as clarified by the user on 15 October. Do not dispatch separate courtesy responders or choose unrelated nearby guards. Retain the threat-response identity after the enemy dies. Approach the player only within the live local courtesy window, then show the brief welfare/loot dialogue and optionally add one native healing potion. Consume the saved exchange once; restore normal native bounty surrender afterward. Departure or expiry prevents late greetings/gifts while preserving loot rights and continuing legitimate scene security.
 
 ## Stage4: live acceptance and release
 

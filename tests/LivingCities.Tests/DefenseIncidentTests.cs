@@ -21,6 +21,30 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string,Action)> cases)
         {
+            cases.Add(("Welfare presence requires same settlement building and local radius",()=>{
+                for(int scenario=0;scenario<5;scenario++)
+                {
+                    string witness,guard; var store=Store(out witness,out guard);
+                    store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
+                    var record=store.ConfirmDefenseDeath("enemy:1",120,7,1,0,2,true,300,100);
+                    store.ObserveDefensePresence(scenario==1 ? (int?)null : scenario==2 ? 2 : 1,
+                        scenario==3 ? -1 : 7,scenario==4 ? 42 : 1,0,2,130,40);
+                    Check.Equal(scenario!=0,record.Death.WelfareExpired);
+                    var copy=new WorldStateStore(0); copy.Restore(store.Snapshot());
+                    copy.ObserveDefensePresence(1,7,1,0,2,131,40);
+                    Check.Equal(scenario!=0,copy.GetDefenseCombatant("enemy:1").Death.WelfareExpired);
+                    Check.True(copy.GetDefenseCombatant("enemy:1").Death.LootEntitled);
+                }
+            }));
+            cases.Add(("Welfare presence expires at deadline but preserves nearby opportunity before it",()=>{
+                string witness,guard; var store=Store(out witness,out guard);
+                store.RecordDefensePlayerHit("enemy:1",110,true); store.RecordDefenseWitness("enemy:1",guard,true,111);
+                var record=Death(store);
+                store.ObserveDefensePresence(1,-1,41,0,2,419,40);
+                Check.True(!record.Death.WelfareExpired);
+                store.ObserveDefensePresence(1,-1,1,0,2,420,40);
+                Check.True(record.Death.WelfareExpired && record.Death.LootEntitled);
+            }));
             cases.Add(("Quest-activated passive attacker qualifies without rewriting origin or pardoning provocation",()=>{
                 foreach(var origin in new[] { CombatOrigin.PassiveEnemy,CombatOrigin.Civilian })
                 foreach(bool provoked in new[] { false,true })

@@ -122,6 +122,20 @@ namespace LivingCities.Core
             if(!d.WelfareConsumed && !d.WelfareExpired && (!onSite || now>=d.WelfareExpiresAt))
             { d.WelfareExpired=true; d.ExpiredAt=now; }
         }
+        public void ObserveDefensePresence(int? settlementId,int buildingKey,double x,double y,double z,double now,double radius)
+        {
+            Require(DefenseTime(now) && buildingKey>=-1 && DefenseCoordinate(x) && DefenseCoordinate(y) &&
+                DefenseCoordinate(z) && radius>0 && radius<=1000,"Invalid welfare presence.");
+            foreach(var c in state.DefenseCombatants)
+            {
+                var d=c.Death;
+                if(d==null || d.WelfareConsumed || d.WelfareExpired || now<d.DiedAt) continue;
+                double dx=x-d.X,dy=y-d.Y,dz=z-d.Z;
+                bool present=settlementId==c.SettlementId && buildingKey==d.BuildingKey &&
+                    dx*dx+dy*dy+dz*dz<=radius*radius;
+                ObserveDefenseScene(c.Id,present,now);
+            }
+        }
         public WelfareResult CompleteDefenseWelfare(string id,string guardId,double now,bool playerOnSite,bool acceptPotion)
         {
             var c=DefenseRecord(id); ObserveDefenseScene(id,playerOnSite,now); var d=c.Death;

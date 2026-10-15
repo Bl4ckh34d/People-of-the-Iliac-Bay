@@ -14,6 +14,7 @@ namespace LivingCities.DFU
         private Func<WorldStateStore> getStore;
         private Func<bool> available;
         private IDisposable hooks;
+        private float nextPresenceCheck;
         public void Install(Func<WorldStateStore> store,Func<bool> enabled)
         {
             getStore=store; available=enabled;
@@ -21,6 +22,30 @@ namespace LivingCities.DFU
             hooks=(IDisposable)Activator.CreateInstance(type,new object[] {
                 new Func<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour,Action<Exception>>(BeginDamage) });
             EnemyDeath.OnEnemyDeath+=EnemyDied;
+            PlayerEnterExit.OnPreTransition+=LeaveDefenseScene;
+        }
+        private bool CanObservePresence()
+        {
+            var game=GameManager.Instance;
+            return getStore!=null && game && game.IsReady && game.IsPlayingGame() && !game.SaveLoadManager.LoadInProgress;
+        }
+        private void LeaveDefenseScene(PlayerEnterExit.TransitionEventArgs args)
+        {
+            if(CanObservePresence()) getStore().ObserveDefensePresence(null,-1,0,0,0,
+                DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),40);
+        }
+        private void Update()
+        {
+            if(Time.unscaledTime<nextPresenceCheck || !CanObservePresence()) return;
+            nextPresenceCheck=Time.unscaledTime+0.25f;
+            var game=GameManager.Instance;
+            var room=game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
+            Component owner=room ? (Component)room : game.IsPlayerInside ? null : game.StreamingWorld.GetCurrentBuildingDirectory();
+            var scene=DefenseScene.For(owner);
+            var point=scene==null ? Vector3.zero : scene.Root.InverseTransformPoint(game.PlayerMotor.transform.position-Vector3.up);
+            getStore().ObserveDefensePresence(scene==null ? (int?)null : scene.SettlementId,
+                scene==null ? -1 : scene.BuildingKey,point.x,point.y,point.z,
+                DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),40);
         }
         private static string Identity(DaggerfallEntityBehaviour target)
         {
@@ -131,6 +156,11 @@ namespace LivingCities.DFU
                 loot.transform.SetParent(scene.Root,true);
             if(loot && loot.LoadID!=0) store.BindDefenseCorpse(id,"loot:"+loot.LoadID.ToString(System.Globalization.CultureInfo.InvariantCulture));
         }
-        private void OnDestroy() { EnemyDeath.OnEnemyDeath-=EnemyDied; if(hooks!=null) hooks.Dispose(); }
+        private void OnDestroy()
+        {
+            EnemyDeath.OnEnemyDeath-=EnemyDied;
+            PlayerEnterExit.OnPreTransition-=LeaveDefenseScene;
+            if(hooks!=null) hooks.Dispose();
+        }
     }
 }

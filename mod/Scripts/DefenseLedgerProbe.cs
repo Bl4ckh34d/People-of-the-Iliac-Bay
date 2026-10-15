@@ -27,6 +27,7 @@ namespace LivingCities.DFU
             try
             {
                 game.PlayerEntity.GodMode=true;
+                yield return VerifyWelfarePresence(store);
                 VerifyObserverIsolation(mod.GetComponent<DefenseCombatAdapter>());
                 VerifyInvisibleWitnesses(mod.GetComponent<DefenseCombatAdapter>(),store);
                 yield return DefenseSceneProbe.Run(store);
@@ -85,6 +86,31 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_NATIVE_DEFENSE_LEDGER_PASS: native sourced damage and lethal weapons, hostile/passive/ally provenance, real corpse binding, prior crime and native JSON.");
             }
             finally { if(body) UnityEngine.Object.Destroy(body); guards.EnemyDefense=defense; game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None; }
+        }
+        private static IEnumerator VerifyWelfarePresence(WorldStateStore store)
+        {
+            var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;
+            var scene=DefenseScene.For(room); var original=game.PlayerMotor.transform.position;
+            var local=room.transform.InverseTransformPoint(original-Vector3.up);
+            double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            string id="presence:"+Guid.NewGuid().ToString("N");
+            store.RegisterDefenseCombatant(id,scene.SettlementId,CombatOrigin.HostileAttacker,now);
+            store.RecordDefensePlayerHit(id,now,true);
+            var record=store.ConfirmDefenseDeath(id,now,scene.BuildingKey,local.x,local.y,local.z,true,300,0);
+            try
+            {
+                yield return new WaitForSecondsRealtime(0.6f);
+                if(record.Death.WelfareExpired) throw new InvalidOperationException("On-site welfare opportunity expired prematurely.");
+                game.PlayerMotor.transform.position=original+Vector3.right*60;
+                yield return new WaitForSecondsRealtime(0.6f);
+                if(!record.Death.WelfareExpired || !record.Death.LootEntitled)
+                    throw new InvalidOperationException("Leaving defense area failed to expire courtesy while retaining loot rights.");
+                game.PlayerMotor.transform.position=original;
+                yield return new WaitForSecondsRealtime(0.6f);
+                if(!record.Death.WelfareExpired) throw new InvalidOperationException("Returning renewed welfare opportunity.");
+            }
+            finally { game.PlayerMotor.transform.position=original; }
+            Debug.Log("LIVING_CITIES_DEFENSE_PRESENCE_PASS: local departure expires courtesy permanently without revoking loot.");
         }
         private static void VerifyObserverIsolation(DefenseCombatAdapter adapter)
         {
