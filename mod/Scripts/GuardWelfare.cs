@@ -12,6 +12,7 @@ namespace LivingCities.DFU
     public sealed partial class GuardPopulation
     {
         private WelfareWindow welfareWindow;
+        private readonly Dictionary<string,float> nextWelfareRelay=new Dictionary<string,float>();
         private readonly List<FailedWelfareApproach> failedWelfareApproaches=new List<FailedWelfareApproach>();
         private sealed class FailedWelfareApproach
         {
@@ -56,6 +57,13 @@ namespace LivingCities.DFU
             }
             var record=worldStore.GetDefenseCombatant(report.ThreatId);
             if(record==null || record.Death==null) return false;
+            float next;
+            if(!record.Death.InformedGuards.Contains(guard.Id) &&
+                (!nextWelfareRelay.TryGetValue(guard.Id,out next) || Time.unscaledTime>=next))
+            {
+                nextWelfareRelay[guard.Id]=Time.unscaledTime+0.25f;
+                DefenseCombatAdapter.RelayDefenseWitnesses(worldStore,record,actor,now);
+            }
             failedWelfareApproaches.RemoveAll(f=> {
                 var old=f.Store==worldStore ? worldStore.GetDefenseCombatant(f.Threat) : null;
                 return old==null || old.Death==null || old.Death.WelfareConsumed || old.Death.WelfareExpired || now>=old.Death.WelfareExpiresAt;

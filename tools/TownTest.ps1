@@ -113,6 +113,7 @@ try {
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_CITIZEN_THREAT_PASS:') { throw 'Citizen threat probe did not complete.' }
     if ($DefenseLedgerProbe -and $body -notmatch 'LIVING_CITIES_NATIVE_DEFENSE_LEDGER_PASS:') { throw 'Native defense ledger probe did not complete.' }
     if ($DefenseLedgerProbe -and $body -notmatch 'LIVING_CITIES_WELFARE_RECREATE_PASS:') { throw 'Welfare serialization and actor recreation probe did not complete.' }
+    if ($DefenseLedgerProbe -and $body -notmatch 'LIVING_CITIES_DEFENSE_RELAY_PASS:') { throw 'Physical defense witness handoff probe did not complete.' }
     if ($WelfareProbe -and $body -notmatch 'LIVING_CITIES_WELFARE_CHAIN_PASS:') { throw 'Welfare encounter chain did not complete.' }
     if ($WelfareProbe -and $body -notmatch 'LIVING_CITIES_WELFARE_SLOT_PASS:') { throw 'Actual welfare approach save/load did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_THREAT_PASS:') { throw 'Keeper threat probe did not complete.' }

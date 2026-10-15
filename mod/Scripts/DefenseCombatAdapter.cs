@@ -129,6 +129,33 @@ namespace LivingCities.DFU
             }
             return result;
         }
+        public static void RelayDefenseWitnesses(WorldStateStore store,DefenseCombatant record,GuardActor recipient,double now)
+        {
+            var death=record.Death;
+            if(death==null || !death.WelfareEligible || death.WelfareConsumed || death.WelfareExpired ||
+                now<death.DiedAt || now>=death.WelfareExpiresAt || death.InformedGuards.Contains(recipient.GuardId)) return;
+            var roster=store.GetGuards(record.SettlementId);
+            var guard=roster==null ? null : roster.Guards.Find(g=>g.Id==recipient.GuardId && g.IsAlive);
+            if(guard==null || !roster.Reports.Exists(r=>r.Id==guard.IncidentId && r.ThreatId==record.Id && r.GuardIds.Contains(guard.Id))) return;
+            var destination=DefenseScene.For(recipient); if(destination==null || destination.SettlementId!=record.SettlementId) return;
+            Func<string,Component,bool> contact=(id,observer)=> {
+                var witness=record.Witnesses.Find(w=>!w.Guard && w.ObserverId==id && w.SeenAt>=record.FirstPlayerHitAt &&
+                    w.SeenAt<=death.DiedAt && death.DiedAt-w.SeenAt<=300);
+                var source=DefenseScene.For(observer);
+                if(witness==null || source==null || source.Root!=destination.Root ||
+                    !CivilianResponses.Sees(observer.transform.position,recipient.transform.position,4)) return false;
+                store.InformDefenseGuard(record.Id,id,recipient.GuardId,now); return true;
+            };
+            foreach(var actor in UnityEngine.Object.FindObjectsOfType<ResidentActor>())
+                if(actor.Resident!=null && actor.Resident.IsAlive && !actor.IsSleeping && contact(actor.Resident.Id,actor)) return;
+            var people=store.NativePeopleFor(record.SettlementId);
+            foreach(var npc in UnityEngine.Object.FindObjectsOfType<StaticNPC>())
+            {
+                var pose=npc.GetComponent<SleepingPose>(); if(pose && pose.Active) continue;
+                var person=people.Find(p=>p.NativeHash==npc.Data.hash && p.WorkKey==npc.Data.buildingKey && p.IsAlive);
+                if(person!=null && contact(person.Id,npc)) return;
+            }
+        }
         private static void ConfirmDeath(WorldStateStore store,DefenseCombatant record,DaggerfallEntityBehaviour target,bool player)
         {
             var scene=DefenseScene.For(target);

@@ -28,7 +28,7 @@ namespace LivingCities.DFU
                 if(Vector3.Distance(anchor,destination)>4 && Vector3.Distance(anchor,destination)<9 && navigation.RouteBetween(anchor,destination).Count>=2)
                 { origin=anchor; break; }
             if(!origin.HasValue) throw new InvalidOperationException("No surveyed welfare approach fixture.");
-            var store=new WorldStateStore(42); store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
+            var store=new WorldStateStore(42); var population=store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
             var roster=store.GetOrCreateGuards(scene.SettlementId,2,new[] { new SavedRoutePoint(),new SavedRoutePoint { X=2 } });
             var guard=roster.Guards[0]; double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var companion=roster.Guards[1];
@@ -42,6 +42,8 @@ namespace LivingCities.DFU
             roster.EnterBuilding(companion.Id,scene.BuildingKey,now,new GuardPoint3 { X=point.x+1,Y=point.y,Z=point.z });
             store.RegisterDefenseCombatant("probe:welfare",scene.SettlementId,CombatOrigin.HostileAttacker,now);
             store.RecordDefensePlayerHit("probe:welfare",now,true); store.RecordDefenseWitness("probe:welfare",guard.Id,true,now);
+            var witness=population.Households[0].Residents[0];
+            store.RecordDefenseWitness("probe:welfare",witness.Id,false,now);
             var record=store.ConfirmDefenseDeath("probe:welfare",now,scene.BuildingKey,destination.x,destination.y,destination.z,true,300,100);
             var host=new GameObject("Welfare fixture controller"); var controller=host.AddComponent<GuardPopulation>(); controller.enabled=false;
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
@@ -81,6 +83,7 @@ namespace LivingCities.DFU
                 }
                 if(!placed) throw new InvalidOperationException("No native-sized welfare approach fixture.");
                 var start=actor.transform.position;
+                VerifyWitnessRelay(store,record,actor,witness,room,now);
                 game.PlayerEntity.GodMode=false;
                 game.PlayerEntity.SetHealth(Math.Max(1,game.PlayerEntity.MaxHealth/2),true);
                 game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
@@ -176,6 +179,31 @@ namespace LivingCities.DFU
                 game.PlayerEntity.Items.RemoveItem(seededPotion);
                 game.PlayerEntity.GodMode=godMode; game.PlayerEntity.SetHealth(health,true); game.PlayerEntity.CrimeCommitted=crime; game.PlayerMotor.transform.position=original;
             }
+        }
+        private static void VerifyWitnessRelay(WorldStateStore store,DefenseCombatant record,GuardActor guard,
+            Resident witness,DaggerfallInterior room,double now)
+        {
+            var relay=typeof(DefenseCombatAdapter).GetMethod("RelayDefenseWitnesses",BindingFlags.Static|BindingFlags.Public);
+            if(relay==null) throw new InvalidOperationException("Defense witness handoff has no runtime contact adapter.");
+            var body=new GameObject("Defense witness contact fixture");
+            var otherRoom=new GameObject("Separate defense witness room"); otherRoom.AddComponent<DaggerfallInterior>();
+            var resident=body.AddComponent<ResidentActor>();
+            typeof(ResidentActor).GetField("<Resident>k__BackingField",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(resident,witness);
+            Action invoke=()=>relay.Invoke(null,new object[] { store,record,guard,now });
+            try
+            {
+                record.Death.InformedGuards.Clear(); body.transform.SetParent(room.transform);
+                body.transform.position=guard.transform.position+Vector3.right*10; invoke();
+                if(record.Death.InformedGuards.Count!=0) throw new InvalidOperationException("Distant witness informed guard without contact.");
+                body.transform.position=guard.transform.position; body.transform.SetParent(otherRoom.transform,true); invoke();
+                if(record.Death.InformedGuards.Count!=0) throw new InvalidOperationException("Witness in another room informed guard.");
+                body.transform.SetParent(room.transform,true); witness.IsAlive=false; invoke(); witness.IsAlive=true;
+                if(record.Death.InformedGuards.Count!=0) throw new InvalidOperationException("Dead witness informed guard.");
+                invoke();
+                if(!record.Death.InformedGuards.Contains(guard.GuardId)) throw new InvalidOperationException("Nearby living fight witness failed to inform responder.");
+                Debug.Log("LIVING_CITIES_DEFENSE_RELAY_PASS: nearby living witness informs matching responder; distant, dead and other-room witnesses do not.");
+            }
+            finally { witness.IsAlive=true; UnityEngine.Object.Destroy(body); UnityEngine.Object.Destroy(otherRoom); }
         }
     }
 }
