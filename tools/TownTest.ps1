@@ -112,6 +112,7 @@ try {
     if ($CrowdProbe -and $body -notmatch 'LIVING_CITIES_CROWD_WALL_PASS:') { throw 'Crowd wall collision check did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_CITIZEN_THREAT_PASS:') { throw 'Citizen threat probe did not complete.' }
     if ($DefenseLedgerProbe -and $body -notmatch 'LIVING_CITIES_NATIVE_DEFENSE_LEDGER_PASS:') { throw 'Native defense ledger probe did not complete.' }
+    if ($DefenseLedgerProbe -and $body -notmatch 'LIVING_CITIES_WELFARE_RECREATE_PASS:') { throw 'Welfare serialization and actor recreation probe did not complete.' }
     if ($WelfareProbe -and $body -notmatch 'LIVING_CITIES_WELFARE_CHAIN_PASS:') { throw 'Welfare encounter chain did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_THREAT_PASS:') { throw 'Keeper threat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENDER_PASS:') { throw 'Indoor defender combat probe did not complete.' }

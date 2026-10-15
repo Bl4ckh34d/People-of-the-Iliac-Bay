@@ -6,6 +6,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using LivingCities.Core;
 using UnityEngine;
@@ -104,14 +105,36 @@ namespace LivingCities.DFU
                 game.PlayerEntity.SetHealth(Math.Max(1,game.PlayerEntity.MaxHealth/2),true);
                 UnityEngine.Object.Destroy(otherActor.gameObject); otherActor=null;
                 Debug.Log("LIVING_CITIES_WELFARE_COMPANION_PASS: uninformed responder preserves courtesy before prior-crime handling.");
+                bool recreated=false;
                 float deadline=Time.realtimeSinceStartup+23;
                 while(Time.realtimeSinceStartup<deadline && window==null)
                 {
                     method.Invoke(controller,new object[] { guard,actor,roster.Reports[0],DaggerfallUnity.Instance.WorldTime.Now.ToSeconds() });
                     window=windowField.GetValue(controller) as DaggerfallMessageBox;
+                    if(!recreated && window==null && Vector3.Distance(start,actor.transform.position)>0.5f)
+                    {
+                        double savedAt=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                        actor.Capture(savedAt);
+                        var savedPosition=actor.transform.position; string guardId=guard.Id;
+                        string json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
+                        var restored=new WorldStateStore(0);
+                        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+                        UnityEngine.Object.Destroy(actor.gameObject); actor=null;
+                        yield return null;
+                        store=restored; roster=store.GetGuards(scene.SettlementId);
+                        guard=roster.Guards.Find(g=>g.Id==guardId); record=store.GetDefenseCombatant("probe:welfare");
+                        typeof(GuardPopulation).GetField("worldStore",flags).SetValue(controller,store);
+                        typeof(GuardPopulation).GetField("<Roster>k__BackingField",flags).SetValue(controller,roster);
+                        actor=GuardActor.CreateInterior(roster,guard.Id,room.transform,savedAt);
+                        yield return null;
+                        if(Vector3.Distance(savedPosition,actor.transform.position)>0.1f || record.Death.WelfareConsumed ||
+                            !store.CanOfferDefenseWelfare(record.Id,guard.Id,savedAt,true,0.5))
+                            throw new InvalidOperationException("Mid-approach native serialization lost guard position or welfare eligibility.");
+                        recreated=true;
+                    }
                     yield return null;
                 }
-                if(window==null || Vector3.Distance(start,actor.transform.position)<1 ||
+                if(!recreated || window==null || Vector3.Distance(start,actor.transform.position)<1 ||
                     Vector3.Distance(actor.transform.position,game.PlayerMotor.transform.position)>=2.5f || actor.GetComponent<EnemyMotor>().IsHostile)
                     throw new InvalidOperationException("Welfare guard failed peaceful physical approach; window="+(window!=null)+
                         "; moved="+Vector3.Distance(start,actor.transform.position)+"; distance="+Vector3.Distance(actor.transform.position,game.PlayerMotor.transform.position)+
@@ -128,6 +151,15 @@ namespace LivingCities.DFU
                     game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft || roster.Reports[0].ThreatId!=null)
                     throw new InvalidOperationException("Welfare exchange lost potion or prior-bounty handoff.");
                 Debug.Log("LIVING_CITIES_GUARD_WELFARE_PASS: surveyed physical approach, peaceful dialogue, one native potion and prior-crime handoff.");
+                var completedStore=new WorldStateStore(0);
+                completedStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
+                    SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
+                var completed=completedStore.GetDefenseCombatant(record.Id);
+                var duplicate=completedStore.CompleteDefenseWelfare(record.Id,guard.Id,
+                    DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),true,true,0.5);
+                if(!completed.Death.WelfareConsumed || !completed.Death.PotionGranted || duplicate.Completed || duplicate.PotionGranted)
+                    throw new InvalidOperationException("Completed welfare repeated or lost reward state after serialization.");
+                Debug.Log("LIVING_CITIES_WELFARE_RECREATE_PASS: native JSON and actor recreation resume approach; completed exchange cannot repeat.");
             }
             finally
             {
