@@ -190,6 +190,7 @@ namespace LivingCities.DFU
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-shop-visit-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-crowd-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-citizen-threat-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-defense-ledger-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-noise-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-indoor-stairs-probe") >= 0)
             {
@@ -201,6 +202,12 @@ namespace LivingCities.DFU
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper fixture load timed out.");
                 yield return new WaitForSecondsRealtime(1);
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-defense-ledger-probe") >= 0)
+                {
+                    yield return DefenseLedgerProbe.Run();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: native defense ledger.");
+                    yield break;
+                }
                 if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-citizen-threat-probe") >= 0)
                 {
                     yield return CitizenThreatProbe.Run();

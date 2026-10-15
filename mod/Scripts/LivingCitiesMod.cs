@@ -61,6 +61,8 @@ namespace LivingCities.DFU
             component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
             component.streets.InstallReactionHook();
+            host.AddComponent<DefenseCombatAdapter>().Install(()=>component.store,
+                ()=>!component.saveFault && component.options.Enabled && component.guards.OwnsSettlement);
             var lifetimeType = Type.GetType("LivingCities.QuestHooks.NativeGuardLifetimeHooks, LivingCities.QuestHooks", true);
             component.guardLifetimeHook = (IDisposable)Activator.CreateInstance(lifetimeType,
                 new object[] { new Func<GameObject, bool>(body => body.GetComponent<GuardActor>() != null) });

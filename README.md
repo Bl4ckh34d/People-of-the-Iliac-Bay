@@ -1,6 +1,6 @@
 # Living Cities for Daggerfall Unity
 
-Lawful-defense foundation adds a schema7 ledger with persistent provenance, loot rights and bounded welfare/gift state.305 core tests and native serialization checks pass; existing save migration/pursuit regression passes. Gameplay combat/corpse hooks and welfare dialogue are not connected yet. See [scope and evidence](docs/LEGITIMATE-DEFENSE.md).
+Lawful-defense work adds a schema7 ledger with persistent provenance, loot rights and bounded welfare/gift state.305 core tests pass. Native weapon, sourced-damage, Disintegrate, attacker-activation and corpse-binding probes pass. Actual corpse pickup and real save/load preserve loot rights and prior crimes. Broader spell/mod coverage, cross-scene tracking and welfare dialogue remain incomplete. See [scope and evidence](docs/LEGITIMATE-DEFENSE.md).
 
 Indoor defense follow-up preserves native attacker knowledge when the player assaults a defending guard. Live tests verify Assault takeover and return after the enemy dies, alongside effect persistence and citizen flight.289 core tests pass; broader encounter coverage remains open. See [verification](docs/THREAT-RESPONSE.md).
 

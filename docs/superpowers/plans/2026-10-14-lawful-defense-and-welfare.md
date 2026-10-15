@@ -20,6 +20,8 @@ Test first: genuine attacker loot before guard arrival; provoked passive enemy a
 
 ## Stage2: native combat and corpse binding
 
+Progress,15 October: native weapon/sourced-health and Disintegrate hooks, actual melee/sourced aggression evidence, immutable passive/ally provocation, invisible-witness exclusion, real corpse binding and immediate native inventory pickup pass. A real dedicated game-slot roundtrip retains corpse, remaining inventory, loot entitlement and prior crime. Scope and evidence are in `docs/LEGITIMATE-DEFENSE.md`. Remaining before Stage2 completion: target-owned scene context and transitions, broader outdoor/mod paths and indirect group provocation. Stage3 remains pending.
+
 Files: native combat hooks under `src/LivingCities.QuestHooks`, `StreetPopulation.BeginWeaponHit`, a focused native defense adapter and live probe under `mod/Scripts`.
 
 Register original native enemy hostility before a player hit can change it. Preserve provocation on later hits and reload. Track player weapon and spell sources separately from guard/environment damage. Observe fight witnesses while the hit occurs; body discovery cannot fabricate a hero. Bind native EnemyDeath's actual corpse marker/LoadID and inventory to the saved resolution. Existing native enemy corpse transfer is already free; confirm actual item transfer and no Murder/Theft both before guard arrival and after reload. Never apply this exemption to managed civilian crime corpses or City Watch deaths.
