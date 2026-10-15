@@ -61,8 +61,9 @@ namespace LivingCities.Core
             var messenger = EntryMessenger.Copy(report.Messenger);
             if (messenger != null)
                 Require(messenger.StartedAt >= report.EnteredAt && report.CitizenWitnesses.Contains(messenger.CitizenId) &&
-                    roster != null && roster.Guards.Exists(g => g.Id == messenger.GuardId &&
-                        EntryMessenger.Distance(g.Post, messenger.Route[messenger.Route.Count - 1]) <= 0.05) &&
+                    // A saved journey records the post at planning time. Guards
+                    // can relocate later; delivery checks the current post.
+                    roster != null && roster.Guards.Exists(g => g.Id == messenger.GuardId) &&
                     (!messenger.Delivered || report.InformedGuards.Contains(messenger.GuardId)), "Invalid entry messenger references.");
         }
         private static List<EntryReport> CopyEntries(WorldState world)

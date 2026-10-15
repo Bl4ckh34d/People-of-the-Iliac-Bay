@@ -7,6 +7,25 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Guard post relocation preserves entry history and cancels an undelivered old route",()=>{
+                foreach(bool delivered in new[] { false,true })
+                {
+                    var store=new WorldStateStore(42); var town=store.GetOrCreate(1,new[] { 4,8 },1);
+                    string witness=town.Households[1].Residents[0].Id;
+                    var roster=store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint { X=28 } });
+                    var report=store.RecordEntry(1,4,100,new[] { witness },new string[0]);
+                    store.PlanEntryMessenger(report.Id,witness,roster.Guards[0].Id,100,
+                        new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=28 } });
+                    if(delivered) store.AdvanceEntryMessengers(1,220);
+                    roster.ReassignPost(roster.Guards[0].Id,new SavedRoutePoint { X=60 },221);
+                    var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                    Check.Equal(0,restored.AdvanceEntryMessengers(1,222).Count);
+                    var saved=restored.Snapshot().EntryReports[0];
+                    Check.Equal(delivered,saved.Messenger.Delivered);
+                    Check.Equal(!delivered,saved.Messenger.Cancelled);
+                    Check.Equal(delivered ? 1 : 0,saved.InformedGuards.Count);
+                }
+            }));
             cases.Add(("Entry messenger travels a saved route before reporting and cannot deliver twice", () => {
                 var store = new WorldStateStore(42); var town = store.GetOrCreate(1, new[] { 4, 8 }, 1);
                 string witness = town.Households[1].Residents[0].Id;

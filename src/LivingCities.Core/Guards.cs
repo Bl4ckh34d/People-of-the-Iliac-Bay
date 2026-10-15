@@ -7,6 +7,12 @@ namespace LivingCities.Core
     public enum SettlementScale { Hamlet, Town, City }
     public enum GuardDuty { Posted, Responding, Searching, Returning, Dead, Engaged, Refuge }
     [Serializable]
+    public sealed class GuardEffectSnapshot
+    {
+        public string Json;
+        public uint MagicMinute;
+    }
+    [Serializable]
     public sealed class GuardRecord
     {
         public string Id, IncidentId, ReplacedById;
@@ -21,6 +27,7 @@ namespace LivingCities.Core
         public GuardInteriorState Interior;
         public GuardRefugeJourney Refuge;
         public double HealthFraction = 1;
+        public GuardEffectSnapshot Effects;
         public GuardDuty Duty;
         public List<SavedRoutePoint> Route = new List<SavedRoutePoint>();
         public double DepartedAt, ArrivesAt, SearchUntil, DiedAt;
@@ -369,7 +376,10 @@ namespace LivingCities.Core
                         X=refuge.ReturnExterior==null ? refuge.Exterior[0].X : refuge.ReturnExterior[refuge.ReturnExterior.Count-1].X,
                         Z=refuge.ReturnExterior==null ? refuge.Exterior[0].Z : refuge.ReturnExterior[refuge.ReturnExterior.Count-1].Z })<0.05),
                     "Invalid guard refuge state.");
+                Require(guard.Effects==null || !string.IsNullOrWhiteSpace(guard.Effects.Json) && guard.Effects.Json.Length<=1048576,
+                    "Invalid guard effect snapshot.");
                 copy.Guards.Add(new GuardRecord { Id = guard.Id, IncidentId = guard.IncidentId, ReplacedById = guard.ReplacedById,
+                    Effects = guard.Effects==null ? null : new GuardEffectSnapshot { Json=guard.Effects.Json,MagicMinute=guard.Effects.MagicMinute },
                     Refuge = refuge,
                     Interior = CopyInterior(guard),
                     AppearanceSeed = guard.AppearanceSeed, IsAlive = guard.IsAlive, Post = CopyPoint(guard.Post), Duty = guard.Duty,

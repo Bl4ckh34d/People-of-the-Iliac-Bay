@@ -16,6 +16,20 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Guard effect snapshot survives validated roster copy without shared mutable state",()=>{
+                var roster=Roster(1);
+                roster.Guards[0].Effects=new GuardEffectSnapshot { Json="[]",MagicMinute=42 };
+                var copy=GuardRoster.CopyValidated(roster);
+                Check.Equal("[]",copy.Guards[0].Effects.Json);
+                Check.Equal(42u,copy.Guards[0].Effects.MagicMinute);
+                copy.Guards[0].Effects.Json="changed";
+                Check.Equal("[]",roster.Guards[0].Effects.Json);
+                roster.Guards[0].Effects.Json=" ";
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(roster));
+                roster.Guards[0].Effects.Json=new string('x',1048577);
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(roster));
+                Check.True(Roster(1).Guards[0].Effects==null);
+            }));
             cases.Add(("Building defense with unavailable responders remains retryable without a phantom report",()=>{
                 var roster=Roster(1); var id=roster.Guards[0].Id;
                 roster.CacheBuildingApproach(73,new SavedRoutePoint { X=100 },

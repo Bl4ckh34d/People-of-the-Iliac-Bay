@@ -37,6 +37,8 @@ Remaining integration: escaped witnesses must dispatch guards to the threatened 
 
 ## Guard spell effects across transitions
 
+Superseded by the verified [guard effect persistence checkpoint](GUARD-EFFECTS.md). The paragraph below records the original gap.
+
 Doorway transitions recreate guard actors and retain health, identity and pursuit, but do not capture or restore EntityEffectManager bundles. Active spell effects can be lost. Required follow-up: preserve native effect state and remaining duration across interior/exterior transitions and save/load, verified with real cast-effect probes. Offscreen time must not restart or indefinitely preserve timed effects. This is an acknowledged gap, not implemented behavior.
 
 ## Source-only indoor defense foundation (earlier checkpoint)

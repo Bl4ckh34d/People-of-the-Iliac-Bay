@@ -103,6 +103,10 @@ try {
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_CITIZEN_THREAT_PASS:') { throw 'Citizen threat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_THREAT_PASS:') { throw 'Keeper threat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENDER_PASS:') { throw 'Indoor defender combat probe did not complete.' }
+    if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_GUARD_EFFECT_RECREATE_PASS:') { throw 'Guard effect recreation probe did not complete.' }
+    if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_GUARD_EFFECT_ELAPSED_PASS:') { throw 'Guard effect elapsed-time probe did not complete.' }
+    if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_GUARD_DOOR_EFFECT_PASS:') { throw 'Guard doorway effect probe did not complete.' }
+    if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_GUARD_EFFECT_LOAD_PASS:') { throw 'Guard effect game reload probe did not complete.' }
     if ($SleepProbe -and $body -notmatch 'LIVING_CITIES_TOWN_SLEEP_PASS:') { throw 'Sleep probe did not complete.' }
     if ($ResponseProbe -and $body -notmatch 'LIVING_CITIES_TOWN_RESPONSE_PASS:') { throw 'Response probe did not complete.' }
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_ACTOR_PASS:') { throw 'Guard actor probe did not complete.' }

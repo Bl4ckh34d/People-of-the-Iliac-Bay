@@ -389,7 +389,7 @@ namespace LivingCities.DFU
             bool indoors=guard.Interior!=null || GuardActor.RefugeIndoors(guard,now);
             if (actors.TryGetValue(guard.Id,out actor) && actor && actor.IsInterior!=indoors)
             {
-                actor.EndCombat(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);
+                actor.CaptureEffects(); actor.EndCombat(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);
                 actors.Remove(guard.Id);
             }
             if (!actors.TryGetValue(guard.Id, out actor) || !actor)
@@ -401,18 +401,26 @@ namespace LivingCities.DFU
             return actor;
         }
         public void Capture()
-        { foreach (var pair in actors) if (pair.Value) pair.Value.Capture(Now()); }
+        { foreach (var pair in actors) if (pair.Value) { pair.Value.Capture(Now()); pair.Value.CaptureEffects(); } }
         private void OnEnable()
         {
+            PlayerEnterExit.OnPreTransition += CaptureBeforeTransition;
             PlayerEnterExit.OnTransitionExterior += ObserveTransition;
             PlayerEnterExit.OnTransitionInterior += ObserveTransition;
             PlayerEnterExit.OnTransitionDungeonInterior += ObserveTransition;
         }
         private void OnDisable()
         {
+            PlayerEnterExit.OnPreTransition -= CaptureBeforeTransition;
             PlayerEnterExit.OnTransitionExterior -= ObserveTransition;
             PlayerEnterExit.OnTransitionInterior -= ObserveTransition;
             PlayerEnterExit.OnTransitionDungeonInterior -= ObserveTransition;
+        }
+        private void CaptureBeforeTransition(PlayerEnterExit.TransitionEventArgs args)
+        {
+            // Native exterior transition destroys the interior before the next
+            // Update. Capture while its actors and effect managers still exist.
+            if(Roster!=null) Capture();
         }
         private void ObserveTransition(PlayerEnterExit.TransitionEventArgs args)
         {
@@ -560,7 +568,7 @@ namespace LivingCities.DFU
                 var guard = Roster.Guards.Find(g => g.Id == pair.Key);
                 bool refugeHere=GuardActor.RefugeIndoors(guard,now) && guard.Refuge.BuildingKey==interior.EntryDoor.buildingKey;
                 if (!refugeHere && (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey))
-                { if (pair.Value) { pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); Destroy(pair.Value.gameObject); } expired.Add(pair.Key); }
+                { if (pair.Value) { pair.Value.CaptureEffects(); pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); Destroy(pair.Value.gameObject); } expired.Add(pair.Key); }
             }
             foreach (var id in expired) actors.Remove(id);
             foreach (var guard in Roster.Guards)

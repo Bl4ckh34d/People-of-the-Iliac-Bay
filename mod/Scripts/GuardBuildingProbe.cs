@@ -6,6 +6,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
+using DaggerfallWorkshop.Game.MagicAndEffects;
 using LivingCities.Core;
 using UnityEngine;
 
@@ -141,6 +142,11 @@ namespace LivingCities.DFU
                     game.PlayerEntity.CrimeCommitted + "; playing=" + game.IsPlayingGame() + "; invisible=" + game.PlayerEntity.IsInvisible +
                     "; sight=" + CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20));
                 var entity = actor.GetComponent<DaggerfallEntityBehaviour>().Entity;
+                actor.GetComponent<EntityEffectManager>().AssignBundle(new EntityEffectBundle(new EffectBundleSettings {
+                    Name="Saved guard effect probe",TargetType=TargetTypes.ByTouch,ElementType=ElementTypes.Magic,
+                    Effects=new[] { new EffectEntry { Key="ContinuousDamage-Fatigue",Settings=new EffectSettings {
+                        DurationBase=10,DurationPerLevel=1,MagnitudeBaseMin=1,MagnitudeBaseMax=1,MagnitudePerLevel=1 } } }
+                },game.PlayerEntityBehaviour),AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
                 entity.SetHealth(Math.Max(1, entity.MaxHealth / 2), true); controller.Capture();
                 double health = first.HealthFraction;
                 game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - shop guards");
@@ -152,6 +158,17 @@ namespace LivingCities.DFU
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || controller.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!loaded || controller.Roster == null) throw new InvalidOperationException("Direct indoor guard reload timed out.");
+                actor=null; deadline=Time.realtimeSinceStartup+8;
+                while(!actor && Time.realtimeSinceStartup<deadline)
+                {
+                    foreach(var item in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                        if(item.GuardId==id && item.IsInterior) actor=item;
+                    yield return null;
+                }
+                if(!actor || actor.GetComponent<EntityEffectManager>().EffectCount!=1 ||
+                    actor.GetComponent<EntityEffectManager>().GetInstancedBundlesSaveData()[0].liveEffects[0].key!="ContinuousDamage-Fatigue")
+                    throw new InvalidOperationException("Actual game reload lost guard spell effect.");
+                Debug.Log("LIVING_CITIES_GUARD_EFFECT_LOAD_PASS: native game save/load restores player spell on wounded indoor guard.");
                 first = controller.Roster.Guards.Find(g => g.Id == id);
                 if (first.Interior == null || first.Interior.BuildingKey != approach.BuildingKey ||
                     Math.Abs(first.HealthFraction - health) > 0.02)
@@ -195,6 +212,12 @@ namespace LivingCities.DFU
                     if(actor && actor.CombatReady) break; yield return null;
                 }
                 if(!actor || !actor.CombatReady) throw new InvalidOperationException("Door pursuit fixture guard did not engage indoors.");
+                actor.GetComponent<EntityEffectManager>().AssignBundle(new EntityEffectBundle(new EffectBundleSettings {
+                    Name="Door effect probe",TargetType=TargetTypes.ByTouch,ElementType=ElementTypes.Magic,
+                    Effects=new[] { new EffectEntry { Key="ContinuousDamage-Fatigue",Settings=new EffectSettings {
+                        DurationBase=60,DurationPerLevel=1,MagnitudeBaseMin=1,MagnitudeBaseMax=1,MagnitudePerLevel=1 } } }
+                },game.PlayerEntityBehaviour),AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
+                if(actor.GetComponent<EntityEffectManager>().EffectCount!=1) throw new InvalidOperationException("Door fixture effect missing before exit.");
                 game.PlayerEnterExit.TransitionExterior(false); DaggerfallUI.Instance.PopToHUD(); yield return null;
                 if(first.Interior!=null && first.Interior.ExteriorPursuit==null)
                     throw new InvalidOperationException("Departing player did not start guard doorway pursuit.");
@@ -210,6 +233,13 @@ namespace LivingCities.DFU
                 if(first.Interior!=null || first.Duty!=GuardDuty.Engaged || !actor || !actor.CombatReady ||
                     actor.GetComponent<EnemySenses>().Target!=game.PlayerEntityBehaviour)
                     throw new InvalidOperationException("Original guard did not emerge and resume native exterior pursuit.");
+                var transferredEffects=actor.GetComponent<EntityEffectManager>().GetInstancedBundlesSaveData();
+                if(transferredEffects.Length!=1 || transferredEffects[0].liveEffects[0].key!="ContinuousDamage-Fatigue" ||
+                    transferredEffects[0].liveEffects[0].roundsRemaining<=0 || transferredEffects[0].liveEffects[0].roundsRemaining>59)
+                    throw new InvalidOperationException("Guard lost or restarted player spell crossing the actual shop door; bundles="+transferredEffects.Length+
+                        "; key="+(transferredEffects.Length==0 ? "none" : transferredEffects[0].liveEffects[0].key)+
+                        "; rounds="+(transferredEffects.Length==0 ? -1 : transferredEffects[0].liveEffects[0].roundsRemaining));
+                Debug.Log("LIVING_CITIES_GUARD_DOOR_EFFECT_PASS: player spell remains on same pursuing guard across native building exit.");
                 var outsideGeometry=new TownGeometry(game.StreamingWorld.GetCurrentBuildingDirectory(),game.StreamingWorld.GetCurrentCityNavigation(),false);
                 var chaseRoute=outsideGeometry.RouteBetweenPoints(first.EngagementPosition,first.Post);
                 LivingCities.Core.SavedRoutePoint chasePoint=null;

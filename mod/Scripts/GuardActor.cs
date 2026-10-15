@@ -101,6 +101,7 @@ namespace LivingCities.DFU
                 actor.groundOffset = controller.height * 0.5f - controller.center.y + controller.skinWidth;
                 actor.Place(now);
                 body.SetActive(true);
+                actor.RestoreEffects();
                 return actor;
             }
             catch { if (body) Destroy(body); throw; }

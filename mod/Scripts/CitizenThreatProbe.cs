@@ -8,6 +8,7 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
 using LivingCities.Core;
+using DaggerfallWorkshop.Game.MagicAndEffects;
 using UnityEngine;
 namespace LivingCities.DFU
 {
@@ -151,6 +152,51 @@ namespace LivingCities.DFU
                 if(copy.Guards[0].Interior.LastSeenSuspect==null || copy.Reports[0].ThreatId!="probe:enemy")
                     throw new InvalidOperationException("Indoor enemy observation did not persist.");
                 Debug.Log("LIVING_CITIES_INDOOR_DEFENDER_PASS: actual indoor native combat damages enemy, preserves interior target and leaves player innocent.");
+                actor.EndCombat();
+                var effects=actor.GetComponent<EntityEffectManager>();
+                effects.AssignBundle(new EntityEffectBundle(new EffectBundleSettings {
+                    Name="Guard persistence probe",TargetType=TargetTypes.ByTouch,ElementType=ElementTypes.Magic,
+                    Effects=new[] { new EffectEntry { Key="ContinuousDamage-Health",Settings=new EffectSettings { DurationBase=10,DurationPerLevel=1,MagnitudeBaseMin=1,MagnitudeBaseMax=1,MagnitudePerLevel=1 } } }
+                },game.PlayerEntityBehaviour),AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
+                yield return new WaitForSecondsRealtime(0.2f);
+                if(effects.EffectCount!=1) throw new InvalidOperationException("Probe damage effect was not applied; bundles="+effects.EffectCount);
+                int rounds=effects.GetInstancedBundlesSaveData()[0].liveEffects[0].roundsRemaining;
+                var capture=typeof(GuardActor).GetMethod("CaptureEffects");
+                if(capture==null) throw new InvalidOperationException("Guard effect capture is missing.");
+                capture.Invoke(actor,null);
+                string json=SaveLoadManager.Serialize(typeof(GuardRoster),roster);
+                roster=GuardRoster.CopyValidated((GuardRoster)SaveLoadManager.Deserialize(typeof(GuardRoster),json));
+                UnityEngine.Object.Destroy(actor.gameObject); actor=null; yield return null;
+                actor=GuardActor.CreateInterior(roster,id,room,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                yield return null;
+                effects=actor.GetComponent<EntityEffectManager>();
+                if(effects.EffectCount!=1 ||
+                    effects.GetInstancedBundlesSaveData()[0].liveEffects[0].roundsRemaining!=rounds)
+                    throw new InvalidOperationException("Guard recreation lost or restarted continuous damage.");
+                Debug.Log("LIVING_CITIES_GUARD_EFFECT_RECREATE_PASS: player continuous damage, native serialization and body recreation preserve active effect and rounds.");
+                actor.Capture(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                capture.Invoke(actor,null);
+                var savedEffects=roster.Guards[0].Effects;
+                UnityEngine.Object.Destroy(actor.gameObject); actor=null; yield return null;
+                DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(180);
+                yield return null; yield return null;
+                actor=GuardActor.CreateInterior(roster,id,room,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                effects=actor.GetComponent<EntityEffectManager>();
+                var remaining=effects.GetInstancedBundlesSaveData()[0].liveEffects[0].roundsRemaining;
+                uint elapsed=roster.Guards[0].Effects.MagicMinute-savedEffects.MagicMinute;
+                if(elapsed<3 || remaining!=rounds-(int)elapsed)
+                    throw new InvalidOperationException("Unloaded guard effect duration did not catch up exactly.");
+                capture.Invoke(actor,null);
+                UnityEngine.Object.Destroy(actor.gameObject); actor=null; yield return null;
+                // Keep this isolated combat fixture in its room while testing
+                // effect expiry independently of the normal search timeout.
+                roster.Guards[0].SearchUntil=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()+3600;
+                DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(1200);
+                yield return null; yield return null;
+                actor=GuardActor.CreateInterior(roster,id,room,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                if(actor.GetComponent<EntityEffectManager>().EffectCount!=0 || roster.Guards[0].Effects!=null)
+                    throw new InvalidOperationException("Expired guard effect returned after body recreation.");
+                Debug.Log("LIVING_CITIES_GUARD_EFFECT_ELAPSED_PASS: unloaded duration catches up and expired effect stays removed.");
             }
             finally { if(actor) { actor.EndCombat(); UnityEngine.Object.Destroy(actor.gameObject); } }
         }
