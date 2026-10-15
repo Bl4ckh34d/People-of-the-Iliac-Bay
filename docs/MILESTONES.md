@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 exterior lodging inventory is now live: one cached inn survey per refresh registers rooms while the player stays outside and reconciles existing native payment. All3 Gothway inns plus full rental/payment/rest regressions pass;333 core tests and Unity build pass. Physical gate/road routes, nonlocal traveler generation and actors are next. Initial synchronous survey performance in large/modded settlements remains unverified.
+
 M3 unloaded tavern survey: model-only temporary geometry plus passive door/marker records now reproduces room/bed/marker assignments in all3 actual Gothway inns. Live comparison preserves player scene/position and native NPC count; rental/payment/rest regressions and333 core tests pass. Helper is not yet wired into automatic settlement-wide inventory; modded replacement layouts remain unverified.
 
 M3 traveler inventory prerequisite: loaded taverns now register guest capacity without a player rental. All3 Gothway inns pass no-receipt/no-charge inventory checks plus import/payment/rest regressions;333 core tests and Unity build pass. Unvisited-inn surveys and actual traveler demand/actors remain pending.

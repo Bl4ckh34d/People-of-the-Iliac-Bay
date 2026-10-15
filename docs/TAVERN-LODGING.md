@@ -1,5 +1,11 @@
 # Tavern lodging and travelers
 
+## Automatic exterior inventory checkpoint, 15 October 2026
+
+The running rental controller now surveys one tavern per refresh while the player is outside. Results are cached for the current `BuildingDirectory`; each cycle re-registers the cached layout against the current world state, so save restoration does not leave a stale cache without ledger entries. Native paid receipts are reconciled by their allocated marker and expiry without charging again. Geometry failures are logged once and retried when the settlement layout reloads; reconciliation conflicts retain existing bookings and receipts. No traveler admission is called yet.
+
+The native fixture clears the town lodging ledger, supplies one paid receipt and stays outdoors. All3 inns appear with guest capacity, exactly that paid reservation, and no movement/entry/gold change. Loaded inventory, passive-vs-loaded geometry, rental/payment/rest checks also pass (`work/ExteriorInventory-pass.log`); the preceding build reproduces missing exterior inventory (`work/ExteriorInventory-runtime-red.log`).333/333 core and Unity build/install pass. First survey remains synchronous within its refresh; large/modded settlement profiling and background time slicing are not proven. Traveler origins, gate/road routes, arrival demand and actors remain pending.
+
 ## Unloaded survey checkpoint, 15 October 2026
 
 `TavernRoomSurvey.ReadUnloaded` builds temporary model-only interior geometry above the scene, adds passive closed-door bounds from block records and reads native rest-marker positions. It shares the same partition algorithm as loaded interiors. It does not call native NPC/quest/loot layout or action-door registration. Temporary geometry is disabled and destroyed in `finally`.

@@ -20,6 +20,71 @@ namespace LivingCities.DFU
         private Func<WorldStateStore> getStore;
         private Func<bool> available;
         private IDisposable hooks;
+        private BuildingDirectory inventoryDirectory;
+        private readonly List<int> inventoryBuildings=new List<int>();
+        private readonly Dictionary<int,Inventory> inventory=new Dictionary<int,Inventory>();
+        private int nextInventory;
+        private sealed class Inventory
+        {
+            public List<LodgingRoom> Rooms;
+            public Dictionary<int,string> Markers;
+            public string Failure;
+        }
+
+        private void RefreshExterior(WorldStateStore store,BuildingDirectory directory)
+        {
+            if(inventoryDirectory!=directory)
+            {
+                inventoryDirectory=directory; inventory.Clear(); inventoryBuildings.Clear(); nextInventory=0;
+                foreach(var building in directory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern)) inventoryBuildings.Add(building.buildingKey);
+                inventoryBuildings.Sort();
+            }
+            if(inventoryBuildings.Count==0) return;
+            int key=inventoryBuildings[nextInventory++%inventoryBuildings.Count];
+            if(nextInventory>=inventoryBuildings.Count) nextInventory=0;
+            Inventory item;
+            if(!inventory.TryGetValue(key,out item))
+            {
+                item=new Inventory(); inventory.Add(key,item);
+                try
+                {
+                    DaggerfallStaticDoors owner=null; StaticDoor entry=default(StaticDoor);
+                    foreach(var candidate in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                        foreach(var door in candidate.Doors)
+                            if(door.doorType==DoorTypes.Building && door.buildingKey==key) { owner=candidate; entry=door; break; }
+                    if(!owner) throw new InvalidOperationException("Tavern entrance unavailable.");
+                    var all=TavernRoomSurvey.ReadUnloaded(owner.transform,entry,out item.Markers);
+                    var eligible=new HashSet<string>(item.Markers.Values);
+                    item.Rooms=all.FindAll(r=>eligible.Contains(r.Id));
+                    Debug.Log("LIVING_CITIES_TAVERN_INVENTORY: "+directory.MapID+":"+key+"; rooms="+item.Rooms.Count);
+                }
+                catch(Exception error)
+                {
+                    item.Failure=error.Message;
+                    Debug.LogWarning("LIVING_CITIES_TAVERN_SURVEY_FAILED: "+directory.MapID+":"+key+": "+item.Failure);
+                }
+            }
+            if(item.Rooms==null) return; // Retry geometry only after the settlement layout reloads.
+            try
+            {
+                store.RegisterLodging(directory.MapID,key,item.Rooms);
+                var receipt=GameManager.Instance.PlayerEntity.GetRentedRoom(directory.MapID,key);
+                double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                if(receipt!=null && receipt.expiryTime>now)
+                {
+                    string room;
+                    if(!item.Markers.TryGetValue(receipt.allocatedBedIndex,out room) ||
+                        !store.ReconcilePlayerLodging(directory.MapID,key,room,now,receipt.expiryTime))
+                        throw new InvalidOperationException("Native paid rental conflicts with exterior inventory.");
+                }
+                item.Failure=null;
+            }
+            catch(Exception error)
+            {
+                if(item.Failure!=error.Message) Debug.LogWarning("LIVING_CITIES_RENTAL_CONFLICT: "+directory.MapID+":"+key+": "+error.Message);
+                item.Failure=error.Message;
+            }
+        }
 
         public void Install(Func<WorldStateStore> store,Func<bool> enabled)
         {
@@ -159,7 +224,7 @@ namespace LivingCities.DFU
             var game=GameManager.Instance;
             var interior=game.IsPlayerInside ? game.PlayerEnterExit.Interior : null;
             if(surveyed!=interior) { surveyed=interior; rooms=null; markers=null; lastFailure=null; }
-            if(!interior) return;
+            if(!interior) { if(!game.IsPlayerInside) RefreshExterior(store,directory); return; }
             BuildingSummary summary;
             int building=interior.EntryDoor.buildingKey;
             if(!directory.GetBuildingSummary(building,out summary) || summary.BuildingType!=DFLocation.BuildingTypes.Tavern) return;
