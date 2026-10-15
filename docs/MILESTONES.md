@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 occupied-bed access: managed tavern reservations now block conflicting native rest destinations and rest-in-place over another guest's bed; own allocated rooms remain usable. Invalid markers refuse instead of silently moving to marker0.322/322 core, Unity build and all3 Gothway native rest/payment/import probes pass. Travelers, full timed-sleep/disk-slot tests and broader layouts remain pending.
+
 M3 rental payment: native paid confirmation and free-room path now enforce full-stay capacity, exact room allocation and extension conflicts before charging. Full inns provide a date for the next vacancy.322/322 core and live callback cases in all3 Gothway inns pass; final bundle installed. Occupied-bed/rest enforcement, actual traveler demand, full disk reload and broader layout coverage remain pending.
 
 M3 paid rental import: running controller now preserves native player bed allocation and imports paid expiry/extensions into marker-backed guest rooms without charging or duplicating bookings. All3 Gothway inns pass live tests;321/321 core tests and Unity build pass. Full disk reload of this new import path, payment/rest availability enforcement and traveler demand remain pending.

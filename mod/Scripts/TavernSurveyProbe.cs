@@ -51,6 +51,7 @@ namespace LivingCities.DFU
                 VerifyRooms(room,beds,doors);
                 yield return VerifyNativeRental(room,directory.MapID);
                 TavernPaymentProbe.Run(room,directory.MapID);
+                TavernRestProbe.Run(room,directory.MapID);
                 foreach(var door in doors)
                     Debug.Log("LIVING_CITIES_TAVERN_DOOR: building="+tavern.buildingKey+"; id="+door.LoadID+
                         "; position="+room.transform.InverseTransformPoint(door.transform.position).ToString("F3")+

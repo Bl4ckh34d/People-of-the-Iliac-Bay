@@ -25,9 +25,54 @@ namespace LivingCities.DFU
         {
             getStore=store; available=enabled;
             var type=Type.GetType("LivingCities.QuestHooks.NativeTavernRentalHooks, LivingCities.QuestHooks",true);
-            hooks=(IDisposable)Activator.CreateInstance(type,new object[] { new Func<int,int,int,Action,bool>(Rent) });
+            hooks=(IDisposable)Activator.CreateInstance(type,new object[] {
+                new Func<int,int,int,Action,bool>(Rent),new Func<bool,string>(RestBlocked) });
         }
         public void Dispose() { if(hooks!=null) hooks.Dispose(); hooks=null; }
+
+        private string RestBlocked(bool stayHere)
+        {
+            if(available==null || !available()) return null;
+            var game=GameManager.Instance; var interior=game.PlayerEnterExit.Interior;
+            var directory=game.StreamingWorld.GetCurrentBuildingDirectory(); BuildingSummary summary;
+            if(!game.IsPlayerInside || !interior || !directory ||
+                !directory.GetBuildingSummary(interior.EntryDoor.buildingKey,out summary) || summary.BuildingType!=DFLocation.BuildingTypes.Tavern) return null;
+            var store=getStore(); int town=directory.MapID,building=interior.EntryDoor.buildingKey;
+            var lodging=store.Snapshot().Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==building);
+            if(lodging==null) return null;
+            const string occupied="This bed is occupied by another guest.";
+            try
+            {
+                Prepare(store,directory,interior);
+                double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                var receipt=game.PlayerEntity.GetRentedRoom(town,building);
+                if(!stayHere && receipt!=null && receipt.expiryTime>now)
+                {
+                    string room;
+                    if(!markers.TryGetValue(receipt.allocatedBedIndex,out room)) return "Your rented bed is unavailable.";
+                    var target=rooms.Find(r=>r.Id==room);
+                    return store.IsLodgingBedReserved(town,building,target.Beds[0],now,"player") ? occupied : null;
+                }
+                // Rest-here keeps the player's position instead of using the paid marker.
+                // Match only the mattress footprint and height, never beds on another floor.
+                Vector3 position=interior.transform.InverseTransformPoint(game.PlayerMotor.transform.position);
+                foreach(var bed in BedGeometry.Read(interior))
+                {
+                    Vector3 offset=position-bed.LocalCenter;
+                    if(offset.y<-.35f || offset.y>2.2f ||
+                        Mathf.Abs(Vector3.Dot(offset,bed.LocalHeadDirection))>bed.Length*.5f+.15f ||
+                        Mathf.Abs(Vector3.Dot(offset,bed.LocalSideDirection))>bed.Width*.5f+.15f) continue;
+                    string id="bed:"+bed.RecordIndex;
+                    if(rooms.Exists(r=>r.Beds.Contains(id)) && store.IsLodgingBedReserved(town,building,id,now,"player")) return occupied;
+                }
+                return null;
+            }
+            catch(Exception error)
+            {
+                Debug.LogWarning("LIVING_CITIES_REST_REFUSED: "+town+":"+building+": "+error.Message);
+                return "The keeper cannot confirm access to this bed.";
+            }
+        }
 
         private void Prepare(WorldStateStore store,BuildingDirectory directory,DaggerfallInterior interior)
         {
