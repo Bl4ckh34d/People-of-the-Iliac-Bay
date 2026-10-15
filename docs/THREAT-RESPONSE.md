@@ -47,7 +47,15 @@ Core tests: 289/289 (`work/IndoorResponse-core-final.log`). Unity build: `work/I
 
 Separate native doorway regression passes (`work/IndoorResponse-door-regression-pass.log`): existing crime response, same wounded guard physically pursuing outside, player spell retained across exit, and actual effect save/reload. Tests use only the dedicated fixture character and hidden owned processes.
 
-Broader interiors, dynamic obstruction replanning, enemies crossing scene boundaries, player-assault takeover during defense, and welfare/loot dialogue still need dedicated acceptance tests or implementation. This checkpoint does not establish complete indoor defense coverage.
+Broader interiors, dynamic obstruction replanning, enemies crossing scene boundaries, and welfare/loot dialogue still need dedicated acceptance tests or implementation. This checkpoint does not establish complete indoor defense coverage.
+
+### Indoor assault and enemy-death follow-up
+
+The native assault probe exposed a handoff gap: ending defense cleared native attacker knowledge, then ordinary indoor response required a new sighting. The controller now records the known player's position and starts native crime response immediately, matching exterior behavior. It retains an existing charge and assigns Assault only when no other crime is recorded.
+
+The expanded fixture uses a surveyed visible player position and native `MakeEnemyHostileToAttacker` notification. It verifies the enemy target is released, the report switches to player crime handling, and Assault remains. After restoring the disposable encounter, setting the enemy's health to zero verifies combat ends and interior return begins without a player charge. This tests target death handling, not attribution of a player kill or loot rights. Existing isolated combat/effect and citizen-flight checks also pass.
+
+Evidence: `work/IndoorAssault-visible-red.log`, `work/IndoorDefense-outcomes-pass.log`, `work/IndoorDefense-outcomes-build.log`;289/289 core (`work/IndoorAssault-core.log`). Installed development0.3.34 hash: `7F2F8E3AA82EC431FFD2922CC707C0D67F0307B44367341880968CB5445F99D1`.
 
 ## Guard spell effects across transitions
 

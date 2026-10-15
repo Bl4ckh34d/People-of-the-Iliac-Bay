@@ -154,10 +154,47 @@ namespace LivingCities.DFU
                         "; known="+(summoned.Interior!=null && summoned.Interior.LastSeenSuspect!=null)+"; alarmLocation="+alarm.HasLocation);
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None || responder.GetComponent<EnemyMotor>().IsHostile)
                     throw new InvalidOperationException("Summoned defender attacked innocent player.");
-                guards.EnemyDefense=false; yield return null; yield return null;
-                if(summoned.Interior!=null && !summoned.Interior.Returning)
-                    throw new InvalidOperationException("Disabled indoor defense did not stand down.");
+                // Exercise native assault notification while the guard already has an enemy target.
+                var originalThreat=defenseReport.ThreatId;
+                bool assaultVisible=false;
+                foreach(var anchor in new InteriorGeometry(room).LocalAnchors)
+                {
+                    var spot=room.transform.TransformPoint(anchor)+Vector3.up;
+                    float distance=Vector3.Distance(responder.transform.position,spot);
+                    if(distance<2 || distance>8 || !CivilianResponses.Sees(responder.transform.position,spot,20)) continue;
+                    game.PlayerMotor.transform.position=spot; assaultVisible=true; break;
+                }
+                if(!assaultVisible) throw new InvalidOperationException("No surveyed visible player position for indoor assault probe.");
+                Physics.SyncTransforms();
+                responder.GetComponent<EnemyMotor>().MakeEnemyHostileToAttacker(game.PlayerEntityBehaviour);
+                deadline=Time.realtimeSinceStartup+5;
+                while(Time.realtimeSinceStartup<deadline && (responder.DefenseTarget ||
+                    responder.GetComponent<EnemySenses>().Target!=game.PlayerEntityBehaviour)) yield return null;
+                if(responder.DefenseTarget || defenseReport.ThreatId!=null ||
+                    responder.GetComponent<EnemySenses>().Target!=game.PlayerEntityBehaviour ||
+                    game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Assault)
+                    throw new InvalidOperationException("Indoor player assault did not take priority over enemy defense; defense="+(responder.DefenseTarget!=null)+
+                        "; threat="+defenseReport.ThreatId+"; playerTarget="+(responder.GetComponent<EnemySenses>().Target==game.PlayerEntityBehaviour)+
+                        "; crime="+game.PlayerEntity.CrimeCommitted+"; sight="+CivilianResponses.Sees(responder.transform.position,game.PlayerMotor.transform.position,20)+
+                        "; hostile="+responder.GetComponent<EnemyMotor>().IsHostile);
+                Debug.Log("LIVING_CITIES_INDOOR_ASSAULT_PASS: native player assault transfers indoor defender to player crime response.");
+                // Restore this disposable encounter before testing target-death stand-down.
+                DaggerfallUI.Instance.PopToHUD(); game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
+                responder.EndCombat(); defenseReport.ThreatId=originalThreat;
+                var enemyPosition=enemy.transform.position;
+                target.Entity.SetHealth(0); yield return null; yield return null;
+                if((summoned.Interior!=null && !summoned.Interior.Returning) || responder.CombatReady || responder.DefenseTarget ||
+                    game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
+                    throw new InvalidOperationException("Dead indoor attacker did not end defense without blaming player.");
+                Debug.Log("LIVING_CITIES_INDOOR_ENEMY_DEATH_PASS: dead attacker ends indoor combat and starts return without a player crime.");
+                guards.EnemyDefense=false;
                 Debug.Log("LIVING_CITIES_INDOOR_DEFENSE_ARRIVAL_PASS: finite guard travels, enters and damages reported hostile enemy without blaming player.");
+                // The isolated combat/effect fixture needs its own living foe.
+                if(enemy) UnityEngine.Object.Destroy(enemy);
+                enemy=GameObjectHelper.CreateFoeGameObjects(enemyPosition,MobileTypes.Thief,1,MobileReactions.Passive)[0];
+                enemy.SetActive(true); yield return null;
+                enemy.GetComponent<EnemyMotor>().IsHostile=true; enemy.GetComponent<EnemyMotor>().enabled=false;
+                enemy.GetComponent<EnemySenses>().enabled=false; enemy.GetComponent<EnemyAttack>().enabled=false;
                 yield return CheckIndoorDefender(enemy,room.transform,room.EntryDoor.buildingKey);
             }
             finally { guards.EnemyDefense=defense; UnityEngine.Object.Destroy(enemy); }

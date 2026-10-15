@@ -133,7 +133,11 @@ namespace LivingCities.DFU
             {
                 if(GameManager.Instance.PlayerEntity.CrimeCommitted==PlayerEntity.Crimes.None)
                     GameManager.Instance.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Assault;
-                actor.EndCombat(); report.ThreatId=null; return false;
+                // Native assault already identifies the attacker. Do not discard that
+                // knowledge and require a second sighting after ending enemy combat.
+                var attacker=interior.transform.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position);
+                guard.Interior.LastSeenSuspect=new GuardPoint3 { X=attacker.x,Y=attacker.y,Z=attacker.z };
+                actor.EndCombat(); report.ThreatId=null; actor.BeginCombat(now); return true;
             }
             DaggerfallEntityBehaviour target;
             defenseEnemies.TryGetValue(report.ThreatId,out target);

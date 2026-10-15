@@ -1,5 +1,7 @@
 # Living Cities for Daggerfall Unity
 
+Indoor defense follow-up preserves native attacker knowledge when the player assaults a defending guard. Live tests verify Assault takeover and return after the enemy dies, alongside effect persistence and citizen flight.289 core tests pass; broader encounter coverage remains open. See [verification](docs/THREAT-RESPONSE.md).
+
 Latest development0.3.34 checkpoint connects indoor enemy defense: an escaped keeper contacts a finite guard, which travels to the shop, enters, searches around shelves and fights the reported attacker without blaming the player. Native shop defense and separate doorway pursuit/effect/save regression pass;289 core tests pass. Broader layouts and moving-target transitions remain unfinished. See [threat response evidence](docs/THREAT-RESPONSE.md).
 
 Latest development0.3.34 rebuild preserves guard spell bundles across body recreation, actual shop exit and game save/load, with elapsed native effect ticks.289 core tests and targeted native checks pass. See [effect persistence evidence and limits](docs/GUARD-EFFECTS.md).
