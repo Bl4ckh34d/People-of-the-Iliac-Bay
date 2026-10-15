@@ -28,6 +28,13 @@ namespace LivingCities.DFU
                         if(door.doorType==DoorTypes.Building && door.buildingKey==tavern.buildingKey)
                         { owner=candidate; entry=door; break; }
                 if(!owner) throw new InvalidOperationException("Tavern entrance missing.");
+                var playerPosition=game.PlayerMotor.transform.position;
+                int people=UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length;
+                Dictionary<int,string> unloadedMarkers;
+                var unloadedRooms=TavernRoomSurvey.ReadUnloaded(owner.transform,entry,out unloadedMarkers);
+                if(game.IsPlayerInside || game.PlayerMotor.transform.position!=playerPosition ||
+                    UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length!=people)
+                    throw new InvalidOperationException("Unloaded tavern survey changed player scene or spawned people.");
                 TownSmokeHarness.EnterInterior(owner.transform,entry);
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
                 var room=game.PlayerEnterExit.Interior;
@@ -49,6 +56,20 @@ namespace LivingCities.DFU
                 }
                 var doors=room.GetComponentsInChildren<DaggerfallActionDoor>();
                 VerifyRooms(room,beds,doors);
+                Dictionary<int,string> loadedMarkers;
+                var loadedRooms=TavernRoomSurvey.Read(room,out loadedMarkers);
+                if(unloadedRooms.Count!=loadedRooms.Count || unloadedMarkers.Count!=loadedMarkers.Count)
+                    throw new InvalidOperationException("Unloaded tavern room or marker count differs from actual interior.");
+                foreach(var group in loadedRooms)
+                {
+                    var other=unloadedRooms.Find(r=>r.Id==group.Id);
+                    if(other==null || other.Beds.Count!=group.Beds.Count || !other.Beds.TrueForAll(b=>group.Beds.Contains(b)))
+                        throw new InvalidOperationException("Unloaded tavern room partition differs from actual interior.");
+                }
+                foreach(var marker in loadedMarkers)
+                    if(!unloadedMarkers.ContainsKey(marker.Key) || unloadedMarkers[marker.Key]!=marker.Value)
+                        throw new InvalidOperationException("Unloaded tavern marker allocation differs from actual interior.");
+                Debug.Log("LIVING_CITIES_UNLOADED_TAVERN_PASS: building="+tavern.buildingKey+"; rooms/markers match loaded interior; player scene and native people unchanged.");
                 yield return VerifyUnrentedInventory(room,directory.MapID);
                 yield return VerifyNativeRental(room,directory.MapID);
                 TavernPaymentProbe.Run(room,directory.MapID);

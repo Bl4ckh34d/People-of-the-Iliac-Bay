@@ -1,5 +1,11 @@
 # Tavern lodging and travelers
 
+## Unloaded survey checkpoint, 15 October 2026
+
+`TavernRoomSurvey.ReadUnloaded` builds temporary model-only interior geometry above the scene, adds passive closed-door bounds from block records and reads native rest-marker positions. It shares the same partition algorithm as loaded interiors. It does not call native NPC/quest/loot layout or action-door registration. Temporary geometry is disabled and destroyed in `finally`.
+
+All3 Gothway taverns match their actual loaded room partitions, bed membership and marker mappings, while player position/interior state and active native NPC count remain unchanged (`work/UnloadedTavern-pass.log`). Existing unrented inventory, paid import, payment and rest regressions pass in the same run;333 core tests and Unity build pass. This validates the helper, not automatic background inventory: the running controller still registers only loaded inns. Third-party model replacements and their script side effects are not covered; passive door bounds currently use native models. Settlement-wide registration, gate/road routes and traveler actors remain next.
+
 ## Unrented inventory checkpoint, 15 October 2026
 
 Entering a supported tavern now registers its marker-backed guest rooms even when the player has no rental receipt. No booking or payment is invented. Existing paid player reservations are still reconciled immediately afterward. Survey results remain cached for the loaded interior, and room-layout validation still runs after save restoration. This removes a rental prerequisite for future traveler admission, but does not yet survey inns the player has never entered.
