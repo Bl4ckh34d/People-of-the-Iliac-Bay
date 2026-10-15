@@ -27,7 +27,19 @@ Rendered resident placement now checks local crowd spacing and swept physical ob
 
 Dense-city profiling, narrow-door queues, moving attackers across interior transitions, complete stationary NPC coverage, sleeping threat awareness, indoor guard enemy response and lawful-defense welfare/loot dialogue remain unfinished.
 
-## Source-only indoor defense foundation
+## Indoor combat adapter checkpoint, 15 October 2026
+
+The guard actor now supports native enemy combat inside buildings and captures the enemy in interior coordinates, including vertical position and the return trail. A controlled `CitizenThreatProbe` creates a disposable indoor defender and verifies actual damage to a hostile thief, a saved interior target, and no player charge or player hostility. Expected pre-fix failure: `work/IndoorDefender-red.log`; passing run: `work/IndoorDefender-green.log`. This validates the actor adapter, not automatic witness dispatch or a complete indoor defense encounter.
+
+Building defense now tolerates an unavailable roster without dereferencing a missing report. Regression covers zero allowed responders, busy guards, and a successful later retry. All 287 core tests pass (`work/IndoorDefender-core.log`), as do the Unity build and exterior enemy-defense regression (`work/IndoorDefender-exterior-pass.log`). Installed development0.3.34 bundle hash: `E270863B7B0252FC9525DD2B11720A13D7B5E62FE7195E40449052B5626299AC`.
+
+Remaining integration: escaped witnesses must dispatch guards to the threatened building; the interior controller must resolve the enemy rather than use player-crime handling. Automatic indoor enemy defense remains unfinished.
+
+## Guard spell effects across transitions
+
+Doorway transitions recreate guard actors and retain health, identity and pursuit, but do not capture or restore EntityEffectManager bundles. Active spell effects can be lost. Required follow-up: preserve native effect state and remaining duration across interior/exterior transitions and save/load, verified with real cast-effect probes. Offscreen time must not restart or indefinitely preserve timed effects. This is an acknowledged gap, not implemented behavior.
+
+## Source-only indoor defense foundation (earlier checkpoint)
 
 Building dispatch and queued building reports now accept a separate enemy target. Validated copy retains that target through exterior travel, delayed doorway entry, interior observations and physical return. A report cannot switch between criminal response and enemy defense or combine enemy defense with crime-scene investigation.281/281 core tests pass (`work/IndoorDefense-green.log`). This is not yet wired into the runtime or installed bundle; indoor guard enemy response remains unfinished.
 

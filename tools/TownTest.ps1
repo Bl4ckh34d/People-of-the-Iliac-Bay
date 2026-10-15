@@ -102,6 +102,7 @@ try {
     if ($CrowdProbe -and $body -notmatch 'LIVING_CITIES_CROWD_WALL_PASS:') { throw 'Crowd wall collision check did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_CITIZEN_THREAT_PASS:') { throw 'Citizen threat probe did not complete.' }
     if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_KEEPER_THREAT_PASS:') { throw 'Keeper threat probe did not complete.' }
+    if ($CitizenThreatProbe -and $body -notmatch 'LIVING_CITIES_INDOOR_DEFENDER_PASS:') { throw 'Indoor defender combat probe did not complete.' }
     if ($SleepProbe -and $body -notmatch 'LIVING_CITIES_TOWN_SLEEP_PASS:') { throw 'Sleep probe did not complete.' }
     if ($ResponseProbe -and $body -notmatch 'LIVING_CITIES_TOWN_RESPONSE_PASS:') { throw 'Response probe did not complete.' }
     if ($GuardActorProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_ACTOR_PASS:') { throw 'Guard actor probe did not complete.' }

@@ -14,7 +14,7 @@ namespace LivingCities.DFU
         private EnemySenses.CanDetectOtherwiseCallback originalDefenseDetection;
         public void BeginDefenseCombat(DaggerfallEntityBehaviour target, double now)
         {
-            if (!target || IsInterior || CombatReady || combatStart != null) return;
+            if (!target || CombatReady || combatStart != null) return;
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (guard.Duty != GuardDuty.Engaged) roster.Engage(GuardId,now);
             DefenseTarget = target;
@@ -38,7 +38,8 @@ namespace LivingCities.DFU
             motor.MakeEnemyHostileToAttacker(DefenseTarget);
             senses.Target = DefenseTarget; senses.SecondaryTarget = null;
             var guard = roster.Guards.Find(g => g.Id == GuardId);
-            var last = geometry.ScenePoint(new RoutePoint(guard.LastSeenSuspect.X,guard.LastSeenSuspect.Z)) + Vector3.up;
+            var last = IsInterior ? Scene(guard.Interior.LastSeenSuspect) :
+                geometry.ScenePoint(new RoutePoint(guard.LastSeenSuspect.X,guard.LastSeenSuspect.Z)) + Vector3.up;
             senses.OldLastKnownTargetPos = last; senses.LastKnownTargetPos = last; senses.PredictedTargetPos = last;
             SayHaltOnce(DefenseTarget);
             GetComponent<EnemyAttack>().enabled = true;
@@ -62,6 +63,15 @@ namespace LivingCities.DFU
             bool sees = DefenseTarget && DefenseTarget.Entity.CurrentHealth > 0 &&
                 CivilianResponses.Sees(transform.position,DefenseTarget.transform.position,20);
             var seen = sees ? transform.parent.InverseTransformPoint(DefenseTarget.transform.position) : Vector3.zero;
+            if (IsInterior)
+            {
+                if (guard.Interior == null || guard.Interior.Returning) return;
+                roster.ObserveInterior(GuardId,Point(local),(double)entity.CurrentHealth/entity.MaxHealth,
+                    now,sees,sees ? Point(seen) : null);
+                // Initial combat is admitted on a visible target; retain its interior
+                // position separately from exterior report coordinates.
+                return;
+            }
             roster.ObserveEngagement(GuardId,new SavedRoutePoint { X = local.x, Z = local.z },
                 (double)entity.CurrentHealth/entity.MaxHealth,now,sees,sees ? new SavedRoutePoint { X = seen.x, Z = seen.z } : null);
         }

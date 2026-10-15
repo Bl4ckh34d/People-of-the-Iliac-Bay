@@ -188,7 +188,7 @@ namespace LivingCities.DFU
             if (!guard.IsAlive || entity.CurrentHealth <= 0) return;
             guard.HealthFraction = (double)entity.CurrentHealth / entity.MaxHealth;
             if (guard.Refuge!=null) { displayedAt=now; return; }
-            if (!IsInterior && DefenseTarget) { CaptureDefense(now); displayedAt = now; return; }
+            if (DefenseTarget) { CaptureDefense(now); displayedAt = now; return; }
             if (IsInterior)
             {
                 if (guard.Interior == null || guard.Interior.Returning) return;

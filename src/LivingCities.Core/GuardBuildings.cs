@@ -78,6 +78,8 @@ namespace LivingCities.Core
             var sent = threatId==null ? Dispatch(incidentId, now, routes, maximumResponders, speed, timeScale) :
                 DispatchDefense(incidentId,threatId,now,routes,maximumResponders,speed,timeScale);
             var report = Reports.Find(r => r.Id == incidentId);
+            // Defense deliberately creates no report when no guard can respond.
+            if (report == null) return sent;
             report.BuildingKey = buildingKey; report.Entrance = CopyPoint(approach.Entrance);
             report.AwaitingApproach = false;
             report.Investigation = investigation;

@@ -117,8 +117,42 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Native keeper did not flee a visible hostile foe.");
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None) throw new InvalidOperationException("Keeper threat response accused player.");
                 Debug.Log("LIVING_CITIES_KEEPER_THREAT_PASS: native registered merchant sees hostile foe and physically flees without blaming player.");
+                yield return CheckIndoorDefender(enemy,room.transform,room.EntryDoor.buildingKey);
             }
             finally { guards.EnemyDefense=defense; UnityEngine.Object.Destroy(enemy); }
+        }
+        private static IEnumerator CheckIndoorDefender(GameObject enemy,Transform room,int buildingKey)
+        {
+            var game=GameManager.Instance;
+            double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            var roster=GuardRoster.Create(1,42,1,new[] { new SavedRoutePoint() });
+            string id=roster.Guards[0].Id;
+            roster.CacheBuildingApproach(buildingKey,new SavedRoutePoint { X=1 },
+                new Dictionary<string,List<SavedRoutePoint>> { { id,new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=1 } } } });
+            roster.DispatchBuilding("indoor-defense-probe",buildingKey,now-20,1,2,12,threatId:"probe:enemy");
+            Vector3 local=room.InverseTransformPoint(enemy.transform.position+Vector3.forward*1.5f);
+            roster.EnterBuilding(id,buildingKey,now,new GuardPoint3 { X=local.x,Y=local.y,Z=local.z });
+            var target=enemy.GetComponent<DaggerfallEntityBehaviour>();
+            target.Entity.MaxHealth=500; target.Entity.SetHealth(500,true);
+            GuardActor actor=null;
+            try
+            {
+                actor=GuardActor.CreateInterior(roster,id,room,now);
+                actor.BeginDefenseCombat(target,now);
+                float deadline=Time.realtimeSinceStartup+15;
+                while(Time.realtimeSinceStartup<deadline && target.Entity.CurrentHealth==500)
+                { actor.Capture(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()); yield return null; }
+                if(!actor.CombatReady || target.Entity.CurrentHealth>=500)
+                    throw new InvalidOperationException("Indoor guard did not engage and damage hostile enemy.");
+                if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None || actor.GetComponent<EnemyMotor>().IsHostile ||
+                    actor.GetComponent<EnemySenses>().Target!=target)
+                    throw new InvalidOperationException("Indoor defender targeted innocent player.");
+                var copy=GuardRoster.CopyValidated(roster);
+                if(copy.Guards[0].Interior.LastSeenSuspect==null || copy.Reports[0].ThreatId!="probe:enemy")
+                    throw new InvalidOperationException("Indoor enemy observation did not persist.");
+                Debug.Log("LIVING_CITIES_INDOOR_DEFENDER_PASS: actual indoor native combat damages enemy, preserves interior target and leaves player innocent.");
+            }
+            finally { if(actor) { actor.EndCombat(); UnityEngine.Object.Destroy(actor.gameObject); } }
         }
     }
 }

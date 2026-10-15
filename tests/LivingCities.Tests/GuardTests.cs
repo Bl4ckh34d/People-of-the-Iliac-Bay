@@ -16,6 +16,19 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Building defense with unavailable responders remains retryable without a phantom report",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73,new SavedRoutePoint { X=100 },
+                    new Dictionary<string,List<SavedRoutePoint>> { { id,Route(0,100) } });
+                Check.Equal(0,roster.DispatchBuilding("danger",73,0,0,2,10,threatId:"enemy:1").Count);
+                Check.Equal(0,roster.Reports.Count);
+                roster.Dispatch("busy",0,new Dictionary<string,List<SavedRoutePoint>> { { id,Route(0,20) } },1,2,10);
+                Check.Equal(0,roster.DispatchBuilding("danger",73,1,1,2,10,threatId:"enemy:1").Count);
+                Check.Equal(1,roster.Reports.Count);
+                roster.Advance(500);
+                Check.Equal(1,roster.DispatchBuilding("danger",73,501,1,2,10,threatId:"enemy:1").Count);
+                Check.Equal("enemy:1",GuardRoster.CopyValidated(roster).Reports.Find(r=>r.Id=="danger").ThreatId);
+            }));
             cases.Add(("Live post reassignment walks the checked route and survives reload",()=>{
                 var roster=Roster(1); var id=roster.Guards[0].Id;
                 roster.MovePost(id,Route(0,20),100,2,10);
