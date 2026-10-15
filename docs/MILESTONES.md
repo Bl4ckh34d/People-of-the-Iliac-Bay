@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 rental-marker mapping: all7 Gothway vanilla rest markers now map uniquely to7 bed groups containing9 beds, independent of open/closed doors. Explicit-room booking preserves native allocation without silent fallback.317/317 core and native all-tavern mapping/build checks pass. Runtime rental import/payment/rest interception and travelers remain unfinished;4 other bed groups still need staff/public classification.
+
 M3 room partition: loaded floor connectivity with canonical closed-door boundaries now groups tavern beds independently of current door animation. All13 beds in Gothway's3 taverns partition once into11 groups; open/closed invariance passes. Guest eligibility, rest-marker mapping and staff allocation remain unconnected. See [tavern evidence and the intermittent guard-combat regression](TAVERN-LODGING.md).
 
 M3 tavern foundation: schema8 now persists exclusive room reservations, protected paid intervals, atomic overlap/extension checks and duration-aware earliest availability. Schemas1–7 migrate empty lodging;316/316 core, Unity native serialization and real save/load regression pass. This is not yet connected to room survey, native rental/payment/rest UI or traveler spawning. See [tavern lodging](TAVERN-LODGING.md).

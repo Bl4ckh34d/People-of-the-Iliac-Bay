@@ -23,7 +23,11 @@ namespace LivingCities.DFU
             }
         }
         public static List<LodgingRoom> Read(DaggerfallInterior interior)
+        { Dictionary<int,string> markers; return Read(interior,out markers); }
+        public static List<LodgingRoom> Read(DaggerfallInterior interior,out Dictionary<int,string> markerRooms)
         {
+            markerRooms=new Dictionary<int,string>();
+            var markers=interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Rest);
             var barriers=new List<DoorBoundary>();
             foreach(var door in interior.GetComponentsInChildren<DaggerfallActionDoor>())
             {
@@ -65,8 +69,15 @@ namespace LivingCities.DFU
                         interior.transform.InverseTransformPoint(points[candidate.RecordIndex])).Count>=2)
                     { assigned.Add(candidate.RecordIndex); room.Beds.Add("bed:"+candidate.RecordIndex); }
                 if(room.Beds.Count==0) throw new InvalidOperationException("Lodging bed disconnected from its own floor.");
+                for(int index=0;index<markers.Length;index++)
+                    if(region.ContainsRestMarker(markers[index]))
+                    {
+                        if(markerRooms.ContainsKey(index)) throw new InvalidOperationException("Rental marker belongs to multiple bed groups: "+index);
+                        markerRooms.Add(index,room.Id);
+                    }
                 result.Add(room);
             }
+            if(markerRooms.Count!=markers.Length) throw new InvalidOperationException("Unmapped native rental marker; building="+interior.EntryDoor.buildingKey);
             return result;
         }
     }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using LivingCities.Core;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
@@ -65,16 +64,14 @@ namespace LivingCities.DFU
         }
         private static void VerifyRooms(DaggerfallInterior interior,List<BedAnchor> beds,DaggerfallActionDoor[] doors)
         {
-            var type=typeof(TavernSurveyProbe).Assembly.GetType("LivingCities.DFU.TavernRoomSurvey");
-            if(type==null) throw new InvalidOperationException("Tavern room partition survey is missing.");
-            var method=type.GetMethod("Read",BindingFlags.Public|BindingFlags.Static);
             var original=new List<bool>(); foreach(var door in doors) original.Add(door.IsOpen);
             try
             {
                 foreach(var door in doors) door.SetOpen(false,true,true); Physics.SyncTransforms();
-                var closed=(List<LodgingRoom>)method.Invoke(null,new object[] { interior });
+                Dictionary<int,string> closedMarkers,openMarkers;
+                var closed=TavernRoomSurvey.Read(interior,out closedMarkers);
                 foreach(var door in doors) door.SetOpen(true,true,true); Physics.SyncTransforms();
-                var opened=(List<LodgingRoom>)method.Invoke(null,new object[] { interior });
+                var opened=TavernRoomSurvey.Read(interior,out openMarkers);
                 Func<List<LodgingRoom>,string> signature=rooms=> {
                     var parts=new List<string>(); foreach(var room in rooms) parts.Add(room.Id+"="+string.Join(",",room.Beds.ToArray()));
                     return string.Join(";",parts.ToArray()); };
@@ -84,6 +81,15 @@ namespace LivingCities.DFU
                     if(!assigned.Add(bed)) throw new InvalidOperationException("Bed belongs to multiple tavern rooms.");
                 foreach(var bed in beds) if(!assigned.Contains("bed:"+bed.RecordIndex)) throw new InvalidOperationException("Tavern bed missing from room partition: "+bed.RecordIndex);
                 if(closed.Count<2) throw new InvalidOperationException("Known multi-room tavern collapsed into one room.");
+                var markers=interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Rest);
+                if(closedMarkers.Count!=markers.Length || openMarkers.Count!=markers.Length)
+                    throw new InvalidOperationException("Native rental markers are missing room mappings.");
+                for(int index=0;index<markers.Length;index++)
+                {
+                    if(!closedMarkers.ContainsKey(index) || !openMarkers.ContainsKey(index) || closedMarkers[index]!=openMarkers[index] ||
+                        !closed.Exists(r=>r.Id==closedMarkers[index])) throw new InvalidOperationException("Rental marker mapping changed with open doors.");
+                    Debug.Log("LIVING_CITIES_TAVERN_MARKER_PASS: building="+interior.EntryDoor.buildingKey+"; marker="+index+"; room="+closedMarkers[index]);
+                }
                 Debug.Log("LIVING_CITIES_TAVERN_ROOMS_PASS: building="+interior.EntryDoor.buildingKey+"; "+signature(closed)+"; open/closed identical.");
             }
             finally { for(int i=0;i<doors.Length;i++) doors[i].SetOpen(original[i],true,true); Physics.SyncTransforms(); }

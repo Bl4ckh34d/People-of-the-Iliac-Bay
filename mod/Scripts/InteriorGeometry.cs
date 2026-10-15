@@ -163,6 +163,23 @@ namespace LivingCities.DFU
             return route;
         }
         private static Vector3 Point(GuardPoint3 point) { return new Vector3((float)point.X,(float)point.Y,(float)point.Z); }
+        // Rest markers can lie over mattresses; associate them with nearby visible
+        // floor in this region without requiring a walkable path onto the mattress.
+        public bool ContainsRestMarker(Vector3 marker)
+        {
+            foreach(var floor in floors.Values)
+            {
+                var delta=marker-floor;
+                if(delta.y < -0.1f || delta.y>1.2f || delta.x*delta.x+delta.z*delta.z>2.25f) continue;
+                if(boundary!=null && !boundary(floor,marker-Vector3.up*0.5f)) continue;
+                var from=floor+Vector3.up; var to=marker+Vector3.up*0.5f;
+                var direction=to-from; bool blocked=false;
+                foreach(var hit in Physics.RaycastAll(from,direction.normalized,direction.magnitude,~0,QueryTriggerInteraction.Ignore))
+                    if(SurveyBlocker(hit.collider)) { blocked=true; break; }
+                if(!blocked) return true;
+            }
+            return false;
+        }
         private GuardPoint3 LocalPoint(Vector3 world)
         { var p = interior.transform.InverseTransformPoint(world); return new GuardPoint3 { X = p.x, Y = p.y, Z = p.z }; }
         private static Vector3Int Cell(Vector3 point, Vector3 seed)

@@ -16,6 +16,15 @@ namespace LivingCities.Tests
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Native allocated room is preserved without fallback to another vacancy",()=>{
+                var store=Store();
+                Check.True(store.TryBookLodging(1,7,"player","player",1,true,1,100,200,"single"));
+                Check.Equal("single",store.Snapshot().Lodgings[0].Bookings[0].RoomId);
+                Check.True(!store.TryBookLodging(1,7,"next","next",2,false,1,100,200,"single"));
+                Check.True(store.TryBookLodging(1,7,"next","next",2,false,1,100,200,"double"));
+                Check.Throws<ArgumentException>(()=>store.TryBookLodging(1,7,"player","player",1,true,1,100,200,"double"));
+                Check.Throws<ArgumentException>(()=>store.TryBookLodging(1,7,"unknown","other",2,false,1,300,400,"missing"));
+            }));
             cases.Add(("Paid lodging reserves entire room while guest is away",()=>{
                 var store=Store();
                 Check.True(store.TryBookLodging(1,7,"a","traveler:a",2,false,2,100,200));

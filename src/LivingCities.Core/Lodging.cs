@@ -51,9 +51,10 @@ namespace LivingCities.Core
             state.Lodgings.Add(copied);
         }
         // A successful commit represents a paid reservation; callers must reconcile native payment.
-        public bool TryBookLodging(int town,int building,string id,string guest,int home,bool player,int party,double start,double end)
+        public bool TryBookLodging(int town,int building,string id,string guest,int home,bool player,int party,double start,double end,string allocatedRoom=null)
         {
             var tavern=Lodging(town,building);
+            Require(allocatedRoom==null || tavern.Rooms.Exists(r=>r.Id==allocatedRoom),"Unknown allocated lodging room.");
             Require(DefenseId(id) && DefenseId(guest) && home>=0 && (player || home!=town) && party>0 &&
                 DefenseTime(start) && DefenseTime(end) && end>start,"Invalid lodging request.");
             foreach(var other in state.Lodgings)
@@ -61,7 +62,8 @@ namespace LivingCities.Core
                 var prior=other.Bookings.Find(b=>b.Id==id);
                 if(prior==null) continue;
                 Require(other==tavern && prior.GuestId==guest && prior.HomeSettlement==home && prior.Player==player &&
-                    prior.PartySize==party && prior.StartsAt==start && prior.EndsAt==end,"Booking identity changed.");
+                    prior.PartySize==party && prior.StartsAt==start && prior.EndsAt==end &&
+                    (allocatedRoom==null || prior.RoomId==allocatedRoom),"Booking identity changed.");
                 return true;
             }
             // A guest cannot occupy two paid rooms over the same interval.
@@ -69,7 +71,8 @@ namespace LivingCities.Core
                 if(other.Bookings.Exists(b=>b.GuestId==guest && Overlap(start,end,b))) return false;
             foreach(var room in tavern.Rooms)
             {
-                if(room.Beds.Count<party || tavern.Bookings.Exists(b=>b.RoomId==room.Id && Overlap(start,end,b))) continue;
+                if((allocatedRoom!=null && room.Id!=allocatedRoom) || room.Beds.Count<party ||
+                    tavern.Bookings.Exists(b=>b.RoomId==room.Id && Overlap(start,end,b))) continue;
                 tavern.Bookings.Add(new LodgingBooking { Id=id,GuestId=guest,HomeSettlement=home,Player=player,
                     PartySize=party,RoomId=room.Id,StartsAt=start,EndsAt=end });
                 return true;
