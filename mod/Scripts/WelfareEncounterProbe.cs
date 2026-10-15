@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using LivingCities.Core;
 using UnityEngine;
@@ -44,6 +45,23 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Real defending guard did not witness legitimate player kill.");
                 var flags=BindingFlags.Instance|BindingFlags.NonPublic;
                 var field=typeof(GuardPopulation).GetField("welfareWindow",flags);
+                var start=actor.transform.position;
+                float approachDeadline=Time.realtimeSinceStartup+10;
+                while(Vector3.Distance(start,actor.transform.position)<0.2f && field.GetValue(guards)==null &&
+                    Time.realtimeSinceStartup<approachDeadline) yield return null;
+                if(field.GetValue(guards)!=null || Vector3.Distance(start,actor.transform.position)<0.2f)
+                    throw new InvalidOperationException("Welfare save fixture did not reach a moving approach before dialogue.");
+                string guardId=guard.Id; int settlement=record.SettlementId;
+                yield return ReloadApproach(guards);
+                var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+                store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",flags).GetValue(mod);
+                record=store.GetDefenseCombatant(threat);
+                guard=store.GetGuards(settlement).Guards.Find(g=>g.Id==guardId);
+                actor=Array.Find(UnityEngine.Object.FindObjectsOfType<GuardActor>(),g=>g.GuardId==guardId);
+                if(!actor || record==null || record.Death.WelfareConsumed || record.Death.WelfareExpired ||
+                    game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft)
+                    throw new InvalidOperationException("Actual welfare slot reload lost responder, opportunity or prior crime.");
+                Debug.Log("LIVING_CITIES_WELFARE_SLOT_PASS: real save/load preserves approaching responder, welfare opportunity and prior Theft.");
                 DaggerfallMessageBox window=null; float deadline=Time.realtimeSinceStartup+22;
                 while(Time.realtimeSinceStartup<deadline && window==null)
                 { window=field.GetValue(guards) as DaggerfallMessageBox; yield return null; }
@@ -61,11 +79,36 @@ namespace LivingCities.DFU
             }
             finally
             {
-                DaggerfallUI.Instance.PopToHUD(); actor.EndCombat();
+                DaggerfallUI.Instance.PopToHUD(); if(actor) actor.EndCombat();
                 game.PlayerEntity.GodMode=god; game.PlayerEntity.SetHealth(health,true);
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue=surrendered;
                 game.PlayerEntity.CrimeCommitted=priorCrime; game.PlayerMotor.transform.position=original;
             }
+        }
+        private static IEnumerator ReloadApproach(GuardPopulation guards)
+        {
+            var game=GameManager.Instance;
+            if(!game.PlayerEntity.Name.StartsWith("LivingCitiesTest-",StringComparison.Ordinal))
+                throw new InvalidOperationException("Welfare reload requires the dedicated test character.");
+            bool saved=false,loaded=false;
+            SaveLoadManager.OnSaveEventHandler onSave=ignored=>saved=true;
+            SaveLoadManager.OnLoadEventHandler onLoad=ignored=>loaded=true;
+            SaveLoadManager.OnSave+=onSave; SaveLoadManager.OnLoad+=onLoad;
+            try
+            {
+                const string name="Living Cities - Welfare approach";
+                game.SaveLoadManager.Save(game.PlayerEntity.Name,name);
+                float deadline=Time.realtimeSinceStartup+30;
+                while(!saved && Time.realtimeSinceStartup<deadline) yield return null;
+                if(!saved) throw new InvalidOperationException("Welfare save timed out.");
+                int key=game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name,name);
+                game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
+                deadline=Time.realtimeSinceStartup+60;
+                while((!loaded || guards.Roster==null || guards.ActiveCount==0) && Time.realtimeSinceStartup<deadline) yield return null;
+                if(!loaded || guards.Roster==null || guards.ActiveCount==0)
+                    throw new InvalidOperationException("Welfare reload timed out.");
+            }
+            finally { SaveLoadManager.OnSave-=onSave; SaveLoadManager.OnLoad-=onLoad; }
         }
     }
 }
