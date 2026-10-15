@@ -26,3 +26,11 @@ The hostile actors in these checks are disposable test fixtures. A quest-tagged 
 Rendered resident placement now checks local crowd spacing and swept physical obstacles. Opposing walkers pass with at least 0.82 metres between managed body centers in the native street fixture. Local steering remains outside inserted walls; it does not guarantee a replacement route around a newly inserted obstruction. Waiting or oscillation at a blocked route remains possible. Static merchant flight still uses its existing checked route rather than the new crowd body registry. Guard integration was deferred after it prevented a wall-post combat fixture from activating; guards retain their existing tested placement and native combat movement.
 
 Dense-city profiling, narrow-door queues, moving attackers across interior transitions, complete stationary NPC coverage, sleeping threat awareness, indoor guard enemy response and lawful-defense welfare/loot dialogue remain unfinished.
+
+## Source-only indoor defense foundation
+
+Building dispatch and queued building reports now accept a separate enemy target. Validated copy retains that target through exterior travel, delayed doorway entry, interior observations and physical return. A report cannot switch between criminal response and enemy defense or combine enemy defense with crime-scene investigation.281/281 core tests pass (`work/IndoorDefense-green.log`). This is not yet wired into the runtime or installed bundle; indoor guard enemy response remains unfinished.
+
+## Daggerfall doorway-post report
+
+The player reported a guard standing facing a house door, then observed the guard run to city-wall shelter when a ghost appeared. SAVE50 stores guard `g:1291010263:n:4` as `Posted`, with no refuge/interior and post `(139.824996948242, 703.400024414063)`. The current player log later records that guard taking refuge in building67329. This supports a stationary doorway post followed by working ghost flight, rather than proving a stuck patrol. Current post selection samples resident commute starts, which are building entrances. Post selection needs an offset to reachable clear space; existing saved rosters need safe migration without renaming guards or rewriting active journeys. That placement correction is not implemented yet.

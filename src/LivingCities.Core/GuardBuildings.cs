@@ -18,14 +18,15 @@ namespace LivingCities.Core
     }
     public sealed partial class GuardRoster
     {
-        public void QueueBuildingReport(string incidentId, int buildingKey)
+        public void QueueBuildingReport(string incidentId, int buildingKey, string threatId = null)
         {
             Require(!string.IsNullOrWhiteSpace(incidentId) && buildingKey >= 0, "Invalid queued building report.");
+            Require(threatId==null || !string.IsNullOrWhiteSpace(threatId) && threatId.Length<=128,"Invalid building threat.");
             var report = Reports.Find(r => r.Id == incidentId);
-            Require(report == null || report.BuildingKey == buildingKey && !report.Investigation,
+            Require(report == null || report.BuildingKey == buildingKey && !report.Investigation && report.ThreatId==threatId,
                 "Queued report cannot change destination or policy.");
             if (report == null) Reports.Add(new GuardReport {
-                Id = incidentId, BuildingKey = buildingKey, AwaitingApproach = true });
+                Id = incidentId, BuildingKey = buildingKey, ThreatId=threatId, AwaitingApproach = true });
         }
         // Exterior adapters survey collision-checked routes before the scene unloads.
         // A missing route is unavailable; never substitute straight-line travel.
@@ -41,12 +42,14 @@ namespace LivingCities.Core
             if (index < 0) BuildingApproaches.Add(validated); else BuildingApproaches[index] = validated;
         }
         public List<GuardRecord> DispatchBuilding(string incidentId, int buildingKey, double now,
-            int maximumResponders, double speed, double timeScale, bool investigation = false, ISet<string> informedGuards = null)
+            int maximumResponders, double speed, double timeScale, bool investigation = false, ISet<string> informedGuards = null, string threatId = null)
         {
             Require(buildingKey >= 0 && !string.IsNullOrWhiteSpace(incidentId) && Time(now) &&
                 maximumResponders >= 0 && maximumResponders <= 256 && Finite(speed) && speed > 0 &&
                 Finite(timeScale) && timeScale > 0, "Invalid building dispatch.");
             var existing = Reports.Find(r => r.Id == incidentId);
+            Require(threatId==null || !string.IsNullOrWhiteSpace(threatId) && threatId.Length<=128 && !investigation,"Invalid building defense.");
+            Require(existing==null || existing.ThreatId==threatId,"Building report target cannot change.");
             Require(existing == null || existing.BuildingKey == buildingKey, "Report cannot change its destination.");
             Require(existing == null || existing.Investigation == investigation, "Report cannot change its investigation policy.");
             if (existing != null && existing.GuardIds.Count > 0) return ReportGuards(existing);
@@ -72,7 +75,8 @@ namespace LivingCities.Core
                     }
                 }
             }
-            var sent = Dispatch(incidentId, now, routes, maximumResponders, speed, timeScale);
+            var sent = threatId==null ? Dispatch(incidentId, now, routes, maximumResponders, speed, timeScale) :
+                DispatchDefense(incidentId,threatId,now,routes,maximumResponders,speed,timeScale);
             var report = Reports.Find(r => r.Id == incidentId);
             report.BuildingKey = buildingKey; report.Entrance = CopyPoint(approach.Entrance);
             report.AwaitingApproach = false;

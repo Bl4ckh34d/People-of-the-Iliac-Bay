@@ -16,6 +16,33 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Building defense preserves target through delayed entry and return", () => {
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.CacheBuildingApproach(73,new SavedRoutePoint { X=100 },
+                    new Dictionary<string,List<SavedRoutePoint>> { { id,Route(0,100) } });
+                var sent=roster.DispatchBuilding("hostile-shop",73,0,1,2,10,false,null,"native:123");
+                Check.Equal(1,sent.Count); Check.Equal("native:123",roster.Reports[0].ThreatId);
+                Check.Throws<ArgumentException>(()=>roster.EnterBuilding(id,73,499,new GuardPoint3()));
+                roster=GuardRoster.CopyValidated(roster);
+                roster.EnterBuilding(id,73,500,new GuardPoint3());
+                roster.ObserveInterior(id,new GuardPoint3 { X=3 },0.5,501,true,new GuardPoint3 { X=5 });
+                roster=GuardRoster.CopyValidated(roster);
+                Check.Equal("native:123",roster.Reports[0].ThreatId);
+                Check.Near(0.5,roster.Guards[0].HealthFraction);
+                roster.EndInteriorSearch(id,502);
+                double exit=roster.Guards[0].Interior.ExitAt;
+                roster.Advance(exit+500);
+                Check.Equal(GuardDuty.Posted,roster.Guards[0].Duty);
+            }));
+            cases.Add(("Queued building defense retains target and forbids criminal conversion", () => {
+                var roster=Roster(1);
+                roster.QueueBuildingReport("danger",73,"native:123");
+                roster=GuardRoster.CopyValidated(roster);
+                Check.Equal("native:123",roster.Reports[0].ThreatId);
+                Check.Throws<ArgumentException>(()=>roster.QueueBuildingReport("danger",73));
+                Check.Throws<ArgumentException>(()=>roster.DispatchBuilding("danger",73,0,1,2,10));
+                Check.Throws<ArgumentException>(()=>roster.DispatchBuilding("other",73,0,1,2,10,true,null,"native:123"));
+            }));
             cases.Add(("Queued native building alarm survives save and dispatches only after a surveyed route", () => {
                 var roster = Roster(1);
                 roster.QueueBuildingReport("native:shop", 73);

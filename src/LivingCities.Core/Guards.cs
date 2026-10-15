@@ -393,7 +393,7 @@ namespace LivingCities.Core
             {
                 Require(report != null && !string.IsNullOrWhiteSpace(report.Id) && reports.Add(report.Id) && report.GuardIds != null && report.GuardIds.Count <= 256, "Invalid guard report.");
                 Require(report.ThreatId == null || !string.IsNullOrWhiteSpace(report.ThreatId) && report.ThreatId.Length <= 128 &&
-                    !report.BuildingKey.HasValue && !report.Investigation && !report.AwaitingApproach &&
+                    !report.Investigation &&
                     report.SearchRoute == null && report.Warning == null, "Invalid saved defense report.");
                 bool outdoorSearch = report.Investigation && !report.BuildingKey.HasValue;
                 Require(report.Warning == null || (report.Investigation && report.BuildingKey.HasValue), "Warning needs an indoor investigation.");

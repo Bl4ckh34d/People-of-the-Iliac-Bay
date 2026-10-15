@@ -63,13 +63,13 @@ namespace LivingCities.Tests
                 Check.Equal(GuardDuty.Returning,saved.Duty); Check.Near(41,copy.Position(saved.Id,saved.DepartedAt).X);
                 copy.Advance(saved.ArrivesAt); Check.Equal(GuardDuty.Posted,saved.Duty); Check.Near(-10,copy.Position(saved.Id,saved.ArrivesAt).X);
             }));
-            cases.Add(("Defense save rejects investigation and building target mixtures transactionally", () => {
+            cases.Add(("Defense save rejects investigation and incomplete building targets transactionally", () => {
                 var roster = Roster(); roster.DispatchDefense("defense:1","enemy:99",10,Routes(roster),1,2,12);
                 var copy=GuardRoster.CopyValidated(roster); copy.Reports[0].ThreatId="";
                 Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(copy));
                 copy=GuardRoster.CopyValidated(roster); copy.Reports[0].Investigation=true;
                 Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(copy));
-                copy=GuardRoster.CopyValidated(roster); copy.Reports[0].BuildingKey=73; copy.Reports[0].Entrance=P(10);
+                copy=GuardRoster.CopyValidated(roster); copy.Reports[0].BuildingKey=73;
                 Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(copy));
                 Check.Equal("enemy:99",roster.Reports[0].ThreatId); Check.Equal(null,roster.Reports[0].BuildingKey);
             }));
