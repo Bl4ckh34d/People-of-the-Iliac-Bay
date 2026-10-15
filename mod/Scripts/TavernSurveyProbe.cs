@@ -49,6 +49,7 @@ namespace LivingCities.DFU
                 }
                 var doors=room.GetComponentsInChildren<DaggerfallActionDoor>();
                 VerifyRooms(room,beds,doors);
+                yield return VerifyNativeRental(room,directory.MapID);
                 foreach(var door in doors)
                     Debug.Log("LIVING_CITIES_TAVERN_DOOR: building="+tavern.buildingKey+"; id="+door.LoadID+
                         "; position="+room.transform.InverseTransformPoint(door.transform.position).ToString("F3")+
@@ -61,6 +62,52 @@ namespace LivingCities.DFU
                 game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(1);
             }
             Debug.Log("LIVING_CITIES_TAVERN_SURVEY_PASS: taverns="+taverns.Count+"; beds="+totalBeds+"; native interior census complete.");
+        }
+        private static IEnumerator VerifyNativeRental(DaggerfallInterior interior,int town)
+        {
+            var player=GameManager.Instance.PlayerEntity;
+            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var priorLodgings=((WorldState)host.GetSaveData()).Lodgings;
+            var prior=new List<DaggerfallWorkshop.Game.Serialization.RoomRental_v1>(player.RentedRooms);
+            var receipt=new DaggerfallWorkshop.Game.Serialization.RoomRental_v1 {
+                name="Living Cities rental probe",mapID=town,buildingKey=interior.EntryDoor.buildingKey,
+                allocatedBedIndex=1,expiryTime=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()+86400 };
+            int gold=player.GetGoldAmount(); ulong expiry=receipt.expiryTime;
+            try
+            {
+                player.RentedRooms.RemoveAll(r=>r.mapID==town && r.buildingKey==receipt.buildingKey);
+                player.RentedRooms.Add(receipt);
+                TavernLodging lodging=null; float deadline=Time.realtimeSinceStartup+15;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    lodging=((WorldState)host.GetSaveData()).Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==receipt.buildingKey);
+                    if(lodging!=null && lodging.Bookings.Exists(b=>b.Player && b.EndsAt==expiry)) break;
+                    yield return null;
+                }
+                if(lodging==null || lodging.Bookings.Count!=1 || lodging.Bookings[0].EndsAt!=expiry)
+                    throw new InvalidOperationException("Native paid rental was not imported by running controller.");
+                Dictionary<int,string> mapping; TavernRoomSurvey.Read(interior,out mapping);
+                var booking=lodging.Bookings[0];
+                if(booking.RoomId!=mapping[1] || receipt.allocatedBedIndex!=1 || receipt.expiryTime!=expiry || player.GetGoldAmount()!=gold)
+                    throw new InvalidOperationException("Native rental import changed allocation or payment.");
+                receipt.expiryTime+=86400; deadline=Time.realtimeSinceStartup+15;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    lodging=((WorldState)host.GetSaveData()).Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==receipt.buildingKey);
+                    if(lodging.Bookings[0].EndsAt==receipt.expiryTime) break;
+                    yield return null;
+                }
+                if(lodging.Bookings.Count!=1 || lodging.Bookings[0].Id!=booking.Id || lodging.Bookings[0].StartsAt!=booking.StartsAt ||
+                    lodging.Bookings[0].EndsAt!=receipt.expiryTime || player.GetGoldAmount()!=gold)
+                    throw new InvalidOperationException("Native rental extension duplicated or charged booking.");
+                Debug.Log("LIVING_CITIES_NATIVE_RENTAL_PASS: building="+receipt.buildingKey+"; room="+booking.RoomId+"; paid marker preserved, repeat/extension no charge.");
+            }
+            finally
+            {
+                player.RentedRooms.Clear(); player.RentedRooms.AddRange(prior);
+                var current=(WorldState)host.GetSaveData(); current.Lodgings=priorLodgings;
+                host.RestoreSaveData(current);
+            }
         }
         private static void VerifyRooms(DaggerfallInterior interior,List<BedAnchor> beds,DaggerfallActionDoor[] doors)
         {

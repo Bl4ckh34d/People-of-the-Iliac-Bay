@@ -16,6 +16,7 @@ namespace LivingCities.DFU
     public sealed class LivingCitiesMod : MonoBehaviour, IHasModSaveData
     {
         private WorldStateStore store = new WorldStateStore(0);
+        private readonly NativeTavernRentals nativeRentals = new NativeTavernRentals();
         private QuestOfferBindings questOffers;
         // Explicit eligible adapters use this service before their offer is displayed.
         // No general-purpose residency guessing or automatic quest rewriting is enabled.
@@ -218,6 +219,7 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_SETTLEMENT: " + directory.MapID + "; households=" + current.Households.Count);
             }
             RegionalIdentityAdapter.Initialize(current);
+            nativeRentals.Refresh(store,directory);
             if (streets && streetPopulationEnabled)
                 streets.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current,
                     store, options.WakeHour, options.SleepHour);

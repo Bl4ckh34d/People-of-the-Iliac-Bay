@@ -1,5 +1,7 @@
 # Living Cities milestones
 
+M3 paid rental import: running controller now preserves native player bed allocation and imports paid expiry/extensions into marker-backed guest rooms without charging or duplicating bookings. All3 Gothway inns pass live tests;321/321 core tests and Unity build pass. Full disk reload of this new import path, payment/rest availability enforcement and traveler demand remain pending.
+
 M3 rental compatibility: concurrent paid player rooms in different inns now survive extension and reload. Same-inn duplicates, overlapping traveler stays and guest-role changes remain rejected.319/319 core tests and Unity build/integration checks pass; bundle installed. Native rental import, payment/rest interception and traveler occupancy remain unfinished.
 
 M3 rental-marker mapping: all7 Gothway vanilla rest markers now map uniquely to7 bed groups containing9 beds, independent of open/closed doors. Explicit-room booking preserves native allocation without silent fallback.317/317 core and native all-tavern mapping/build checks pass. Runtime rental import/payment/rest interception and travelers remain unfinished;4 other bed groups still need staff/public classification.

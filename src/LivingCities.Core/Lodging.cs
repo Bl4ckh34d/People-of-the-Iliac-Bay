@@ -95,6 +95,22 @@ namespace LivingCities.Core
             }
             throw new ArgumentException("Unknown lodging booking.");
         }
+        // Import a native paid receipt; payment and allocated marker remain owned by DFU.
+        public bool ReconcilePlayerLodging(int town,int building,string room,double now,double expiry)
+        {
+            Require(DefenseTime(now) && DefenseTime(expiry),"Invalid native rental time.");
+            var tavern=Lodging(town,building);
+            Require(tavern.Rooms.Exists(r=>r.Id==room),"Unknown native rental room.");
+            if(expiry<=now) return false;
+            var booking=tavern.Bookings.Find(b=>b.Player && b.GuestId=="player" && b.StartsAt<=now && now<b.EndsAt);
+            if(booking!=null)
+            {
+                if(booking.RoomId!=room || expiry<booking.EndsAt) return false;
+                return TryExtendLodging(booking.Id,expiry);
+            }
+            string id="native-player:"+town+":"+building+":"+now.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
+            return TryBookLodging(town,building,id,"player",town,true,1,now,expiry,room);
+        }
         public bool IsLodgingBedReserved(int town,int building,string bed,double now,string guest)
         {
             Require(DefenseTime(now),"Invalid lodging time."); var tavern=Lodging(town,building);

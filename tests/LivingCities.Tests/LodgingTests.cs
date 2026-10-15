@@ -16,6 +16,32 @@ namespace LivingCities.Tests
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Native paid rental reconciliation preserves identity room and original interval on repeat and extension",()=>{
+                var store=Store();
+                Check.True(store.ReconcilePlayerLodging(1,7,"single",100,200));
+                var original=store.Snapshot().Lodgings[0].Bookings[0];
+                Check.True(store.ReconcilePlayerLodging(1,7,"single",125,200));
+                Check.True(store.ReconcilePlayerLodging(1,7,"single",150,300));
+                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.True(restored.ReconcilePlayerLodging(1,7,"single",175,300));
+                var bookings=restored.Snapshot().Lodgings[0].Bookings;
+                Check.Equal(1,bookings.Count); Check.Equal(original.Id,bookings[0].Id);
+                Check.Equal(100d,bookings[0].StartsAt); Check.Equal(300d,bookings[0].EndsAt);
+                Check.Equal("single",bookings[0].RoomId);
+                Check.True(!restored.ReconcilePlayerLodging(1,7,"single",300,300));
+                Check.True(restored.ReconcilePlayerLodging(1,7,"single",400,500));
+                Check.Equal(2,restored.Snapshot().Lodgings[0].Bookings.Count);
+            }));
+            cases.Add(("Native rental conflicts cannot silently move rooms evict guests or shorten paid stays",()=>{
+                var store=Store(); store.ReconcilePlayerLodging(1,7,"single",100,200);
+                Check.True(!store.ReconcilePlayerLodging(1,7,"double",120,200));
+                Check.True(!store.ReconcilePlayerLodging(1,7,"single",120,190));
+                store.TryBookLodging(1,7,"next","traveler",2,false,1,200,300,"single");
+                Check.True(!store.ReconcilePlayerLodging(1,7,"single",120,250));
+                Check.Equal(200d,store.Snapshot().Lodgings[0].Bookings[0].EndsAt);
+                Check.True(!store.ReconcilePlayerLodging(1,7,"single",210,400));
+                Check.Equal(2,store.Snapshot().Lodgings[0].Bookings.Count);
+            }));
             cases.Add(("Player retains concurrent paid rooms in different inns through extension and reload",()=>{
                 var store=Store();
                 store.RegisterLodging(1,8,new[] { new LodgingRoom { Id="room",Beds=new List<string> { "bed" } } });
