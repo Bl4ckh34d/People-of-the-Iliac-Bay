@@ -18,9 +18,10 @@ namespace LivingCities.Core
         public readonly bool SocialOnly;
         public readonly string ConversationReaction;
         public readonly string History;
+        public readonly string KnowledgeResult;
 
         public DialogueRequest(string playerText, string vanillaAnswer, string npcName,
-            string race, string gender, string socialRole, int disposition, bool socialOnly = false, string conversationReaction = "", string history = "")
+            string race, string gender, string socialRole, int disposition, bool socialOnly = false, string conversationReaction = "", string history = "", string knowledgeResult = "")
         {
             PlayerText = LocalDialogue.NormalizeContext(playerText, 240);
             VanillaAnswer = LocalDialogue.NormalizeContext(vanillaAnswer, 800);
@@ -33,6 +34,7 @@ namespace LivingCities.Core
             SocialOnly = socialOnly;
             ConversationReaction = LocalDialogue.NormalizeContext(conversationReaction, int.MaxValue);
             History = history ?? string.Empty;
+            KnowledgeResult = LocalDialogue.NormalizeContext(knowledgeResult, 4000);
         }
     }
 
@@ -77,7 +79,14 @@ namespace LivingCities.Core
                     "Let the stable personality color word choice without reciting trait labels. Let current mood influence brevity and patience, especially when outside in rain; mood may change without changing personality. " +
                     "Do not default to a clarification or refusal when the player asks for a story, opinion or casual conversation. " +
                     "For unsupplied places or lore, answer as your character would, with uncertainty where appropriate; do not present invented directions, quests, services or prices as verified facts. " +
-                    "Respect the supplied reaction. Do not invent a spouse or established relationship. Do not claim to have marked a map, given an item or changed game state.";
+                    "Respect the supplied reaction. Do not invent a spouse or established relationship. " +
+                    "Confirm a map marker or other game action only when the current authoritative context says it was explicitly confirmed as completed. " +
+                    "Otherwise never claim to have marked a map, given an item or changed game state.";
+                if (!string.IsNullOrWhiteSpace(request.KnowledgeResult))
+                    socialPrompt += "\nCURRENT VERIFIED LOCATION SEARCH / ACTION RESULT (supersedes earlier dialogue):\n" + request.KnowledgeResult +
+                        "\nAnswer the current question using this result. Use the exact supplied names; when choices are supplied, name them rather than a vague 'shop' or 'inn'. " +
+                        "Do not invent distance, landmarks, services or another destination. If the current action failed or is disabled, say you could not mark this chosen place, regardless of earlier markers. " +
+                        "Only confirm the current chosen destination and action result. Keep your personality and speak naturally.\n";
                 return new DialoguePlan(socialPrompt, request.VanillaAnswer, CacheKey(request));
             }
             string prompt = "Rephrase a Daggerfall NPC answer.\n" +
@@ -117,6 +126,7 @@ namespace LivingCities.Core
             hash = Hash(hash, request.SocialOnly ? "social" : "authoritative");
             hash = Hash(hash, request.ConversationReaction);
             hash = Hash(hash, request.History);
+            hash = Hash(hash, request.KnowledgeResult);
             return hash.ToString("X8", CultureInfo.InvariantCulture);
         }
 
@@ -171,10 +181,10 @@ namespace LivingCities.Core
         public const string FallbackAnswer = "[Local dialogue unavailable]";
 
         public static DialogueRequest Create(string playerText, string npcName,
-            string race, string gender, string socialRole, int disposition, string conversationReaction = "", string history = "")
+            string race, string gender, string socialRole, int disposition, string conversationReaction = "", string history = "", string knowledgeResult = "")
         {
             return new DialogueRequest(playerText, FallbackAnswer, npcName, race, gender,
-                socialRole, disposition, true, conversationReaction, history);
+                socialRole, disposition, true, conversationReaction, history, knowledgeResult);
         }
     }
 

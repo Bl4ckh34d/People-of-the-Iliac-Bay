@@ -32,6 +32,18 @@ Home questions resolve the actual saved `HomeKey`, not the model's invented geog
 
 Implementation: `SharedConversationArchive.cs`, `ConversationArchiveState.cs`, `ConversationMemory.cs`, `LivingCitiesMod.DialogueMemory.cs`, `LivingCitiesMod.DialogueHome.cs`. Verification and remaining limits: [Testing](TESTING.md).
 
+## Browsing local NPC knowledge
+
+Broad typed questions can search the current NPC's native location topics instead of requiring a destination's exact name. Inns/lodging resolve to Taverns, shrines to Local temples, and shop, shop-service, guild, bank and library queries resolve to their available native categories. Specific services such as potion shops narrow a general shop query. Personal questions about “your inn” remain roleplay rather than a search for other businesses.
+
+The search evaluates and caches vanilla `GetNPCKnowledgeAboutItem` results for actual local buildings and checks native willingness, including the mod's disposition effects. It preserves the native RNG seed and does not run answer macros while listing places. Quest-resource topics remain on their native path. Up to three nearby known choices, with native compass directions, enter the LLM context for natural wording. Only choices actually named in the displayed reply become the current conversation's suggested set.
+
+An explicit “mark one” request randomly chooses from that set after rechecking current native topic identity, knowledge and willingness. A direct category request such as “mark an inn” can choose any known matching destination. The real native map function executes before the model receives its success/failure context. Disabled map requests and indoor direction-only rules remain effective. Category changes, intervening native topic selections and a new conversation clear stale suggestions; no suggestion list is added to the save format. Exact named destinations and trusted personal-home requests retain their existing handling.
+
+This extends structured native-topic retrieval; it adds no vector database, embedding service or model download. The location search is bounded to public native local-building topics, not a new mechanism for browsing hidden quest people, secrets or arbitrary world data. Model prose can still require human quality testing; generated text does not grant knowledge or execute map actions.
+
+Current search/action results also enter a separate system message after the sliding history, and remain intact if older turns are trimmed. The displayed location reply is checked for required supplied names, excluded native destinations and marker-result contradictions. A failed wording check uses the actual dynamic native-fact answer, such as the real named inn choices or the completed/failed marker result. This protects location answers without applying a location validator to ordinary social conversation. The displayed, verified answer is what enters memory and the follow-up selection set.
+
 <a id="inventory"></a>
 
 # NPC integration inventory and compatibility plan

@@ -37,6 +37,7 @@ namespace LivingCities.DFU
             conversationBusy = false;
             conversationEncounterRecorded = false;
             conversationLastTopic = null;
+            conversationSuggestions.Clear();
             var talkWindow = DaggerfallUI.UIManager.TopWindow as DaggerfallTalkWindow;
             var transcript = talkWindow == null || conversationListField == null ? null : conversationListField.GetValue(talkWindow) as ListBox;
             conversationLastTranscriptCount = transcript == null ? 0 : transcript.Count;
@@ -118,7 +119,7 @@ namespace LivingCities.DFU
             }
             conversationDispositionBeforeMessage = CurrentDialogueDisposition();
             if (HandleConversationHostility(window, playerText, "neutral", true)) return;
-            if (TryHandleConversationHomeRequest(window, playerText)) return;
+            if (TryHandleConversationHomeRequest(window, playerText)) { conversationSuggestions.Clear(); return; }
             conversationHomeTopicAvailable=false;
             var manager = GameManager.Instance.TalkManager;
             var native = new Dictionary<int, TalkManager.ListItem>();
@@ -135,7 +136,10 @@ namespace LivingCities.DFU
             // Native topic clicks can change the subject between typed messages.
             // A previewed/default topic is not a previously answered question.
             if (transcript != null && transcript.Count > conversationLastTranscriptCount)
+            {
+                conversationSuggestions.Clear();
                 conversationLastTopic = manager.CurrentQuestionListItem;
+            }
             var previous = conversationLastTopic;
             int previousId = -1;
             foreach (var pair in native) if (pair.Value == previous) { previousId = pair.Key; break; }
@@ -181,6 +185,7 @@ namespace LivingCities.DFU
                 if (effectiveTone == "family_threat") ApplyFamilyThreatDisposition();
                 else ApplyConversationDisposition(effectiveTone, playerText);
                 if (HandleConversationHostility(window, playerText, effectiveTone, choice.Intent != "social")) return;
+                if (TryBrowseConversation(window, playerText, history, choice, all, native)) return;
                 if (choice.Intent == "social" || choice.Intent == "unknown")
                 {
                     if (choice.Intent == "unknown" && ConversationKnowledge.WantsMap(playerText))
@@ -190,6 +195,7 @@ namespace LivingCities.DFU
                 TalkManager.ListItem selected;
                 if (!native.TryGetValue(choice.TopicId, out selected))
                 { SubmitSocialText(window, playerText, history); return; }
+                conversationSuggestions.Clear();
                 conversationBusy = false;
                 AppendDialoguePair(window, playerText, AnswerNativeConversationTopic(window, selected, choice.Intent == "map"));
             }))

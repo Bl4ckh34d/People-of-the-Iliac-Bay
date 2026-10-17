@@ -246,7 +246,9 @@ namespace LivingCities.DFU
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-regional-probe") >= 0)
             {
                 game.SaveLoadManager.EnumerateSaves();
-                int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - inside Gothway Garden");
+                var dialogueArguments=Environment.GetCommandLineArgs();
+                int dialogueSaveArgument=Array.IndexOf(dialogueArguments,"-livingcities-fixture-save");
+                int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, dialogueSaveArgument>=0 ? dialogueArguments[dialogueSaveArgument+1] : "Living Cities - inside Gothway Garden");
                 if (fixture < 0) fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "People - Gothway Garden");
                 if (fixture < 0) throw new InvalidOperationException("Exterior fixture missing.");
                 loaded = false; game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
@@ -255,6 +257,8 @@ namespace LivingCities.DFU
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Exterior fixture load timed out.");
                 if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-dialogue-probe") >= 0)
                 {
+                    if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-knowledge-browse-only")>=0)
+                        yield return KnowledgeBrowsingProbe.ApproachSpeaker(adapter,streets);
                     ResidentActor person = null;
                     float actorDeadline = Time.realtimeSinceStartup + 15;
                     while (!person && Time.realtimeSinceStartup < actorDeadline)
@@ -344,6 +348,12 @@ namespace LivingCities.DFU
                     var submit = typeof(LivingCitiesMod).GetMethod("SubmitFreeText", flags);
                     if (transcript == null || submit == null)
                         throw new InvalidOperationException("Dialogue submission or transcript adapter missing.");
+                    if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-knowledge-browse-only")>=0)
+                    {
+                        yield return KnowledgeBrowsingProbe.Run(adapter,talk,submit,transcript);
+                        Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: knowledge browsing.");
+                        yield break;
+                    }
                     int beforeReply = transcript.Count;
                     string question = input.Text;
                     input.Text = string.Empty;

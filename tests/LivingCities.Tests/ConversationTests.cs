@@ -54,6 +54,70 @@ namespace LivingCities.Tests
                 Check.Equal("unknown", ConversationKnowledge.Parse("unknown|-1|neutral", topics, "Mark that on my map", -1).Intent);
                 Check.Equal(1,ConversationKnowledge.Parse("topic|2|neutral",topics,"Where are the Local temples?",-1).TopicId);
             }));
+            cases.Add(("Broad inn and temple questions resolve native categories without exact menu labels", () => {
+                var places = new List<ConversationTopic> {
+                    new ConversationTopic(10, "Taverns", "Where is / Location", true),
+                    new ConversationTopic(11, "The Black Wolf", "Where is / Location / Taverns", false),
+                    new ConversationTopic(12, "Local temples", "Where is / Location", true),
+                    new ConversationTopic(13, "Temple of Kynareth", "Where is / Location / Local temples", false) };
+                Check.Equal(10, ConversationKnowledge.ExactFallback("Is there any inn nearby?", places, -1).TopicId);
+                Check.Equal(12, ConversationKnowledge.ExactFallback("Can you recommend a temple?", places, -1).TopicId);
+                Check.Equal(11, ConversationKnowledge.ExactFallback("Where is The Black Wolf?", places, -1).TopicId);
+            }));
+            cases.Add(("Knowledge browsing separates broad shops from a specific shop service", () => {
+                var groups = new List<ConversationTopic> {
+                    new ConversationTopic(1,"Alchemists","Location",true),
+                    new ConversationTopic(2,"General stores","Location",true),
+                    new ConversationTopic(3,"Bookstores","Location",true),
+                    new ConversationTopic(4,"Local temples","Location",true),
+                    new ConversationTopic(5,"Guilds","Location",true) };
+                Check.Equal("1,2,3", string.Join(",", ConversationBrowsing.RequestedGroups("Any shops nearby?",groups)));
+                Check.Equal("1", string.Join(",", ConversationBrowsing.RequestedGroups("Any shop selling potions?",groups)));
+                Check.Equal("3", string.Join(",", ConversationBrowsing.RequestedGroups("Could you suggest a bookshop?",groups)));
+                Check.Equal("4", string.Join(",", ConversationBrowsing.RequestedGroups("Do you know a shrine nearby?",groups)));
+                Check.Equal("5", string.Join(",", ConversationBrowsing.RequestedGroups("Where can I find a guildhall?",groups)));
+            }));
+            cases.Add(("Knowledge browsing leaves personal conversation and negation alone", () => {
+                var groups = new List<ConversationTopic> {new ConversationTopic(1,"Taverns","Location",true)};
+                foreach(string text in new[] {"Do you own an inn?","Are you going to an inn?","I visited an inn last winter.","I do not need an inn.","Tell me about your inn","Would you recommend your inn?","Do you know if your inn is open?"})
+                    Check.Equal(0,ConversationBrowsing.RequestedGroups(text,groups).Count);
+                Check.True(ConversationBrowsing.IsMapChoice("Can you mark one of those on my map?"));
+                Check.True(!ConversationBrowsing.IsMapChoice("Don't mark one of them."));
+            }));
+            cases.Add(("Random map choice uses only remembered currently eligible distinct destinations", () => {
+                int[] remembered={11,22,22,33}; int[] known={11,22,44};
+                Check.Equal(11,ConversationBrowsing.Pick(remembered,known,count=>0));
+                Check.Equal(22,ConversationBrowsing.Pick(remembered,known,count=>count-1));
+                Check.Equal(-1,ConversationBrowsing.Pick(remembered,new int[0],count=>throw new Exception("No choices must not draw randomness")));
+                Check.Equal(-1,ConversationBrowsing.Pick(new int[0],known,count=>0));
+                Check.Throws<ArgumentOutOfRangeException>(()=>ConversationBrowsing.Pick(remembered,known,count=>count));
+            }));
+            cases.Add(("Roleplay may confirm only authoritative completed map actions", () => {
+                var request=FreeTextDialogue.Create("Mark one", "An NPC", "Breton", "Female", "resident", 0,
+                    "The game has successfully marked The Black Wolf.");
+                Check.True(LocalDialogue.Build(request).Prompt.Contains("explicitly confirmed as completed"));
+            }));
+            cases.Add(("Current knowledge results follow history and stay in the model cache key", () => {
+                var first=FreeTextDialogue.Create("Any shops?","NPC","Breton","Female","resident",0,"","NPC: Earlier inn advice", "Current shop: The Real Store");
+                var second=FreeTextDialogue.Create("Any shops?","NPC","Breton","Female","resident",0,"","NPC: Earlier inn advice", "Current shop: Another Store");
+                string prompt=LocalDialogue.Build(first).Prompt;
+                Check.True(prompt.LastIndexOf("Current shop: The Real Store",StringComparison.Ordinal)>prompt.IndexOf("Earlier inn advice",StringComparison.Ordinal));
+                Check.True(prompt.Contains("Use the exact supplied names"));
+                Check.True(LocalDialogue.CacheKey(first)!=LocalDialogue.CacheKey(second));
+                var completion=LocalDialogueCompletion.Build(new LocalDialogueConnection("http://127.0.0.1:8080/completion",5000),first);
+                Check.True(completion.Prompt.LastIndexOf("Current shop: The Real Store",StringComparison.Ordinal)>
+                    completion.Prompt.IndexOf("<|im_start|>assistant\nEarlier inn advice",StringComparison.Ordinal));
+                string trimmed=DialogueHistoryWindow.Fit(completion.Prompt,first.History,completion.Prompt.Length-5,text=>text.Length,true);
+                Check.True(trimmed!=null && trimmed.Contains("Current shop: The Real Store"));
+            }));
+            cases.Add(("Knowledge replies retain current names and actual marker results", () => {
+                string factual="You could try The Black Dungeon west of here or The Fox and Bird east of here.";
+                Check.Equal(factual,ConversationBrowsing.SelectReply("There is a shop nearby.",factual,new[]{"The Black Dungeon","The Fox and Bird"},new string[0],null));
+                Check.Equal("I cannot mark The Black Dungeon on your map.",ConversationBrowsing.SelectReply("The Fox and Bird is marked.","I cannot mark The Black Dungeon on your map.",new[]{"The Black Dungeon"},new[]{"The Fox and Bird"},false));
+                Check.Equal("I've marked The Black Dungeon on your map.",ConversationBrowsing.SelectReply("I've marked The Black Dungeon on your map.","fallback",new[]{"The Black Dungeon"},new string[0],true));
+                Check.Equal("No marker.",ConversationBrowsing.SelectReply("The Black Dungeon is where we are now.","No marker.",new[]{"The Black Dungeon"},new string[0],false));
+                Check.Equal("No marker.",ConversationBrowsing.SelectReply("I couldn't mark The Black Dungeon, but I've marked it on your map now.","No marker.",new[]{"The Black Dungeon"},new string[0],false));
+            }));
             cases.Add(("Reporting witnesses cannot open a talk window", () => {
                 Check.True(ConversationAccess.CanStart(false, false, false));
                 Check.True(!ConversationAccess.CanStart(true, false, false));

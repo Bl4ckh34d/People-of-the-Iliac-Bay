@@ -8,7 +8,19 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — doubled guard targets with separate gate slots, 17 October 2026
+## Latest acceptance — local knowledge browsing and unnamed map choices, 17 October 2026
+
+Installed bundle SHA-256: `D3B23B760C63FC289AA8D2C2372F18B7F3A4C4EEBFB11A89D44293A27DF77854`, matching `dist/livingcities.dfmod`.
+
+- **711/711 core tests passed**; runtime compilation has zero warnings/errors; Unity build/install passed through the established normal-editor path. Regressions reproduced missing singular inn/category matching, overbroad potion-shop results, personal-business false positives, stale result priority after structured history, omitted real names, and contradictory failed-marker wording before corrections.
+- Core coverage includes inn/shop/temple/guild/service aliases, exact-name precedence, personal conversation and negation, distinct random eligible choices, empty/invalid pools, authoritative result priority and cache keys, history trimming without losing current knowledge, and current-name/marker-result reply validation. Ordinary social messages retain their existing model path.
+- The owned-player run loaded `People - Daggerfall day` and used the real local model through native Talk. The saved gate-side view had no talkable passer, so the dialogue-only fixture created two temporary bodies for actual saved adult identities. This is not acceptance of their ordinary movement or schedule. No player save was written.
+- Native lookup matched vanilla knowledge calculations and preserved the RNG seed without map discovery. Controlled known/unknown inn entries then produced real named choices: The Fox and Bird and The Black Dungeon. “Mark one on my map” discovered exactly one mentioned inn. A direct temple request replaced inn choices; follow-ups used The Temple of Kynareth. A broad shop query named The Adventurer's Book Dealer. Disabled map requests and an unwilling NPC produced no new marker; unknown destinations were not disclosed. Opening Talk with a different NPC cleared suggestions.
+- Repeat: `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -FixtureSaveName 'People - Daggerfall day' -DialogueProbe -KnowledgeBrowseOnly`. The final process exited successfully with `LIVING_CITIES_KNOWLEDGE_BROWSE_PASS` and `LIVING_CITIES_TOWN_TEST_PASS`. Evidence: `work/knowledge-browse-core.log`, `knowledge-browse-runtime.log`, `knowledge-browse-build.log`, `knowledge-browse-native.log`, and `knowledge-browse-native-player.log`. Earlier failing fixture and prose runs remain separately recorded.
+
+This verifies real native knowledge and map APIs plus model-driven replies under controlled knowledge/reaction states. It is not exhaustive prose-quality, localization, quest-topic, service-type or indoor-layout certification. Indoor map restrictions remain source-checked through the existing native direction-only rule. Broad people/hidden quest browsing is not added. Earlier unrelated wall-camera and travel-connector limitations remain open below.
+
+## Prior acceptance — doubled guard targets with separate gate slots, 17 October 2026
 
 Installed bundle SHA-256: `B6700C752BF1D17E144B2F3D6F25877BFD31CC9895A00A71AFAC5C4F709F5BB1`, matching `dist/livingcities.dfmod`.
 

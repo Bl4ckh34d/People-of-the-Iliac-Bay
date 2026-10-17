@@ -14,6 +14,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$WallQuarterProbe,
     [switch]$StationaryNpcProbe,
     [switch]$DialogueProbe,
+    [switch]$KnowledgeBrowseOnly,
     [switch]$MemoryArchiveProbe,
     [switch]$MemoryArchiveRead,
     [switch]$MovementClockProbe,
@@ -51,6 +52,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$DefenseLedgerProbe,
     [switch]$WelfareProbe)
 $ErrorActionPreference = 'Stop'
+if ($KnowledgeBrowseOnly -and -not $DialogueProbe) { throw 'KnowledgeBrowseOnly requires DialogueProbe.' }
 if ($GuardQuotaOnly -and -not $GateGuardProbe) { throw 'GuardQuotaOnly requires GateGuardProbe.' }
 if ($RunningPilotProbe -and -not $FixtureCharacter) { throw 'Running pilot probe requires a disposable fixture character.' }
 if ($InnAlarmProbe -and -not $FixtureCharacter) { throw 'Inn alarm probe requires a disposable fixture character.' }
@@ -72,7 +74,7 @@ if ($FreshPreviews) {
 }
 if ($FixtureCharacter) { $arguments += ' -livingcities-fixture-character ' + $FixtureCharacter }
 if ($FixtureSaveName) {
-    if (-not $FixtureCharacter -or -not ($PerformanceProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe -or $ResidentTripProbe -or $CrossRegionTripProbe -or $GateGuardProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
+    if (-not $FixtureCharacter -or -not ($PerformanceProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe -or $ResidentTripProbe -or $CrossRegionTripProbe -or $GateGuardProbe -or $DialogueProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
     $arguments += ' -livingcities-fixture-save "' + $FixtureSaveName + '"'
 }
 if ($QuestProbe) { $arguments += ' -livingcities-quest-probe' }
@@ -110,6 +112,7 @@ if ($GuardQuotaOnly) { $arguments += ' -livingcities-guard-quota-only' }
 if ($WallQuarterProbe) { $arguments += ' -livingcities-wall-quarter-probe' }
 if ($StationaryNpcProbe) { $arguments += ' -livingcities-stationary-probe' }
 if ($DialogueProbe) { $arguments += ' -livingcities-dialogue-probe' }
+if ($KnowledgeBrowseOnly) { $arguments += ' -livingcities-knowledge-browse-only' }
 if ($OccupiedApproachProbe) {
     if (-not $FixtureCharacter) { throw 'Occupied approach probe requires a disposable character.' }
     $arguments += ' -livingcities-occupied-approach-probe'
@@ -349,7 +352,8 @@ try {
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PENDING_GUARD_PASS:') { throw 'Pending native guard report probe did not complete.' }
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
     if ($InteriorEscapeProbe -and $body -notmatch 'LIVING_CITIES_WITNESS_MOVING_ATTACKER_PASS:') { throw 'Moving attacker witness probe did not complete.' }
-    if ($DialogueProbe -and ($body -notmatch 'LIVING_CITIES_DIALOGUE_FOCUS_PASS:' -or $body -notmatch 'LIVING_CITIES_GROUNDED_DIALOGUE_PASS:' -or $body -notmatch 'LIVING_CITIES_FLIRT_PASS:' -or $body -notmatch 'LIVING_CITIES_CHILD_DIALOGUE_REPORT_PASS:' -or $body -notmatch 'LIVING_CITIES_DIALOGUE_MEMORY_PASS:' -or $body -notmatch 'LIVING_CITIES_HOME_DIALOGUE_PASS:')) { throw 'Grounded dialogue, focus, flirt, child-report, memory or home checks did not complete.' }
+    if ($KnowledgeBrowseOnly -and $body -notmatch 'LIVING_CITIES_KNOWLEDGE_BROWSE_PASS:') { throw 'Knowledge browse checks did not complete.' }
+    if ($DialogueProbe -and -not $KnowledgeBrowseOnly -and ($body -notmatch 'LIVING_CITIES_DIALOGUE_FOCUS_PASS:' -or $body -notmatch 'LIVING_CITIES_GROUNDED_DIALOGUE_PASS:' -or $body -notmatch 'LIVING_CITIES_FLIRT_PASS:' -or $body -notmatch 'LIVING_CITIES_CHILD_DIALOGUE_REPORT_PASS:' -or $body -notmatch 'LIVING_CITIES_DIALOGUE_MEMORY_PASS:' -or $body -notmatch 'LIVING_CITIES_HOME_DIALOGUE_PASS:')) { throw 'Grounded dialogue, focus, flirt, child-report, memory or home checks did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_HOUSING_LIVE_PASS:') { throw 'Housing probe did not complete.' }
     if ($HousingProbe -and ($body -notmatch 'LIVING_CITIES_ENTRY_PASS:' -or $body -notmatch 'LIVING_CITIES_ENTRY_GUARD_PASS:')) { throw 'Entry witness probes did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_ENTRY_MESSENGER_PASS:') { throw 'Entry messenger probe did not complete.' }

@@ -124,7 +124,7 @@ namespace LivingCities.DFU
 
         }
 
-        private void SubmitSocialText(DaggerfallTalkWindow talk, string playerText, string history)
+        private void SubmitSocialText(DaggerfallTalkWindow talk, string playerText, string history, Action<string> onAnswer = null, string knowledgeResult = "", Func<string,string> verifyAnswer = null)
         {
             ResidentActor actor = GameManager.Instance.TalkManager.CurrentNPCType==TalkManager.NPCType.Mobile ? conversationActor : null;
             string npcName = GameManager.Instance.TalkManager.NameNPC;
@@ -163,13 +163,17 @@ namespace LivingCities.DFU
                 " " + CurrentConversationWeather() +
                 CurrentConversationLifeContext(npcName, disposition) +
                 CurrentConversationMemory(playerText) +
-                " Current time and weather supersede earlier conversation descriptions. Do not infer visible sky conditions while indoors.", history);
+                " Current time and weather supersede earlier conversation descriptions. Do not infer visible sky conditions while indoors.", history, knowledgeResult);
             int requestSession=memorySession;
             if (!localDialogue.Request(NewDialogueConnection(), request,
                 answer => { if(!CurrentMemorySession(talk,requestSession)) return;
                     conversationBusy = false;
                     if (answer == LocalDialogueClient.Unavailable) { DaggerfallUI.AddHUDText("Local dialogue unavailable. Check the local model server."); return; }
-                    if (answer != LocalDialogueClient.ContextLimit) AppendRememberedDialoguePair(talk, playerText, answer,"model"); }))
+                    if (answer != LocalDialogueClient.ContextLimit) {
+                        if(verifyAnswer != null) answer=verifyAnswer(answer);
+                        AppendRememberedDialoguePair(talk, playerText, answer,"model");
+                        if(onAnswer != null) onAnswer(answer);
+                    } }))
             {
                 conversationBusy = false;
                 DaggerfallUI.AddHUDText("Waiting for the current reply.");

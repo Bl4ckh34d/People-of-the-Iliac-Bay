@@ -82,8 +82,15 @@ namespace LivingCities.Core
                     fixedContext = fixedContext.Replace(LocalDialogue.HistoryContext(request.History),
                         LocalDialogue.HistoryContext("[Earlier exchanges are supplied as separate messages below.]"));
                 fixedContext = fixedContext.Replace("Player said: \"" + request.PlayerText + "\"\n", "");
+                string currentKnowledge = string.IsNullOrWhiteSpace(request.KnowledgeResult) ? "" :
+                    "<|im_start|>system\nCURRENT VERIFIED LOCATION SEARCH / ACTION RESULT (overrides earlier dialogue):\n" +
+                    request.KnowledgeResult.Replace("<|", "< |") +
+                    "\nUse the exact supplied names. Name the supplied choices, not a vague shop or inn. Do not invent distances, landmarks or services. " +
+                    "For a map request, report ONLY the current chosen place and current action result. If no marker was placed, say so, regardless of any earlier marker. " +
+                    "Answer naturally in character.\n<|im_end|>\n";
                 prompt = "<|im_start|>system\nYou are a concise fantasy NPC. Follow the user's supplied safety and authority rules.\n" +
                     fixedContext.Replace("<|", "< |") + "\n<|im_end|>\n" + DialogueHistoryWindow.Messages(request.History) +
+                    currentKnowledge +
                     "<|im_start|>user\n" + request.PlayerText.Replace("<|", "< |") + "<|im_end|>\n<|im_start|>assistant\n";
             }
             string body = "{\"prompt\":\"" + EscapeJson(prompt) +
