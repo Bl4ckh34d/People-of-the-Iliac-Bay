@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using LivingCities.Core;
@@ -71,7 +72,7 @@ namespace LivingCities.DFU
                 break;
             }
             if (patrol == null) return;
-            var sent = Roster.DispatchOutdoorInvestigation(id, now, routes, patrol, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+            var sent = Roster.DispatchOutdoorInvestigation(id, now, routes, patrol, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
             if (sent.Count == 0) return;
             // Body discovery alone is not evidence of murder. Known witnessed crimes
             // retain their normal crime state through the separate witness pipeline.
@@ -90,7 +91,7 @@ namespace LivingCities.DFU
             if (!OwnsExterior) return;
             double now = Now(); Roster.Advance(now);
             var routes = NearbyResponseRoutes(observer, null, Local(GameManager.Instance.PlayerMotor.transform.position));
-            if (routes.Count > 0) Roster.Dispatch("corpse-theft:" + incidentId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+            if (routes.Count > 0) Roster.Dispatch("corpse-theft:" + incidentId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
         }
     }
 }

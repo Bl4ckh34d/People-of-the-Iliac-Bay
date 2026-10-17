@@ -11,9 +11,9 @@ Start with the [TL;DR roadmap](docs/ROADMAP.md), [future design/backlog](docs/RO
 - Persistent generated residents, households, local activities and traveler systems are implemented, with remaining movement and arrival bugs.
 - Native indoor people have partial identity, reaction, bed and service integration. Outdoor NPCs added by other mods do not yet have universal adoption or homes.
 - Finite guards, patrols, building responses, crime scenes and pursuit are implemented across documented paths; broad compatibility remains under test.
-- Local dialogue includes world context and disposition-related behavior. It is experimental and requires a separately configured local model server.
+- Local dialogue includes world context, disposition, saved per-NPC conversation memories and trusted home map requests. It is experimental and requires a separately configured local model server; unidentified/unadopted NPCs do not yet have persistent memory.
 - General main/side/mod quest compatibility is **not complete**. One tightly scoped native delivery quest has automatic household binding.
-- The game-clock source now enforces 2× real time and migrates supported saved movement timing. Build/startup passed; direct gameplay timing acceptance remains pending.
+- The game clock enforces 2× real time and migrates supported saved movement timing. A loaded-game check measured 8 game seconds over 4.01 real seconds. See [acceptance evidence](docs/TESTING.md#latest-acceptance) for scope and limits.
 
 ## Documentation
 

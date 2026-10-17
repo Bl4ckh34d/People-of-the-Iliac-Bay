@@ -90,7 +90,7 @@ namespace LivingCities.DFU
                     {
                         if (!WallAvailable(entrance.BuildingKey, guard.Id, null, bed.Anchor.RecordIndex)) continue;
                         var exterior = route.Points.ConvertAll(p => new GuardPoint3 { X = p.X, Z = p.Z });
-                        var plan = GuardRefugeJourney.Create(entrance.BuildingKey, exterior, bed.EntranceRoute, started, 1.3, 12);
+                        var plan = GuardRefugeJourney.Create(entrance.BuildingKey, exterior, bed.EntranceRoute, started, 1.3, DaggerfallUnity.Instance.WorldTime.TimeScale);
                         plan.WallDuty = true; plan.RestBedRecord = bed.Anchor.RecordIndex;
                         try
                         {

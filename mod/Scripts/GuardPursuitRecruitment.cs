@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using LivingCities.Core;
@@ -23,7 +24,7 @@ namespace LivingCities.DFU
                 if(route.Count<2) return false;
                 string incident="reacquired:"+guard.Id+":"+now.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                 if(Roster.Dispatch(incident,now,new Dictionary<string,List<SavedRoutePoint>> {
-                    {guard.Id,route} },1,2.8,12).Count==0) return false;
+                    {guard.Id,route} },1,2.8,DaggerfallUnity.Instance.WorldTime.TimeScale).Count==0) return false;
             }
             actor.BeginCombat(now);
             Debug.Log("LIVING_CITIES_PURSUIT_REACQUIRED: guard="+guard.Id);
@@ -53,7 +54,7 @@ namespace LivingCities.DFU
                     if(route.Count<2) continue;
                     string incident="pursuit:"+candidate.GuardId+":"+now.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
                     var sent=Roster.Dispatch(incident,now,new Dictionary<string,List<SavedRoutePoint>> {
-                        {candidate.GuardId,route} },1,2.8,12);
+                        {candidate.GuardId,route} },1,2.8,DaggerfallUnity.Instance.WorldTime.TimeScale);
                     if(sent.Count==0) continue;
                     candidate.BeginCombat(now,source.LastSeenSuspect);
                     // Passing the alarm along must not renew stale knowledge.

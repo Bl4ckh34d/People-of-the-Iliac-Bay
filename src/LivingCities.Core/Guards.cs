@@ -73,6 +73,49 @@ namespace LivingCities.Core
         public List<GuardRecord> Guards = new List<GuardRecord>();
         public List<GuardReport> Reports = new List<GuardReport>();
         public List<GuardBuildingApproach> BuildingApproaches = new List<GuardBuildingApproach>();
+        internal static void MigrateTravelClock(GuardRoster roster, double now, double previousRate, double currentRate)
+        {
+            foreach (var guard in roster.Guards)
+            {
+                if (guard.Duty != GuardDuty.Responding && guard.Duty != GuardDuty.Returning) continue;
+                double oldArrival = guard.ArrivesAt;
+                var interval = ClockRateMigration.RescaleInterval(guard.DepartedAt, oldArrival, now, previousRate, currentRate);
+                guard.DepartedAt = interval.Start; guard.ArrivesAt = interval.End;
+                if (guard.Duty == GuardDuty.Returning) guard.SearchUntil = interval.Start;
+                if (guard.SearchUntil == oldArrival + 300) guard.SearchUntil = guard.ArrivesAt + 300;
+                foreach (var report in roster.Reports)
+                {
+                    var arrival = report.Arrivals.Find(item => item.GuardId == guard.Id);
+                    if (arrival != null && !arrival.Arrived) arrival.ScheduledAt = guard.ArrivesAt;
+                    if (report.FirstArrivalAt == oldArrival) report.FirstArrivalAt = guard.ArrivesAt;
+                }
+            }
+        }
+        internal static void MigratePatrolAndRefugeClock(GuardRoster roster, double now, double previousRate, double currentRate)
+        {
+            foreach (var patrol in roster.Patrols)
+                patrol.Plan.MigrateClockRate(now, previousRate, currentRate);
+            foreach (var guard in roster.Guards)
+            {
+                if (guard.Refuge != null) guard.Refuge.MigrateClockRate(now, previousRate, currentRate);
+                if (guard.PostRecall == null) continue;
+                var recall = guard.PostRecall;
+                if (recall.WallDuty != null)
+                {
+                    recall.WallDuty.MigrateClockRate(now, previousRate, currentRate);
+                    recall.DepartsAt = recall.WallDuty.StartsAt;
+                    recall.ArrivesAt = recall.DepartsAt + Length(recall.Route) * recall.WallDuty.SecondsPerMetre;
+                }
+                else if (now < recall.DepartsAt)
+                    recall.ArrivesAt = recall.DepartsAt + (recall.ArrivesAt - recall.DepartsAt) * currentRate / previousRate;
+                else if (now < recall.ArrivesAt)
+                {
+                    var interval = ClockRateMigration.RescaleInterval(recall.DepartsAt, recall.ArrivesAt, now,
+                        previousRate, currentRate);
+                    recall.DepartsAt = interval.Start; recall.ArrivesAt = interval.End;
+                }
+            }
+        }
         public static int TargetCount(SettlementScale scale, int residents)
         {
             Require(residents >= 0 && (scale == SettlementScale.Hamlet || scale == SettlementScale.Town || scale == SettlementScale.City), "Invalid settlement population.");

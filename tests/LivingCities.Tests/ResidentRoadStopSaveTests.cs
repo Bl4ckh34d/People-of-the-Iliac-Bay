@@ -61,7 +61,7 @@ namespace LivingCities.Tests
                 var store=new WorldStateStore(12);string id=store.GetOrCreate(100,new[]{1},1).Households[0].Residents[0].Id;
                 var trip=Trip(id);trip.OutboundStops[0].ExitRoadNode=3;
                 trip.OutboundStops[0].Visit.ThroughRoute=true;trip.OutboundStops[0].Visit.ExitRoute[1].X=1010;
-                store.ScheduleResidentTrip(trip);var saved=store.Snapshot();Check.Equal(21,saved.Version);
+                store.ScheduleResidentTrip(trip);var saved=store.Snapshot();Check.Equal(22,saved.Version);
                 Check.Near(154,saved.ResidentTrips[0].ArrivesAt);Check.Near(282,saved.ResidentTrips[0].HomeAt);
                 store.Restore(saved);Check.Near(3.1,store.ResidentTripAt(id,145).Position.X);
                 saved.Version=16;Check.Throws<ArgumentException>(()=>store.Restore(saved));
@@ -228,7 +228,7 @@ namespace LivingCities.Tests
                 var store=new WorldStateStore(12);var person=store.GetOrCreate(100,new[]{1},1).Households[0].Residents[0];
                 foreach(int town in new[]{200,300,400}) store.GetOrCreate(town,new[]{2},1);
                 store.ScheduleResidentTrip(Trip(person.Id));var saved=store.Snapshot();var trip=saved.ResidentTrips[0];
-                Check.Equal(21,saved.Version);Check.Near(174,trip.ArrivesAt);Check.Near(218,trip.ReturnsFromVisitAt);
+                Check.Equal(22,saved.Version);Check.Near(174,trip.ArrivesAt);Check.Near(218,trip.ReturnsFromVisitAt);
                 Check.Near(292,trip.RoadReturnsAt);Check.Near(302,trip.HomeAt);
                 Check.Equal("outbound/0",trip.OutboundStops[0].Id);Check.Equal("return/0",trip.ReturnStops[0].Id);
                 var outbound=store.ResidentTripAt(person.Id,122);Check.Equal(300,outbound.SettlementId);
@@ -251,7 +251,7 @@ namespace LivingCities.Tests
                 var trip=Trip(person.Id);trip.OutboundStops=null;trip.ReturnStops=null;store.ScheduleResidentTrip(trip);
                 var saved=store.Snapshot();saved.Version=15;saved.ResidentTrips[0].OutboundStops=null;saved.ResidentTrips[0].ReturnStops=null;
                 store.Restore(saved);trip=store.Snapshot().ResidentTrips[0];Check.Near(150,trip.ArrivesAt);Check.Near(244,trip.HomeAt);
-                Check.Equal(0,trip.OutboundStops.Count);Check.Equal(0,trip.ReturnStops.Count);Check.Equal(21,store.Snapshot().Version);
+                Check.Equal(0,trip.OutboundStops.Count);Check.Equal(0,trip.ReturnStops.Count);Check.Equal(22,store.Snapshot().Version);
             }));
             cases.Add(("Road stop IDs, ordering and endpoints are validated without partial replacement",()=>{
                 var source=Trip("person");source.OutboundStops[0].Id="return/0";

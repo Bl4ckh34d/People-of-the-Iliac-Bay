@@ -15,7 +15,7 @@ namespace LivingCities.Tests
                     var roster=store.GetOrCreateGuards(1,1,new[] { new SavedRoutePoint { X=28 } });
                     var report=store.RecordEntry(1,4,100,new[] { witness },new string[0]);
                     store.PlanEntryMessenger(report.Id,witness,roster.Guards[0].Id,100,
-                        new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=28 } });
+                        new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=28 } },12);
                     if(delivered) store.AdvanceEntryMessengers(1,220);
                     roster.ReassignPost(roster.Guards[0].Id,new SavedRoutePoint { X=60 },221);
                     var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
@@ -32,7 +32,7 @@ namespace LivingCities.Tests
                 var roster = store.GetOrCreateGuards(1, 1, new List<SavedRoutePoint> { new SavedRoutePoint { X = 28 } });
                 var report = store.RecordEntry(1, 4, 100, new[] { witness }, new string[0]);
                 var route = new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 28 } };
-                store.PlanEntryMessenger(report.Id, witness, roster.Guards[0].Id, 100, route);
+                store.PlanEntryMessenger(report.Id, witness, roster.Guards[0].Id, 100, route,12);
                 route[1].X = 999; // Caller mutation must not alter saved travel.
                 Check.Equal(220.0, report.Messenger.ArrivesAt);
                 Check.Equal(14.0, report.Messenger.Position(160).X);
@@ -57,7 +57,7 @@ namespace LivingCities.Tests
                         new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 50 } }));
                     Check.True(report.Messenger == null);
                     store.PlanEntryMessenger(report.Id, witness.Id, roster.Guards[0].Id, 100,
-                        new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 28 } });
+                        new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 28 } },12);
                     if (interruption == 0) witness.IsAlive = false;
                     else if (interruption == 1) roster.Kill(roster.Guards[0].Id, 150);
                     else roster.Dispatch("other-crime", 150, new Dictionary<string, List<SavedRoutePoint>> {

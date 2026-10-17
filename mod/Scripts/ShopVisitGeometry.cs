@@ -134,7 +134,7 @@ namespace LivingCities.DFU
                 routes.Add(geometry.RouteBetween(from,entry));
                 try
                 {
-                    var journey=ShopVisitJourney.Create(start,end,routes,ResidentMovement.WalkSpeed,12,purchase,visitSeed,IsTavern);
+                    var journey=ShopVisitJourney.Create(start,end,routes,ResidentMovement.WalkSpeed,DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.TimeScale,purchase,visitSeed,IsTavern);
                     return journey;
                 }
                 catch(ArgumentException error) { candidateFailure=error.Message; browsing.RemoveAt(browsing.Count-1); }

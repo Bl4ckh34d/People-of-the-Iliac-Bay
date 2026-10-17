@@ -139,6 +139,21 @@ namespace LivingCities.Core
             };
         }
 
+        // Called once by the versioned save migration. Keep the current physical
+        // position and remaining activity time; only walking uses the new rate.
+        public void MigrateClockRate(double now, double previousRate, double currentRate)
+        {
+            double ratio = ClockRateMigration.RescaleDuration(1, previousRate, currentRate);
+            if (!Finite(now) || now < 0) throw new ArgumentOutOfRangeException(nameof(now));
+            if (ratio == 1 || now >= EndsAt) return;
+            if (now >= ObservedAt)
+            {
+                Legs = RemainingLegs(now);
+                ObservedAt = now;
+            }
+            SecondsPerMetre *= ratio;
+        }
+
         public List<ObservedVisitLeg> RemainingLegs(double now)
         {
             if (!Finite(now) || now < ObservedAt) throw new ArgumentOutOfRangeException(nameof(now));

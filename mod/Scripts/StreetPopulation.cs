@@ -686,10 +686,10 @@ namespace LivingCities.DFU
             var points = OffsetStreetPath(centerline, resident.AppearanceSeed);
             var schedule = routine.DestinationKey < 0 ? DailySchedule.HomeDay(resident.HomeKey, wake * 60, sleep * 60) :
                 DailySchedule.DayVisit(resident.HomeKey, routine.DestinationKey, points, routine.OpenMinute, routine.CloseMinute,
-                    20 + (int)(resident.AppearanceSeed % 41), ResidentMovement.WalkSpeed, 12, resident.AppearanceSeed, wake * 60, sleep * 60);
+                    20 + (int)(resident.AppearanceSeed % 41), ResidentMovement.WalkSpeed, DaggerfallUnity.Instance.WorldTime.TimeScale, resident.AppearanceSeed, wake * 60, sleep * 60);
             var haunted=population.SettlementId!=1291010263 || routine.DestinationKey<0 ? schedule :
                 DailySchedule.DayVisit(resident.HomeKey,routine.DestinationKey,points,routine.OpenMinute,routine.CloseMinute,
-                    20+(int)(resident.AppearanceSeed%41),ResidentMovement.WalkSpeed,12,resident.AppearanceSeed,wake*60,sleep*60,300,1140);
+                    20+(int)(resident.AppearanceSeed%41),ResidentMovement.WalkSpeed,DaggerfallUnity.Instance.WorldTime.TimeScale,resident.AppearanceSeed,wake*60,sleep*60,300,1140);
             if(routine.Itinerary!=null)
             {
                 try
@@ -999,7 +999,7 @@ namespace LivingCities.DFU
                         try
                         {
                             var cancelled=VisitDeparture.Create(plan.Resident.Id,population.SettlementId,plan.Resident.HomeKey,
-                                interior.EntryDoor.buildingKey,seconds,until,route,outside,ResidentMovement.WalkSpeed,12);
+                                interior.EntryDoor.buildingKey,seconds,until,route,outside,ResidentMovement.WalkSpeed,DaggerfallUnity.Instance.WorldTime.TimeScale);
                             worldStore.SaveVisitDeparture(cancelled);
                             hasDeparture=worldStore.TryVisitDeparturePosition(plan.Resident.Id,seconds,out departure,out home);
                         }
@@ -1035,7 +1035,7 @@ namespace LivingCities.DFU
                         {
                             double until=(Math.Floor(seconds/86400)+1)*86400;
                             var cancelled=VisitDeparture.Create(plan.Resident.Id,population.SettlementId,plan.Resident.HomeKey,
-                                interior.EntryDoor.buildingKey,seconds,until,route,outside,ResidentMovement.WalkSpeed,12);
+                                interior.EntryDoor.buildingKey,seconds,until,route,outside,ResidentMovement.WalkSpeed,DaggerfallUnity.Instance.WorldTime.TimeScale);
                             worldStore.SaveVisitDeparture(cancelled);
                         }
                     }

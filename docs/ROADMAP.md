@@ -4,6 +4,12 @@ Consolidated 17 October 2026. The broader roadmap remains planned work. Subseque
 
 ## Direction
 
+### Active memory implementation contract
+
+Persist completed conversation exchanges and observed meetings per stable NPC identity inside the character's mod save. Each record carries game time/date, actual meeting place, and provenance. Retrieve a bounded selection of relevant older exchanges plus recent meetings for each new turn; retain the existing sliding live transcript and full current authoritative context. Do not use model-written anecdotes as verified shared events, merge people by display name, replay disposition effects from history, or expose another NPC's private conversations. Save reload/new game must invalidate in-flight replies. Record only visible native dialogue, never hidden quest scripts or undisclosed quest state. No embeddings, external API, Python service or per-frame whole-world scan is needed. Companion activities remain deferred; actual future actions can use the same typed observation journal.
+
+Acceptance: durable save/restore, separate NPCs and characters, relevant old recall beyond recent turns, game-date/elapsed-time recall, bounded prompt size, claim/fact separation, stale response rejection, legacy saves with no memory, and a native conversation/reopen probe. Memory begins when installed; prior unrecorded conversations cannot be reconstructed.
+
 Make one persistent person exist across home, work, streets, travel, conversation and combat. Preserve native quest/service ownership. Complete reliable physical movement and identity before adding more behaviors that depend on them.
 
 The [current inventory](NPC-SYSTEMS.md#inventory) describes implemented coverage. The [future design and backlog](ROADMAP.md#detailed-design) records the latest requirements. The [delivery plan](ROADMAP.md#delivery-plan) gives ordered, testable work packages. Old milestone paragraphs remain historical evidence, not a competing current plan.
@@ -26,7 +32,7 @@ The [current inventory](NPC-SYSTEMS.md#inventory) describes implemented coverage
 | 2 | Housing and bed allocation before generated population | Saved people and authored tenants keep capacity; local workers obtain homes before remaining families are generated; migration never evicts silently |
 | 3 | Native locals and visitors become mobile by role | Stall workers commute; shopkeepers lock/unlock and commute when needed; shop tenants use keys; inn lodgers have origins, visits and checkout/return journeys |
 | 4 | Bedside staff behavior and appearance coverage | Ordinary institutional staff retain services and use real reserved beds; movement/sleep art matches each actual vanilla or replacement appearance |
-| 5 | Story-aware dialogue and persistent memory | Main NPCs keep authored character; stage-filtered facts do not leak secrets; encounters and shared activities persist with provenance and game dates |
+| 5 | Story-aware dialogue and broader event memory | Dated conversation journals and meeting retrieval are implemented. Remaining: authored main-story personas, stage-filtered disclosure, and adapters for future shared activities; see NPC systems for current scope. |
 | 6 | Broader vanilla quest adapters, then Quest Pack 1 | Per-quest/per-role capability records and native end-to-end tests; unsupported stages remain native rather than being moved speculatively |
 | 7 | Modular packaging and public installation | No-LLM installation works without model/CUDA downloads; optional setup is reproducible on a clean machine with measured hardware requirements |
 | Later | Invitations, durable human combat state, companions and action framework | Independent milestones after movement, ownership, memory and inventory foundations; explicitly shelved now |

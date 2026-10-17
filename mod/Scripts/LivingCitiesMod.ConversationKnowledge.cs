@@ -54,6 +54,7 @@ namespace LivingCities.DFU
                 // Match the core's native identity when available, including shop heads.
                 conversationPersonId = "npc:" + data.mapID + ":" + data.buildingKey + ":" + data.hash;
             }
+            conversationHomeTopicAvailable = false;
             if (conversationDispositionEnabled && conversationPersonId != null && !saveFault)
                 store.SetConversationBaseline(conversationPersonId, conversationNativeDisposition,
                     DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(), CaptureDialogueFactionId(manager));
@@ -63,6 +64,7 @@ namespace LivingCities.DFU
                 reactionToPlayerField.SetValue(manager, ConversationEffects.Reaction(conversationNativeDisposition,
                     store.ConversationDisposition(conversationPersonId)));
             if (lastConversationTone != null) lastConversationTone.SetValue(manager, -1);
+            BeginDialogueMemory(talkWindow);
         }
 
         private void InstallConversationHooks()
@@ -93,15 +95,19 @@ namespace LivingCities.DFU
 
         private void SubmitFreeText(DaggerfallTalkWindow window, string playerText)
         {
-            if (conversationBusy) { AppendDialoguePair(window, playerText, "One moment, please."); return; }
+            if (conversationBusy) { DaggerfallUI.AddHUDText("Waiting for the current reply."); return; }
             if (!conversationEncounterRecorded && conversationPersonId != null && store != null && !saveFault)
             {
                 store.RecordConversationEncounter(conversationPersonId, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
                 conversationEncounterRecorded = true;
             }
             conversationBusy = true;
+            var changedTranscript=conversationListField.GetValue(window) as ListBox;
+            if(changedTranscript!=null && changedTranscript.Count>conversationLastTranscriptCount)
+                conversationHomeTopicAvailable=false;
             if (ConversationClock.IsQuestion(playerText))
             {
+                conversationHomeTopicAvailable=false;
                 conversationResponseCue = "";
                 conversationDispositionBeforeMessage = CurrentDialogueDisposition();
                 if (HandleConversationHostility(window, playerText, "neutral", true)) return;
@@ -110,6 +116,10 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_DIALOGUE_CLOCK: answered from WorldTime.Now");
                 return;
             }
+            conversationDispositionBeforeMessage = CurrentDialogueDisposition();
+            if (HandleConversationHostility(window, playerText, "neutral", true)) return;
+            if (TryHandleConversationHomeRequest(window, playerText)) return;
+            conversationHomeTopicAvailable=false;
             var manager = GameManager.Instance.TalkManager;
             var native = new Dictionary<int, TalkManager.ListItem>();
             var all = new List<ConversationTopic>();
@@ -143,9 +153,10 @@ namespace LivingCities.DFU
             }
             string history = ReadConversationHistory(window);
             string prompt = ConversationKnowledge.Prompt(playerText, candidates, previousId, history);
+            int requestSession=memorySession;
             if (!localDialogue.Classify(NewDialogueConnection(), prompt, history, output =>
             {
-                if (DaggerfallUI.UIManager.TopWindow != window) { conversationBusy = false; return; }
+                if (!CurrentMemorySession(window,requestSession)) return;
                 if (output == LocalDialogueClient.ContextLimit) { conversationBusy = false; return; }
                 if (output == LocalDialogueClient.Unavailable) { conversationBusy = false;
                     DaggerfallUI.AddHUDText("Local dialogue unavailable. Check the local model server."); return; }
@@ -184,7 +195,7 @@ namespace LivingCities.DFU
             }))
             {
                 conversationBusy = false;
-                AppendDialoguePair(window, playerText, "One moment, please.");
+                DaggerfallUI.AddHUDText("Waiting for the current reply.");
             }
         }
 

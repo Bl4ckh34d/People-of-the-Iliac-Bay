@@ -18,7 +18,7 @@ namespace LivingCities.Tests
                 person.Reaction=CivilianReaction.Flee;person.HasPosition=true;person.BuildingKey=1;
                 person.Escape=CivilianEscape.Create(person,100,
                     new List<GuardPoint3>{new GuardPoint3(),new GuardPoint3{X=2.8}},
-                    new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=20}});
+                    new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=20}}, timeScale:12);
                 store.AdvanceEscapes(1,112,true);
                 Check.Near(112,person.EscapeAdvancedAt);
                 var reload=new WorldStateStore(0);reload.Restore(store.Snapshot());store=reload;
@@ -56,7 +56,7 @@ namespace LivingCities.Tests
                 var person=new AlarmPerson {HasPosition=true,BuildingKey=7,Reaction=CivilianReaction.Flee};
                 var escape=CivilianEscape.Create(person,100,
                     new List<GuardPoint3>{new GuardPoint3(),new GuardPoint3 {X=3}},
-                    new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint {X=12}},3);
+                    new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint {X=12}},3,12);
                 escape.Advance(person,124); Check.Near(3,person.X);
                 var changed=escape.RedirectExterior(124,new List<SavedRoutePoint>{
                     new SavedRoutePoint {X=3},new SavedRoutePoint {X=3,Z=6}});
@@ -80,7 +80,7 @@ namespace LivingCities.Tests
                 var person = new AlarmPerson { HasPosition = true, BuildingKey = 1, Reaction = CivilianReaction.Flee };
                 var escape = CivilianEscape.Create(person, 100,
                     new List<GuardPoint3> { new GuardPoint3(), new GuardPoint3 { X = 3.9 } },
-                    new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 3.9 } }, 3.9);
+                    new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 3.9 } }, 3.9, 12);
                 Check.Near(112, escape.ExitAt); Check.Near(124, escape.ReportAt);
                 var copy = CivilianEscape.Copy(escape); Check.Near(3.9, copy.Speed);
                 copy.Advance(person, 106); Check.Near(1.95, person.X);
@@ -93,7 +93,7 @@ namespace LivingCities.Tests
                     HasPosition = true, BuildingKey = 12, X = 2 };
                 var escape = CivilianEscape.Create(person, 100,
                     new List<GuardPoint3> { new GuardPoint3 { X = 2 }, new GuardPoint3 { X = 4.8 } },
-                    new List<SavedRoutePoint> { new SavedRoutePoint { X = 50 }, new SavedRoutePoint { X = 52.8 } });
+                    new List<SavedRoutePoint> { new SavedRoutePoint { X = 50 }, new SavedRoutePoint { X = 52.8 } }, timeScale:12);
                 person.Escape = escape;
                 escape.Advance(person, 106);
                 Check.Equal(12, person.BuildingKey); Check.Near(3.4, person.X);
@@ -120,7 +120,7 @@ namespace LivingCities.Tests
                 person.Reaction = CivilianReaction.Flee; person.HasPosition = true; person.BuildingKey = 1;
                 person.Escape = CivilianEscape.Create(person, 100,
                     new List<GuardPoint3> { new GuardPoint3(), new GuardPoint3 { X = 2.8 } },
-                    new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 2.8 } });
+                    new List<SavedRoutePoint> { new SavedRoutePoint(), new SavedRoutePoint { X = 2.8 } }, timeScale:12);
                 var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
                 Check.Equal(0, restored.AdvanceEscapes(1, 110).Count);
                 var saved = restored.ActiveAlarm(residents[1].Id, 110).People[0];

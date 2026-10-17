@@ -572,7 +572,7 @@ namespace LivingCities.Tests
             cases.Add(("Schema five migrates without inventing garrisons", () => {
                 var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 1 });
                 var older = store.Snapshot(); older.Version = 5; older.Garrisons = null;
-                store.Restore(older); Check.Equal(21, store.Snapshot().Version); Check.Equal(0, store.Snapshot().Garrisons.Count);
+                store.Restore(older); Check.Equal(22, store.Snapshot().Version); Check.Equal(0, store.Snapshot().Garrisons.Count);
             }));
             cases.Add(("Bad guard routes reject transactionally without partial dispatch", () => {
                 var roster = Roster();

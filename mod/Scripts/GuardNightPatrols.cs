@@ -94,7 +94,7 @@ namespace LivingCities.DFU
                     if (leaderJoin == null || followerJoin == null) continue;
                     try
                     {
-                        var plan = PatrolPairPlan.Create(leader.Id, partner.Id, leaderJoin, followerJoin, circuit, 0, 86400, 1.3, 12, 2);
+                        var plan = PatrolPairPlan.Create(leader.Id, partner.Id, leaderJoin, followerJoin, circuit, 0, 86400, 1.3, DaggerfallUnity.Instance.WorldTime.TimeScale, 2);
                         patrolTemplates.Add(plan); used.Add(leader.Id); used.Add(partner.Id); found = true;
                         Debug.Log("LIVING_CITIES_PATROL_SURVEY: pair=" + leader.Id + "/" + partner.Id + "; length=" + RouteLength(circuit));
                     }
@@ -148,7 +148,7 @@ namespace LivingCities.DFU
                     Roster.IsOnPatrol(a.Id) || Roster.IsOnPatrol(b.Id) || IsGateGuard(a.Id) || IsGateGuard(b.Id)) continue;
                 try
                 {
-                    var plan = PatrolPairPlan.Create(a.Id,b.Id,template.LeaderJoin,template.FollowerJoin,template.Circuit,now,dawn,1.3,12,2);
+                    var plan = PatrolPairPlan.Create(a.Id,b.Id,template.LeaderJoin,template.FollowerJoin,template.Circuit,now,dawn,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale,2);
                     Roster.StartPatrol(plan,now);
                     Debug.Log("LIVING_CITIES_PATROL_START: " + a.Id + "/" + b.Id);
                 }

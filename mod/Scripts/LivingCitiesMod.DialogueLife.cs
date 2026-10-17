@@ -72,7 +72,8 @@ namespace LivingCities.DFU
                 Familiar = conversationPersonId != null && store != null && store.ConversationEncounters(conversationPersonId) > 1,
                 Activity = activity };
             return " " + ConversationLifeContext.Personality(seed) + " " +
-                ConversationLifeContext.Mood(seed, day, mood) + " " + plan;
+                ConversationLifeContext.Mood(seed, day, mood) + " " + plan + " " +
+                ConversationHomeContext(CurrentDialogueDisposition());
         }
 
         private static uint ConversationNameSeed(string name, int settlement)

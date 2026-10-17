@@ -9,6 +9,7 @@ namespace LivingCities.Tests
         {
             var cases = new List<(string Name, Action Body)>();
             PopulationTests.Add(cases);
+            ConversationMemoryTests.Add(cases);
             ShopPhysicalProgressTests.Add(cases);
             ObservedVisitTests.Add(cases);
             HouseholdRecoveryTests.Add(cases);
@@ -78,6 +79,8 @@ namespace LivingCities.Tests
             FamilyThreatTests.Add(cases);
             HouseholdLootConsentTests.Add(cases);
             DispositionPricingTests.Add(cases);
+            ClockMigrationTests.Add(cases);
+            ResidentClockMigrationTests.Add(cases);
             int failures = 0;
             foreach (var test in cases)
             {

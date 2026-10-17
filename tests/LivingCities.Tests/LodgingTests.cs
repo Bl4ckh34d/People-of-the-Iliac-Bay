@@ -65,7 +65,7 @@ namespace LivingCities.Tests
                 var store=Store(); store.TryBookLodging(1,7,"paid","player",1,true,1,100,200,"single");
                 var old=store.Snapshot(); old.Version=9; old.Lodgings[0].Occupants=null;
                 var restored=new WorldStateStore(0); restored.Restore(old);
-                Check.Equal(21,restored.Snapshot().Version);
+                Check.Equal(22,restored.Snapshot().Version);
                 Check.Equal(0,restored.Snapshot().Lodgings[0].Occupants.Count);
                 Check.Equal("paid",restored.Snapshot().Lodgings[0].Bookings[0].Id);
             }));

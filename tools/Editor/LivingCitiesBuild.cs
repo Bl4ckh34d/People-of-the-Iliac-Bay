@@ -578,7 +578,7 @@ public static class LivingCitiesBuild
     {
         var person=new AlarmPerson {HasPosition=true,BuildingKey=7,Reaction=CivilianReaction.Flee};
         var route=CivilianEscape.Create(person,100,new List<GuardPoint3>{new GuardPoint3(),new GuardPoint3 {X=3}},
-            new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint {X=12}},3);
+            new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint {X=12}},3,12);
         var redirected=route.RedirectExterior(124,new List<SavedRoutePoint>{new SavedRoutePoint {X=3},new SavedRoutePoint {X=3,Z=6}});
         var json=SaveLoadManager.Serialize(typeof(CivilianEscape),redirected);
         var restored=CivilianEscape.Copy((CivilianEscape)SaveLoadManager.Deserialize(typeof(CivilianEscape),json));
@@ -746,6 +746,7 @@ public static class LivingCitiesBuild
         VerifyNativeServiceHook();
         VerifyTheftSight();
         VerifyEntryPersistence();
+        VerifyConversationMemoryPersistence();
         VerifyNativePeoplePersistence();
         VerifyCivilianHitScopes();
         VerifyIndoorNoisePersistence();
@@ -1053,14 +1054,28 @@ public static class LivingCitiesBuild
         var json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
         var restored = new WorldStateStore(0);
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
-        Require(restored.AdvanceEntryMessengers(99, 12597431582).Count == 0, "Messenger cannot report before arrival");
-        Require(restored.AdvanceEntryMessengers(99, 12597431583).Count == 1, "Messenger reports at saved arrival time");
+        Require(restored.AdvanceEntryMessengers(99, 12597431482.9).Count == 0, "Messenger cannot report before arrival");
+        Require(restored.AdvanceEntryMessengers(99, 12597431483).Count == 1, "Messenger reports at saved arrival time");
         var copied = restored.Snapshot().EntryReports[0];
         Require(copied.Id == report.Id && copied.EnteredAt == 12597431462 && copied.InformedGuards.Count == 1,
             "Entry evidence survives native epoch rounding and later guard notification");
-        Require(copied.Messenger.Delivered && copied.Messenger.ArrivesAt == 12597431583,
+        Require(copied.Messenger.Delivered && copied.Messenger.ArrivesAt == 12597431483,
             "Messenger route and arrival survive native epoch rounding");
         Debug.Log("LIVING_CITIES_ENTRY_PERSISTENCE_PASS: native saved witness route and timed delivery.");
+    }
+    private static void VerifyConversationMemoryPersistence()
+    {
+        var store=new WorldStateStore(42);
+        store.RememberConversation("npc-test",12597431462.259386,"6 Morning Star 405","Black Wolf Inn",
+            "My sister is named Mirabelle.","I will remember that.","model");
+        store.RememberObservation("npc-test",12597431462,"6 Morning Star 405","Black Wolf Inn","Met the player here.");
+        var json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
+        var restored=new WorldStateStore(7);
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+        Require(restored.RecallConversation("npc-test","sister",12597517862,2000).Contains("Mirabelle"),"NPC memory native save recall");
+        Require(json==SaveLoadManager.Serialize(typeof(WorldState),restored.Snapshot()),"NPC memory native serializer roundtrip");
+        Require(!restored.RecallConversation("other","sister",12597517862,2000).Contains("Mirabelle"),"NPC memory private identity");
+        Debug.Log("LIVING_CITIES_MEMORY_PERSISTENCE_PASS: dated NPC exchanges and observations survive native serializer.");
     }
     private static void VerifyNativePeoplePersistence()
     {

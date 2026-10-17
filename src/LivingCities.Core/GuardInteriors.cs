@@ -12,6 +12,7 @@ namespace LivingCities.Core
         public GuardPoint3 Entrance, Position, LastSeenSuspect;
         public List<GuardPoint3> Trail = new List<GuardPoint3>();
         public bool Returning;
+        public double TimeScale = 12;
         public SavedRoutePoint ExteriorPursuit;
         public double ReturnAt, ExitAt;
         public double PursuitUntil;
@@ -31,7 +32,7 @@ namespace LivingCities.Core
             Engage(id, now);
             var guard = Find(id);
             guard.SearchUntil = searchUntil;
-            guard.Interior = new GuardInteriorState { BuildingKey = buildingKey, Entrance = landing,
+            guard.Interior = new GuardInteriorState { BuildingKey = buildingKey, TimeScale = 2, Entrance = landing,
                 Position = Point3(landing), Trail = new List<GuardPoint3> { Point3(landing) } };
         }
         public void ObserveInterior(string id, GuardPoint3 position, double health, double now, bool sees, GuardPoint3 suspect)
@@ -113,7 +114,7 @@ namespace LivingCities.Core
                 if (Distance3(room.Trail[room.Trail.Count - 1], room.Position) > 0)
                     room.Trail.Add(Point3(room.Position));
                 room.Trail.Reverse(); room.Returning = true; room.ReturnAt = guard.SearchUntil;
-                room.ExitAt = room.ReturnAt + TrailLength(room.Trail) / 2.8 * 12;
+                room.ExitAt = room.ReturnAt + TrailLength(room.Trail) / 2.8 * EffectiveTimeScale(room);
             }
             if (!room.Returning || now < room.ExitAt) return;
             if(room.ExteriorPursuit!=null)
@@ -132,20 +133,41 @@ namespace LivingCities.Core
             var source = guard.Interior;
             if (source == null) return null;
             Require((guard.Duty == GuardDuty.Engaged || guard.Duty == GuardDuty.Dead) && source.BuildingKey >= 0 &&
-                source.Trail != null && source.Trail.Count > 0 && Time(source.ReturnAt) && Time(source.ExitAt) && Time(source.PursuitUntil),
+                source.Trail != null && source.Trail.Count > 0 && Time(source.ReturnAt) && Time(source.ExitAt) && Time(source.PursuitUntil) &&
+                Finite(source.TimeScale) && source.TimeScale >= 0,
                 "Invalid indoor guard state.");
             var copy = new GuardInteriorState { BuildingKey = source.BuildingKey, Entrance = Point3(source.Entrance),
                 Position = Point3(source.Position), LastSeenSuspect = source.LastSeenSuspect == null ? null : Point3(source.LastSeenSuspect),
-                Returning = source.Returning, ReturnAt = source.ReturnAt, ExitAt = source.ExitAt,PursuitUntil=source.PursuitUntil };
+                Returning = source.Returning, TimeScale = source.TimeScale, ReturnAt = source.ReturnAt, ExitAt = source.ExitAt,PursuitUntil=source.PursuitUntil };
             Require(source.ExteriorPursuit==null || source.Returning && Time(source.ExitAt+300),"Invalid doorway pursuit.");
             copy.ExteriorPursuit=source.ExteriorPursuit==null ? null : CopyPoint(source.ExteriorPursuit);
             foreach (var point in source.Trail) copy.Trail.Add(Point3(point));
             Require(source.Returning ? source.ReturnAt == guard.SearchUntil && source.ExitAt >= source.ReturnAt &&
-                Math.Abs(source.ExitAt - source.ReturnAt - TrailLength(copy.Trail) / 2.8 * 12) < 0.001 &&
+                (Math.Abs(source.ExitAt - source.ReturnAt - TrailLength(copy.Trail) / 2.8 * (source.TimeScale == 0 ? 12 : source.TimeScale)) < 0.001) &&
                 Distance3(copy.Trail[copy.Trail.Count - 1], copy.Entrance) < 0.001 :
                 source.ReturnAt == 0 && source.ExitAt == 0 && Distance3(copy.Trail[0], copy.Entrance) < 0.001,
                 "Invalid indoor return route.");
             return copy;
+        }
+        private static double EffectiveTimeScale(GuardInteriorState room) { return room.TimeScale == 0 ? 12 : room.TimeScale; }
+        internal static void MigrateInteriorClock(GuardRoster roster, double now, double previousRate, double currentRate)
+        {
+            foreach (var guard in roster.Guards)
+            {
+                var room = guard.Interior;
+                if (room == null) continue;
+                if (room.Returning)
+                {
+                    ClockInterval interval;
+                    if (now >= room.ExitAt)
+                        interval = new ClockInterval(room.ExitAt - (room.ExitAt - room.ReturnAt) * currentRate / previousRate,
+                            room.ExitAt, now);
+                    else interval = ClockRateMigration.RescaleInterval(room.ReturnAt, room.ExitAt, now, previousRate, currentRate);
+                    room.ReturnAt = interval.Start; room.ExitAt = interval.End;
+                    guard.SearchUntil = interval.Start;
+                }
+                room.TimeScale = currentRate;
+            }
         }
         private static GuardPoint3 Point3(GuardPoint3 point)
         {

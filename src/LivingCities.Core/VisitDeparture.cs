@@ -23,7 +23,7 @@ namespace LivingCities.Core
             var person=new AlarmPerson { HasPosition=true,BuildingKey=buildingKey,Reaction=CivilianReaction.Flee,
                 X=start.X,Y=start.Y,Z=start.Z };
             if(double.IsNaN(until) || double.IsInfinity(until) || until<=now) throw new ArgumentException("Invalid cancellation deadline.");
-            var motion=CivilianEscape.Create(person,now,inside,homeRoute,speed*12/timeScale);
+            var motion=CivilianEscape.Create(person,now,inside,homeRoute,speed,timeScale);
             return Copy(new VisitDeparture { ResidentId=residentId,SettlementId=settlementId,HomeKey=homeKey,
                 Until=Math.Max(until,motion.ReportAt+1),Motion=motion });
         }

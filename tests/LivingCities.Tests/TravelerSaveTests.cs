@@ -205,7 +205,7 @@ namespace LivingCities.Tests
                 Check.Equal(TravelerAdmission.Pending,store.Snapshot().TravelerVisits[0].Admission);
                 Check.True(store.TryAdmitTraveler("visit",43800));
                 Check.True(store.TryAdmitTraveler("visit",43801));
-                var snapshot=store.Snapshot(); Check.Equal(21,snapshot.Version);
+                var snapshot=store.Snapshot(); Check.Equal(22,snapshot.Version);
                 Check.Equal(1,snapshot.Lodgings[0].Bookings.Count);
                 var booking=snapshot.Lodgings[0].Bookings[0];
                 Check.Equal("traveler:a",booking.GuestId); Check.Equal(43800d,booking.StartsAt);

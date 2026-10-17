@@ -77,7 +77,8 @@ namespace LivingCities.DFU
             if (pending.Messenger != null && report.Messenger == null && report.InformedGuards.Count == 0)
             {
                 var messenger = pending.Messenger;
-                pending.Store.PlanEntryMessenger(report.Id, messenger.CitizenId, messenger.GuardId, messenger.StartedAt, messenger.Route);
+                pending.Store.PlanEntryMessenger(report.Id, messenger.CitizenId, messenger.GuardId, messenger.StartedAt, messenger.Route,
+                    DaggerfallUnity.Instance.WorldTime.TimeScale);
                 entryJourneys[messenger.CitizenId] = report.Messenger;
             }
             if (report.InformedGuards.Count > 0 && game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
@@ -138,7 +139,8 @@ namespace LivingCities.DFU
                 if (!guard.IsAlive || guard.Duty != GuardDuty.Posted || guard.Interior != null) continue;
                 var route = geometry.RouteBetweenPoints(local, guard.Post);
                 if (route.Count < 2) continue;
-                var candidate = new EntryMessenger { CitizenId = citizenId, GuardId = guard.Id, StartedAt = now, Route = route };
+                var candidate = new EntryMessenger { CitizenId = citizenId, GuardId = guard.Id, StartedAt = now,
+                    TimeScale = DaggerfallUnity.Instance.WorldTime.TimeScale, Route = route };
                 if (best == null || candidate.ArrivesAt < best.ArrivesAt) best = candidate;
             }
             return best;
@@ -157,7 +159,7 @@ namespace LivingCities.DFU
             if (!OwnsTown() || report == null || report.SettlementId != Roster.SettlementId || report.InformedGuards.Count == 0 ||
                 GameManager.Instance.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None) return;
             if (Roster.Reports.Exists(r => r.Id == report.Id && r.GuardIds.Count > 0)) return;
-            var sent = Roster.DispatchBuilding(report.Id, report.BuildingKey, Now(), Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12,
+            var sent = Roster.DispatchBuilding(report.Id, report.BuildingKey, Now(), Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale,
                 false, new HashSet<string>(report.InformedGuards));
             if (sent.Count > 0) reportId = report.Id;
         }

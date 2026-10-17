@@ -341,7 +341,7 @@ namespace LivingCities.DFU
             {
                 if (!Roster.BuildingApproaches.Exists(a => a.BuildingKey == building.Value))
                     Roster.QueueBuildingReport(reportId, building.Value);
-                var responders = Roster.DispatchBuilding(reportId, building.Value, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+                var responders = Roster.DispatchBuilding(reportId, building.Value, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
                 Debug.Log("LIVING_CITIES_GUARD_BUILDING_DISPATCH: building=" + building + "; responders=" + responders.Count);
                 return;
             }
@@ -354,7 +354,7 @@ namespace LivingCities.DFU
                 var route = geometry.RouteBetweenPoints(Roster.Position(guard.Id, now), target);
                 if (route.Count >= 2) routes.Add(guard.Id, route);
             }
-            var sent = Roster.Dispatch(reportId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+            var sent = Roster.Dispatch(reportId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
             Debug.Log("LIVING_CITIES_GUARD_DISPATCH: " + reportId + "; responders=" + sent.Count);
         }
         public void ReportWitnessedInteriorLoot()
@@ -380,7 +380,7 @@ namespace LivingCities.DFU
                 if (report.Id.StartsWith("native:", StringComparison.Ordinal) && !report.Investigation &&
                     report.BuildingKey.HasValue && report.GuardIds.Count == 0)
                     Roster.DispatchBuilding(report.Id, report.BuildingKey.Value, now,
-                        Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+                        Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
         }
         private void UpdateInvestigations(double now)
         {
@@ -393,7 +393,7 @@ namespace LivingCities.DFU
             foreach (var alarm in worldStore.ObserveCrimeScenes(directory.MapID, location, now))
             {
                 string id = "discovery:" + alarm.Id;
-                Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12, true);
+                Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale, true);
                 var report = Roster.Reports.Find(r => r.Id == id);
                 if (report != null && report.HasArrival) worldStore.DiscoverCrimeScene(alarm.Id, now);
             }
@@ -484,7 +484,7 @@ namespace LivingCities.DFU
             bool neutralInnReport = alarm.ThreatId == null && !reachedDirectWitness;
             string dispatchId = neutralInnReport ? "inn-alarm:" + alarm.Id : id;
             if(Roster.Reports.Exists(r=>r.Id==dispatchId && r.GuardIds.Count>0)) return;
-            var sent = Roster.DispatchBuilding(dispatchId, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12,
+            var sent = Roster.DispatchBuilding(dispatchId, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale,
                 neutralInnReport,alarm.ThreatId==null ? null : informed,alarm.ThreatId,
                 !neutralInnReport && alarm.ThreatId==null && alarm.Corpse!=null);
             if (sent.Count == 0) return;
@@ -545,7 +545,7 @@ namespace LivingCities.DFU
                 if (route.Count >= 2) routes.Add(guard.Id, route);
             }
             if (routes.Count == 0) return;
-            var sent = Roster.Dispatch(id, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
+            var sent = Roster.Dispatch(id, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
             if (sent.Count == 0) return;
             reportId = id;
             GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
@@ -694,7 +694,7 @@ namespace LivingCities.DFU
                         string assault = "assault:" + guard.Id + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
                         var actual = Roster.Position(guard.Id, now);
                         Roster.Dispatch(assault, now, new Dictionary<string, List<SavedRoutePoint>> {
-                            { guard.Id, new List<SavedRoutePoint> { actual, actual } } }, 1, 2.8, 12);
+                            { guard.Id, new List<SavedRoutePoint> { actual, actual } } }, 1, 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
                     }
                     if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None) game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
                     var defense = Roster.Reports.Find(r => r.Id == guard.IncidentId);
@@ -711,7 +711,7 @@ namespace LivingCities.DFU
                         if (routeTick)
                         {
                             var route = geometry.RouteBetweenPoints(guard.EngagementPosition, guard.Post);
-                            if (route.Count >= 2) Roster.ReturnFromEngagement(guard.Id, now, route, 2.8, 12);
+                            if (route.Count >= 2) Roster.ReturnFromEngagement(guard.Id, now, route, 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
                         }
                     }
                     else actor.BeginCombat(now);

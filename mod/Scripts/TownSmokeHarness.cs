@@ -239,6 +239,15 @@ namespace LivingCities.DFU
                         yield return null;
                     if(!dialogueGuards || !dialogueGuards.OwnsSettlement)
                         throw new InvalidOperationException("Dialogue crime probe requires completed garrison setup before pausing in Talk.");
+                    double clockStart=DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                    float realStart=Time.realtimeSinceStartup;
+                    yield return new WaitForSecondsRealtime(4f);
+                    double elapsedGame=DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()-clockStart;
+                    float elapsedReal=Time.realtimeSinceStartup-realStart;
+                    if(DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.TimeScale!=2f ||
+                        Math.Abs(elapsedGame-elapsedReal*2)>1.5)
+                        throw new InvalidOperationException("World clock did not run at 2x realtime after loaded save: game="+elapsedGame+"; real="+elapsedReal);
+                    Debug.Log("LIVING_CITIES_CLOCK_2X_PASS: game="+elapsedGame+"; realtime="+elapsedReal);
                     game.TalkManager.TalkToMobileNPC(person.Person);
                     yield return new WaitForSecondsRealtime(0.3f);
                     var talk = DaggerfallUI.UIManager.TopWindow as DaggerfallWorkshop.Game.UserInterface.DaggerfallTalkWindow;
@@ -323,7 +332,9 @@ namespace LivingCities.DFU
                     ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-dialogue-reply.png"));
                     yield return new WaitForSecondsRealtime(1f);
                     yield return DialogueHistoryProbe.Run(adapter, talk);
+                    yield return DialogueMemoryProbe.Run(adapter,talk,person.Person);
                     DialogueClockProbe.Run(adapter, talk, transcript);
+                    yield return DialogueHomeProbe.Run(adapter,talk,submit,transcript,person.Resident.Id);
                     yield return GroundedConversationProbe.Run(adapter, talk, submit, transcript, person.Resident.Id);
                     HouseholdGreetingProbe.Run(streets);
                     yield return HouseholdConsentProbe.Run(adapter, streets);

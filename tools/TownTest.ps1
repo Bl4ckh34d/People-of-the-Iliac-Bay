@@ -313,7 +313,7 @@ try {
     if ($GuardBuildingProbe -and $body -notmatch 'LIVING_CITIES_PENDING_GUARD_PASS:') { throw 'Pending native guard report probe did not complete.' }
     if ($GuardWitnessProbe -and $body -notmatch 'LIVING_CITIES_TOWN_GUARD_WITNESS_PASS:') { throw 'Guard witness probe did not complete.' }
     if ($InteriorEscapeProbe -and $body -notmatch 'LIVING_CITIES_WITNESS_MOVING_ATTACKER_PASS:') { throw 'Moving attacker witness probe did not complete.' }
-    if ($DialogueProbe -and ($body -notmatch 'LIVING_CITIES_DIALOGUE_FOCUS_PASS:' -or $body -notmatch 'LIVING_CITIES_GROUNDED_DIALOGUE_PASS:' -or $body -notmatch 'LIVING_CITIES_FLIRT_PASS:' -or $body -notmatch 'LIVING_CITIES_CHILD_DIALOGUE_REPORT_PASS:')) { throw 'Grounded dialogue, focus, flirt or child-report checks did not complete.' }
+    if ($DialogueProbe -and ($body -notmatch 'LIVING_CITIES_DIALOGUE_FOCUS_PASS:' -or $body -notmatch 'LIVING_CITIES_GROUNDED_DIALOGUE_PASS:' -or $body -notmatch 'LIVING_CITIES_FLIRT_PASS:' -or $body -notmatch 'LIVING_CITIES_CHILD_DIALOGUE_REPORT_PASS:' -or $body -notmatch 'LIVING_CITIES_DIALOGUE_MEMORY_PASS:' -or $body -notmatch 'LIVING_CITIES_HOME_DIALOGUE_PASS:')) { throw 'Grounded dialogue, focus, flirt, child-report, memory or home checks did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_HOUSING_LIVE_PASS:') { throw 'Housing probe did not complete.' }
     if ($HousingProbe -and ($body -notmatch 'LIVING_CITIES_ENTRY_PASS:' -or $body -notmatch 'LIVING_CITIES_ENTRY_GUARD_PASS:')) { throw 'Entry witness probes did not complete.' }
     if ($HousingProbe -and $body -notmatch 'LIVING_CITIES_ENTRY_MESSENGER_PASS:') { throw 'Entry messenger probe did not complete.' }

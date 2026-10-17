@@ -6,9 +6,10 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 21;
+        public int Version = 22;
         public uint WorldSeed;
         public List<ConversationAttitude> ConversationAttitudes = new List<ConversationAttitude>();
+        public List<NpcConversationMemory> ConversationMemories = new List<NpcConversationMemory>();
         public HauntingRoutineDay HauntingDay;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
         public List<TownRoutineState> Routines = new List<TownRoutineState>();
@@ -147,9 +148,15 @@ namespace LivingCities.Core
             }
             TravelerVisitRevision++;
         }
-        public void Restore(WorldState incoming)
+        public void Restore(WorldState incoming) { RestoreCore(incoming, null); }
+        public void Restore(WorldState incoming, double loadedGameTime)
+        { RestoreCore(incoming, loadedGameTime); }
+        private void RestoreCore(WorldState incoming, double? loadedGameTime)
         {
-            state = CopyValidated(incoming);
+            var candidate = CopyValidated(incoming);
+            if (loadedGameTime.HasValue && incoming.Version < 22) MigrateClockRate(candidate, loadedGameTime.Value);
+            candidate = CopyValidated(candidate);
+            state = candidate;
             IndexResidentTrips();
             IndexObservedVisits();
             TravelerVisitRevision++;
@@ -157,7 +164,7 @@ namespace LivingCities.Core
         }
         public TownRoutineState GetRoutines(int settlementId)
         {
-            Require(state.Version >= 1 && state.Version <= 21, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 22, "Unsupported save schema.");
             if (state.Version == 1) return null;
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
@@ -195,7 +202,7 @@ namespace LivingCities.Core
         public void SetRoutines(TownRoutineState routines)
         {
             if (routines == null) throw new ArgumentNullException(nameof(routines));
-            Require(state.Version >= 1 && state.Version <= 21, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 22, "Unsupported save schema.");
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
             var settlement = FindRoutineSettlement(state, routines.SettlementId);
@@ -310,10 +317,11 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 21, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 22, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             copy.ConversationAttitudes = CopyConversationAttitudes(source);
+            copy.ConversationMemories = CopyConversationMemories(source);
             if(source.HauntingDay!=null)
             {
                 double day=source.HauntingDay.Day;
@@ -441,6 +449,31 @@ namespace LivingCities.Core
                 if (home != null) home.Residents.Find(r => r.Id == native.Id).NativeIdentity = native;
             }
             return copy;
+        }
+        private static void MigrateClockRate(WorldState world, double now)
+        {
+            Require(Finite(now) && now >= 0, "Invalid game time for clock migration.");
+            foreach (var alarm in world.AlarmIncidents)
+                foreach (var person in alarm.People)
+                    if (person.Escape != null)
+                    {
+                        person.Escape.MigrateClockScale(now, 12, 2);
+                        if (person.EscapeAdvancedAt > 0)
+                            person.EscapeAdvancedAt = Math.Max(person.EscapeAdvancedAt,
+                                Math.Max(person.Escape.StartedAt, person.Escape.RedirectedAt));
+                    }
+            foreach (var report in world.EntryReports)
+                if (report.Messenger != null) report.Messenger.MigrateClockScale(now, 12, 2);
+            foreach (var departure in world.VisitDepartures)
+                departure.Motion.MigrateClockScale(now, 12, 2);
+            foreach (var visit in world.ObservedVisits)
+                visit.MigrateClockRate(now, 12, 2);
+            foreach (var roster in world.Garrisons)
+            {
+                GuardRoster.MigrateInteriorClock(roster, now, 12, 2);
+                GuardRoster.MigrateTravelClock(roster, now, 12, 2);
+                GuardRoster.MigratePatrolAndRefugeClock(roster, now, 12, 2);
+            }
         }
         private static string HistoryKey(int settlementId, int buildingKey, int generation)
         { return settlementId + ":" + buildingKey + ":" + generation; }

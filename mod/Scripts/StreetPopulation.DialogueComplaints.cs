@@ -80,7 +80,7 @@ namespace LivingCities.DFU
             }
 
             double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
-            float elapsed = Mathf.Clamp((float)((now - complaint.LastUpdatedAt) / 12d), 0, 0.25f);
+            float elapsed = Mathf.Clamp((float)((now - complaint.LastUpdatedAt) / DaggerfallUnity.Instance.WorldTime.TimeScale), 0, 0.25f);
             complaint.LastUpdatedAt = now;
             while (complaint.NextWaypoint < complaint.Route.Count)
             {
@@ -165,7 +165,7 @@ namespace LivingCities.DFU
                     if (guards.TryFindNearestComplaintGuard(position, out guardId, out movedGuard, out route))
                     { complaint.GuardId = guardId; guardPosition = movedGuard; complaint.Route = route; complaint.NextWaypoint = 1; }
                 }
-                float elapsed = Mathf.Clamp((float)((now - complaint.LastUpdatedAt) / 12d), 0, 30f);
+                float elapsed = Mathf.Clamp((float)((now - complaint.LastUpdatedAt) / DaggerfallUnity.Instance.WorldTime.TimeScale), 0, 30f);
                 complaint.LastUpdatedAt = now;
                 while (complaint.NextWaypoint < complaint.Route.Count)
                 {

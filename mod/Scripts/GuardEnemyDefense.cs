@@ -59,7 +59,7 @@ namespace LivingCities.DFU
                 var route=geometry.RouteBetweenPoints(origin,destination);
                 if(route.Count>=2) routes.Add(guard.Id,route);
             }
-            Roster.DispatchDefense("danger:"+alarm.Id,alarm.ThreatId,now,routes,Mathf.Clamp(MaximumResponders,1,2),2.8,12);
+            Roster.DispatchDefense("danger:"+alarm.Id,alarm.ThreatId,now,routes,Mathf.Clamp(MaximumResponders,1,2),2.8,DaggerfallUnity.Instance.WorldTime.TimeScale);
         }
         private void SurveyEnemyThreats(double now)
         {
@@ -84,7 +84,7 @@ namespace LivingCities.DFU
                 }
                 if (routes.Count == 0) continue;
                 string report = "defense:" + key + ":" + now.ToString("R",System.Globalization.CultureInfo.InvariantCulture);
-                var sent = Roster.DispatchDefense(report,key,now,routes,Mathf.Clamp(MaximumResponders,1,2),2.8,12);
+                var sent = Roster.DispatchDefense(report,key,now,routes,Mathf.Clamp(MaximumResponders,1,2),2.8,DaggerfallUnity.Instance.WorldTime.TimeScale);
                 if (sent.Count > 0) Debug.Log("LIVING_CITIES_ENEMY_DEFENSE: target=" + key + "; guards=" + sent.Count);
             }
         }
@@ -109,7 +109,7 @@ namespace LivingCities.DFU
                     {
                         if (guard.Duty != GuardDuty.Engaged) Roster.Engage(guard.Id,now);
                         Roster.ObserveEngagement(guard.Id,current,guard.HealthFraction,now,false);
-                        Roster.ReturnFromEngagement(guard.Id,now,route,2.8,12);
+                        Roster.ReturnFromEngagement(guard.Id,now,route,2.8,DaggerfallUnity.Instance.WorldTime.TimeScale);
                     }
                 }
                 return true;

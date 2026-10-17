@@ -118,19 +118,19 @@ namespace LivingCities.DFU
         {
             var route=pair.ReturnRoute;if(route==null) return;
             double dusk=(Math.Floor(now/86400)*86400)+DaggerfallDateTime.DuskHour*3600;
-            double departure=dusk-RouteLength(route)*12/1.3-60;
+            double departure=dusk-RouteLength(route)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3-60;
             if(AtPoint(guard.Post,pair.Outside) && guard.PostRecall==null && guard.IsAlive && now<departure &&
                 guard.ArrivesAt<=departure && guard.Interior==null && guard.Refuge==null &&
                 (guard.Duty==GuardDuty.Posted || guard.Duty==GuardDuty.Returning &&
                     guard.IncidentId!=null && guard.IncidentId.StartsWith("post:",StringComparison.Ordinal)))
-                Roster.SchedulePostRecall(guard.Id,route,departure,dusk,1.3,12);
+                Roster.SchedulePostRecall(guard.Id,route,departure,dusk,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);
             var recall=guard.PostRecall;var prepared=pair.Wall;
             if(recall==null || recall.WallDuty!=null || prepared==null || prepared.GuardId!=guard.Id ||
                 !WallAvailable(prepared.BuildingKey,guard.Id,pair,prepared.BedRecord)) return;
             var exterior=new List<GuardPoint3>();
             foreach(var point in recall.Route) exterior.Add(new GuardPoint3 {X=point.X,Z=point.Z});
             for(int p=1;p<prepared.Outside.Count;p++) exterior.Add(new GuardPoint3 {X=prepared.Outside[p].X,Z=prepared.Outside[p].Z});
-            var plan=GuardRefugeJourney.Create(prepared.BuildingKey,exterior,prepared.Room,recall.DepartsAt,1.3,12);
+            var plan=GuardRefugeJourney.Create(prepared.BuildingKey,exterior,prepared.Room,recall.DepartsAt,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);
             plan.WallDuty=true;
             plan.RestBedRecord=prepared.BedRecord;
             plan.ReturnExterior=prepared.Outside.ConvertAll(p=>new GuardPoint3 {X=p.X,Z=p.Z});plan.ReturnExterior.Reverse();

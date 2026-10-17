@@ -65,6 +65,7 @@ namespace LivingCities.DFU
             }
             dialogueWasOpen = true;
             EnsureDialogueInput(talk);
+            CaptureNativeDialogueMemory();
             // Native topic selection updates this label. Copy only actual changes,
             // never overwrite a draft each frame while the player edits it.
             if (dialogueQuestionLabel.Text != dialogueNativeQuestion)
@@ -161,14 +162,17 @@ namespace LivingCities.DFU
                 " Current authoritative game clock: " + CurrentConversationClock() +
                 " " + CurrentConversationWeather() +
                 CurrentConversationLifeContext(npcName, disposition) +
+                CurrentConversationMemory(playerText) +
                 " Current time and weather supersede earlier conversation descriptions. Do not infer visible sky conditions while indoors.", history);
+            int requestSession=memorySession;
             if (!localDialogue.Request(NewDialogueConnection(), request,
-                answer => { conversationBusy = false;
+                answer => { if(!CurrentMemorySession(talk,requestSession)) return;
+                    conversationBusy = false;
                     if (answer == LocalDialogueClient.Unavailable) { DaggerfallUI.AddHUDText("Local dialogue unavailable. Check the local model server."); return; }
-                    if (answer != LocalDialogueClient.ContextLimit) AppendDialoguePair(talk, playerText, answer); }))
+                    if (answer != LocalDialogueClient.ContextLimit) AppendRememberedDialoguePair(talk, playerText, answer,"model"); }))
             {
                 conversationBusy = false;
-                AppendDialoguePair(talk, playerText, "They are considering another question. Please wait.");
+                DaggerfallUI.AddHUDText("Waiting for the current reply.");
             }
         }
 
@@ -267,10 +271,7 @@ namespace LivingCities.DFU
 
         private void AppendDialoguePair(DaggerfallTalkWindow talk, string playerText, string answer)
         {
-            if (talk == null || appendConversationPair == null) return;
-            appendConversationPair.Invoke(talk, new object[] { playerText, answer });
-            var transcript = conversationListField == null ? null : conversationListField.GetValue(talk) as ListBox;
-            if (transcript != null) conversationLastTranscriptCount = transcript.Count;
+            AppendRememberedDialoguePair(talk,playerText,answer,"action");
         }
     }
 }

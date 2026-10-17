@@ -44,6 +44,34 @@ namespace LivingCities.Core
             copy.ValidateFormation();
             return copy;
         }
+        public void MigrateClockRate(double now, double previousRate, double currentRate)
+        {
+            if (TimeScale == currentRate) return;
+            Require(Finite(now) && now >= 0 && Finite(previousRate) && previousRate > 0 &&
+                Finite(currentRate) && currentRate > 0, "Invalid patrol clock migration.");
+            double ratio = currentRate / previousRate;
+            double oldCircuitStart = CircuitStartsAt;
+            double joinLength = Math.Max(Length(LeaderJoin), Length(FollowerJoin));
+            if (now < StartsAt)
+            {
+                // The scheduled departure is calendar intent; only the travel rate changes.
+            }
+            else if (now < EndsAt && now < oldCircuitStart)
+                StartsAt = now - (now - StartsAt) * ratio;
+            else if (now < EndsAt)
+            {
+                double newCircuitStart = now - (now - oldCircuitStart) * ratio;
+                StartsAt = newCircuitStart - joinLength * currentRate / Speed;
+            }
+            else
+            {
+                double newEnd = now - (now - EndsAt) * ratio;
+                double newCircuitStart = newEnd - (EndsAt - oldCircuitStart) * ratio;
+                StartsAt = newCircuitStart - joinLength * currentRate / Speed;
+                EndsAt = newEnd;
+            }
+            TimeScale = currentRate;
+        }
         private void ValidateFormation()
         {
             // Between corner events, both positions are linear. Minimize their

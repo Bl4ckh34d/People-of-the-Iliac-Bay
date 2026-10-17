@@ -8,6 +8,17 @@ namespace LivingCities.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
+            cases.Add(("NPC home questions and follow-up map requests require an explicit home topic and trust", new Action(() => {
+                Check.True(ConversationHomeRequests.IsHomeInformationRequest("Where do you live?"));
+                Check.True(ConversationHomeRequests.IsHomeInformationRequest("What is your home address?"));
+                Check.True(ConversationHomeRequests.IsExplicitHomeMapRequest("Could you mark your house on my map?"));
+                Check.True(ConversationHomeRequests.IsFollowupHomeMapRequest("Mark it on my map", true));
+                Check.True(!ConversationHomeRequests.IsFollowupHomeMapRequest("Mark it on my map", false));
+                Check.True(!ConversationHomeRequests.IsHomeInformationRequest("Tell me a story about your family."));
+                Check.True(!ConversationHomeRequests.IsExplicitHomeMapRequest("Could you mark the inn on my map?"));
+                Check.True(ConversationHomeRequests.CanShareHome(20));
+                Check.True(!ConversationHomeRequests.CanShareHome(19));
+            })));
             cases.Add(("NPC personality is stable and daily plans name only scheduled stops", () => {
                 string first = ConversationLifeContext.Personality(12345u);
                 Check.Equal(first, ConversationLifeContext.Personality(12345u));

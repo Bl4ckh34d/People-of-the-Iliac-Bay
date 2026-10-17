@@ -94,7 +94,7 @@ namespace LivingCities.DFU
                 {
                     try
                     {
-                        Roster.TakeRefuge(guard.Id,GuardRefugeJourney.Create(entrance.BuildingKey,exterior,room,now,3.8,12),now,home);
+                        Roster.TakeRefuge(guard.Id,GuardRefugeJourney.Create(entrance.BuildingKey,exterior,room,now,3.8,DaggerfallUnity.Instance.WorldTime.TimeScale),now,home);
                         Debug.Log("LIVING_CITIES_GUARD_REFUGE: "+guard.Id+"; building="+entrance.BuildingKey); return true;
                     }
                     catch(ArgumentException) { /* Occupied destination: try another surveyed standing place. */ }

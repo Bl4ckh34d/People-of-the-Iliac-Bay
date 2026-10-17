@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DaggerfallWorkshop;
 using LivingCities.Core;
 using UnityEngine;
 namespace LivingCities.DFU
@@ -74,7 +75,7 @@ namespace LivingCities.DFU
                     if(patrolSurvey!=null) StopCoroutine(patrolSurvey);
                     patrolTemplates.Clear();
                     foreach(var patrol in Roster.Patrols) patrolTemplates.Add(PatrolPairPlan.CopyValidated(patrol.Plan));
-                    Roster.MovePost(guard.Id,route,Now(),1.3,12);
+                    Roster.MovePost(guard.Id,route,Now(),1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);
                     approachSurvey=StartCoroutine(SurveyApproaches(GameManagerNavigation()));
                     patrolSurvey=StartCoroutine(SurveyPatrols());
                     Debug.Log("LIVING_CITIES_GUARD_POST_MOVE: "+guard.Id);

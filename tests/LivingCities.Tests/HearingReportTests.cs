@@ -18,7 +18,7 @@ namespace LivingCities.Tests
             hearer.HasPosition = true; hearer.BuildingKey = 7;
             hearer.Escape = CivilianEscape.Create(hearer, 100, new List<GuardPoint3> {
                 new GuardPoint3(), new GuardPoint3 { X = 2 } }, new List<SavedRoutePoint> {
-                new SavedRoutePoint { X = 2 }, new SavedRoutePoint() });
+                new SavedRoutePoint { X = 2 }, new SavedRoutePoint() }, timeScale:12);
             Population.MarkDead(town, victim.Id); store.ConfirmCorpse(alarm.Id, 100);
             store.RegisterUnwitnessedScene(alarm.Id);
             var roster = store.GetOrCreateGuards(1, 1, new[] { new SavedRoutePoint() });

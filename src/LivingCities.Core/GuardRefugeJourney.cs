@@ -10,7 +10,7 @@ namespace LivingCities.Core
         public int BuildingKey;
         public List<GuardPoint3> Exterior, Interior;
         public List<GuardPoint3> ReturnExterior;
-        public double StartsAt, SecondsPerMetre;
+        public double StartsAt, SecondsPerMetre, TimeScale = 12;
         public double? ReleasedAt;
         public bool WallDuty;
         public int? RestBedRecord;
@@ -24,14 +24,15 @@ namespace LivingCities.Core
         {
             Require(Finite(speed) && speed > 0 && Finite(timeScale) && timeScale > 0);
             return CopyValidated(new GuardRefugeJourney { BuildingKey=building, Exterior=CopyRoute(exterior),
-                Interior=CopyRoute(interior), StartsAt=now, SecondsPerMetre=timeScale/speed });
+                Interior=CopyRoute(interior), StartsAt=now, SecondsPerMetre=timeScale/speed, TimeScale=timeScale });
         }
         public static GuardRefugeJourney CopyValidated(GuardRefugeJourney source)
         {
             Require(source != null && source.BuildingKey >= 0 && Time(source.StartsAt) &&
-                Finite(source.SecondsPerMetre) && source.SecondsPerMetre > 0);
+                Finite(source.SecondsPerMetre) && source.SecondsPerMetre > 0 &&
+                Finite(source.TimeScale) && source.TimeScale >= 0);
             var copy = new GuardRefugeJourney { BuildingKey=source.BuildingKey, StartsAt=source.StartsAt,
-                SecondsPerMetre=source.SecondsPerMetre, ReleasedAt=source.ReleasedAt, WallDuty=source.WallDuty, RestBedRecord=source.RestBedRecord,
+                SecondsPerMetre=source.SecondsPerMetre, TimeScale=source.TimeScale, ReleasedAt=source.ReleasedAt, WallDuty=source.WallDuty, RestBedRecord=source.RestBedRecord,
                 Exterior=CopyRoute(source.Exterior), Interior=CopyRoute(source.Interior),
                 ReturnExterior=source.ReturnExterior==null ? null : CopyRoute(source.ReturnExterior) };
             Require(copy.ReturnExterior==null || Distance(copy.ReturnExterior[0],copy.Exterior[copy.Exterior.Count-1])<0.05);
@@ -41,6 +42,21 @@ namespace LivingCities.Core
                 Require(Time(copy.ReleasedAt.Value) && copy.ReleasedAt.Value >= copy.ShelteredAt &&
                     Time(copy.ReleasedAt.Value + copy.ReturnSeconds));
             return copy;
+        }
+        public void MigrateClockRate(double now, double previousRate, double currentRate)
+        {
+            if (TimeScale == currentRate) return;
+            Require(Time(now) && Finite(previousRate) && previousRate > 0 && Finite(currentRate) && currentRate > 0);
+            double oldShelteredAt = ShelteredAt;
+            double ratio = currentRate / previousRate;
+            if (now < StartsAt) { /* Future departure remains on its calendar schedule. */ }
+            else if (now < oldShelteredAt || WallDuty && !RestBedRecord.HasValue &&
+                (!ReleasedAt.HasValue || ReleasedAt.Value > now))
+                StartsAt = now - (now - StartsAt) * ratio;
+            if (ReleasedAt.HasValue && ReleasedAt.Value <= now)
+                ReleasedAt = now - (now - ReleasedAt.Value) * ratio;
+            SecondsPerMetre *= ratio;
+            TimeScale = currentRate;
         }
         private double TravelSeconds { get { return (Length(Exterior)+Length(Interior))*SecondsPerMetre; } }
         private double ReturnSeconds { get { return (Length(ReturnExterior ?? Exterior)+Length(Interior))*SecondsPerMetre; } }

@@ -17,6 +17,7 @@ namespace LivingCities.DFU
 {
     public sealed partial class LivingCitiesMod : MonoBehaviour, IHasModSaveData
     {
+        private const float GameplayTimeScale = 2f;
         private WorldStateStore store = new WorldStateStore(0);
         public readonly BasicRoadsNetwork RoadNetwork = new BasicRoadsNetwork();
         private readonly NativeTavernRentals nativeRentals = new NativeTavernRentals();
@@ -98,6 +99,7 @@ namespace LivingCities.DFU
         }
         private void Awake()
         {
+            ApplyGameplayTimeScale();
             ResetWorld();
             StartGameBehaviour.OnNewGame += ResetWorld;
             SaveLoadManager.OnStartLoad += BeforeLoad;
@@ -119,6 +121,7 @@ namespace LivingCities.DFU
         {
             if (!DaggerfallUI.UIManager.ContainsWindow(DaggerfallUI.Instance.TalkWindow))
             {
+                EndDialogueMemory(true);
                 if (localDialogue) localDialogue.Cancel();
                 conversationSessionOpen = false;
                 conversationBusy = false;
@@ -214,6 +217,9 @@ namespace LivingCities.DFU
         }
         private void ResetWorld()
         {
+            EndDialogueMemory(false);
+            if(localDialogue) localDialogue.Cancel();
+            conversationSessionOpen=false; dialogueWasOpen=false;
             bereavementGreetings.Clear();
             ResetTravelPlanning();
             if(roadActors) roadActors.Clear();
@@ -225,6 +231,10 @@ namespace LivingCities.DFU
         }
         private void BeforeLoad(SaveData_v1 ignored)
         {
+            EndDialogueMemory(false);
+            if(localDialogue) localDialogue.Cancel();
+            conversationSessionOpen=false; dialogueWasOpen=false;
+            ApplyGameplayTimeScale();
             bereavementGreetings.Clear();
             ResetTravelPlanning();
             if(roadActors) roadActors.Clear();
@@ -239,6 +249,7 @@ namespace LivingCities.DFU
         public object NewSaveData() { return new WorldState { WorldSeed = NewSeed() }; }
         public object GetSaveData()
         {
+            CaptureNativeDialogueMemory();
             if (saveFault) throw new InvalidOperationException("Living Cities save restore failed; refusing to overwrite population data.");
             if (guards) guards.Capture();
             if (streets) streets.CaptureObservedVisits();
@@ -246,13 +257,17 @@ namespace LivingCities.DFU
         }
         public void RestoreSaveData(object saveData)
         {
+            EndDialogueMemory(false);
+            if(localDialogue) localDialogue.Cancel();
+            conversationSessionOpen=false; dialogueWasOpen=false;
+            ApplyGameplayTimeScale();
             ResetTravelPlanning();
             if(roadActors) roadActors.Clear();
             if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
             saveFault = true; current = null;
-            store.Restore(saveData as WorldState);
+            store.Restore(saveData as WorldState, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
             if (store.Snapshot().QuestBindings.Count > 0 || (questHouseholdsEnabled && mod != null))
                 questOffers = CreateQuestOffers();
             saveFault = false; nextCheck = 0;
@@ -264,11 +279,18 @@ namespace LivingCities.DFU
         }
         private void Update()
         {
+            ApplyGameplayTimeScale();
             UpdateEmbeddedDialogue();
             AdvanceTravelPlanning();
             long started=RuntimeTiming.Start();
             try { UpdatePopulation(); }
             finally { RuntimeTiming.End("population-refresh",started); }
+        }
+        private static void ApplyGameplayTimeScale()
+        {
+            var game = DaggerfallUnity.Instance;
+            if (game != null && game.WorldTime != null && game.WorldTime.TimeScale != GameplayTimeScale)
+                game.WorldTime.TimeScale = GameplayTimeScale;
         }
         private DaggerfallWorkshop.Game.Utility.CityNavigation pendingNavigation;
         private void UpdatePopulation()

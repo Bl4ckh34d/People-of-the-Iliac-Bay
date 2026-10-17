@@ -8,17 +8,19 @@ namespace LivingCities.Core
         public int BuildingKey;
         public double StartedAt;
         public double Speed;
+        public double TimeScale = 12;
         public double RedirectedAt;
         public List<GuardPoint3> InteriorRoute;
         public List<SavedRoutePoint> ExteriorRoute;
         // Routes are immutable after creation/validated restore. Avoid scanning or allocating
         // a long street route for every resident's alarm query on every frame.
         [NonSerialized] private double? insideLength, outsideLength;
-        public static CivilianEscape Create(AlarmPerson person, double now, List<GuardPoint3> inside, List<SavedRoutePoint> outside, double speed = 2.8)
+        public static CivilianEscape Create(AlarmPerson person, double now, List<GuardPoint3> inside,
+            List<SavedRoutePoint> outside, double speed = 2.8, double timeScale = 2)
         {
             if (person == null || !person.HasPosition || person.BuildingKey < 0 || person.Reaction != CivilianReaction.Flee)
                 throw new ArgumentException("Witness cannot flee this interior.");
-            var result = Copy(new CivilianEscape { BuildingKey = person.BuildingKey, StartedAt = now, Speed = speed,
+            var result = Copy(new CivilianEscape { BuildingKey = person.BuildingKey, StartedAt = now, Speed = speed, TimeScale = timeScale,
                 InteriorRoute = inside, ExteriorRoute = outside });
             if (Distance(inside[0], new GuardPoint3 { X = person.X, Y = person.Y, Z = person.Z }) > 0.05)
                 throw new ArgumentException("Escape must start at witness position.");
@@ -38,7 +40,8 @@ namespace LivingCities.Core
             candidate.ExteriorRoute=route; candidate.RedirectedAt=now;
             return Copy(candidate);
         }
-        public double ExitAt { get { if (!insideLength.HasValue) insideLength = Length(InteriorRoute); return StartedAt + insideLength.Value / EffectiveSpeed * 12; } }
+        public double ExitAt { get { if (!insideLength.HasValue) insideLength = Length(InteriorRoute); return StartedAt + insideLength.Value / EffectiveSpeed * EffectiveTimeScale; } }
+        private double EffectiveTimeScale { get { return TimeScale == 0 ? 12 : TimeScale; } }
         public double ReportAt
         {
             get
@@ -50,7 +53,7 @@ namespace LivingCities.Core
                     { double x = ExteriorRoute[i].X-ExteriorRoute[i-1].X, z = ExteriorRoute[i].Z-ExteriorRoute[i-1].Z; length += Math.Sqrt(x*x+z*z); }
                     outsideLength = length;
                 }
-                return ExteriorStart + outsideLength.Value / EffectiveSpeed * 12;
+                return ExteriorStart + outsideLength.Value / EffectiveSpeed * EffectiveTimeScale;
             }
         }
         public bool Arrived(double now) { return now >= ReportAt; }
@@ -58,7 +61,7 @@ namespace LivingCities.Core
         {
             if (now < StartedAt) return;
             bool inside = now < ExitAt;
-            double distance = (now - (inside ? StartedAt : ExteriorStart)) / 12 * EffectiveSpeed;
+            double distance = (now - (inside ? StartedAt : ExteriorStart)) / EffectiveTimeScale * EffectiveSpeed;
             var point = inside ? Along(InteriorRoute, distance) : AlongExterior(distance);
             person.HasPosition = true; person.BuildingKey = inside ? BuildingKey : -1;
             person.X = point.X; person.Y = point.Y; person.Z = point.Z;
@@ -67,10 +70,12 @@ namespace LivingCities.Core
         {
             if (source == null) return null;
             if (source.BuildingKey < 0 || !Finite(source.StartedAt) || source.StartedAt < 0 || !Finite(source.Speed) || source.Speed < 0 || source.Speed > 20 ||
+                !Finite(source.TimeScale) || source.TimeScale < 0 ||
                 source.InteriorRoute == null || source.InteriorRoute.Count < 2 || source.InteriorRoute.Count > 1000 ||
                 source.ExteriorRoute == null || source.ExteriorRoute.Count < 2 || source.ExteriorRoute.Count > 10000)
                 throw new ArgumentException("Invalid witness escape plan.");
-            var result = new CivilianEscape { BuildingKey = source.BuildingKey, StartedAt = source.StartedAt, Speed = source.Speed,RedirectedAt=source.RedirectedAt,
+            var result = new CivilianEscape { BuildingKey = source.BuildingKey, StartedAt = source.StartedAt, Speed = source.Speed,
+                TimeScale = source.TimeScale, RedirectedAt=source.RedirectedAt,
                 InteriorRoute = new List<GuardPoint3>(), ExteriorRoute = new List<SavedRoutePoint>() };
             foreach (var p in source.InteriorRoute)
             {
@@ -85,6 +90,27 @@ namespace LivingCities.Core
             if (!Finite(result.RedirectedAt) || result.RedirectedAt<0 || result.RedirectedAt!=0 && result.RedirectedAt<result.ExitAt ||
                 !Finite(result.ReportAt)) throw new ArgumentException("Invalid escape duration.");
             return result;
+        }
+        public void MigrateClockScale(double now, double previousRate, double currentRate)
+        {
+            if (EffectiveTimeScale == currentRate) return;
+            double oldRate = previousRate;
+            double oldExitAt = ExitAt;
+            double oldExteriorStart = ExteriorStart;
+            double oldReportAt = ReportAt;
+            var interior = ClockRateMigration.RescaleInterval(StartedAt, oldExitAt, now, oldRate, currentRate);
+            StartedAt = interior.Start;
+            TimeScale = currentRate;
+            if (now >= oldExitAt && now < oldReportAt)
+            {
+                var exterior = ClockRateMigration.RescaleInterval(oldExteriorStart, oldReportAt, now, oldRate, currentRate);
+                RedirectedAt = exterior.Start;
+            }
+            else if (RedirectedAt != 0)
+            {
+                var exterior = ClockRateMigration.RescaleInterval(RedirectedAt, oldReportAt, now, oldRate, currentRate);
+                RedirectedAt = exterior.Start;
+            }
         }
         private GuardPoint3 AlongExterior(double distance)
         {

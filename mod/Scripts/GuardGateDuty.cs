@@ -164,7 +164,7 @@ namespace LivingCities.DFU
                     if(prepared.Points!=null && prepared.Points.Count>=2) pair.ReturnRoute=prepared.Points;
                 }
                 var returnRoute=pair.ReturnRoute;
-                if(returnRoute!=null) returnTravelSeconds=RouteLength(returnRoute)*12/1.3;
+                if(returnRoute!=null) returnTravelSeconds=RouteLength(returnRoute)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
                 now=Now();
                 if(!guard.IsAlive || pair.GuardId!=guard.Id || !IsVanillaGateOpen(pair.Gate,now)) continue;
                 dayStart=Math.Floor(now/86400)*86400;
@@ -192,12 +192,12 @@ namespace LivingCities.DFU
                 if(route==null || route.Count<2 || !guard.IsAlive || !AtPoint(guard.Post,departurePost) ||
                     guard.Duty!=GuardDuty.Posted || guard.Interior!=null || guard.Refuge!=null ||
                     guard.IncidentId!=null || Roster.IsOnPatrol(guard.Id) || !IsVanillaGateOpen(pair.Gate,now)) continue;
-                double travelSeconds = RouteLength(route) * 12 / 1.3;
+                double travelSeconds = RouteLength(route) * DaggerfallUnity.Instance.WorldTime.TimeScale / 1.3;
                 if (now + travelSeconds > duskAt) continue;
                 if(shouldBeOutside && now+travelSeconds+returnTravelSeconds+60>duskAt) continue;
                 try
                 {
-                    Roster.MovePost(guard.Id, route, now, 1.3, 12);
+                    Roster.MovePost(guard.Id, route, now, 1.3, DaggerfallUnity.Instance.WorldTime.TimeScale);
                     ArmGateRecall(guard,pair,now);
                     InvalidateGateApproaches();
                     if (!shouldBeOutside && pair.RecoverInside)
@@ -266,7 +266,7 @@ namespace LivingCities.DFU
                 yield return ReadGateRoute(source,post.Point,prepared);
                 if(prepared.Points==null || prepared.Points.Count<2 || !EligibleGateGuard(guard,assigned) || !AtPoint(source,guard.Post)) continue;
                 bool moved=false;
-                try {Roster.MovePost(guard.Id,prepared.Points,Now(),1.3,12);moved=true;}
+                try {Roster.MovePost(guard.Id,prepared.Points,Now(),1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);moved=true;}
                 catch(ArgumentException) { }
                 if(!moved) continue;
                 InvalidateGateApproaches();complete(guard);yield break;
@@ -284,7 +284,7 @@ namespace LivingCities.DFU
                 pair.ReturnRoute=prepared.Points;
             }
             double now=Now(),dayStart=Math.Floor(Now()/86400)*86400;
-            double returnTravel=RouteLength(pair.ReturnRoute)*12/1.3;
+            double returnTravel=RouteLength(pair.ReturnRoute)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
             bool outside=now-dayStart>=DaggerfallDateTime.DawnHour*3600 &&
                 dayStart+DaggerfallDateTime.DuskHour*3600-now>returnTravel+60;
             var target=outside ? pair.Outside : pair.ReturnInside;
@@ -296,12 +296,12 @@ namespace LivingCities.DFU
                 now=Now();
                 if(prepared.Points==null || prepared.Points.Count<2 || !EligibleGateGuard(guard,assigned) ||
                     !AtPoint(source,guard.Post) || !IsVanillaGateOpen(pair.Gate,now)) continue;
-                double arrival=now+RouteLength(prepared.Points)*12/1.3;
+                double arrival=now+RouteLength(prepared.Points)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
                 // A late preparation waits for a fresh cycle with an inside target.
                 if(arrival>dayStart+DaggerfallDateTime.DuskHour*3600 ||
                     outside && arrival+returnTravel+60>dayStart+DaggerfallDateTime.DuskHour*3600) yield break;
                 bool moved=false;
-                try {Roster.MovePost(guard.Id,prepared.Points,now,1.3,12);moved=true;}
+                try {Roster.MovePost(guard.Id,prepared.Points,now,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);moved=true;}
                 catch(ArgumentException) { }
                 if(!moved) continue;
                 ArmGateRecall(guard,pair,now);

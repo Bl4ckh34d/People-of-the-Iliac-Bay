@@ -9,7 +9,19 @@ Current coverage and source ownership are below. Planned behavior belongs in [Ro
 | Guards and crime | Finite guards, patrols, pursuit, reports, indoor responses, scenes and welfare exist across tested paths; this is not blanket native/mod quest coverage. |
 | Mortality and access | Ordinary native people have partial reactions, corpse/property-key handling and household consequences. Do not assume all provider actors use these paths. |
 | Sleep and art | Native bed surveys and sleeping art exist. Shared beds, complete external art coverage and universal mobile institutional staff remain future work. |
-| Conversation | Local dialogue uses current world/person context and recent transcript; durable memory/home disclosure changes have their own test status. Quest logic remains native. |
+| Conversation | Saved per-person journals, bounded retrieval, sliding live transcript, current world context and trusted home disclosure are implemented. Quest logic remains native; authored story personas and broad quest capability review remain future work. |
+
+## Persistent conversation memory and home knowledge
+
+Completed typed exchanges and ordinary Talk-topic exchanges are stored in `WorldState.ConversationMemories`. Closing a conversation also records the meeting's game date and actual building/settlement. Memories belong to the saved character and exact persistent NPC identity, never the display name. Building NPCs retain their native map/building/hash identity; custom quest actors use quest UID/resource symbol to avoid sharing memories with a replacement at the same position. Unidentified vanilla wanderers and unowned custom/dungeon actors retain the current transcript only; adopting them into persistent people remains a separate roadmap item.
+
+Each new social reply retrieves relevant older exchanges and a recent observed meeting, bounded to 2,000 characters. The existing live conversation window still slides to fit the model's context; current identity, weather, clock, location, household and schedule context remains separate. Retrieval is local lexical ranking with recency, without embeddings or another model service. Saved journals keep their records rather than silently discarding older turns. Save size and copy/restore work therefore grow with the player's actual interactions; large multi-year journals still need performance measurement.
+
+Player claims and generated NPC anecdotes remain quoted speech, not verified shared events. The observed-event API currently records actual meetings; companion trips/actions do not exist yet and are not fabricated. Nearby visible indoor people are supplied as current context, without granting access to their private conversations. No hidden quest script or unrevealed quest facts are imported. Earlier conversations from builds that did not record memory cannot be reconstructed. A model can still misinterpret a retrieved fact; the journal and native actions provide inspectable ground truth.
+
+Home questions resolve the actual saved `HomeKey`, not the model's invented geography. Effective disposition **20 or higher** permits disclosure. A trusted request can discover the exact home on the native map, respecting the map-request setting. Unnamed residences get a map note based on the actual speaker; existing quest labels and player notes are preserved. Remote or unassigned homes are not given invented local addresses. Intervening topic changes clear the implicit “mark it” home target.
+
+Implementation: `ConversationMemory.cs`, `LivingCitiesMod.DialogueMemory.cs`, `LivingCitiesMod.DialogueHome.cs`. Verification and remaining limits: [Testing](TESTING.md).
 | Commerce | Disposition influences implemented native commerce/service hooks; guild expulsion and noble consequences remain tracked separately in the roadmap. |
 
 <a id="inventory"></a>
