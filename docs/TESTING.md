@@ -8,7 +8,20 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — shared memory archive, 17 October 2026
+## Latest acceptance — physical movement with 2× time, 17 October 2026
+
+Installed bundle SHA-256: `F43956C9225C2FF5EA99F41AAEA70FA43AA2BB233456721B761855F1B384A0B4`, matching `dist/livingcities.dfmod`.
+
+- **672/672 core tests passed**. Both new tests failed before the corrections: cached daily routes moved only one sixth of the intended speed, and short fallback visits lost speed through whole-minute commute rounding. Runtime compilation has zero warnings/errors; Unity build/install passed through the existing normal-editor license fallback.
+- Loaded the original schema-21 `People - Daggerfall day` fixture. All **778 cached daily walking legs** evaluated at 1.3 m/s with world time at 2×.
+- A rendered native resident using production `ResidentActor`/`CrowdMotion` movement measured **1.3066 m/s** walking against 1.3 expected, and **3.3486 m/s** running against 3.3605 expected for that appearance seed. Simultaneous game/real clock ratios were **2.0167** and **1.9996** over four real seconds each. The movement measurement uses a clear elevated test floor to isolate physical speed from crowd congestion.
+- Core checks cover schema 21/22/23 caches, old and already-correct clock encodings, source snapshot preservation, idempotent restore, unchanged dwell durations, and exact physical fallback walking at both 12× and 2×.
+
+Run `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -MovementClockProbe` with DFU closed. Evidence: `work/movement-clock-red.log`, `movement-clock-core.log`, `movement-clock-runtime.log`, `movement-clock-build.log`, and `movement-clock-native-player.log`. No player saves were overwritten by this probe.
+
+Scope: repairs local daily caches and fallback travel. New inter-settlement plans already use the active clock. Older inter-settlement trips containing paid stays or linked admission histories retain their existing timing; an atomic trip/booking migration remains open. This speed check does not establish that every crowded route reaches every appointment.
+
+## Prior acceptance — shared memory archive, 17 October 2026
 
 Installed bundle SHA-256: `E4AD0FD0CFDAC0525DBCCC6DF5A93589C41325EE9A18B48030D1AE8F58D76FD0` (matches `dist/livingcities.dfmod`).
 

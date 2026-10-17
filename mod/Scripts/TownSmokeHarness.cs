@@ -174,6 +174,12 @@ namespace LivingCities.DFU
             var adapter = GetComponent<LivingCitiesMod>();
             var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-movement-clock-probe")>=0)
+            {
+                yield return MovementClockProbe.Run(adapter,streets,character);
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: physical movement at 2x clock.");
+                yield break;
+            }
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-memory-archive-probe")>=0)
             {
                 yield return SharedMemoryArchiveProbe.Run(adapter,character,

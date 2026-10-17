@@ -55,6 +55,8 @@ These additions do not replace earlier work: finite guards, crime/fleeing/report
 
 Current blockers and uncertain evidence remain visible: physical inn movement is not broadly accepted; the prior current/next destination and saved-door fixes still need targeted native checks. The 2× clock and supported active-movement migration are now accepted; historical calendar bookings are not all retimed. No percentage-complete estimate should hide these distinctions.
 
+The local daily-route slowdown after the clock change is corrected: legacy 12× route durations migrate on load, and fallback physical travel no longer rounds to whole game minutes. A separate atomic migration for older inter-settlement trips with linked service exits, admissions, paid stays and observed checkpoints remains required; preserve those records until their complete reference graph can be retimed safely.
+
 ## Next decision
 
 After the clock and memory updates, recommended next selectable slice: finish the existing destination/door/movement regression, then implement the read-only actor census. Alternative: prioritize story-safe context if plot leakage is the immediate concern. Choose one bounded slice before code changes; companions and exhaustive Quest Pack adaptation are not that slice.

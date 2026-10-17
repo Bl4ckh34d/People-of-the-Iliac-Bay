@@ -81,6 +81,7 @@ namespace LivingCities.Tests
             HouseholdLootConsentTests.Add(cases);
             DispositionPricingTests.Add(cases);
             ClockMigrationTests.Add(cases);
+            MovementClockTests.Add(cases);
             ResidentClockMigrationTests.Add(cases);
             int failures = 0;
             foreach (var test in cases)

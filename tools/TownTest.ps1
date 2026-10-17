@@ -15,6 +15,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$DialogueProbe,
     [switch]$MemoryArchiveProbe,
     [switch]$MemoryArchiveRead,
+    [switch]$MovementClockProbe,
     [switch]$BedProbe,
     [switch]$SleepProbe,
     [switch]$RunningPilotProbe,
@@ -102,6 +103,10 @@ if ($GateGuardProbe) { $arguments += ' -livingcities-gate-guard-probe' }
 if ($WallQuarterProbe) { $arguments += ' -livingcities-wall-quarter-probe' }
 if ($StationaryNpcProbe) { $arguments += ' -livingcities-stationary-probe' }
 if ($DialogueProbe) { $arguments += ' -livingcities-dialogue-probe' }
+if ($MovementClockProbe) {
+    if (-not $FixtureCharacter) { throw 'Movement clock probe requires a disposable character.' }
+    $arguments += ' -livingcities-movement-clock-probe'
+}
 if ($MemoryArchiveProbe) {
     if (-not $FixtureCharacter) { throw 'Memory archive probe requires a disposable character.' }
     $arguments += ' -livingcities-memory-archive-probe'
@@ -173,6 +178,7 @@ try {
         Start-Sleep -Milliseconds 500
     }
     if (-not $passed) { throw "Town test did not finish within $testTimeout seconds." }
+    if ($MovementClockProbe -and $body -notmatch 'LIVING_CITIES_MOVEMENT_CLOCK_PASS:') { throw 'Physical NPC speed and 2x clock checks did not complete.' }
     if ($PerformanceProbe -and $body -notmatch 'LIVING_CITIES_PERFORMANCE_PASS:') { throw 'Performance samples did not complete.' }
     if ($PerformanceProbe -and $body -notmatch 'LIVING_CITIES_MURDER_WITNESS_PASS:') { throw 'Murder witness persistence probe did not complete.' }
     if ($HauntingDawnProbe -and $body -notmatch 'LIVING_CITIES_HAUNTING_DAWN_PASS:') { throw 'Haunting dawn lifetime check did not complete.' }

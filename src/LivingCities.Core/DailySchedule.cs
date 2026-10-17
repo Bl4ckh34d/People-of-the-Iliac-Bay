@@ -20,7 +20,8 @@ namespace LivingCities.Core
     }
     public sealed class DailySchedule
     {
-        private readonly int home, work, wake, sleep, open, close, commute;
+        private readonly int home, work, wake, sleep, open, close;
+        private double commute;
         private readonly RoutePoint[] points;
         private readonly double[] distances;
         private Activity awayActivity = Activity.Work;
@@ -123,6 +124,9 @@ namespace LivingCities.Core
             int arrival = earliest + (int)(seed % (uint)(latest - earliest + 1));
             var schedule = Workday(homeKey, destinationKey, copy, arrival, arrival + dwellMinutes,
                 commuteMinutes, wakeMinute, sleepMinute);
+            // Calendar slots may use whole minutes; physical movement must retain
+            // the exact route duration, especially with a slower world clock.
+            schedule.commute=length/metresPerRealSecond*gameSecondsPerRealSecond/60;
             schedule.awayActivity = Activity.Visit;
             return schedule;
         }

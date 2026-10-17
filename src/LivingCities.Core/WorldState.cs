@@ -156,6 +156,7 @@ namespace LivingCities.Core
         {
             var candidate = CopyValidated(incoming);
             if (loadedGameTime.HasValue && incoming.Version < 22) MigrateClockRate(candidate, loadedGameTime.Value);
+            if (loadedGameTime.HasValue) RepairCachedMovementClock(candidate,2);
             candidate = CopyValidated(candidate);
             var restoredMemories=PrepareMemoryIndex(candidate);
             if(conversationArchive!=null && candidate.ConversationArchive==null)

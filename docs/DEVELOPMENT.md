@@ -2,6 +2,14 @@
 
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
+## Physical movement and the 2× clock — 17 October 2026
+
+The reported resident slowdown came from cached daily itinerary durations still encoded at 12×. A native Daggerfall save contained a 58.47 m leg lasting 539.76 game seconds: 1.3 m/s at 12×, but only 0.217 m/s after loading with the 2× clock. Restore now detects those legacy rates from route geometry and repairs walking, return and gate durations. It also repairs affected caches already resaved as schema 22/23, while preserving dwell durations and leaving already-correct legs unchanged.
+
+The fallback `DailySchedule.DayVisit` had a separate quantization problem: rounding a short commute to whole game minutes changed its physical speed when the clock slowed. Calendar selection still reserves whole-minute slots, but actual travel now uses the exact route length, physical speed and clock conversion. Walking remains 1.3 m/s; existing per-person fleeing speeds remain unchanged. Normal gameplay time remains 2×; Unity animation time is unchanged.
+
+Tests first reproduced both failures. The owned-player movement probe loads the actual old Daggerfall fixture, validates saved daily leg speeds, and measures a rendered native resident walking and running over real seconds. This bounded correction does not rewrite older inter-settlement trips with paid room bookings or linked admission histories. Those require an atomic trip/booking/observed-visit migration; changing only their rates would invalidate saved references. New travel plans already use the current clock.
+
 ## Shared conversation archive implementation — 17 October 2026
 
 Approved design: store conversations once in a shared archive and keep an immutable checkpoint in each game save. Ancestry, not game time, determines which memories a save can retrieve. Continuing an old checkpoint creates another branch automatically. Current world facts and the live transcript remain separate from retrieved memory.
