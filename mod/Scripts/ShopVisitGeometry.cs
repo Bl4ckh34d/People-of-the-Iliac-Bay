@@ -41,9 +41,7 @@ namespace LivingCities.DFU
             shelves.Sort((a,b)=>{ int x=a.x.CompareTo(b.x); return x!=0 ? x : a.z.CompareTo(b.z); });
             foreach(var npc in room.GetComponentsInChildren<StaticNPC>())
             {
-                FactionFile.FactionData faction;
-                if(GameManager.Instance.PlayerEntity.FactionData.GetFactionData(npc.Data.factionID,out faction) &&
-                    faction.sgroup==(int)FactionFile.SocialGroups.Merchants &&
+                if(NativeBusinessServices.IsKeeper(npc,room.BuildingData.BuildingType) &&
                     (!IsTavern || this.livingTavernKeeper!=null && this.livingTavernKeeper(npc)))
                 {
                     counter=room.transform.InverseTransformPoint(npc.transform.position);

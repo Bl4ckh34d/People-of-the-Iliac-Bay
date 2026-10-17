@@ -350,7 +350,9 @@ namespace LivingCities.DFU
                 FactionFile.FactionData faction;
                 bool found=GameManager.Instance.PlayerEntity.FactionData.GetFactionData(data.factionID,out faction);
                 if(found && faction.type==(int)FactionFile.FactionTypes.Individual) continue;
-                bool merchant=keeperHome!=null && !npc.IsChildNPC && found && faction.sgroup==(int)FactionFile.SocialGroups.Merchants;
+                BuildingSummary business;
+                bool merchant=keeperHome!=null && directory.GetBuildingSummary(data.buildingKey,out business) &&
+                    NativeBusinessServices.IsKeeper(npc,business.BuildingType);
                 // Every ordinary interior flat needs death/awareness ownership, even
                 // guild staff, innkeepers and factionless people outside shops.
                 // Only actual shop merchants participate in shop household allocation.

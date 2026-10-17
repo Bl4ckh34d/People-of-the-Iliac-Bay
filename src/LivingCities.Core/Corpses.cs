@@ -34,7 +34,8 @@ namespace LivingCities.Core
     }
     public sealed partial class WorldStateStore
     {
-        public bool InitializeCorpseHomeKey(string incidentId, int? confirmedKeeperWorkplace = null)
+        public bool InitializeCorpseHomeKey(string incidentId, int? confirmedKeeperWorkplace = null,
+            Func<int,int,bool> allowPropertyKey = null)
         {
             var alarm = FindIncident(incidentId);
             Require(alarm.Corpse != null && !alarm.Corpse.Cleared, "Cannot issue keys from a missing or cleared corpse.");
@@ -52,12 +53,13 @@ namespace LivingCities.Core
             foreach (var retired in state.HouseholdHistory)
                 if (retired.Household.Residents.Exists(person => person.Id == alarm.VictimId))
                     claims.Add(new CorpsePropertyKeyClaim { SettlementId = retired.SettlementId, BuildingKey = retired.Household.BuildingKey });
-            if (native != null && native.HomeKey >= 0 && !claims.Exists(key =>
+            if (native != null && native.HomeKey >= 0 && native.BedSlot>=0 && native.BedSlot<native.BedCapacity && !claims.Exists(key =>
                 key.SettlementId == native.SettlementId && key.BuildingKey == native.HomeKey))
                 claims.Add(new CorpsePropertyKeyClaim { SettlementId = native.SettlementId, BuildingKey = native.HomeKey });
             if (confirmedKeeperWorkplace.HasValue && !claims.Exists(key =>
                 key.SettlementId == native.SettlementId && key.BuildingKey == native.WorkKey))
                 claims.Add(new CorpsePropertyKeyClaim { SettlementId = native.SettlementId, BuildingKey = native.WorkKey });
+            if(allowPropertyKey!=null) claims.RemoveAll(key=>!allowPropertyKey(key.SettlementId,key.BuildingKey));
             return InitializeCorpsePropertyKeyClaims(incidentId, claims);
         }
         public bool InitializeCorpsePropertyKeyClaims(string incidentId, IEnumerable<CorpsePropertyKeyClaim> claims)
@@ -91,14 +93,16 @@ namespace LivingCities.Core
             body.PropertyKeyClaimsInitialized = true;
             return true;
         }
-        public List<CorpsePropertyKeyClaim> GetAvailableCorpsePropertyKeyClaims(string incidentId)
+        public List<CorpsePropertyKeyClaim> GetAvailableCorpsePropertyKeyClaims(string incidentId,
+            Func<string,int,int,bool> allowPropertyKey = null)
         {
-            var body = FindIncident(incidentId).Corpse;
+            var alarm=FindIncident(incidentId);
+            var body = alarm.Corpse;
             var available = new List<CorpsePropertyKeyClaim>();
             if (body == null || body.Cleared || !body.PropertyKeyClaimsInitialized) return available;
             Require(body.PropertyKeyClaims != null, "Missing initialized corpse property key claims.");
             foreach (var claim in body.PropertyKeyClaims)
-                if (!claim.Taken)
+                if (!claim.Taken && (allowPropertyKey==null || allowPropertyKey(alarm.VictimId,claim.SettlementId,claim.BuildingKey)))
                     available.Add(new CorpsePropertyKeyClaim { SettlementId = claim.SettlementId,
                         BuildingKey = claim.BuildingKey, Taken = false });
             return available;

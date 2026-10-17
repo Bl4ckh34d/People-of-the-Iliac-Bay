@@ -64,7 +64,8 @@ namespace LivingCities.DFU
 
         private string PersistentMemoryIdentity()
         {
-            var npc=GameManager.Instance.TalkManager.StaticNPC;
+            var manager=GameManager.Instance.TalkManager;
+            var npc=manager.CurrentNPCType==TalkManager.NPCType.Static ? manager.StaticNPC : null;
             if(!npc || npc.Data.context==StaticNPC.Context.Building) return conversationPersonId;
             // Generated quest actors can reuse a layout position. A new quest at
             // that position must never inherit the previous person's memories.
@@ -141,10 +142,10 @@ namespace LivingCities.DFU
             // Only nearby visible people, once per submitted turn. No global census
             // and no private conversations/quests are shared between NPCs.
             var names=new List<string>();
-            var origin=game.TalkManager.MobileNPC ? game.TalkManager.MobileNPC.transform.position :
-                game.TalkManager.StaticNPC ? game.TalkManager.StaticNPC.transform.position : game.PlayerObject.transform.position;
-            var target=game.TalkManager.MobileNPC ? game.TalkManager.MobileNPC.transform :
-                game.TalkManager.StaticNPC ? game.TalkManager.StaticNPC.transform : null;
+            var mobile=game.TalkManager.CurrentNPCType==TalkManager.NPCType.Mobile ? game.TalkManager.MobileNPC : null;
+            var stationary=game.TalkManager.CurrentNPCType==TalkManager.NPCType.Static ? game.TalkManager.StaticNPC : null;
+            var origin=mobile ? mobile.transform.position : stationary ? stationary.transform.position : game.PlayerObject.transform.position;
+            var target=mobile ? mobile.transform : stationary ? stationary.transform : null;
             foreach(var npc in UnityEngine.Object.FindObjectsOfType<MobilePersonNPC>())
                 if(npc.transform!=target && !string.IsNullOrWhiteSpace(npc.NameNPC) &&
                     CanSeeMemoryPerson(origin,npc.transform,target) && names.Count<8) names.Add(npc.NameNPC);

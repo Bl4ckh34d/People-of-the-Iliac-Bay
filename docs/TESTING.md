@@ -8,7 +8,17 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — occupied interior approaches, 17 October 2026
+## Latest acceptance — keeper identity, tenancy and keys, 17 October 2026
+
+Installed bundle SHA-256: `32A9B56F837CAF2826D5BC8A66C92344F622F09FAC4CD8A68FEBDA0332982ACD`, matching `dist/livingcities.dfmod`.
+
+- **680/680 core tests passed**. The role-prompt, temporary-inn-key exclusion and legacy-key availability regressions failed before their corrections; a bed-assigned shop tenant retains the home key without workplace confirmation. Runtime compilation has zero warnings/errors; Unity build/install passed.
+- A native shop fixture first reproduced “Bed-owning tenant was classified as shopkeeper.” The corrected player probe rejects tenant ownership/business context, preserves a bed-backed tenant key, filters a legacy non-keeper workplace claim without resetting its ledger, and recognizes the actual selling NPC as keeper.
+- A static adult ignores a stale mobile child; inverse mobile identity and memory ignore a stale static NPC. Five local inn doors reject key eligibility through the production filter.
+- Repeat: `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -BusinessIdentityProbe`. Evidence: `work/business-role-red.log`, `business-keys-red.log`, `business-legacy-red.log`, `business-role-red-player.log`, `business-role-core.log`, `business-role-runtime.log`, `business-role-build.log`, `business-role-native-player.log`.
+- No player save was overwritten and no foreign home was invented for an authored inn occupant. Native inn staff classification and universal permanent-home adoption remain planned. This probe does not certify every service transaction, LLM reply, physical door-key interaction or modded inn layout. Previously transferred non-inn keys lack issuer provenance and are not retroactively revoked.
+
+## Prior acceptance — occupied interior approaches, 17 October 2026
 
 Installed bundle SHA-256: `EECF1FACE0DA42A6B6B53E17E4010FD7ED0FD971C553CD72C27CF1451B8156E9`, matching `dist/livingcities.dfmod`.
 

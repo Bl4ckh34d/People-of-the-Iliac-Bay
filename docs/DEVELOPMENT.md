@@ -2,6 +2,14 @@
 
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
+## Keeper services, tenancy and keys — 17 October 2026
+
+`NativeBusinessServices` mirrors native `PlayerActivate.StaticNPCClick`: ordinary merchant service/repair in a shop or room rental in an inn establishes keeper role; guild/custom service and quest-control branches take precedence. `WorkKey` is the authored NPC's source/work building, not proof of ownership. Dialogue now compares the current static speaker's full native identity and service role before supplying keeper/business context. It carries social role into free chat and does not infer work duties from placement alone. Mobile/static identity, memory, child checks and listener origin use `TalkManager.CurrentNPCType`.
+
+A shop tenant with a saved home and bed claim keeps building access without becoming a keeper. Inns issue no property key, including for innkeepers and temporary bed occupants; known permanent-home keys remain valid. Runtime filters both new claims and old unclaimed ledger entries while retaining taken flags. Old inn keys already held in inventory no longer bypass the door hook. Previously transferred non-inn keys lack issuer provenance and are not deleted or retroactively revoked; distinguishing a historical invalid business claim from a valid home key requires a later migration design.
+
+Do not confuse this role correction with universal housing. Generated travelers have origins/reservations; authored inn occupants do not all have permanent remote households. Main-hall people may be local staff/patrons or visitors. Ordinary bedroom occupants are candidates for visitor adoption, with native quests excluded. That classification and housing work remains planned.
+
 ## Occupied interior approaches — 17 October 2026
 
 The recorded shelf flicker was a physically unreachable waypoint: another body stood 0.20 m from the target while required separation was 0.52 m. Comfort steering alternated directions without reaching it. Interior followers now wait without rotating or advancing their walking animation at an occupied target; existing overlap can still recover through geometry-checked movement. They resume when the target clears. Outdoor steering and personal walking/running speeds are unchanged.

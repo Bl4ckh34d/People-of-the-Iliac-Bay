@@ -2,6 +2,8 @@
 
 Current coverage and source ownership are below. Planned behavior belongs in [Roadmap](ROADMAP.md); dated implementation details and older requirements remain in [History](HISTORY.md). This guide does not certify all NPCs, quests or buildings.
 
+Keeper role follows the native selling/repair or room-rental service, not merely a building key or bed. Bed-backed shop tenants can retain access keys without being keepers. Inns issue no inn keys; only known permanent homes supply lodger/patron home keys. Authored inn-bedroom visitors still need permanent-origin adoption, while main-hall occupants require classification as local staff, local patrons or visitors before housing is assigned. See [keeper/key implementation boundaries](DEVELOPMENT.md#keeper-services-tenancy-and-keys--17-october-2026).
+
 | Area | Current boundary / remaining work |
 | --- | --- |
 | Identity and households | Generated residents are persistent. Authored local workers and mod NPCs still need universal census/adoption and housing priority. |

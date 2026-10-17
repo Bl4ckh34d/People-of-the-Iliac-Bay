@@ -17,6 +17,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$MemoryArchiveRead,
     [switch]$MovementClockProbe,
     [switch]$OccupiedApproachProbe,
+    [switch]$BusinessIdentityProbe,
     [switch]$BedProbe,
     [switch]$SleepProbe,
     [switch]$RunningPilotProbe,
@@ -108,6 +109,10 @@ if ($OccupiedApproachProbe) {
     if (-not $FixtureCharacter) { throw 'Occupied approach probe requires a disposable character.' }
     $arguments += ' -livingcities-occupied-approach-probe'
 }
+if ($BusinessIdentityProbe) {
+    if (-not $FixtureCharacter) { throw 'Business identity probe requires a disposable fixture character.' }
+    $arguments += ' -livingcities-business-identity-probe'
+}
 if ($MovementClockProbe) {
     if (-not $FixtureCharacter) { throw 'Movement clock probe requires a disposable character.' }
     $arguments += ' -livingcities-movement-clock-probe'
@@ -184,6 +189,7 @@ try {
     }
     if (-not $passed) { throw "Town test did not finish within $testTimeout seconds." }
     if ($OccupiedApproachProbe -and ($body -notmatch 'LIVING_CITIES_OCCUPIED_APPROACH_PASS:' -or $body -notmatch 'LIVING_CITIES_FREE_BROWSE_PASS:')) { throw 'Occupied approach and free browse checks did not finish.' }
+    if ($BusinessIdentityProbe -and ($body -notmatch 'LIVING_CITIES_BUSINESS_IDENTITY_PASS:' -or $body -notmatch 'LIVING_CITIES_NO_INN_KEYS_PASS:' -or $body -notmatch 'LIVING_CITIES_ACTIVE_SPEAKER_PASS:')) { throw 'Business identity, active speaker and inn key checks did not finish.' }
     if ($MovementClockProbe -and $body -notmatch 'LIVING_CITIES_MOVEMENT_CLOCK_PASS:') { throw 'Physical NPC speed and 2x clock checks did not complete.' }
     if ($PerformanceProbe -and $body -notmatch 'LIVING_CITIES_PERFORMANCE_PASS:') { throw 'Performance samples did not complete.' }
     if ($PerformanceProbe -and $body -notmatch 'LIVING_CITIES_MURDER_WITNESS_PASS:') { throw 'Murder witness persistence probe did not complete.' }

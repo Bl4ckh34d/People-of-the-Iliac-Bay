@@ -21,6 +21,36 @@ namespace LivingCities.Tests
 
         public static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Legacy key availability rechecks issuer without resetting the saved ledger", () => {
+                CivilianIncident alarm;string witness;var store=Body(out alarm,out witness);
+                store.InitializeCorpsePropertyKeyClaims(alarm.Id,new[]{
+                    new CorpsePropertyKeyClaim {SettlementId=1,BuildingKey=7},
+                    new CorpsePropertyKeyClaim {SettlementId=1,BuildingKey=4}});
+                var keys=store.GetAvailableCorpsePropertyKeyClaims(alarm.Id,(person,town,building)=>person==alarm.VictimId && building==7);
+                Check.Equal(1,keys.Count);Check.Equal(7,keys[0].BuildingKey);
+                Check.Equal(2,store.GetAvailableCorpsePropertyKeyClaims(alarm.Id).Count);
+            }));
+            cases.Add(("Temporary inn property excluded without losing permanent home key", () => {
+                var store=new WorldStateStore(42);var town=store.GetOrCreate(1,new[]{8},1);
+                town.Households[0].BedCapacity=4;
+                var person=store.RegisterNativePerson(1,4,11,"Inn Lodger",ResidentSex.Female,1,41,182,1);
+                Check.True(store.AssignNativeBed(person.Id,new HomeProfile(4,0),new[]{new HomeProfile(8,4)}));
+                var alarm=store.RecordViolence(1,person.Id,100);store.LocateViolence(alarm.Id,4,0,0,0);person.IsAlive=false;
+                store.ConfirmCorpse(alarm.Id,101,4,0,0,0);
+                store.InitializeCorpseHomeKey(alarm.Id,4,(settlement,building)=>building!=4);
+                var keys=store.GetAvailableCorpsePropertyKeyClaims(alarm.Id);
+                Check.Equal(1,keys.Count);Check.Equal(8,keys[0].BuildingKey);
+            }));
+            cases.Add(("Shop tenant retains bed-assigned access without keeper confirmation", () => {
+                var store=new WorldStateStore(42);store.GetOrCreate(1,new[]{8},1);
+                var person=store.RegisterNativePerson(1,4,11,"Shop Tenant",ResidentSex.Female,1,0,182,1);
+                Check.True(store.AssignNativeBed(person.Id,new HomeProfile(4,1),new HomeProfile[0]));
+                var alarm=store.RecordViolence(1,person.Id,100);store.LocateViolence(alarm.Id,4,0,0,0);person.IsAlive=false;
+                store.ConfirmCorpse(alarm.Id,101,4,0,0,0);
+                store.InitializeCorpseHomeKey(alarm.Id,null,(settlement,building)=>building!=99);
+                var keys=store.GetAvailableCorpsePropertyKeyClaims(alarm.Id);
+                Check.Equal(1,keys.Count);Check.Equal(4,keys[0].BuildingKey);
+            }));
             cases.Add(("Confirmed off-site keeper receives home and business keys but rejects another workplace", () => {
                 var store = new WorldStateStore(42); var town = store.GetOrCreate(1, new[] { 8 }, 1);
                 town.Households[0].BedCapacity = 4;

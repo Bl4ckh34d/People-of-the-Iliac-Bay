@@ -85,6 +85,7 @@ namespace LivingCities.DFU
                 if (!npc || !npc.gameObject.activeInHierarchy || npc.Data.context != StaticNPC.Context.Building ||
                     npc.Data.mapID != game.PlayerGPS.CurrentLocation.MapTableData.MapId || npc.Data.buildingKey != building.buildingKey ||
                     npc.GetComponent<QuestResourceBehaviour>() || npc.GetComponent<DaggerfallAction>()) continue;
+                if(!NativeBusinessServices.IsKeeper(npc,building.buildingType)) continue;
 
                 string personId = string.Format(CultureInfo.InvariantCulture, "npc:{0}:{1}:{2}",
                     npc.Data.mapID, npc.Data.buildingKey, npc.Data.hash);

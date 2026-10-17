@@ -14,11 +14,14 @@ namespace LivingCities.DFU
             double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             int day = (int)Math.Floor(now / 86400);
             int settlement = game.PlayerGPS.HasCurrentLocation ? game.PlayerGPS.CurrentLocation.MapTableData.MapId : -1;
-            Resident resident = conversationActor && conversationActor.Resident != null && conversationActor.Resident.IsAlive
+            Resident resident = game.TalkManager.CurrentNPCType==TalkManager.NPCType.Mobile && conversationActor && conversationActor.Resident != null && conversationActor.Resident.IsAlive
                 ? conversationActor.Resident : null;
             NativePerson native = resident == null && store != null && settlement >= 0
                 ? FindConversationNative(settlement) : null;
-            var mobile = game.TalkManager.MobileNPC;
+            var mobile = game.TalkManager.CurrentNPCType==TalkManager.NPCType.Mobile ? game.TalkManager.MobileNPC : null;
+            int contextTown,contextBuilding;BuildingSummary contextSummary;
+            bool keeper=native!=null && TryConversationBuilding(out contextTown,out contextBuilding,out contextSummary) &&
+                native.WorkKey==contextBuilding && NativeBusinessServices.OffersKeeperService(native.FactionId,contextSummary.BuildingType);
             string fallbackIdentity = !string.IsNullOrEmpty(conversationPersonId) ? conversationPersonId :
                 npcName + (mobile ? ":" + mobile.GetInstanceID() : string.Empty);
             uint seed = resident != null ? resident.AppearanceSeed : native != null
@@ -31,7 +34,7 @@ namespace LivingCities.DFU
             bool outdoors = !game.PlayerEnterExit.IsPlayerInside;
             string activity = resident != null && streets
                 ? streets.GetState(resident.Id, now).Activity.ToString().ToLowerInvariant()
-                : native != null && game.PlayerEnterExit.IsPlayerInsideBuilding &&
+                : keeper && game.PlayerEnterExit.IsPlayerInsideBuilding &&
                     game.PlayerEnterExit.BuildingDiscoveryData.buildingKey == native.WorkKey ? "work" : string.Empty;
             string plan = "No tracked daily itinerary is available.";
             if (resident != null && store != null)
@@ -62,11 +65,13 @@ namespace LivingCities.DFU
                         key => homeSettlement == settlement ? ConversationBuildingName(key) : string.Empty);
                 }
             }
-            else if (native != null)
+            else if (native != null && keeper)
                 plan = ConversationLifeContext.NativeDuty(ConversationBuildingName(native.WorkKey),
                     ConversationBuildingName(native.HomeKey),
                     game.PlayerEnterExit.IsPlayerInsideBuilding &&
                     game.PlayerEnterExit.BuildingDiscoveryData.buildingKey == native.WorkKey);
+            else if(native!=null)
+                plan="No verified work duties or daily itinerary are available for you. Your original placement in this building does not mean you own or operate it.";
             var mood = new ConversationMoodInputs { Disposition = disposition, Hour = (int)(now % 86400 / 3600),
                 Grieving = grieving, Alarmed = alarmed, Outdoors = outdoors, Weather = condition,
                 Familiar = conversationPersonId != null && store != null && store.ConversationEncounters(conversationPersonId) > 1,

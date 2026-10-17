@@ -126,7 +126,7 @@ namespace LivingCities.DFU
 
         private void SubmitSocialText(DaggerfallTalkWindow talk, string playerText, string history)
         {
-            ResidentActor actor = conversationActor;
+            ResidentActor actor = GameManager.Instance.TalkManager.CurrentNPCType==TalkManager.NPCType.Mobile ? conversationActor : null;
             string npcName = GameManager.Instance.TalkManager.NameNPC;
             string race = "unknown";
             string gender = "unknown";
@@ -141,7 +141,7 @@ namespace LivingCities.DFU
             }
             else
             {
-                var npc = GameManager.Instance.TalkManager.MobileNPC;
+                var npc = GameManager.Instance.TalkManager.CurrentNPCType==TalkManager.NPCType.Mobile ? GameManager.Instance.TalkManager.MobileNPC : null;
                 if (npc)
                 {
                     npcName = npc.NameNPC;
@@ -152,7 +152,7 @@ namespace LivingCities.DFU
                 else
                 {
                     role = StaticDialogueRole();
-                    var stationary = GameManager.Instance.TalkManager.StaticNPC;
+                    var stationary = GameManager.Instance.TalkManager.CurrentNPCType==TalkManager.NPCType.Static ? GameManager.Instance.TalkManager.StaticNPC : null;
                     if (stationary) { race = stationary.Data.race.ToString(); gender = stationary.Data.gender.ToString(); }
                 }
             }
@@ -260,9 +260,22 @@ namespace LivingCities.DFU
         private string StaticDialogueRole()
         {
             TalkManager talk = GameManager.Instance == null ? null : GameManager.Instance.TalkManager;
-            var npc = talk == null ? null : talk.StaticNPC;
+            var npc = talk == null || talk.CurrentNPCType!=TalkManager.NPCType.Static ? null : talk.StaticNPC;
             if (!npc) return "settlement resident";
             if (npc.IsChildNPC) return "local child";
+            int town,building;BuildingSummary summary;
+            if(TryConversationBuilding(out town,out building,out summary))
+            {
+                if(NativeBusinessServices.IsKeeper(npc,summary.BuildingType))
+                    return summary.BuildingType==DFLocation.BuildingTypes.Tavern ? "innkeeper offering room rental" : "shopkeeper offering merchant services";
+                var person=FindConversationNative(town);
+                if(RMBLayout.IsShop(summary.BuildingType) && person!=null && person.HomeKey==building && person.BedSlot>=0)
+                    return "residential tenant above the shop, not its keeper or owner";
+                if(summary.BuildingType==DFLocation.BuildingTypes.Tavern)
+                    return person!=null && store.NativeLodgingBed(person.Id)!=null ? "inn bedroom lodger; permanent origin not yet verified; not the keeper" :
+                        "inn occupant; local staff, local patron or visiting status not yet verified; not the keeper";
+                if(RMBLayout.IsShop(summary.BuildingType)) return "shop visitor, not its keeper or owner";
+            }
             FactionFile.FactionData faction;
             if (GameManager.Instance.PlayerEntity.FactionData.GetFactionData(npc.Data.factionID, out faction))
                 return ((FactionFile.SocialGroups)faction.sgroup).ToString().ToLowerInvariant() + " resident";

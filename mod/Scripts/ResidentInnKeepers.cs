@@ -17,9 +17,7 @@ namespace LivingCities.DFU
             var people=store.NativePeopleFor(town); receptionKeeper=null;string keeperId=null;
             foreach(var npc in interior.GetComponentsInChildren<StaticNPC>())
             {
-                FactionFile.FactionData faction;
-                if(!GameManager.Instance.PlayerEntity.FactionData.GetFactionData(npc.Data.factionID,out faction) ||
-                    faction.sgroup!=(int)FactionFile.SocialGroups.Merchants) continue;
+                if(!NativeBusinessServices.IsKeeper(npc,DaggerfallConnect.DFLocation.BuildingTypes.Tavern)) continue;
                 var person=people.Find(p=>p.WorkKey==key && p.NativeHash==npc.Data.hash);
                 if(person==null || !person.IsAlive) continue;
                 var response=store.NativeResponse(person.Id);

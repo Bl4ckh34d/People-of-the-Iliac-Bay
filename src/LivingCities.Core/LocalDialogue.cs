@@ -61,6 +61,7 @@ namespace LivingCities.Core
             {
                 string socialPrompt = "This is a free-text social chat with a Daggerfall NPC.\n" +
                     "NPC: " + request.NpcName + "\n" +
+                    "Social role: " + request.SocialRole + "\n" +
                     "Disposition: " + request.Disposition.ToString(CultureInfo.InvariantCulture) + "\n" +
                     "Authoritative reaction to this approach: " + request.ConversationReaction + "\n" +
                     HistoryContext(request.History) +
@@ -70,6 +71,7 @@ namespace LivingCities.Core
                     "A negative disposition means distrust; a high positive disposition means warmth. Direct insults should provoke displeasure, not an apology or agreement. " +
                     "Use the earlier conversation to recall personal details the player told you, explicitly as their statements, and to answer follow-ups coherently. " +
                     "Treat supplied time, date, location, weather, identity and game facts as true. Invent small personal opinions, anecdotes and harmless details to make this a lively roleplay conversation. " +
+                    "Tenancy or access to a building does not make you its owner. A customer or lodger is not the keeper. Never invent business ownership or let an earlier mistaken ownership claim override the current verified role. " +
                     "Shared history with the player must come from the recorded memories or current transcript. Never invent past meetings, shared adventures or promises. A remembered player claim is not proof it happened. Refer naturally to remembered dates or elapsed time when relevant; do not recite your memory log. " +
                     "Treat a supplied daily plan as private NPC knowledge, not a script to recite. If asked politely, decide whether to share the next real destination based on personality and disposition. If annoyed, you may say you have places to be without revealing them. Never claim a planned stop is where you are now when current verified activity says otherwise. Never invent a specific arrival time. Never invent specific scheduled stops. " +
                     "Let the stable personality color word choice without reciting trait labels. Let current mood influence brevity and patience, especially when outside in rain; mood may change without changing personality. " +

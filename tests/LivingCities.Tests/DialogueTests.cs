@@ -332,7 +332,8 @@ namespace LivingCities.Tests
                 Check.True(plan.Prompt.Contains("Do not introduce yourself by reciting your name, race, gender, class, trade, or job"));
                 Check.True(!plan.Prompt.Contains("Race: Breton"));
                 Check.True(!plan.Prompt.Contains("Gender: female"));
-                Check.True(!plan.Prompt.Contains("Social role: shopkeeper"));
+                Check.True(plan.Prompt.Contains("Social role: shopkeeper"));
+                Check.True(plan.Prompt.Contains("Tenancy or access to a building does not make you its owner"));
                 Check.True(!plan.Prompt.Contains("use the usual topics"));
             })));
             cases.Add(("Free text completion invites a social reply instead of paraphrasing its fallback", new Action(() => {
@@ -344,7 +345,7 @@ namespace LivingCities.Tests
                 Check.True(completion.JsonBody.Contains("How has your morning been?"));
                 Check.True(!completion.JsonBody.Contains("Breton"));
                 Check.True(!completion.JsonBody.Contains("female"));
-                Check.True(!completion.JsonBody.Contains("shopkeeper"));
+                Check.True(completion.JsonBody.Contains("Social role: shopkeeper"));
                 Check.True(completion.JsonBody.Contains("Respond directly in English using plain ASCII punctuation, in character"));
                 Check.True(!completion.JsonBody.Contains(FreeTextDialogue.FallbackAnswer));
                 Check.True(!completion.JsonBody.Contains("Rephrase a Daggerfall NPC answer"));

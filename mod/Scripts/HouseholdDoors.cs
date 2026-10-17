@@ -59,7 +59,7 @@ namespace LivingCities.DFU
         private bool? HouseholdDoorAccess(BuildingSummary summary)
         {
             var game=GameManager.Instance;
-            if (game && game.IsReady && game.PlayerGPS.HasCurrentLocation &&
+            if (summary.BuildingType!=DFLocation.BuildingTypes.Tavern && game && game.IsReady && game.PlayerGPS.HasCurrentLocation &&
                 HasHouseholdPropertyKey(game.PlayerGPS.CurrentLocation.MapTableData.MapId, summary.buildingKey))
                 return true;
             if (!HouseholdLocksEnabled) return null;

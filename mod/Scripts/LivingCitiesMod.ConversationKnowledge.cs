@@ -45,10 +45,10 @@ namespace LivingCities.DFU
             conversationResponseCue = "";
             var manager = GameManager.Instance.TalkManager;
             conversationNativeDisposition = CurrentDialogueDisposition();
-            var mobile = manager.MobileNPC;
+            var mobile = manager.CurrentNPCType==TalkManager.NPCType.Mobile ? manager.MobileNPC : null;
             var actor = mobile ? mobile.GetComponent<ResidentActor>() : null;
             conversationPersonId = actor && actor.Resident != null ? actor.Resident.Id : null;
-            if (manager.StaticNPC)
+            if (manager.CurrentNPCType==TalkManager.NPCType.Static && manager.StaticNPC)
             {
                 var data = manager.StaticNPC.Data;
                 // Match the core's native identity when available, including shop heads.
@@ -233,9 +233,9 @@ namespace LivingCities.DFU
         private bool ConversationPartnerIsChild()
         {
             var manager = GameManager.Instance.TalkManager;
-            var actor = manager.MobileNPC ? manager.MobileNPC.GetComponent<ResidentActor>() : null;
+            var actor = manager.CurrentNPCType==TalkManager.NPCType.Mobile && manager.MobileNPC ? manager.MobileNPC.GetComponent<ResidentActor>() : null;
             return actor && actor.Resident != null && actor.Resident.AgeGroup == ResidentAgeGroup.Child ||
-                manager.StaticNPC && manager.StaticNPC.IsChildNPC;
+                manager.CurrentNPCType==TalkManager.NPCType.Static && manager.StaticNPC && manager.StaticNPC.IsChildNPC;
         }
 
         private void ReportChildDialogueOffense()
@@ -251,9 +251,9 @@ namespace LivingCities.DFU
         private string ResolveConversationFlirt()
         {
             var manager = GameManager.Instance.TalkManager;
-            var mobile = manager.MobileNPC;
+            var mobile = manager.CurrentNPCType==TalkManager.NPCType.Mobile ? manager.MobileNPC : null;
             var actor = mobile ? mobile.GetComponent<ResidentActor>() : null;
-            var stationary = manager.StaticNPC;
+            var stationary = manager.CurrentNPCType==TalkManager.NPCType.Static ? manager.StaticNPC : null;
             bool child = ConversationPartnerIsChild();
             string gender = stationary ? stationary.Data.gender.ToString() : mobile ? mobile.Gender.ToString() : "unknown";
             string identity = conversationPersonId ?? (mobile ? "unmanaged:" + mobile.GetInstanceID() : null);

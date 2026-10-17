@@ -25,7 +25,11 @@ namespace LivingCities.DFU
             if (summary.BuildingType == DFLocation.BuildingTypes.Tavern || RMBLayout.IsShop(summary.BuildingType))
             {
                 NativePerson keeper = FindConversationNative(settlement);
-                if (keeper == null || !keeper.IsAlive || keeper.WorkKey != building) return false;
+                var manager=game.TalkManager;
+                var speaker=manager.CurrentNPCType==TalkManager.NPCType.Static ? manager.StaticNPC : null;
+                if (keeper == null || !keeper.IsAlive || keeper.WorkKey != building || !speaker ||
+                    speaker.Data.mapID!=settlement || speaker.Data.buildingKey!=building ||
+                    speaker.Data.hash!=keeper.NativeHash || !NativeBusinessServices.IsKeeper(speaker,summary.BuildingType)) return false;
                 place = summary.BuildingType == DFLocation.BuildingTypes.Tavern ? "the innkeeper's inn" : "the shopkeeper's shop";
                 return true;
             }
@@ -56,9 +60,14 @@ namespace LivingCities.DFU
             if (!TryConversationBuilding(out settlement, out building, out summary))
                 return "You are inside a building; its ownership context is unavailable.";
             if (summary.BuildingType == DFLocation.BuildingTypes.Tavern)
-                return "You are on a public inn floor; only its actual keeper is treated as the owner.";
+                return "You are inside this inn, not its keeper. Only the NPC offering room rental is its keeper. Your presence here does not establish ownership or whether you are local staff, a local patron or a visitor.";
             if (RMBLayout.IsShop(summary.BuildingType))
-                return "You are on a public shop floor; only its actual keeper is treated as the owner.";
+            {
+                var native=FindConversationNative(settlement);
+                bool tenant=native!=null && native.IsAlive && native.HomeKey==building && native.BedSlot>=0;
+                return tenant ? "You rent living space and have an assigned bed in this shop building. You are a tenant, not its shopkeeper or owner." :
+                    "You are visiting this shop. You are a customer, not its shopkeeper or owner.";
+            }
             return "You are inside another building, not the NPC's own home or business.";
         }
 

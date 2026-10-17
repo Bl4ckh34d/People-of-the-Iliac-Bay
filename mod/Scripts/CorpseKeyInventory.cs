@@ -23,13 +23,30 @@ namespace LivingCities.DFU
             int? workplace = null;
             var person = worldStore.NativePeopleFor(population.SettlementId).Find(p => p.Id == alarm.VictimId);
             BuildingSummary building;
-            DaggerfallConnect.Arena2.FactionFile.FactionData faction;
             if (person != null && directory.GetBuildingSummary(person.WorkKey,out building) &&
-                (RMBLayout.IsShop(building.BuildingType) || building.BuildingType == DaggerfallConnect.DFLocation.BuildingTypes.Tavern) &&
-                GameManager.Instance.PlayerEntity.FactionData.GetFactionData(person.FactionId,out faction) &&
-                faction.sgroup == (int)DaggerfallConnect.Arena2.FactionFile.SocialGroups.Merchants)
+                RMBLayout.IsShop(building.BuildingType) && NativeBusinessServices.OffersKeeperService(person.FactionId,building.BuildingType))
                 workplace = person.WorkKey;
-            worldStore.InitializeCorpseHomeKey(alarm.Id,workplace);
+            worldStore.InitializeCorpseHomeKey(alarm.Id,workplace,AllowsPropertyKey);
+        }
+
+        private bool AllowsPropertyKey(int settlement,int buildingKey)
+        {
+            BuildingSummary summary;
+            // Foreign generated households are residential; never replace their
+            // home with the current inn's key. Local authored sites are classified.
+            return !directory || population==null || settlement!=population.SettlementId ||
+                !directory.GetBuildingSummary(buildingKey,out summary) || summary.BuildingType!=DaggerfallConnect.DFLocation.BuildingTypes.Tavern;
+        }
+        private bool AllowsCorpsePropertyKey(string victimId,int settlement,int buildingKey)
+        {
+            if(!AllowsPropertyKey(settlement,buildingKey)) return false;
+            var person=worldStore.NativePeopleFor(settlement).Find(p=>p.Id==victimId);
+            if(person==null || person.WorkKey!=buildingKey) return true;
+            if(person.HomeKey==buildingKey && person.BedSlot>=0 && person.BedSlot<person.BedCapacity) return true;
+            BuildingSummary summary;
+            return directory && population!=null && population.SettlementId==settlement &&
+                directory.GetBuildingSummary(buildingKey,out summary) && RMBLayout.IsShop(summary.BuildingType) &&
+                NativeBusinessServices.OffersKeeperService(person.FactionId,summary.BuildingType);
         }
 
         private void InstallCorpseTransferHook()
@@ -74,8 +91,8 @@ namespace LivingCities.DFU
             if (!Ready || worldStore == null || !corpses.TryGetValue(incidentId,out body) || !body ||
                 Vector3.Distance(body.transform.position,GameManager.Instance.PlayerMotor.transform.position)>3) return;
             if (corpseInventory) return;
-            worldStore.InitializeCorpseHomeKey(incidentId);
-            var claims=worldStore.GetAvailableCorpsePropertyKeyClaims(incidentId);
+            worldStore.InitializeCorpseHomeKey(incidentId,null,AllowsPropertyKey);
+            var claims=worldStore.GetAvailableCorpsePropertyKeyClaims(incidentId,AllowsCorpsePropertyKey);
             if (claims.Count==0) { DaggerfallUI.AddHUDText("The body carries nothing you can take."); return; }
             var container=new GameObject("People of the Iliac Bay corpse inventory");
             container.transform.position=body.transform.position;
