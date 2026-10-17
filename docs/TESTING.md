@@ -1,3 +1,36 @@
+# Testing and verification status
+
+Read each result's date and scope. Source tests, runtime compilation, a Unity bundle and player acceptance are distinct checks. Historical evidence is in [History](HISTORY.md); compatibility limits are in [Compatibility](COMPATIBILITY.md).
+
+Run core checks from the repository with `dotnet run --project tests/LivingCities.Tests --configuration Release`. Compile runtime source with `dotnet build tools/RuntimeCompile/RuntimeCompile.csproj --configuration Release`. `tools/Build.ps1` packages/installs only when DFU is closed; it refuses to interrupt a player's game. `tools/TownTest.ps1` runs owned-player fixtures and similarly refuses an existing session. Read switch prerequisites before selecting a probe.
+
+Performance work must record game/build/save/mod combination and measured frame times; a lower update frequency alone is not proof of fewer stalls. Prior guard/inn survey timings and regressions remain in the [performance evidence](HISTORY.md#source-performance-md). The observed destination/door and inn-movement regressions remain open until a specific player test accepts them.
+
+<a id="saves"></a>
+
+# Current test saves â€” 17 October 2026
+
+Character: **LivingCitiesTest-9a5f197b**. These five saves were generated from a new character with the current external city, village, wall and tavern mods. Each save was immediately loaded and checked for the expected character, settlement, exterior scene and no active crime.
+
+| Save | Purpose |
+| --- | --- |
+| People - Gothway Garden | Daytime street population and conversations |
+| People - Shop entrance | Enter the current general store layout for shopping/keeper tests |
+| People - Inn entrance | Enter the current inn layout for patrons, rooms and keeper tests |
+| People - Daggerfall day | Large-city population, performance and guards |
+| People - Daggerfall night | Haunting, curfew and guard behavior |
+
+All saves are outdoors to avoid persisting an obsolete interior scene. They contain the standard new-game quests, not injected crime/welfare/quest-debug scenarios. The test launcher enables GodMode during generation; use the console if a test specifically requires ordinary player damage.
+
+The former disposable test characters and their obsolete saves were removed from the game's Saves directory. A recovery archive is outside the game menu at `DFU/backups/obsolete-test-saves-20261017`, with a manifest. It also contains four rejected preview slots from an interrupted first generation attempt; those are not valid fresh fixtures.
+
+Regenerate with `./tools/TownTest.ps1 -FreshPreviews`. This creates a new test character and never deletes previous saves automatically. The generator verifies all five reloads and reports `LIVING_CITIES_TOWN_TEST_PASS: fresh previews`. Evidence: `work/FreshPreviews-pass.log`.
+
+The other older regression commands may still expect their named, purpose-built fixtures. Do not silently substitute a clean save for a scripted murder or quest fixture; rebuild the intended scenario first.
+
+
+<a id="fixtures"></a>
+
 # Gothway Garden test saves
 
 ## Indoor guard fixture
@@ -90,7 +123,7 @@ Screenshots of street and interior actors were inspected. Interior placement cur
 
 ## Residential family fixture and tavern audit, 14 October 2026
 
-Use **SAVE34 — Living Cities - residential family home**, character **LivingCitiesTest-f238d317**, for family observation. Building 196864 is House2 in residential block RESIAM10.RMB, model 320, with three beds and three residents (two adults, one child). The actual-player HousingProbe verifies all three actors and creates this separate save. SAVE28 and all older saves remain unchanged.
+Use **SAVE34 ï¿½ Living Cities - residential family home**, character **LivingCitiesTest-f238d317**, for family observation. Building 196864 is House2 in residential block RESIAM10.RMB, model 320, with three beds and three residents (two adults, one child). The actual-player HousingProbe verifies all three actors and creates this separate save. SAVE28 and all older saves remain unchanged.
 
 The reported SAVE28 is building 131584. Both raw assets and the loaded native BuildingDirectory classify it as House2, not Tavern. It uses model 249 in TVRNAM00.RMB; actual Tavern 131590 reuses that model. The resemblance is real, but the tested allocation is residential. All three actual taverns (65542, 66061, 131590) are absent from both HousingSurvey profiles and the saved household list. Do not infer building use from exterior model or block-name prefix alone.
 

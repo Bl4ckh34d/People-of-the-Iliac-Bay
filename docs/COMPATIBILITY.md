@@ -1,10 +1,109 @@
+# Compatibility and quest boundaries
+
+See [Roadmap](ROADMAP.md) for planned adapters; all dated results below retain their stated scope. Installed does not mean every quest or layout is tested.
+
+<a id="quests"></a>
+
+# Quest Pack 1 and Quest Actions Extension audit
+
+17 October 2026. These are separately installed third-party mods, not code or assets incorporated into People of the Iliac Bay.
+
+## Installation and evidence
+
+**Planning follow-up, 17 October 2026:** [quest-role design and representative cases](ROADMAP.md#detailed-design) and [delivery phase 6](ROADMAP.md#delivery-plan) consolidate mobility and spoiler-control options. Quest Pack mobility implementation is explicitly deferred. Review must eventually cover each quest's roles/stages, native bindings and disclosure gates; representative source analysis and installation tests are not certification of every quest. Existing native control remains the conservative default.
+
+Installed from the user-supplied archives:
+
+- `Quest Pack 1 dfmod-2-2025-11-20b-1763826811.zip`: Quest Pack 1 **2025.11.20b**.
+- `Quest Actions Extension-677-2-0-0-1740947698.zip`: Quest Actions Extension **2.0.0**.
+
+Both bundles target DFU 1.1.1. Player and editor copies match the archive-extracted SHA-256 values. Player load order is BasicRoads 18, Quest Actions Extension 19, Quest Pack 1 20, People of the Iliac Bay 21. Other enabled choices are preserved. The pre-install configuration is retained locally in `work/quest-mod-audit/Mods.before-install.json`.
+
+Quest Pack 1 declares a nonoptional, nonpeer dependency on Quest Actions Extension version 1.12.0. DFU's `ModManager.CheckModDependencies` treats the declared version as a minimum (`IsVersionLowerOrEqual`), so installed 2.0.0 satisfies that version check. This is not proof that every script action is bug-free.
+
+The owned-player startup test passed and registered all nine pack quest lists. The existing live dialogue regression also passed with both mods enabled. A data-only quest pack reporting “No mod loaders found” is expected; it contributes quest assets/lists rather than a runtime initializer. This audit does not claim all 302 quests have been played or that native quest integration is complete.
+
+Local inspection evidence is under ignored `work/quest-mod-audit/`. The original bundles, extracted quest text and decompiled extension source are not redistributed in this repository. Existing NameGen/localization and DET material diagnostics still appear in startup logs; no new clean-whole-stack claim is made.
+
+## Quest inventory
+
+The bundle contains 303 QBN-bearing TextAssets: **302 quest scripts plus one literal `test` fixture**. Metadata exposes 298 loose resources, including the test fixture. Five additional `JHrepchange1`–`JHrepchange5` script assets are linked child quests, not missing orphan entries.
+
+| Quest list | Active entries | Disabled entries |
+| --- | ---: | ---: |
+| Commoner | 23 | 0 |
+| Dark Brotherhood | 25 | 0 |
+| Fighters Guild | 41 | 2 |
+| Knightly Orders | 47 | 0 |
+| Mages Guild | 29 | 1 |
+| Misc | 2 | 0 |
+| Noble | 4 | 0 |
+| Temples | 12 | 4 |
+| Thieves Guild | 30 | 0 |
+| Total | 213 | 7 |
+
+These are list entries, not all directly offerable quest scripts. Loose quests include chained/supporting content. `QuestList-Misc:6` refers to `JHPCART`, while the available asset is `JHCART`; this is a source-level candidate defect requiring native lookup verification, not a reason to rewrite the downloaded pack silently.
+
+There is no `A0C00Y14` or `S000...` asset/list reference in the pack. It does not override our narrow vanilla delivery pilot or the main-quest files inspected here. It still uses fixed main-world identities such as Gortwog.
+
+Raw syntax census across all 303 scripts: 258 declare people, 199 declare questors, 117 contain `place npc`, 82 `hide npc`, 90 `place foe`, 134 `create foe`, 150 `killed`, 288 clocks and 85 daily time windows. These overlapping counts identify test coverage needs; they do not establish semantic compatibility.
+
+## Representative NPC risks
+
+| Case | Script and evidence | Required treatment |
+| --- | --- | --- |
+| Human/monster swap | `JHCAPA01` The Werewolf Hunt, declarations 385–391, hide/place sequence 513–521, kill/reward 528–535 | Preserve distinct Person and Foe resources and scripted visibility. Do not let routine lifecycle resurrect the human or remove the foe |
+| Fixed named people and disguised actor | `JHDB121a` To Kill an Ambassador, Br'itsa/Gortwog 326–331, alias/vampire sequence 390–439 | Retain individual identity, alias semantics, quest placement and hostile replacement |
+| Captive child/parent | `JHDB109` Going Home, 95–113 and 129–154 | Quest dungeon/home assignment overrides normal family routine; timed hide and parent ambush must remain native |
+| Hostage | `JHDB113` To the Wolves, 68–117 | Preserve target, hide/face/dialogue transitions and timer outcomes |
+| Priest escort and timed combat | `JHKN119` Rite of Vampire Dispelling, 115–149 and 181–213 | Temple service affiliation does not make this an ordinary staff actor; preserve hidden escort and event clock |
+| Relocated service-role people | `JHCAPA01`, 385–411 and 458–489; `JHCG003`, 84–99 | Merchant/apothecary/chemist faction alone is not proof of a permanent shopkeeper or resident |
+| Kill target represented as foe | `JHFG106`, 157–170 and 220–224 | Native kill event and foe identity must survive simulation; do not substitute a generic citizen |
+
+All source identifiers above refer to extracted user-installed bundle TextAssets. Representative tests must cover click, item hand-in, reward, scripted relocation, hiding/restoration, timing, foe injury/death and save/load, not merely whether an NPC appears.
+
+## Extension inventory
+
+Quest Actions Extension registers **28 actions/conditions** at game start plus four console commands. It adds no NPC sprite sheets or global household system. Quest Pack 1 adds quest resources, not a global resident census or new animation assets.
+
+| Group | Registered classes |
+| --- | --- |
+| Player stats/status | `ReducePlayerHealth`, `ReducePlayerFatigue`, `ReducePlayerMagicka`, `IncreasePlayerHealth`, `IncreasePlayerFatigue`, `IncreasePlayerMagicka`, `InfectPlayerWith` |
+| Items | `PlayerHandsover`, `PlayerPossesses`, `EquippedWithItem`, `UpdateQuestItemMaterial`, `UpdateQuestItemAddEnchantment`, `UpdateQuestItemApplyMagicTemplate` |
+| Time/location/state | `RaiseTime`, `WithinUnits`, `CurrentMapPixel`, `CurrentInBlockPixel`, `PlayerCurrentRegionIs`, `CurrentStateIs` |
+| Thresholds/progression | `WhenHealthLevel`, `WhenFatigueLevel`, `WhenMagickaLevel`, `GuildRankAtLeast`, `EnemyHealthLowerHigher`, `KilledEnemiesOfClass`, `MagicEfectKeyIsOn`, `PlayerLegalReputeIs`, `PlayerFactionReputeIs` |
+
+Important interactions:
+
+- `WithinUnits` reads the actual QuestResourceBehaviour transform and vertical difference. It can follow the original moving resource; it cannot locate an unrelated substitute resident. Example: `JHMG222:131`.
+- `CurrentMapPixel`, `CurrentInBlockPixel` and region conditions remain player-position checks. Do not satisfy them using an unloaded NPC's scheduled position.
+- `RaiseTime` directly advances the game clock. Our schedules, sleep, stays, reporting and guard duties must handle clock jumps. A future 2× clock must change elapsed-time progression without incorrectly scaling explicit quest time jumps or deadlines.
+- `GuildRankAtLeast`, legal reputation and faction reputation read native player state. NPC disposition is a separate value; planned guild expulsion must update native membership coherently rather than imitate it only in dialogue.
+- `EnemyHealthLowerHigher` and `KilledEnemiesOfClass` depend on native quest foe state. Background cleanup must not count as a kill or lose required injury/death events.
+
+The decompiled `CurrentStateIs.Pattern` appears to omit alternative separators before vampire/wereboar/werewolf forms. This is a candidate upstream parsing defect, not a confirmed gameplay failure or a mod change made by this audit. Check affected syntax in a native parser fixture before considering a compatibility shim. No downloaded bundle was modified.
+
+## Acceptance backlog
+
+- [ ] Native parser/lookup check for every contributed list entry and extension syntax used by the pack, including the `JHPCART` discrepancy.
+- [ ] Original-resource identity and no duplicate actor across sleep, return, streaming and save/load.
+- [ ] Captive/escort, disguise/monster swap, fixed individual, relocated service actor and kill/reward fixtures.
+- [ ] Timed meetings, explicit clock jumps and quest deadlines under the eventual clock-rate policy.
+- [ ] Guild/reputation conditions after any future disposition-driven expulsion system.
+- [ ] Confirm pending and completed quest cleanup releases simulation ownership without reviving dead people.
+
+Use the [NPC integration policy](NPC-SYSTEMS.md#inventory) for implementation ordering. Installing these mods does not expand the current automatic household-binding whitelist.
+
+
+<a id="external-mods"></a>
+
 # External mod installation and compatibility audit
 
 ## NPC and quest inventory — 17 October
 
-The current cross-category inventory, housing gaps, quest ownership risks and animation coverage are recorded in [NPC integration audit](NPC-INTEGRATION-AUDIT.md). This source audit supersedes assumptions that every stationary NPC is already adopted or housed. Runtime census and generic adoption remain pending.
+The current cross-category inventory, housing gaps, quest ownership risks and animation coverage are recorded in [NPC integration audit](NPC-SYSTEMS.md#inventory). This source audit supersedes assumptions that every stationary NPC is already adopted or housed. Runtime census and generic adoption remain pending.
 
-Quest Actions Extension 2.0.0 and Quest Pack 1 2025.11.20b are installed separately in player/editor, enabled before People of the Iliac Bay, and pass startup plus the existing live dialogue regression. See [quest-pack audit](QUEST-PACK-COMPATIBILITY.md) for the 302-script inventory, minimum dependency version, representative difficult NPCs and outstanding quest acceptance. No external bundle was modified.
+Quest Actions Extension 2.0.0 and Quest Pack 1 2025.11.20b are installed separately in player/editor, enabled before People of the Iliac Bay, and pass startup plus the existing live dialogue regression. See [quest-pack audit](COMPATIBILITY.md#quests) for the 302-script inventory, minimum dependency version, representative difficult NPCs and outstanding quest acceptance. No external bundle was modified.
 
 ## Pending: external stationary NPC integration — 17 October
 
@@ -114,3 +213,31 @@ Names of Tamriel Extended 1.1 is a loose StreamingAssets/Text override, not an e
 - DFU/work/external-mods/dependency-inventory.json and layout-overlaps.json
 - DFU/work/external-mods/Mods.before-full-install.json preserves previous enabled order
 - LivingCities/work/external-decompiled contains local inspection only, not redistributed code
+
+
+<a id="requirements"></a>
+
+# External mod requirements
+
+Latest user selection supersedes the original list below: Lootable Villagers and Families of Daggerfall are removed from both installations and the enabled-mod list. Original archives are retained. Living Cities will implement corpse inventory/keys itself and already owns households/relationships. Rosy's Residences is disabled in favor of the tavern/city/village improvements; Rosy's Resources remains enabled because those improvements require it. See EXTERNAL-MOD-AUDIT.md for the installed order and compatibility evidence.
+
+## Installation checkpoint, 16 October
+
+Later verification: native DFU `NameHelper` generated 400 nonempty names across all eight humanoid banks and both genders using the installed editor override. `DFU/work/external-mods/names-validation.log` records `EXTERNAL_NAMES_VERIFIED` and a clean Unity exit. This verifies generation, not saved-identity migration or visual gameplay.
+
+Property-key integration is in development: custom item and exact-property access, per-corpse persisted claims, and post-transfer inventory observation. `NativeItemTransferHooks` compiles against the player assemblies and observes single/bulk non-stacking transfers only after the item leaves the source and enters the destination. It is not yet attached to corpse inventories; do not claim loot is functional.
+
+The user is downloading archives into `DFU/downloads`. Names of Tamriel Extended 1.1 is installed separately into both player and editor `StreamingAssets/Text/NameGen.txt`. The original RAR remains unchanged. Its JSON omitted a comma between Monster3 sets 2 and 3; the staged copy adds that comma and passes JSON parsing. Both deployed files match SHA-256 `921B560087396021AE55030D5961C2D6010D4AF0B4721CEEEA1D11219857693D`. Runtime name-generation acceptance is pending. Existing saved identities must not be regenerated. This supersedes the initial login request below.
+
+Daggerfall Expanded Textures 1.3.0 and RMB Resource Pack 0.3.0 are installed separately in player/editor Mods folders. Unity successfully loaded both bundles and extracted their actual metadata (`DFU/work/external-mods/inspection.log`, `EXTERNAL_MOD_INSPECTION_SUCCESS`). Player Mods.json enables both before BasicRoads and Living Cities, preserving the existing pair's relative order; its original copy is `DFU/work/external-mods/Mods.before-dependencies.json`. This validates archive loading, not in-game compatibility. Taverns Redone, Lootable Villagers and Detailed City Walls are not yet installed.
+
+Detailed City Walls requires [Daggerfall Expanded Textures](https://www.nexusmods.com/daggerfallunity/mods/307) and [RMB Resource Pack](https://www.nexusmods.com/daggerfallunity/mods/528).
+
+User-approved 16 October 2026. These mods are separately installed dependencies, not assets bundled inside Living Cities.
+
+- Names of Tamriel — https://www.nexusmods.com/daggerfallunity/mods/1310 . Use the installed name generator for newly generated residents while preserving saved identities.
+- Taverns Redone — https://www.nexusmods.com/daggerfallunity/mods/43 . Lodging census, room allocation and navigation must use the modified inn geometry.
+- Lootable Villagers — https://www.nexusmods.com/daggerfallunity/mods/362 . Managed NPC corpses must offer persistent loot including their home/workplace key. Keys identify a settlement and building, survive inventory/save transitions and open the matching locked house, shop or inn. Prevent duplicate bodies/loot when both mods handle a death. Reuse a suitable native key inventory image if available; otherwise generate one.
+- Detailed City Walls — https://www.nexusmods.com/daggerfallunity/mods/221 . Requires Daggerfall Expanded Textures and RMB Resource Pack per its author. Off-duty guards in walled settlements walk into the wall interiors and use unoccupied beds; daytime posts sleep at night and night patrols sleep during the day. Exterior gate guards retire before gates close. This supersedes the earlier off-duty wall-patrol placeholder. Unwalled settlements do not gain guard sleep/rest behavior from this feature.
+
+Installation is pending: Nexus showed a logged-out download gate in the Codex browser. Requested login; do not claim these files are installed until their archives and deployed content are verified. Integration must inspect each mod's actual contents, interfaces and load ordering. Saved vanilla-layout room/route caches need invalidation or migration when replacement geometry changes.

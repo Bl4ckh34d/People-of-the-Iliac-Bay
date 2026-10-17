@@ -1,9 +1,0 @@
-# Physical space and local avoidance
-
-User requirement, 14 October 2026: NPCs occupy physical space. Walking residents must pass around each other rather than overlap or walk through one another. Apply this to citizens, children, travelers and guards, including normal routines, flight and pursuit.
-
-Use local avoidance over collision-safe navigation routes. Preserve walls and other static obstacles while providing enough lateral clearance for the actors' footprints. In narrow passages or doorways where passing is impossible, agents must slow, wait and yield with a stable priority rule. Do not solve a conflict by pushing another actor through a wall or teleporting it past the obstruction. Queues and social gatherings need separate reachable standing positions and must leave door access clear. Waiting for shops to open uses the same spacing policy.
-
-Keep avoidance local and bounded for large populations, using nearby spatial queries rather than every NPC comparing with every other NPC. The persistent schedule remains authoritative for intended activities, but actual progress must account for short delays and avoid snapping a visible actor back to its ideal timetable position. Save/load and distance-based materialization must not introduce overlapping actors at doors or route origins. Player interaction and collision should be checked alongside NPC-to-NPC behavior so crowds do not trap the player indefinitely.
-
-Acceptance: two opposing walkers in an open street; overtaking a slower walker; opposing traffic at a narrow door; groups entering and leaving a busy tavern; shoppers waiting for opening; stationary conversation groups; fleeing citizens crossing guard reinforcements; spawn/reload into a busy area; profiling with hundreds of scheduled NPCs. Current ResidentActor.Place directly assigns scheduled positions and does not implement this requirement. This document records pending work, not a completed feature.

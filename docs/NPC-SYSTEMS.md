@@ -1,10 +1,26 @@
+# NPC systems and current coverage
+
+Current coverage and source ownership are below. Planned behavior belongs in [Roadmap](ROADMAP.md); dated implementation details and older requirements remain in [History](HISTORY.md). This guide does not certify all NPCs, quests or buildings.
+
+| Area | Current boundary / remaining work |
+| --- | --- |
+| Identity and households | Generated residents are persistent. Authored local workers and mod NPCs still need universal census/adoption and housing priority. |
+| Schedules and travel | Daily itineraries, guests and inter-settlement travel exist. Physical movement, inn arrival and stated/actual destination consistency still need acceptance. |
+| Guards and crime | Finite guards, patrols, pursuit, reports, indoor responses, scenes and welfare exist across tested paths; this is not blanket native/mod quest coverage. |
+| Mortality and access | Ordinary native people have partial reactions, corpse/property-key handling and household consequences. Do not assume all provider actors use these paths. |
+| Sleep and art | Native bed surveys and sleeping art exist. Shared beds, complete external art coverage and universal mobile institutional staff remain future work. |
+| Conversation | Local dialogue uses current world/person context and recent transcript; durable memory/home disclosure changes have their own test status. Quest logic remains native. |
+| Commerce | Disposition influences implemented native commerce/service hooks; guild expulsion and noble consequences remain tracked separately in the roadmap. |
+
+<a id="inventory"></a>
+
 # NPC integration inventory and compatibility plan
 
 Audited 17 October 2026 against the local source, installed mod configuration, extracted bundle metadata, and DFU 1.1.1 source. This is a source audit, not proof that every actor in every settlement has been exercised in the player. Historical checkpoint documents describe successive states; this report distinguishes current code from proposed integration.
 
 ## Main findings
 
-**Future-policy follow-up, 17 October 2026:** see the [TL;DR roadmap](ROADMAP.md), [consolidated requirements](superpowers/specs/2026-10-17-npc-lifecycle-and-quest-dialogue-design.md) and [delivery plan](superpowers/plans/2026-10-17-consolidated-delivery-plan.md). Those describe requested housing priorities, inn visitors/shared beds, tenant keys, market commutes, quest-safe story context and shelved companions. They do not change the implemented coverage recorded below.
+**Future-policy follow-up, 17 October 2026:** see the [TL;DR roadmap](ROADMAP.md), [consolidated requirements](ROADMAP.md#detailed-design) and [delivery plan](ROADMAP.md#delivery-plan). Those describe requested housing priorities, inn visitors/shared beds, tenant keys, market commutes, quest-safe story context and shelved companions. They do not change the implemented coverage recorded below.
 
 There is no universal NPC adoption system yet. Generated household residents, generated visitors, ordinary native interior people, and quest-owned actors follow different paths. Outdoor authored NPCs from external mods are not automatically integrated. Registering an identity does not establish a home, commute, sleep schedule, or complete movement art.
 
@@ -123,4 +139,4 @@ Prioritized next work:
 - [ ] Test offer, rejection, acceptance, directions, journal, arrival, sleep/wake, hand-in, reward, hostility, injury/death, relocation, abort, completion, save/reload and concurrent quests.
 - [ ] Test fresh and existing saves, mod toggle/load-order changes, dawn/dusk/rain, murder/creature reactions, housing capacity and large-city frame times.
 
-Quest Pack 1 and Quest Actions Extension are included in the separate [additional quest audit](QUEST-PACK-COMPATIBILITY.md). Implementation should proceed by tested role adapters; generic movement of all authored NPCs is not yet safe.
+Quest Pack 1 and Quest Actions Extension are included in the separate [additional quest audit](COMPATIBILITY.md#quests). Implementation should proceed by tested role adapters; generic movement of all authored NPCs is not yet safe.

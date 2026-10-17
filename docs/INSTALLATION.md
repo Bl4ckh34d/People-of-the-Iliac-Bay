@@ -4,11 +4,11 @@ Status checked 17 October 2026. This repository is a development source snapshot
 
 ## Daggerfall Unity mod
 
-The tested project targets **Daggerfall Unity 1.1.1**. For source builds, see [repository setup](REPOSITORY.md) and [integration notes](INTEGRATION.md); those need a separate DFU source tree, Unity editor and build dependencies. Downloading this repository does not produce a playable installation by itself.
+The tested project targets **Daggerfall Unity 1.1.1**. For source builds, see [repository setup](DEVELOPMENT.md#repository) and [integration notes](DEVELOPMENT.md#integration); those need a separate DFU source tree, Unity editor and build dependencies. Downloading this repository does not produce a playable installation by itself.
 
 When a built `livingcities.dfmod` is available, close DFU, place it in the player's `DaggerfallUnity_Data/StreamingAssets/Mods` directory and enable **People of the Iliac Bay** in the mod list. The internal filename and GUID remain stable despite the public rename. Back up your saves and existing bundle before an update; use dedicated test saves during development.
 
-Install third-party mods separately, following their authors' requirements. The local integration set and explicit limitations are recorded in [external requirements](EXTERNAL-MOD-REQUIREMENTS.md), [external audit](EXTERNAL-MOD-AUDIT.md) and [tested local order](EXTERNAL-MOD-LOAD-ORDER.txt). These are development evidence, not a promise that arbitrary versions work together. Changed interior layouts require a restart; save outdoors before changing those mods.
+Install third-party mods separately, following their authors' requirements. The local integration set and explicit limitations are recorded in [external requirements](COMPATIBILITY.md#requirements), [external audit](COMPATIBILITY.md#external-mods) and [tested local order](EXTERNAL-MOD-LOAD-ORDER.txt). These are development evidence, not a promise that arbitrary versions work together. Changed interior layouts require a restart; save outdoors before changing those mods.
 
 ## Optional local LLM: what is actually used
 
