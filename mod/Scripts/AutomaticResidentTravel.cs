@@ -130,7 +130,8 @@ namespace LivingCities.DFU
                     double length=0;
                     for(int point=1;point<road.Count;point++)
                     {double x=road[point].X-road[point-1].X,z=road[point].Z-road[point-1].Z;length+=Math.Sqrt(x*x+z*z);}
-                    double roadSeconds=length*MapsFile.WorldMapTerrainDim*MeshReader.GlobalScale*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
+                    // Discovery must look back far enough for the slowest visitor.
+                    double roadSeconds=length*MapsFile.WorldMapTerrainDim*MeshReader.GlobalScale*DaggerfallUnity.Instance.WorldTime.TimeScale/(ResidentMovement.WalkSpeed*0.85);
                     foreach(int departureDay in ResidentDiscovery.CandidateDepartureDays(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),roadSeconds))
                     {
                         yield return PlanUnloadedTravelDay(source,sourceStore,departureDay,new[]{directory.MapID},id=>directory.LocationData,
@@ -189,7 +190,7 @@ namespace LivingCities.DFU
                 var firstVisit=new ResidentTravelProposal {ResidentId=proposal.ResidentId,HomeSettlement=proposal.HomeSettlement,
                     DestinationSettlement=proposal.DestinationSettlement,DesiredDeparture=proposal.DesiredDeparture,
                     Purpose=proposal.Purpose,VisitDays=1};
-                double secondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
+                double secondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeedFor(person.AppearanceSeed);
                 yield return ResidentTripPlanner.Prepare(firstVisit,person,home.Grid,destination,road,secondsPerMetre,result,valid);
                 if(!valid()) yield break;
                 if(discover && result.Trip!=null && result.Trip.Evaluate(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()).Phase!=ResidentTripPhase.Outbound)

@@ -58,7 +58,7 @@ namespace LivingCities.DFU
                     var roomRoute=indoorGeometry.RouteBetween(currentLocal,plan.Standing);
                     try
                     {
-                        double rate=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeed;
+                        double rate=DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed;
                         plan.SecondsPerMetre=rate;
                         var scheduleRoute=new List<GuardPoint3>(exitRoute); scheduleRoute.Reverse();
                         plan.Walk=TravelerRoomWalk.Create(scheduleRoute,plan.AttemptedAt,plan.LeaveAt,rate);

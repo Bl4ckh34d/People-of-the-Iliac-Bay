@@ -42,7 +42,7 @@ namespace LivingCities.DFU
                     store.ResidentInnAdmission(person.Id,now)!=TravelerAdmission.Pending || store.ResidentInnReceptionAt(person.Id,now)!=null) continue;
                 var route=indoorGeometry.RouteBetween(interior.transform.InverseTransformPoint(indoorGeometry.EntryGround.Value),counter.Value);
                 try {store.SaveResidentInnReception(person.Id,new ResidentInnReception {VisitId=visit.VisitId,SettlementId=visit.SettlementId,KeeperId=keeperId,BuildingKey=key,VisitEnterAt=visit.VisitEnterAt,
-                    VisitLeaveAt=visit.VisitLeaveAt,StartedAt=now,SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeed,
+                    VisitLeaveAt=visit.VisitLeaveAt,StartedAt=now,SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeedFor(person.AppearanceSeed),
                     ServiceSeconds=(3+person.AppearanceSeed%4)*DaggerfallUnity.Instance.WorldTime.TimeScale,Route=route});}
                 catch(System.ArgumentException) {return false;}
             }

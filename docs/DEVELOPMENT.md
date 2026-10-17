@@ -2,6 +2,12 @@
 
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
+## Stable personal walking pace — 17 October 2026
+
+Mobile citizens now derive walking speed from their persisted appearance seed through a separate deterministic hash: 1.3 m/s ±15%, rounded to four decimals (1.105–1.495 m/s). Scene changes, day changes and reloads do not reroll it. Existing fleeing already had stable 3.25–4.55 m/s variation and retains its original formula and values.
+
+The personal pace feeds daily itinerary and fallback travel durations, rendered indoor movement, shop browsing/capture, inn/room/service routes, newly planned resident road travel and new generated traveler visits. Shared path geometry caches retain baseline durations; each citizen's itinerary copies those durations at their own pace. Legacy local 12× and fixed-speed 2× itineraries convert on restore, while already-personalized durations remain unchanged. Calendar time remains 2×. Previously documented migration limits for already-booked inter-settlement journeys still apply. Guard formation schedules retain their coordinated pace.
+
 ## Physical movement and the 2× clock — 17 October 2026
 
 The reported resident slowdown came from cached daily itinerary durations still encoded at 12×. A native Daggerfall save contained a 58.47 m leg lasting 539.76 game seconds: 1.3 m/s at 12×, but only 0.217 m/s after loading with the 2× clock. Restore now detects those legacy rates from route geometry and repairs walking, return and gate durations. It also repairs affected caches already resaved as schema 22/23, while preserving dwell durations and leaving already-correct legs unchanged.

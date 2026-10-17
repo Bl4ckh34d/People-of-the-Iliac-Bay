@@ -247,7 +247,7 @@ namespace LivingCities.DFU
                             route.Reverse();
                             try
                             {
-                                double secondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
+                                double secondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeedFor(plan.Resident.AppearanceSeed);
                                 plan.RoomWalk=TravelerRoomWalk.Create(route,plan.Journey.CheckInAt,plan.Journey.CheckOutAt,secondsPerMetre);
                                 plan.RoomFollower=new InteriorRoomFollower(route,secondsPerMetre);
                                 plan.RoomSecondsPerMetre=secondsPerMetre;

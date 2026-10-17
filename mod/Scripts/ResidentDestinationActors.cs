@@ -137,7 +137,7 @@ namespace LivingCities.DFU
                             {
                                 worldStore.SaveResidentServiceExit(resident.Id,new ResidentServiceExit {VisitId=visit.VisitId,SettlementId=visit.SettlementId,BuildingKey=visit.BuildingKey,
                                     VisitEnterAt=visit.VisitEnterAt,VisitLeaveAt=visit.VisitLeaveAt,StartedAt=seconds,
-                                    SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeed,Route=route});
+                                    SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed,Route=route});
                                 continue;
                             }
                             catch(System.ArgumentException) { /* Unsupported exit geometry retains the existing schedule. */ }
@@ -175,7 +175,7 @@ namespace LivingCities.DFU
                                 worldStore.SaveResidentServiceExit(resident.Id,new ResidentServiceExit {VisitId=visit.VisitId,
                                     SettlementId=visit.SettlementId,BuildingKey=visit.BuildingKey,VisitEnterAt=visit.VisitEnterAt,
                                     VisitLeaveAt=visit.VisitLeaveAt,StartedAt=seconds,
-                                    SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeed,Route=route});
+                                    SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed,Route=route});
                                 continue;
                             }
                             catch(System.ArgumentException)

@@ -26,7 +26,7 @@ namespace LivingCities.DFU
             uint previous=DFRandom.Seed;
             try
             {
-                return TravelerDemand.Create(seed,town,tavern,day,slot,origins,1,4,access.Walled,access.Points,
+                var proposal=TravelerDemand.Create(seed,town,tavern,day,slot,origins,1,4,access.Walled,access.Points,
                     DaggerfallUnity.Instance.WorldTime.TimeScale/1.3,(origin,appearance,sex)=> {
                         var bank=origin.Race==(int)Races.Redguard ? NameHelper.BankTypes.Redguard :
                             origin.Race==(int)Races.Nord ? NameHelper.BankTypes.Nord : NameHelper.BankTypes.Breton;
@@ -34,6 +34,8 @@ namespace LivingCities.DFU
                         var names=DaggerfallUnity.Instance.NameHelper;
                         return names.FirstName(bank,sex==ResidentSex.Male ? Genders.Male : Genders.Female)+" "+names.Surname(bank);
                     });
+                proposal.Visit.CommuteSeconds*=ResidentMovement.WalkSpeed/ResidentMovement.WalkSpeedFor(proposal.Person.AppearanceSeed);
+                return proposal;
             }
             finally { DFRandom.Seed=previous; }
         }

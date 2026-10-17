@@ -29,14 +29,18 @@ namespace LivingCities.DFU
             }
             finally {SaveLoadManager.OnLoad-=handler;}
             var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host);
+            var snapshot=store.Snapshot();
+            var people=new System.Collections.Generic.Dictionary<string,Resident>();
+            foreach(var town in snapshot.Settlements) foreach(var home in town.Households)
+                foreach(var resident in home.Residents) people.Add(resident.Id,resident);
             int checkedLegs=0;
-            foreach(var town in store.Snapshot().Routines) foreach(var person in town.Residents)
+            foreach(var town in snapshot.Routines) foreach(var person in town.Residents)
                 if(person.Itinerary!=null) foreach(var stop in person.Itinerary.Stops)
                 {
                     double length=0;
                     for(int n=1;n<stop.Route.Count;n++)
                     {var a=stop.Route[n-1];var b=stop.Route[n];length+=Math.Sqrt((b.X-a.X)*(b.X-a.X)+(b.Z-a.Z)*(b.Z-a.Z));}
-                    if(Math.Abs(length/stop.WalkSeconds*2-ResidentMovement.WalkSpeed)>0.002)
+                    if(Math.Abs(length/stop.WalkSeconds*2-ResidentMovement.WalkSpeedFor(people[person.ResidentId].AppearanceSeed))>0.002)
                         throw new InvalidOperationException("Loaded route still has a clock-dependent physical speed.");
                     checkedLegs++;
                 }
@@ -52,7 +56,7 @@ namespace LivingCities.DFU
                 actor.Initialize(new Resident {Id="movement-probe",FullName="Movement Probe",AppearanceSeed=42},1,
                     GameManager.Instance.StreamingWorld.GetCurrentCityNavigation());
                 Physics.SyncTransforms(); yield return null;
-                foreach(double speed in new[]{ResidentMovement.WalkSpeed,ResidentMovement.FleeSpeed(42)})
+                foreach(double speed in new[]{actor.WalkingSpeed,ResidentMovement.FleeSpeed(42)})
                 {
                     var motion=body.GetComponent<CrowdMotion>(); motion.ResetPlacement();
                     actor.Place(new Vector3(0,1000,0),Vector3.right);

@@ -14,6 +14,7 @@ namespace LivingCities.DFU
     public sealed class ResidentActor : MonoBehaviour
     {
         public Resident Resident { get; private set; }
+        public double WalkingSpeed { get { return ResidentMovement.WalkSpeedFor(Resident.AppearanceSeed); } }
         public MobilePersonNPC Person { get; private set; }
         private DaggerfallEntity entity;
         private SleepingPose sleeping;
@@ -42,7 +43,7 @@ namespace LivingCities.DFU
         {
             death=onDeath;
             Resident = resident;
-            crowd=GetComponent<CrowdMotion>(); if(!crowd) crowd=gameObject.AddComponent<CrowdMotion>(); crowd.Configure(1);
+            crowd=GetComponent<CrowdMotion>(); if(!crowd) crowd=gameObject.AddComponent<CrowdMotion>(); crowd.Configure(1,WalkingSpeed);
             Person = GetComponent<MobilePersonNPC>();
             var motor = GetComponent<MobilePersonMotor>();
             motor.cityNavigation = navigation;

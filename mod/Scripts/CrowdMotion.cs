@@ -13,6 +13,7 @@ namespace LivingCities.DFU
         public const float BodyRadius=0.25f;
         public const float Separation=BodyRadius*2+0.02f;
         private float offset;
+        private double walkingSpeed=ResidentMovement.WalkSpeed;
         private const float radius=BodyRadius;
         private bool placed;
         private Vector3 lastTarget;
@@ -21,7 +22,7 @@ namespace LivingCities.DFU
         private int comfortPassingSide;
         private double comfortLateralOffset;
         public void ResumeFromPause() { resumeWithoutReconstruction=true; }
-        public void Configure(float groundOffset) { offset=groundOffset; }
+        public void Configure(float groundOffset,double speed=ResidentMovement.WalkSpeed) { offset=groundOffset;walkingSpeed=speed; }
         public void ResetPlacement() { placed=false; comfortPassingSide=0; comfortLateralOffset=0; }
         // A saved body already has a known location. Do not run the new-spawn
         // ring search, which can teleport it when another body reconstructs first.
@@ -88,8 +89,8 @@ namespace LivingCities.DFU
                 actual=Ground; return placed;
             }
             var from=Ground;
-            double maximum=physicalTarget ? ResidentMovement.WalkSpeed*Time.deltaTime :
-                Math.Max(ResidentMovement.WalkSpeed*Time.deltaTime,change.magnitude);
+            double maximum=physicalTarget ? walkingSpeed*Time.deltaTime :
+                Math.Max(walkingSpeed*Time.deltaTime,change.magnitude);
             // Long frame stalls must not sweep through a whole crowd in one step.
             maximum=Math.Min(maximum,0.5);
             if(!comfortWalking) { comfortPassingSide=0; comfortLateralOffset=0; }

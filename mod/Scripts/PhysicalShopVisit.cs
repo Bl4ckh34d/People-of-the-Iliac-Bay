@@ -30,7 +30,7 @@ namespace LivingCities.DFU
             var actual=interior.transform.InverseTransformPoint(actor.transform.position-Vector3.up);
             var result=new ObservedVisit {ResidentId=actor.Resident.Id,SettlementId=settlement,BuildingKey=interior.EntryDoor.buildingKey,
                 ObservedAt=now,PlannedEndAt=OriginalEndAt,ResumeUntil=Math.Max(OriginalEndAt,ResumeUntil),
-                SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeed};
+                SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed};
             if(progress.Phase==ShopVisitPhase.Complete)
             {
                 result.Legs.Add(new ObservedVisitLeg {Route=new List<GuardPoint3>{new GuardPoint3 {X=actual.x,Y=actual.y,Z=actual.z}},AfterPhase=ShopVisitPhase.Complete});
@@ -79,7 +79,7 @@ namespace LivingCities.DFU
                 {
                     route=geometry.RouteBetween(actual,activityGround);
                     if(route.Count<2) { LastFailure="no route from actual body to activity"; return; }
-                    try { follower=new InteriorRoomFollower(route,DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeed,
+                    try { follower=new InteriorRoomFollower(route,DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed,
                         progress.Leg==Journey.LegCount-1 ? 0.55f : 0.15f); }
                     catch(ArgumentException error) { LastFailure=error.Message; return; }
                 }

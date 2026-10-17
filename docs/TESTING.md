@@ -8,7 +8,18 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — physical movement with 2× time, 17 October 2026
+## Latest acceptance — stable personal walking variation, 17 October 2026
+
+Installed bundle SHA-256: `E29B7DAF3ED1A257C2237726775969D213E41A47C743163D132196C9FCDACAC8`, matching `dist/livingcities.dfmod`.
+
+- **675/675 core tests passed**; runtime compilation has zero warnings/errors; Unity build/install passed. New tests first reproduced absent walking variation and missing personal speed in legacy daily caches.
+- Across 10,000 appearance seeds, walking stays within 1.105–1.495 m/s, includes slower/faster people, has over 100 distinct values, remains stable per seed and averages close to 1.3 m/s. Existing fleeing values exactly match the previous formula across 1,000 seeds.
+- The native old Daggerfall fixture checked **778 daily route legs** against each owner's personal speed after migration. The rendered test resident measured **1.3888 m/s** against its assigned **1.3779 m/s** walking pace. Running measured **3.3473 m/s** against its unchanged **3.3605 m/s** pace. Simultaneous game/real clock ratios were **2.0225** and **1.9988**.
+- Repeat using the same `-MovementClockProbe` command below. Evidence: `work/movement-variation-red.log`, `movement-variation-red-cache.log`, `movement-variation-core.log`, `movement-variation-runtime.log`, `movement-variation-build.log`, and `movement-variation-native-player.log`. The fixture probe did not overwrite player saves.
+
+Personal walking pace applies to mobile citizens, their local schedules and indoor movement, and newly planned travel. Existing fleeing variation stays intact. Coordinated guard formation speeds and the previously documented migration limit for old paid inter-settlement trips are unchanged.
+
+## Prior acceptance — physical movement with 2× time, 17 October 2026
 
 Installed bundle SHA-256: `F43956C9225C2FF5EA99F41AAEA70FA43AA2BB233456721B761855F1B384A0B4`, matching `dist/livingcities.dfmod`.
 
