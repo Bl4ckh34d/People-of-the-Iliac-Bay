@@ -57,7 +57,7 @@ namespace LivingCities.DFU
             if (Math.Abs(a.X-b.X) + Math.Abs(a.Z-b.Z) < 0.1 || report.SearchRoute == null)
                 throw new InvalidOperationException("Investigator did not patrol the area.");
             string json = DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-            var restored = new WorldStateStore(0);
+            var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
             restored.Restore((WorldState)DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Deserialize(typeof(WorldState), json));
             if (!restored.OutdoorCorpses(population.SettlementId)[0].Corpse.Cleared)
                 throw new InvalidOperationException("Outdoor cleanup lost on native save round trip.");
@@ -89,7 +89,7 @@ namespace LivingCities.DFU
             game.PlayerEntity.Items.TransferAll(loot.Items);
             if (!game.PlayerEntity.Items.Contains(takenKey) || store.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count != 0)
                 throw new InvalidOperationException("Native take-all did not persist the corpse key claim.");
-            var keyReload = new WorldStateStore(0); keyReload.Restore(store.Snapshot());
+            var keyReload = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); keyReload.Restore(store.Snapshot());
             if (keyReload.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count != 0)
                 throw new InvalidOperationException("Corpse key returned after world reload.");
             // Returning a taken key is a player deposit, not a replenished claim.

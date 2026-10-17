@@ -14,7 +14,7 @@ namespace LivingCities.DFU
             var original=store;
             try
             {
-                var isolated=new WorldStateStore(1);isolated.Restore(store.Snapshot());store=isolated;
+                var isolated=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());isolated.Restore(store.Snapshot());store=isolated;
                 Resident person=null,partner=null;int settlement=0;
                 foreach(var town in store.Snapshot().Settlements)
                     foreach(var home in town.Households)

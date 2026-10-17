@@ -58,7 +58,7 @@ namespace LivingCities.Tests
                 store.SetRoutines(source);
                 source.Residents[0].Itinerary.Stops[0].Route[1].X = 999;
                 var snapshot = store.Snapshot();
-                Check.Equal(22, snapshot.Version);
+                Check.Equal(new WorldState().Version, snapshot.Version);
                 Check.Near(10, snapshot.Routines[0].Residents[0].Itinerary.Stops[0].Route[1].X);
                 var json = JsonSerializer.Serialize(snapshot, new JsonSerializerOptions { IncludeFields = true });
                 var decoded = JsonSerializer.Deserialize<WorldState>(json, new JsonSerializerOptions { IncludeFields = true });

@@ -226,7 +226,7 @@ namespace LivingCities.DFU
             if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
-            store = new WorldStateStore(NewSeed()); current = null; saveFault = false; nextCheck = 0;
+            store = new WorldStateStore(NewSeed(),ConversationArchiveRoot()); current = null; saveFault = false; nextCheck = 0;
             if (questHouseholdsEnabled && mod != null) questOffers = CreateQuestOffers();
         }
         private void BeforeLoad(SaveData_v1 ignored)
@@ -246,6 +246,14 @@ namespace LivingCities.DFU
             saveFault = true; current = null;
         }
         private static uint NewSeed() { return BitConverter.ToUInt32(Guid.NewGuid().ToByteArray(), 0); }
+        internal static string ConversationArchiveRoot()
+        {
+            var manager=SaveLoadManager.Instance;
+            string saves=manager!=null ? manager.UnitySavePath : DaggerfallUnity.Settings.MyDaggerfallUnitySavePath;
+            if(string.IsNullOrEmpty(saves) || !System.IO.Directory.Exists(saves))
+                saves=System.IO.Path.Combine(DaggerfallUnity.Settings.PersistentDataPath,"Saves");
+            return System.IO.Path.Combine(saves,"PeopleMemory");
+        }
         public object NewSaveData() { return new WorldState { WorldSeed = NewSeed() }; }
         public object GetSaveData()
         {
@@ -253,7 +261,7 @@ namespace LivingCities.DFU
             if (saveFault) throw new InvalidOperationException("Living Cities save restore failed; refusing to overwrite population data.");
             if (guards) guards.Capture();
             if (streets) streets.CaptureObservedVisits();
-            return store.Snapshot();
+            return store.SnapshotForSave();
         }
         public void RestoreSaveData(object saveData)
         {

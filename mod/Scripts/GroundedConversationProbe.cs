@@ -54,7 +54,7 @@ namespace LivingCities.DFU
             if (store.ConversationDisposition(personId) != offset - 12) throw new InvalidOperationException("Reported insult incorrectly changed disposition.");
             yield return Ask(adapter, window, submit, transcript, "You are an idiot", answer => { });
             if (store.ConversationDisposition(personId) != offset - 37) throw new InvalidOperationException("Repeated insult did not apply -25.");
-            var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
+            var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore(store.Snapshot());
             if (restored.ConversationDisposition(personId) != offset - 37) throw new InvalidOperationException("Disposition not preserved by snapshot restore.");
             var enabledField = typeof(LivingCitiesMod).GetField("conversationDispositionEnabled", Private);
             var reactionMethod = typeof(TalkManager).GetMethod("GetReactionToPlayer_0_1_2", Private);

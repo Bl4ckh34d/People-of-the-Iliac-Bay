@@ -289,7 +289,7 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_PLANNER_ROAD: nodes="+plannedRoad.Count+"; access="+plannerStreetPoint+"; candidates="+planningPeople.Count);
                 var awaySurvey=new UnloadedSettlementSurvey.Result();
                 yield return UnloadedSettlementSurvey.ReadSteps(awayLocation,awaySurvey);
-                var coldStore=new WorldStateStore(plannerState.WorldSeed);
+                var coldStore=new WorldStateStore(plannerState.WorldSeed,LivingCitiesMod.ConversationArchiveRoot());
                 var coldPopulation=new UnloadedPopulation.Result();
                 foreach(var building in awaySurvey.Grid.Buildings)
                 {
@@ -315,7 +315,7 @@ namespace LivingCities.DFU
                     retainedCold.Residents[0].FullName!=coldPerson.FullName || retainedCold.Surname!=coldHome.Surname)
                     throw new InvalidOperationException("Reserved traveler identity changed when hometown was completed.");
                 Debug.Log("LIVING_CITIES_RESERVED_HOUSEHOLD_PASS: one surveyed home reserved; native restore and full hometown completion preserve identity/family; loaded scene unchanged.");
-                var incomingStore=new WorldStateStore(plannerState.WorldSeed);
+                var incomingStore=new WorldStateStore(plannerState.WorldSeed,LivingCitiesMod.ConversationArchiveRoot());
                 int incomingDay=(int)(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()/86400)+1;
                 yield return host.ProbeUnloadedTravelDay(awayLocation,directory.LocationData,incomingStore,incomingDay,()=>true);
                 var incomingState=incomingStore.Snapshot();
@@ -353,8 +353,8 @@ namespace LivingCities.DFU
                     multiDay.Trip.Destination.Stops[firstInnIndex].DwellSeconds<2*3600 ||
                     multiDay.Trip.Destination.Stops[firstInnIndex].KeepRoomUntil<=multiDay.Trip.ArrivesAt)
                     throw new InvalidOperationException("Native multi-day routing failed: "+multiDay.Unavailable);
-                var overnightStore=new WorldStateStore(1);overnightStore.Restore(plannerState);overnightStore.ScheduleResidentTrip(multiDay.Trip);
-                var overnightReload=new WorldStateStore(1);overnightReload.Restore(RoundTrip(overnightStore.Snapshot()));
+                var overnightStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());overnightStore.Restore(plannerState);overnightStore.ScheduleResidentTrip(multiDay.Trip);
+                var overnightReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());overnightReload.Restore(RoundTrip(overnightStore.Snapshot()));
                 if(!overnightReload.IsResidentAway(multiDay.Trip.ResidentId,multiDay.Trip.ArrivesAt) ||
                     overnightReload.IsResidentAway(multiDay.Trip.ResidentId,multiDay.Trip.HomeAt))
                     throw new InvalidOperationException("Multi-day original identity lost absence or return.");
@@ -382,7 +382,7 @@ namespace LivingCities.DFU
                 var lateVisits=new System.Collections.Generic.List<ResidentVisitSnapshot>(ResidentVisitJourney.Create(latePlan.Trip.ArrivesAt,latePlan.Trip.Destination).ScheduledVisits());
                 if(lateVisits[1].EnterAt<lateVisits[0].LeaveAt || Math.Floor(lateVisits[1].EnterAt/86400)<=Math.Floor(lateVisits[0].EnterAt/86400))
                     throw new InvalidOperationException("Late service did not follow the overnight stay.");
-                var lateStore=new WorldStateStore(1);lateStore.Restore(plannerState);lateStore.ScheduleResidentTrip(latePlan.Trip);
+                var lateStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());lateStore.Restore(plannerState);lateStore.ScheduleResidentTrip(latePlan.Trip);
                 lateStore.Restore(RoundTrip(lateStore.Snapshot()));
                 if(lateStore.ResidentTripAt(latePlan.Trip.ResidentId,lateVisits[0].EnterAt+60).VisitPurpose!=ResidentVisitPurpose.Inn)
                     throw new InvalidOperationException("Lodging-first native restore lost the arrival night.");
@@ -409,12 +409,12 @@ namespace LivingCities.DFU
                 if(sameInn.Trip==null || sameInn.InnDoor.BuildingKey!=socialStop.BuildingKey || sameInn.Trip.Destination.Stops.Count!=1 ||
                     sameInn.Trip.Destination.Stops[0].WalkSeconds!=socialStop.WalkSeconds || sameInn.Trip.Destination.Stops[0].DwellSeconds<26*3600)
                     throw new InvalidOperationException("Social destination could not host its own overnight stay.");
-                var socialStore=new WorldStateStore(1);socialStore.Restore(plannerState);socialStore.ScheduleResidentTrip(sameInn.Trip);
+                var socialStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());socialStore.Restore(plannerState);socialStore.ScheduleResidentTrip(sameInn.Trip);
                 socialStore.Restore(RoundTrip(socialStore.Snapshot()));
                 if(!socialStore.IsResidentAway(sameInn.Trip.ResidentId,sameInn.Trip.ArrivesAt+86400))
                     throw new InvalidOperationException("Same-inn stay lost home absence on native restore.");
                 Debug.Log("LIVING_CITIES_SAME_INN_STAY_PASS: only available inn="+socialStop.BuildingKey+"; original approach, two nights and serialized absence.");
-                var lodgingStore=new WorldStateStore(plannerState.WorldSeed);
+                var lodgingStore=new WorldStateStore(plannerState.WorldSeed,LivingCitiesMod.ConversationArchiveRoot());
                 lodgingStore.GetOrCreateFamilies(directory.MapID,HousingSurvey.Read(directory));
                 var housed=new ResidentTripPlanner.Result();
                 yield return ResidentTripPlanner.PrepareLodgedTrip(planned.Trip,2,awaySurvey.Grid,awayLocation,lodgingStore,1,123,housed,()=>true);
@@ -426,7 +426,7 @@ namespace LivingCities.DFU
                     lateDay.Trip.Destination.Stops.Count!=2 || lateDay.Trip.Destination.Stops[0].Purpose!=ResidentVisitPurpose.Inn ||
                     lateDay.Trip.Destination.Stops[1].BuildingKey!=lateTrip.Destination.Stops[0].BuildingKey)
                     throw new InvalidOperationException("Late day visit failed capacity-aware overnight promotion: "+lateDay.Unavailable);
-                var lateDayStore=new WorldStateStore(1);lateDayStore.Restore(lodgingStore.Snapshot());
+                var lateDayStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());lateDayStore.Restore(lodgingStore.Snapshot());
                 lateDayStore.ScheduleResidentTrip(lateDay.Trip);lateDayStore.Restore(RoundTrip(lateDayStore.Snapshot()));
                 if(!lateDayStore.IsResidentAway(lateDay.Trip.ResidentId,lateDay.Trip.InnReceptions[0].VisitEnterAt+60) ||
                     lateDayStore.IsResidentAway(lateDay.Trip.ResidentId,lateDay.Trip.HomeAt))
@@ -451,7 +451,7 @@ namespace LivingCities.DFU
                 if(alternative.Trip.InnReceptions.Count!=1 || alternative.Trip.InnStays.Count!=0)
                     throw new InvalidOperationException("Prepared trip lacks reception plan or paid before arrival.");
                 lodgingStore.ScheduleResidentTrip(alternative.Trip);
-                var lodgingReload=new WorldStateStore(1);lodgingReload.Restore(RoundTrip(lodgingStore.Snapshot()));
+                var lodgingReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());lodgingReload.Restore(RoundTrip(lodgingStore.Snapshot()));
                 if(!lodgingReload.IsResidentAway(alternative.Trip.ResidentId,alternative.Trip.ArrivesAt))
                     throw new InvalidOperationException("Capacity-selected trip lost ownership on restore.");
                 var reception=alternative.Trip.InnReceptions[0];
@@ -473,7 +473,7 @@ namespace LivingCities.DFU
                 var deadKeeper=deadState.NativePeople.Find(p=>p.Id==reception.KeeperId);
                 if(deadKeeper==null) throw new InvalidOperationException("Remote keeper identity not persisted.");
                 deadKeeper.IsAlive=false;
-                var unavailable=new WorldStateStore(1);unavailable.Restore(deadState);
+                var unavailable=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());unavailable.Restore(deadState);
                 if(unavailable.HasUnpreparedResidentInnAdmission(alternative.Trip.DestinationSettlement,reception.BuildingKey,reception.ServiceEndsAt+1) ||
                     unavailable.TryAdmitResidentInn(alternative.Trip.ResidentId,reception.ServiceEndsAt+1) ||
                     unavailable.Snapshot().ResidentTrips.Find(t=>t.ResidentId==alternative.Trip.ResidentId).ServiceExits.Count!=1)
@@ -484,7 +484,7 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_KEEPER_ADMISSION_PASS: dead bound keeper rejects payment, prepares exit and stays dead across native restore.");
                 Debug.Log("LIVING_CITIES_OVERNIGHT_CAPACITY_PASS: homes="+actualHomes.Households.Count+"; full="+firstInn+
                     "; alternative="+alternative.InnDoor.BuildingKey+"; room remains unbooked until arrival.");
-                var plannedStore=new WorldStateStore(1); plannedStore.Restore(plannerState);
+                var plannedStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); plannedStore.Restore(plannerState);
                 double commitTime=planned.Trip.DepartsAt-1;
                 if(ResidentTripPlanner.Commit(plannedStore,planned.Trip,()=>false,commitTime) ||
                     ResidentTripPlanner.Commit(plannedStore,planned.Trip,()=>true,planned.Trip.DepartsAt))
@@ -495,18 +495,18 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TRAVEL_COMMIT_PASS: stale/late requests rejected; valid original resident committed once.");
                 var adjacent=ResidentTrip.Create(planned.Trip.ResidentId,planned.Trip.HomeSettlement,planned.Trip.DestinationSettlement,
                     planned.Trip.DepartsAt,600,100,new[]{new RoutePoint(207.2,213),new RoutePoint(207.8,213)});
-                var adjacentStore=new WorldStateStore(1); adjacentStore.Restore(plannerState); adjacentStore.ScheduleResidentTrip(adjacent);
-                var adjacentReload=new WorldStateStore(1); adjacentReload.Restore(RoundTrip(adjacentStore.Snapshot()));
+                var adjacentStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); adjacentStore.Restore(plannerState); adjacentStore.ScheduleResidentTrip(adjacent);
+                var adjacentReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); adjacentReload.Restore(RoundTrip(adjacentStore.Snapshot()));
                 var adjacentPosition=adjacentReload.ResidentTripAt(adjacent.ResidentId,adjacent.DepartsAt+30);
                 if(adjacentPosition.Phase!=ResidentTripPhase.Outbound || Math.Abs(adjacentPosition.Position.X-207.5)>0.000001 ||
                     adjacentReload.IsResidentAway(adjacent.ResidentId,adjacent.HomeAt))
                     throw new InvalidOperationException("Two trimmed endpoints lost native save continuity.");
                 Debug.Log("LIVING_CITIES_ADJACENT_ROAD_SAVE_PASS: two trimmed endpoints retain midpoint travel and return after native save.");
-                var restoredPlan=new WorldStateStore(1); restoredPlan.Restore(RoundTrip(plannedStore.Snapshot()));
+                var restoredPlan=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); restoredPlan.Restore(RoundTrip(plannedStore.Snapshot()));
                 if(!restoredPlan.IsResidentAway(planned.Trip.ResidentId,planned.Trip.ArrivesAt) || restoredPlan.IsResidentAway(planned.Trip.ResidentId,planned.Trip.HomeAt))
                     throw new InvalidOperationException("Prepared trip lost original-resident absence/return across native save.");
                 Debug.Log("LIVING_CITIES_RESIDENT_PLANNER_PASS: original="+planned.Trip.ResidentId+"; destination="+planned.Trip.DestinationSettlement+"; road nodes="+planned.Trip.Road.Count);
-                var batchStore=new WorldStateStore(1); batchStore.Restore(plannerState);
+                var batchStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); batchStore.Restore(plannerState);
                 var batchProposal=new ResidentTravelProposal {ResidentId=planned.Trip.ResidentId,HomeSettlement=planned.Trip.HomeSettlement,
                     DestinationSettlement=planned.Trip.DestinationSettlement,DesiredDeparture=planned.Trip.DepartsAt,VisitDays=3,Purpose=ResidentVisitPurpose.Shop};
                 int batchFrame=Time.frameCount;
@@ -517,11 +517,11 @@ namespace LivingCities.DFU
                 if(batchTrip.InnReceptions.Count!=2 || batchTrip.InnStays.Count!=0 ||
                     batchTrip.InnReceptions.Exists(r=>string.IsNullOrEmpty(r.KeeperId)))
                     throw new InvalidOperationException("Automatic three-day trip lost its two planned nights or prepaid before arrival.");
-                var batchReload=new WorldStateStore(1);batchReload.Restore(RoundTrip(batchStore.Snapshot()));
+                var batchReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());batchReload.Restore(RoundTrip(batchStore.Snapshot()));
                 if(!batchReload.IsResidentAway(batchTrip.ResidentId,batchTrip.InnReceptions[1].VisitEnterAt) ||
                     batchReload.IsResidentAway(batchTrip.ResidentId,batchTrip.HomeAt))
                     throw new InvalidOperationException("Automatic multi-day trip lost original identity absence or return after save/load.");
-                var cancelledStore=new WorldStateStore(1); cancelledStore.Restore(plannerState);
+                var cancelledStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); cancelledStore.Restore(plannerState);
                 yield return host.ProbeTravelBatch(directory.LocationData,awayLocation,cancelledStore,homePopulation,batchProposal,()=>false);
                 if(cancelledStore.Snapshot().ResidentTrips.Exists(t=>t.ResidentId==batchProposal.ResidentId))
                     throw new InvalidOperationException("Invalidated live travel batch committed a resident.");
@@ -757,7 +757,7 @@ namespace LivingCities.DFU
                 Route=new System.Collections.Generic.List<SavedRoutePoint> {new SavedRoutePoint {X=10,Z=0},new SavedRoutePoint {X=20,Z=0}}});
             itinerary.ExitRoute.Add(new SavedRoutePoint {X=20,Z=0}); itinerary.ExitRoute.Add(new SavedRoutePoint {X=0,Z=0});
             state.ResidentTrips[0].Destination=itinerary;
-            var itineraryStore=new WorldStateStore(1); itineraryStore.Restore(RoundTrip(state));
+            var itineraryStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); itineraryStore.Restore(RoundTrip(state));
             var timed=ResidentTrip.CopyValidated(state.ResidentTrips[0]);
             if(itineraryStore.ResidentTripAt(person.Id,timed.ArrivesAt+60).BuildingKey!=10 ||
                 itineraryStore.ResidentTripAt(person.Id,timed.ArrivesAt+200).BuildingKey!=20 ||
@@ -771,7 +771,7 @@ namespace LivingCities.DFU
             itineraryStore.LocateViolence(incident.Id,10,0,0,0);
             victim.IsAlive=false;
             itineraryStore.ConfirmCorpse(incident.Id,timed.ArrivesAt+61);
-            var crimeStore=new WorldStateStore(1); crimeStore.Restore(RoundTrip(itineraryStore.Snapshot()));
+            var crimeStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); crimeStore.Restore(RoundTrip(itineraryStore.Snapshot()));
             if(crimeStore.DestinationResidents(timed.DestinationSettlement,timed.ArrivesAt+62).Count!=0 ||
                 crimeStore.ResidentTripAt(victim.Id,timed.HomeAt).Phase!=ResidentTripPhase.Unavailable ||
                 crimeStore.RecordViolence(timed.DestinationSettlement,victim.Id,timed.HomeAt).Id!=incident.Id)
@@ -781,7 +781,7 @@ namespace LivingCities.DFU
             yield return new WaitForSecondsRealtime(3); yield return Ready(streets);
             directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             townGeometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation());
-            var visitorStore=new WorldStateStore(1); visitorStore.Restore((WorldState)host.GetSaveData());
+            var visitorStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); visitorStore.Restore((WorldState)host.GetSaveData());
             var foreign=visitorStore.GetOrCreate(206728581,new[]{30},1).Households[0].Residents[0];
             var visitTrip=ResidentTrip.Create(foreign.Id,206728581,directory.MapID,clock.ToSeconds()-100,600,100,
                 new[]{new RoutePoint(207,212),new RoutePoint(207,213)});
@@ -826,7 +826,7 @@ namespace LivingCities.DFU
                 System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(streets);
             var exitRoute=exitGeometry.RouteToExit(streets.FindActor(foreign.Id).transform.position-Vector3.up);
             if(exitRoute.Count<2) throw new InvalidOperationException("Foreign visitor has no service exit route.");
-            var exitStore=new WorldStateStore(1); exitStore.Restore((WorldState)host.GetSaveData());
+            var exitStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); exitStore.Restore((WorldState)host.GetSaveData());
             var exitVisit=exitStore.ResidentTripAt(foreign.Id,clock.ToSeconds());
             exitStore.SaveResidentServiceExit(foreign.Id,new ResidentServiceExit {BuildingKey=home.BuildingKey,
                 VisitEnterAt=exitVisit.VisitEnterAt,VisitLeaveAt=exitVisit.VisitLeaveAt,StartedAt=clock.ToSeconds(),

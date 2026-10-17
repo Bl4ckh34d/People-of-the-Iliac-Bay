@@ -31,15 +31,14 @@ namespace LivingCities.Core
             if (string.IsNullOrWhiteSpace(personId)) return null;
             if (memoryIndexOwner != state)
             {
-                memoryIndex = new Dictionary<string, NpcConversationMemory>(StringComparer.Ordinal);
-                foreach (var journal in state.ConversationMemories) memoryIndex.Add(journal.PersonId, journal);
+                memoryIndex = PrepareMemoryIndex(state);
                 memoryIndexOwner = state;
             }
             NpcConversationMemory found;
             if (!memoryIndex.TryGetValue(personId, out found) && create)
             {
                 found = new NpcConversationMemory { PersonId = personId };
-                memoryIndex.Add(personId, found); state.ConversationMemories.Add(found);
+                memoryIndex.Add(personId, found);
             }
             return found;
         }
@@ -67,6 +66,7 @@ namespace LivingCities.Core
             // Store the journal, not a model-generated factual summary. Retrieval is
             // bounded separately; old conversations are not silently evicted.
             MemoryFor(personId,true).Entries.Add(entry);
+            AddPendingMemory(personId,entry);
         }
 
         public string RecallConversation(string personId, string query, double now, int maximumCharacters=2000)
@@ -131,7 +131,7 @@ namespace LivingCities.Core
             return result.Length>limit ? result.Substring(0,limit) : result;
         }
 
-        private static void ValidateMemoryEntry(NpcMemoryEntry entry)
+        internal static void ValidateMemoryEntry(NpcMemoryEntry entry)
         {
             Require(entry!=null && Finite(entry.At) && entry.At>=0 &&
                 entry.Date!=null && entry.Date.Length<=120 && entry.Place!=null && entry.Place.Length<=300 &&

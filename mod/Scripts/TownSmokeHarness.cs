@@ -174,6 +174,13 @@ namespace LivingCities.DFU
             var adapter = GetComponent<LivingCitiesMod>();
             var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-memory-archive-probe")>=0)
+            {
+                yield return SharedMemoryArchiveProbe.Run(adapter,character,
+                    Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-memory-archive-read")>=0);
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: shared archive timeline probe.");
+                yield break;
+            }
             bool crossRegionTripProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-cross-region-trip-probe")>=0;
             bool residentTripProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-resident-trip-probe")>=0;
             bool dailyItineraryProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-daily-itinerary-probe")>=0;

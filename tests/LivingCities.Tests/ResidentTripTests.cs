@@ -260,7 +260,7 @@ namespace LivingCities.Tests
                 var store=Store(out var person); store.ScheduleResidentTrip(Trip(person.Id));
                 var old=store.Snapshot(); old.Version=12; old.ResidentTrips[0].HomeRoute=null;
                 store.Restore(old);
-                Check.Equal(22,store.Snapshot().Version);
+                Check.Equal(new WorldState().Version,store.Snapshot().Version);
                 Check.Equal(ResidentTripPhase.Outbound,store.ResidentTripAt(person.Id,100).Phase);
                 Check.Equal(ResidentTripPhase.Home,store.ResidentTripAt(person.Id,1100).Phase);
                 var invalid=store.Snapshot(); invalid.ResidentTrips[0].HomeWalkSeconds=10;

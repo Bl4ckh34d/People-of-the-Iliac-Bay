@@ -78,7 +78,7 @@ namespace LivingCities.DFU
                         yield return VerifyImmediateLoot(target.CorpseLootContainer,possession);
                     }
                     var saved=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
-                    var restored=new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),saved));
+                    var restored=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),saved));
                     if(restored.GetDefenseCombatant(id).Death.LootEntitled!=hostile)
                         throw new InvalidOperationException("Native defense entitlement did not roundtrip.");
                     UnityEngine.Object.Destroy(body); body=null;

@@ -37,7 +37,7 @@ namespace LivingCities.Tests
             var restored=new WorldStateStore(1);
             restored.Restore(JsonSerializer.Deserialize<WorldState>(JsonSerializer.Serialize(world,Json),Json));
             var saved=restored.Snapshot();
-            Check.Equal(22,saved.Version);
+            Check.Equal(new WorldState().Version,saved.Version);
             Check.Equal(1,saved.HouseholdHistory.Count);
             Check.Equal(1,saved.Settlements[0].Households.Count);
             Check.Equal(1,saved.Settlements[0].Households[0].Generation);

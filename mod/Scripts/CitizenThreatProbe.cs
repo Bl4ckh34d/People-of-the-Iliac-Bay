@@ -83,7 +83,7 @@ namespace LivingCities.DFU
                         "; current="+actor.transform.position+"; enemy="+enemy.transform.position+"; initialGap="+initialGap);
                 Debug.Log("LIVING_CITIES_FLIGHT_SAFETY_PASS: hostile blocks home, innocent player on opposite side; citizen increases threat clearance.");
                 var json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
-                var restored=new WorldStateStore(42); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+                var restored=new WorldStateStore(42,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
                 if(restored.ActiveAlarm(resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()).ThreatId!=alarm.ThreatId)
                     throw new InvalidOperationException("Native serializer lost citizen threat ownership.");
                 // Controlled final approach exercises the real runtime arrival hook;

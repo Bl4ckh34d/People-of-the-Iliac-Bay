@@ -28,7 +28,7 @@ namespace LivingCities.DFU
                 if(Vector3.Distance(anchor,destination)>4 && Vector3.Distance(anchor,destination)<9 && navigation.RouteBetween(anchor,destination).Count>=2)
                 { origin=anchor; break; }
             if(!origin.HasValue) throw new InvalidOperationException("No surveyed welfare approach fixture.");
-            var store=new WorldStateStore(42); var population=store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
+            var store=new WorldStateStore(42,LivingCitiesMod.ConversationArchiveRoot()); var population=store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
             var roster=store.GetOrCreateGuards(scene.SettlementId,2,new[] { new SavedRoutePoint(),new SavedRoutePoint { X=2 } });
             var guard=roster.Guards[0]; double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var companion=roster.Guards[1];
@@ -120,7 +120,7 @@ namespace LivingCities.DFU
                         actor.Capture(savedAt);
                         var savedPosition=actor.transform.position; string guardId=guard.Id;
                         string json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
-                        var restored=new WorldStateStore(0);
+                        var restored=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
                         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
                         UnityEngine.Object.Destroy(actor.gameObject); actor=null;
                         yield return null;
@@ -155,7 +155,7 @@ namespace LivingCities.DFU
                     game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft || roster.Reports[0].ThreatId!=null)
                     throw new InvalidOperationException("Recognition granted a potion or lost prior-bounty handoff.");
                 Debug.Log("LIVING_CITIES_GUARD_WELFARE_PASS: surveyed physical approach, recognition interrupts welfare, no potion and prior-crime handoff.");
-                var completedStore=new WorldStateStore(0);
+                var completedStore=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
                 completedStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
                     SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
                 var completed=completedStore.GetDefenseCombatant(record.Id);

@@ -10,6 +10,7 @@ namespace LivingCities.Tests
             var cases = new List<(string Name, Action Body)>();
             PopulationTests.Add(cases);
             ConversationMemoryTests.Add(cases);
+            SharedMemoryArchiveTests.Add(cases);
             ShopPhysicalProgressTests.Add(cases);
             ObservedVisitTests.Add(cases);
             HouseholdRecoveryTests.Add(cases);

@@ -78,7 +78,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(0.3f);
                 if (streets.CorpseCount != 1) throw new InvalidOperationException("Confirmed dead resident has no persistent corpse view.");
                 string bodyJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var bodyRestore = new WorldStateStore(0);
+                var bodyRestore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
                 bodyRestore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), bodyJson));
                 var savedBody = bodyRestore.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse;
                 if (!savedBody.HasPosition || savedBody.BuildingKey != building || savedBody.Cleared)
@@ -119,7 +119,7 @@ namespace LivingCities.DFU
                     new Vector3((float)pendingBody.X, (float)pendingBody.Y, (float)pendingBody.Z)) > 4)
                     throw new InvalidOperationException("Investigator inspection position is not beside corpse.");
                 double remaining = pendingBody.InspectionRemainingRealSeconds;
-                var progressStore = new WorldStateStore(0);
+                var progressStore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
                 progressStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
                     SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData())));
                 if (Math.Abs(progressStore.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.InspectionRemainingRealSeconds - remaining) > 0.001)
@@ -144,7 +144,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Visible warning did not count down before Trespassing.");
                 var warningCopy = CrimeSceneWarning.Copy(report.Warning);
                 string warningJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var warningStore = new WorldStateStore(0);
+                var warningStore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
                 warningStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), warningJson));
                 if (Math.Abs(warningStore.GetGuards(scene.SettlementId).Reports.Find(r => r.Id == report.Id).Warning.Remaining - warningCopy.Remaining) > 0.001)
                     throw new InvalidOperationException("Warning countdown changed on native serialization.");
@@ -154,7 +154,7 @@ namespace LivingCities.DFU
                 if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Trespassing)
                     throw new InvalidOperationException("Refusing the ten-second warning did not cause Trespassing.");
                 string json = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 if (Math.Abs(restored.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.DiscoveredAt - scene.Scene.DiscoveredAt) > 0.001)
                     throw new InvalidOperationException("Discovery deadline changed on serialization.");
                 game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - crime scene investigation");

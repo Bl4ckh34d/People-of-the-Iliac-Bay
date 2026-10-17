@@ -218,7 +218,7 @@ namespace LivingCities.DFU
                     (restoredTown == null ? "missing" : restoredTown.ItineraryVersion.ToString()) +
                     "; itinerary=" + (itineraryDifference ?? "pass") + "; identity=" + (identityDifference ?? "pass") +
                     "; jsonChars=" + json.Length + "; resident=" + original.Id + ".");
-            var restoredStore = new WorldStateStore(0);
+            var restoredStore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
             restoredStore.Restore(decoded);
             var storeRoutine = restoredStore.GetRoutines(directory.MapID).Residents.Find(item => item.ResidentId == original.Id);
             if (!SameItinerary(selected.Routine, storeRoutine))

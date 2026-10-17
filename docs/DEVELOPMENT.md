@@ -2,6 +2,24 @@
 
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
+## Shared conversation archive implementation — 17 October 2026
+
+Approved design: store conversations once in a shared archive and keep an immutable checkpoint in each game save. Ancestry, not game time, determines which memories a save can retrieve. Continuing an old checkpoint creates another branch automatically. Current world facts and the live transcript remain separate from retrieved memory.
+
+Storage uses compressed, content-addressed chunks below `Saves/PeopleMemory/<archive-id>/`. Each chunk contains its parent hash and a bounded batch of dated, attributed NPC entries. SHA-256 verifies content, temporary files are flushed before atomic publication, and existing chunks are never overwritten. A save contains the archive ID/head hash and no committed transcript. Schema 22 inline journals remain readable and migrate on the next save. No automatic garbage collection removes older branches.
+
+Completed execution plan:
+
+- [x] Add failing core tests for old/new/branched checkpoints at identical game dates, NPC isolation, inline migration, unchanged-save deduplication, bounded save payload, missing/corrupt chunks, failed writes and archive portability.
+- [x] Implement the archive codec/store and validated checkpoint. Keep pending entries in runtime snapshots; flush only for actual save snapshots. Validate the entire requested ancestry before replacing live state.
+- [x] Connect runtime save/load and new-character reset. Preserve the checkpoint on failures and surface unavailable archives without silently starting blank memories.
+- [x] Add portable save export/import which includes only referenced archive chunks and validates imported content; never overwrite an existing save or archive chunk.
+- [x] Exercise native save serialization plus real disk save/load across divergent timelines, run regressions, build/install, and record measured checkpoint sizes and test evidence.
+
+Accepted: 670 core tests, native write/restart-read isolation, 157-character checkpoints, real-save transfer checks and the existing live dialogue/service/compatibility regression. See [Testing](TESTING.md#latest-acceptance). Test-only store clones now configure the active archive root; an unconfigured store deliberately rejects archived saves.
+
+Target: DFU 1.1.1, Unity 2019.4.40f1, C# 7.3/netstandard2.0, no new native database or model dependency. Archive history still consumes disk once; total retention/forgetting is a separate policy. Backup the entire Saves directory or use the portable export tool.
+
 <a id="repository"></a>
 
 # Repository setup and development baseline

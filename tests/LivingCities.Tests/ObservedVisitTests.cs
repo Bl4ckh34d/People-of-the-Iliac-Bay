@@ -226,7 +226,7 @@ namespace LivingCities.Tests
             var json = JsonSerializer.Serialize(store.Snapshot(), Json);
             var restored = new WorldStateStore(0);
             restored.Restore(JsonSerializer.Deserialize<WorldState>(json, Json));
-            Check.Equal(22, restored.Snapshot().Version);
+            Check.Equal(new WorldState().Version, restored.Snapshot().Version);
             Check.Equal(json, JsonSerializer.Serialize(restored.Snapshot(), Json));
             Check.Near(1, restored.GetObservedVisit(resident.Id).Evaluate(101).Position.X);
 

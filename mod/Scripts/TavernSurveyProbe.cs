@@ -30,7 +30,7 @@ namespace LivingCities.DFU
             foreach(var stay in old.InnStays) {stay.SettlementId=null;stay.VisitId=null;}
             foreach(var reception in old.InnReceptions) {reception.SettlementId=null;reception.VisitId=null;}
             foreach(var exit in old.ServiceExits) {exit.SettlementId=null;exit.VisitId=null;}
-            var migrated=new WorldStateStore(1);migrated.Restore(legacy);
+            var migrated=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());migrated.Restore(legacy);
             var copy=migrated.Snapshot().ResidentTrips.Find(t=>t.ResidentId==resident);
             if(copy.InnStays.Exists(s=>s.SettlementId!=town) || copy.InnReceptions.Exists(r=>r.SettlementId!=town) ||
                 copy.ServiceExits.Exists(e=>e.SettlementId!=town) || copy.InnStays[0].BookingId!=trip.InnStays[0].BookingId)
@@ -46,10 +46,10 @@ namespace LivingCities.DFU
         }
         private static void VerifyRemoteClaims(BuildingDirectory directory,StaticDoor entry,TavernRoomSurvey.Result inventory)
         {
-            var local=new WorldStateStore(1); local.GetOrCreate(directory.MapID,new int[0]);
+            var local=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); local.GetOrCreate(directory.MapID,new int[0]);
             local.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
             NativeInnOccupants.Claim(local,directory,entry,inventory.Rooms,inventory.Occupants,100);
-            var remote=new WorldStateStore(1); remote.GetOrCreate(directory.MapID,new int[0]);
+            var remote=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); remote.GetOrCreate(directory.MapID,new int[0]);
             remote.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
             uint seed=DFRandom.Seed;
             NativeInnOccupants.Claim(remote,directory.MapID,directory.LocationData,entry,inventory.Rooms,inventory.Occupants,100);
@@ -66,7 +66,7 @@ namespace LivingCities.DFU
             var foreign=directory.LocationData; foreign.LocationIndex++;
             for(int r=0;r<MapsFile.RegionRaces.Length;r++)
                 if(MapsFile.RegionRaces[r]!=MapsFile.RegionRaces[foreign.RegionIndex]) {foreign.RegionIndex=r;break;}
-            var alternate=new WorldStateStore(1); alternate.GetOrCreate(directory.MapID,new int[0]);
+            var alternate=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); alternate.GetOrCreate(directory.MapID,new int[0]);
             alternate.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
             NativeInnOccupants.Claim(alternate,directory.MapID,foreign,entry,inventory.Rooms,inventory.Occupants,100);
             foreach(var person in alternate.NativePeopleFor(directory.MapID))
@@ -80,7 +80,7 @@ namespace LivingCities.DFU
             int marker=-1; string room=null;
             foreach(var pair in inventory.Markers) {marker=pair.Key;room=pair.Value;break;}
             if(marker<0) throw new InvalidOperationException("No rental marker for receipt fixture.");
-            var store=new WorldStateStore(1); store.GetOrCreate(directory.MapID,new int[0]);
+            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.GetOrCreate(directory.MapID,new int[0]);
             var receipt=new RoomRental_v1 {mapID=directory.MapID,buildingKey=entry.buildingKey,allocatedBedIndex=marker,expiryTime=1000};
             NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,100);
             NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,200);
@@ -92,7 +92,7 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Permanent occupant displaced paid player room.");
             if(store.TryBookLodging(directory.MapID,entry.buildingKey,"conflicting-remote-guest","visitor",777,false,1,200,500,room))
                 throw new InvalidOperationException("Remote guest double-booked player room.");
-            var invalid=new WorldStateStore(1); invalid.GetOrCreate(directory.MapID,new int[0]);
+            var invalid=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); invalid.GetOrCreate(directory.MapID,new int[0]);
             receipt.allocatedBedIndex=int.MaxValue; bool rejected=false;
             try {NativeTavernRentals.RegisterInventory(invalid,directory.MapID,directory.LocationData,entry,inventory,receipt,100);}
             catch(InvalidOperationException) {rejected=true;}
@@ -102,7 +102,7 @@ namespace LivingCities.DFU
         }
         private static void VerifyLocalPatronFlow(DaggerfallInterior room,InteriorGeometry geometry,WorldState saved,int town,double now)
         {
-            var store=new WorldStateStore(1); store.Restore(saved);
+            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore(saved);
             var people=store.NativePeopleFor(town);
             Func<StaticNPC,bool> isLivingKeeper=npc=>
             {
@@ -427,7 +427,7 @@ namespace LivingCities.DFU
             var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>();
             var baseline=(WorldState)mod.GetSaveData(); var clock=DaggerfallUnity.Instance.WorldTime.Now;
             clock.RaiseTime((float)(86400-clock.ToSeconds()%86400));
-            double now=clock.ToSeconds(); var store=new WorldStateStore(1); store.Restore(baseline);
+            double now=clock.ToSeconds(); var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore(baseline);
             var person=store.GetOrCreate(102,new[]{30},1).Households[0].Residents[0];
             if(SleepArtCatalog.ForResident(person)==null) throw new InvalidOperationException("Resident inn fixture lacks sleeping art.");
             var trip=ResidentTrip.Create(person.Id,102,town,now-100,3600,100,
@@ -467,7 +467,7 @@ namespace LivingCities.DFU
                 while((!streets.FindActor(person.Id) || !streets.FindActor(person.Id).IsSleeping) && Time.realtimeSinceStartup<deadline) yield return null;
                 var actor=streets.FindActor(person.Id);
                 if(!actor || !actor.IsSleeping) throw new InvalidOperationException("Admitted resident did not sleep in booked inn bed.");
-                var evidence=new WorldStateStore(1); evidence.Restore((WorldState)mod.GetSaveData());
+                var evidence=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); evidence.Restore((WorldState)mod.GetSaveData());
                 string bedId=evidence.ResidentInnBed(person.Id,clock.ToSeconds());
                 var bed=BedGeometry.Read(room).Find(b=>"bed:"+b.RecordIndex==bedId);
                 if(bed==null || Vector3.Distance(actor.transform.position,room.transform.TransformPoint(bed.LocalCenter)+Vector3.up*0.18f)>0.05f)
@@ -521,7 +521,7 @@ namespace LivingCities.DFU
             var streets=mod.GetComponent<StreetPopulation>();
             var baseline=(WorldState)mod.GetSaveData();
             var clock=DaggerfallUnity.Instance.WorldTime.Now; double now=clock.ToSeconds();
-            var store=new WorldStateStore(1); store.Restore(baseline);
+            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore(baseline);
             var person=store.GetOrCreate(100,new[]{30},1).Households[0].Residents[0];
             int key=room.EntryDoor.buildingKey;
             // Fill every remaining rentable room in this disposable test population.
@@ -565,7 +565,7 @@ namespace LivingCities.DFU
                 clock.RaiseTime((float)Math.Max(0,ends+1-clock.ToSeconds()));
                 yield return new WaitForSecondsRealtime(1);
                 if(streets.FindActor(person.Id)) throw new InvalidOperationException("Refused resident remained inside after exit.");
-                var restored=new WorldStateStore(1); restored.Restore(persisted);
+                var restored=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore(persisted);
                 if(restored.IsResidentAway(person.Id,returning.HomeAt+1))
                     throw new InvalidOperationException("Refused resident did not return home after serialized exit.");
                 Debug.Log("LIVING_CITIES_RESIDENT_INN_REFUSAL_PASS: building="+key+"; native admission, physical exit, cancelled appointments and serialized return home.");

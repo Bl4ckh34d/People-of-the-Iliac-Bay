@@ -129,7 +129,7 @@ namespace LivingCities.DFU
             var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;
             var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>();
             var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
-            var store=new WorldStateStore(1); store.Restore((WorldState)mod.GetSaveData());
+            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore((WorldState)mod.GetSaveData());
             var person=store.GetOrCreate(100,new[]{30},1).Households[0].Residents[0];
             var clock=DaggerfallUnity.Instance.WorldTime.Now; double now=clock.ToSeconds();
             var trip=ResidentTrip.Create(person.Id,100,directory.MapID,now-100,3600,100,
@@ -216,7 +216,7 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Second foreign resident has no real shop browsing journey for corpse-report fixture.");
             person=witness;
             actor=streets.FindActor(person.Id);
-            var crimeStore=new WorldStateStore(1); crimeStore.Restore((WorldState)mod.GetSaveData());
+            var crimeStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); crimeStore.Restore((WorldState)mod.GetSaveData());
             var localTown=crimeStore.GetOrCreate(directory.MapID,new[]{30},1); Resident victim=null;
             foreach(var household in localTown.Households)
                 foreach(var resident in household.Residents)
@@ -270,7 +270,7 @@ namespace LivingCities.DFU
             }
             if(!guards.OccupiesCrimeScene(room.EntryDoor.buildingKey,clock.ToSeconds()))
                 throw new InvalidOperationException("Responding guards never occupied shopper crime scene.");
-            var arrivalStore=new WorldStateStore(1); arrivalStore.Restore((WorldState)mod.GetSaveData());
+            var arrivalStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); arrivalStore.Restore((WorldState)mod.GetSaveData());
             var newcomer=arrivalStore.GetOrCreate(101,new[]{30},1).Households[0].Residents[0];
             var arrival=ResidentTrip.Create(newcomer.Id,101,directory.MapID,clock.ToSeconds(),3600,100,
                 new[]{new RoutePoint(207,212),new RoutePoint(207,213)});

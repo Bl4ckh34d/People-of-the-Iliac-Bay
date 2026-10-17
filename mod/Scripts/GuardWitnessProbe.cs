@@ -135,7 +135,7 @@ namespace LivingCities.DFU
                 guards.ReportCivilianCrime(alarm, witness.transform.position);
                 if (guards.Roster.Reports.Count != 1 || alarm.People[0].Warned.Count != 0) throw new InvalidOperationException("Report duplicated or spent citizen warning budget.");
                 string json = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 if (!restored.ActiveAlarm(witness.Resident.Id, now).HasLocation || restored.GetGuards(directory.MapID).Reports.Count != 1)
                     throw new InvalidOperationException("Native serialization lost crime origin or spent report.");
                 Debug.Log("LIVING_CITIES_TOWN_GUARD_WITNESS_PASS: no automatic exterior alarm, direct witness, nearby guard report, fixed crime destination, bounded dispatch and native persistence.");

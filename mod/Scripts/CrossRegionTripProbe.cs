@@ -27,7 +27,7 @@ namespace LivingCities.DFU
             {
                 var origin=candidates[i];
                 var source=DaggerfallUnity.Instance.ContentReader.MapFileReader.GetLocation(origin.Region,origin.LocationIndex);
-                var store=new WorldStateStore(12345);
+                var store=new WorldStateStore(12345,LivingCitiesMod.ConversationArchiveRoot());
                 Debug.Log("LIVING_CITIES_CROSS_REGION_ATTEMPT: origin="+origin.Settlement+"; region="+origin.Region);
                 yield return host.ProbeUnloadedTravelDay(source,directory.LocationData,store,day,()=>true);
                 var state=store.Snapshot();
@@ -78,7 +78,7 @@ namespace LivingCities.DFU
                 var paired=ResidentRoadPassage.Attach(trip,passageNode,passageRoute.SettlementId,passageRoute.EntryRoad,
                     passageRoute.ExitRoad,passageRoute.Visit,1800);
                 var pairedState=store.Snapshot();pairedState.ResidentTrips[0]=paired;
-                var receptionStore=new WorldStateStore(1);receptionStore.Restore(pairedState);
+                var receptionStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());receptionStore.Restore(pairedState);
                 var prepared=new ResidentTripPlanner.Result();
                 yield return ResidentTripPlanner.PrepareRoadInnReception(paired,passageTown,passageLocation,passageRoute.Door,
                     receptionStore,1,42,prepared,()=>true);
@@ -96,7 +96,7 @@ namespace LivingCities.DFU
                 var receptionState=receptionStore.Snapshot();receptionState.ResidentTrips[0]=prepared.Trip;
                 receptionStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),receptionState)));
                 Debug.Log("LIVING_CITIES_ROAD_KEEPER_PLAN_PASS: real remote keeper, counter routes, both directions, no advance payment, native restore.");
-                var pairedStore=new WorldStateStore(1);
+                var pairedStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());
                 pairedStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),pairedState)));
                 var pairedRoad=new System.Collections.Generic.List<RoutePoint>();foreach(var point in paired.Road) pairedRoad.Add(new RoutePoint(point.X,point.Z));
                 int pairedVisits=0;
@@ -153,7 +153,7 @@ namespace LivingCities.DFU
                     game.StreamingWorld.GetCurrentBuildingDirectory()!=directory)
                     throw new InvalidOperationException("Cross-region restore lost absence/return or changed scene.");
                 var discoveryState=store.Snapshot();discoveryState.ResidentTrips.Clear();
-                var discovered=new WorldStateStore(1);discovered.Restore(discoveryState);
+                var discovered=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());discovered.Restore(discoveryState);
                 double roadNow=(trip.RoadLeavesAt+trip.ArrivesAt)/2;
                 if(!discovered.DiscoverOutboundResidentTrip(trip,roadNow) || discovered.DiscoverOutboundResidentTrip(trip,roadNow))
                     throw new InvalidOperationException("Original outbound discovery failed or duplicated identity.");
@@ -163,7 +163,7 @@ namespace LivingCities.DFU
                     !discovered.IsResidentAway(trip.ResidentId,roadNow) || discovered.IsResidentAway(trip.ResidentId,trip.HomeAt))
                     throw new InvalidOperationException("Native discovery restore lost original resident lifecycle.");
                 Debug.Log("LIVING_CITIES_OUTBOUND_DISCOVERY_PASS: original partial hometown resident; no duplicate; native restore and future return.");
-                var liveDiscovery=new WorldStateStore(12345);
+                var liveDiscovery=new WorldStateStore(12345,LivingCitiesMod.ConversationArchiveRoot());
                 foreach(int pastDay in ResidentDiscovery.CandidateDepartureDays(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),trip.TravelSeconds))
                 {
                     yield return host.ProbeUnloadedTravelDay(source,directory.LocationData,liveDiscovery,pastDay,()=>true,true);
@@ -191,7 +191,7 @@ namespace LivingCities.DFU
         private static void VerifyRoadStopSerialization()
         {
             // Isolated fixture: never insert synthetic road stops into the player's world.
-            var store=new WorldStateStore(12);
+            var store=new WorldStateStore(12,LivingCitiesMod.ConversationArchiveRoot());
             var person=store.ReserveHousehold(100,new HomeProfile(10,1,100)).Residents[0];
             foreach(int town in new[]{200,300,400})
             {
@@ -215,7 +215,7 @@ namespace LivingCities.DFU
             var planned=store.Snapshot();
             foreach(double offset in new[]{16d,70d,134d})
                 if(!store.TryAdmitResidentInn(person.Id,start+offset)) throw new InvalidOperationException("Scoped inn admission failed.");
-            var restored=new WorldStateStore(1);
+            var restored=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
                 SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
             var saved=restored.Snapshot();
@@ -251,7 +251,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Intermediate inn presence duplicated or lost original resident.");
             }
             Debug.Log("LIVING_CITIES_ROAD_STOP_SAVE_PASS: schema "+saved.Version+"; outbound/return scopes; native year-scale timestamps; original identity and phase continuity. Isolated timing fixture, not physical inn admission.");
-            var refused=new WorldStateStore(1);refused.Restore(planned);
+            var refused=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());refused.Restore(planned);
             if(!refused.TryBookLodging(300,7,"player-room","player",300,true,1,start+10,start+100) ||
                 refused.TryAdmitResidentInn(person.Id,start+16)) throw new InvalidOperationException("Intermediate full inn failed to refuse guest.");
             refused.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
@@ -268,7 +268,7 @@ namespace LivingCities.DFU
             planned.ResidentTrips[0].InnReceptions.Clear();
             var passage=planned.ResidentTrips[0].OutboundStops[0];passage.ExitRoadNode=3;
             passage.Visit.ThroughRoute=true;passage.Visit.ExitRoute[1].X=1010;
-            var through=new WorldStateStore(1);
+            var through=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());
             through.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),planned)));
             if(through.Snapshot().Version!=19 || Math.Abs(through.ResidentTripAt(person.Id,start+35).Position.X-3.1)>0.001 ||
                 Math.Abs(through.Snapshot().ResidentTrips[0].ArrivesAt-start-44)>0.001)

@@ -6,10 +6,11 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 22;
+        public int Version = 23;
         public uint WorldSeed;
         public List<ConversationAttitude> ConversationAttitudes = new List<ConversationAttitude>();
         public List<NpcConversationMemory> ConversationMemories = new List<NpcConversationMemory>();
+        public ConversationArchiveCheckpoint ConversationArchive;
         public HauntingRoutineDay HauntingDay;
         public List<SettlementPopulation> Settlements = new List<SettlementPopulation>();
         public List<TownRoutineState> Routines = new List<TownRoutineState>();
@@ -156,7 +157,11 @@ namespace LivingCities.Core
             var candidate = CopyValidated(incoming);
             if (loadedGameTime.HasValue && incoming.Version < 22) MigrateClockRate(candidate, loadedGameTime.Value);
             candidate = CopyValidated(candidate);
+            var restoredMemories=PrepareMemoryIndex(candidate);
+            if(conversationArchive!=null && candidate.ConversationArchive==null)
+                candidate.ConversationArchive=SharedConversationArchive.LegacyCheckpoint(candidate.WorldSeed);
             state = candidate;
+            memoryIndex=restoredMemories; memoryIndexOwner=state;
             IndexResidentTrips();
             IndexObservedVisits();
             TravelerVisitRevision++;
@@ -164,7 +169,7 @@ namespace LivingCities.Core
         }
         public TownRoutineState GetRoutines(int settlementId)
         {
-            Require(state.Version >= 1 && state.Version <= 22, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 23, "Unsupported save schema.");
             if (state.Version == 1) return null;
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
@@ -202,7 +207,7 @@ namespace LivingCities.Core
         public void SetRoutines(TownRoutineState routines)
         {
             if (routines == null) throw new ArgumentNullException(nameof(routines));
-            Require(state.Version >= 1 && state.Version <= 22, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 23, "Unsupported save schema.");
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
             var settlement = FindRoutineSettlement(state, routines.SettlementId);
@@ -317,11 +322,12 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 22, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 23, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             copy.ConversationAttitudes = CopyConversationAttitudes(source);
             copy.ConversationMemories = CopyConversationMemories(source);
+            copy.ConversationArchive = ConversationArchiveCheckpoint.CopyValidated(source.ConversationArchive);
             if(source.HauntingDay!=null)
             {
                 double day=source.HauntingDay.Day;

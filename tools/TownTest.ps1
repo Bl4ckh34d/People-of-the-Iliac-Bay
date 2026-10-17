@@ -13,6 +13,8 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$WallQuarterProbe,
     [switch]$StationaryNpcProbe,
     [switch]$DialogueProbe,
+    [switch]$MemoryArchiveProbe,
+    [switch]$MemoryArchiveRead,
     [switch]$BedProbe,
     [switch]$SleepProbe,
     [switch]$RunningPilotProbe,
@@ -100,6 +102,11 @@ if ($GateGuardProbe) { $arguments += ' -livingcities-gate-guard-probe' }
 if ($WallQuarterProbe) { $arguments += ' -livingcities-wall-quarter-probe' }
 if ($StationaryNpcProbe) { $arguments += ' -livingcities-stationary-probe' }
 if ($DialogueProbe) { $arguments += ' -livingcities-dialogue-probe' }
+if ($MemoryArchiveProbe) {
+    if (-not $FixtureCharacter) { throw 'Memory archive probe requires a disposable character.' }
+    $arguments += ' -livingcities-memory-archive-probe'
+    if ($MemoryArchiveRead) { $arguments += ' -livingcities-memory-archive-read' }
+}
 if ($GuardBuildingProbe) { $arguments += ' -livingcities-guard-building-probe' }
 if ($GuardWitnessProbe) { $arguments += ' -livingcities-guard-witness-probe' }
 if ($HousingProbe) { $arguments += ' -livingcities-housing-probe' }
@@ -346,6 +353,7 @@ try {
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_OFFER_PASS:') { throw 'Quest offer accept/reject probe did not complete.' }
     if ($QuestBindingProbe -and $body -notmatch 'LIVING_CITIES_TOWN_QUEST_RECIPIENT_PASS:') { throw 'Quest recipient activation probe did not complete.' }
     if ($DeliveryProbe -and $body -notmatch 'LIVING_CITIES_TOWN_DELIVERY_PASS:') { throw 'Vanilla delivery hand-in did not complete.' }
+    if ($MemoryArchiveProbe -and $body -notmatch 'LIVING_CITIES_MEMORY_ARCHIVE_PASS:') { throw 'Shared memory archive probe did not complete.' }
 } finally {
     try {
         if (Test-Path -LiteralPath $log) { Copy-Item -LiteralPath $log -Destination "$repo/work/town-test.log" -Force }

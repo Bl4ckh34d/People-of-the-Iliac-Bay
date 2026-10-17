@@ -57,9 +57,9 @@ namespace LivingCities.DFU
                         proposal.Person.Id!=repeated.Person.Id || proposal.Person.Name!=repeated.Person.Name ||
                         proposal.Visit.DesiredArrival!=repeated.Visit.DesiredArrival || DFRandom.Seed!=random)
                         throw new InvalidOperationException("Traveler identity is local, unstable or changes native random state.");
-                    var state=new WorldStateStore(42); state.GetOrCreate(directory.MapID,new int[0]);
+                    var state=new WorldStateStore(42,LivingCitiesMod.ConversationArchiveRoot()); state.GetOrCreate(directory.MapID,new int[0]);
                     state.RegisterTraveler(proposal.Person); state.RegisterTravelerVisit(proposal.Visit);
-                    var copy=new WorldStateStore(0);
+                    var copy=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
                     copy.Restore((WorldState)DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Deserialize(typeof(WorldState),
                         DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Serialize(typeof(WorldState),state.Snapshot())));
                     if(copy.Snapshot().Travelers[0].Name!=proposal.Person.Name) throw new InvalidOperationException("Generated traveler identity lost on reload.");

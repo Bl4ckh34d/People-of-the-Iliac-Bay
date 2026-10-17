@@ -154,7 +154,7 @@ namespace LivingCities.Tests
             Check.Near(before, migratedRoster.Position(guardId, 160).X);
             Check.Near(350, migratedGuard.ArrivesAt);
             Check.Near(95, (migratedGuard.ArrivesAt - 160) / 2);
-            Check.Equal(22, migrated.Version);
+            Check.Equal(new WorldState().Version, migrated.Version);
             restored.Restore(migrated, 160);
             Check.Near(350, restored.Snapshot().Garrisons[0].Guards[0].ArrivesAt);
 

@@ -66,7 +66,7 @@ namespace LivingCities.DFU
             double incidentStart = now - 1200;
 
             // Every phase runs on a deep validated copy. Live resident state stays untouched.
-            var isolated = new WorldStateStore(0);
+            var isolated = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
             isolated.Restore(liveStore.Snapshot());
             var isolatedTown = isolated.GetOrCreate(settlementId, new int[0]);
             Resident isolatedWitness = null;
@@ -125,7 +125,7 @@ namespace LivingCities.DFU
 
                 string json = SaveLoadManager.Serialize(typeof(WorldState), isolated.Snapshot());
                 var saved = (WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json);
-                var restored = new WorldStateStore(0);
+                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
                 restored.Restore(saved);
                 var restoredIncident = restored.Snapshot().AlarmIncidents.Find(item => item.Id == incident.Id);
                 if (restoredIncident == null || !restoredIncident.PlayerAttributed || !restoredIncident.AccusationIssued ||

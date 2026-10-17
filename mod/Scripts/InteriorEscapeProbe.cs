@@ -132,7 +132,7 @@ namespace LivingCities.DFU
                 if (person.Escape.Speed != fleeSpeed || fleeSpeed < ResidentMovement.WalkSpeed * 2.5 ||
                     fleeSpeed > ResidentMovement.WalkSpeed * 3.5)
                     throw new InvalidOperationException("Runtime flight did not use the resident's stable randomized speed.");
-                var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 var saved = restored.ActiveAlarm(id, clock.ToSeconds()).People.Find(p => p.ResidentId == id);
                 if(person.EscapeAdvancedAt<=0 || Math.Abs(saved.EscapeAdvancedAt-person.EscapeAdvancedAt)>0.001)
                     throw new InvalidOperationException("Native serialization lost witness simulation time.");

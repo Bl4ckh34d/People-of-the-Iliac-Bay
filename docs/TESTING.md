@@ -8,7 +8,22 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — 17 October 2026
+## Latest acceptance — shared memory archive, 17 October 2026
+
+Installed bundle SHA-256: `E4AD0FD0CFDAC0525DBCCC6DF5A93589C41325EE9A18B48030D1AE8F58D76FD0` (matches `dist/livingcities.dfmod`).
+
+- Core: **670/670 passed**; runtime compilation: zero warnings/errors; Unity build and integration checks passed. The existing normal-editor fallback handled a batch-mode license rejection.
+- Native disk save/load: created a base save and two divergent futures, then restarted the game completely and loaded all three again. The base recalled neither future; each branch recalled only its own additions, despite identical conversation dates. Separate NPC isolation passed.
+- Each native serialized archive checkpoint measured **157 characters**. A core test added 1,000 exchanges and verified unchanged total serialized snapshot length for otherwise identical world data; committed transcripts are absent from saves. Other world-state fields can still grow normally.
+- Legacy inline migration, repeated-import deduplication, unchanged saves, unsaved-memory rollback, pending entries after failed writes, missing/corrupt ancestry and transactional restore passed.
+- Portable export/import passed against a real native save: identical mod payload, exact ancestry, existing-slot refusal, path-traversal rejection and corrupt-ancestry rejection.
+- Native Talk reopened with an empty transcript and the live model recalled an earlier archived personal detail. Current clock, home marking, grounded dialogue, disposition, room pricing/refusal, indoor guard dispatch and final compatibility transitions passed in the completed owned-player run.
+
+Evidence: `work/archive-core.log`, `work/archive-runtime.log`, `work/archive-build.log`, `work/archive-native-write-player.log`, `work/archive-native-read-player.log`, `work/archive-transfer-test.log`, and `work/archive-dialogue.log`. The initial dialogue run exposed an unconfigured archive in an old test-only clone; runtime probe clones now use the active archive root. Core storage and the native branch probes were unchanged by that helper correction.
+
+Back up the entire Saves directory, including `PeopleMemory`, or use [portable export/import](INSTALLATION.md#memory-backups). History consumes shared disk space once; automatic pruning and multi-year load/recall performance are not implemented or established by these tests.
+
+## Prior memory/home/clock acceptance — 17 October 2026
 
 Installed bundle SHA-256: `09172B40E7C6D4C53A6D6813190149CFAB787DBC736DE757ACAA3BF222D47897`.
 
@@ -43,6 +58,8 @@ Regenerate with `./tools/TownTest.ps1 -FreshPreviews`. This creates a new test c
 
 The other older regression commands may still expect their named, purpose-built fixtures. Do not silently substitute a clean save for a scripted murder or quest fixture; rebuild the intended scenario first.
 
+The shared-archive probe also creates three diagnostic slots on this disposable character: `People - Memory base`, `People - Memory future`, and `People - Memory branch`. They contain synthetic same-date conversations used to prove old-save and branch isolation. They are not additional ordinary starting fixtures.
+
 
 <a id="fixtures"></a>
 
@@ -51,5 +68,15 @@ The other older regression commands may still expect their named, purpose-built 
 Use the current character above. `tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -DialogueProbe` runs the native UI, clock, memory, home-marker, grounded dialogue, disposition and existing service/compatibility checks. It owns its launched game process and refuses to interrupt an existing one.
 
 `tools/TestDialogueMemory.ps1` runs saved old-detail recall and separate-person missing-memory checks against the local model without opening DFU. It requires the configured loopback llama.cpp server. The core suite independently checks save isolation, deep copy, bounded retrieval, old relevant turns, dates, future timestamps, claim provenance and epoch precision.
+
+Shared-archive checks, in order, with DFU closed:
+
+```powershell
+./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -MemoryArchiveProbe
+./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -MemoryArchiveProbe -MemoryArchiveRead
+./tools/TestMemoryArchiveTransfer.ps1 -SaveFolder 'C:/path/to/Saves/SAVE12'
+```
+
+The second command starts a separate game process and loads all three disk saves again. Use the actual folder for `People - Memory base` in the transfer test. That test exports/imports a real save into an isolated temporary directory, checks the payload and archive, and rejects overwriting, path traversal and corrupt ancestry. Runtime probe clones must use `LivingCitiesMod.ConversationArchiveRoot()` when restoring a checkpoint; an unconfigured core store intentionally rejects nonempty archive heads.
 
 Older specialized saves, commands and acceptance checkpoints are preserved in [historical fixture evidence](HISTORY.md#source-test-fixtures-md). They are not current selectable saves and must not be presented as current instructions.

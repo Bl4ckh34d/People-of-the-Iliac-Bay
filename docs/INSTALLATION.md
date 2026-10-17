@@ -10,6 +10,23 @@ When a built `livingcities.dfmod` is available, close DFU, place it in the playe
 
 Install third-party mods separately, following their authors' requirements. The local integration set and explicit limitations are recorded in [external requirements](COMPATIBILITY.md#requirements), [external audit](COMPATIBILITY.md#external-mods) and [tested local order](EXTERNAL-MOD-LOAD-ORDER.txt). These are development evidence, not a promise that arbitrary versions work together. Changed interior layouts require a restart; save outdoors before changing those mods.
 
+<a id="memory-backups"></a>
+
+## Memory archives, backups and moving saves
+
+Schema 23 stores conversation records once in `PeopleMemory` alongside the `SAVE0`, `SAVE1`, etc. folders in DFU's configured Saves directory. Each save holds an immutable checkpoint. Earlier slots and alternate timelines retain their own history, even when their game dates match. Existing inline journals migrate when that slot is next saved; the mod does not rewrite other old slots. Older mod builds cannot read schema 23.
+
+**Back up the entire Saves directory, including PeopleMemory.** Copying one SAVE folder alone no longer carries its conversation history. A missing/corrupt archive produces a load error and suspends the mod rather than silently losing memories. Restore the archive from the matching backup. Do not delete archive chunks merely because one save slot was deleted: another slot or exported backup can still reference that ancestry.
+
+For a portable single-save package, close DFU and run these source-workspace tools with the .NET 8 SDK. Export automatically includes only the ancestry referenced by that save, not sibling futures. Import validates the archive, preserves existing chunks, and requires an unused destination slot:
+
+```powershell
+dotnet run --project tools/MemoryArchiveTool -c Release -- export "C:/path/to/Saves/SAVE4" "C:/backups/my-save.zip"
+dotnet run --project tools/MemoryArchiveTool -c Release -- import "C:/backups/my-save.zip" "C:/path/to/Saves" SAVE12
+```
+
+Normal gameplay requires no database server, embedding model or extra runtime. The shared archive still grows with new conversations; automatic forgetting and archive garbage collection are not implemented.
+
 ## Optional local LLM: what is actually used
 
 The tested local setup uses:

@@ -563,7 +563,7 @@ namespace LivingCities.DFU
                 while(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()<departure.Motion.ExitAt && Time.realtimeSinceStartup<deadline) yield return null;
                 yield return null; yield return null;
                 if(streets.FindActor(resident.Id)) throw new InvalidOperationException("Rejected visitor stayed inside guarded shop.");
-                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                var restored=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore(store.Snapshot());
                 if(restored.VisitDepartureFor(resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds())==null)
                     throw new InvalidOperationException("Rejected visitor departure did not survive snapshot restore.");
                 Debug.Log("LIVING_CITIES_GUARDED_VISITOR_PASS: cleared guarded shop rejects arrival; visitor exits; cancellation survives restore.");
