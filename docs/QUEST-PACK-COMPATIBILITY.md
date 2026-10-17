@@ -4,6 +4,8 @@
 
 ## Installation and evidence
 
+**Planning follow-up, 17 October 2026:** [quest-role design and representative cases](superpowers/specs/2026-10-17-npc-lifecycle-and-quest-dialogue-design.md) and [delivery phase 6](superpowers/plans/2026-10-17-consolidated-delivery-plan.md) consolidate mobility and spoiler-control options. Quest Pack mobility implementation is explicitly deferred. Review must eventually cover each quest's roles/stages, native bindings and disclosure gates; representative source analysis and installation tests are not certification of every quest. Existing native control remains the conservative default.
+
 Installed from the user-supplied archives:
 
 - `Quest Pack 1 dfmod-2-2025-11-20b-1763826811.zip`: Quest Pack 1 **2025.11.20b**.

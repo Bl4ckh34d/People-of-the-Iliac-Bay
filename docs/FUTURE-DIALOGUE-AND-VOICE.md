@@ -1,5 +1,9 @@
 ﻿# Future dialogue and English voices
 
+## Current planning authority — 17 October 2026
+
+See the [roadmap](ROADMAP.md) and [consolidated design](superpowers/specs/2026-10-17-npc-lifecycle-and-quest-dialogue-design.md) for latest future requirements. Preserve ordinary free-form roleplay while adding authored main-story personas, speaker/stage-filtered quest facts, dated shared-experience memory and consent-based invitations. Hidden motives and future plot must not enter the social prompt or retrieval results; sensitive quest answers need native/approved stage content, since models can also know story spoilers independently. Mood may vary without changing story intent. Native dialogue actions/rewards remain authoritative. Companions and chat-command action adapters remain shelved. Older dated sections below record their respective implementation stage and may contain superseded approaches.
+
 ## Daily plans, personality and mood — 17 October 2026
 
 Implemented for local free-text dialogue: each addressed NPC gets independently mixed personality traits (warmth, patience, curiosity, privacy and manner), stable where the NPC has a persistent identity. Mood is recalculated from a stable daily baseline, current personal disposition, bereavement, danger response, outdoor weather, daylight, activity and whether a previous text conversation with this persistent identity is recorded. The encounter count survives saves. Rain, storms, snow, fog and sunshine supply contextual signals; darkness can make a stranger seem riskier without forcing every NPC into one response. These are guidance for free-form replies, not canned response templates.

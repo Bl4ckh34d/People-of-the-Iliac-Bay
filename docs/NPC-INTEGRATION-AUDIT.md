@@ -4,6 +4,8 @@ Audited 17 October 2026 against the local source, installed mod configuration, e
 
 ## Main findings
 
+**Future-policy follow-up, 17 October 2026:** see the [TL;DR roadmap](ROADMAP.md), [consolidated requirements](superpowers/specs/2026-10-17-npc-lifecycle-and-quest-dialogue-design.md) and [delivery plan](superpowers/plans/2026-10-17-consolidated-delivery-plan.md). Those describe requested housing priorities, inn visitors/shared beds, tenant keys, market commutes, quest-safe story context and shelved companions. They do not change the implemented coverage recorded below.
+
 There is no universal NPC adoption system yet. Generated household residents, generated visitors, ordinary native interior people, and quest-owned actors follow different paths. Outdoor authored NPCs from external mods are not automatically integrated. Registering an identity does not establish a home, commute, sleep schedule, or complete movement art.
 
 | Population category | Current behavior | Home and beds | Missing coverage |

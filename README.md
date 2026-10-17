@@ -6,6 +6,8 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 ## Project status
 
+Start with the [TL;DR roadmap](docs/ROADMAP.md), [future design/backlog](docs/superpowers/specs/2026-10-17-npc-lifecycle-and-quest-dialogue-design.md), and [phased delivery plan](docs/superpowers/plans/2026-10-17-consolidated-delivery-plan.md). These distinguish implemented behavior from proposed work. For playing and local-model setup, see the [installation guide](docs/INSTALLATION.md): there is no complete installer or published release bundle yet.
+
 - Persistent generated residents, households, local activities and traveler systems are implemented, with remaining movement and arrival bugs.
 - Native indoor people have partial identity, reaction, bed and service integration. Outdoor NPCs added by other mods do not yet have universal adoption or homes.
 - Finite guards, patrols, building responses, crime scenes and pursuit are implemented across documented paths; broad compatibility remains under test.

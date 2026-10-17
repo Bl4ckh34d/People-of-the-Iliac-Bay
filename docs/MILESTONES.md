@@ -1,6 +1,12 @@
 # Living Cities milestones
 
-## NPC inventory and repository baseline — 17 October 2026
+## Consolidated future delivery order — 17 October 2026
+
+Use the [TL;DR roadmap](ROADMAP.md) and [phased plan](superpowers/plans/2026-10-17-consolidated-delivery-plan.md) as current planning entry points. The [design/backlog](superpowers/specs/2026-10-17-npc-lifecycle-and-quest-dialogue-design.md) records housing-first authored actors, market visits, shop tenants/keeper commutes, mobile inn visitors, limited shared beds, native quest capability gates and spoiler-safe story personalities. Invitations, human stats, recruitable nonquest companions, inventory/progression/action adapters and persistent shared-experience memory are recorded but shelved. Existing requirements below remain in scope; dated checkpoints are historical evidence. Installer and modular opt-out requirements are explicit, with current limitations in [installation](INSTALLATION.md).
+
+This consolidation implements no gameplay. The subsequent user request separately authorizes the 2× clock fix and rebuild; other future slices await selection.
+
+## NPC inventory and repository baseline — 17 October 2026 (historical checkpoint)
 
 The [NPC integration audit](NPC-INTEGRATION-AUDIT.md) records current coverage for generated residents, authored interiors, outdoor mod NPCs, quests, housing and appearance assets. Its unchecked tasks are required work, not implemented features. The [additional quest audit](QUEST-PACK-COMPATIBILITY.md) covers installed Quest Pack 1 and Quest Actions Extension. Preserve native quest ownership before extending generic mobility. Establish authored-local housing reservations before filling remaining residential capacity.
 
