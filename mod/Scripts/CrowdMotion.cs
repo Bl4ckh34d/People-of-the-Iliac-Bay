@@ -56,7 +56,7 @@ namespace LivingCities.DFU
             foreach(var point in Neighbours(center)) result.Add(Vector(point));
             return result;
         }
-        public bool Place(Vector3 target,out Vector3 actual,bool comfortWalking=true)
+        public bool Place(Vector3 target,out Vector3 actual,bool comfortWalking=true,bool waitAtOccupiedTarget=false)
         {
             var change=placed ? target-lastTarget : Vector3.zero;
             bool physicalTarget=resumeWithoutReconstruction;
@@ -95,8 +95,9 @@ namespace LivingCities.DFU
             maximum=Math.Min(maximum,0.5);
             if(!comfortWalking) { comfortPassingSide=0; comfortLateralOffset=0; }
             var neighbours=Neighbours(from);
-            var result=comfortWalking ? CrowdSteering.MoveComfort(Point(from),Point(target),neighbours,Separation,1.1,1.8,
-                maximum,ref comfortPassingSide,ref comfortLateralOffset,Point(change),candidate=>Clear(from,Vector(candidate)),true) :
+            bool waiting=waitAtOccupiedTarget && CrowdSteering.Occupied(Point(target),neighbours,Separation);
+            var result=comfortWalking || waiting ? CrowdSteering.MoveComfort(Point(from),Point(target),neighbours,Separation,1.1,1.8,
+                maximum,ref comfortPassingSide,ref comfortLateralOffset,Point(change),candidate=>Clear(from,Vector(candidate)),true,waitAtOccupiedTarget) :
                 CrowdSteering.Move(Point(from),Point(target),neighbours,Separation,maximum,
                     candidate=>Clear(from,Vector(candidate)));
             actual=Vector(result); transform.position=actual+Vector3.up*offset; return true;

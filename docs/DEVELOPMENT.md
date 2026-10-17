@@ -2,6 +2,12 @@
 
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
+## Occupied interior approaches — 17 October 2026
+
+The recorded shelf flicker was a physically unreachable waypoint: another body stood 0.20 m from the target while required separation was 0.52 m. Comfort steering alternated directions without reaching it. Interior followers now wait without rotating or advancing their walking animation at an occupied target; existing overlap can still recover through geometry-checked movement. They resume when the target clears. Outdoor steering and personal walking/running speeds are unchanged.
+
+Browsing additionally checks actual occupants rather than relying solely on planned reservation times. It can select a reachable free position within 1.2 m of the same visible shelf/activity target, checking at most 64 surveyed candidates and at most once per real second per active visit. A short reservation prevents simultaneous selection. Captured physical visits retain the alternate endpoint and reconnect subsequent legs, preserving their actual movement after reload. This addresses the observed occupied-goal case, not every possible interior route stall.
+
 ## Stable personal walking pace — 17 October 2026
 
 Mobile citizens now derive walking speed from their persisted appearance seed through a separate deterministic hash: 1.3 m/s ±15%, rounded to four decimals (1.105–1.495 m/s). Scene changes, day changes and reloads do not reroll it. Existing fleeing already had stable 3.25–4.55 m/s variation and retains its original formula and values.

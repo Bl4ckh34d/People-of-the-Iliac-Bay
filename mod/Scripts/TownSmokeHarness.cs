@@ -174,6 +174,12 @@ namespace LivingCities.DFU
             var adapter = GetComponent<LivingCitiesMod>();
             var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-occupied-approach-probe")>=0)
+            {
+                yield return OccupiedApproachProbe.Run(adapter,streets,character);
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: occupied approach and free browsing.");
+                yield break;
+            }
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-movement-clock-probe")>=0)
             {
                 yield return MovementClockProbe.Run(adapter,streets,character);

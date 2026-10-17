@@ -143,7 +143,7 @@ namespace LivingCities.DFU
             if(direction.sqrMagnitude<0.0001f) direction=point-actual;
             var motion=actor.GetComponent<CrowdMotion>();
             if(motion) motion.ResumeFromPause();
-            actor.Place(point,direction);
+            actor.Place(point,direction,waitAtOccupiedTarget:true);
             return Arrived;
         }
 

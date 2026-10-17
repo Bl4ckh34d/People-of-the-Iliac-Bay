@@ -8,7 +8,16 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — stable personal walking variation, 17 October 2026
+## Latest acceptance — occupied interior approaches, 17 October 2026
+
+Installed bundle SHA-256: `EECF1FACE0DA42A6B6B53E17E4010FD7ED0FD971C553CD72C27CF1451B8156E9`, matching `dist/livingcities.dfmod`.
+
+- **677/677 core tests passed**, including two new regressions that failed before the correction. Runtime compilation and Unity build/install passed.
+- The owned-player fixture loaded `People - Shop entrance`, entered an actual general store and occupied a generated shelf goal. The approaching NPC reached a free nearby position at the same shelf; its captured visit validated with connected remaining legs.
+- A blocked approach held position, heading and idle pose for 90 rendered frames, then resumed after the blocker left. Existing-overlap recovery and wall rejection passed core tests.
+- Repeat: `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -OccupiedApproachProbe`. Evidence: `work/occupied-approach-red.log`, `occupied-approach-core.log`, `occupied-approach-runtime.log`, `occupied-approach-build.log`, and `occupied-approach-native-player.log`. No player save was overwritten. Other route-stall diagnostics still appear; this does not establish universal crowd deadlock resolution.
+
+## Prior acceptance — stable personal walking variation, 17 October 2026
 
 Installed bundle SHA-256: `E29B7DAF3ED1A257C2237726775969D213E41A47C743163D132196C9FCDACAC8`, matching `dist/livingcities.dfmod`.
 

@@ -76,6 +76,37 @@ namespace LivingCities.DFU
             return browsingFacing.TryGetValue(position,out target) ? target-position : Vector3.zero;
         }
         public void ResetReservations() { reserved.Clear(); }
+        public bool TryFreeBrowsePosition(Vector3 occupied,ResidentActor actor,double now,out Vector3 chosen)
+        {
+            chosen=occupied;
+            Vector3 target;
+            if(!browsingFacing.TryGetValue(occupied,out target)) return false;
+            var crowd=StreetPopulation.ShopDepartureNeighbours(room.transform.TransformPoint(occupied),actor);
+            var neighbours=new List<GuardPoint3>();
+            foreach(var other in crowd) neighbours.Add(new GuardPoint3 {X=other.x,Y=other.y,Z=other.z});
+            var world=room.transform.TransformPoint(occupied);
+            if(!CrowdSteering.Occupied(new GuardPoint3 {X=world.x,Y=world.y,Z=world.z},neighbours,CrowdMotion.Separation)) return false;
+            Transform owner;shelfOwners.TryGetValue(target,out owner);
+            var actual=room.transform.InverseTransformPoint(actor.transform.position-Vector3.up);
+            foreach(var candidate in geometry.NearbyApproachPoints(occupied,1.2f,0.15f,64))
+            {
+                var point=room.transform.TransformPoint(candidate);
+                if(NearTavernBed(candidate) || CrowdSteering.Occupied(new GuardPoint3 {X=point.x,Y=point.y,Z=point.z},neighbours,
+                    CrowdMotion.Separation+0.08f) || !CanSeeTarget(candidate,target,owner)) continue;
+                bool claimed=false;
+                foreach(var pair in reserved) if(pair.Key!=actor.Resident.Id) foreach(var claim in pair.Value)
+                    if(claim.Start<=now && claim.End>now && Math.Abs(claim.Position.Y-candidate.y)<2.1 &&
+                        (new Vector3((float)claim.Position.X,(float)claim.Position.Y,(float)claim.Position.Z)-candidate).sqrMagnitude<
+                        CrowdMotion.Separation*CrowdMotion.Separation) claimed=true;
+                if(claimed || geometry.RouteBetween(actual,candidate).Count<2) continue;
+                List<ShopOccupancy> claims;
+                if(!reserved.TryGetValue(actor.Resident.Id,out claims)) {claims=new List<ShopOccupancy>();reserved.Add(actor.Resident.Id,claims);}
+                claims.Add(new ShopOccupancy {Start=now,End=now+30,Position=new GuardPoint3 {X=candidate.x,Y=candidate.y,Z=candidate.z}});
+                browsingFacing[candidate]=target;chosen=candidate;
+                return true;
+            }
+            return false;
+        }
         public ShopVisitJourney Create(string id,uint seed,double start,double end)
         {
             rejectedVisits.Remove(id);candidateFailure=null;

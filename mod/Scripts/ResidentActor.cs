@@ -165,14 +165,14 @@ namespace LivingCities.DFU
                 }
             }
         }
-        public void Place(Vector3 ground, Vector3 direction, bool standing = false, bool fleeing = false)
+        public void Place(Vector3 ground, Vector3 direction, bool standing = false, bool fleeing = false,bool waitAtOccupiedTarget=false)
         {
             if (!fleeing || standing || conversing) SetRunningPreview(false);
             if (conversing) { FaceConversation(); return; }
             if (sleeping) sleeping.Wake();
             var before=transform.position;
             Vector3 actual;
-            if(crowd && !crowd.Place(ground,out actual,!standing)) { gameObject.SetActive(false); return; }
+            if(crowd && !crowd.Place(ground,out actual,!standing,waitAtOccupiedTarget)) { gameObject.SetActive(false); return; }
             if(!crowd) transform.position=ground+Vector3.up;
             if(!gameObject.activeSelf) gameObject.SetActive(true);
             var moved=transform.position-before;
@@ -183,7 +183,7 @@ namespace LivingCities.DFU
             // locomotion still follows actual displacement.
             if(!atActivity && moved.sqrMagnitude>0.000001f && moved.sqrMagnitude<1) direction=moved;
             direction.y = 0;
-            if (direction.sqrMagnitude > 0.00001f) transform.rotation = Quaternion.LookRotation(direction);
+            if (direction.sqrMagnitude > 0.00001f && (standing || moved.sqrMagnitude>0.000001f)) transform.rotation = Quaternion.LookRotation(direction);
             bool idle = GameManager.IsGamePaused || moved.sqrMagnitude<0.000001f ||
                 atActivity;
             // DFU's setter restarts the animation even when the value is unchanged.

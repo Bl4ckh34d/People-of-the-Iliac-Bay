@@ -59,6 +59,10 @@ The local daily-route slowdown after the clock change is corrected: legacy 12× 
 
 ## Next decision
 
+### Open dialogue ownership defect — 17 October 2026
+
+A source audit found that every surveyed ordinary interior flat receives the building as `WorkKey`, while shop/inn conversation ownership accepts that key as proof the speaker is the keeper. Consequently a tracked patron can receive false owner context, including “Your business is called …”. Investigation only; this is not fixed by the occupied-approach build. Resolve the exact native keeper identity before granting owner context, and select the active speaker using `TalkManager.CurrentNPCType` rather than stale mobile/static references. Regress both a patron inside a shop and a static conversation immediately after a mobile conversation. Prior model ownership claims must not override verified current role. Preserve free roleplay; correcting source identity does not require returning to canned refusals.
+
 After the clock and memory updates, recommended next selectable slice: finish the existing destination/door/movement regression, then implement the read-only actor census. Alternative: prioritize story-safe context if plot leakage is the immediate concern. Choose one bounded slice before code changes; companions and exhaustive Quest Pack adaptation are not that slice.
 
 <a id="detailed-design"></a>

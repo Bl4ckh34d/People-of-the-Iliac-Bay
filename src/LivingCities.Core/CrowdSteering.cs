@@ -22,7 +22,7 @@ namespace LivingCities.Core
         }
         public static GuardPoint3 MoveComfort(GuardPoint3 from,GuardPoint3 target,IEnumerable<GuardPoint3> neighbours,
             double separation,double comfortRadius,double lookAhead,double maximumStep,ref int passingSide,
-            ref double comfortOffset,GuardPoint3 pathDirection,Func<GuardPoint3,bool> clear,bool continuePath=false)
+            ref double comfortOffset,GuardPoint3 pathDirection,Func<GuardPoint3,bool> clear,bool continuePath=false,bool stopAtOccupiedTarget=false)
         {
             if(!Valid(from) || !Valid(target) || neighbours==null || clear==null || !Finite(separation) || separation<=0 ||
                 !Finite(comfortRadius) || comfortRadius<=separation || !Finite(lookAhead) || lookAhead<=0 ||
@@ -31,6 +31,20 @@ namespace LivingCities.Core
                 pathDirection!=null && !Valid(pathDirection))
                 throw new ArgumentException("Invalid crowd comfort movement.");
             var others=ValidatedNeighbours(neighbours);
+            if(stopAtOccupiedTarget && Occupied(target,others,separation))
+            {
+                passingSide=0;comfortOffset=0;
+                foreach(var other in others)
+                {
+                    double x=from.X-other.X,z=from.Z-other.Z;
+                    if(Math.Abs(other.Y-from.Y)>2.1 || x*x+z*z>=separation*separation-0.0000001) continue;
+                    // Recover an existing overlap before waiting. The normal swept
+                    // clearance and geometry checks still own the recovery step.
+                    if(x*x+z*z<0.000001) x=1;
+                    return Move(from,new GuardPoint3 {X=from.X+x,Y=from.Y,Z=from.Z+z},others,separation,maximumStep,clear);
+                }
+                return Copy(from);
+            }
             double dx=target.X-from.X,dz=target.Z-from.Z,dy=target.Y-from.Y;
             double length=Math.Sqrt(dx*dx+dz*dz+dy*dy),horizontal=Math.Sqrt(dx*dx+dz*dz);
             if(length<0.000001 || horizontal<0.000001 || maximumStep==0)
@@ -137,6 +151,16 @@ namespace LivingCities.Core
                 }
             }
             return true;
+        }
+        public static bool Occupied(GuardPoint3 target,IEnumerable<GuardPoint3> neighbours,double separation)
+        {
+            if(!Valid(target) || !Finite(separation) || separation<=0) throw new ArgumentException("Invalid occupancy query.");
+            foreach(var other in ValidatedNeighbours(neighbours))
+            {
+                double x=target.X-other.X,z=target.Z-other.Z;
+                if(Math.Abs(target.Y-other.Y)<=2.1 && x*x+z*z<separation*separation) return true;
+            }
+            return false;
         }
         private static IList<GuardPoint3> ValidatedNeighbours(IEnumerable<GuardPoint3> neighbours)
         {

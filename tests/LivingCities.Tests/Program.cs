@@ -83,6 +83,7 @@ namespace LivingCities.Tests
             ClockMigrationTests.Add(cases);
             MovementClockTests.Add(cases);
             MovementVariationTests.Add(cases);
+            OccupiedApproachTests.Add(cases);
             ResidentClockMigrationTests.Add(cases);
             int failures = 0;
             foreach (var test in cases)
