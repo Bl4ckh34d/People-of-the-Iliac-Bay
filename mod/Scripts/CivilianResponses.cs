@@ -109,6 +109,12 @@ namespace LivingCities.DFU
         }
         private static float Distance(ResidentActor a, ResidentActor b)
         { return b ? (a.transform.position - b.transform.position).sqrMagnitude : float.PositiveInfinity; }
+        public static BystanderPosture Bystander(ResidentActor actor, Vector3 player, BystanderPosture previous)
+        {
+            if (!actor) return BystanderPosture.Resume;
+            return BystanderResponse.Evaluate(Vector3.Distance(actor.transform.position, player),
+                actor.Resident.AppearanceSeed, previous);
+        }
         private static void Locate(AlarmPerson person, ResidentActor actor, int building)
         {
             if (person == null || person.HasPosition) return;
@@ -124,14 +130,14 @@ namespace LivingCities.DFU
                 if (Blocker(hit.collider)) return false;
             return true;
         }
-        private static bool Blocker(Collider collider)
+        internal static bool Blocker(Collider collider)
         {
             return collider.GetComponentInParent<DaggerfallEntityBehaviour>() == null &&
                 collider.GetComponentInParent<StaticNPC>() == null &&
                 collider.GetComponentInParent<MobilePersonNPC>() == null && collider.GetComponentInParent<PlayerMotor>() == null;
         }
         public static void Move(ResidentActor actor, AlarmPerson person, ResidentRoutine routine, Transform origin,
-            TownGeometry geometry, InteriorGeometry indoor,Vector3? danger=null)
+            TownGeometry geometry, InteriorGeometry indoor,Vector3? danger=null,Vector3? shelterTarget=null,int shelterBuilding=-1,bool allowHome=true)
         {
             Vector3 ground = origin.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
             Vector3 target = ground;
@@ -154,6 +160,14 @@ namespace LivingCities.DFU
                     }
                 }
             }
+            else if(person.BuildingKey==-1 && shelterTarget.HasValue)
+            {
+                target=shelterTarget.Value;
+                if(shelterBuilding>=0 && Vector3.Distance(ground,target)<0.2f)
+                {person.ReachedRefuge=true;person.BuildingKey=shelterBuilding;}
+            }
+            else if(person.BuildingKey==-1 && !allowHome)
+                target=player; // The safety steering rejects this and finds an outward retreat.
             else if (person.BuildingKey == -1 && routine.Route.Count >= 2)
             {
                 // Retrace this resident's collision-validated commute to their own door.
@@ -184,6 +198,12 @@ namespace LivingCities.DFU
                 }
             }
             float speed = person.Reaction == CivilianReaction.Flee ? (float)ResidentMovement.FleeSpeed(actor.Resident.AppearanceSeed) : 2.8f;
+            if(person.Reaction==CivilianReaction.Flee && person.BuildingKey==-1 && geometry!=null && !person.ReachedRefuge)
+            {
+                var steering=actor.GetComponent<CivilianFlightSteering>();
+                if(!steering) steering=actor.gameObject.AddComponent<CivilianFlightSteering>();
+                target=steering.Target(ground,target,player,geometry,origin);
+            }
             Vector3 deltaMove = Vector3.MoveTowards(ground, target, GameManager.IsGamePaused ? 0 : speed * Time.deltaTime) - ground;
             if (indoor != null) InteriorGeometry.OpenOrdinaryDoors(ground, ground + deltaMove);
             bool blocked = false;
@@ -200,7 +220,9 @@ namespace LivingCities.DFU
                     { proposed.y = hit.point.y; supported = true; break; }
                 if (supported) ground = proposed; else blocked = true;
             }
-            actor.Place(ground, person.Reaction == CivilianReaction.Fight ? player - ground : deltaMove, blocked || deltaMove.sqrMagnitude < 0.000001f);
+            actor.Place(ground, person.Reaction == CivilianReaction.Fight ? player - ground : deltaMove,
+                blocked || deltaMove.sqrMagnitude < 0.000001f,
+                person.Reaction == CivilianReaction.Flee && !blocked && deltaMove.sqrMagnitude > 0.000001f);
             var saved = origin.InverseTransformPoint(ground); person.X = saved.x; person.Y = saved.y; person.Z = saved.z;
         }
         private static Vector3 Point(SavedRoutePoint point) { return new Vector3((float)point.X, 0, (float)point.Z); }

@@ -16,6 +16,185 @@ namespace LivingCities.Tests
         { return new List<SavedRoutePoint> { new SavedRoutePoint { X = from }, new SavedRoutePoint { X = to } }; }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Wall bed reservations share quarters but never the same bed",()=>{
+                var roster=Roster(3);
+                for(int i=0;i<3;i++) {
+                    roster.SchedulePostRecall(roster.Guards[i].Id,Route(i*10,i*10+5),200,220,1,1);
+                    var shift=GuardRefugeJourney.Create(7,new[] {new GuardPoint3 {X=i*10},new GuardPoint3 {X=i*10+5},new GuardPoint3 {X=35}},
+                        new[] {new GuardPoint3(),new GuardPoint3 {Z=8}},200,1,1);
+                    shift.WallDuty=true; shift.RestBedRecord=i==2?0:i;
+                    shift.ReturnExterior=new List<GuardPoint3> {new GuardPoint3 {X=35},new GuardPoint3 {X=i*10+5}};
+                    shift.Release(300);
+                    if(i==2) Check.Throws<ArgumentException>(()=>roster.ScheduleWallDuty(roster.Guards[i].Id,shift));
+                    else roster.ScheduleWallDuty(roster.Guards[i].Id,shift);
+                }
+                var restored=GuardRoster.CopyValidated(roster);
+                Check.Equal(1,restored.Guards[1].PostRecall.WallDuty.RestBedRecord.Value);
+                restored.Guards[1].PostRecall.WallDuty.RestBedRecord=0;
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(restored));
+                roster.Advance(250);
+                var active=GuardRoster.CopyValidated(roster);
+                Check.Equal(1,active.Guards[1].Refuge.RestBedRecord.Value);
+                active.Guards[1].Refuge.RestBedRecord=0;
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(active));
+            }));
+            cases.Add(("Active wall refuge rejects an already reserved bed",()=>{
+                var roster=Roster(2); var first=roster.Guards[0].Id; var second=roster.Guards[1].Id;
+                var occupied=GuardRefugeJourney.Create(7,new[] {new GuardPoint3(),new GuardPoint3 {X=5}},
+                    new[] {new GuardPoint3(),new GuardPoint3 {Z=8}},100,1,1);
+                occupied.WallDuty=true; occupied.RestBedRecord=3;
+                roster.TakeRefuge(first,occupied,100);
+                roster.Guards[0].Refuge.Release(300);
+                var duplicate=GuardRefugeJourney.Create(7,new[] {new GuardPoint3 {X=10},new GuardPoint3 {X=5}},
+                    new[] {new GuardPoint3(),new GuardPoint3 {Z=8}},100,1,1);
+                duplicate.WallDuty=true; duplicate.RestBedRecord=3;
+                Check.Throws<ArgumentException>(()=>roster.TakeRefuge(second,duplicate,100));
+            }));
+            cases.Add(("Night patrol rest intent survives return and save load",(Action)(()=>{
+                var roster=Roster(2); string a=roster.Guards[0].Id,b=roster.Guards[1].Id;
+                var circuit=new List<SavedRoutePoint> {new SavedRoutePoint {X=0},new SavedRoutePoint {X=20},
+                    new SavedRoutePoint {X=20,Z=20},new SavedRoutePoint {Z=20},new SavedRoutePoint()};
+                var plan=PatrolPairPlan.Create(a,b,Route(0,0),Route(10,2),circuit,100,200,1,1,2);
+                roster.StartPatrol(plan,100); roster.StopPatrol(a,150);
+                roster.ScheduleDayRest(a,300,150); roster.ScheduleDayRest(b,300,150);
+                var options=new JsonSerializerOptions {IncludeFields=true};
+                roster=GuardRoster.CopyValidated(JsonSerializer.Deserialize<GuardRoster>(JsonSerializer.Serialize(roster,options),options));
+                Check.Near(300,roster.Guards[0].DayRestUntil); Check.Near(300,roster.Guards[1].DayRestUntil);
+                roster.Advance(301);
+                Check.Near(0,roster.Guards[0].DayRestUntil);
+            })));
+            cases.Add(("Emergency response cancels a guard's pending daytime rest",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.ScheduleDayRest(id,300,10);
+                roster.Dispatch("emergency",10,new Dictionary<string,List<SavedRoutePoint>> {{id,Route(0,20)}},1,2,1);
+                Check.Near(0,roster.Guards[0].DayRestUntil);
+            }));
+            cases.Add(("Wall bed rest stays at its bed, survives reload and leaves exactly at shift time",()=>{
+                var shift=GuardRefugeJourney.Create(7,new[] {new GuardPoint3(),new GuardPoint3 {X=10}},
+                    new[] {new GuardPoint3(),new GuardPoint3 {Z=8}},200,1,1);
+                shift.WallDuty=true; shift.RestBedRecord=42; shift.Release(301);
+                var options=new JsonSerializerOptions {IncludeFields=true};
+                shift=GuardRefugeJourney.CopyValidated(JsonSerializer.Deserialize<GuardRefugeJourney>(JsonSerializer.Serialize(shift,options),options));
+                Check.Equal(42,shift.RestBedRecord.Value); Check.Near(301,shift.ReleasedAt.Value);
+                Check.Equal(RefugePhase.Sheltered,shift.Evaluate(220).Phase);
+                Check.Near(8,shift.Evaluate(220).Position.Z); Check.Near(8,shift.Evaluate(299).Position.Z);
+                Check.Equal(RefugePhase.Exiting,shift.Evaluate(302).Phase); Check.Near(7,shift.Evaluate(302).Position.Z);
+                shift.WallDuty=false;
+                Check.Throws<ArgumentException>(()=>GuardRefugeJourney.CopyValidated(shift));
+            }));
+            cases.Add(("Wall shift patrol survives save, moves indoors, and returns to inner staging at dawn",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.SchedulePostRecall(id,Route(0,5),200,220,1,1);
+                var shift=GuardRefugeJourney.Create(7,new[] { new GuardPoint3(),new GuardPoint3 { X=5 },new GuardPoint3 { X=10 } },
+                    new[] { new GuardPoint3(),new GuardPoint3 { Z=8 } },200,1,1);
+                shift.WallDuty=true;
+                shift.ReturnExterior=new List<GuardPoint3> { new GuardPoint3 { X=10 },new GuardPoint3 { X=5 } };
+                shift.Release(300);
+                roster.ScheduleWallDuty(id,shift);
+                var options=new JsonSerializerOptions { IncludeFields=true };
+                roster=GuardRoster.CopyValidated(JsonSerializer.Deserialize<GuardRoster>(JsonSerializer.Serialize(roster,options),options));
+                roster.Advance(203); Check.Equal(GuardDuty.Refuge,roster.Guards[0].Duty);
+                Check.Near(3,roster.Position(id,203).X);
+                var journey=roster.Guards[0].Refuge;
+                Check.Equal(RefugePhase.Sheltered,journey.Evaluate(220).Phase);
+                Check.True(Math.Abs(journey.Evaluate(220).Position.Z-journey.Evaluate(222).Position.Z)>0.1);
+                Check.True(journey.Evaluate(224).Position.Z>0);
+                roster.Advance(500); Check.Equal(GuardDuty.Posted,roster.Guards[0].Duty);
+                Check.Near(5,roster.Position(id,500).X); Check.True(!roster.KnowsPlayerCrime(id));
+            }));
+            cases.Add(("Wall shift rejects mismatched recall and duplicate quarter reservations",()=>{
+                var roster=Roster(2); var id=roster.Guards[0].Id;
+                roster.SchedulePostRecall(id,Route(0,5),200,220,1,1);
+                var shift=GuardRefugeJourney.Create(7,new[] { new GuardPoint3(),new GuardPoint3 { X=5 },new GuardPoint3 { X=15 } },
+                    new[] { new GuardPoint3(),new GuardPoint3 { Z=8 } },200,1,1);
+                shift.WallDuty=true; shift.ReturnExterior=new List<GuardPoint3> {new GuardPoint3 {X=15},new GuardPoint3 {X=5}};
+                shift.Release(300); roster.ScheduleWallDuty(id,shift);
+                var other=roster.Guards[1].Id; roster.SchedulePostRecall(other,Route(10,15),200,220,1,1);
+                Check.Throws<ArgumentException>(()=>roster.ScheduleWallDuty(other,shift));
+                shift.Exterior[0].X=90;
+                Check.Near(0,roster.Guards[0].PostRecall.WallDuty.Exterior[0].X);
+                roster.Guards[0].PostRecall.WallDuty.SecondsPerMetre=2;
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(roster));
+            }));
+            cases.Add(("Scheduled wall duty yields to crime response and retains guard health",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.Guards[0].HealthFraction=0.4;
+                roster.SchedulePostRecall(id,Route(0,5),200,220,1,1);
+                var shift=GuardRefugeJourney.Create(7,new[] { new GuardPoint3(),new GuardPoint3 { X=5 },new GuardPoint3 { X=10 } },
+                    new[] { new GuardPoint3(),new GuardPoint3 { Z=8 } },200,1,1);
+                shift.WallDuty=true; shift.ReturnExterior=new List<GuardPoint3> {new GuardPoint3 {X=10},new GuardPoint3 {X=5}};
+                shift.Release(300); roster.ScheduleWallDuty(id,shift);
+                roster.Dispatch("crime",150,new Dictionary<string,List<SavedRoutePoint>> { {id,Route(0,50)} },1,2,1);
+                roster.Advance(210);
+                Check.True(roster.Guards[0].PostRecall==null && roster.Guards[0].Refuge==null);
+                Check.Near(0.4,roster.Guards[0].HealthFraction);
+            }));
+            cases.Add(("Repeated gate duty keeps routine report storage bounded",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                for(int day=1;day<=30;day++)
+                {
+                    roster.MovePost(id,Route(roster.Guards[0].Post.X,20),day*1000,2,1);
+                    roster.SchedulePostRecall(id,Route(20,5),day*1000+200,day*1000+220,1,1);
+                    roster.Advance(day*1000+205);
+                    roster=GuardRoster.CopyValidated(roster);
+                    Check.True(roster.Reports.Count<=1);
+                    roster.Advance(day*1000+300);
+                    Check.Equal(0,roster.Reports.Count);
+                }
+            }));
+            cases.Add(("Gate recall advances while unloaded and survives a saved mid-route journey",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.MovePost(id,Route(0,20),100,2,1);
+                roster.SchedulePostRecall(id,Route(20,5),200,220,1,1);
+                var options=new JsonSerializerOptions { IncludeFields=true };
+                roster=GuardRoster.CopyValidated(JsonSerializer.Deserialize<GuardRoster>(JsonSerializer.Serialize(roster,options),options));
+                Check.Near(20,roster.Position(id,199).X);
+                Check.Near(15,roster.Position(id,205).X);
+                Check.Equal(GuardDuty.Returning,roster.Guards[0].Duty);
+                roster=GuardRoster.CopyValidated(roster);
+                Check.Near(5,roster.Position(id,1000).X);
+                Check.Equal(GuardDuty.Posted,roster.Guards[0].Duty);
+                Check.True(roster.Guards[0].PostRecall==null);
+                Check.Equal(1,roster.Guards.Count);
+                Check.True(!roster.KnowsPlayerCrime(id));
+            }));
+            cases.Add(("Gate recall cannot replace an emergency or resurrect a dead guard",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                roster.SchedulePostRecall(id,Route(0,5),200,220,1,1);
+                roster.Dispatch("crime",150,new Dictionary<string,List<SavedRoutePoint>> { { id,Route(0,50) } },1,2,1);
+                roster.Advance(1000);
+                Check.True(roster.Guards[0].PostRecall==null);
+                Check.Near(0,roster.Guards[0].Post.X);
+                var dead=Roster(1); id=dead.Guards[0].Id;
+                dead.SchedulePostRecall(id,Route(0,5),200,220,1,1);
+                dead.Kill(id,160); dead.Advance(1000);
+                Check.Equal(GuardDuty.Dead,dead.Guards[0].Duty);
+                Check.Near(0,dead.Position(id,1000).X);
+            }));
+            cases.Add(("Gate recall rejects missed closing deadlines and corrupted saved routes",()=>{
+                var roster=Roster(1); var id=roster.Guards[0].Id;
+                Check.Throws<ArgumentException>(()=>roster.SchedulePostRecall(id,Route(0,50),200,220,1,1));
+                Check.Throws<ArgumentException>(()=>roster.SchedulePostRecall(id,Route(9,5),200,220,1,1));
+                roster.SchedulePostRecall(id,Route(0,5),200,220,1,1);
+                var copied=GuardRoster.CopyValidated(roster);
+                copied.Guards[0].PostRecall.Route[0].X=90;
+                Check.Near(0,roster.Guards[0].PostRecall.Route[0].X);
+                roster.Guards[0].PostRecall.ArrivesAt=230;
+                Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(roster));
+            }));
+            cases.Add(("Gate guard posts flank opening and face away from wall",()=>{
+                var plan=GateGuardPosts.Build(10,20,1,0,0,1,2,3,1.5,1.25);
+                Check.Near(13.5,plan.InsideLeft.X); Check.Near(13.5,plan.InsideRight.X);
+                Check.Near(40,plan.InsideLeft.Z+plan.InsideRight.Z);
+                Check.Near(3,plan.InsideReturnLeft.X-plan.InsideLeft.X);
+                Check.Near(6.5,plan.OutsideLeft.X); Check.Near(6.5,plan.OutsideRight.X);
+                Check.Near(1,plan.InsideFacing.X); Check.Near(0,plan.InsideFacing.Z);
+                Check.Near(-1,plan.OutsideFacing.X); Check.Near(0,plan.OutsideFacing.Z);
+                var rotated=GateGuardPosts.Build(0,0,0,-4,3,0,1,2,1,1);
+                Check.Near(-3,rotated.InsideLeft.X); Check.Near(-2,rotated.InsideLeft.Z);
+                Check.Near(0,rotated.OutsideFacing.X); Check.Near(1,rotated.OutsideFacing.Z);
+                Check.Throws<ArgumentException>(()=>GateGuardPosts.Build(0,0,1,0,1,0,1,2,1,1));
+            }));
             cases.Add(("Guard effect snapshot survives validated roster copy without shared mutable state",()=>{
                 var roster=Roster(1);
                 roster.Guards[0].Effects=new GuardEffectSnapshot { Json="[]",MagicMinute=42 };
@@ -393,7 +572,7 @@ namespace LivingCities.Tests
             cases.Add(("Schema five migrates without inventing garrisons", () => {
                 var store = new WorldStateStore(42); store.GetOrCreate(1, new[] { 1 });
                 var older = store.Snapshot(); older.Version = 5; older.Garrisons = null;
-                store.Restore(older); Check.Equal(9, store.Snapshot().Version); Check.Equal(0, store.Snapshot().Garrisons.Count);
+                store.Restore(older); Check.Equal(21, store.Snapshot().Version); Check.Equal(0, store.Snapshot().Garrisons.Count);
             }));
             cases.Add(("Bad guard routes reject transactionally without partial dispatch", () => {
                 var roster = Roster();

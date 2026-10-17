@@ -7,6 +7,7 @@ namespace LivingCities.Core
     public sealed class LodgingRoom
     {
         public string Id;
+        public bool NonRentable;
         public List<string> Beds=new List<string>();
     }
     [Serializable]
@@ -18,14 +19,55 @@ namespace LivingCities.Core
         public double StartsAt,EndsAt;
     }
     [Serializable]
+    public sealed class LodgingOccupant
+    {
+        public string PersonId,BedId;
+        public double StartsAt;
+    }
+    [Serializable]
     public sealed class TavernLodging
     {
         public int SettlementId,BuildingKey;
         public List<LodgingRoom> Rooms=new List<LodgingRoom>();
         public List<LodgingBooking> Bookings=new List<LodgingBooking>();
+        public List<LodgingOccupant> Occupants=new List<LodgingOccupant>();
     }
     public sealed partial class WorldStateStore
     {
+        private void ReleaseCleanedLodging(CivilianIncident alarm)
+        {
+            if(alarm.Corpse==null || !alarm.Corpse.Cleared ||
+                !state.NativePeople.Exists(p=>p.Id==alarm.VictimId && !p.IsAlive)) return;
+            foreach(var tavern in state.Lodgings)
+                tavern.Occupants.RemoveAll(o=>o.PersonId==alarm.VictimId);
+        }
+        public string NativeLodgingBed(string personId)
+        {
+            foreach(var tavern in state.Lodgings)
+            {
+                var claim=tavern.Occupants.Find(o=>o.PersonId==personId);
+                if(claim!=null) return claim.BedId;
+            }
+            return null;
+        }
+        public bool TryClaimLodgingBed(int town,int building,string personId,string bed,double now)
+        {
+            var tavern=Lodging(town,building);
+            Require(DefenseTime(now) && state.NativePeople.Exists(p=>p.Id==personId && p.IsAlive &&
+                p.SettlementId==town && p.WorkKey==building),"Invalid native lodging occupant.");
+            var room=tavern.Rooms.Find(r=>r.Beds.Contains(bed));
+            Require(room!=null,"Unknown occupant bed.");
+            foreach(var other in state.Lodgings)
+            {
+                var prior=other.Occupants.Find(o=>o.PersonId==personId);
+                if(prior!=null) return other==tavern && prior.BedId==bed;
+            }
+            if(tavern.Occupants.Exists(o=>o.BedId==bed) || tavern.Bookings.Exists(b=>b.RoomId==room.Id && b.EndsAt>now)) return false;
+            tavern.Occupants.Add(new LodgingOccupant {PersonId=personId,BedId=bed,StartsAt=now});
+            return true;
+        }
+        private static bool OccupiedRoom(TavernLodging tavern,LodgingRoom room,double end)
+        { return tavern.Occupants.Exists(o=>room.Beds.Contains(o.BedId) && o.StartsAt<end); }
         private TavernLodging Lodging(int town,int building)
         {
             var result=state.Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==building);
@@ -39,13 +81,16 @@ namespace LivingCities.Core
             var existing=state.Lodgings.Find(t=>t.SettlementId==town && t.BuildingKey==building);
             if(existing!=null)
             {
-                Require(existing.Rooms.Count==copied.Rooms.Count,"Lodging layout change requires reconciliation.");
-                foreach(var room in copied.Rooms)
+                foreach(var previous in existing.Rooms)
                 {
-                    var previous=existing.Rooms.Find(r=>r.Id==room.Id);
-                    Require(previous!=null && previous.Beds.Count==room.Beds.Count &&
+                    var room=copied.Rooms.Find(r=>r.Id==previous.Id);
+                    Require(room!=null && previous.NonRentable==room.NonRentable && previous.Beds.Count==room.Beds.Count &&
                         previous.Beds.TrueForAll(b=>room.Beds.Contains(b)),"Lodging layout change requires reconciliation.");
                 }
+                var additions=copied.Rooms.FindAll(r=>!existing.Rooms.Exists(p=>p.Id==r.Id));
+                Require(additions.TrueForAll(r=>r.NonRentable),"New rental rooms require layout reconciliation.");
+                existing.Rooms.AddRange(additions);
+                existing.Rooms.Sort((a,b)=>StringComparer.Ordinal.Compare(a.Id,b.Id));
                 return;
             }
             state.Lodgings.Add(copied);
@@ -74,7 +119,7 @@ namespace LivingCities.Core
             }
             foreach(var room in tavern.Rooms)
             {
-                if((allocatedRoom!=null && room.Id!=allocatedRoom) || room.Beds.Count<party ||
+                if(room.NonRentable || (allocatedRoom!=null && room.Id!=allocatedRoom) || room.Beds.Count<party || OccupiedRoom(tavern,room,end) ||
                     tavern.Bookings.Exists(b=>b.RoomId==room.Id && Overlap(start,end,b))) continue;
                 tavern.Bookings.Add(new LodgingBooking { Id=id,GuestId=guest,HomeSettlement=home,Player=player,
                     PartySize=party,RoomId=room.Id,StartsAt=start,EndsAt=end });
@@ -88,7 +133,9 @@ namespace LivingCities.Core
             {
                 var booking=tavern.Bookings.Find(b=>b.Id==id); if(booking==null) continue;
                 Require(DefenseTime(end) && end>=booking.EndsAt,"Invalid lodging extension.");
+                if(OccupiedRoom(tavern,tavern.Rooms.Find(r=>r.Id==booking.RoomId),end)) return false;
                 if(end!=booking.EndsAt && state.TravelerVisits.Exists(v=>v.BookingId==id)) return false;
+                if(end!=booking.EndsAt && state.ResidentTrips.Exists(t=>t.InnStays.Exists(s=>s.BookingId==id))) return false;
                 foreach(var other in state.Lodgings)
                     if(other.Bookings.Exists(b=>b!=booking && (b.GuestId==booking.GuestId && (!booking.Player || other==tavern) ||
                         other==tavern && b.RoomId==booking.RoomId) && Overlap(booking.StartsAt,end,b))) return false;
@@ -117,7 +164,8 @@ namespace LivingCities.Core
             Require(DefenseTime(now),"Invalid lodging time."); var tavern=Lodging(town,building);
             var room=tavern.Rooms.Find(r=>r.Beds.Contains(bed));
             Require(room!=null,"Unknown lodging bed.");
-            return tavern.Bookings.Exists(b=>b.RoomId==room.Id && b.GuestId!=guest && b.StartsAt<=now && now<b.EndsAt);
+            return tavern.Occupants.Exists(o=>room.Beds.Contains(o.BedId) && o.PersonId!=guest && o.StartsAt<=now) ||
+                tavern.Bookings.Exists(b=>b.RoomId==room.Id && b.GuestId!=guest && b.StartsAt<=now && now<b.EndsAt);
         }
         public double? EarliestLodgingStart(int town,int building,int party,double now,double duration)
         {
@@ -125,11 +173,11 @@ namespace LivingCities.Core
             var tavern=Lodging(town,building); double? earliest=null;
             foreach(var room in tavern.Rooms)
             {
-                if(room.Beds.Count<party) continue;
+                if(room.NonRentable || room.Beds.Count<party) continue;
                 double at=now; var bookings=tavern.Bookings.FindAll(b=>b.RoomId==room.Id);
                 bookings.Sort((a,b)=>a.StartsAt.CompareTo(b.StartsAt));
                 foreach(var booking in bookings) if(Overlap(at,at+duration,booking)) at=booking.EndsAt;
-                if(DefenseTime(at+duration) && (!earliest.HasValue || at<earliest.Value)) earliest=at;
+                if(!OccupiedRoom(tavern,room,at+duration) && DefenseTime(at+duration) && (!earliest.HasValue || at<earliest.Value)) earliest=at;
             }
             return earliest;
         }
@@ -137,12 +185,12 @@ namespace LivingCities.Core
         {
             Require(party>0 && DefenseTime(start) && DefenseTime(end) && end>start,"Invalid lodging offer.");
             var tavern=Lodging(town,building);
-            var room=tavern.Rooms.Find(r=>r.Beds.Count>=party && !tavern.Bookings.Exists(b=>b.RoomId==r.Id && Overlap(start,end,b)));
+            var room=tavern.Rooms.Find(r=>!r.NonRentable && r.Beds.Count>=party && !OccupiedRoom(tavern,r,end) && !tavern.Bookings.Exists(b=>b.RoomId==r.Id && Overlap(start,end,b)));
             return room==null ? null : room.Id;
         }
         private static bool Overlap(double start,double end,LodgingBooking booking)
         { return start<booking.EndsAt && booking.StartsAt<end; }
-        private static TavernLodging CopyLodging(TavernLodging source,WorldState world,HashSet<string> ids)
+        private static TavernLodging CopyLodging(TavernLodging source,WorldState world,HashSet<string> ids,int version=11)
         {
             Require(source!=null && source.BuildingKey>=0 && world.Settlements.Exists(s=>s.SettlementId==source.SettlementId) &&
                 source.Rooms!=null && source.Bookings!=null,"Invalid tavern lodging.");
@@ -151,18 +199,30 @@ namespace LivingCities.Core
             foreach(var room in source.Rooms)
             {
                 Require(room!=null && DefenseId(room.Id) && rooms.Add(room.Id) && room.Beds!=null && room.Beds.Count>0,"Invalid lodging room.");
-                var next=new LodgingRoom { Id=room.Id };
+                var next=new LodgingRoom { Id=room.Id,NonRentable=version>=11 && room.NonRentable };
                 foreach(var bed in room.Beds) { Require(DefenseId(bed) && beds.Add(bed),"Duplicate or invalid lodging bed."); next.Beds.Add(bed); }
                 copy.Rooms.Add(next);
             }
             copy.Rooms.Sort((a,b)=>StringComparer.Ordinal.Compare(a.Id,b.Id));
+            if(version>=10)
+            {
+                Require(source.Occupants!=null,"Missing native lodging occupants.");
+                foreach(var occupant in source.Occupants)
+                {
+                    Require(occupant!=null && DefenseTime(occupant.StartsAt) && beds.Contains(occupant.BedId) &&
+                        world.NativePeople.Exists(p=>p.Id==occupant.PersonId && p.SettlementId==source.SettlementId && p.WorkKey==source.BuildingKey) &&
+                        !copy.Occupants.Exists(o=>o.PersonId==occupant.PersonId || o.BedId==occupant.BedId),"Invalid native lodging claim.");
+                    copy.Occupants.Add(new LodgingOccupant {PersonId=occupant.PersonId,BedId=occupant.BedId,StartsAt=occupant.StartsAt});
+                }
+            }
             foreach(var booking in source.Bookings)
             {
                 Require(booking!=null && DefenseId(booking.Id) && ids.Add(booking.Id) && DefenseId(booking.GuestId) &&
                     booking.HomeSettlement>=0 && (booking.Player || booking.HomeSettlement!=source.SettlementId) &&
-                    booking.PartySize>0 && copy.Rooms.Exists(r=>r.Id==booking.RoomId && r.Beds.Count>=booking.PartySize) &&
+                    booking.PartySize>0 && copy.Rooms.Exists(r=>r.Id==booking.RoomId && !r.NonRentable && r.Beds.Count>=booking.PartySize) &&
                     DefenseTime(booking.StartsAt) && DefenseTime(booking.EndsAt) && booking.EndsAt>booking.StartsAt,
                     "Invalid lodging booking.");
+                Require(!OccupiedRoom(copy,copy.Rooms.Find(r=>r.Id==booking.RoomId),booking.EndsAt),"Booking conflicts with native room occupant.");
                 Require(!copy.Bookings.Exists(b=>b.GuestId==booking.GuestId && b.Player!=booking.Player),"Lodging guest role changed.");
                 Require(!copy.Bookings.Exists(b=>(b.RoomId==booking.RoomId || b.GuestId==booking.GuestId) &&
                     Overlap(booking.StartsAt,booking.EndsAt,b)),"Overlapping lodging bookings.");
@@ -178,7 +238,7 @@ namespace LivingCities.Core
             Require(source.Lodgings!=null,"Missing lodging ledger."); var ids=new HashSet<string>();
             foreach(var tavern in source.Lodgings)
             {
-                var copy=CopyLodging(tavern,world,ids);
+                var copy=CopyLodging(tavern,world,ids,source.Version);
                 Require(!result.Exists(t=>t.SettlementId==copy.SettlementId && t.BuildingKey==copy.BuildingKey),"Duplicate tavern lodging.");
                 foreach(var booking in copy.Bookings)
                 {

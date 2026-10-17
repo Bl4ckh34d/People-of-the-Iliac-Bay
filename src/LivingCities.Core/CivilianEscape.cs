@@ -8,6 +8,7 @@ namespace LivingCities.Core
         public int BuildingKey;
         public double StartedAt;
         public double Speed;
+        public double RedirectedAt;
         public List<GuardPoint3> InteriorRoute;
         public List<SavedRoutePoint> ExteriorRoute;
         // Routes are immutable after creation/validated restore. Avoid scanning or allocating
@@ -25,6 +26,18 @@ namespace LivingCities.Core
         }
         // Zero is the additive-field default in historical saves; keep their timing.
         private double EffectiveSpeed { get { return Speed == 0 ? 2.8 : Speed; } }
+        private double ExteriorStart { get { return RedirectedAt==0 ? ExitAt : RedirectedAt; } }
+        public CivilianEscape RedirectExterior(double now,List<SavedRoutePoint> route)
+        {
+            if(!Finite(now) || now<ExteriorStart || route==null || route.Count<2 || route[0]==null)
+                throw new ArgumentException("Witness must exit before changing street route.");
+            var current=new AlarmPerson(); Advance(current,now);
+            double x=route[0].X-current.X,z=route[0].Z-current.Z;
+            if(Math.Sqrt(x*x+z*z)>.05) throw new ArgumentException("Redirect must start at current witness position.");
+            var candidate=Copy(this);
+            candidate.ExteriorRoute=route; candidate.RedirectedAt=now;
+            return Copy(candidate);
+        }
         public double ExitAt { get { if (!insideLength.HasValue) insideLength = Length(InteriorRoute); return StartedAt + insideLength.Value / EffectiveSpeed * 12; } }
         public double ReportAt
         {
@@ -37,7 +50,7 @@ namespace LivingCities.Core
                     { double x = ExteriorRoute[i].X-ExteriorRoute[i-1].X, z = ExteriorRoute[i].Z-ExteriorRoute[i-1].Z; length += Math.Sqrt(x*x+z*z); }
                     outsideLength = length;
                 }
-                return ExitAt + outsideLength.Value / EffectiveSpeed * 12;
+                return ExteriorStart + outsideLength.Value / EffectiveSpeed * 12;
             }
         }
         public bool Arrived(double now) { return now >= ReportAt; }
@@ -45,7 +58,7 @@ namespace LivingCities.Core
         {
             if (now < StartedAt) return;
             bool inside = now < ExitAt;
-            double distance = (now - (inside ? StartedAt : ExitAt)) / 12 * EffectiveSpeed;
+            double distance = (now - (inside ? StartedAt : ExteriorStart)) / 12 * EffectiveSpeed;
             var point = inside ? Along(InteriorRoute, distance) : AlongExterior(distance);
             person.HasPosition = true; person.BuildingKey = inside ? BuildingKey : -1;
             person.X = point.X; person.Y = point.Y; person.Z = point.Z;
@@ -57,7 +70,7 @@ namespace LivingCities.Core
                 source.InteriorRoute == null || source.InteriorRoute.Count < 2 || source.InteriorRoute.Count > 1000 ||
                 source.ExteriorRoute == null || source.ExteriorRoute.Count < 2 || source.ExteriorRoute.Count > 10000)
                 throw new ArgumentException("Invalid witness escape plan.");
-            var result = new CivilianEscape { BuildingKey = source.BuildingKey, StartedAt = source.StartedAt, Speed = source.Speed,
+            var result = new CivilianEscape { BuildingKey = source.BuildingKey, StartedAt = source.StartedAt, Speed = source.Speed,RedirectedAt=source.RedirectedAt,
                 InteriorRoute = new List<GuardPoint3>(), ExteriorRoute = new List<SavedRoutePoint>() };
             foreach (var p in source.InteriorRoute)
             {
@@ -69,7 +82,8 @@ namespace LivingCities.Core
                 if (p == null || !Coordinate(p.X) || !Coordinate(p.Z)) throw new ArgumentException("Invalid escape point.");
                 result.ExteriorRoute.Add(new SavedRoutePoint { X = p.X, Z = p.Z });
             }
-            if (!Finite(result.ReportAt)) throw new ArgumentException("Invalid escape duration.");
+            if (!Finite(result.RedirectedAt) || result.RedirectedAt<0 || result.RedirectedAt!=0 && result.RedirectedAt<result.ExitAt ||
+                !Finite(result.ReportAt)) throw new ArgumentException("Invalid escape duration.");
             return result;
         }
         private GuardPoint3 AlongExterior(double distance)
@@ -107,7 +121,8 @@ namespace LivingCities.Core
     }
     public sealed partial class WorldStateStore
     {
-        public List<CivilianIncident> AdvanceEscapes(int settlementId, double now)
+        public List<CivilianIncident> AdvanceEscapes(int settlementId, double now, bool includeStreetContacts=false,
+            Action<CivilianIncident,AlarmPerson,double> beforeAdvance=null)
         {
             Require(ValidTime(now), "Invalid witness time.");
             var reports = new List<CivilianIncident>();
@@ -117,10 +132,13 @@ namespace LivingCities.Core
                 bool ready = false;
                 foreach (var person in alarm.People)
                 {
-                    if (person.Escape == null || person.Reaction != CivilianReaction.Flee ||
+                    if (person.Escape == null || !CivilianAlarms.PersonActive(alarm, person, now) || person.Reaction != CivilianReaction.Flee ||
                         !AlarmResident(settlementId, person.ResidentId).IsAlive) continue;
+                    if(beforeAdvance!=null) beforeAdvance(alarm,person,now);
                     person.Escape.Advance(person, now);
-                    if ((person.DirectWitness || person.HeardViolence) && person.Escape.Arrived(now)) ready = true;
+                    if(now>=person.Escape.StartedAt) person.EscapeAdvancedAt=now;
+                    if ((person.DirectWitness || person.HeardViolence || person.InnAlarm || person.CorpseObserver) &&
+                        (person.Escape.Arrived(now) || includeStreetContacts && now>=person.Escape.ExitAt)) ready = true;
                 }
                 if (ready) reports.Add(alarm);
             }

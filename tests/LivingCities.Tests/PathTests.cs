@@ -16,8 +16,68 @@ namespace LivingCities.Tests
 
     internal static class PathTests
     {
+        private sealed class EdgeGrid : IWalkEdgeGrid
+        {
+            public int Width {get {return 3;}}
+            public int Height {get {return 2;}}
+            public int Cost(int x,int z) {return 1;}
+            public bool CanStep(GridCell from,GridCell to)
+            {return !(from.Z==0 && to.Z==0 && Math.Min(from.X,to.X)==0 && Math.Max(from.X,to.X)==1);}
+        }
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Walkable endpoints cannot cross a blocked edge", () =>
+            {
+                var grid=new EdgeGrid();
+                var path=GridPathfinder.Find(grid,new GridCell(0,0),new GridCell(2,0),100);
+                Check.Equal(5,path.Count);
+                for(int i=1;i<path.Count;i++) Check.True(grid.CanStep(path[i-1],path[i]));
+                var search=GridPathfinder.Begin(grid,new GridCell(2,0),new GridCell(0,0),100);
+                while(!search.IsComplete) search.Step(1);
+                Check.Equal(5,search.Path.Count);
+                for(int i=1;i<search.Path.Count;i++) Check.True(grid.CanStep(search.Path[i-1],search.Path[i]));
+            }));
+            cases.Add(("Background work starts stay separated after stalls", () =>
+            {
+                var gate=new WorkStartGate(0.1);
+                Check.True(gate.TryStart(0));
+                Check.True(!gate.TryStart(0));
+                Check.True(!gate.TryStart(0.099));
+                Check.True(gate.TryStart(0.1));
+                Check.True(gate.TryStart(100));
+                Check.True(!gate.TryStart(100));
+                Check.True(!gate.TryStart(100.099));
+                Check.True(gate.TryStart(100.1));
+                Check.Throws<ArgumentOutOfRangeException>(()=>gate.TryStart(double.NaN));
+                Check.Throws<ArgumentOutOfRangeException>(()=>new WorkStartGate(0));
+            }));
+            cases.Add(("Sliced grid search preserves route and bounds each advance", () =>
+            {
+                var grid=new TestGrid("111111", "190091", "111111");
+                var expected=GridPathfinder.Find(grid,new GridCell(0,1),new GridCell(5,1),100);
+                foreach(int budget in new[]{1,2,7})
+                {
+                    var search=GridPathfinder.Begin(grid,new GridCell(0,1),new GridCell(5,1),100);
+                    int calls=0;
+                    while(!search.IsComplete)
+                    {
+                        Check.Equal(0,search.Path.Count);
+                        int before=search.WorkDone;
+                        search.Step(budget);
+                        Check.True(search.WorkDone-before<=budget);
+                        Check.True(++calls<100);
+                    }
+                    Check.Equal(string.Join("|",expected),string.Join("|",search.Path));
+                    int done=search.WorkDone; search.Step(1); Check.Equal(done,search.WorkDone);
+                }
+            }));
+            cases.Add(("Sliced grid search rejects partial exhausted paths", () =>
+            {
+                var search=GridPathfinder.Begin(new TestGrid("11111"),new GridCell(0,0),new GridCell(4,0),2);
+                while(!search.IsComplete) search.Step(1);
+                Check.Equal(0,search.Path.Count);
+                Check.Throws<ArgumentOutOfRangeException>(()=>search.Step(0));
+            }));
             cases.Add(("Routes go around solid obstacles", () =>
             {
                 var grid = new TestGrid("111", "001", "111");

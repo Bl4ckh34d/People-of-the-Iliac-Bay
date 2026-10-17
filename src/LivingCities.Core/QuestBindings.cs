@@ -108,6 +108,13 @@ namespace LivingCities.Core
             var town = world.Settlements.Find(t => t.SettlementId == binding.SettlementId);
             var home = town == null ? null : town.Households.Find(h => h.BuildingKey == binding.HomeKey);
             var resident = home == null ? null : home.Residents.Find(r => r.Id == binding.ResidentId);
+            if (resident == null)
+                foreach (var retired in world.HouseholdHistory)
+                    if (retired.SettlementId == binding.SettlementId && retired.Household.BuildingKey == binding.HomeKey)
+                    {
+                        resident = retired.Household.Residents.Find(r => r.Id == binding.ResidentId);
+                        if (resident != null) break;
+                    }
             Require(resident != null, "Quest binding does not belong to a saved household resident.");
             return resident;
         }

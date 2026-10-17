@@ -1,0 +1,16 @@
+name: Core tests
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Run simulation tests
+        run: dotnet run --project tests/LivingCities.Tests --configuration Release

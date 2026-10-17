@@ -82,6 +82,27 @@ namespace LivingCities.DFU
             action.Activate(new RaycastHit { distance = 1 });
             if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None)
                 throw new InvalidOperationException("Examining a corpse or presence alone caused a crime.");
+            var loot = DaggerfallUI.Instance.InventoryWindow.LootTarget;
+            if (!loot || loot.Items.Count != 1 || !HouseholdPropertyKeyItem.IsMatching(loot.Items.GetItem(0),population.SettlementId,other.HomeKey))
+                throw new InvalidOperationException("Corpse inventory did not expose its owner's home key.");
+            var takenKey = loot.Items.GetItem(0);
+            game.PlayerEntity.Items.TransferAll(loot.Items);
+            if (!game.PlayerEntity.Items.Contains(takenKey) || store.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count != 0)
+                throw new InvalidOperationException("Native take-all did not persist the corpse key claim.");
+            var keyReload = new WorldStateStore(0); keyReload.Restore(store.Snapshot());
+            if (keyReload.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count != 0)
+                throw new InvalidOperationException("Corpse key returned after world reload.");
+            // Returning a taken key is a player deposit, not a replenished claim.
+            loot.Items.Transfer(takenKey,game.PlayerEntity.Items);
+            DaggerfallUI.Instance.PopToHUD();
+            yield return null;
+            if (!action) throw new InvalidOperationException("Empty inventory removed the corpse visual.");
+            bool depositPreserved=false;
+            foreach (var pile in UnityEngine.Object.FindObjectsOfType<DaggerfallLoot>())
+                if (pile.ContainerType==LootContainerTypes.DroppedLoot && pile.Items.Contains(takenKey)) depositPreserved=true;
+            if (!depositPreserved || store.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count!=0)
+                throw new InvalidOperationException("Returned corpse key was lost or recreated as an unclaimed key.");
+            Debug.Log("LIVING_CITIES_CORPSE_KEY_INVENTORY_PASS: native window, owner key, take-all, persistent depletion, deposit preserved, body retained.");
             var guardView = UnityEngine.Object.FindObjectOfType<GuardActor>();
             if (!guardView) throw new InvalidOperationException("No physical investigator view.");
             var activation = game.PlayerObject.GetComponent<PlayerActivate>();

@@ -1,0 +1,91 @@
+{
+  "batch": {
+    "name": "batch-08",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-08.png",
+    "items": [
+      {
+        "id": "flat-182-22",
+        "archive": 182,
+        "record": 22,
+        "kind": "flat",
+        "caption": "cloaked old man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-22.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-23",
+        "archive": 182,
+        "record": 23,
+        "kind": "flat",
+        "caption": "man in a blue coat",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-23.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-24",
+        "archive": 182,
+        "record": 24,
+        "kind": "flat",
+        "caption": "bearded old man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-24.png",
+        "aliases": [
+          "flat-334-7"
+        ]
+      },
+      {
+        "id": "flat-182-25",
+        "archive": 182,
+        "record": 25,
+        "kind": "flat",
+        "caption": "scruffy-looking sailor",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-25.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-26",
+        "archive": 182,
+        "record": 26,
+        "kind": "flat",
+        "caption": "young lady in green",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-26.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-27",
+        "archive": 182,
+        "record": 27,
+        "kind": "flat",
+        "caption": "elegantly dressed lady",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-27.png",
+        "aliases": [
+          "flat-334-4"
+        ]
+      },
+      {
+        "id": "flat-182-28",
+        "archive": 182,
+        "record": 28,
+        "kind": "flat",
+        "caption": "blue-cloaked woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-28.png",
+        "aliases": [
+          "flat-346-10"
+        ]
+      },
+      {
+        "id": "flat-182-29",
+        "archive": 182,
+        "record": 29,
+        "kind": "flat",
+        "caption": "pathetic old cripple",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-29.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-182-22 (cloaked old man); 2: flat-182-23 (man in a blue coat); 3: flat-182-24 (bearded old man); 4: flat-182-25 (scruffy-looking sailor); 5: flat-182-26 (young lady in green); 6: flat-182-27 (elegantly dressed lady); 7: flat-182-28 (blue-cloaked woman); 8: flat-182-29 (pathetic old cripple). Study each face in the source carefully. Preserve baldness, grey vs brown vs blond hair and actual facial hair. No extra facial hair on clean-shaven faces.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-c80faa37-2da1-4090-acb5-f90cd99b2068.png",
+  "status": "generated-awaiting-runtime-validation"
+}

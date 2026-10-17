@@ -8,6 +8,58 @@ namespace LivingCities.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("House greeting counts living visitors and sleepers but not corpses or absent owners", () => {
+                var people = new List<Resident> { new Resident { Id = "owner", IsAlive = false } };
+                Check.True(!HouseholdAccess.HasLivingOccupant(4, people, r => { throw new Exception("Corpse has no activity"); }));
+                people[0].IsAlive = true;
+                Check.True(!HouseholdAccess.HasLivingOccupant(4, people, r => At(Activity.Visit, 8)));
+                Check.True(!HouseholdAccess.HasLivingOccupant(4, people, r => At(Activity.Travel, 4)));
+                Check.True(HouseholdAccess.HasLivingOccupant(4, people, r => At(Activity.Sleep, 4)));
+                people[0].HomeKey = 8;
+                Check.True(HouseholdAccess.HasLivingOccupant(4, people, r => At(Activity.Visit, 4)));
+                people.Clear();
+                Check.True(!HouseholdAccess.HasLivingOccupant(4, people, r => At(Activity.Home, 4)));
+            }));
+            cases.Add(("Shelter lock survives alarm expiry and save, expires exactly one hour after arrival",()=>{
+                var store=new WorldStateStore(3); var town=store.GetOrCreate(1,new[]{4,8},1);
+                var victim=town.Households[0].Residents[0]; var runner=town.Households[1].Residents[0];
+                var alarm=store.RecordViolence(1,victim.Id,100); var person=store.Witness(alarm.Id,runner.Id,100);
+                person.Reaction=CivilianReaction.Flee; person.HasPosition=true;person.BuildingKey=8;person.ReachedRefuge=true;
+                store.RecordShelterArrival(alarm.Id,runner.Id,200);
+                Check.True(!store.ShelterLocked(1,8,199)); Check.True(store.ShelterLocked(1,8,200));
+                Check.True(!store.ShelterLocked(2,8,500)); Check.True(!store.ShelterLocked(1,4,500));
+                var restored=new WorldStateStore(0);restored.Restore(store.Snapshot());
+                Check.True(restored.ShelterLocked(1,8,3799.9)); Check.True(!restored.ShelterLocked(1,8,3800));
+                restored.RecordShelterArrival(alarm.Id,runner.Id,500);
+                Check.True(!restored.ShelterLocked(1,8,3800));
+                var old=store.Snapshot();old.ShelterLocks=null; restored.Restore(old);
+                Check.True(!restored.ShelterLocked(1,8,500));
+            }));
+            cases.Add(("Shelter arrival requires a living fleeing occupant and rejects corrupt saved locks atomically",()=>{
+                var store=new WorldStateStore(3);var town=store.GetOrCreate(1,new[]{4,8},1);
+                var alarm=store.RecordViolence(1,town.Households[0].Residents[0].Id,100);
+                var runner=town.Households[1].Residents[0];var person=store.Witness(alarm.Id,runner.Id,100);
+                person.Reaction=CivilianReaction.Flee; person.HasPosition=true;person.BuildingKey=-1;
+                Check.Throws<ArgumentException>(()=>store.RecordShelterArrival(alarm.Id,runner.Id,200));
+                person.BuildingKey=8;person.ReachedRefuge=true;store.RecordShelterArrival(alarm.Id,runner.Id,200);
+                var bad=store.Snapshot();bad.ShelterLocks[0].Until=double.NaN;
+                Check.Throws<ArgumentException>(()=>store.Restore(bad));Check.True(store.ShelterLocked(1,8,500));
+            }));
+            cases.Add(("A new fleeing arrival renews the shelter hour without duplicate door records",()=>{
+                var store=new WorldStateStore(3);var town=store.GetOrCreate(1,new[]{4,8,12,16},1);
+                var runner=town.Households[1].Residents[0];
+                int victim=0;
+                foreach(double at in new[] {100.0,300.0,5000.0})
+                {
+                    var alarm=store.RecordViolence(1,town.Households[victim].Residents[0].Id,at);
+                    victim= victim==0 ? 2 : 3;
+                    var person=store.Witness(alarm.Id,runner.Id,at);
+                    person.Reaction=CivilianReaction.Flee;person.HasPosition=true;person.ReachedRefuge=true;person.BuildingKey=8;
+                    store.RecordShelterArrival(alarm.Id,runner.Id,at+10);
+                    Check.Equal(1,store.Snapshot().ShelterLocks.Count);
+                    Check.True(store.ShelterLocked(1,8,at+3609)); Check.True(!store.ShelterLocked(1,8,at+3610));
+                }
+            }));
             cases.Add(("Alarm location overrides sleeping schedule without mutating saved flight state", () => {
                 var home = new Household { BuildingKey = 4 };
                 home.Residents.Add(new Resident { Id = "owner", HomeKey = 4 });

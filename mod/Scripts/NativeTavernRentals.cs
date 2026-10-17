@@ -13,9 +13,30 @@ namespace LivingCities.DFU
 {
     public sealed class NativeTavernRentals : IDisposable
     {
+        // Shared by exterior and remote preparation. No NPC admission is allowed
+        // until native paid receipts and permanent occupants have been reconciled.
+        internal static void RegisterInventory(WorldStateStore store,int town,DFLocation location,StaticDoor entry,
+            TavernRoomSurvey.Result inventory,RoomRental_v1 receipt,double now)
+        {
+            if(store==null || inventory==null || inventory.Rooms==null || inventory.Markers==null || inventory.Occupants==null)
+                throw new ArgumentException("Incomplete inn inventory.");
+            string allocated=null;
+            if(receipt!=null && receipt.expiryTime>now &&
+                (receipt.mapID!=town || receipt.buildingKey!=entry.buildingKey || !inventory.Markers.TryGetValue(receipt.allocatedBedIndex,out allocated)))
+                throw new InvalidOperationException("Native paid rental has no matching destination room.");
+            // Remote and loaded surveys must agree on rooms without native
+            // rental markers (staff/common rooms), before comparing inventories.
+            var eligible=new HashSet<string>(inventory.Markers.Values);
+            foreach(var room in inventory.Rooms) room.NonRentable=!eligible.Contains(room.Id);
+            store.RegisterLodging(town,entry.buildingKey,inventory.Rooms);
+            if(allocated!=null && !store.ReconcilePlayerLodging(town,entry.buildingKey,allocated,now,receipt.expiryTime))
+                throw new InvalidOperationException("Native paid rental conflicts with destination inventory.");
+            NativeInnOccupants.Claim(store,town,location,entry,inventory.Rooms,inventory.Occupants,now,inventory.KeeperHash);
+        }
         private DaggerfallInterior surveyed;
         private List<LodgingRoom> rooms;
         private Dictionary<int,string> markers;
+        private Dictionary<int,string> roomOccupants;
         private string lastFailure;
         private Func<WorldStateStore> getStore;
         private Func<bool> available;
@@ -24,10 +45,18 @@ namespace LivingCities.DFU
         private readonly List<int> inventoryBuildings=new List<int>();
         private readonly Dictionary<int,Inventory> inventory=new Dictionary<int,Inventory>();
         private int nextInventory;
+        private System.Collections.IEnumerator surveyOperation;
+        private TavernRoomSurvey.Result surveyResult;
+        private Inventory surveyInventory;
+        private int surveyKey;
+        private float surveyStartsAt;
+        private bool surveyStarted;
         private sealed class Inventory
         {
             public List<LodgingRoom> Rooms;
             public Dictionary<int,string> Markers;
+            public Dictionary<int,string> Occupants;
+            public StaticDoor Entry;
             public string Failure;
         }
 
@@ -35,11 +64,13 @@ namespace LivingCities.DFU
         {
             if(inventoryDirectory!=directory)
             {
+                CancelSurvey();
                 inventoryDirectory=directory; inventory.Clear(); inventoryBuildings.Clear(); nextInventory=0;
                 foreach(var building in directory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern)) inventoryBuildings.Add(building.buildingKey);
                 inventoryBuildings.Sort();
             }
             if(inventoryBuildings.Count==0) return;
+            if(surveyOperation!=null) return;
             int key=inventoryBuildings[nextInventory++%inventoryBuildings.Count];
             if(nextInventory>=inventoryBuildings.Count) nextInventory=0;
             Inventory item;
@@ -53,10 +84,12 @@ namespace LivingCities.DFU
                         foreach(var door in candidate.Doors)
                             if(door.doorType==DoorTypes.Building && door.buildingKey==key) { owner=candidate; entry=door; break; }
                     if(!owner) throw new InvalidOperationException("Tavern entrance unavailable.");
-                    var all=TavernRoomSurvey.ReadUnloaded(owner.transform,entry,out item.Markers);
-                    var eligible=new HashSet<string>(item.Markers.Values);
-                    item.Rooms=all.FindAll(r=>eligible.Contains(r.Id));
-                    Debug.Log("LIVING_CITIES_TAVERN_INVENTORY: "+directory.MapID+":"+key+"; rooms="+item.Rooms.Count);
+                    item.Entry=entry;
+                    surveyResult=new TavernRoomSurvey.Result(); surveyInventory=item; surveyKey=key;
+                    surveyOperation=TavernRoomSurvey.ReadUnloadedSteps(owner.transform,entry,surveyResult);
+                    surveyStartsAt=Time.unscaledTime+0.1f;
+                    surveyStarted=false;
+                    return;
                 }
                 catch(Exception error)
                 {
@@ -65,19 +98,18 @@ namespace LivingCities.DFU
                 }
             }
             if(item.Rooms==null) return; // Retry geometry only after the settlement layout reloads.
+            ReconcileInventory(store,directory,key,item);
+        }
+        private void ReconcileInventory(WorldStateStore store,BuildingDirectory directory,int key,Inventory item)
+        {
             try
             {
-                store.RegisterLodging(directory.MapID,key,item.Rooms);
                 var receipt=GameManager.Instance.PlayerEntity.GetRentedRoom(directory.MapID,key);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
-                if(receipt!=null && receipt.expiryTime>now)
-                {
-                    string room;
-                    if(!item.Markers.TryGetValue(receipt.allocatedBedIndex,out room) ||
-                        !store.ReconcilePlayerLodging(directory.MapID,key,room,now,receipt.expiryTime))
-                        throw new InvalidOperationException("Native paid rental conflicts with exterior inventory.");
-                }
+                RegisterInventory(store,directory.MapID,directory.LocationData,item.Entry,
+                    new TavernRoomSurvey.Result {Rooms=item.Rooms,Markers=item.Markers,Occupants=item.Occupants},receipt,now);
                 item.Failure=null;
+                store.AdvanceInnAdmissions(directory.MapID,now,8,key);
             }
             catch(Exception error)
             {
@@ -93,7 +125,47 @@ namespace LivingCities.DFU
             hooks=(IDisposable)Activator.CreateInstance(type,new object[] {
                 new Func<int,int,int,Action,bool>(Rent),new Func<bool,string>(RestBlocked) });
         }
-        public void Dispose() { if(hooks!=null) hooks.Dispose(); hooks=null; }
+        public void Dispose() { CancelSurvey(); if(hooks!=null) hooks.Dispose(); hooks=null; }
+        private void CancelSurvey()
+        {
+            if(surveyOperation==null) return;
+            (surveyOperation as IDisposable)?.Dispose(); surveyOperation=null;
+            inventory.Remove(surveyKey); surveyInventory=null; surveyResult=null;
+        }
+        public void AdvanceSurvey()
+        {
+            if(surveyOperation==null || Time.unscaledTime<surveyStartsAt) return;
+            if(available==null || !available() || !inventoryDirectory ||
+                GameManager.Instance.IsPlayerInside || GameManager.Instance.StreamingWorld.GetCurrentBuildingDirectory()!=inventoryDirectory)
+            { CancelSurvey(); return; }
+            if(!surveyStarted)
+            {
+                if(!BackgroundWork.TryStart()) return;
+                surveyStarted=true;
+            }
+            long started=RuntimeTiming.Start();
+            try
+            {
+                if(surveyOperation.MoveNext()) return;
+                (surveyOperation as IDisposable)?.Dispose(); surveyOperation=null;
+                surveyInventory.Markers=surveyResult.Markers; surveyInventory.Occupants=surveyResult.Occupants;
+                var eligible=new HashSet<string>(surveyResult.Markers.Values);
+                foreach(var room in surveyResult.Rooms) room.NonRentable=!eligible.Contains(room.Id);
+                surveyInventory.Rooms=surveyResult.Rooms;
+                ReconcileInventory(getStore(),inventoryDirectory,surveyKey,surveyInventory);
+                Debug.Log("LIVING_CITIES_TAVERN_INVENTORY: "+inventoryDirectory.MapID+":"+surveyKey+"; rooms="+surveyInventory.Rooms.Count);
+                surveyResult=null; surveyInventory=null;
+            }
+            catch(Exception error)
+            {
+                var item=surveyInventory;
+                if(surveyOperation!=null) (surveyOperation as IDisposable)?.Dispose();
+                surveyOperation=null; surveyResult=null; surveyInventory=null;
+                if(item!=null) item.Failure=error.Message;
+                Debug.LogWarning("LIVING_CITIES_TAVERN_SURVEY_FAILED: "+surveyKey+": "+error.Message);
+            }
+            finally { RuntimeTiming.End("tavern-survey-slice",started); }
+        }
 
         private string RestBlocked(bool stayHere)
         {
@@ -145,9 +217,10 @@ namespace LivingCities.DFU
             if(rooms==null)
             {
                 Dictionary<int,string> mapping;
-                var all=TavernRoomSurvey.Read(interior,out mapping);
+                var all=TavernRoomSurvey.Read(interior,out mapping,out roomOccupants);
                 var eligible=new HashSet<string>(mapping.Values);
-                rooms=all.FindAll(r=>eligible.Contains(r.Id)); markers=mapping;
+                foreach(var room in all) room.NonRentable=!eligible.Contains(room.Id);
+                rooms=all; markers=mapping;
             }
             store.RegisterLodging(directory.MapID,interior.EntryDoor.buildingKey,rooms);
         }
@@ -186,6 +259,15 @@ namespace LivingCities.DFU
                         !store.ReconcilePlayerLodging(town,building,room,now,receipt.expiryTime))
                         throw new InvalidOperationException("Existing paid room needs reconciliation.");
                 }
+                // Earlier registered arrivals get first choice. Keep this UI action
+                // bounded; a full batch asks the player to wait for catch-up.
+                NativeInnOccupants.Claim(store,directory,interior.EntryDoor,rooms,roomOccupants,now);
+                AdvanceResidentInside(store,town,building,now);
+                if(store.HasDueTravelerAdmission(town,building,now) || store.HasDueResidentInnAdmission(town,building,now))
+                {
+                    DaggerfallUI.MessageBox("The keeper is serving arriving guests. Please try again shortly.");
+                    return true;
+                }
                 double end=(receipt==null ? now : receipt.expiryTime)+days*86400d;
                 if(end-now>351*86400d) throw new InvalidOperationException("Rental duration exceeds native limit.");
                 if(receipt==null) room=store.AvailableLodgingRoom(town,building,1,now,end);
@@ -219,6 +301,13 @@ namespace LivingCities.DFU
             }
         }
 
+        private static void AdvanceResidentInside(WorldStateStore store,int town,int building,double now)
+        {
+            var streets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();
+            bool ready=streets && streets.PrepareResidentInnReceptions(store,town,building,now);
+            if(!ready && store.HasUnpreparedResidentInnAdmission(town,building,now)) return;
+            store.AdvanceInnAdmissions(town,now,8,building);
+        }
         public void Refresh(WorldStateStore store,BuildingDirectory directory)
         {
             var game=GameManager.Instance;
@@ -235,13 +324,20 @@ namespace LivingCities.DFU
                 Prepare(store,directory,interior);
                 // Guest capacity exists independently of whether the player rented.
                 // Reconcile any native payment before future NPC admission uses it.
-                if(receipt==null || receipt.expiryTime<=now) { lastFailure=null; return; }
+                if(receipt==null || receipt.expiryTime<=now)
+                {
+                    NativeInnOccupants.Claim(store,directory,interior.EntryDoor,rooms,roomOccupants,now);
+                    AdvanceResidentInside(store,directory.MapID,building,now);
+                    lastFailure=null; return;
+                }
                 string allocated;
                 if(!markers.TryGetValue(receipt.allocatedBedIndex,out allocated))
                     throw new InvalidOperationException("Native allocated bed marker has no surveyed guest room.");
                 if(!store.ReconcilePlayerLodging(directory.MapID,building,allocated,now,receipt.expiryTime))
                     throw new InvalidOperationException("Native paid rental conflicts with saved lodging; receipt and existing bookings retained.");
                 lastFailure=null;
+                NativeInnOccupants.Claim(store,directory,interior.EntryDoor,rooms,roomOccupants,now);
+                AdvanceResidentInside(store,directory.MapID,building,now);
             }
             catch(Exception error)
             {

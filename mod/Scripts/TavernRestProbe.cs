@@ -22,7 +22,7 @@ namespace LivingCities.DFU
             try
             {
                 Dictionary<int,string> markers; var rooms=TavernRoomSurvey.Read(interior,out markers);
-                rooms=rooms.FindAll(r=>new HashSet<string>(markers.Values).Contains(r.Id));
+                foreach(var room in rooms) room.NonRentable=!new HashSet<string>(markers.Values).Contains(room.Id);
                 var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host);
                 store.RegisterLodging(town,building,rooms);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();

@@ -72,6 +72,17 @@ namespace LivingCities.Core
             if(now<ExitAt) return Sample(TravelerPhase.Leaving,1-(now-LeaveInnAt)/commute,false);
             return Sample(TravelerPhase.Departed,0,false);
         }
+        public static TravelerJourney CreateRefused(uint seed,double desiredArrival,double commuteSeconds,bool walled,
+            IEnumerable<RoutePoint> route,double refusedAt)
+        {
+            var result=Create(seed,desiredArrival,1,commuteSeconds,walled,route);
+            if(!Finite(refusedAt) || refusedAt+0.001<result.CheckInAt) throw new ArgumentException("Refusal precedes arrival.");
+            result.CheckOutAt=Math.Max(result.CheckInAt,refusedAt);
+            result.ExitAt=walled ? NextOpen(result.CheckOutAt+commuteSeconds) : result.CheckOutAt+commuteSeconds;
+            result.LeaveInnAt=result.ExitAt-commuteSeconds;
+            if(!Finite(result.ExitAt) || result.ExitAt<=result.LeaveInnAt) throw new ArgumentException("Invalid refused departure.");
+            return result;
+        }
         private TravelerSnapshot Sample(TravelerPhase phase,double progress,bool withinStay)
         {
             double along=distance[distance.Length-1]*Math.Max(0,Math.Min(1,progress));

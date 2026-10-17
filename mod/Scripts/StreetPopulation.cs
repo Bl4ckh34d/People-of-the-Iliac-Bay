@@ -24,6 +24,7 @@ namespace LivingCities.DFU
         }
         private BuildingDirectory directory;
         private CityNavigation navigation;
+        private RoadTravelActors roadTravelActors;
         private TownGeometry geometry;
         private PopulationManager vanilla;
         private bool vanillaWasEnabled, ownsVanilla;
@@ -36,22 +37,152 @@ namespace LivingCities.DFU
         private InteriorGeometry indoorGeometry;
         private ShopVisitGeometry shopGeometry;
         private readonly Dictionary<string,ShopVisitJourney> shopJourneys=new Dictionary<string,ShopVisitJourney>();
+        private readonly Dictionary<string,PhysicalShopVisit> physicalShopVisits=new Dictionary<string,PhysicalShopVisit>();
+        private sealed class ShopDeparture { public List<GuardPoint3> Route; public int Next,TrackedWaypoint=-1; public double StartedAt,RetryAt; public float LastTargetDistance,StalledAt,NextDetourAt; }
+        private readonly Dictionary<string,ShopDeparture> shopDepartures=new Dictionary<string,ShopDeparture>();
+        private readonly Dictionary<string, BystanderPosture> bystanderPostures = new Dictionary<string, BystanderPosture>();
+        private sealed class BystanderRouteCache { public Vector3 Goal; public List<SavedRoutePoint> Route; public float RepathAt; }
+        private readonly Dictionary<string, BystanderRouteCache> bystanderRoutes = new Dictionary<string, BystanderRouteCache>();
+        private readonly HashSet<string> bystanderReturning = new HashSet<string>();
+        private float bystanderUntil;
         private double shopVisitDay=-1;
         private readonly Dictionary<string, int> indoorSlots = new Dictionary<string, int>();
         private SettlementPopulation population;
         private SleepingArt sleepingArt;
+        private Texture2D runningPilotAtlas;
         private CivilianResponses responses;
         private IDisposable reactionHook;
         private WorldStateStore worldStore;
         private int wakeHour, sleepHour;
         private float nextThreatSurvey;
+        private float nextMurderResolutionCheck;
         public bool ReactionsEnabled { get; set; }
+        private void OnEnable()
+        {
+            GuardActor.PlayerHalted -= OnPlayerHalted;
+            GuardActor.PlayerHalted += OnPlayerHalted;
+        }
+        private void OnDisable()
+        {
+            GuardActor.PlayerHalted -= OnPlayerHalted;
+            DisposeHouseholdLootConsentHook();
+        }
+        private void OnPlayerHalted(Vector3 guardPosition, Vector3 playerPosition, float audibleRange)
+        {
+            if (!Ready || GameManager.IsGamePaused) return;
+            bystanderUntil = Time.unscaledTime + 45f;
+            lastHaltGuardPosition = guardPosition;
+            lastHaltPlayerPosition = playerPosition;
+            lastHaltAudibleRange = audibleRange;
+        }
+        private Vector3 lastHaltGuardPosition, lastHaltPlayerPosition;
+        private float lastHaltAudibleRange;
+        private bool ApplyHaltBystander(ResidentActor actor, Vector3 player, Vector3 scheduledPosition, double seconds)
+        {
+            if (!actor) return false;
+            string id = actor.Resident.Id;
+            bool alarmActive = Time.unscaledTime <= bystanderUntil &&
+                GameManager.Instance.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;
+            if (!alarmActive)
+            {
+                bystanderPostures.Remove(id);
+                if (!bystanderReturning.Contains(id)) return false;
+                return ReturnBystander(actor, scheduledPosition);
+            }
+            float playerDistance = Vector3.Distance(actor.transform.position, player);
+            bool previouslyWatching = bystanderPostures.ContainsKey(id);
+            bool newlyHeard = Vector3.Distance(actor.transform.position, lastHaltGuardPosition) <= lastHaltAudibleRange &&
+                CivilianResponses.Sees(actor.transform.position + Vector3.up, lastHaltGuardPosition + Vector3.up, lastHaltAudibleRange);
+            if (!previouslyWatching && !newlyHeard || playerDistance > 22 ||
+                !CivilianResponses.Sees(actor.transform.position + Vector3.up, player + Vector3.up, 22))
+            {
+                if (previouslyWatching) { bystanderPostures.Remove(id); bystanderReturning.Add(id); }
+                if (!bystanderReturning.Contains(id)) return false;
+                return ReturnBystander(actor, scheduledPosition);
+            }
+            BystanderPosture previous;
+            if (!bystanderPostures.TryGetValue(id, out previous)) previous = BystanderPosture.Resume;
+            var posture = CivilianResponses.Bystander(actor, player, previous);
+            if (posture == BystanderPosture.Resume)
+            {
+                bystanderPostures.Remove(id);
+                bystanderReturning.Add(id);
+                return ReturnBystander(actor, scheduledPosition);
+            }
+            bystanderReturning.Remove(id);
+            bystanderPostures[id] = posture;
+            if (previous != posture) bystanderRoutes.Remove(id);
+            Vector3 position = actor.transform.position - Vector3.up;
+            if (posture == BystanderPosture.Watch)
+            {
+                actor.Place(position, player - actor.transform.position, true);
+                return true;
+            }
+            Vector3 away = position - player; away.y = 0;
+            if (away.sqrMagnitude < 0.0001f) away = actor.transform.forward;
+            away.Normalize();
+            float desiredDistance = BystanderResponse.RetreatDistance(actor.Resident.AppearanceSeed);
+            float currentDistance = Vector3.Distance(position, player);
+            if (currentDistance < desiredDistance && geometry != null)
+            {
+                Vector3 destination = position + away * Mathf.Min(3f, desiredDistance - currentDistance + 0.25f);
+                var route = GetBystanderRoute(id, position, destination);
+                if (route.Count > 1)
+                {
+                    Vector3 next = geometry.ScenePoint(new RoutePoint((float)route[1].X, (float)route[1].Z));
+                    Vector3 step = Vector3.MoveTowards(position, next, 2.2f * Time.deltaTime) - position;
+                    actor.Place(position + step, step, false);
+                    return true;
+                }
+            }
+            actor.Place(position, away, true);
+            return true;
+        }
+        private List<SavedRoutePoint> GetBystanderRoute(string id, Vector3 fromPosition, Vector3 destination)
+        {
+            BystanderRouteCache cache;
+            bool stale = !bystanderRoutes.TryGetValue(id, out cache) || cache.Route == null || cache.Route.Count < 2 ||
+                Vector3.Distance(cache.Goal, destination) > 1.25f || Time.unscaledTime >= cache.RepathAt;
+            if (stale)
+            {
+                Vector3 from = directory.transform.InverseTransformPoint(fromPosition);
+                Vector3 to = directory.transform.InverseTransformPoint(destination);
+                var route = geometry.RouteBetweenPoints(new SavedRoutePoint { X = from.x, Z = from.z }, new SavedRoutePoint { X = to.x, Z = to.z });
+                cache = new BystanderRouteCache { Goal = destination, Route = route, RepathAt = Time.unscaledTime + 0.75f };
+                bystanderRoutes[id] = cache;
+            }
+            return cache.Route;
+        }
+        private bool ReturnBystander(ResidentActor actor, Vector3 scheduledPosition)
+        {
+            string id = actor.Resident.Id;
+            Vector3 position = actor.transform.position - Vector3.up;
+            if (Vector3.Distance(position, scheduledPosition) <= 0.35f)
+            {
+                bystanderReturning.Remove(id); bystanderRoutes.Remove(id); return false;
+            }
+            if (geometry != null)
+            {
+                var route = GetBystanderRoute(id, position, scheduledPosition);
+                if (route.Count > 1)
+                {
+                    Vector3 next = geometry.ScenePoint(new RoutePoint((float)route[1].X, (float)route[1].Z));
+                    Vector3 step = Vector3.MoveTowards(position, next, 1.5f * Time.deltaTime) - position;
+                    actor.Place(position + step, step);
+                    return true;
+                }
+            }
+            actor.Place(position, scheduledPosition - position, true);
+            return true;
+        }
         public void InstallReactionHook()
         {
             var type = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
             reactionHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<Transform, Action<Exception>>(BeginWeaponHit) });
             InstallHouseholdDoorHook();
             InstallTheftHook();
+            InstallCorpseTransferHook();
+            InstallHouseholdLootConsentHook();
             InstallEntryAwareness();
             InstallKeeperServiceHook();
         }
@@ -78,11 +209,21 @@ namespace LivingCities.DFU
                 {
                     worldStore.ConfirmCorpse(alarm.Id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),
                         deathBuilding, deathPosition.x, deathPosition.y, deathPosition.z);
+                    worldStore.MarkPlayerMurder(alarm.Id);
+                    SpreadInnAlarm(alarm, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
                     if (deathBuilding == -1 && guards && guards.OwnsExterior && alarm.People.Count == 0 &&
                         !guards.Roster.Reports.Exists(r => r.Id == "civilian:" + alarm.Id && r.GuardIds.Count > 0) &&
                         GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
                         GameManager.Instance.PlayerEntity.CrimeCommitted = previousCrime;
-                    if (!concealed) return;
+                    if (!concealed)
+                    {
+                        // The pre-damage witness pass records reactions, but cannot
+                        // dispatch a murder report until this callback confirms death.
+                        if (guards) guards.ReportCivilianCrime(alarm, actor.transform.position);
+                        if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
+                            worldStore.MarkMurderAccusationIssued(alarm.Id);
+                        return;
+                    }
                     worldStore.RegisterUnwitnessedScene(alarm.Id);
                     if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
                         GameManager.Instance.PlayerEntity.CrimeCommitted = previousCrime;
@@ -108,15 +249,15 @@ namespace LivingCities.DFU
         {
             if (!interior || indoorGeometry == null) return;
             var guards = GetComponent<GuardPopulation>();
-            var outside = guards ? guards.WitnessRoute(interior.EntryDoor.buildingKey, now) : null;
-            if (outside == null) return;
+            if(!guards) return;
+            List<SavedRoutePoint> outside=null;
             foreach (var witness in actors.Values)
             {
                 if (!witness || !witness.Resident.IsAlive) continue;
                 var alarm = worldStore.ActiveAlarm(witness.Resident.Id, now);
                 if (alarm == null) continue;
                 var person = alarm.People.Find(p => p.ResidentId == witness.Resident.Id);
-                if (person == null || (!person.DirectWitness && !person.HeardViolence) || person.Reaction != CivilianReaction.Flee || person.Escape != null ||
+                if (person == null || (!person.DirectWitness && !person.HeardViolence && !person.InnAlarm && !person.CorpseObserver) || person.Reaction != CivilianReaction.Flee || person.Escape != null ||
                     person.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 if (!WakeResidentForAlarm(witness,person)) continue;
                 // Rendering can lag the authoritative alarm position while actors move.
@@ -124,6 +265,8 @@ namespace LivingCities.DFU
                 var ground = interior.transform.TransformPoint(new Vector3((float)person.X, (float)person.Y, (float)person.Z));
                 var route = indoorGeometry.RouteToExit(ground);
                 if (route.Count < 2) continue;
+                if(outside==null) outside=guards.WitnessRoute(interior.EntryDoor.buildingKey,now);
+                if(outside==null) return;
                 var escape = CivilianEscape.Create(person, now, route, outside, ResidentMovement.FleeSpeed(witness.Resident.AppearanceSeed));
                 person.Escape = escape;
             }
@@ -137,7 +280,7 @@ namespace LivingCities.DFU
                 var alarm = worldStore.ActiveAlarm(plan.Resident.Id, now);
                 if (alarm == null || alarm.VictimId != victimId) continue;
                 var p = alarm.People.Find(person => person.ResidentId == plan.Resident.Id);
-                if (p.Escape != null && (p.DirectWitness || p.HeardViolence) && p.Reaction == CivilianReaction.Flee) return true;
+                if (p.Escape != null && (p.DirectWitness || p.HeardViolence || p.InnAlarm) && p.Reaction == CivilianReaction.Flee) return true;
             }
             return false;
         }
@@ -154,12 +297,34 @@ namespace LivingCities.DFU
             return true;
         }
         private AlarmPerson Reaction(string id, double now)
-        { return ReactionsEnabled && responses != null ? responses.Active(id, now) : null; }
+        {
+            if(!ReactionsEnabled) return null;
+            AlarmPerson grudge;if(partnerRetaliation.TryGetValue(id,out grudge)) return grudge;
+            return responses != null ? responses.Active(id, now) : null;
+        }
+        private readonly Dictionary<string,AlarmPerson> partnerRetaliation=new Dictionary<string,AlarmPerson>();
+        private readonly Dictionary<string,float> nextGrudgeCheck=new Dictionary<string,float>();
+        private void RecognizePartnerKiller(ResidentActor actor,double now,Transform origin,int building)
+        {
+            if(!ReactionsEnabled || actor.IsSleeping || GameManager.IsGamePaused || GameManager.Instance.PlayerEntity.IsInvisible) return;
+            float next;if(nextGrudgeCheck.TryGetValue(actor.Resident.Id,out next) && Time.time<next) return;
+            nextGrudgeCheck[actor.Resident.Id]=Time.time+.5f;
+            if(!worldStore.HoldsPartnerGrudge(actor.Resident,now) ||
+                !CivilianResponses.Sees(actor.transform.position,GameManager.Instance.PlayerMotor.transform.position,20)) return;
+            var point=origin.InverseTransformPoint(actor.transform.position-Vector3.up);
+            partnerRetaliation[actor.Resident.Id]=new AlarmPerson {ResidentId=actor.Resident.Id,DirectWitness=true,
+                Reaction=CivilianReaction.Fight,HasPosition=true,BuildingKey=building,X=point.x,Y=point.y,Z=point.z};
+        }
         public bool IsAlarmed(string id)
         { return Reaction(id, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()) != null; }
         private readonly Dictionary<int, BedAnchor> indoorBeds = new Dictionary<int, BedAnchor>();
         private readonly Dictionary<string, BedAssignment> bedClaims = new Dictionary<string, BedAssignment>();
-        public void SetSleepingArt(Mod mod) { if (sleepingArt != null) sleepingArt.Dispose(); sleepingArt = new SleepingArt(mod); }
+        public void SetSleepingArt(Mod mod)
+        {
+            if (sleepingArt != null) sleepingArt.Dispose();
+            sleepingArt = new SleepingArt(mod);
+            if (!runningPilotAtlas) runningPilotAtlas = RunningPilotPose.Load(mod);
+        }
         public int ActiveCount { get { return actors.Count; } }
         private readonly Dictionary<string, GameObject> corpses = new Dictionary<string, GameObject>();
         public int CorpseCount { get { return corpses.Count; } }
@@ -180,22 +345,54 @@ namespace LivingCities.DFU
             id = null; ground = Vector3.zero; return false;
         }
         public ResidentActor FindActor(string id) { ResidentActor actor; return actors.TryGetValue(id, out actor) ? actor : null; }
+        public void ReleaseTransferredActor(ResidentActor actor)
+        {
+            if(actor && FindActor(actor.Resident.Id)==actor)
+            { actors.Remove(actor.Resident.Id); bystanderPostures.Remove(actor.Resident.Id); }
+        }
+        public bool TryReceiveRoadActor(ResidentActor actor,WorldStateStore store,double seconds)
+        {
+            ActivitySnapshot destination;
+            bool visiting=actor && population!=null && store.TryDestinationResidentState(actor.Resident.Id,population.SettlementId,seconds,out destination);
+            if(!Ready || !directory || !navigation || interior || !actor || !actor.Resident.IsAlive ||
+                !ReferenceEquals(worldStore,store) || !visiting && !store.IsResidentOnHomeRoute(actor.Resident.Id,seconds) ||
+                store.ResidentTripAt(actor.Resident.Id,seconds).SettlementId!=population.SettlementId ||
+                !visiting && !plans.Exists(p=>ReferenceEquals(p.Resident,actor.Resident))) return false;
+            var existing=FindActor(actor.Resident.Id);
+            if(existing && existing!=actor) return false;
+            actor.TransferOwner(directory.transform,navigation);
+            actors[actor.Resident.Id]=actor;
+            actor.SetRunningPilotAtlas(runningPilotAtlas);
+            return true;
+        }
         public bool IsLivingResident(string id) { return plans.Exists(p => p.Resident.Id == id && p.Resident.IsAlive) ||
+            destinationResidents.ContainsKey(id) && destinationResidents[id].IsAlive ||
+            travelerPlans.ContainsKey(id) && travelerPlans[id].Person.IsAlive ||
             (worldStore != null && population != null && worldStore.NativePeopleFor(population.SettlementId).Exists(p => p.Id == id && p.IsAlive)); }
         public static bool IsVisitDestination(DFLocation.BuildingTypes buildingType)
         {
             int type = (int)buildingType;
+            ResidentVisitPurpose purpose;
             return type >= 0 && type < PlayerActivate.openHours.Length &&
-                Math.Max(9, (int)PlayerActivate.openHours[type]) < Math.Min(18, (int)PlayerActivate.closeHours[type]) &&
-                buildingType != DFLocation.BuildingTypes.HouseForSale &&
-                buildingType != DFLocation.BuildingTypes.Palace &&
-                buildingType != DFLocation.BuildingTypes.GuildHall &&
-                buildingType != DFLocation.BuildingTypes.Town4;
+                TryGetDailyPurpose(buildingType, out purpose) &&
+                Math.Max(9, (int)PlayerActivate.openHours[type]) < Math.Min(18, (int)PlayerActivate.closeHours[type]);
         }
         public ActivitySnapshot GetState(string id, double seconds)
         {
+            ActivitySnapshot destination;
+            if(worldStore!=null && population!=null &&
+                worldStore.TryDestinationResidentState(id,population.SettlementId,seconds,out destination))
+                return destination.BuildingKey>=0 && ResidentInnSleeping(id,seconds) ?
+                    new ActivitySnapshot(Activity.Sleep,destination.BuildingKey,destination.Position,0) : destination;
+            if(worldStore!=null && worldStore.IsResidentAway(id,seconds))
+                return worldStore.LocalResidentState(id,seconds,default(ActivitySnapshot));
             var plan = plans.Find(item => item.Resident.Id == id);
-            if (plan == null) throw new ArgumentException("Unknown resident schedule.");
+            if (plan == null)
+            {
+                TravelerPlan traveler;
+                if(travelerPlans.TryGetValue(id,out traveler)) return TravelerState(traveler,seconds);
+                throw new ArgumentException("Unknown resident schedule.");
+            }
             return EntryState(id, seconds, Scheduled(plan,seconds));
         }
         public void SetTown(BuildingDirectory town, CityNavigation nav, SettlementPopulation population, WorldStateStore store, int wake, int sleep)
@@ -203,8 +400,10 @@ namespace LivingCities.DFU
             wakeHour = wake; sleepHour = sleep;
             if (!SettlementClassification.SupportsPopulation((int)town.LocationData.MapTableData.LocationType) ||
                 (town.MapID==1291010263 && DaggerfallPopulationProbe.SuppressCityActors)) { Clear(); return; }
-            if (directory == town && !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
+            if (directory == town && this.population == population &&
+                !(needsExterior && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)) return;
             Clear(); directory = town; navigation = nav; this.population = population; worldStore = store;
+            roadTravelActors=GetComponent<RoadTravelActors>();
             responses = new CivilianResponses(store, population.SettlementId, (alarm, position) => {
                 var guards = GetComponent<GuardPopulation>();
                 if (guards) guards.ReportCivilianCrime(alarm, position);
@@ -213,8 +412,11 @@ namespace LivingCities.DFU
         }
         private IEnumerator Build(SettlementPopulation population, WorldStateStore store, int wake, int sleep)
         {
+            // Ensure StartCoroutine returns its handle before any fast-path clears it.
+            yield return null;
             var saved = store.GetRoutines(population.SettlementId);
-            if (saved != null)
+            bool upgrade = saved != null && saved.ItineraryVersion < 1;
+            if (saved != null && !upgrade)
             {
                 geometry = new TownGeometry(directory, navigation, false);
                 foreach (var home in population.Households)
@@ -224,7 +426,43 @@ namespace LivingCities.DFU
                         var routine = saved.Residents.Find(item => item.ResidentId == resident.Id) ?? new ResidentRoutine { ResidentId = resident.Id };
                         AddPlan(resident, routine, home.SurnameSeed, wake, sleep);
                     }
+                bool compact = saved.ItineraryVersion == 1;
+                Coroutine activeBuild = building;
                 FinishBuild(population.SettlementId);
+                // Saved routes restore immediately, but doors are scene geometry.
+                // Survey them in slices so shelter and destination lookups work
+                // after loading a save without adding a synchronous town stall.
+                building = activeBuild;
+                var savedEntranceSteps = geometry.ReadEntranceSteps();
+                while (true)
+                {
+                    while (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused)
+                        yield return null;
+                    if (!directory || !ReferenceEquals(this.population, population) ||
+                        !ReferenceEquals(worldStore, store)) { building = null; yield break; }
+                    if (!savedEntranceSteps.MoveNext()) break;
+                    yield return savedEntranceSteps.Current;
+                }
+                Debug.Log("LIVING_CITIES_TOWN_ENTRANCES_READY: map=" + population.SettlementId +
+                    "; entrances=" + geometry.Entrances.Count);
+                if (compact)
+                {
+                    // Keep existing actors ready while large saved route sets compact in slices.
+                    bool changed = false;
+                    foreach (var routine in saved.Residents)
+                    {
+                        if (routine != null && CompactDailyRoutineRoutes(routine)) changed = true;
+                        yield return null;
+                    }
+                    if (changed)
+                    {
+                        long compactionCommitStarted = RuntimeTiming.Start();
+                        try { store.SetRoutines(saved); }
+                        finally { RuntimeTiming.End("daily-routine-commit", compactionCommitStarted); }
+                    }
+                    building = null;
+                }
+                building = null;
                 yield break;
             }
             // Old interior saves have no routes yet. Display household residents, then
@@ -232,16 +470,53 @@ namespace LivingCities.DFU
             if (GameManager.Instance.PlayerEnterExit.IsPlayerInside)
             {
                 needsExterior = true;
+                if (saved != null) geometry = new TownGeometry(directory, navigation, false);
                 foreach (var home in population.Households)
                     foreach (var resident in home.Residents)
-                        if (!resident.IsQuestProtected) AddPlan(resident, new ResidentRoutine { ResidentId = resident.Id }, home.SurnameSeed, wake, sleep);
+                        if (!resident.IsQuestProtected)
+                        {
+                            var routine = saved == null ? null : saved.Residents.Find(item => item.ResidentId == resident.Id);
+                            if (routine == null) routine = new ResidentRoutine { ResidentId = resident.Id };
+                            AddPlan(resident, routine, home.SurnameSeed, wake, sleep);
+                        }
                 Ready = true; building = null;
                 yield break;
             }
             // CityNavigation resolves its location reference in Start, after activation.
             yield return null;
-            geometry = new TownGeometry(directory, navigation);
-            saved = new TownRoutineState { SettlementId = population.SettlementId };
+            geometry = new TownGeometry(directory, navigation, false);
+            // Exterior route preparation can pause when the player enters a building.
+            // Keep household/interior simulation ready independently of that work,
+            // including the first visit to a settlement with no saved routes.
+            if (saved == null) saved = new TownRoutineState { SettlementId = population.SettlementId };
+            {
+                foreach (var home in population.Households)
+                    foreach (var resident in home.Residents)
+                    {
+                        if (resident.IsQuestProtected) continue;
+                        var routine = saved.Residents.Find(item => item.ResidentId == resident.Id);
+                        if (routine == null)
+                        {
+                            routine = new ResidentRoutine { ResidentId = resident.Id };
+                            saved.Residents.Add(routine);
+                        }
+                        AddPlan(resident, routine, home.SurnameSeed, wake, sleep);
+                    }
+                // Keep old routines and actors available while new route pairs are surveyed.
+                Coroutine activeBuild = building;
+                FinishBuild(population.SettlementId);
+                building = activeBuild;
+            }
+
+            // Entrance surveying performs exterior physics queries. Pause every step
+            // while an interior is active, including if the player enters mid-survey.
+            var entranceSteps = geometry.ReadEntranceSteps();
+            while (true)
+            {
+                while (GameManager.Instance.PlayerEnterExit.IsPlayerInside) yield return null;
+                if (!entranceSteps.MoveNext()) break;
+                yield return entranceSteps.Current;
+            }
             var destinations = new List<BuildingSummary>();
             foreach (var pair in geometry.Entrances)
             {
@@ -250,64 +525,192 @@ namespace LivingCities.DFU
                 if (IsVisitDestination(summary.BuildingType))
                     destinations.Add(summary);
             }
-            var cache = new Dictionary<string, List<RoutePoint>>();
+            dailyRouteCache.Clear();
+            dailyRouteCacheOrder.Clear();
+            dailyRouteCacheNodes.Clear();
             foreach (var home in population.Households)
             {
-                TownGeometry.Entrance entrance;
-                geometry.Entrances.TryGetValue(home.BuildingKey, out entrance);
                 foreach (var resident in home.Residents)
                 {
                     if (resident.IsQuestProtected) continue;
-                    var routine = new ResidentRoutine { ResidentId = resident.Id };
-                    int first = destinations.Count == 0 ? 0 : (int)(resident.AppearanceSeed % (uint)destinations.Count);
-                    for (int attempt = 0; resident.AgeGroup == ResidentAgeGroup.Adult && entrance != null && attempt < Math.Min(4, destinations.Count); attempt++)
+                    var routine = saved.Residents.Find(item => item.ResidentId == resident.Id);
+                    if (routine == null)
                     {
-                        // Physics queries are valid only while exterior geometry is active.
-                        while (GameManager.Instance.PlayerEnterExit.IsPlayerInside) yield return null;
-                        var destination = destinations[(first + attempt) % destinations.Count];
-                        if (destination.buildingKey == home.BuildingKey) continue;
-                        string key = home.BuildingKey + ":" + destination.buildingKey;
-                        List<RoutePoint> route;
-                        if (!cache.TryGetValue(key, out route))
-                        {
-                            route = geometry.RouteBetween(entrance, geometry.Entrances[destination.buildingKey]);
-                            cache.Add(key, route);
-                        }
-                        if (route.Count < 2) continue;
-                        int type = (int)destination.BuildingType;
-                        routine.DestinationKey = destination.buildingKey;
-                        routine.OpenMinute = Math.Max(9 * 60, PlayerActivate.openHours[type] * 60);
-                        routine.CloseMinute = Math.Min(18 * 60, PlayerActivate.closeHours[type] * 60);
-                        foreach (var point in route) routine.Route.Add(new SavedRoutePoint { X = point.X, Z = point.Z });
-                        break;
+                        routine = new ResidentRoutine { ResidentId = resident.Id };
+                        saved.Residents.Add(routine);
                     }
-                    saved.Residents.Add(routine);
-                    AddPlan(resident, routine, home.SurnameSeed, wake, sleep);
+
+                    if (resident.IsAlive && resident.AgeGroup == ResidentAgeGroup.Adult && resident.NativeIdentity == null &&
+                        geometry.Entrances.ContainsKey(home.BuildingKey))
+                    {
+                        var options = SelectDailyItineraryOptions(destinations, resident, home.BuildingKey);
+                        var buildingKeys = new List<int> { home.BuildingKey };
+                        foreach (var option in options) buildingKeys.Add(option.BuildingKey);
+                        var residentRoutes = new Dictionary<DailyRouteKey, DailyRoute>();
+
+                        // Survey only each resident's bounded candidate graph. The shared
+                        // cache reuses paths across residents; reverse paths reuse the same
+                        // validated static route in the opposite direction.
+                        for (int fromIndex = 0; fromIndex < buildingKeys.Count; fromIndex++)
+                        for (int toIndex = 0; toIndex < buildingKeys.Count; toIndex++)
+                        {
+                            int from = buildingKeys[fromIndex], to = buildingKeys[toIndex];
+                            if (from == to || GetDailyRoute(from, to, residentRoutes) != null) continue;
+                            var routeResult = new TownGeometry.RouteResult();
+                            Func<bool> stillCurrent = () => directory && directory.gameObject.activeInHierarchy &&
+                                ReferenceEquals(this.population, population) && ReferenceEquals(worldStore, store);
+                            var routeWork = geometry.ReadRouteSteps(geometry.Entrances[from], geometry.Entrances[to],
+                                routeResult, stillCurrent);
+                            bool routeFinished = false;
+                            try
+                            {
+                                while (!routeFinished)
+                                {
+                                    while (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused)
+                                        yield return null;
+                                    if (!stillCurrent()) yield break;
+                                    long sliceStarted = RuntimeTiming.Start();
+                                    var budget = System.Diagnostics.Stopwatch.StartNew();
+                                    try
+                                    {
+                                        do
+                                        {
+                                            if (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused ||
+                                                !stillCurrent()) break;
+                                            routeFinished = !routeWork.MoveNext();
+                                        }
+                                        while (!routeFinished && budget.Elapsed.TotalMilliseconds < 4);
+                                    }
+                                    finally { RuntimeTiming.End("daily-route-slice", sliceStarted); }
+                                    if (!routeFinished) yield return null;
+                                }
+                            }
+                            finally { (routeWork as IDisposable)?.Dispose(); }
+                            if (routeResult.Points == null) yield break;
+                            residentRoutes[new DailyRouteKey { From = from, To = to }] =
+                                SurveyDailyRoute(from, to, routeResult.Points);
+                            yield return null;
+                        }
+
+                        var routes = new List<AdultDailyItineraryLeg>();
+                        for (int fromIndex = 0; fromIndex < buildingKeys.Count; fromIndex++)
+                        for (int toIndex = 0; toIndex < buildingKeys.Count; toIndex++)
+                        {
+                            int from = buildingKeys[fromIndex], to = buildingKeys[toIndex];
+                            if (from == to) continue;
+                            var route = GetDailyRoute(from, to, residentRoutes);
+                            if (route == null || route.Points.Count < 2 || route.WalkSeconds <= 0) continue;
+                            var leg = new AdultDailyItineraryLeg { FromBuildingKey = from, ToBuildingKey = to,
+                                WalkSeconds = route.WalkSeconds };
+                            foreach (var point in route.Points)
+                                leg.Route.Add(new SavedRoutePoint { X = point.X, Z = point.Z });
+                            routes.Add(leg);
+                        }
+
+                        if (options.Count > 0 && routes.Count > 0)
+                        {
+                            double departure = DailyDepartureSeconds(resident, wake, sleep);
+                            double latestHome = Math.Min(sleep * 3600.0, 18 * 3600 + 45 * 60);
+                            int minimumStops = Math.Min(3, options.Count);
+                            int maximumStops = Math.Min(5, options.Count);
+                            int[] activeMinimums = options.Count >= 3 ? new[] { 3 * 3600, 2 * 3600, 90 * 60 } :
+                                options.Count == 2 ? new[] { 90 * 60, 45 * 60 } : new[] { 20 * 60 };
+                            for (int stopFloor = minimumStops; stopFloor >= 1 && routine.Itinerary == null; stopFloor--)
+                            for (int activeIndex = 0; activeIndex < activeMinimums.Length && routine.Itinerary == null; activeIndex++)
+                            {
+                                var request = new AdultDailyItineraryRequest { HomeBuildingKey = home.BuildingKey,
+                                    DepartureAt = departure, LatestHomeAt = latestHome,
+                                    MinimumAwaySeconds = activeMinimums[activeIndex], MinimumStops = stopFloor,
+                                    MaximumStops = maximumStops, Seed = resident.AppearanceSeed,
+                                    Options = options, Routes = routes };
+                                ResidentDestination itinerary;
+                                bool planned;
+                                long planStarted = RuntimeTiming.Start();
+                                try
+                                {
+                                    planned = AdultDailyItineraryPlanner.TryCreate(request, out itinerary);
+                                }
+                                catch (ArgumentException) { continue; }
+                                finally { RuntimeTiming.End("daily-itinerary-plan", planStarted); }
+                                if (!planned) continue;
+                                routine.Itinerary = itinerary;
+                                routine.ItineraryDepartureSeconds = departure;
+                                KeepFirstStopAsLegacyRoute(routine, itinerary);
+                            }
+                        }
+
+                        // Preserve original single-destination route as a fallback when
+                        // an itinerary cannot be planned or later gets interrupted.
+                        if (routine.DestinationKey < 0)
+                            foreach (var option in options)
+                            {
+                                var route = GetDailyRoute(home.BuildingKey, option.BuildingKey, residentRoutes);
+                                if (route == null || route.Points.Count < 2) continue;
+                                routine.DestinationKey = option.BuildingKey;
+                                routine.OpenMinute = option.OpenMinute;
+                                routine.CloseMinute = option.CloseMinute;
+                                routine.Route = new List<SavedRoutePoint>();
+                                foreach (var point in route.Points)
+                                    routine.Route.Add(new SavedRoutePoint { X = point.X, Z = point.Z });
+                                break;
+                            }
+                    }
+
+                    // Do not publish a visit before its routine exists in the save
+                    // ledger. Interior entry can save observed visits mid-survey.
                 }
                 // Bounded incremental layout work avoids a single long main-thread stall.
                 yield return null;
             }
-            store.SetRoutines(saved);
-            FinishBuild(population.SettlementId);
+            saved.ItineraryVersion = 1;
+            long commitStarted = RuntimeTiming.Start();
+            try { store.SetRoutines(saved); }
+            finally { RuntimeTiming.End("daily-routine-commit", commitStarted); }
+            foreach (var home in population.Households)
+                foreach (var resident in home.Residents)
+                {
+                    if (resident.IsQuestProtected) continue;
+                    var routine = saved.Residents.Find(item => item.ResidentId == resident.Id);
+                    if (routine != null) ReplacePlanForItinerary(resident, routine, home.SurnameSeed, wake, sleep);
+                    yield return null;
+                }
+            needsExterior = false;
+            building = null;
         }
         private void AddPlan(Resident resident, ResidentRoutine routine, uint surnameSeed, int wake, int sleep)
         {
             // The native actor already represents this exact household member.
             if (worldStore.NativePeopleFor(population.SettlementId).Exists(p => p.Id == resident.Id)) return;
-            var points = new List<RoutePoint>();
-            foreach (var point in routine.Route) points.Add(new RoutePoint(point.X, point.Z));
+            var centerline = new List<RoutePoint>();
+            foreach (var point in routine.Route) centerline.Add(new RoutePoint(point.X, point.Z));
+            var points = OffsetStreetPath(centerline, resident.AppearanceSeed);
             var schedule = routine.DestinationKey < 0 ? DailySchedule.HomeDay(resident.HomeKey, wake * 60, sleep * 60) :
                 DailySchedule.DayVisit(resident.HomeKey, routine.DestinationKey, points, routine.OpenMinute, routine.CloseMinute,
                     20 + (int)(resident.AppearanceSeed % 41), ResidentMovement.WalkSpeed, 12, resident.AppearanceSeed, wake * 60, sleep * 60);
             var haunted=population.SettlementId!=1291010263 || routine.DestinationKey<0 ? schedule :
                 DailySchedule.DayVisit(resident.HomeKey,routine.DestinationKey,points,routine.OpenMinute,routine.CloseMinute,
                     20+(int)(resident.AppearanceSeed%41),ResidentMovement.WalkSpeed,12,resident.AppearanceSeed,wake*60,sleep*60,300,1140);
+            if(routine.Itinerary!=null)
+            {
+                try
+                {
+                    var itinerary = OffsetStreetItinerary(routine.Itinerary, resident.AppearanceSeed);
+                    schedule=DailySchedule.ItineraryDay(resident.HomeKey,itinerary,routine.ItineraryDepartureSeconds,wake*60,sleep*60);
+                    var journey=ResidentVisitJourney.Create(routine.ItineraryDepartureSeconds,itinerary);
+                    if(population.SettlementId!=1291010263 || routine.ItineraryDepartureSeconds>=300*60 && journey.EndsAt<=1140*60)
+                        haunted=schedule;
+                }
+                catch(ArgumentException error)
+                {
+                    Debug.LogWarning("LIVING_CITIES_DAILY_PLAN_FALLBACK: "+resident.Id+"; "+error.Message);
+                }
+            }
             plans.Add(new Plan { Resident = resident, Schedule = schedule, HauntedSchedule=haunted, Routine = routine,
                 SurnameSeed = surnameSeed });
         }
         private ActivitySnapshot Scheduled(Plan plan,double seconds)
         {
-            return ActiveSchedule(plan).EvaluateSeconds(seconds);
+            return worldStore.LocalResidentState(plan.Resident.Id,seconds,ObservedSchedule(plan,seconds,ActiveSchedule(plan)));
         }
         private DailySchedule ActiveSchedule(Plan plan)
         {
@@ -338,9 +741,22 @@ namespace LivingCities.DFU
         }
         private void Update()
         {
+            UpdateCorpseInventory();
+            long started=RuntimeTiming.Start();
+            try { UpdatePopulation(); }
+            finally { RuntimeTiming.End("street-population",started); }
+        }
+        private void UpdatePopulation()
+        {
             if (!directory) { if (plans.Count > 0) Clear(); return; }
             var game = GameManager.Instance;
             if (!Ready || game == null || !game.IsReady || !game.IsPlayingGame()) return;
+            if (worldStore != null && Time.unscaledTime >= nextMurderResolutionCheck)
+            {
+                nextMurderResolutionCheck = Time.unscaledTime + 1;
+                if (GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None)
+                    worldStore.ResolveAccusedPlayerMurders();
+            }
             var now = DaggerfallUnity.Instance.WorldTime.Now;
             double seconds = now.ToSeconds() + (now.Second - Math.Floor(now.Second));
             if (ReactionsEnabled && worldStore != null && !GameManager.IsGamePaused)
@@ -351,7 +767,8 @@ namespace LivingCities.DFU
                     PrepareIndoorEscapes(seconds);
                 }
                 var guards = GetComponent<GuardPopulation>();
-                foreach (var alarm in worldStore.AdvanceEscapes(population.SettlementId, seconds))
+                foreach (var alarm in worldStore.AdvanceEscapes(population.SettlementId, seconds,true,
+                    guards ? (Action<CivilianIncident,AlarmPerson,double>)guards.PrepareWitnessAdvance : null))
                     if (guards) guards.ReportEscapedWitness(alarm, seconds);
             }
             var loadedInterior = game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
@@ -359,9 +776,11 @@ namespace LivingCities.DFU
             {
                 RestoreKeeperViews(); RestoreHouseFlats(); ClearActors(); ClearCorpses(); interior = loadedInterior; indoorSlots.Clear();
                 if (interior) ReconcileHouseFlats(interior);
-                indoorGeometry = interior ? new InteriorGeometry(interior) : null;
-                shopGeometry=interior ? new ShopVisitGeometry(interior,indoorGeometry) : null;
+                indoorGeometry = interior ? new InteriorGeometry(interior,CrowdMotion.BodyRadius) : null;
+                shopGeometry=null;
                 shopJourneys.Clear();
+                physicalShopVisits.Clear();
+                shopDepartures.Clear();
                 shopVisitDay=-1;
                 indoorBeds.Clear(); bedClaims.Clear();
                 if (interior && population != null)
@@ -373,10 +792,21 @@ namespace LivingCities.DFU
                         foreach (var claim in HomeBeds.Assign(home, indoorBeds.Keys)) bedClaims.Add(claim.ResidentId, claim);
                     }
                 }
+                if(interior)
+                {
+                    SurveyKeeperIdentities();
+                    shopGeometry=new ShopVisitGeometry(interior,indoorGeometry,npc=>
+                    {
+                        var keeper=KeeperPerson(npc);
+                        return keeper!=null && keeper.IsAlive;
+                    });
+                }
                 if (interior) Debug.Log("LIVING_CITIES_INTERIOR_ANCHORS: building=" + interior.EntryDoor.buildingKey +
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
             SurveyKeeperIdentities();
+            UpdateTravelerActors(seconds);
+            UpdateDestinationActors(seconds);
             UpdateKeeperResponses(seconds);
             UpdateEntryReports(seconds);
             UpdateOutdoorScenes(seconds);
@@ -384,44 +814,68 @@ namespace LivingCities.DFU
             if(ReactionsEnabled && responses!=null && Time.unscaledTime>=nextThreatSurvey)
             {
                 nextThreatSurvey=Time.unscaledTime+0.5f;
-                var guards=GetComponent<GuardPopulation>();
-                if(guards) foreach(var target in UnityEngine.Object.FindObjectsOfType<DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour>())
+                long threatStarted = RuntimeTiming.Start();
+                try
                 {
-                    string key=guards.RegisterHostileThreat(target);
-                    if(key!=null)
+                    var guards=GetComponent<GuardPopulation>();
+                    if(guards) foreach(var target in UnityEngine.Object.FindObjectsOfType<DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour>())
                     {
-                        responses.Threat(target,key,actors.Values,seconds,interior ? interior.EntryDoor.buildingKey : -1,
-                            id=>GetState(id,seconds).Activity==Activity.Sleep);
-                        ObserveKeeperThreat(target,key,seconds);
+                        string key=guards.RegisterHostileThreat(target);
+                        if(key!=null)
+                        {
+                            responses.Threat(target,key,actors.Values,seconds,interior ? interior.EntryDoor.buildingKey : -1,
+                                id=>GetState(id,seconds).Activity==Activity.Sleep);
+                            ObserveKeeperThreat(target,key,seconds);
+                        }
                     }
                 }
+                finally { RuntimeTiming.End("citizen-threat-scan", threatStarted); }
             }
             if (ReactionsEnabled && responses != null)
                 responses.WarnNearby(actors.Values, seconds, interior ? interior.EntryDoor.buildingKey : -1,
                     id => GetState(id, seconds).Activity == Activity.Sleep);
+            AdvanceOffscreenDialogueComplaints(seconds);
             if (game.PlayerEnterExit.IsPlayerInside)
             {
                 if (interior) UpdateInterior(seconds); else ClearActors();
                 return;
             }
             Vector3 player = game.PlayerMotor.transform.position;
+            PrepareStreetChats(seconds);
             foreach (var plan in plans)
             {
-                var state = EntryState(plan.Resident.Id, seconds, Scheduled(plan,seconds));
+                var state = worldStore.IsResidentAway(plan.Resident.Id,seconds) ? Scheduled(plan,seconds) :
+                    EntryState(plan.Resident.Id, seconds, Scheduled(plan,seconds));
                 ResidentActor actor;
                 actors.TryGetValue(plan.Resident.Id, out actor);
+                if(actor && actor.gameObject.activeInHierarchy) RecognizePartnerKiller(actor,seconds,directory.transform,-1);
                 var reaction = Reaction(plan.Resident.Id, seconds);
+                if(reaction!=null || !plan.Resident.IsAlive || QuestOwned(plan.Resident))
+                { worldStore.RemoveObservedVisit(plan.Resident.Id);physicalShopVisits.Remove(plan.Resident.Id); }
                 Vector3 position = state.Activity == Activity.Travel ? geometry.ScenePoint(state.Position) : Vector3.zero;
                 if (reaction != null && reaction.HasPosition)
                     position = directory.transform.TransformPoint(new Vector3((float)reaction.X, (float)reaction.Y, (float)reaction.Z));
                 float limit = actor ? 165 : 140;
                 bool outside = reaction != null && reaction.HasPosition ? reaction.BuildingKey == -1 && !reaction.ReachedRefuge : state.Activity == Activity.Travel;
-                bool visible = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && outside &&
+                bool visible = plan.Resident.IsAlive && (!worldStore.IsResidentAway(plan.Resident.Id,seconds) ||
+                    worldStore.IsResidentOnHomeRoute(plan.Resident.Id,seconds)) && !QuestOwned(plan.Resident) && outside &&
                     (position - player).sqrMagnitude <= limit * limit;
+                if (HasDialogueComplaint(plan.Resident.Id))
+                    visible = true;
                 if (!visible)
                 {
+                    if (reaction == null && actor && !worldStore.IsResidentAway(plan.Resident.Id, seconds) &&
+                        !QuestOwned(plan.Resident) && ContinueLocalOutdoorArrival(plan, actor, state, seconds)) continue;
+                    bystanderPostures.Remove(plan.Resident.Id);
+                    if(actor && roadTravelActors && roadTravelActors.TryAdopt(actor,worldStore,seconds))
+                    { actors.Remove(plan.Resident.Id); continue; }
                     if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
                     actors.Remove(plan.Resident.Id); continue;
+                }
+                if (!actor)
+                {
+                    if(roadTravelActors && worldStore.IsResidentOnHomeRoute(plan.Resident.Id,seconds) &&
+                        roadTravelActors.TryReturn(plan.Resident.Id,worldStore,seconds)) actor=FindActor(plan.Resident.Id);
                 }
                 if (!actor)
                 {
@@ -430,40 +884,76 @@ namespace LivingCities.DFU
                     go.name = "Living Cities " + plan.Resident.Id;
                     actor = go.AddComponent<ResidentActor>();
                     actor.Initialize(plan.Resident, plan.SurnameSeed, navigation);
+                    actor.SetRunningPilotAtlas(runningPilotAtlas);
                     actors.Add(plan.Resident.Id, actor);
                     go.SetActive(true);
                 }
                 if (reaction != null && reaction.HasPosition)
                 {
+                    bystanderPostures.Remove(plan.Resident.Id);
                     if (reaction.Escape != null)
                     {
                         PlaceEscape(actor, reaction, seconds, directory.transform, true);
                         continue;
                     }
-                    CivilianResponses.Move(actor, reaction, plan.Routine, directory.transform, geometry, null);
+                    Vector3? danger=null;
+                    var alarm=worldStore.ActiveAlarm(plan.Resident.Id,seconds);
+                    if(alarm!=null && alarm.ThreatId!=null)
+                    {
+                        Vector3 current; var guards=GetComponent<GuardPopulation>();
+                        danger=guards && guards.TryHostileThreatPosition(alarm.ThreatId,out current) ? current :
+                            alarm.HasLocation && alarm.BuildingKey==-1 ? directory.transform.TransformPoint(new Vector3((float)alarm.X,(float)alarm.Y,(float)alarm.Z)) :
+                            actor.transform.position-Vector3.up;
+                    }
+                    Vector3 shelter=Vector3.zero;int shelterBuilding=-1;
+                    bool hasShelter=reaction.Reaction==CivilianReaction.Flee && !reaction.ReachedRefuge &&
+                        TryShelterTarget(actor,reaction,alarm,danger ?? player,seconds,out shelter,out shelterBuilding);
+                    if(!hasShelter) {shelter=Vector3.zero;shelterBuilding=-1;}
+                    CivilianResponses.Move(actor, reaction, plan.Routine, directory.transform, geometry, null,danger,
+                        hasShelter ? (Vector3?)shelter : null,shelterBuilding,
+                        ShelterAccessible(actor.Resident.HomeKey,actor.Resident.HomeKey,alarm,seconds));
+                    if(reaction.ReachedRefuge && !reaction.RefugeSealed && alarm!=null)
+                        worldStore.RecordShelterArrival(alarm.Id,plan.Resident.Id,seconds);
                     continue;
                 }
-                var next = EntryState(plan.Resident.Id, seconds + 0.1, Scheduled(plan,seconds + 0.1));
+                if (PlaceDialogueComplaint(actor)) continue;
+                if (ApplyHaltBystander(actor, player, position, seconds)) continue;
+                if (PlaceStreetChat(actor,seconds)) continue;
+                var next = worldStore.IsResidentAway(plan.Resident.Id,seconds+0.1) ? Scheduled(plan,seconds+0.1) :
+                    EntryState(plan.Resident.Id, seconds + 0.1, Scheduled(plan,seconds + 0.1));
                 Vector3 direction = next.Activity == Activity.Travel ? geometry.ScenePoint(next.Position) - position :
                     position - geometry.ScenePoint(Scheduled(plan,Math.Max(0, seconds - 0.1)).Position);
                 actor.Place(position, direction);
+                RecognizePartnerKiller(actor,seconds,directory.transform,-1);
             }
         }
         private void UpdateInterior(double seconds)
         {
             PrepareShopVisits(seconds);
+            var bodies=worldStore.ObserveCorpses(population.SettlementId,interior.EntryDoor.buildingKey,seconds);
             foreach (var plan in plans)
             {
                 var state = EntryState(plan.Resident.Id, seconds, Scheduled(plan,seconds));
                 ResidentActor actor; actors.TryGetValue(plan.Resident.Id, out actor);
+                if(actor && actor.gameObject.activeInHierarchy) RecognizePartnerKiller(actor,seconds,interior.transform,interior.EntryDoor.buildingKey);
                 var reaction = Reaction(plan.Resident.Id, seconds);
+                if(reaction!=null || !plan.Resident.IsAlive || QuestOwned(plan.Resident))
+                { worldStore.RemoveObservedVisit(plan.Resident.Id);physicalShopVisits.Remove(plan.Resident.Id); }
                 bool atHome = reaction != null && reaction.HasPosition ? reaction.BuildingKey == interior.EntryDoor.buildingKey :
                     state.Activity != Activity.Travel && state.BuildingKey == interior.EntryDoor.buildingKey;
-                bool present = plan.Resident.IsAlive && !QuestOwned(plan.Resident) && atHome;
+                bool present = plan.Resident.IsAlive && !worldStore.IsResidentAway(plan.Resident.Id,seconds) && !QuestOwned(plan.Resident) && atHome;
                 if (!present)
                 {
+                    PhysicalShopVisit unfinished;
+                    if(actor && plan.Resident.IsAlive && reaction==null && !QuestOwned(plan.Resident) &&
+                        physicalShopVisits.TryGetValue(plan.Resident.Id,out unfinished) &&
+                        unfinished.Snapshot.Phase!=ShopVisitPhase.Complete && PlaceShopVisit(actor,seconds)) continue;
+                    if(actor && plan.Resident.IsAlive && reaction==null && !worldStore.IsResidentAway(plan.Resident.Id,seconds) &&
+                        !QuestOwned(plan.Resident) && state.BuildingKey!=interior.EntryDoor.buildingKey &&
+                        ActiveSchedule(plan).ContainsVisitBuilding(interior.EntryDoor.buildingKey) && shopJourneys.ContainsKey(plan.Resident.Id) &&
+                        ContinueShopDeparture(actor,seconds)) continue;
                     if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
-                    actors.Remove(plan.Resident.Id); indoorSlots.Remove(plan.Resident.Id);
+                    actors.Remove(plan.Resident.Id); indoorSlots.Remove(plan.Resident.Id); shopDepartures.Remove(plan.Resident.Id);
                     continue;
                 }
                 int slot;
@@ -480,7 +970,102 @@ namespace LivingCities.DFU
                     go.name = "Living Cities " + plan.Resident.Id;
                     actor = go.AddComponent<ResidentActor>();
                     actor.Initialize(plan.Resident, plan.SurnameSeed, navigation);
+                    actor.SetRunningPilotAtlas(runningPilotAtlas);
                     actors.Add(plan.Resident.Id, actor); go.SetActive(true);
+                    if(state.Activity==Activity.Visit && indoorGeometry.EntryGround.HasValue)
+                        actor.transform.position=indoorGeometry.EntryGround.Value+Vector3.up;
+                }
+                if(reaction==null && state.Activity==Activity.Visit)
+                {
+                    AlarmPerson departure; bool home;
+                    bool hasDeparture=worldStore.TryVisitDeparturePosition(plan.Resident.Id,seconds,out departure,out home);
+                    if(hasDeparture) { physicalShopVisits.Remove(plan.Resident.Id);worldStore.RemoveObservedVisit(plan.Resident.Id); }
+                    ShopVisitJourney localJourney;
+                    bool failedLocalTavernVisit=shopGeometry!=null && shopGeometry.IsTavern &&
+                        plan.Resident.HomeKey!=interior.EntryDoor.buildingKey &&
+                        ActiveSchedule(plan).ContainsVisitBuilding(interior.EntryDoor.buildingKey) &&
+                        shopJourneys.TryGetValue(plan.Resident.Id,out localJourney) && localJourney==null;
+                    if(!hasDeparture && failedLocalTavernVisit)
+                    {
+                        var route=indoorGeometry.RouteToExit(actor.transform.position-Vector3.up);
+                        var outside=DailyReturnRoute(plan.Routine,interior.EntryDoor.buildingKey);
+                        if(route.Count<2 || outside.Count<2)
+                        {
+                            Debug.LogWarning("LIVING_CITIES_TAVERN_VISIT_CANCEL_ROUTE_MISSING: "+plan.Resident.Id+
+                                "; building="+interior.EntryDoor.buildingKey);
+                            continue;
+                        }
+                        double until=(Math.Floor(seconds/86400)+1)*86400;
+                        try
+                        {
+                            var cancelled=VisitDeparture.Create(plan.Resident.Id,population.SettlementId,plan.Resident.HomeKey,
+                                interior.EntryDoor.buildingKey,seconds,until,route,outside,ResidentMovement.WalkSpeed,12);
+                            worldStore.SaveVisitDeparture(cancelled);
+                            hasDeparture=worldStore.TryVisitDeparturePosition(plan.Resident.Id,seconds,out departure,out home);
+                        }
+                        catch(System.ArgumentException)
+                        {
+                            Debug.LogWarning("LIVING_CITIES_TAVERN_VISIT_CANCEL_REJECTED: "+plan.Resident.Id+
+                                "; building="+interior.EntryDoor.buildingKey);
+                            continue;
+                        }
+                    }
+                    if(failedLocalTavernVisit && hasDeparture && !home)
+                    {
+                        AlarmPerson next; bool nextHome;
+                        worldStore.TryVisitDeparturePosition(plan.Resident.Id,seconds+0.1,out next,out nextHome);
+                        var ground=interior.transform.TransformPoint(new Vector3((float)departure.X,(float)departure.Y,(float)departure.Z));
+                        Vector3 direction=next!=null && next.BuildingKey==departure.BuildingKey ?
+                            interior.transform.TransformVector(new Vector3((float)(next.X-departure.X),(float)(next.Y-departure.Y),(float)(next.Z-departure.Z))) : actor.transform.forward;
+                        InteriorGeometry.OpenOrdinaryDoors(actor.transform.position-Vector3.up,ground);
+                        actor.Place(ground,direction);
+                        continue;
+                    }
+                }
+                if(ReactionsEnabled && reaction==null && state.Activity==Activity.Visit)
+                {
+                    var guards=GetComponent<GuardPopulation>();
+                    AlarmPerson departure; bool home;
+                    if(!worldStore.TryVisitDeparturePosition(plan.Resident.Id,seconds,out departure,out home) &&
+                        guards && guards.OccupiesCrimeScene(interior.EntryDoor.buildingKey,seconds))
+                    {
+                        var route=indoorGeometry.RouteToExit(actor.transform.position-Vector3.up);
+                        var outside=DailyReturnRoute(plan.Routine,interior.EntryDoor.buildingKey);
+                        if(route.Count>=2 && outside.Count>=2 && plan.Resident.HomeKey!=interior.EntryDoor.buildingKey)
+                        {
+                            double until=(Math.Floor(seconds/86400)+1)*86400;
+                            var cancelled=VisitDeparture.Create(plan.Resident.Id,population.SettlementId,plan.Resident.HomeKey,
+                                interior.EntryDoor.buildingKey,seconds,until,route,outside,ResidentMovement.WalkSpeed,12);
+                            worldStore.SaveVisitDeparture(cancelled);
+                        }
+                    }
+                    if(worldStore.TryVisitDeparturePosition(plan.Resident.Id,seconds,out departure,out home) && !home)
+                    {
+                        AlarmPerson next; bool nextHome;
+                        worldStore.TryVisitDeparturePosition(plan.Resident.Id,seconds+0.1,out next,out nextHome);
+                        var ground=interior.transform.TransformPoint(new Vector3((float)departure.X,(float)departure.Y,(float)departure.Z));
+                        Vector3 direction=next!=null && next.BuildingKey==departure.BuildingKey ?
+                            interior.transform.TransformVector(new Vector3((float)(next.X-departure.X),(float)(next.Y-departure.Y),(float)(next.Z-departure.Z))) : actor.transform.forward;
+                        InteriorGeometry.OpenOrdinaryDoors(actor.transform.position-Vector3.up,ground);
+                        actor.Place(ground,direction);
+                        continue;
+                    }
+                    var body=bodies.Find(a=>a.BuildingKey==interior.EntryDoor.buildingKey && a.ThreatId==null);
+                    if(body!=null)
+                    {
+                        var observer=worldStore.NoticeInteriorCorpse(body.Id,plan.Resident.Id,interior.EntryDoor.buildingKey,seconds);
+                        if(observer!=null && CivilianAlarms.PersonActive(body,observer,seconds))
+                        {
+                            if(!observer.HasPosition)
+                            {
+                                var local=interior.transform.InverseTransformPoint(actor.transform.position-Vector3.up);
+                                observer.HasPosition=true; observer.BuildingKey=interior.EntryDoor.buildingKey;
+                                observer.X=local.x; observer.Y=local.y; observer.Z=local.z;
+                            }
+                            reaction=observer;
+                            PrepareIndoorEscapes(seconds);
+                        }
+                    }
                 }
                 if (reaction != null && reaction.HasPosition && !reaction.ReachedRefuge)
                 {
@@ -514,24 +1099,180 @@ namespace LivingCities.DFU
                     bedClaim = bedClaims[plan.Resident.Id];
                     actor.Sleep(interior.transform, indoorBeds[bedClaim.BedRecordIndex], art);
                 }
-                else if(reaction==null && state.Activity==Activity.Visit && PlaceShopVisit(actor,plan,seconds)) { }
+                else if(reaction==null && state.Activity==Activity.Visit && PlaceShopVisit(actor,seconds)) { }
                 else actor.Place(interior.transform.TransformPoint(indoorGeometry.LocalAnchors[slot]), Vector3.forward, true);
+                RecognizePartnerKiller(actor,seconds,interior.transform,interior.EntryDoor.buildingKey);
             }
         }
-        private bool PlaceShopVisit(ResidentActor actor,Plan plan,double seconds)
+        private bool PlaceShopVisit(ResidentActor actor,double seconds)
         {
             if(shopGeometry==null) return false;
-            ShopVisitJourney journey;
-            if(!shopJourneys.TryGetValue(plan.Resident.Id,out journey)) return false;
-            if(journey==null) return false;
-            var state=journey.Evaluate(seconds); var next=journey.Evaluate(seconds+0.5);
-            var local=new Vector3((float)state.Position.X,(float)state.Position.Y,(float)state.Position.Z);
-            bool idle=state.Phase==ShopVisitPhase.Browsing || state.Phase==ShopVisitPhase.Haggling || state.Phase==ShopVisitPhase.Complete;
-            var direction=idle ? shopGeometry.Face(local,state.Phase) : new Vector3((float)(next.Position.X-state.Position.X),
-                (float)(next.Position.Y-state.Position.Y),(float)(next.Position.Z-state.Position.Z));
-            var ground=interior.transform.TransformPoint(local);
+            PhysicalShopVisit physical;
+            if(!physicalShopVisits.TryGetValue(actor.Resident.Id,out physical))
+            {
+                if(!RestoreObservedShopVisit(actor,seconds,out physical))
+                {
+                    ShopVisitJourney journey;
+                    if(!shopJourneys.TryGetValue(actor.Resident.Id,out journey) || journey==null) return false;
+                    physical=new PhysicalShopVisit(journey) {ResumeUntil=ShopResumeUntil(actor,seconds,journey.PlannedEndAt)};
+                }
+                physicalShopVisits[actor.Resident.Id]=physical;
+            }
+            physical.Advance(actor,interior,indoorGeometry,shopGeometry,seconds);
+            if(physical.Snapshot.Phase==ShopVisitPhase.Complete)
+            {
+                var saved=physical.Capture(actor,interior,indoorGeometry,seconds,population.SettlementId);
+                if(saved!=null) worldStore.StoreObservedVisit(saved);
+                physicalShopVisits.Remove(actor.Resident.Id);
+                RemoveDestinationActor(actor.Resident.Id);
+            }
+            return true;
+        }
+        public bool TryShopActivity(string id,out ShopVisitSnapshot snapshot)
+        {
+            PhysicalShopVisit physical;
+            if(physicalShopVisits.TryGetValue(id,out physical)) {snapshot=physical.Snapshot;return true;}
+            snapshot=new ShopVisitSnapshot();return false;
+        }
+        private bool ContinueShopDeparture(ResidentActor actor,double seconds)
+        {
+            var id=actor.Resident.Id;
+            ShopDeparture departure;
+            if(!shopDepartures.TryGetValue(id,out departure))
+            {
+                departure=new ShopDeparture { StartedAt=seconds };
+                shopDepartures[id]=departure;
+            }
+            if(seconds-departure.StartedAt>=600)
+            {
+                departure.Route=null;
+                departure.Next=0;
+                departure.StartedAt=seconds;
+                departure.RetryAt=seconds;
+            }
+            if(departure.Route==null)
+            {
+                if(seconds<departure.RetryAt) return true;
+                var current=actor.transform.position-Vector3.up;
+                var route=indoorGeometry.RouteToExit(current);
+                if(route.Count<2)
+                {
+                    // Retry briefly if crowd displacement leaves actor outside surveyed mesh.
+                    departure.RetryAt=seconds+0.5;
+                    return true;
+                }
+                departure.Route=route; departure.Next=1; departure.TrackedWaypoint=-1;
+            }
+            var actorGround=actor.transform.position-Vector3.up;
+            int trackedIndex=Mathf.Clamp(departure.Next,0,departure.Route.Count-1);
+            var tracked=departure.Route[trackedIndex];
+            var trackedGround=interior.transform.TransformPoint(new Vector3((float)tracked.X,(float)tracked.Y,(float)tracked.Z));
+            float targetDistance=Vector3.Distance(actorGround,trackedGround);
+            if(departure.TrackedWaypoint!=trackedIndex)
+            {
+                departure.TrackedWaypoint=trackedIndex;
+                departure.LastTargetDistance=targetDistance;
+                departure.StalledAt=Time.unscaledTime;
+            }
+            else if(departure.LastTargetDistance-targetDistance>=0.12f)
+            {
+                departure.LastTargetDistance=targetDistance;
+                departure.StalledAt=0;
+            }
+            else if(departure.StalledAt<=0) departure.StalledAt=Time.unscaledTime;
+            if(targetDistance>=0.35f && departure.StalledAt>0 && Time.unscaledTime-departure.StalledAt>=0.8f &&
+                Time.unscaledTime>=departure.NextDetourAt)
+            {
+                var neighbours=ShopDepartureNeighbours(actorGround,actor);
+                var rejoinPoints=new List<GuardPoint3>();
+                for(int i=departure.Next+1;i<departure.Route.Count;i++) rejoinPoints.Add(departure.Route[i]);
+                int rejoinIndex;
+                var detour=indoorGeometry.FindLocalDetour(actorGround,neighbours,CrowdMotion.Separation,rejoinPoints,out rejoinIndex);
+                departure.NextDetourAt=Time.unscaledTime+1.5f;
+                if(detour.Count>=2)
+                {
+                    for(int i=rejoinIndex+1;i<rejoinPoints.Count;i++) detour.Add(rejoinPoints[i]);
+                    departure.Route=detour;departure.Next=1;departure.TrackedWaypoint=-1;departure.StalledAt=Time.unscaledTime;
+                }
+            }
+            var final=departure.Route[departure.Route.Count-1];
+            var finalGround=interior.transform.TransformPoint(new Vector3((float)final.X,(float)final.Y,(float)final.Z));
+            if(Vector3.Distance(actor.transform.position,finalGround+Vector3.up)<0.65f)
+            {
+                shopDepartures.Remove(id);
+                RemoveDestinationActor(id);
+                return true;
+            }
+            while(departure.Next<departure.Route.Count-1)
+            {
+                var point=departure.Route[departure.Next];
+                var waypoint=interior.transform.TransformPoint(new Vector3((float)point.X,(float)point.Y,(float)point.Z));
+                if(Vector3.Distance(actor.transform.position,waypoint+Vector3.up)<0.35f)
+                { departure.Next++; continue; }
+                var afterPoint=departure.Route[departure.Next+1];
+                var afterGround=interior.transform.TransformPoint(new Vector3((float)afterPoint.X,(float)afterPoint.Y,(float)afterPoint.Z));
+                // Survey paths may pass within the crowd radius of an unmodeled
+                // native NPC. Skip that waypoint only when the body sweep and floor
+                // remain clear to the next surveyed point.
+                if(Vector3.Distance(actor.transform.position,waypoint+Vector3.up)<=CrowdMotion.Separation+0.1f &&
+                    ShopDepartureSegmentClear(actor.transform.position-Vector3.up,afterGround,actor))
+                { departure.Next++; continue; }
+                break;
+            }
+            var next=departure.Route[Math.Min(departure.Next,departure.Route.Count-1)];
+            var ground=interior.transform.TransformPoint(new Vector3((float)next.X,(float)next.Y,(float)next.Z));
+            var after=departure.Route[Math.Min(departure.Next+1,departure.Route.Count-1)];
+            var following=interior.transform.TransformPoint(new Vector3((float)after.X,(float)after.Y,(float)after.Z));
             InteriorGeometry.OpenOrdinaryDoors(actor.transform.position-Vector3.up,ground);
-            actor.Place(ground,interior.transform.TransformDirection(direction),idle);
+            var direction=following-ground;
+            if(direction.sqrMagnitude<0.0001f) direction=ground-(actor.transform.position-Vector3.up);
+            var motion=actor.GetComponent<CrowdMotion>();
+            if(motion) motion.ResumeFromPause();
+            actor.Place(ground,direction);
+            return true;
+        }
+        internal static List<Vector3> ShopDepartureNeighbours(Vector3 center,ResidentActor actor)
+        {
+            // Managed bodies are represented by CrowdMotion, not physical blocking
+            // colliders. Include them before collecting native people below.
+            var motion=actor ? actor.GetComponent<CrowdMotion>() : null;
+            var result=motion ? motion.NeighbourPositions(center) : new List<Vector3>();
+            foreach(var collider in Physics.OverlapSphere(center,4,~0,QueryTriggerInteraction.Ignore))
+            {
+                if(!collider || actor && collider.transform.IsChildOf(actor.transform) || collider.GetComponentInParent<CrowdMotion>()) continue;
+                if(!collider.GetComponentInParent<StaticNPC>() && !collider.GetComponentInParent<MobilePersonNPC>() &&
+                    !collider.GetComponentInParent<DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour>() &&
+                    !collider.GetComponentInParent<PlayerMotor>()) continue;
+                var bounds=collider.bounds;var point=new Vector3(bounds.center.x,bounds.min.y,bounds.center.z);
+                bool duplicate=false;foreach(var existing in result){var delta=existing-point;delta.y=0;if(delta.sqrMagnitude<0.04f){duplicate=true;break;}}
+                if(!duplicate) result.Add(point);
+            }
+            return result;
+        }
+        private bool ShopDepartureSegmentClear(Vector3 from,Vector3 to,ResidentActor actor)
+        {
+            var delta=to-from;
+            if(delta.sqrMagnitude>1.25f*1.25f || Mathf.Abs(delta.y)>0.5f) return false;
+            if(delta.sqrMagnitude>0.000001f)
+                foreach(var hit in Physics.CapsuleCastAll(from+Vector3.up*(0.51f+CrowdMotion.BodyRadius),from+Vector3.up*1.65f,
+                    CrowdMotion.BodyRadius,delta.normalized,delta.magnitude,~0,QueryTriggerInteraction.Ignore))
+                    if(ShopDepartureBlocker(hit.collider,actor)) return false;
+            for(float t=0;t<=1.001f;t+=0.2f)
+            {
+                var sample=Vector3.Lerp(from,to,t); bool supported=false;
+                foreach(var hit in Physics.RaycastAll(sample+Vector3.up*0.55f,Vector3.down,1.1f,~0,QueryTriggerInteraction.Ignore))
+                {
+                    if(hit.normal.y<0.65f || Mathf.Abs(hit.point.y-sample.y)>0.5f || !hit.collider.transform.IsChildOf(interior.transform)) continue;
+                    supported=true; break;
+                }
+                if(!supported) return false;
+            }
+            return true;
+        }
+        private static bool ShopDepartureBlocker(Collider collider,ResidentActor actor)
+        {
+            if(actor && collider.transform.IsChildOf(actor.transform) || collider.GetComponentInParent<CrowdMotion>()) return false;
+            if(collider.GetComponentInParent<DaggerfallActionDoor>() || collider.GetComponentInParent<DaggerfallAction>()) return false;
             return true;
         }
         private void PrepareShopVisits(double seconds)
@@ -544,8 +1285,9 @@ namespace LivingCities.DFU
             foreach(var plan in plans)
             {
                 var schedule=ActiveSchedule(plan);
-                if(!plan.Resident.IsAlive || plan.Routine.DestinationKey!=interior.EntryDoor.buildingKey || !schedule.HasVisit) continue;
-                double start,end; schedule.TryVisitWindow(seconds,out start,out end);
+                if(!plan.Resident.IsAlive || !schedule.ContainsVisitBuilding(interior.EntryDoor.buildingKey)) continue;
+                double start,end;
+                if(!schedule.TryVisitWindowForBuilding(seconds,interior.EntryDoor.buildingKey,out start,out end)) continue;
                 shopJourneys[plan.Resident.Id]=shopGeometry.Create(plan.Resident.Id,plan.Resident.AppearanceSeed,start,end);
             }
         }
@@ -557,10 +1299,13 @@ namespace LivingCities.DFU
             Vector3 direction = next.BuildingKey == person.BuildingKey ?
                 origin.TransformVector(new Vector3((float)(next.X-person.X), (float)(next.Y-person.Y), (float)(next.Z-person.Z))) : actor.transform.forward;
             if (!outside) InteriorGeometry.OpenOrdinaryDoors(actor.transform.position - Vector3.up, point);
-            actor.Place(point, direction, person.Escape.Arrived(now) || GameManager.IsGamePaused);
+            bool stopped = person.Escape.Arrived(now) || GameManager.IsGamePaused;
+            actor.Place(point, direction, stopped, !stopped);
         }
         private void ClearActors()
         {
+            streetChats.Clear();nextStreetChat.Clear();nextChatScan=0;
+            partnerRetaliation.Clear();nextGrudgeCheck.Clear();
             foreach (var actor in actors.Values) if (actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
             actors.Clear();
         }
@@ -583,12 +1328,12 @@ namespace LivingCities.DFU
                 wanted.Add(alarm.Id);
                 GameObject view;
                 if (corpses.TryGetValue(alarm.Id, out view) && view) continue;
+                InitializeCorpseKeys(alarm);
                 // Native human corpse placeholder; resident-specific corpse art is a separate milestone.
                 view = GameObjectHelper.CreateDaggerfallBillboardGameObject(380, 1, origin);
                 view.name = "Living Cities corpse " + alarm.VictimId;
                 view.transform.position = point;
                 view.GetComponent<DaggerfallBillboard>().AlignToBase();
-                if (buildingKey == -1)
                 {
                     var collider = view.GetComponent<BoxCollider>() ?? view.AddComponent<BoxCollider>();
                     collider.isTrigger = true;
@@ -611,6 +1356,13 @@ namespace LivingCities.DFU
         }
         public void Clear()
         {
+            bystanderPostures.Clear(); bystanderUntil=0;
+            travelerPlans.Clear(); nextTravelerRefresh=0;
+            destinationResidents.Clear(); nextDestinationRefresh=0;
+            destinationShopWindows.Clear();
+            residentRooms.Clear();
+            residentReceptions.Clear(); receptionKeeper=null;
+            travelerWindow.Clear(); travelerWindowDay=-1; travelerWindowRevision=-1;
             entryJourneys.Clear();
             keeperRoom = null;
             RestoreKeeperViews();
@@ -620,7 +1372,7 @@ namespace LivingCities.DFU
             ClearActors(); ClearCorpses(); plans.Clear(); Ready = false;
             needsExterior = false;
             interior = null; indoorGeometry = null; indoorSlots.Clear();
-            shopGeometry=null; shopJourneys.Clear(); shopVisitDay=-1;
+            shopGeometry=null; shopJourneys.Clear(); physicalShopVisits.Clear(); shopDepartures.Clear(); shopVisitDay=-1;
             population = null; indoorBeds.Clear(); bedClaims.Clear();
             responses = null; worldStore = null;
             if (ownsVanilla && vanilla)
@@ -630,6 +1382,6 @@ namespace LivingCities.DFU
             }
             hiddenVanilla.Clear(); ownsVanilla = false; vanilla = null; directory = null; geometry = null;
         }
-        private void OnDestroy() { RemoveEntryAwareness(); Clear(); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); if (keeperServiceHook != null) keeperServiceHook.Dispose(); }
+        private void OnDestroy() { DisposeCorpseInventory(); RemoveEntryAwareness(); Clear(); if (runningPilotAtlas) Destroy(runningPilotAtlas); if (sleepingArt != null) sleepingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); if (keeperServiceHook != null) keeperServiceHook.Dispose(); }
     }
 }

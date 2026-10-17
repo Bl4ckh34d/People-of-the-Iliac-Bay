@@ -12,6 +12,13 @@ namespace LivingCities.Core
         public List<GuardPoint3> ReturnExterior;
         public double StartsAt, SecondsPerMetre;
         public double? ReleasedAt;
+        public bool WallDuty;
+        public int? RestBedRecord;
+        public bool ConflictsWith(int buildingKey, int? bedRecord)
+        {
+            return BuildingKey == buildingKey &&
+                (!RestBedRecord.HasValue || !bedRecord.HasValue || RestBedRecord == bedRecord);
+        }
         public static GuardRefugeJourney Create(int building, IEnumerable<GuardPoint3> exterior,
             IEnumerable<GuardPoint3> interior, double now, double speed, double timeScale)
         {
@@ -24,10 +31,11 @@ namespace LivingCities.Core
             Require(source != null && source.BuildingKey >= 0 && Time(source.StartsAt) &&
                 Finite(source.SecondsPerMetre) && source.SecondsPerMetre > 0);
             var copy = new GuardRefugeJourney { BuildingKey=source.BuildingKey, StartsAt=source.StartsAt,
-                SecondsPerMetre=source.SecondsPerMetre, ReleasedAt=source.ReleasedAt,
+                SecondsPerMetre=source.SecondsPerMetre, ReleasedAt=source.ReleasedAt, WallDuty=source.WallDuty, RestBedRecord=source.RestBedRecord,
                 Exterior=CopyRoute(source.Exterior), Interior=CopyRoute(source.Interior),
                 ReturnExterior=source.ReturnExterior==null ? null : CopyRoute(source.ReturnExterior) };
             Require(copy.ReturnExterior==null || Distance(copy.ReturnExterior[0],copy.Exterior[copy.Exterior.Count-1])<0.05);
+            Require(!copy.RestBedRecord.HasValue || copy.WallDuty && copy.RestBedRecord.Value>=0);
             Require(Time(copy.ShelteredAt));
             if (copy.ReleasedAt.HasValue)
                 Require(Time(copy.ReleasedAt.Value) && copy.ReleasedAt.Value >= copy.ShelteredAt &&
@@ -42,6 +50,13 @@ namespace LivingCities.Core
             Require(Time(now));
             if (ReleasedAt.HasValue) return;
             double release = Math.Max(now,ShelteredAt);
+            // Finish the current indoor circuit before returning along the entry
+            // route. This avoids a discontinuous jump from a patrol point at dawn.
+            if(WallDuty && !RestBedRecord.HasValue)
+            {
+                double cycle=2*Math.Min(6,Length(Interior)*0.5)*SecondsPerMetre;
+                release=ShelteredAt+Math.Ceiling((release-ShelteredAt)/cycle)*cycle;
+            }
             Require(Time(release+ReturnSeconds));
             ReleasedAt=release;
         }
@@ -65,6 +80,12 @@ namespace LivingCities.Core
             double along=Math.Max(0,now-StartsAt)/SecondsPerMetre;
             if (along < outside) return Snapshot(RefugePhase.Approaching,Exterior,along);
             if (along < outside+inside) return Snapshot(RefugePhase.Entering,Interior,along-outside);
+            if(WallDuty && !RestBedRecord.HasValue)
+            {
+                double span=Math.Min(6,inside*0.5);
+                double cycle=(along-outside-inside)%(2*span);
+                return Snapshot(RefugePhase.Sheltered,Interior,inside-(cycle<=span ? cycle : 2*span-cycle));
+            }
             return Snapshot(RefugePhase.Sheltered,Interior,inside);
         }
         // Exterior and interior coordinates deliberately use their own scene origins.

@@ -19,13 +19,15 @@ namespace LivingCities.Tests
         public static void Add(List<(string, Action)> cases)
         {
             cases.Add(("Crime scene warning allows ten unpaused seconds and resets only on departure", () => {
-                var warning = new CrimeSceneWarning(); Check.True(warning.Begin());
-                warning.Advance(4, true, false); Check.Near(6, warning.Remaining);
-                warning.Advance(100, true, true); Check.Near(6, warning.Remaining);
-                Check.True(!warning.Begin());
+                var warning = new CrimeSceneWarning(); Check.True(warning.Begin()); Check.Equal(10, warning.DisplaySeconds);
+                warning.Advance(4, true, false); Check.Near(6, warning.Remaining); Check.Equal(6, warning.DisplaySeconds);
+                warning.Advance(100, true, true); Check.Near(6, warning.Remaining); Check.Equal(6, warning.DisplaySeconds);
+                warning.Advance(5.1, true, false); Check.Equal(1, warning.DisplaySeconds);
                 var saved = CrimeSceneWarning.Copy(warning);
-                saved.Advance(5.9, true, false); Check.True(!saved.Violated);
-                saved.Advance(0.1, true, false); Check.True(saved.Violated);
+                saved.Advance(0.8, true, false); Check.Equal(1, saved.DisplaySeconds); Check.True(!saved.Violated);
+                saved.Advance(0.11, true, false); Check.Equal(0, saved.DisplaySeconds); Check.True(saved.Violated);
+                warning.Advance(1, true, false); Check.Equal(0, warning.DisplaySeconds);
+                Check.True(!warning.Begin());
                 saved.Advance(0, false, false); Check.True(!saved.Issued && !saved.Violated);
                 Check.True(saved.Begin()); Check.Near(10, saved.Remaining);
                 Check.Throws<ArgumentException>(() => saved.Advance(double.NaN, true, false));

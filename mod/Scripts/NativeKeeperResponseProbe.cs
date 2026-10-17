@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -13,6 +14,18 @@ namespace LivingCities.DFU
 {
     public static class NativeKeeperResponseProbe
     {
+        private static void PlaceVisible(ResidentActor actor,StaticNPC npc)
+        {
+            foreach(float distance in new[]{0.8f,1.2f,1.8f,2.5f,3.5f})
+            foreach(var offset in new[]{Vector3.right,Vector3.left,Vector3.forward,Vector3.back,
+                new Vector3(1,0,1).normalized,new Vector3(-1,0,1).normalized,new Vector3(1,0,-1).normalized,new Vector3(-1,0,-1).normalized})
+            {
+                actor.Place(npc.transform.position-Vector3.up+offset*distance,Vector3.forward,true);
+                Physics.SyncTransforms();
+                if(actor.gameObject.activeSelf && CivilianResponses.Sees(npc.transform.position,actor.transform.position,20)) return;
+            }
+            throw new InvalidOperationException("No unobstructed controlled witness placement beside native keeper.");
+        }
         public static IEnumerator Run(string character, string keeperId)
         {
             yield return VerifyDoorPermissions();
@@ -27,6 +40,17 @@ namespace LivingCities.DFU
             var victim = town.Households.Find(h => h.Residents.Exists(r => r.IsAlive)).Residents.Find(r => r.IsAlive);
             var room = game.PlayerEnterExit.Interior;
             var npc = Array.Find(room.GetComponentsInChildren<StaticNPC>(true), n => n.Data.hash == keeper.NativeHash);
+            foreach(var original in room.GetComponentsInChildren<StaticNPC>(true))
+            {
+                DaggerfallConnect.Arena2.FactionFile.FactionData faction;
+                bool found=game.PlayerEntity.FactionData.GetFactionData(original.Data.factionID,out faction);
+                Debug.Log("LIVING_CITIES_SHOP_NATIVE: flat="+original.Data.billboardArchiveIndex+"/"+original.Data.billboardRecordIndex+
+                    "; name="+original.DisplayName+"; faction="+original.Data.factionID+"; group="+(found?faction.sgroup:-1)+
+                    "; registered="+world.NativePeople.Exists(p=>p.NativeHash==original.Data.hash && p.WorkKey==original.Data.buildingKey));
+            }
+            var bookman=Array.Find(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.billboardArchiveIndex==184 && n.Data.billboardRecordIndex==2);
+            if(!bookman || !world.NativePeople.Exists(p=>p.NativeHash==bookman.Data.hash && p.WorkKey==bookman.Data.buildingKey))
+                throw new InvalidOperationException("Ordinary factionless shop NPC 184/2 has no persistent combat identity.");
             streets.ReactionsEnabled = true; game.PlayerEntity.GodMode = true;
             if (!npc || streets.KeeperServiceBlocked(npc)) throw new InvalidOperationException("Keeper response fixture is not initially available.");
             double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
@@ -136,7 +160,7 @@ namespace LivingCities.DFU
                 try
                 {
                     var visitor = visitorObject.AddComponent<ResidentActor>(); visitor.Initialize(hitResident, surname, navigation);
-                    visitor.Place(npc.transform.position - Vector3.up + Vector3.right * 0.8f, Vector3.forward, true);
+                    PlaceVisible(visitor,npc);
                     actorMap.Add(hitResident.Id, visitor); Physics.SyncTransforms();
                     game.PlayerMotor.transform.position = npc.transform.position + Vector3.up * 0.2f;
                     Physics.SyncTransforms();
@@ -144,7 +168,12 @@ namespace LivingCities.DFU
                     var witnessed = store.NativeResponse(keeperId);
                     if (hitResident.IsAlive || witnessed == null || witnessed.VictimId != hitResident.Id ||
                         !witnessed.People.Exists(p => p.ResidentId == keeperId && p.DirectWitness) || !streets.KeeperServiceBlocked(npc))
-                        throw new InvalidOperationException("Native weapon-hit path did not capture living keeper witness and suppress service.");
+                        throw new InvalidOperationException("Native weapon-hit path did not capture living keeper witness and suppress service; victimAlive="+
+                            hitResident.IsAlive+"; response="+(witnessed==null?"none":witnessed.VictimId)+"; direct="+
+                            (witnessed!=null && witnessed.People.Exists(p=>p.ResidentId==keeperId && p.DirectWitness))+
+                            "; blocked="+streets.KeeperServiceBlocked(npc)+"; victimVisible="+CivilianResponses.Sees(npc.transform.position,visitor.transform.position,20)+
+                            "; playerVisible="+CivilianResponses.Sees(npc.transform.position,game.PlayerMotor.transform.position,20)+
+                            "; invisible="+game.PlayerEntity.IsInvisible+"; time="+DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
                     Debug.Log("LIVING_CITIES_KEEPER_WEAPON_PASS: native WeaponDamage killing captures keeper sight; controlled visitor placement.");
                 }
                 finally { actorMap.Remove(hitResident.Id); UnityEngine.Object.Destroy(visitorObject); }
@@ -153,6 +182,56 @@ namespace LivingCities.DFU
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
             yield return VerifyKeeperDeath(character, keeperId);
             yield return VerifyKeeperSleep(character, keeperId);
+            yield return VerifyOrdinaryShopDeath(character);
+        }
+        private static IEnumerator VerifyOrdinaryShopDeath(string character)
+        {
+            var game=GameManager.Instance;
+            var adapter=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var streets=adapter.GetComponent<StreetPopulation>();
+            bool loaded=false,saved=false;
+            SaveLoadManager.OnLoadEventHandler onLoad=ignored=>loaded=true;
+            SaveLoadManager.OnSaveEventHandler onSave=ignored=>saved=true;
+            SaveLoadManager.OnLoad+=onLoad; SaveLoadManager.OnSave+=onSave;
+            try
+            {
+                int fixture=game.SaveLoadManager.FindSaveFolderByNames(character,"Living Cities - shopkeeper identity");
+                game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
+                float deadline=Time.realtimeSinceStartup+60;
+                while((!loaded || !streets.Ready) && Time.realtimeSinceStartup<deadline) yield return null;
+                if(!loaded || !streets.Ready) throw new InvalidOperationException("Ordinary shop NPC fixture load timed out.");
+                yield return new WaitForSecondsRealtime(1);
+                var npc=Array.Find(game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>(true),
+                    n=>n.Data.billboardArchiveIndex==184 && n.Data.billboardRecordIndex==2);
+                var world=(WorldState)adapter.GetSaveData();
+                var person=world.NativePeople.Find(p=>p.NativeHash==npc.Data.hash && p.WorkKey==npc.Data.buildingKey);
+                if(person==null || !person.IsAlive || person.HomeKey!=-1 || person.BedSlot!=-1)
+                    throw new InvalidOperationException("Ordinary shop NPC lacks identity or stole a keeper bed.");
+                string id=person.Id;
+                streets.ReactionsEnabled=true;
+                game.WeaponManager.WeaponDamage(null,false,false,npc.transform,npc.transform.position,Vector3.forward);
+                world=(WorldState)adapter.GetSaveData();
+                if(world.NativePeople.Find(p=>p.Id==id).IsAlive || npc.gameObject.activeSelf ||
+                    !world.AlarmIncidents.Exists(a=>a.VictimId==id && a.Corpse!=null))
+                    throw new InvalidOperationException("Factionless shop NPC survived native weapon hit or lost corpse.");
+                game.SaveLoadManager.Save(character,"Living Cities - ordinary shop NPC death");
+                deadline=Time.realtimeSinceStartup+30;
+                while(!saved && Time.realtimeSinceStartup<deadline) yield return null;
+                if(!saved) throw new InvalidOperationException("Ordinary shop NPC death save timed out.");
+                int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"Living Cities - ordinary shop NPC death");
+                loaded=false; game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
+                deadline=Time.realtimeSinceStartup+60;
+                while((!loaded || !streets.Ready) && Time.realtimeSinceStartup<deadline) yield return null;
+                if(!loaded || !streets.Ready) throw new InvalidOperationException("Ordinary shop NPC death reload timed out.");
+                yield return new WaitForSecondsRealtime(1);
+                world=(WorldState)adapter.GetSaveData();
+                person=world.NativePeople.Find(p=>p.Id==id);
+                npc=Array.Find(game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==person.NativeHash);
+                if(person.IsAlive || !npc || npc.gameObject.activeSelf || streets.CorpseCount<1)
+                    throw new InvalidOperationException("Ordinary shop NPC revived or lost corpse after real reload.");
+                Debug.Log("LIVING_CITIES_ORDINARY_SHOP_DEATH_PASS: flat184/2 native weapon hit, corpse, persisted death and no keeper bed allocation.");
+            }
+            finally { SaveLoadManager.OnLoad-=onLoad; SaveLoadManager.OnSave-=onSave; }
         }
         private static IEnumerator VerifyKeeperSleep(string character, string keeperId)
         {
@@ -292,7 +371,7 @@ namespace LivingCities.DFU
                 var partner = streets.FindActor(home.Residents.Find(r => r.Id != keeperId).Id);
                 if (!npc || !partner) throw new InvalidOperationException("Keeper death fixture lacks keeper or partner.");
                 // Controlled partner sight tests identity/violence integration, not general stair navigation.
-                partner.Place(npc.transform.position - Vector3.up + Vector3.right * 0.8f, Vector3.forward, true);
+                PlaceVisible(partner,npc);
                 game.PlayerMotor.transform.position = npc.transform.position + Vector3.up * 0.2f;
                 streets.ReactionsEnabled = true; Physics.SyncTransforms();
                 int reports = guards.Roster.Reports.Count;
@@ -323,9 +402,195 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Reload resurrected native keeper or lost physical corpse/service block.");
                 var ui = DaggerfallUI.UIManager.TopWindow; game.TalkManager.TalkToStaticNPC(npc);
                 if (DaggerfallUI.UIManager.TopWindow != ui) throw new InvalidOperationException("Dead native keeper opened dialogue after reload.");
+                yield return VerifyVisitorAfterKeeperDeath(adapter, streets, game.PlayerEnterExit.Interior, keeper);
                 Debug.Log("LIVING_CITIES_KEEPER_DEATH_PASS: native weapon hit; household identity; family witness; no instant guards; corpse; blocked service; real reload; save=" + slot);
             }
             finally { SaveLoadManager.OnLoad -= onLoad; SaveLoadManager.OnSave -= onSave; }
+        }
+        private static IEnumerator VerifyVisitorAfterKeeperDeath(LivingCitiesMod adapter, StreetPopulation streets,
+            DaggerfallInterior room, NativePerson keeper)
+        {
+            var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+            var plans=(IEnumerable)typeof(StreetPopulation).GetField("plans",flags).GetValue(streets);
+            object selected=null;
+            foreach(var plan in plans)
+            {
+                var planType=plan.GetType();
+                var resident=(Resident)planType.GetField("Resident").GetValue(plan);
+                if(resident.IsAlive && !resident.IsQuestProtected && resident.NativeIdentity==null &&
+                    resident.AgeGroup!=ResidentAgeGroup.Child && resident.HomeKey!=room.EntryDoor.buildingKey)
+                { selected=plan; break; }
+            }
+            if(selected==null) throw new InvalidOperationException("No living non-native visitor is available for post-death shop regression.");
+            var selectedType=selected.GetType();
+            var visitor=(Resident)selectedType.GetField("Resident").GetValue(selected);
+            var scheduleField=selectedType.GetField("Schedule");
+            var originalSchedule=scheduleField.GetValue(selected);
+            var routine=(ResidentRoutine)selectedType.GetField("Routine").GetValue(selected);
+            int originalDestination=routine.DestinationKey;
+            int building=room.EntryDoor.buildingKey;
+            var schedule=DailySchedule.DayVisit(visitor.HomeKey,building,
+                new[]{new RoutePoint(0,0),new RoutePoint(1,0)},540,1080,30,1.3,12,visitor.AppearanceSeed,360,1320);
+            double start=0,end=0;
+            for(int minute=540;minute<1080;minute++) if(schedule.TryVisitWindow(minute*60,out start,out end)) break;
+            if(end<=start) throw new InvalidOperationException("Post-death shop visitor has no scheduled visit window.");
+            double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            double day=Math.Floor(now/86400)*86400;
+            start+=day; end+=day;
+            if(start+1<=now) { start+=86400; end+=86400; }
+            int chosenDay=0;
+            while((StableSeed.Combine(visitor.AppearanceSeed,(uint)building,(uint)Math.Floor(start/86400),0x53484f50)&1)!=0)
+            {
+                if(++chosenDay>64) throw new InvalidOperationException("Could not schedule a purchase visit after keeper death.");
+                start+=86400; end+=86400;
+            }
+            int nativeCountBefore=((WorldState)adapter.GetSaveData()).NativePeople.FindAll(p=>p.SettlementId==keeper.SettlementId).Count;
+            int serviceCountBefore=CountKeeperStatics(room,keeper);
+            if(serviceCountBefore!=1) throw new InvalidOperationException("Keeper fixture has unexpected native service-flat count before visitor: "+serviceCountBefore);
+            scheduleField.SetValue(selected,schedule); routine.DestinationKey=building;
+            typeof(StreetPopulation).GetField("shopVisitDay",flags).SetValue(streets,-1d);
+            try
+            {
+                DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((long)(start+1-now));
+                yield return null; yield return null;
+                float deadline=Time.realtimeSinceStartup+15;
+                AlarmPerson observer=null;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    AssertKeeperStillDead(adapter,room,keeper,nativeCountBefore,serviceCountBefore,"visitor discovery");
+                    var world=(WorldState)adapter.GetSaveData();
+                    var alarm=world.AlarmIncidents.Find(a=>a.VictimId==keeper.Id);
+                    observer=alarm==null ? null : alarm.People.Find(p=>p.ResidentId==visitor.Id);
+                    if(observer!=null && observer.Escape!=null) break;
+                    yield return null;
+                }
+                if(observer==null || !observer.CorpseObserver || observer.DirectWitness || observer.Escape==null)
+                    throw new InvalidOperationException("Arriving shopper did not discover corpse and plan neutral physical flight.");
+                // Let the player build advance normally through the physical doorway.
+                deadline=Time.realtimeSinceStartup+30;
+                while(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()<observer.Escape.ExitAt && Time.realtimeSinceStartup<deadline)
+                {
+                    AssertKeeperStillDead(adapter,room,keeper,nativeCountBefore,serviceCountBefore,"visitor fleeing");
+                    yield return null;
+                }
+                yield return null; yield return null;
+                if(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()<observer.Escape.ExitAt || streets.FindActor(visitor.Id))
+                    throw new InvalidOperationException("Corpse observer failed to leave the loaded shop.");
+                AssertKeeperStillDead(adapter,room,keeper,nativeCountBefore,serviceCountBefore,"visitor exited");
+                var guards=adapter.GetComponent<GuardPopulation>();
+                string neutralReport="inn-alarm:murder:"+keeper.Id;
+                if(guards.Roster.Reports.Exists(r=>r.Id==neutralReport))
+                    throw new InvalidOperationException("Corpse observer notified guards before physical contact.");
+                var priorCrime=GameManager.Instance.PlayerEntity.CrimeCommitted;
+                var clock=DaggerfallUnity.Instance.WorldTime.Now;
+                double advance=observer.Escape.ReportAt+1-clock.ToSeconds();
+                if(advance>0) clock.RaiseTime((long)Math.Ceiling(advance));
+                deadline=Time.realtimeSinceStartup+10;
+                GuardReport neutral=null;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    neutral=guards.Roster.Reports.Find(r=>r.Id==neutralReport && r.GuardIds.Count>0);
+                    if(neutral!=null) break;
+                    yield return null;
+                }
+                if(neutral==null || !neutral.Investigation || GameManager.Instance.PlayerEntity.CrimeCommitted!=priorCrime)
+                    throw new InvalidOperationException("Corpse observer contact failed neutral dispatch or changed player crime.");
+                if(neutral.HasArrival) throw new InvalidOperationException("Corpse observer report teleported guards into shop.");
+                Debug.Log("LIVING_CITIES_CORPSE_VISITOR_CONTACT_PASS: unloaded street route reaches posted guard; neutral physical-contact dispatch; no instant arrival or new Murder charge.");
+                var player=GameManager.Instance.PlayerEntity;
+                var concealment=player.MagicalConcealmentFlags;
+                try
+                {
+                    player.CrimeCommitted=PlayerEntity.Crimes.None;
+                    player.MagicalConcealmentFlags=concealment | MagicalConcealmentFlags.InvisibleTrue;
+                    double arrival=double.MaxValue;
+                    foreach(var id in neutral.GuardIds)
+                    { var guard=guards.Roster.Guards.Find(g=>g.Id==id); if(guard!=null) arrival=Math.Min(arrival,guard.ArrivesAt); }
+                    advance=arrival+1-clock.ToSeconds();
+                    if(advance>0 && arrival<double.MaxValue) clock.RaiseTime((long)Math.Ceiling(advance));
+                    bool inspected=false,cleared=false;
+                    deadline=Time.realtimeSinceStartup+60;
+                    while(Time.realtimeSinceStartup<deadline)
+                    {
+                        var world=(WorldState)adapter.GetSaveData();
+                        var body=world.AlarmIncidents.Find(a=>a.VictimId==keeper.Id).Corpse;
+                        if(body.InspectionGuardId!=null && body.InspectionRemainingRealSeconds>0 && body.InspectionRemainingRealSeconds<5) inspected=true;
+                        if(body.Cleared) { cleared=true; break; }
+                        yield return null;
+                    }
+                    if(!inspected || !cleared) throw new InvalidOperationException("Neutral guard failed physical approach and five-second corpse cleanup.");
+                    Debug.Log("LIVING_CITIES_NEUTRAL_INSPECTION_PASS: visitor report guard entered shop, approached body, inspected and cleared corpse.");
+                    yield return VerifyGuardedArrival(adapter,streets,room,visitor.Id);
+                }
+                finally { player.CrimeCommitted=priorCrime; player.MagicalConcealmentFlags=concealment; }
+                Debug.Log("LIVING_CITIES_KEEPER_VISITOR_PASS: scheduled visitor discovered corpse, fled and exited instead of browsing/haggling; keeper stays dead; neutral posted-guard route; visitor="+visitor.Id);
+            }
+            finally { scheduleField.SetValue(selected,originalSchedule); routine.DestinationKey=originalDestination; }
+        }
+        private static IEnumerator VerifyGuardedArrival(LivingCitiesMod adapter,StreetPopulation streets,DaggerfallInterior room,string excluded)
+        {
+            var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+            object chosen=null; Resident resident=null;
+            foreach(var item in (IEnumerable)typeof(StreetPopulation).GetField("plans",flags).GetValue(streets))
+            {
+                var candidate=(Resident)item.GetType().GetField("Resident").GetValue(item);
+                if(candidate.Id!=excluded && candidate.IsAlive && candidate.NativeIdentity==null &&
+                    candidate.HomeKey!=room.EntryDoor.buildingKey && candidate.AgeGroup!=ResidentAgeGroup.Child)
+                { chosen=item; resident=candidate; break; }
+            }
+            if(chosen==null) throw new InvalidOperationException("No guarded-arrival test visitor.");
+            var scheduleField=chosen.GetType().GetField("Schedule"); var previous=scheduleField.GetValue(chosen);
+            var routine=(ResidentRoutine)chosen.GetType().GetField("Routine").GetValue(chosen);
+            int destination=routine.DestinationKey;
+            double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            int minute=(int)(now%86400/60)+1;
+            var schedule=DailySchedule.DayVisit(resident.HomeKey,room.EntryDoor.buildingKey,
+                new[]{new RoutePoint(),new RoutePoint(1,0)},minute,minute+10,10,1.3,12,0,0,1439);
+            scheduleField.SetValue(chosen,schedule); routine.DestinationKey=room.EntryDoor.buildingKey;
+            try
+            {
+                DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((long)(minute*60-now%86400+1));
+                var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",flags).GetValue(adapter);
+                VisitDeparture departure=null; float deadline=Time.realtimeSinceStartup+10;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    departure=store.VisitDepartureFor(resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                    if(departure!=null) break;
+                    yield return null;
+                }
+                if(departure==null) throw new InvalidOperationException("Guarded scene failed to reject arriving shopper after corpse cleanup.");
+                deadline=Time.realtimeSinceStartup+30;
+                while(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()<departure.Motion.ExitAt && Time.realtimeSinceStartup<deadline) yield return null;
+                yield return null; yield return null;
+                if(streets.FindActor(resident.Id)) throw new InvalidOperationException("Rejected visitor stayed inside guarded shop.");
+                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                if(restored.VisitDepartureFor(resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds())==null)
+                    throw new InvalidOperationException("Rejected visitor departure did not survive snapshot restore.");
+                Debug.Log("LIVING_CITIES_GUARDED_VISITOR_PASS: cleared guarded shop rejects arrival; visitor exits; cancellation survives restore.");
+            }
+            finally { scheduleField.SetValue(chosen,previous); routine.DestinationKey=destination; }
+        }
+        private static int CountKeeperStatics(DaggerfallInterior room,NativePerson keeper)
+        {
+            int count=0;
+            foreach(var npc in room.GetComponentsInChildren<StaticNPC>(true))
+                if(npc.Data.hash==keeper.NativeHash && npc.Data.buildingKey==keeper.WorkKey) count++;
+            return count;
+        }
+        private static void AssertKeeperStillDead(LivingCitiesMod adapter,DaggerfallInterior room,NativePerson keeper,
+            int nativeCount,int serviceCount,string stage)
+        {
+            var world=(WorldState)adapter.GetSaveData();
+            int keeperMatches=world.NativePeople.FindAll(p=>p.Id==keeper.Id).Count;
+            var current=world.NativePeople.Find(p=>p.Id==keeper.Id);
+            var npc=Array.Find(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==keeper.NativeHash && n.Data.buildingKey==keeper.WorkKey);
+            int currentServiceCount=CountKeeperStatics(room,keeper);
+            int currentNativeCount=world.NativePeople.FindAll(p=>p.SettlementId==keeper.SettlementId).Count;
+            if(keeperMatches!=1 || current==null || current.IsAlive || !npc || npc.gameObject.activeSelf ||
+                currentNativeCount!=nativeCount || currentServiceCount!=serviceCount)
+                throw new InvalidOperationException("Shop visitor changed/recreated dead keeper at "+stage+"; keeperMatches="+keeperMatches+
+                    "; alive="+(current!=null && current.IsAlive)+"; active="+(npc && npc.gameObject.activeSelf)+
+                    "; nativeCount="+currentNativeCount+"/"+nativeCount+"; serviceStatics="+currentServiceCount+"/"+serviceCount);
         }
         private static IEnumerator VerifyDoorPermissions()
         {

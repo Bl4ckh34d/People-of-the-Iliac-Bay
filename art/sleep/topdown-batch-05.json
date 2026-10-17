@@ -1,0 +1,88 @@
+{
+  "batch": {
+    "name": "batch-05",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-05.png",
+    "items": [
+      {
+        "id": "flat-181-6",
+        "archive": 181,
+        "record": 6,
+        "kind": "flat",
+        "caption": "blue-cloaked dancer",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-181-6.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-181-7",
+        "archive": 181,
+        "record": 7,
+        "kind": "flat",
+        "caption": "blue-cloaked dancer",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-181-7.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-0",
+        "archive": 182,
+        "record": 0,
+        "kind": "flat",
+        "caption": "white-haired old man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-0.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-1",
+        "archive": 182,
+        "record": 1,
+        "kind": "flat",
+        "caption": "fat bald man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-1.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-2",
+        "archive": 182,
+        "record": 2,
+        "kind": "flat",
+        "caption": "blond-bearded man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-2.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-3",
+        "archive": 182,
+        "record": 3,
+        "kind": "flat",
+        "caption": "bearded man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-3.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-4",
+        "archive": 182,
+        "record": 4,
+        "kind": "flat",
+        "caption": "well-dressed boy",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-4.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-5",
+        "archive": 182,
+        "record": 5,
+        "kind": "flat",
+        "caption": "jester",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-5.png",
+        "aliases": [
+          "flat-334-6",
+          "flat-346-3"
+        ]
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact identities per cell: 1: flat-181-6 (blue-cloaked dancer); 2: flat-181-7 (blue-cloaked dancer); 3: flat-182-0 (white-haired old man); 4: flat-182-1 (fat bald man); 5: flat-182-2 (blond-bearded man); 6: flat-182-3 (bearded man); 7: flat-182-4 (well-dressed boy); 8: flat-182-5 (jester). Cell3 bald crown grey-white side hair and beard; cell4 dark-skinned bald portly man; cell7 youthful clean-shaven brown-haired boy; cell8 orange/yellow jester cap with orange hair. Match source faces; do not make everyone elderly.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-af8dce2e-05fc-4a34-8e52-32de9ebdf6bd.png",
+  "status": "generated-awaiting-runtime-validation"
+}

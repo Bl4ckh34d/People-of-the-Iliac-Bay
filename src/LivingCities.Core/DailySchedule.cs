@@ -24,6 +24,12 @@ namespace LivingCities.Core
         private readonly RoutePoint[] points;
         private readonly double[] distances;
         private Activity awayActivity = Activity.Work;
+        private ResidentVisitJourney itineraryJourney;
+        private ResidentVisitSnapshot[] itineraryVisits;
+        private double itineraryDepartureSeconds;
+        private double itineraryEndsAt;
+        public double ReturnHomeAt(double daySeconds)
+        { return Math.Floor(daySeconds/86400)*86400+(itineraryJourney!=null ? itineraryEndsAt : (close+commute)*60d); }
         private DailySchedule(int home, int work, int wake, int sleep, int open, int close, int commute, RoutePoint[] points)
         {
             this.home = home; this.work = work; this.wake = wake; this.sleep = sleep;
@@ -62,6 +68,28 @@ namespace LivingCities.Core
         {
             ValidateHome(homeKey, wakeMinute, sleepMinute);
             return new DailySchedule(homeKey, -1, wakeMinute, sleepMinute, 0, 0, 0, new RoutePoint[0]);
+        }
+        public static DailySchedule ItineraryDay(int homeKey, ResidentDestination itinerary, double departureSeconds,
+            int wakeMinute, int sleepMinute)
+        {
+            ValidateHome(homeKey, wakeMinute, sleepMinute);
+            if (!Finite(departureSeconds) || departureSeconds < wakeMinute * 60d || departureSeconds >= sleepMinute * 60d ||
+                departureSeconds >= 86400 || itinerary == null)
+                throw new ArgumentException("Itinerary departure must fit inside waking hours.");
+            var copied = ResidentVisitJourney.Copy(itinerary);
+            if (copied.ThroughRoute) throw new ArgumentException("Daily itinerary must return home.", nameof(itinerary));
+            foreach (var stop in copied.Stops)
+                if (stop.Purpose == ResidentVisitPurpose.Inn)
+                    throw new ArgumentException("Daily itineraries cannot reserve overnight inns.", nameof(itinerary));
+            var journey = ResidentVisitJourney.Create(departureSeconds, copied);
+            if (journey.EndsAt >= 86400 || journey.EndsAt > sleepMinute * 60d)
+                throw new ArgumentException("Itinerary return must fit inside the same waking day.", nameof(itinerary));
+            var schedule = HomeDay(homeKey, wakeMinute, sleepMinute);
+            schedule.itineraryJourney = journey;
+            schedule.itineraryDepartureSeconds = departureSeconds;
+            schedule.itineraryEndsAt = journey.EndsAt;
+            schedule.itineraryVisits = new List<ResidentVisitSnapshot>(journey.ScheduledVisits()).ToArray();
+            return schedule;
         }
         public static DailySchedule DayVisit(int homeKey, int destinationKey, IEnumerable<RoutePoint> route,
             int opens, int closes, int dwellMinutes, double metresPerRealSecond, double gameSecondsPerRealSecond,
@@ -113,7 +141,36 @@ namespace LivingCities.Core
             startsAt=day+open*60; endsAt=day+close*60;
             return awayActivity==Activity.Visit && state.Activity==Activity.Visit;
         }
-        public bool HasVisit { get { return awayActivity==Activity.Visit && work>=0; } }
+        public bool TryVisitWindowForBuilding(double now, int buildingKey, out double startsAt, out double endsAt)
+        {
+            if (!Finite(now) || now < 0) throw new ArgumentOutOfRangeException(nameof(now));
+            double day = Math.Floor(now / 86400) * 86400;
+            if (itineraryVisits != null)
+            {
+                foreach (var visit in itineraryVisits)
+                    if (visit.BuildingKey == buildingKey)
+                    {
+                        startsAt = day + visit.EnterAt;
+                        endsAt = day + visit.LeaveAt;
+                        return true;
+                    }
+                startsAt = endsAt = 0;
+                return false;
+            }
+            startsAt = day + open * 60;
+            endsAt = day + close * 60;
+            return awayActivity == Activity.Visit && work == buildingKey;
+        }
+        public bool HasVisit { get { return itineraryVisits != null ? itineraryVisits.Length > 0 : awayActivity==Activity.Visit && work>=0; } }
+        public bool ContainsVisitBuilding(int buildingKey)
+        {
+            if (itineraryVisits != null)
+            {
+                foreach (var visit in itineraryVisits) if (visit.BuildingKey == buildingKey) return true;
+                return false;
+            }
+            return HasVisit && work == buildingKey;
+        }
         public ActivitySnapshot Evaluate(long absoluteMinute)
         {
             if (absoluteMinute < 0) throw new ArgumentOutOfRangeException(nameof(absoluteMinute));
@@ -122,6 +179,15 @@ namespace LivingCities.Core
         private ActivitySnapshot EvaluateMinuteOfDay(double minute)
         {
             if (minute < wake || minute >= sleep) return Interior(Activity.Sleep, home);
+            if (itineraryJourney != null)
+            {
+                double seconds = minute * 60;
+                if (seconds < itineraryDepartureSeconds || seconds >= itineraryEndsAt) return Interior(Activity.Home, home);
+                var visit = itineraryJourney.Evaluate(seconds);
+                if (visit.Phase == ResidentVisitPhase.Inside)
+                    return new ActivitySnapshot(Activity.Visit, visit.BuildingKey, visit.Position, 0);
+                return new ActivitySnapshot(Activity.Travel, -1, visit.Position, 0);
+            }
             if (work < 0 || minute < open - commute || minute >= close + commute) return Interior(Activity.Home, home);
             if (minute >= open && minute < close) return Interior(awayActivity, work);
             double progress = minute < open ? (minute - (open - commute)) / (double)commute : 1 - (minute - close) / (double)commute;

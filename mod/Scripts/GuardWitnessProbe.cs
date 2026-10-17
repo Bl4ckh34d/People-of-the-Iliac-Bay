@@ -25,25 +25,58 @@ namespace LivingCities.DFU
             {
                 var clock = DaggerfallUnity.Instance.WorldTime.Now;
                 clock.RaiseTime((86400 + 12 * 3600 - (int)(clock.ToSeconds() % 86400)) % 86400);
-                float deadline = Time.realtimeSinceStartup + 30;
-                while ((guards.Roster == null || guards.Roster.BuildingApproaches.Count == 0) && Time.realtimeSinceStartup < deadline) yield return null;
-                if (guards.Roster == null || guards.Roster.BuildingApproaches.Count == 0) throw new InvalidOperationException("Witness probe needs surveyed guard routes.");
-                streets.enabled = false;
                 var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
                 var geometry = new TownGeometry(directory, game.StreamingWorld.GetCurrentCityNavigation(), false);
-                SavedRoutePoint crime = null;
+                var approachSurveyField = typeof(GuardPopulation).GetField("approachSurvey", BindingFlags.Instance | BindingFlags.NonPublic);
+                float deadline = Time.realtimeSinceStartup + 120;
+                while ((guards.Roster == null || (Coroutine)approachSurveyField.GetValue(guards) != null) && Time.realtimeSinceStartup < deadline)
+                    yield return null;
+                if (guards.Roster == null || (Coroutine)approachSurveyField.GetValue(guards) != null || guards.Roster.BuildingApproaches.Count == 0)
+                    throw new InvalidOperationException("Witness probe needs completed guard approach survey.");
+                streets.enabled = false;
+                double now = clock.ToSeconds();
+                SavedRoutePoint crime = null, nearPost = null;
+                var nearPostPosition = Vector3.zero;
                 foreach (var approach in guards.Roster.BuildingApproaches)
                     foreach (var route in approach.Routes)
+                    {
+                        var routeGuard = guards.Roster.Guards.Find(g => g.Id == route.GuardId && g.IsAlive && g.Duty == GuardDuty.Posted);
+                        if (routeGuard == null || route.Points == null || route.Points.Count < 2) continue;
+                        var current = guards.Roster.Position(routeGuard.Id, now);
+                        if (Vector2.Distance(new Vector2((float)current.X, (float)current.Z),
+                            new Vector2((float)routeGuard.Post.X, (float)routeGuard.Post.Z)) > 0.05f) continue;
                         foreach (var point in route.Points)
                         {
-                            bool distant = true;
-                            foreach (var guard in guards.Roster.Guards)
-                                if (Vector2.Distance(new Vector2((float)point.X, (float)point.Z), new Vector2((float)guard.Post.X, (float)guard.Post.Z)) < 35) { distant = false; break; }
-                            if (distant && geometry.RouteBetweenPoints(guards.Roster.Guards[0].Post, point).Count >= 2) { crime = point; break; }
+                            var scenePoint = geometry.ScenePoint(new RoutePoint(point.X, point.Z));
+                            var standing = geometry.ScenePoint(new RoutePoint(current.X, current.Z)) + Vector3.up;
+                            float distance = Vector2.Distance(new Vector2((float)point.X, (float)point.Z),
+                                new Vector2((float)current.X, (float)current.Z));
+                            if (nearPost == null && distance > 0.5f && distance < 20 &&
+                                CivilianResponses.Sees(scenePoint, standing, 20) &&
+                                geometry.RouteBetweenPoints(current, point).Count >= 2)
+                            { nearPost = point; nearPostPosition = scenePoint; }
+                            if (crime == null)
+                            {
+                                bool outsideReportRange = true;
+                                foreach (var guard in guards.Roster.Guards)
+                                {
+                                    if (!guard.IsAlive || guard.Duty != GuardDuty.Posted) continue;
+                                    var posted = guards.Roster.Position(guard.Id, now);
+                                    if (Vector2.Distance(new Vector2((float)point.X, (float)point.Z),
+                                        new Vector2((float)posted.X, (float)posted.Z)) <= 20)
+                                    { outsideReportRange = false; break; }
+                                }
+                                if (outsideReportRange) crime = point;
+                            }
+                            if (crime != null && nearPost != null) break;
                         }
-                if (crime == null) throw new InvalidOperationException("No reachable crime fixture away from guard posts.");
+                        if (crime != null && nearPost != null) break;
+                    }
+                if (crime == null || nearPost == null)
+                    throw new InvalidOperationException("Completed guard routes contain no reachable remote and near-post witness fixtures.");
                 var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var actors = (Dictionary<string, ResidentActor>)typeof(StreetPopulation).GetField("actors", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(streets);
+                var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 foreach (var actor in actors.Values) if (actor) UnityEngine.Object.Destroy(actor.gameObject);
                 actors.Clear();
                 var fixtures = new List<ResidentActor>();
@@ -58,6 +91,19 @@ namespace LivingCities.DFU
                         body.SetActive(true); actors.Add(resident.Id, actor); fixtures.Add(actor);
                     }
                 if (fixtures.Count != 2) throw new InvalidOperationException("Need two adult residents.");
+                Resident preHitResident = null;
+                foreach (var home in population.Households)
+                    foreach (var resident in home.Residents)
+                        if (resident.IsAlive && !fixtures.Exists(actor => actor.Resident.Id == resident.Id)) { preHitResident = resident; break; }
+                if (preHitResident == null) throw new InvalidOperationException("Need a separate living resident for the pre-death report assertion.");
+                var preHit = store.RecordViolence(population.SettlementId, preHitResident.Id, now);
+                var nearLocal = directory.transform.InverseTransformPoint(nearPostPosition);
+                store.LocateViolence(preHit.Id, -1, nearLocal.x, nearLocal.y, nearLocal.z);
+                var priorCrime = game.PlayerEntity.CrimeCommitted;
+                guards.ReportCivilianCrime(preHit, nearPostPosition);
+                if (guards.Roster.Reports.Exists(r => r.Id == "civilian:" + preHit.Id) ||
+                    game.PlayerEntity.CrimeCommitted != priorCrime)
+                    throw new InvalidOperationException("Unconfirmed civilian hit was dispatched as murder despite a visible posted guard.");
                 var victim = fixtures[0]; var witness = fixtures[1];
                 game.PlayerMotor.transform.position = victim.transform.position + Vector3.right * 2;
                 game.WeaponManager.WeaponDamage(null, false, false, victim.transform, victim.transform.position, Vector3.forward);
@@ -69,8 +115,6 @@ namespace LivingCities.DFU
                 try { game.WeaponManager.WeaponDamage(null, false, false, null, Vector3.zero, Vector3.forward); }
                 catch (NullReferenceException) { failed = true; }
                 if (!failed || hook.GetProperty("CurrentTarget").GetValue(null, null) != null) throw new InvalidOperationException("Weapon exception did not restore context.");
-                var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
-                double now = clock.ToSeconds();
                 var alarm = store.ActiveAlarm(witness.Resident.Id, now);
                 if (alarm == null) throw new InvalidOperationException("Visible citizen did not witness killing.");
                 alarm.People.Find(p => p.ResidentId == witness.Resident.Id).Reaction = CivilianReaction.Flee;

@@ -1,5 +1,19 @@
 # Sleeping art studies
 
+## Appearance catalogue, 15 October 2026
+
+Final installed-build verification:339/339 core tests, Unity catalogue checks, native keeper response/death/sleep/reload, factionless book-holder death/reload, and male/female resident sleep/wake/death/reload all pass. Evidence: `work/ShopStatic-core.log`, `work/ShopStatic-build-editor.log`, `work/ShopStatic-runtime-pass.log`, `work/SleepCatalogue-cached-runtime-pass.log`. Side-view screenshots were inspected; the complete sleeper stays aligned to the mattress. This validates sampled runtime identities, not visual fidelity of every generated face.
+
+The new overhead catalogue contains 191 distinct generated appearances and maps 215 original appearance references, including all 24 civilian mobile outfits, City Watch, current child flats, and most stationary people. Exact duplicate source PNGs share an entry. `coverage.json` records the eight missing source appearances (184/5 through 184/12): the built-in generator rejected their reference sheet. They receive no substitute face. Editor markers and non-humanoid Daedric figures are outside this human/NPC sleeper catalogue.
+
+All original source flats were visually inspected in contact sheets before generation. The shopkeeper is 182/0; the seated book-holding scribe in the user's screenshot is 184/2. The shopkeeper's corrected bald crown and grey beard are `topdown-flat-182-0-v5.png`, now bundled in place of the brown-haired v4. Nulfaga (182/44) is a separate appearance, not a shopkeeper reference.
+
+Each `topdown-batch-NN.json` stores the built-in imagegen prompt, original identities, exact duplicate aliases, generated source path, and cell order. Sheets have four columns and two rows, read left-to-right then top-to-bottom. Corrected sheets 02-v2 (closed eyes) and 09-v2 (beardless flute player) supersede their first versions. The separate `topdown-mobile-381-388.png` is an initial study; the catalogue uses batches 21–24 for mobile appearances.
+
+`SleepArtCatalog` maps archive/record to a file and cell. `SleepingArt` decodes each sheet once, scans all eight alpha footprints once per file, caches the bounds, and uses the existing fixed horizontal, aspect-preserving bed renderer. Native household heads retain their original flat mapping; generated adults follow DFU's actual racial outfit arrays; children use the same 182/38 and 182/43 flats as `ChildHomeBillboard`. Asset availability does not register additional NPCs or change quest/sleep schedules.
+
+Validation: 339/339 core tests pass; Unity build verifies all 215 mapped entries, nonempty alpha bounds, separated cells and aspect ratios. Evidence: `work/SleepCatalogue-green.log` and `work/SleepCatalogue-build-editor.log`. Live player validation is recorded separately. Source PNGs remain unchanged generated output, with coarse pixel-art styling at larger-than-native resolution. This is not a claim of pixel-identical facial reconstruction or complete coverage.
+
 ## Single overhead composite, 15 October 2026
 
 The player now requests a single complete top-down image with no perspective rather than mapping foreshortened angle art onto the mattress. Native182/0 uses `topdown-flat-182-0-v4.png`, copied unchanged with alpha into `mod/Textures/sleep-topdown-flat-182-0.png.bytes`. Its source is built-in image generation `exec-0812b9f9-6c54-479c-bc0e-eecd0d9b7de1.png`. The selected revision starts from the shorter v2 study and modestly extends only the blanket, retaining its stylized head/pillow/width proportions. The earlier very long v1 and shorter v2 remain provenance; the anatomy-driven tall v3 was rejected and is not bundled. Future revisions should follow the player's modest visual adjustment, not impose a new adult-anatomy ratio.

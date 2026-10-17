@@ -46,6 +46,7 @@ namespace LivingCities.Core
     public sealed class Household
     {
         public int BuildingKey;
+        public int Generation;
         public string HeadId, Surname;
         public uint SurnameSeed;
         public int BedCapacity = -1; // Unknown for legacy households; never invent capacity.
@@ -56,6 +57,7 @@ namespace LivingCities.Core
     public sealed class SettlementPopulation
     {
         public int SettlementId;
+        public bool IsPartial;
         public List<Household> Households = new List<Household>();
     }
 

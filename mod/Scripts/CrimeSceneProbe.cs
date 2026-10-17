@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using LivingCities.Core;
@@ -19,6 +20,7 @@ namespace LivingCities.DFU
             var streets = adapter.GetComponent<StreetPopulation>(); var guards = adapter.GetComponent<GuardPopulation>();
             var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool previous = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true); streets.ReactionsEnabled = true;
+            var previousConcealment = game.PlayerEntity.MagicalConcealmentFlags;
             bool savedEvent = false, loadedEvent = false;
             GuardBuildingApproach uncached = null;
             GuardRoster uncachedRoster = null;
@@ -71,6 +73,8 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Unwitnessed death did not remain concealed until departure.");
                 if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Theft)
                     throw new InvalidOperationException("Concealment lost previously known crime.");
+                SetPlayerInvisible(game.PlayerEntity, true);
+                yield return null; yield return null;
                 yield return new WaitForSecondsRealtime(0.3f);
                 if (streets.CorpseCount != 1) throw new InvalidOperationException("Confirmed dead resident has no persistent corpse view.");
                 string bodyJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
@@ -99,13 +103,45 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Physical guard arrival did not discover scene.");
                 TownSmokeHarness.EnterInterior(owner.transform, door);
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
-                if (streets.CorpseCount != 0 || !store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.Cleared)
-                    throw new InvalidOperationException("Guard arrival failed to clear the corpse.");
+                if (streets.CorpseCount != 1 || store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.Cleared)
+                    throw new InvalidOperationException("Building entry cleared corpse before physical inspection.");
                 if (!guards.Roster.Guards.Exists(g => g.Interior != null && g.IncidentId == report.Id))
                     throw new InvalidOperationException("Investigators missing on re-entry.");
-                if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None ||
-                    report.Warning == null || !report.Warning.Issued || report.Warning.Violated)
-                    throw new InvalidOperationException("Unidentified visitor did not receive a leave warning before accusation.");
+                deadline = Time.realtimeSinceStartup + 30;
+                var pendingBody = store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse;
+                while (pendingBody.InspectionRemainingRealSeconds >= 5 && Time.realtimeSinceStartup < deadline)
+                { yield return null; pendingBody = store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse; }
+                if (pendingBody.InspectionRemainingRealSeconds >= 5 || pendingBody.InspectionGuardId == null)
+                    throw new InvalidOperationException("Investigator did not physically reach the corpse.");
+                var inspector = guards.Roster.Guards.Find(g => g.Id == pendingBody.InspectionGuardId);
+                if (inspector == null || inspector.Interior == null || Vector3.Distance(
+                    new Vector3((float)inspector.Interior.Position.X, (float)inspector.Interior.Position.Y, (float)inspector.Interior.Position.Z),
+                    new Vector3((float)pendingBody.X, (float)pendingBody.Y, (float)pendingBody.Z)) > 4)
+                    throw new InvalidOperationException("Investigator inspection position is not beside corpse.");
+                double remaining = pendingBody.InspectionRemainingRealSeconds;
+                var progressStore = new WorldStateStore(0);
+                progressStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
+                    SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData())));
+                if (Math.Abs(progressStore.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.InspectionRemainingRealSeconds - remaining) > 0.001)
+                    throw new InvalidOperationException("Reload reset corpse inspection progress.");
+                deadline = Time.realtimeSinceStartup + 12;
+                while (streets.CorpseCount != 0 && Time.realtimeSinceStartup < deadline) yield return null;
+                if (streets.CorpseCount != 0 || !store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.Cleared)
+                    throw new InvalidOperationException("Five seconds at corpse did not clear it.");
+                if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None)
+                    throw new InvalidOperationException("Hidden inspection stage caused an accusation.");
+                SetPlayerInvisible(game.PlayerEntity, false);
+                deadline = Time.realtimeSinceStartup + 5;
+                while ((report.Warning == null || !report.Warning.Issued) && Time.realtimeSinceStartup < deadline) yield return null;
+                if (report.Warning == null || !report.Warning.Issued || report.Warning.Violated ||
+                    report.Warning.DisplaySeconds < 1 || report.Warning.DisplaySeconds > 10)
+                    throw new InvalidOperationException("Visible visitor did not receive a fresh leave countdown.");
+                int warningStart = report.Warning.DisplaySeconds;
+                deadline = Time.realtimeSinceStartup + 2;
+                while (report.Warning.DisplaySeconds >= warningStart && Time.realtimeSinceStartup < deadline) yield return null;
+                if (report.Warning.DisplaySeconds >= warningStart || report.Warning.Violated ||
+                    game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None)
+                    throw new InvalidOperationException("Visible warning did not count down before Trespassing.");
                 var warningCopy = CrimeSceneWarning.Copy(report.Warning);
                 string warningJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
                 var warningStore = new WorldStateStore(0);
@@ -144,6 +180,8 @@ namespace LivingCities.DFU
                 arrestGuard.EndCombat(); DaggerfallUI.Instance.PopToHUD();
                 game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Trespassing;
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = false;
+                arrestGuard.BeginCombat(clock.ToSeconds());
+                yield return null; yield return null;
                 game.PlayerEntity.GodMode = false;
                 int health = game.PlayerEntity.CurrentHealth;
                 var attack = arrestGuard.GetComponent<EnemyAttack>();
@@ -156,6 +194,30 @@ namespace LivingCities.DFU
                 var surrender = DaggerfallUI.UIManager.TopWindow as DaggerfallMessageBox;
                 if (surrender == null || !game.PlayerEntity.HaveShownSurrenderToGuardsDialogue )
                     throw new InvalidOperationException("Guard did not offer surrender before damage. damage=" + bestDamage + "; shown=" + game.PlayerEntity.HaveShownSurrenderToGuardsDialogue + "; window=" + DaggerfallUI.UIManager.TopWindow.GetType().Name);
+                yield return new WaitForSecondsRealtime(0.5f);
+                if (!arrestGuard.gameObject.activeInHierarchy || !arrestGuard.CombatReady || !arrestGuard.GetComponent<EnemyMotor>().IsHostile)
+                    throw new InvalidOperationException("Surrender dialogue discarded the active guard pursuit.");
+                typeof(EnemyAttack).GetMethod("SurrenderToGuardsDialogue_OnButtonClick", BindingFlags.Instance | BindingFlags.NonPublic)
+                    .Invoke(attack, new object[] { surrender, DaggerfallMessageBox.MessageBoxButtons.No });
+                yield return new WaitForSecondsRealtime(0.5f);
+                if (!game.PlayerEntity.HaveShownSurrenderToGuardsDialogue)
+                    throw new InvalidOperationException("Refused surrender was reset during the same pursuit.");
+                foreach (var joiningGuard in UnityEngine.Object.FindObjectsOfType<GuardActor>())
+                {
+                    joiningGuard.BeginCombat(clock.ToSeconds());
+                    yield return null; yield return null;
+                    var joiningAttack = joiningGuard.GetComponent<EnemyAttack>();
+                    for (int attempt = 0; attempt < 32; attempt++) apply.Invoke(joiningAttack, new object[] { null });
+                    if (DaggerfallUI.UIManager.TopWindow is DaggerfallMessageBox)
+                        throw new InvalidOperationException("A pursuing guard repeated the refused surrender offer.");
+                }
+                Debug.Log("LIVING_CITIES_SURRENDER_REFUSAL_PASS: dialogue retains hostile guards; refusal persists across frames and additional guard attacks.");
+                // Start a separate controlled offer to retain the native acceptance/court regression.
+                game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = false;
+                for (int attempt = 0; attempt < 256 && !game.PlayerEntity.HaveShownSurrenderToGuardsDialogue; attempt++)
+                    apply.Invoke(attack, new object[] { null });
+                surrender = DaggerfallUI.UIManager.TopWindow as DaggerfallMessageBox;
+                if (surrender == null) throw new InvalidOperationException("Separate acceptance offer missing.");
                 typeof(EnemyAttack).GetMethod("SurrenderToGuardsDialogue_OnButtonClick", BindingFlags.Instance | BindingFlags.NonPublic)
                     .Invoke(attack, new object[] { surrender, DaggerfallMessageBox.MessageBoxButtons.Yes });
                 yield return null; yield return null;
@@ -180,7 +242,33 @@ namespace LivingCities.DFU
                     uncachedRoster.BuildingApproaches.Add(uncached);
                 SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad;
                 guards.Clear(); flag.SetValue(adapter, previous); game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;
+                RemoveTestConcealment();
+                game.PlayerEntity.MagicalConcealmentFlags = previousConcealment;
             }
+        }
+
+        private static void SetPlayerInvisible(DaggerfallWorkshop.Game.Entity.PlayerEntity player, bool invisible)
+        {
+            RemoveTestConcealment();
+            if(invisible)
+            {
+                var manager=GameManager.Instance.PlayerEffectManager;
+                var bundle=manager.CreateSpellBundle("Invisibility-True",ElementTypes.Magic,
+                    new EffectSettings { DurationBase=2000,DurationPerLevel=1 });
+                var settings=bundle.Settings; settings.Name="Living Cities scene probe concealment"; bundle.Settings=settings;
+                manager.AssignBundle(bundle,AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
+            }
+            const DaggerfallWorkshop.Game.Entity.MagicalConcealmentFlags invisibility =
+                DaggerfallWorkshop.Game.Entity.MagicalConcealmentFlags.InvisibleNormal |
+                DaggerfallWorkshop.Game.Entity.MagicalConcealmentFlags.InvisibleTrue;
+            var flags = player.MagicalConcealmentFlags;
+            player.MagicalConcealmentFlags = invisible ? flags | DaggerfallWorkshop.Game.Entity.MagicalConcealmentFlags.InvisibleTrue : flags & ~invisibility;
+        }
+        private static void RemoveTestConcealment()
+        {
+            var manager=GameManager.Instance.PlayerEffectManager;
+            foreach(var bundle in manager.EffectBundles)
+                if(bundle.name=="Living Cities scene probe concealment") manager.RemoveBundle(bundle);
         }
     }
 }

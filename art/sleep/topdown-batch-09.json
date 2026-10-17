@@ -1,0 +1,89 @@
+{
+  "batch": {
+    "name": "batch-09",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-09.png",
+    "items": [
+      {
+        "id": "flat-182-30",
+        "archive": 182,
+        "record": 30,
+        "kind": "flat",
+        "caption": "pitiful bald man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-30.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-31",
+        "archive": 182,
+        "record": 31,
+        "kind": "flat",
+        "caption": "pitiful bald man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-31.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-32",
+        "archive": 182,
+        "record": 32,
+        "kind": "flat",
+        "caption": "good-looking whore",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-32.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-33",
+        "archive": 182,
+        "record": 33,
+        "kind": "flat",
+        "caption": "prostitute",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-33.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-34",
+        "archive": 182,
+        "record": 34,
+        "kind": "flat",
+        "caption": "blonde whore",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-34.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-35",
+        "archive": 182,
+        "record": 35,
+        "kind": "flat",
+        "caption": "scruffy sailor",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-35.png",
+        "aliases": [
+          "flat-357-4"
+        ]
+      },
+      {
+        "id": "flat-182-36",
+        "archive": 182,
+        "record": 36,
+        "kind": "flat",
+        "caption": "snake charmer",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-36.png",
+        "aliases": [
+          "flat-357-5"
+        ]
+      },
+      {
+        "id": "flat-182-37",
+        "archive": 182,
+        "record": 37,
+        "kind": "flat",
+        "caption": "flute player",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-37.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-182-30 (pitiful bald man); 2: flat-182-31 (pitiful bald man); 3: flat-182-32 (good-looking whore); 4: flat-182-33 (prostitute); 5: flat-182-34 (blonde whore); 6: flat-182-35 (scruffy sailor); 7: flat-182-36 (snake charmer); 8: flat-182-37 (flute player). Study each face in the source carefully. Preserve baldness, grey vs brown vs blond hair and actual facial hair. No extra facial hair on clean-shaven faces.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-0970e2b4-cb39-42aa-9c88-767df59eb486.png",
+  "status": "generated-awaiting-runtime-validation"
+}

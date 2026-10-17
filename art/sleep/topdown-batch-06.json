@@ -1,0 +1,89 @@
+{
+  "batch": {
+    "name": "batch-06",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-06.png",
+    "items": [
+      {
+        "id": "flat-182-6",
+        "archive": 182,
+        "record": 6,
+        "kind": "flat",
+        "caption": "jester",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-6.png",
+        "aliases": [
+          "flat-334-3"
+        ]
+      },
+      {
+        "id": "flat-182-7",
+        "archive": 182,
+        "record": 7,
+        "kind": "flat",
+        "caption": "white-bearded man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-7.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-8",
+        "archive": 182,
+        "record": 8,
+        "kind": "flat",
+        "caption": "man in chef's hat",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-8.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-9",
+        "archive": 182,
+        "record": 9,
+        "kind": "flat",
+        "caption": "woman in gray",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-9.png",
+        "aliases": [
+          "flat-357-2"
+        ]
+      },
+      {
+        "id": "flat-182-10",
+        "archive": 182,
+        "record": 10,
+        "kind": "flat",
+        "caption": "woman in blue",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-10.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-11",
+        "archive": 182,
+        "record": 11,
+        "kind": "flat",
+        "caption": "comely maiden",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-11.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-12",
+        "archive": 182,
+        "record": 12,
+        "kind": "flat",
+        "caption": "milk maid",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-12.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-13",
+        "archive": 182,
+        "record": 13,
+        "kind": "flat",
+        "caption": "man wearing brown",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-13.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact identities per cell: 1: flat-182-6 (jester); 2: flat-182-7 (white-bearded man); 3: flat-182-8 (man in chef's hat); 4: flat-182-9 (woman in gray); 5: flat-182-10 (woman in blue); 6: flat-182-11 (comely maiden); 7: flat-182-12 (milk maid); 8: flat-182-13 (man wearing brown). Match sources: blue-green jester, elderly grey bearded man, tan chef with white cap, blonde bob woman, black bob woman, auburn-haired serving woman, grey-haired capped elderly woman, brown-hatted man. Keep skin tones and facial features source-specific.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-1479ecdb-7c68-4a06-a8e9-825ab9d50724.png",
+  "status": "generated-awaiting-runtime-validation"
+}

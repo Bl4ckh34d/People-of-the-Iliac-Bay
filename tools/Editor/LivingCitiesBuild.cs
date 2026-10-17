@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
@@ -10,6 +11,7 @@ using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Utility;
 using DaggerfallConnect;
+using DaggerfallConnect.FallExe;
 using LivingCities.Core;
 using LivingCities.DFU;
 using UnityEditor;
@@ -17,6 +19,14 @@ using UnityEngine;
 
 public static class LivingCitiesBuild
 {
+    private static void RequirePlayerClosed()
+    {
+        var players = System.Diagnostics.Process.GetProcessesByName("DaggerfallUnity");
+        bool running = players.Length != 0;
+        foreach (var player in players) player.Dispose();
+        if (running) throw new InvalidOperationException("Daggerfall Unity is running; build/install will not replace a loaded mod. Close the game first.");
+    }
+
     public static void VerifyAndBuildQuestBindingProbe()
     {
         VerifyAndBuild();
@@ -34,12 +44,14 @@ public static class LivingCitiesBuild
             staging + "/QuestBindingProbe.dll.bytes", staging + "/QuestBindingProbe.dfmod.json" } };
         Require(BuildPipeline.BuildAssetBundles(output, new[] { build }, BuildAssetBundleOptions.ChunkBasedCompression,
             BuildTarget.StandaloneWindows64) != null, "Quest binding probe bundle");
+        RequirePlayerClosed();
         File.Copy(Path.Combine(output, "livingcitiesquestbindingprobe.dfmod"),
             Path.Combine(root, "Player/DaggerfallUnity_Data/StreamingAssets/Mods/livingcitiesquestbindingprobe.dfmod"), true);
         Debug.Log("LIVING_CITIES_QUEST_BINDING_PROBE_BUILT");
     }
     public static void BuildGuardProbe()
     {
+        RequirePlayerClosed();
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         const string staging = "Assets/Game/Mods/LivingCitiesGuardProbe";
         Directory.CreateDirectory(staging);
@@ -56,6 +68,7 @@ public static class LivingCitiesBuild
             staging + "/0Harmony.dll.bytes", staging + "/GuardProbe.dll.bytes", staging + "/GuardProbe.dfmod.json" } };
         Require(BuildPipeline.BuildAssetBundles(output, new[] { build }, BuildAssetBundleOptions.ChunkBasedCompression,
             BuildTarget.StandaloneWindows64) != null, "Guard probe bundle");
+        RequirePlayerClosed();
         File.Copy(Path.Combine(output, "livingcitiesguardprobe.dfmod"),
             Path.Combine(root, "Player/DaggerfallUnity_Data/StreamingAssets/Mods/livingcitiesguardprobe.dfmod"), true);
         Debug.Log("LIVING_CITIES_GUARD_PROBE_BUILT");
@@ -63,18 +76,23 @@ public static class LivingCitiesBuild
 
     public static void VerifyAndBuild()
     {
+        RequirePlayerClosed();
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         VerifySerialization();
         VerifyAlarmSerialization();
         VerifyGuardPersistence();
         VerifyDefenseLedger();
         VerifyLodging();
+        VerifyWitnessRedirect();
         VerifyTravelers();
         VerifySettings();
+        VerifyPropertyKeyItemTemplate();
         VerifyHousing();
         VerifyBeds();
         VerifySleepingArt();
         VerifySleepingAlignment();
+        VerifyActivityFacing();
+        VerifyActivitySight();
         Require(!StreetPopulation.IsVisitDestination(DaggerfallConnect.DFLocation.BuildingTypes.House1), "House1 is not an open shop destination");
         Require(typeof(IHasModSaveData).IsAssignableFrom(typeof(LivingCitiesMod)), "Save adapter contract");
         Require(typeof(BuildingDirectory).GetMethod("GetBuildingsOfType") != null, "Building enumeration hook");
@@ -98,6 +116,7 @@ public static class LivingCitiesBuild
             if (source.Contains("/Libraries/") && (source.EndsWith(".dll.bytes") || source.EndsWith("/Harmony-LICENSE.txt")))
             { assets.Add(source); continue; }
             if (source.EndsWith("/modsettings.json")) { assets.Add(source); continue; }
+            if (source == "Assets/Game/Mods/LivingCities/ItemTemplates.json") { assets.Add(source); continue; }
             if (source.EndsWith(".png.bytes") && source.Contains("/Textures/")) { assets.Add(source); continue; }
             Require(source.EndsWith(".cs") && !source.Contains("/Editor/"), "Only runtime sources may ship");
             scriptPaths.Add(Path.Combine(Application.dataPath,source.Substring("Assets/".Length)));
@@ -129,6 +148,7 @@ public static class LivingCitiesBuild
             foreach (string asset in assets) Require(bundle.LoadAsset<TextAsset>(asset) != null, "Missing bundled source: " + asset);
         }
         finally { bundle.Unload(true); }
+        RequirePlayerClosed();
         File.Copy(package, Path.Combine(root, "Player/DaggerfallUnity_Data/StreamingAssets/Mods/livingcities.dfmod"), true);
         string evidence = Path.Combine(root, "LivingCities/work");
         Directory.CreateDirectory(evidence);
@@ -137,6 +157,170 @@ public static class LivingCitiesBuild
             ",\"nativeSettings\":true,\"installed\":true,\"physicalActors\":false}");
         Debug.Log("LIVING_CITIES_BUILD_SUCCESS: serializer, adapter lifecycle, contracts and bundle verified; installed.");
     }
+    private static void VerifyPropertyKeyItemTemplate()
+    {
+        const string templatePath = "Assets/Game/Mods/LivingCities/ItemTemplates.json";
+        var info = JsonUtility.FromJson<ModInfo>(File.ReadAllText("Assets/Game/Mods/LivingCities/LivingCities.dfmod.json"));
+        Require(info.Files.Contains(templatePath), "Property key template is listed in mod assets");
+        string json = File.ReadAllText(templatePath);
+        Require(HouseholdPropertyKeyItem.TemplateIndex == 0x4C430001 &&
+            HouseholdPropertyKeyItem.TemplateIndex > ItemHelper.LastDFTemplate &&
+            json.Contains("\"index\": 1279459329") && json.Contains("\"name\": \"Property Key\"") &&
+            json.Contains("\"playerTextureArchive\": 432") && json.Contains("\"playerTextureRecord\": 20"),
+            "Property key template uses distinct custom item identity and Skeleton Key icon");
+        Require(!json.Contains("\"artifactIndexBitfield\"") && !json.Contains("MagicItemTemplates"),
+            "Property key is not an artifact or master key");
+
+        // Batch editor verification does not start ModManager's player loader.
+        // Import the packaged JSON into the native helper before constructing items.
+        var templates = SaveLoadManager.Deserialize(typeof(List<ItemTemplate>), json) as List<ItemTemplate>;
+        Require(templates != null && templates.Count == 1, "Property key JSON deserializes through native serializer");
+        var templateField = typeof(ItemHelper).GetField("itemTemplates",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+        Require(templateField != null, "Native item template storage exists for editor fixture");
+        var nativeTemplates = (List<ItemTemplate>)templateField.GetValue(DaggerfallUnity.Instance.ItemHelper);
+        nativeTemplates.RemoveAll(t => t.index == HouseholdPropertyKeyItem.TemplateIndex);
+        nativeTemplates.Add(templates[0]);
+        HouseholdPropertyKeyItem.Register();
+        Require(Array.IndexOf(DaggerfallUnity.Instance.ItemHelper.GetCustomItemsForGroup(ItemGroups.MiscItems),
+            HouseholdPropertyKeyItem.TemplateIndex) < 0,
+            "Property key is registered for direct creation, not random loot or shop stock");
+        var key = (HouseholdPropertyKeyItem)ItemBuilder.CreateItem(ItemGroups.MiscItems, HouseholdPropertyKeyItem.TemplateIndex);
+        key.enchantmentPoints = 1234567;
+        key.message = 7654321;
+        Require(key.GetType() == typeof(HouseholdPropertyKeyItem) && !key.IsArtifact &&
+            key.ItemGroup == ItemGroups.MiscItems && key.value == 0 &&
+            key.customMagic == null && key.legacyMagic == null,
+            "Property key is a mundane custom misc item, not a priced artifact");
+        Require(HouseholdPropertyKeyItem.IsMatching(key, 1234567, 7654321) &&
+            !HouseholdPropertyKeyItem.IsMatching(key, 1234568, 7654321) &&
+            !HouseholdPropertyKeyItem.IsMatching(key, 1234567, 7654322),
+            "Property key requires exact settlement and building identity");
+
+        var inventory = new ItemCollection();
+        inventory.AddItem(key, noStack: true);
+        string serialized = SaveLoadManager.Serialize(typeof(ItemData_v1[]), inventory.SerializeItems());
+        var itemData = SaveLoadManager.Deserialize(typeof(ItemData_v1[]), serialized) as ItemData_v1[];
+        Require(itemData != null && itemData.Length == 1 &&
+            itemData[0].className == typeof(HouseholdPropertyKeyItem).ToString(),
+            "Native item save records stable custom class name");
+        var restored = new ItemCollection();
+        restored.DeserializeItems(itemData);
+        var restoredKey = restored.GetItem(0);
+        Require(restoredKey != null && restoredKey.GetType() == typeof(HouseholdPropertyKeyItem) &&
+            HouseholdPropertyKeyItem.IsMatching(restoredKey, 1234567, 7654321),
+            "Native item serialization restores custom property key class and exact identity");
+        Require(!key.IsStackable(), "Property keys cannot merge across property identities");
+        var source = new ItemCollection(); var target = new ItemCollection();
+        source.AddItem(key);
+        int transferred = 0;
+        var hookType = Type.GetType("LivingCities.QuestHooks.NativeItemTransferHooks, LivingCities.QuestHooks", true);
+        using ((IDisposable)Activator.CreateInstance(hookType, new object[] {
+            new Func<DaggerfallUnityItem,ItemCollection,ItemCollection,bool>((item,from,to) => ReferenceEquals(from,source)),
+            new Action<DaggerfallUnityItem,ItemCollection,ItemCollection>((item,from,to) => {
+                Require(!from.Contains(item) && to.Contains(item), "Transfer callback runs only after actual movement");
+                transferred++;
+            })
+        }))
+        {
+            target.Transfer(key,source);
+            Require(transferred == 1, "Individual corpse key transfer reports once");
+            source.AddItem(new HouseholdPropertyKeyItem(1234567,7654322));
+            source.AddItem(new HouseholdPropertyKeyItem(1234567,7654323));
+            target.TransferAll(source);
+            Require(transferred == 3 && source.Count == 0 && target.Count == 3,
+                "Take-all reports each distinct property key without stacking");
+        }
+    }
+    public static void VerifyActivitySight()
+    {
+        var target=GameObject.CreatePrimitive(PrimitiveType.Cube);
+        var blocker=GameObject.CreatePrimitive(PrimitiveType.Cube);
+        try
+        {
+            Vector3 origin=new Vector3(10000,10000,10000);
+            target.transform.position=origin+Vector3.forward*3;
+            blocker.transform.position=origin+Vector3.forward*1.5f;
+            Physics.SyncTransforms();
+            Require(!InteriorActivitySight.Visible(origin,target.transform.position,target.transform),
+                "Activity anchors must reject a shelf hidden behind a wall");
+            blocker.transform.position=origin+Vector3.forward*5;
+            Physics.SyncTransforms();
+            Require(InteriorActivitySight.Visible(origin,target.transform.position,target.transform),
+                "A shelf's own collider is the intended visible target");
+            blocker.transform.position=origin+Vector3.forward*1.5f;
+            blocker.AddComponent<CrowdMotion>();
+            Physics.SyncTransforms();
+            Require(InteriorActivitySight.Visible(origin,target.transform.position,target.transform),
+                "Transient pedestrians must not invalidate cached activity anchors");
+            Debug.Log("LIVING_CITIES_ACTIVITY_SIGHT_PASS");
+        }
+        finally { UnityEngine.Object.DestroyImmediate(target); UnityEngine.Object.DestroyImmediate(blocker); }
+    }
+    public static void VerifyActivityFacing()
+    {
+        var body = new GameObject("Activity facing regression");
+        try
+        {
+            var actor = body.AddComponent<ResidentActor>();
+            var person = body.AddComponent<MobilePersonNPC>();
+            person.Asset = body.AddComponent<ChildHomeBillboard>();
+            typeof(ResidentActor).GetProperty("Person").GetSetMethod(true).Invoke(actor, new object[] { person });
+            for (int i = 0; i < 40; i++)
+            {
+                body.transform.position = Vector3.up + Vector3.right * (i % 2 == 0 ? 0.02f : -0.02f);
+                actor.Place(Vector3.zero, Vector3.forward, true);
+                Require(Vector3.Dot(body.transform.forward, Vector3.forward) > 0.999f,
+                    "Small placement corrections must not turn a busy resident away from their activity");
+            }
+            body.transform.position = Vector3.up - Vector3.right * 0.1f;
+            actor.Place(Vector3.zero, Vector3.forward, false);
+            Require(Vector3.Dot(body.transform.forward, Vector3.right) > 0.999f,
+                "Walking still follows actual movement");
+            // Exercise the real native animation state without loading scene textures.
+            var native = body.AddComponent<MobilePersonBillboard>();
+            var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+            var animations = new MobileAnimation[8];
+            for (int i = 0; i < animations.Length; i++) animations[i] = new MobileAnimation { FramePerSecond = 4, NumFrames = 4 };
+            typeof(MobilePersonBillboard).GetField("moveAnims", flags).SetValue(native, animations);
+            typeof(MobilePersonBillboard).GetField("idleAnims", flags).SetValue(native, new[] { new MobileAnimation { FramePerSecond = 1, NumFrames = 1 } });
+            person.Asset = native;
+            body.transform.position = Vector3.up;
+            actor.Place(Vector3.zero, Vector3.forward, true);
+            Require(!native.IsIdle, "Busy adults must retain native directional records instead of forced frontal idle art");
+            Require((float)typeof(MobilePersonBillboard).GetField("animSpeed", flags).GetValue(native) == 0,
+                "Busy directional pose must not animate walking in place");
+            Require((int)typeof(MobilePersonBillboard).GetField("currentFrame", flags).GetValue(native) == 1,
+                "Standing must hold the inspected feet-together passing frame, not the wide-stride frame");
+            body.transform.position = Vector3.up - Vector3.right * 0.1f;
+            actor.Place(Vector3.zero, Vector3.right, false);
+            Require((float)typeof(MobilePersonBillboard).GetField("animSpeed", flags).GetValue(native) == 4,
+                "Leaving the activity must restore native walking animation");
+            var floor = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            try
+            {
+                floor.transform.position = Vector3.down * 0.1f;
+                floor.transform.localScale = new Vector3(10, 0.2f, 10);
+                Physics.SyncTransforms();
+                var crowd = body.AddComponent<CrowdMotion>(); crowd.Configure(1);
+                typeof(ResidentActor).GetField("crowd", flags).SetValue(actor, crowd);
+                actor.Place(Vector3.back * 2, Vector3.forward, false);
+                var before = body.transform.position;
+                actor.Place(Vector3.zero, Vector3.left, true);
+                var displacement = body.transform.position - before;
+                Require(displacement.sqrMagnitude > 0.01f && Vector3.Dot(body.transform.forward, displacement.normalized) > 0.99f,
+                    "A scheduled browser still approaching its stop must face movement, not the future shelf target");
+                var beforeRejectedReconstruction = body.transform.position;
+                actor.Place(Vector3.right * 30, Vector3.right, false);
+                Require(body.activeSelf && Vector3.Distance(body.transform.position,beforeRejectedReconstruction)<0.001f,
+                    "An already placed body must remain visible when schedule reconstruction has no supported destination");
+            }
+            finally { UnityEngine.Object.DestroyImmediate(floor); }
+            Debug.Log("LIVING_CITIES_ACTIVITY_FACING_PASS");
+        }
+        finally { UnityEngine.Object.DestroyImmediate(body); }
+    }
+
     public static void VerifySaveState()
     {
         VerifySerialization();
@@ -216,6 +400,35 @@ public static class LivingCitiesBuild
     }
     private static void VerifySleepingArt()
     {
+        var sheets=new Dictionary<string,Texture2D>();
+        var footprints=new Dictionary<string,Rect[]>();
+        try
+        {
+            int checkedEntries=0;
+            foreach(var entry in SleepArtCatalog.Entries)
+            {
+                Texture2D image;
+                if(!sheets.TryGetValue(entry.File,out image))
+                {
+                    image=new Texture2D(2,2);
+                    Require(image.LoadImage(File.ReadAllBytes("Assets/Game/Mods/LivingCities/Textures/"+entry.File)),"Catalogue PNG decode: "+entry.File);
+                    sheets.Add(entry.File,image);
+                    footprints.Add(entry.File,entry.Cell<0?new[]{SleepingArt.Footprint(image)}:SleepingArt.GridFootprints(image));
+                }
+                var rect=footprints[entry.File][entry.Cell<0?0:entry.Cell];
+                float ratio=rect.height*image.height/(rect.width*image.width);
+                Require(ratio>1.7f && ratio<3.2f,"Sleeper proportions: "+entry.Archive+"/"+entry.Record);
+                if(entry.Cell>=0)
+                {
+                    float x=(entry.Cell%4)/4f,y=(1-entry.Cell/4)/2f;
+                    Require(rect.xMin>x && rect.xMax<x+0.25f && rect.yMin>y && rect.yMax<y+0.5f,"Atlas cell stays separate: "+entry.Archive+"/"+entry.Record);
+                }
+                checkedEntries++;
+            }
+            Require(checkedEntries==215,"Explicit sleeping coverage count");
+            Debug.Log("LIVING_CITIES_SLEEP_CATALOGUE_PASS: "+checkedEntries+" mapped source appearances; shared textures and separate overhead footprints.");
+        }
+        finally { foreach(var image in sheets.Values) UnityEngine.Object.DestroyImmediate(image); }
         var overhead=new Texture2D(2,2);
         try
         {
@@ -350,16 +563,29 @@ public static class LivingCitiesBuild
             string legacy = "{\"Version\":" + version + ",\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"Residents\":[{\"Id\":\"legacy\",\"HomeKey\":10,\"AppearanceSeed\":3,\"IsAlive\":false}]}]}],\"Routines\":[]}";
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), legacy));
             var migrated = restored.Snapshot(); var home = migrated.Settlements[0].Households[0]; var resident = home.Residents[0];
-            Require(migrated.Version == 9 && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
+            Require(migrated.Version == new WorldState().Version && migrated.QuestBindings.Count == 0 && resident.Id == "legacy" && resident.AppearanceSeed == 3 && !resident.IsAlive &&
                 resident.AgeGroup == ResidentAgeGroup.Adult && resident.Sex == ResidentSex.Female && resident.PartnerId == null &&
                 home.SurnameSeed == StableSeed.Combine(42, 100, 10, 0xfffffffe), "Legacy FullSerializer migration " + version);
         }
         string schemaThree = "{\"Version\":3,\"WorldSeed\":42,\"Settlements\":[{\"SettlementId\":100,\"Households\":[{\"BuildingKey\":10,\"SurnameSeed\":876,\"Residents\":[{\"Id\":\"legacy-family\",\"HomeKey\":10,\"AppearanceSeed\":3,\"Sex\":1,\"IsAlive\":false}]}]}],\"Routines\":[]}";
         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), schemaThree));
-        Require(restored.Snapshot().Version == 9 && restored.Snapshot().QuestBindings.Count == 0 &&
+        Require(restored.Snapshot().Version == new WorldState().Version && restored.Snapshot().QuestBindings.Count == 0 &&
             restored.Snapshot().Settlements[0].Households[0].SurnameSeed == 876 &&
             !restored.Snapshot().Settlements[0].Households[0].Residents[0].IsAlive, "Schema three without a binding field migrates without regeneration");
         Debug.Log("LIVING_CITIES_QUEST_LEDGER_SERIALIZATION_PASS: committed contracts, largest native-serializable UID, deaths and schemas 1-3.");
+    }
+    private static void VerifyWitnessRedirect()
+    {
+        var person=new AlarmPerson {HasPosition=true,BuildingKey=7,Reaction=CivilianReaction.Flee};
+        var route=CivilianEscape.Create(person,100,new List<GuardPoint3>{new GuardPoint3(),new GuardPoint3 {X=3}},
+            new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint {X=12}},3);
+        var redirected=route.RedirectExterior(124,new List<SavedRoutePoint>{new SavedRoutePoint {X=3},new SavedRoutePoint {X=3,Z=6}});
+        var json=SaveLoadManager.Serialize(typeof(CivilianEscape),redirected);
+        var restored=CivilianEscape.Copy((CivilianEscape)SaveLoadManager.Deserialize(typeof(CivilianEscape),json));
+        restored.Advance(person,136);
+        Require(Math.Abs(person.X-3)<.001 && Math.Abs(person.Z-3)<.001 && restored.ReportAt==148,
+            "Redirected witness retains position timing and speed through native serialization");
+        Debug.Log("LIVING_CITIES_WITNESS_REDIRECT_SAVE_PASS: native route redirect serialization.");
     }
     private static void VerifyLodging()
     {
@@ -371,25 +597,58 @@ public static class LivingCitiesBuild
         Require(restored.IsLodgingBedReserved(1,7,"bed:1",200,"traveler"),"Entire private room survives native serialization");
         Require(!restored.TryBookLodging(1,7,"traveler","visitor",2,false,1,200,300),"Paid player booking cannot be displaced");
         Require(restored.EarliestLodgingStart(1,7,1,200,86400)==864100,"Native booking checkout remains authoritative");
+        var occupant=restored.RegisterNativePerson(1,7,42,"Inn Occupant",ResidentSex.Male,1,0,182,0);
+        Require(restored.TryClaimLodgingBed(1,7,occupant.Id,"bed:0",864100),"Native occupant claims expired room");
+        json=SaveLoadManager.Serialize(typeof(WorldState),restored.Snapshot());
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+        Require(restored.NativeLodgingBed(occupant.Id)=="bed:0" && restored.IsLodgingBedReserved(1,7,"bed:1",864101,"player"),
+            "Native occupant bed and room exclusion survive serialization");
+        Require(restored.AvailableLodgingRoom(1,7,1,864101,864200)==null,"Native occupied room is not offered");
+        var expanded=restored.Snapshot().Lodgings[0].Rooms;
+        expanded.Add(new LodgingRoom {Id="staff",NonRentable=true,Beds=new List<string>{"staff-bed"}});
+        restored.RegisterLodging(1,7,expanded);
+        json=SaveLoadManager.Serialize(typeof(WorldState),restored.Snapshot());
+        restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+        Require(restored.Snapshot().Lodgings[0].Rooms.Find(r=>r.Id=="staff").NonRentable &&
+            restored.AvailableLodgingRoom(1,7,1,864101,864200)==null,"Non-rental bedroom survives native serialization without becoming available");
         var legacy=restored.Snapshot(); legacy.Version=7; legacy.Lodgings=null;
         restored.Restore(legacy); Require(restored.Snapshot().Lodgings.Count==0,"Schema seven gains empty lodging ledger");
         Debug.Log("LIVING_CITIES_LODGING_SAVE_PASS: native paid-room serialization, protected player interval and schema-seven migration.");
     }
     private static void VerifyTravelers()
     {
+        var precise=new WorldStateStore(42); precise.GetOrCreate(1,new int[0]);
+        precise.RegisterLodging(1,7,new[]{new LodgingRoom { Id="room",Beds=new List<string>{"bed"} }});
+        precise.RegisterTraveler(new TravelerPerson {Id="traveler:precise",Name="Calendar Guest",HomeSettlement=2,AppearanceSeed=12});
+        precise.RegisterTravelerVisit(new TravelerVisit {Id="precise-visit",PersonId="traveler:precise",SettlementId=1,TavernKey=7,Nights=2,
+            DesiredArrival=12597573702,CommuteSeconds=6990.40364950249,
+            Route=new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=30}}});
+        precise.AdvanceTravelerAdmissions(1,12597581000,8);
+        precise.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),precise.Snapshot())));
+        Require(precise.Snapshot().TravelerVisits[0].Admission==TravelerAdmission.Admitted,"Real-calendar fractional traveler paid booking round trip");
         var store=new WorldStateStore(42); store.GetOrCreate(1,new int[0]);
         store.RegisterLodging(1,7,new[] { new LodgingRoom { Id="room",Beds=new List<string> { "bed" } } });
         store.RegisterTraveler(new TravelerPerson { Id="traveler:test",Name="Travel Test",HomeSettlement=2,AppearanceSeed=12 });
         store.RegisterTravelerVisit(new TravelerVisit { Id="visit",PersonId="traveler:test",SettlementId=1,TavernKey=7,Nights=2,
             DesiredArrival=43200,CommuteSeconds=600,Route=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=30 } } });
         Require(store.TryAdmitTraveler("visit",43800),"Traveler admitted to paid room");
+        store.RegisterTraveler(new TravelerPerson { Id="traveler:witness",Name="Travel Witness",HomeSettlement=3,AppearanceSeed=13 });
+        store.RegisterTravelerVisit(new TravelerVisit { Id="witness-visit",PersonId="traveler:witness",SettlementId=1,TavernKey=7,Nights=2,
+            DesiredArrival=43200,CommuteSeconds=600,Route=new List<SavedRoutePoint> { new SavedRoutePoint(),new SavedRoutePoint { X=30 } } });
+        var incident=store.RecordViolence(1,"traveler:test",45000);
+        store.LocateViolence(incident.Id,-1,2,0,3);
+        Require(store.Witness(incident.Id,"traveler:witness",45000).DirectWitness,"Traveler witnesses native save fixture");
         store.KillTraveler("traveler:test",45000);
+        store.ConfirmCorpse(incident.Id,45000);
+        store.NoticeOutdoorCorpse(incident.Id,"traveler:witness",false,45001);
         string json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
         var restored=new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
-        Require(restored.Snapshot().Version==9 && !restored.Snapshot().Travelers[0].IsAlive &&
+        Require(restored.Snapshot().Version == new WorldState().Version && !restored.Snapshot().Travelers[0].IsAlive &&
             restored.Snapshot().TravelerVisits[0].Admission==TravelerAdmission.Admitted &&
             restored.IsLodgingBedReserved(1,7,"bed",50000,"player"),"Traveler native serialization preserves death and booking");
-        var old=restored.Snapshot(); old.Version=8; old.Travelers=null; old.TravelerVisits=null;
+        Require(restored.Snapshot().AlarmIncidents[0].Corpse.Discovery.ObserverId=="traveler:witness" &&
+            restored.Snapshot().AlarmIncidents[0].People[0].DirectWitness,"Traveler corpse and witness survive native serialization");
+        var old=restored.Snapshot(); old.Version=8; old.Travelers=null; old.TravelerVisits=null; old.AlarmIncidents.Clear();
         restored.Restore(old); Require(restored.Snapshot().Travelers.Count==0 && restored.Snapshot().TravelerVisits.Count==0,"Schema eight gains empty travelers");
         Debug.Log("LIVING_CITIES_TRAVELER_SAVE_PASS: native schema-nine traveler identity, visit, death, admission and room ownership.");
     }
@@ -521,7 +780,7 @@ public static class LivingCitiesBuild
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Recruitment and replacement lineage persist");
         var legacy = restored.Snapshot(); legacy.Version = 5; legacy.Garrisons = null;
         restored.Restore(legacy);
-        Require(restored.Snapshot().Version == 9 && restored.Snapshot().Garrisons.Count == 0 &&
+        Require(restored.Snapshot().Version == new WorldState().Version && restored.Snapshot().Garrisons.Count == 0 &&
             restored.Snapshot().Settlements.Count == 1, "Schema five garrison migration preserves residents");
         VerifyPatrolPairPlan();
         VerifyGuardPatrolRoster();
@@ -699,11 +958,18 @@ public static class LivingCitiesBuild
         store.DiscoverCrimeScene(alarm.Id, arrival);
         roster.Reports[0].Warning = new CrimeSceneWarning(); roster.Reports[0].Warning.Begin();
         roster.Reports[0].Warning.Advance(4, true, false);
-        Require(store.ObserveCorpses(99, -1, arrival).Count == 0, "Guard arrival clears confirmed corpse");
+        Require(store.ObserveCorpses(99, -1, arrival).Count == 1, "Guard arrival preserves corpse until inspection");
+        roster.EnterBuilding(guard.Id, 7, arrival, new GuardPoint3 { X=4, Y=6, Z=6 });
+        store.AdvanceCrimeSceneInspection(alarm.Id, guard.Id, 2, false, false, true, arrival+24);
         string json = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
         var restored = new WorldStateStore(0); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
         Require(json == SaveLoadManager.Serialize(typeof(WorldState), restored.Snapshot()), "Native scene chronology round trip");
-        Require(restored.Snapshot().AlarmIncidents[0].Corpse.Cleared, "Native cleared corpse persists");
+        Require(!restored.Snapshot().AlarmIncidents[0].Corpse.Cleared &&
+            restored.Snapshot().AlarmIncidents[0].Corpse.InspectionRemainingRealSeconds == 3 &&
+            restored.Snapshot().AlarmIncidents[0].Corpse.InspectionGuardId == guard.Id,
+            "Native inspection owner and remaining time persist");
+        restored.AdvanceCrimeSceneInspection(alarm.Id, guard.Id, 3, false, false, true, arrival+60);
+        Require(restored.Snapshot().AlarmIncidents[0].Corpse.Cleared, "Restored inspection completes cleanup");
         var body = restored.Snapshot().AlarmIncidents[0].Corpse;
         Require(body.HasPosition && body.BuildingKey == 7 && body.X == 4 && body.Y == 5 && body.Z == 6,
             "Native corpse retains actual death position independently of first assault");
@@ -926,7 +1192,7 @@ public static class LivingCitiesBuild
             new Func<BuildingSummary, bool?>(summary => {
                 Require(summary.buildingKey == 42, "Door hook preserves building identity");
                 calls++; return unlocked;
-            }) }))
+            }), new Func<int, string>(key => null) }))
         {
             var building = new BuildingSummary { buildingKey = 42 };
             Require(!player.BuildingIsUnlocked(building), "Absent household locks native door query");
@@ -1024,7 +1290,7 @@ public static class LivingCitiesBuild
             var adapter = go.AddComponent<LivingCitiesMod>();
             adapter.RestoreSaveData(adapter.NewSaveData());
             var saved = (WorldState)adapter.GetSaveData();
-            Require(saved.Version == 9 && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
+            Require(saved.Version == new WorldState().Version && saved.Settlements.Count == 0 && saved.Routines.Count == 0 && saved.QuestBindings.Count == 0, "New world state");
             bool rejected = false;
             try { adapter.RestoreSaveData(new WorldState { Version = 999 }); }
             catch (ArgumentException) { rejected = true; }

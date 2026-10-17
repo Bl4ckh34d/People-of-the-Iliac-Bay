@@ -1,0 +1,85 @@
+{
+  "batch": {
+    "name": "batch-23",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-23.png",
+    "items": [
+      {
+        "id": "mobile-389",
+        "archive": 389,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-389.png",
+        "aliases": []
+      },
+      {
+        "id": "mobile-390",
+        "archive": 390,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-390.png",
+        "aliases": []
+      },
+      {
+        "id": "mobile-392",
+        "archive": 392,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-392.png",
+        "aliases": []
+      },
+      {
+        "id": "mobile-393",
+        "archive": 393,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-393.png",
+        "aliases": []
+      },
+      {
+        "id": "mobile-451",
+        "archive": 451,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-451.png",
+        "aliases": []
+      },
+      {
+        "id": "mobile-452",
+        "archive": 452,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-452.png",
+        "aliases": []
+      },
+      {
+        "id": "mobile-385",
+        "archive": 385,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-385.png",
+        "aliases": []
+      },
+      {
+        "id": "mobile-386",
+        "archive": 386,
+        "record": 5,
+        "kind": "mobile",
+        "caption": "classic mobile appearance",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\mobile-386.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: mobile-389 (classic mobile appearance); 2: mobile-390 (classic mobile appearance); 3: mobile-392 (classic mobile appearance); 4: mobile-393 (classic mobile appearance); 5: mobile-451 (classic mobile appearance); 6: mobile-452 (classic mobile appearance); 7: mobile-385 (classic mobile appearance); 8: mobile-386 (classic mobile appearance). Preserve original facial hair, skin colour, hair and hoods. Do not confuse the sexes. ",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-ed223442-08b9-4200-a571-064118781eb9.png",
+  "status": "generated-awaiting-runtime-validation"
+}

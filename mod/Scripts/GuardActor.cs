@@ -122,7 +122,7 @@ namespace LivingCities.DFU
                 var facing=target-transform.position; facing.y=0;
                 if (facing.sqrMagnitude>0.00000001f) transform.forward=facing.normalized;
                 transform.position=target;
-                var refugeState=snapshot.Phase==RefugePhase.Sheltered ? MobileStates.Idle : MobileStates.Move;
+                var refugeState=snapshot.Phase==RefugePhase.Sheltered && (!guard.Refuge.WallDuty || guard.Refuge.RestBedRecord.HasValue) ? MobileStates.Idle : MobileStates.Move;
                 if (mobile.EnemyState!=refugeState) mobile.ChangeEnemyState(refugeState);
                 displayedAt=now; return;
             }
@@ -153,18 +153,31 @@ namespace LivingCities.DFU
             displayedAt = now;
         }
 
-        public void BeginCombat(double now)
+        public void SetInteriorPose(Vector3 position, Vector3 facing, bool moving)
+        {
+            facing.y = 0;
+            if (facing.sqrMagnitude > 0.0001f) transform.forward = facing.normalized;
+            transform.position = position;
+            var state = moving ? MobileStates.Move : MobileStates.Idle;
+            if (mobile.EnemyState != state) mobile.ChangeEnemyState(state);
+        }
+
+        public void BeginCombat(double now, SavedRoutePoint reportedSuspect = null)
         {
             if (DefenseTarget) EndCombat();
-            if (combatStart != null || CombatReady) return;
             var guard = roster.Guards.Find(g => g.Id == GuardId);
+            if(IsInterior && guard.Interior!=null && !guard.Interior.Returning)
+                roster.ObserveInterior(GuardId,Point(transform.parent.InverseTransformPoint(transform.position)),guard.HealthFraction,
+                    now,true,Point(transform.parent.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position)));
+            if (combatStart != null || CombatReady) return;
             if (IsInterior && guard.Interior != null && guard.Interior.LastSeenSuspect == null)
                 guard.Interior.LastSeenSuspect = Point(transform.parent.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position));
             if (guard.Duty != GuardDuty.Engaged)
             {
                 roster.Engage(GuardId, now);
                 var local = transform.parent.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position);
-                guard.LastSeenSuspect = new SavedRoutePoint { X = local.x, Z = local.z };
+                guard.LastSeenSuspect = reportedSuspect == null ? new SavedRoutePoint { X = local.x, Z = local.z } :
+                    new SavedRoutePoint { X = reportedSuspect.X, Z = reportedSuspect.Z };
             }
             combatStart = StartCoroutine(StartCombat());
         }

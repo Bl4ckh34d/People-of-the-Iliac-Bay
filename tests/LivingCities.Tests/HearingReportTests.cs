@@ -28,6 +28,20 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string,Action)> cases)
         {
+            cases.Add(("A hearer can report before route end and retain contact evidence through restore",()=>{
+                var store=Scene(out var alarm,out var person);
+                // The route continues beyond the guard, who can already hear the witness.
+                person.Escape.ExteriorRoute=new List<SavedRoutePoint>{new SavedRoutePoint{X=2},new SavedRoutePoint{X=-10}};
+                person.Escape=CivilianEscape.Copy(person.Escape);
+                double contact=person.Escape.ExitAt+2/2.8*12;
+                Check.True(!person.Escape.Arrived(contact));
+                Check.Equal(1,store.AdvanceEscapes(1,contact,true).Count);
+                Check.True(store.ReportHeardViolence(alarm.Id,person.ResidentId,contact));
+                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.True(restored.Snapshot().AlarmIncidents[0].Scene.Reported);
+                var invalid=restored.Snapshot(); invalid.AlarmIncidents[0].Scene.ReportGuardPosition.X+=5;
+                Check.Throws<ArgumentException>(()=>restored.Restore(invalid));
+            }));
             cases.Add(("Hearer must physically reach living posted guard before neutral report", () => {
                 var store = Scene(out var alarm, out var person);
                 Check.Equal(0, store.ObserveCrimeScenes(1, 7, 101).Count);
@@ -37,7 +51,7 @@ namespace LivingCities.Tests
                 Check.True(alarm.Scene.Reported && !alarm.Scene.PlayerLeft && !person.DirectWitness);
                 Check.True(!store.ReportHeardViolence(alarm.Id, person.ResidentId, person.Escape.ReportAt + 1));
             }));
-            cases.Add(("Reported indoor noise dispatches investigation before departure and cleans only on arrival", () => {
+            cases.Add(("Reported indoor noise dispatches investigation and clears only after corpse inspection", () => {
                 var store = Scene(out var alarm, out var person); double time = person.Escape.ReportAt;
                 store.AdvanceEscapes(1, time); store.ReportHeardViolence(alarm.Id, person.ResidentId, time);
                 Check.Equal(1, store.ObserveCrimeScenes(1, 7, time).Count);
@@ -47,7 +61,14 @@ namespace LivingCities.Tests
                 Check.Equal(1, store.ObserveCorpses(1, 7, time).Count);
                 double arrival = sent[0].ArrivesAt;
                 store.DiscoverCrimeScene(alarm.Id, arrival);
-                Check.Equal(0, store.ObserveCorpses(1, 7, arrival).Count);
+                Check.Equal(1, store.ObserveCorpses(1, 7, arrival).Count);
+                roster.EnterBuilding(sent[0].Id, 7, arrival, new GuardPoint3());
+                Check.Near(5, store.AdvanceCrimeSceneInspection(alarm.Id, sent[0].Id, 20, true, false, true, arrival + 1));
+                Check.Near(3, store.AdvanceCrimeSceneInspection(alarm.Id, sent[0].Id, 2, false, false, true, arrival + 2));
+                var saved = new WorldStateStore(0); saved.Restore(store.Snapshot());
+                Check.Near(3, saved.Snapshot().AlarmIncidents.Find(a => a.Id == alarm.Id).Corpse.InspectionRemainingRealSeconds);
+                Check.Near(0, store.AdvanceCrimeSceneInspection(alarm.Id, sent[0].Id, 3, false, false, true, arrival + 5));
+                Check.Equal(0, store.ObserveCorpses(1, 7, arrival + 5).Count);
                 Check.True(alarm.Scene.Occupied(arrival + 3599));
                 Check.True(!alarm.Scene.Occupied(arrival + 3600));
                 var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());

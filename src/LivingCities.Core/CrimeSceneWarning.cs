@@ -7,6 +7,7 @@ namespace LivingCities.Core
         public bool Issued;
         public double Remaining;
         public bool Violated { get { return Issued && Remaining <= 0; } }
+        public int DisplaySeconds { get { return !Issued || Remaining <= 0 ? 0 : (int)Math.Ceiling(Remaining); } }
         public bool Begin()
         {
             if (Issued) return false;

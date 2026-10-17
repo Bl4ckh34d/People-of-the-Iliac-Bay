@@ -1,0 +1,85 @@
+{
+  "batch": {
+    "name": "batch-15",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-15.png",
+    "items": [
+      {
+        "id": "flat-183-19",
+        "archive": 183,
+        "record": 19,
+        "kind": "flat",
+        "caption": "majestic orc",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-19.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-20",
+        "archive": 183,
+        "record": 20,
+        "kind": "flat",
+        "caption": "Dark Elf king",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-20.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-21",
+        "archive": 183,
+        "record": 21,
+        "kind": "flat",
+        "caption": "blonde queen",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-21.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-0",
+        "archive": 184,
+        "record": 0,
+        "kind": "flat",
+        "caption": "well-to-do merchant",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-0.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-1",
+        "archive": 184,
+        "record": 1,
+        "kind": "flat",
+        "caption": "woman in a cloak",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-1.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-2",
+        "archive": 184,
+        "record": 2,
+        "kind": "flat",
+        "caption": "man in a green robe",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-2.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-3",
+        "archive": 184,
+        "record": 3,
+        "kind": "flat",
+        "caption": "fat flutist",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-3.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-4",
+        "archive": 184,
+        "record": 4,
+        "kind": "flat",
+        "caption": "strapping young man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-4.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact identities per cell: 1: flat-183-19 (majestic orc); 2: flat-183-20 (Dark Elf king); 3: flat-183-21 (blonde queen); 4: flat-184-0 (well-to-do merchant); 5: flat-184-1 (woman in a cloak); 6: flat-184-2 (man in a green robe); 7: flat-184-3 (fat flutist); 8: flat-184-4 (strapping young man). Cell1 green-skinned Orc king with grey side hair; cell6 balding light-skinned elderly male scribe with grey side hair and grey beard, NOT brown full hair. Keep all eight source identities distinct.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-9ffc190b-d072-4ed0-9a29-11e63707574f.png",
+  "status": "generated-awaiting-runtime-validation"
+}

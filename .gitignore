@@ -4,3 +4,26 @@ work/
 dist/
 *.user
 
+# Machine-local credentials, editor state, and runtime output.
+.env
+.env.*
+!.env.example
+*.log
+.vs/
+.idea/
+__pycache__/
+*.pyc
+
+# Extracted original game references; regenerate from the user's own game data.
+art/standing/source/**/*.png
+art/standing/side-poses-*.png
+art/run/pilot-385/source/*.png
+art/dialogue/TALK01I0-source.png
+
+# External installations and downloads never belong in the source repository.
+*.dfmod
+*.gguf
+*.zip
+*.7z
+*.dmp
+

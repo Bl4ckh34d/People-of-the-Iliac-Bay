@@ -15,11 +15,14 @@ namespace LivingCities.Core
         public int DestinationKey = -1;
         public int OpenMinute, CloseMinute;
         public List<SavedRoutePoint> Route = new List<SavedRoutePoint>();
+        public ResidentDestination Itinerary;
+        public double ItineraryDepartureSeconds;
     }
     [Serializable]
     public sealed class TownRoutineState
     {
         public int SettlementId;
+        public int ItineraryVersion;
         public List<ResidentRoutine> Residents = new List<ResidentRoutine>();
     }
 }

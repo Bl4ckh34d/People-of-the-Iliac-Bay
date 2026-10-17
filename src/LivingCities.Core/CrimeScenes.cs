@@ -10,6 +10,7 @@ namespace LivingCities.Core
         public double LeftAt, DiscoveredAt;
         public bool Reported;
         public string ReporterId, ReportGuardId;
+        public SavedRoutePoint ReportGuardPosition;
         public double ReportedAt;
         public bool Occupied(double now) { return Discovered && now >= DiscoveredAt && now < DiscoveredAt + UnwitnessedScene.OccupationSeconds; }
     }
@@ -25,16 +26,16 @@ namespace LivingCities.Core
                 "Neutral report needs an unidentified hearing observer.");
             if (alarm.Scene.Reported || alarm.Scene.Discovered || !Active(alarm, now) ||
                 !AlarmResident(alarm.SettlementId, observerId).IsAlive || person.Escape == null ||
-                !person.Escape.Arrived(now)) return false;
+                now<person.Escape.ExitAt) return false;
             Require(person.Escape.BuildingKey == alarm.BuildingKey, "Hearer escaped another building.");
             var roster = state.Garrisons.Find(g => g.SettlementId == alarm.SettlementId);
             if (roster == null) return false;
             roster.Advance(now); person.Escape.Advance(person, now);
-            var guard = roster.Guards.Find(g => g.IsAlive && g.Duty == GuardDuty.Posted && g.Interior == null &&
-                Math.Abs(g.Post.X - person.X) < 0.5 && Math.Abs(g.Post.Z - person.Z) < 0.5);
-            if (guard == null) return false;
+            var contacts=roster.GuardsInReportingRange(new SavedRoutePoint{X=person.X,Z=person.Z},now);
+            if (contacts.Count==0) return false;
             alarm.Scene.Reported = true; alarm.Scene.ReporterId = observerId;
-            alarm.Scene.ReportGuardId = guard.Id; alarm.Scene.ReportedAt = now;
+            alarm.Scene.ReportGuardId = contacts[0]; alarm.Scene.ReportedAt = now;
+            alarm.Scene.ReportGuardPosition=roster.Position(contacts[0],now);
             return true;
         }
         public void RegisterUnwitnessedScene(string incidentId)
@@ -77,6 +78,15 @@ namespace LivingCities.Core
                 report.HasArrival && report.FirstArrivalAt >= SceneReadyAt(scene) && report.FirstArrivalAt <= now,
                 "No investigation guard has reached this scene.");
             scene.Discovered = true; scene.DiscoveredAt = report.FirstArrivalAt;
+            if (alarm.Corpse != null && alarm.Corpse.InspectionGuardId == null)
+            {
+                string inspector = null;
+                foreach (var arrival in report.Arrivals)
+                    if (arrival.Arrived && arrival.ScheduledAt == report.FirstArrivalAt &&
+                        (inspector == null || string.CompareOrdinal(arrival.GuardId, inspector) < 0)) inspector = arrival.GuardId;
+                Require(inspector != null, "Scene arrival has no living investigator.");
+                alarm.Corpse.InspectionGuardId = inspector;
+            }
         }
         private static bool VictimOwnsScene(CivilianIncident alarm, Resident victim, WorldState world)
         {
@@ -92,7 +102,7 @@ namespace LivingCities.Core
             if (scene == null) return null;
             Require(!victim.IsAlive && alarm.HasLocation && alarm.BuildingKey >= 0 &&
                 (VictimOwnsScene(alarm, victim, world) || alarm.People.Exists(p => p != null && p.HeardViolence)) &&
-                alarm.People.TrueForAll(p => p != null && p.HeardViolence),
+                alarm.People.TrueForAll(p => p != null && (p.HeardViolence || p.CorpseObserver)),
                 "Invalid unwitnessed scene ownership.");
             Require(ValidTime(scene.ReportedAt), "Invalid hearing report time.");
             if (scene.Reported)
@@ -102,22 +112,37 @@ namespace LivingCities.Core
                 var roster = world.Garrisons == null ? null : world.Garrisons.Find(g => g != null && g.SettlementId == alarm.SettlementId);
                 var guard = roster == null || roster.Guards == null ? null : roster.Guards.Find(g => g != null && g.Id == scene.ReportGuardId);
                 Require(reporter != null && reporter.HeardViolence && escape != null &&
-                    escape.BuildingKey == alarm.BuildingKey && escape.Arrived(scene.ReportedAt + 0.001) &&
+                    escape.BuildingKey == alarm.BuildingKey && scene.ReportedAt+0.001>=escape.ExitAt &&
                     scene.ReportedAt >= alarm.StartedAt && scene.ReportedAt < CivilianAlarms.ActiveUntil(alarm) &&
                     guard != null && (guard.IsAlive || guard.DiedAt >= scene.ReportedAt),
                     "Invalid saved physical hearing report.");
-                var endpoint = escape.ExteriorRoute[escape.ExteriorRoute.Count - 1];
-                Require(Math.Abs(endpoint.X - guard.Post.X) < 0.5 && Math.Abs(endpoint.Z - guard.Post.Z) < 0.5,
-                    "Hearing report has no matching guard contact.");
+                if(scene.ReportGuardPosition!=null)
+                {
+                    var contact=scene.ReportGuardPosition;
+                    var atReport=new AlarmPerson(); escape.Advance(atReport,scene.ReportedAt);
+                    double dx=contact.X-atReport.X,dz=contact.Z-atReport.Z;
+                    Require(!double.IsNaN(dx) && !double.IsInfinity(dx) && !double.IsNaN(dz) && !double.IsInfinity(dz) &&
+                        dx*dx+dz*dz<=0.75*0.75+0.001,"Invalid saved guard contact position.");
+                }
+                else
+                {
+                    var endpoint=escape.ExteriorRoute[escape.ExteriorRoute.Count-1];
+                    Require(escape.Arrived(scene.ReportedAt+0.001) && Math.Abs(endpoint.X-guard.Post.X)<0.5 && Math.Abs(endpoint.Z-guard.Post.Z)<0.5,
+                        "Hearing report has no matching guard contact.");
+                }
             }
-            else Require(scene.ReporterId == null && scene.ReportGuardId == null && scene.ReportedAt == 0,
+            else Require(scene.ReporterId == null && scene.ReportGuardId == null && scene.ReportedAt == 0 && scene.ReportGuardPosition==null,
                 "Unreported scene has invented contact.");
             Require(ValidTime(scene.LeftAt) && ValidTime(scene.DiscoveredAt) && ValidTime(scene.DiscoveredAt + UnwitnessedScene.OccupationSeconds) &&
                 (scene.PlayerLeft ? scene.LeftAt >= alarm.StartedAt : scene.LeftAt == 0) &&
                 (scene.Discovered ? (scene.PlayerLeft || scene.Reported) && scene.DiscoveredAt >= SceneReadyAt(scene) : scene.DiscoveredAt == 0),
                 "Invalid scene chronology.");
+            if (alarm.Corpse != null && alarm.Corpse.InspectionGuardId != null)
+                Require(scene.Discovered || InspectionReport(alarm,world,alarm.Corpse.InspectionGuardId)!=null,
+                    "Undiscovered scene has a corpse inspector without an arrived report.");
             return new UnwitnessedScene { PlayerLeft = scene.PlayerLeft, LeftAt = scene.LeftAt,
                 Reported = scene.Reported, ReporterId = scene.ReporterId, ReportGuardId = scene.ReportGuardId, ReportedAt = scene.ReportedAt,
+                ReportGuardPosition=scene.ReportGuardPosition==null ? null : new SavedRoutePoint{X=scene.ReportGuardPosition.X,Z=scene.ReportGuardPosition.Z},
                 Discovered = scene.Discovered, DiscoveredAt = scene.DiscoveredAt };
         }
     }

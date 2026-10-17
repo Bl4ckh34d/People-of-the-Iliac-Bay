@@ -1,0 +1,85 @@
+{
+  "batch": {
+    "name": "batch-17",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-17.png",
+    "items": [
+      {
+        "id": "flat-184-13",
+        "archive": 184,
+        "record": 13,
+        "kind": "flat",
+        "caption": "naked blonde",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-13.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-14",
+        "archive": 184,
+        "record": 14,
+        "kind": "flat",
+        "caption": "naked brunette",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-14.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-15",
+        "archive": 184,
+        "record": 15,
+        "kind": "flat",
+        "caption": "ragged young boy",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-15.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-16",
+        "archive": 184,
+        "record": 16,
+        "kind": "flat",
+        "caption": "chubby old man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-16.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-17",
+        "archive": 184,
+        "record": 17,
+        "kind": "flat",
+        "caption": "brawny peasant",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-17.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-18",
+        "archive": 184,
+        "record": 18,
+        "kind": "flat",
+        "caption": "tough she-devil",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-18.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-19",
+        "archive": 184,
+        "record": 19,
+        "kind": "flat",
+        "caption": "attractive blonde",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-19.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-20",
+        "archive": 184,
+        "record": 20,
+        "kind": "flat",
+        "caption": "man in purple",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-20.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-184-13 (naked blonde); 2: flat-184-14 (naked brunette); 3: flat-184-15 (ragged young boy); 4: flat-184-16 (chubby old man); 5: flat-184-17 (brawny peasant); 6: flat-184-18 (tough she-devil); 7: flat-184-19 (attractive blonde); 8: flat-184-20 (man in purple). All outputs fully covered, only faces and close-fitting headgear visible. Preserve skin colour and original hair, beard and age; no beard on clean-shaven faces.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-3d169784-a512-43ff-8120-cb45ecbdea59.png",
+  "status": "generated-awaiting-runtime-validation"
+}

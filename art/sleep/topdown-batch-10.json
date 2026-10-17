@@ -1,0 +1,91 @@
+{
+  "batch": {
+    "name": "batch-10",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-10.png",
+    "items": [
+      {
+        "id": "flat-182-38",
+        "archive": 182,
+        "record": 38,
+        "kind": "flat",
+        "caption": "little girl",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-38.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-39",
+        "archive": 182,
+        "record": 39,
+        "kind": "flat",
+        "caption": "street sweeper",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-39.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-40",
+        "archive": 182,
+        "record": 40,
+        "kind": "flat",
+        "caption": "wise-looking man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-40.png",
+        "aliases": [
+          "flat-346-14"
+        ]
+      },
+      {
+        "id": "flat-182-41",
+        "archive": 182,
+        "record": 41,
+        "kind": "flat",
+        "caption": "remarkable woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-41.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-42",
+        "archive": 182,
+        "record": 42,
+        "kind": "flat",
+        "caption": "page boy",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-42.png",
+        "aliases": [
+          "flat-334-9"
+        ]
+      },
+      {
+        "id": "flat-182-43",
+        "archive": 182,
+        "record": 43,
+        "kind": "flat",
+        "caption": "little boy",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-43.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-44",
+        "archive": 182,
+        "record": 44,
+        "kind": "flat",
+        "caption": "old crone",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-44.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-45",
+        "archive": 182,
+        "record": 45,
+        "kind": "flat",
+        "caption": "adventuresome woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-45.png",
+        "aliases": [
+          "flat-334-10"
+        ]
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-182-38 (little girl); 2: flat-182-39 (street sweeper); 3: flat-182-40 (wise-looking man); 4: flat-182-41 (remarkable woman); 5: flat-182-42 (page boy); 6: flat-182-43 (little boy); 7: flat-182-44 (old crone); 8: flat-182-45 (adventuresome woman). Study each face in the source carefully. Preserve baldness, grey vs brown vs blond hair and actual facial hair. No extra facial hair on clean-shaven faces.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-6f9c5a06-d933-403a-abd7-78781a68c738.png",
+  "status": "generated-awaiting-runtime-validation"
+}

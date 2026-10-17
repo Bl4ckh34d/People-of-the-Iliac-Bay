@@ -1,5 +1,13 @@
 # Daggerfall nightlife and the Lysandus haunting
 
+## 16 October: quest-owned dawn expiry
+
+Stock `S0000977.txt` stops its spawn task during 05:00–19:00, but does not explicitly hide or destroy existing foes. `Task.Clear()` only clears the triggered flag. Correction to the initial investigation: native scene-cache serialization contains doors and loot, not enemies. Existing exterior enemies remain alive under the disabled exterior parent while the player is indoors. These native sources are unchanged; Living Cities' enemy-defense dictionary only holds actor references. The native probe reproduced a genuinely quest-owned ghost surviving dawn (`work/HauntingDawn-red-native.log`). The old city fixture lacks an active haunting quest, so the probe starts the stock quest in its disposable session without rewriting the fixture.
+
+`HauntingLifetime` now tracks only S0000977-owned Ghost/Wraith actors and expires them at their next 05:00 boundary or curse resolution. Despawn avoids damage, death and loot events. It watches spawn/load/exterior transitions and includes inactive exterior actors. A reviewer found that destroying an unplaced native spawn could invalidate CreateFoe's pending array; a failing native regression reproduced that edge. The adapter now retains pending inactive-self actors until placement and uses OnEnable to suppress expired activation synchronously. Existing hidden exterior actors have activeSelf=true and still expire indoors.
+
+Unity build and `TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -HauntingDawnProbe` pass: outdoor dawn, inactive exterior expiry while inside an inn, unrelated ghost preservation, and delayed placement across dawn (`work/HauntingPending-green-build.log`, `work/HauntingPending-green-native.log`). Actual disk reload and curse-resolution regression remain to be added. No engine or quest script changes were made.
+
 ## Settlement coverage and live regional verification (0.3.31)
 
 StreetPopulation and GuardPopulation now admit native city/town/village categories0/1/2 rather than two named map IDs. Unsupported location types retain native behavior; the Daggerfall-specific test isolation remains internal.269/269 core tests pass. `TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -RegionalProbe` passes with470 schedules/38 guards in Berbaaqnia and435 schedules/35 guards in Bubogureg. Each city validates every generated name/race and constructs two adult actors to check race, gender, identity and billboard asset. This is not a visual portrait audit or continuous movement acceptance for all layouts.

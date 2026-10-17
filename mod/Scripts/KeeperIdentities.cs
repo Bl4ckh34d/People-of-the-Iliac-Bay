@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -63,6 +64,14 @@ namespace LivingCities.DFU
         }
         private bool KeeperSleeping(NativePerson person, double now)
         {
+            if(worldStore.NativeLodgingBed(person.Id)!=null)
+            {
+                uint seed=StableSeed.Combine(0,(uint)person.SettlementId,(uint)person.WorkKey,unchecked((uint)person.NativeHash));
+                int wake=Mathf.Clamp(wakeHour*60+(int)(seed%31)-15,0,1439);
+                int sleep=Mathf.Clamp(sleepHour*60+(int)((seed>>8)%31)-15,0,1439);
+                double minute=now%86400/60;
+                return (minute<wake || minute>=sleep) && (!ReactionsEnabled || worldStore.NativeResponse(person.Id)==null);
+            }
             var schedule = KeeperSchedule(person);
             return schedule != null && schedule.EvaluateSeconds(now).Activity == Activity.Sleep &&
                 (!ReactionsEnabled || worldStore.NativeResponse(person.Id) == null);
@@ -70,7 +79,7 @@ namespace LivingCities.DFU
         private void UpdateKeeperSleep(StaticNPC npc, NativePerson person, double now, bool alarmed)
         {
             var pose = npc.GetComponent<SleepingPose>();
-            var art = SleepEnabled && !alarmed && person.IsAlive && person.HomeKey == person.WorkKey &&
+            var art = SleepEnabled && !alarmed && person.IsAlive &&
                 KeeperSleeping(person, now) && sleepingArt != null ? sleepingArt.ForNative(person) : null;
             if (art == null)
             {
@@ -88,6 +97,18 @@ namespace LivingCities.DFU
                 }
                 else if (pose) pose.Wake();
                 return;
+            }
+            string innBed=worldStore.NativeLodgingBed(person.Id);
+            if(innBed!=null)
+            {
+                if(indoorBeds.Count==0) foreach(var bed in BedGeometry.Read(interior)) indoorBeds.Add(bed.RecordIndex,bed);
+                foreach(var bed in indoorBeds.Values)
+                    if(innBed=="bed:"+bed.RecordIndex)
+                    {
+                        if(!pose) pose=npc.gameObject.AddComponent<SleepingPose>();
+                        pose.BeginNative(interior.transform,bed,art); return;
+                    }
+                if(pose) pose.Wake(); return;
             }
             var records = new List<int>(indoorBeds.Keys); records.Sort();
             if (person.BedSlot < 0 || person.BedSlot >= records.Count) { if (pose) pose.Wake(); return; }
@@ -155,12 +176,18 @@ namespace LivingCities.DFU
                 KeeperView view;
                 if (keeperViews.TryGetValue(keeper.Id, out view)) view.WasActive = false;
                 worldStore.ConfirmCorpse(alarm.Id, now, building, local.x, local.y, local.z);
+                worldStore.MarkPlayerMurder(alarm.Id);
+                SpreadInnAlarm(alarm, now);
                 var guards = GetComponent<GuardPopulation>();
                 var player = GameManager.Instance.PlayerEntity;
                 player.TallyCrimeGuildRequirements(false, 5);
                 bool concealed = !alarm.People.Exists(p => p.DirectWitness) && guards && guards.OwnsSettlement;
                 if (concealed) worldStore.RegisterUnwitnessedScene(alarm.Id);
-                else player.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
+                else
+                {
+                    player.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
+                    worldStore.MarkMurderAccusationIssued(alarm.Id);
+                }
                 PrepareIndoorEscapes(now);
                 // Finite guards learn through the existing physical witness/discovery
                 // pipeline. Explicitly disabled finite guards retain native reporting.
@@ -172,7 +199,7 @@ namespace LivingCities.DFU
         {
             if (!ReactionsEnabled || !interior || alarm == null) return;
             SurveyKeeperIdentities();
-            foreach (var npc in interior.GetComponentsInChildren<StaticNPC>())
+            foreach (var npc in interior.GetComponentsInChildren<StaticNPC>(true))
             {
                 var person = KeeperPerson(npc);
                 if (person == null || !person.IsAlive) continue;
@@ -185,6 +212,41 @@ namespace LivingCities.DFU
                 var local = interior.transform.InverseTransformPoint(pose && pose.Active ? npc.transform.position : npc.transform.position - offset);
                 witness.HasPosition = true; witness.BuildingKey = interior.EntryDoor.buildingKey;
                 witness.X = local.x; witness.Y = local.y; witness.Z = local.z;
+            }
+        }
+        private void SpreadInnAlarm(CivilianIncident alarm, double now)
+        {
+            if (alarm == null || !interior || !directory || worldStore == null || population == null) return;
+            BuildingSummary summary;
+            int building = interior.EntryDoor.buildingKey;
+            if (alarm.ThreatId != null || alarm.VictimId == null || alarm.Corpse == null || alarm.BuildingKey != building ||
+                !directory.GetBuildingSummary(building, out summary) || summary.BuildingType != DFLocation.BuildingTypes.Tavern ||
+                !alarm.People.Exists(p => p.DirectWitness || p.HeardViolence)) return;
+
+            foreach (var actor in actors.Values)
+            {
+                if (!actor || !actor.Resident.IsAlive || actor.Resident.Id == alarm.VictimId ||
+                    !actor.gameObject.activeInHierarchy || actor.transform.parent != interior.transform) continue;
+                var person = worldStore.AlertInnOccupant(alarm.Id, actor.Resident.Id, building, now);
+                if (person == null || person.Escape != null) continue;
+                var ground = actor.IsSleeping ? actor.transform.position : actor.transform.position - Vector3.up;
+                var local = interior.transform.InverseTransformPoint(ground);
+                person.HasPosition = true; person.BuildingKey = building;
+                person.X = local.x; person.Y = local.y; person.Z = local.z;
+            }
+            foreach (var npc in interior.GetComponentsInChildren<StaticNPC>(true))
+            {
+                var native = KeeperPerson(npc);
+                if (native == null || !native.IsAlive || native.Id == alarm.VictimId || !npc.gameObject.activeInHierarchy) continue;
+                var person = worldStore.AlertInnOccupant(alarm.Id, native.Id, building, now);
+                if (person == null || person.Escape != null) continue;
+                var billboard = npc.GetComponent<DaggerfallBillboard>();
+                var pose = npc.GetComponent<SleepingPose>();
+                Vector3 ground = pose && pose.Active ? npc.transform.position :
+                    npc.transform.position - Vector3.up * (billboard ? billboard.Summary.Size.y * 0.5f : 1);
+                var local = interior.transform.InverseTransformPoint(ground);
+                person.HasPosition = true; person.BuildingKey = building;
+                person.X = local.x; person.Y = local.y; person.Z = local.z;
             }
         }
         private void UpdateKeeperResponses(double now)
@@ -212,6 +274,7 @@ namespace LivingCities.DFU
                 }
                 var alarm = ReactionsEnabled ? worldStore.NativeResponse(person.Id) : null;
                 if (alarm != null && GameManager.Instance.PlayerEntity.CrimeCommitted == DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None &&
+                    !worldStore.HasPersistentMurderFear(person.Id) &&
                     worldStore.ClearNativeResponse(person.Id, now)) alarm = null;
                 if (alarm == null)
                 {
@@ -277,19 +340,24 @@ namespace LivingCities.DFU
                 }
             }
             nextKeeperSurvey = Time.unscaledTime + 1;
-            if (keeperHome == null) return;
             var keepers = new List<NativePerson>();
             foreach (var npc in interior.GetComponentsInChildren<StaticNPC>(true))
             {
                 var data = npc.Data;
-                if (data.context != StaticNPC.Context.Building || data.buildingKey != keeperHome.BuildingKey || npc.IsChildNPC ||
+                if (data.context != StaticNPC.Context.Building || data.buildingKey != interior.EntryDoor.buildingKey ||
+                    replacedHouseFlats.ContainsKey(npc.gameObject) ||
                     npc.GetComponent<QuestResourceBehaviour>() || npc.GetComponent<DaggerfallAction>()) continue;
                 FactionFile.FactionData faction;
-                if (!GameManager.Instance.PlayerEntity.FactionData.GetFactionData(data.factionID, out faction) ||
-                    faction.type == (int)FactionFile.FactionTypes.Individual || faction.sgroup != (int)FactionFile.SocialGroups.Merchants) continue;
-                var keeper = worldStore.RegisterNativePerson(population.SettlementId, keeperHome.BuildingKey, data.hash, npc.DisplayName,
+                bool found=GameManager.Instance.PlayerEntity.FactionData.GetFactionData(data.factionID,out faction);
+                if(found && faction.type==(int)FactionFile.FactionTypes.Individual) continue;
+                bool merchant=keeperHome!=null && !npc.IsChildNPC && found && faction.sgroup==(int)FactionFile.SocialGroups.Merchants;
+                // Every ordinary interior flat needs death/awareness ownership, even
+                // guild staff, innkeepers and factionless people outside shops.
+                // Only actual shop merchants participate in shop household allocation.
+                var keeper = worldStore.RegisterNativePerson(population.SettlementId, data.buildingKey, data.hash, npc.DisplayName,
                     data.gender == DaggerfallWorkshop.Game.Entity.Genders.Female ? ResidentSex.Female : ResidentSex.Male,
                     (int)data.race, data.factionID, data.billboardArchiveIndex, data.billboardRecordIndex);
+                if(!merchant) continue;
                 if (keeper.HomeKey < 0 && worldStore.AssignNativeBed(keeper.Id, keeperHome, keeperHomes))
                     Debug.Log("LIVING_CITIES_KEEPER_HOME: " + keeper.Id + "; " + keeper.Name + "; home=" + keeper.HomeKey + "; bed=" + keeper.BedSlot);
                 keepers.Add(keeper);

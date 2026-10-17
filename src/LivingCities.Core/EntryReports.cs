@@ -51,7 +51,8 @@ namespace LivingCities.Core
             Require(report.CitizenWitnesses != null && report.InformedGuards != null, "Missing entry witnesses.");
             var ids = new HashSet<string>();
             foreach (string id in report.CitizenWitnesses)
-                Require(id != null && ids.Add(id) && town.Households.Exists(h => h.Residents.Exists(r => r.Id == id && (!living || r.IsAlive))),
+                Require(id != null && ids.Add(id) && (town.Households.Exists(h => h.Residents.Exists(r => r.Id == id && (!living || r.IsAlive))) ||
+                    ValidVisitingEntryWitness(world,report,id,living)),
                     "Unknown, duplicate or dead entry witness.");
             ids.Clear();
             var roster = world.Garrisons.Find(g => g.SettlementId == report.SettlementId);
@@ -65,6 +66,21 @@ namespace LivingCities.Core
                     // can relocate later; delivery checks the current post.
                     roster != null && roster.Guards.Exists(g => g.Id == messenger.GuardId) &&
                     (!messenger.Delivered || report.InformedGuards.Contains(messenger.GuardId)), "Invalid entry messenger references.");
+        }
+        private static bool ValidVisitingEntryWitness(WorldState world,EntryReport report,string id,bool living)
+        {
+            foreach(var origin in world.Settlements)
+            {
+                var resident=TripResident(world,origin.SettlementId,id);
+                if(resident==null) continue;
+                if(!living) return true; // Historical evidence outlives the latest trip.
+                if(!resident.IsAlive || world.ResidentTrips==null) return false;
+                var trip=world.ResidentTrips.Find(t=>t.ResidentId==id && t.VisitsSettlement(report.SettlementId));
+                if(trip==null) return false;
+                var presence=trip.Evaluate(report.EnteredAt);
+                return presence.Phase==ResidentTripPhase.Visiting && presence.SettlementId==report.SettlementId;
+            }
+            return false;
         }
         private static List<EntryReport> CopyEntries(WorldState world)
         {

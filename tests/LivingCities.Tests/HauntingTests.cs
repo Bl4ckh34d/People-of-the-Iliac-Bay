@@ -65,6 +65,100 @@ namespace LivingCities.Tests
                 var position=CrowdSteering.Move(new GuardPoint3(),new GuardPoint3 { X=1 },new GuardPoint3[0],0.6,0.1,p=>false);
                 Check.Equal(0d,position.X); Check.Equal(0d,position.Z);
             }));
+            cases.Add(("Crowd steering recovers initial overlap only while separation increases",()=>{
+                var from=new GuardPoint3();
+                var neighbour=new GuardPoint3 { X=0.51 };
+                var away=CrowdSteering.Move(from,new GuardPoint3 { X=-1 },new[] { neighbour },0.52,0.1,p=>true);
+                Check.True(away.X<from.X);
+                Check.True(Math.Abs(away.X-neighbour.X)>Math.Abs(from.X-neighbour.X));
+                var toward=CrowdSteering.Move(from,new GuardPoint3 { X=1 },new[] { neighbour },0.52,0.1,
+                    p=>Math.Abs(p.Z)<0.000001);
+                Check.Equal(0d,toward.X);
+                Check.Equal(0d,toward.Z);
+            }));
+            cases.Add(("Crowd steering overlap recovery cannot cross another neighbor",()=>{
+                var position=CrowdSteering.Move(new GuardPoint3(),new GuardPoint3 { X=-1 },
+                    new[] { new GuardPoint3 { X=0.4 },new GuardPoint3 { X=-0.6 } },0.52,1,
+                    p=>Math.Abs(p.Z)<0.000001);
+                Check.Equal(0d,position.X);
+                Check.Equal(0d,position.Z);
+            }));
+            cases.Add(("Crowd comfort steering deflects before hard separation is threatened",()=>{
+                int side=0;
+                var position=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=10 },
+                    new[] { new GuardPoint3 { X=1.4 } },0.52,1.1,1.8,0.1,ref side,p=>true);
+                Check.True(position.X>0);
+                Check.True(position.Z>0);
+                Check.Equal(1,side);
+            }));
+            cases.Add(("Crowd comfort steering falls back to hard separation beside a wall",()=>{
+                int side=0;
+                var position=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=10 },
+                    new[] { new GuardPoint3 { X=1.4 } },0.52,1.1,1.8,0.1,ref side,p=>Math.Abs(p.Z)<0.000001);
+                Check.Near(0.1,position.X);
+                Check.Near(0,position.Z);
+            }));
+            cases.Add(("Crowd comfort steering ignores neighbors behind and on other floors",()=>{
+                int side=0;
+                var behind=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=1 },
+                    new[] { new GuardPoint3 { X=-0.8 } },0.52,1.1,1.8,0.1,ref side,p=>true);
+                Check.Near(0.1,behind.X); Check.Near(0,behind.Z);
+                var otherFloor=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=1 },
+                    new[] { new GuardPoint3 { X=0.8,Y=3 } },0.52,1.1,1.8,0.1,ref side,p=>true);
+                Check.Near(0.1,otherFloor.X); Check.Near(0,otherFloor.Z);
+            }));
+            cases.Add(("Crowd comfort steering retains its passing side while the conflict shifts",()=>{
+                int side=0;
+                var first=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=10 },
+                    new[] { new GuardPoint3 { X=1.4,Z=-0.1 } },0.52,1.1,1.8,0.1,ref side,p=>true);
+                var second=CrowdSteering.MoveComfort(new GuardPoint3 { X=0.1,Z=first.Z },new GuardPoint3 { X=10 },
+                    new[] { new GuardPoint3 { X=1.3,Z=0.1 } },0.52,1.1,1.8,0.1,ref side,p=>true);
+                Check.True(first.Z>0); Check.True(second.Z>0); Check.Equal(1,side);
+            }));
+            cases.Add(("Crowd comfort steering keeps sloped 3D steps within the frame limit",()=>{
+                int side=0;
+                var position=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=10,Y=10 },
+                    new[] { new GuardPoint3 { X=1.4,Y=1.4 } },0.52,1.1,1.8,0.1,ref side,p=>true);
+                double moved=Math.Sqrt(position.X*position.X+position.Y*position.Y+position.Z*position.Z);
+                Check.True(moved<=0.1+0.000001);
+            }));
+            cases.Add(("Crowd comfort steering ignores neighbors beyond the intended endpoint",()=>{
+                int side=0;
+                var position=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=1 },
+                    new[] { new GuardPoint3 { X=2 } },0.52,1.1,2.5,0.1,ref side,p=>true);
+                Check.Near(0.1,position.X); Check.Near(0,position.Z); Check.Equal(0,side);
+            }));
+            cases.Add(("Crowd comfort steering anticipates beyond a short continuing waypoint",()=>{
+                int side=0;
+                var position=CrowdSteering.MoveComfort(new GuardPoint3(),new GuardPoint3 { X=0.1 },
+                    new[] { new GuardPoint3 { X=1.5 } },0.52,1.1,1.8,0.1,ref side,p=>true,true);
+                double moved=Math.Sqrt(position.X*position.X+position.Y*position.Y+position.Z*position.Z);
+                Check.True(position.Z>0);
+                Check.True(moved<=0.1+0.000001);
+            }));
+            cases.Add(("Interpolated crowd targets preserve the walking comfort distance",()=>{
+                var a=new GuardPoint3 { X=-3 };
+                var b=new GuardPoint3 { X=3 };
+                int sideA=0,sideB=0;
+                double offsetA=0,offsetB=0;
+                double minimum=6;
+                string closest="";
+                const double dt=0.1,scheduledSpeed=1.3;
+                for(int frame=1;frame<=60;frame++)
+                {
+                    double elapsed=frame*dt,step=scheduledSpeed*dt;
+                    var targetA=new GuardPoint3 { X=-3+scheduledSpeed*elapsed };
+                    var targetB=new GuardPoint3 { X=3-scheduledSpeed*elapsed };
+                    a=CrowdSteering.MoveComfort(a,targetA,new[] { b },0.52,1.1,1.8,step,ref sideA,ref offsetA,
+                        new GuardPoint3 { X=1 },p=>true,true);
+                    b=CrowdSteering.MoveComfort(b,targetB,new[] { a },0.52,1.1,1.8,step,ref sideB,ref offsetB,
+                        new GuardPoint3 { X=-1 },p=>true,true);
+                    double dx=a.X-b.X,dz=a.Z-b.Z;
+                    double distance=Math.Sqrt(dx*dx+dz*dz);
+                    if(distance<minimum) { minimum=distance; closest=frame+" A="+a.X+","+a.Z+" B="+b.X+","+b.Z+" sides="+sideA+","+sideB; }
+                }
+                Check.True(minimum>=1.0,"Minimum center distance was "+minimum+" at "+closest);
+            }));
             cases.Add(("Visit windows retain exact arrival and departure across calendar days",()=>{
                 var schedule=DailySchedule.DayVisit(1,2,new[] { new RoutePoint(0,0),new RoutePoint(10,0) },540,1080,30,1,12,0,360,1320);
                 double start,end;
@@ -87,16 +181,61 @@ namespace LivingCities.Tests
                     new List<GuardPoint3> { new GuardPoint3 { X=20 },new GuardPoint3 { X=30 } },
                     new List<GuardPoint3> { new GuardPoint3 { X=30 },new GuardPoint3() } };
                 var journey=ShopVisitJourney.Create(100,460,routes,1,1);
+                var patron=ShopVisitJourney.Create(100,460,routes,1,1,true,0,true);
+                Check.Equal(ShopVisitPhase.Haggling,patron.Evaluate(111).Phase);
+                Check.Equal(ShopVisitPhase.Browsing,patron.Evaluate(140).Phase);
+                Check.Equal(ShopVisitPhase.Leaving,patron.Evaluate(445).Phase);
+                var occupancy=new List<ShopOccupancy>(journey.Occupancies());
+                Check.Equal(3,occupancy.Count);Check.Near(110,occupancy[0].Start);
+                foreach(var occupied in occupancy)
+                {
+                    var sample=journey.Evaluate((occupied.Start+occupied.End)/2);
+                    Check.True(sample.Phase==ShopVisitPhase.Browsing || sample.Phase==ShopVisitPhase.Haggling);
+                    Check.Near(occupied.Position.X,sample.Position.X);
+                }
                 Check.Equal(ShopVisitPhase.Walking,journey.Evaluate(105).Phase);
                 Check.Equal(5d,journey.Evaluate(105).Position.X);
                 Check.Equal(ShopVisitPhase.Browsing,journey.Evaluate(115).Phase);
-                Check.Equal(ShopVisitPhase.Haggling,journey.Evaluate(420).Phase);
+                Check.Equal(ShopVisitPhase.Haggling,journey.Evaluate(428).Phase);
                 Check.Equal(ShopVisitPhase.Leaving,journey.Evaluate(445).Phase);
                 Check.Equal(15d,journey.Evaluate(445).Position.X);
                 Check.Equal(ShopVisitPhase.Complete,journey.Evaluate(460).Phase);
                 Check.Equal(journey.Evaluate(445).Position.X,ShopVisitJourney.Create(100,460,routes,1,1).Evaluate(445).Position.X);
                 routes[0][1].X=999;
                 Check.Equal(10d,journey.Evaluate(115).Position.X);
+            }));
+            cases.Add(("Shop visits allow several browsing stops and a short counter interaction",()=>{
+                var routes=new List<List<GuardPoint3>>();
+                for(int i=0;i<5;i++) routes.Add(new List<GuardPoint3> { new GuardPoint3 { X=i },new GuardPoint3 { X=i+1 } });
+                routes.Add(new List<GuardPoint3> { new GuardPoint3 { X=5 },new GuardPoint3() });
+                var journey=ShopVisitJourney.Create(0,1200,routes,1,12);
+                var stops=new HashSet<double>(); int counterSeconds=0;
+                for(int second=0;second<1200;second++)
+                {
+                    var sample=journey.Evaluate(second);
+                    if(sample.Phase==ShopVisitPhase.Browsing) stops.Add(sample.Position.X);
+                    if(sample.Phase==ShopVisitPhase.Haggling) counterSeconds++;
+                }
+                Check.Equal(4,stops.Count);
+                Check.True(counterSeconds>=36 && counterSeconds<=84);
+                Check.Equal(ShopVisitPhase.Complete,journey.Evaluate(1200).Phase);
+            }));
+            cases.Add(("Nonbuyers browse then leave without a counter stop and reconstruct identically",()=>{
+                var routes=new List<List<GuardPoint3>> {
+                    new List<GuardPoint3> { new GuardPoint3(),new GuardPoint3 { X=4 } },
+                    new List<GuardPoint3> { new GuardPoint3 { X=4 },new GuardPoint3 { X=8 } },
+                    new List<GuardPoint3> { new GuardPoint3 { X=8 },new GuardPoint3() } };
+                var first=ShopVisitJourney.Create(100,1300,routes,1.3,12,false,73);
+                var restored=ShopVisitJourney.Create(100,1300,routes,1.3,12,false,73);
+                Check.True(!first.Purchases); bool browsing=false,leaving=false;
+                for(int second=100;second<=1300;second++)
+                {
+                    var a=first.Evaluate(second); var b=restored.Evaluate(second);
+                    Check.True(a.Phase!=ShopVisitPhase.Haggling);
+                    Check.Equal(a.Phase,b.Phase); Check.Near(a.Position.X,b.Position.X);
+                    browsing|=a.Phase==ShopVisitPhase.Browsing; leaving|=a.Phase==ShopVisitPhase.Leaving;
+                }
+                Check.True(browsing && leaving);
             }));
             cases.Add(("Settlement coverage admits native cities towns and villages only",()=>{
                 for(int category=-1;category<=15;category++)

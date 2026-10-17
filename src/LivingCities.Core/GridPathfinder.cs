@@ -20,6 +20,10 @@ namespace LivingCities.Core
         int Height { get; }
         int Cost(int x, int z);
     }
+    public interface IWalkEdgeGrid : IWalkGrid
+    {
+        bool CanStep(GridCell from,GridCell to);
+    }
 
     public static class GridPathfinder
     {
@@ -39,47 +43,80 @@ namespace LivingCities.Core
 
         public static List<GridCell> Find(IWalkGrid grid, GridCell start, GridCell end, int maxVisited)
         {
-            if (grid == null) throw new ArgumentNullException(nameof(grid));
-            if (maxVisited < 1) throw new ArgumentOutOfRangeException(nameof(maxVisited));
-            var empty = new List<GridCell>();
-            if (!Inside(grid, start) || !Inside(grid, end) || grid.Cost(start.X, start.Z) <= 0 || grid.Cost(end.X, end.Z) <= 0)
-                return empty;
-            var frontier = new SortedSet<Entry>();
-            var costs = new Dictionary<GridCell, long> { [start] = 0 };
-            var parents = new Dictionary<GridCell, GridCell>();
-            frontier.Add(new Entry { Cell = start, Score = Distance(start, end) });
-            int visited = 0;
-            while (frontier.Count > 0 && visited < maxVisited)
+            var search=Begin(grid,start,end,maxVisited);
+            while(!search.IsComplete) search.Step(int.MaxValue);
+            return new List<GridCell>(search.Path);
+        }
+
+        public static Search Begin(IWalkGrid grid,GridCell start,GridCell end,int maxVisited)
+        { return new Search(grid,start,end,maxVisited); }
+
+        // Caller owns an immutable grid for the search lifetime. No partial route is
+        // published; both stale frontier entries and parent tracing consume budget.
+        public sealed class Search
+        {
+            private readonly IWalkGrid grid;
+            private readonly GridCell start,end;
+            private readonly int maxVisited;
+            private readonly SortedSet<Entry> frontier=new SortedSet<Entry>();
+            private readonly Dictionary<GridCell,long> costs=new Dictionary<GridCell,long>();
+            private readonly Dictionary<GridCell,GridCell> parents=new Dictionary<GridCell,GridCell>();
+            private readonly List<GridCell> result=new List<GridCell>();
+            private static readonly IReadOnlyList<GridCell> empty=Array.Empty<GridCell>();
+            private IReadOnlyList<GridCell> published=empty;
+            private int visited;
+            private bool tracing;
+            private GridCell trace;
+            public bool IsComplete {get;private set;}
+            public int WorkDone {get;private set;}
+            public IReadOnlyList<GridCell> Path {get {return published;}}
+            internal Search(IWalkGrid grid,GridCell start,GridCell end,int maxVisited)
             {
-                Entry next = frontier.Min;
-                frontier.Remove(next);
-                if (costs[next.Cell] != next.Cost) continue;
-                visited++;
-                if (next.Cell.Equals(end))
+                if(grid==null) throw new ArgumentNullException(nameof(grid));
+                if(maxVisited<1) throw new ArgumentOutOfRangeException(nameof(maxVisited));
+                this.grid=grid; this.start=start; this.end=end; this.maxVisited=maxVisited;
+                if(!Inside(grid,start) || !Inside(grid,end) || grid.Cost(start.X,start.Z)<=0 || grid.Cost(end.X,end.Z)<=0)
+                {IsComplete=true; return;}
+                costs[start]=0;
+                frontier.Add(new Entry {Cell=start,Score=Distance(start,end)});
+            }
+            public void Step(int budget)
+            {
+                if(budget<1) throw new ArgumentOutOfRangeException(nameof(budget));
+                for(int work=0;work<budget && !IsComplete;work++)
                 {
-                    var path = new List<GridCell> { end };
-                    GridCell cell = end;
-                    while (!cell.Equals(start)) { cell = parents[cell]; path.Add(cell); }
-                    path.Reverse();
-                    return path;
-                }
-                var neighbors = new[] {
-                    new GridCell(next.Cell.X, next.Cell.Z - 1), new GridCell(next.Cell.X - 1, next.Cell.Z),
-                    new GridCell(next.Cell.X + 1, next.Cell.Z), new GridCell(next.Cell.X, next.Cell.Z + 1) };
-                foreach (GridCell neighbor in neighbors)
-                {
-                    if (!Inside(grid, neighbor)) continue;
-                    int step = grid.Cost(neighbor.X, neighbor.Z);
-                    if (step <= 0) continue;
-                    long cost = next.Cost + step;
-                    long previous;
-                    if (costs.TryGetValue(neighbor, out previous) && previous <= cost) continue;
-                    costs[neighbor] = cost;
-                    parents[neighbor] = next.Cell;
-                    frontier.Add(new Entry { Cell = neighbor, Cost = cost, Score = cost + Distance(neighbor, end) });
+                    if(tracing)
+                    {
+                        WorkDone++;
+                        result.Add(trace);
+                        if(trace.Equals(start)) {result.Reverse(); published=result.AsReadOnly(); IsComplete=true;}
+                        else trace=parents[trace];
+                        continue;
+                    }
+                    if(frontier.Count==0 || visited>=maxVisited) {IsComplete=true; break;}
+                    WorkDone++;
+                    Entry next=frontier.Min; frontier.Remove(next);
+                    if(costs[next.Cell]!=next.Cost) continue;
+                    visited++;
+                    if(next.Cell.Equals(end)) {tracing=true; trace=end; continue;}
+                    Visit(next,new GridCell(next.Cell.X,next.Cell.Z-1));
+                    Visit(next,new GridCell(next.Cell.X-1,next.Cell.Z));
+                    Visit(next,new GridCell(next.Cell.X+1,next.Cell.Z));
+                    Visit(next,new GridCell(next.Cell.X,next.Cell.Z+1));
                 }
             }
-            return empty;
+            private void Visit(Entry next,GridCell neighbor)
+            {
+                if(!Inside(grid,neighbor)) return;
+                int step=grid.Cost(neighbor.X,neighbor.Z);
+                if(step<=0) return;
+                var edges=grid as IWalkEdgeGrid;
+                if(edges!=null && !edges.CanStep(next.Cell,neighbor)) return;
+                long cost=next.Cost+step,previous;
+                if(costs.TryGetValue(neighbor,out previous) && previous<=cost) return;
+                costs[neighbor]=cost; parents[neighbor]=next.Cell;
+                frontier.Add(new Entry {Cell=neighbor,Cost=cost,Score=cost+Distance(neighbor,end)});
+            }
         }
 
         private static bool Inside(IWalkGrid grid, GridCell cell) { return cell.X >= 0 && cell.Z >= 0 && cell.X < grid.Width && cell.Z < grid.Height; }

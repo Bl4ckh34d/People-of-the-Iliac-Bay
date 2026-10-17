@@ -22,12 +22,14 @@ namespace LivingCities.DFU
         private void InstallEntryAwareness()
         {
             PlayerEnterExit.OnPreTransition += CaptureEntry;
+            PlayerEnterExit.OnPreTransition += CaptureObservedTransition;
             PlayerEnterExit.OnTransitionInterior += CommitEntry;
             PlayerEnterExit.OnFailedTransition += CancelEntry;
         }
         private void RemoveEntryAwareness()
         {
             PlayerEnterExit.OnPreTransition -= CaptureEntry;
+            PlayerEnterExit.OnPreTransition -= CaptureObservedTransition;
             PlayerEnterExit.OnTransitionInterior -= CommitEntry;
             PlayerEnterExit.OnFailedTransition -= CancelEntry;
             pendingEntry = null;
@@ -110,6 +112,13 @@ namespace LivingCities.DFU
         }
         private ActivitySnapshot EntryState(string id, double now, ActivitySnapshot scheduled)
         {
+            AlarmPerson departure; bool home;
+            if(worldStore!=null && worldStore.TryVisitDeparturePosition(id,now,out departure,out home))
+            {
+                if(home && scheduled.Activity==Activity.Sleep && scheduled.BuildingKey==departure.BuildingKey) return scheduled;
+                return new ActivitySnapshot(home ? Activity.Home : departure.BuildingKey<0 ? Activity.Travel : Activity.Visit,
+                    departure.BuildingKey,new RoutePoint(departure.X,departure.Z),0);
+            }
             EntryMessenger messenger;
             if (!entryJourneys.TryGetValue(id, out messenger) || now < messenger.StartedAt || messenger.Cancelled || messenger.Delivered) return scheduled;
             var point = messenger.Position(now);

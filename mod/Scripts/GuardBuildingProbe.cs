@@ -21,6 +21,10 @@ namespace LivingCities.DFU
             var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool enabled = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true);
             var controller = adapter.GetComponent<GuardPopulation>();
+            float rosterDeadline=Time.realtimeSinceStartup+60;
+            while((!controller || controller.Roster==null) && Time.realtimeSinceStartup<rosterDeadline)
+            {yield return null;controller=adapter.GetComponent<GuardPopulation>();}
+            if(!controller || controller.Roster==null) throw new InvalidOperationException("Guard building fixture did not initialize its roster.");
             var postDirectory=game.StreamingWorld.GetCurrentBuildingDirectory();
             var postSites=new TownGeometry(postDirectory,game.StreamingWorld.GetCurrentCityNavigation(),false).SurveyGuardPosts(350);
             if(postSites.Count==0) throw new InvalidOperationException("No public guard post sites surveyed.");

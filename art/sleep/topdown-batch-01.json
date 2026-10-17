@@ -1,0 +1,85 @@
+{
+  "batch": {
+    "name": "batch-01",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-01.png",
+    "items": [
+      {
+        "id": "flat-176-3",
+        "archive": 176,
+        "record": 3,
+        "kind": "flat",
+        "caption": "bare-breasted dancer",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-176-3.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-176-4",
+        "archive": 176,
+        "record": 4,
+        "kind": "flat",
+        "caption": "dancer",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-176-4.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-176-5",
+        "archive": 176,
+        "record": 5,
+        "kind": "flat",
+        "caption": "dark-cloaked man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-176-5.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-176-6",
+        "archive": 176,
+        "record": 6,
+        "kind": "flat",
+        "caption": "woman in black and red",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-176-6.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-177-0",
+        "archive": 177,
+        "record": 0,
+        "kind": "flat",
+        "caption": "cowled old man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-177-0.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-177-1",
+        "archive": 177,
+        "record": 1,
+        "kind": "flat",
+        "caption": "old man with a hat",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-177-1.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-177-2",
+        "archive": 177,
+        "record": 2,
+        "kind": "flat",
+        "caption": "bald man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-177-2.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-177-3",
+        "archive": 177,
+        "record": 3,
+        "kind": "flat",
+        "caption": "blonde woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-177-3.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-176-3 (bare-breasted dancer); 2: flat-176-4 (dancer); 3: flat-176-5 (dark-cloaked man); 4: flat-176-6 (woman in black and red); 5: flat-177-0 (cowled old man); 6: flat-177-1 (old man with a hat); 7: flat-177-2 (bald man); 8: flat-177-3 (blonde woman). All outputs fully covered, only faces and close-fitting headgear visible. Preserve skin colour and original hair, beard and age; no beard on clean-shaven faces.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-e340f023-36a8-4235-a86d-82259a3a4454.png",
+  "status": "generated-awaiting-runtime-validation"
+}

@@ -51,10 +51,12 @@ namespace LivingCities.DFU
             guards.Sort((a,b) => string.CompareOrdinal(a.Id,b.Id));
             foreach (var leader in guards)
             {
-                if (!leader.IsAlive || used.Contains(leader.Id) || patrolTemplates.Count >= Mathf.Clamp(MaximumPatrolPairs, 0, 4)) continue;
+                if (!leader.IsAlive || used.Contains(leader.Id) || IsGateGuard(leader.Id) ||
+                    patrolTemplates.Count >= Mathf.Clamp(MaximumPatrolPairs, 0, 4)) continue;
                 GuardRecord partner = null; double distance = double.MaxValue;
                 foreach (var candidate in guards)
-                    if (candidate.IsAlive && candidate != leader && !used.Contains(candidate.Id) && Gap(leader.Post, candidate.Post) < distance)
+                    if (candidate.IsAlive && candidate != leader && !used.Contains(candidate.Id) &&
+                        !IsGateGuard(candidate.Id) && Gap(leader.Post, candidate.Post) < distance)
                     { partner = candidate; distance = Gap(leader.Post,candidate.Post); }
                 if (partner == null) continue;
                 while (!OwnsExterior || GameManager.IsGamePaused) yield return null;
@@ -112,7 +114,19 @@ namespace LivingCities.DFU
                 DaggerfallUnity.Instance.WorldTime.Now.IsNight && !haunted;
             if (!night)
             {
-                foreach (var pair in new List<GuardPatrolAssignment>(Roster.Patrols)) Roster.StopPatrol(pair.Plan.LeaderId, now);
+                double dusk = Math.Floor(now / 86400) * 86400 + DaggerfallDateTime.DuskHour * 3600;
+                if (dusk <= now) dusk += 86400;
+                foreach (var pair in new List<GuardPatrolAssignment>(Roster.Patrols))
+                {
+                    if (!pair.InterruptedAt.HasValue)
+                    {
+                        Roster.StopPatrol(pair.Plan.LeaderId, now);
+                        try { Roster.ScheduleDayRest(pair.Plan.LeaderId, dusk, now); }
+                        catch (ArgumentException) { }
+                        try { Roster.ScheduleDayRest(pair.Plan.FollowerId, dusk, now); }
+                        catch (ArgumentException) { }
+                    }
+                }
                 return;
             }
             if (!OwnsExterior || GameManager.Instance.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None) return;
@@ -125,12 +139,13 @@ namespace LivingCities.DFU
             foreach (var template in patrolTemplates)
             {
                 if (Roster.Patrols.Count >= cap) break;
-                int free = Roster.Guards.FindAll(g => g.IsAlive && g.Duty == GuardDuty.Posted && !Roster.IsOnPatrol(g.Id)).Count;
+                int free = Roster.Guards.FindAll(g => g.IsAlive && g.Duty == GuardDuty.Posted &&
+                    !Roster.IsOnPatrol(g.Id) && !IsGateGuard(g.Id)).Count;
                 if (free < 6) break;
                 var a = Roster.Guards.Find(g => g.Id == template.LeaderId);
                 var b = Roster.Guards.Find(g => g.Id == template.FollowerId);
                 if (a == null || b == null || !a.IsAlive || !b.IsAlive || a.Duty != GuardDuty.Posted || b.Duty != GuardDuty.Posted ||
-                    Roster.IsOnPatrol(a.Id) || Roster.IsOnPatrol(b.Id)) continue;
+                    Roster.IsOnPatrol(a.Id) || Roster.IsOnPatrol(b.Id) || IsGateGuard(a.Id) || IsGateGuard(b.Id)) continue;
                 try
                 {
                     var plan = PatrolPairPlan.Create(a.Id,b.Id,template.LeaderJoin,template.FollowerJoin,template.Circuit,now,dawn,1.3,12,2);

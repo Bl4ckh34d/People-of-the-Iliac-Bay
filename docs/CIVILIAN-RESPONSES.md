@@ -1,5 +1,21 @@
 # Citizen response checkpoint
 
+## Persistent murder witnesses, 16 October 2026
+
+Schema 19 distinguishes confirmed player-caused innocent deaths, issued accusations and resolved crimes. Ordinary direct witnesses and their bounded warned contacts flee and refuse dialogue until resolution, including after the temporary alarm expires. A native crime value of None before a witness reports does not clear this state. Partner/child grudges remain independent and lasting. Native keeper responses can clear immediately after resolution rather than waiting for the old alarm deadline.
+
+Attribution occurs after the weapon-hit callback confirms death. Exterior murder dispatch requires a corpse and is retried after confirmation. Vanilla mobile-civilian hits already kill instantly; this dispatch gate is defensive, not evidence that vanilla supports nonlethal civilian attacks. Nonlethal escaped violence uses Assault without replacing an existing charge.
+
+Core suite: 518/518. Unity build and native isolated-store adapter/FullSerializer checks pass (`work/WitnessPersistence-performance-pass.log`). The actual weapon-hit/nearby-guard reporting regression also passes (`work/WitnessPersistence-guard-pass.log`), including corpse-less dispatch rejection, no automatic distant guards, bounded report dispatch and native restoration. Its fixture now waits for complete asynchronous approach surveying and selects points outside the actual 20 m report radius; the old partial-cache/35 m fixture failed before reaching gameplay assertions. Resolution uses the existing native crime-state signal after game readiness, not a new courtroom event; regional crime transitions and complete courtroom playthroughs remain unverified.
+
+## Ordinary stationary people, 15 October 2026
+
+Registration now covers ordinary building `StaticNPC` identities outside shops as well: tavern staff/patrons, guild staff, temple staff and bankers receive the existing native weapon-hit, corpse, awareness and persisted-death behavior. Only actual shop merchants allocate shop-family beds. Flats already replaced by a residential family are excluded, avoiding duplicate identities. QuestResourceBehaviour, DaggerfallAction and named Individual-faction actors remain separately owned; this checkpoint does not remove quest-specific protection or implement all their schedules.
+
+Native test `TownTest.ps1 -FixtureCharacter LivingCitiesTest-f238d317 -StationaryNpcProbe` kills28 ordinary people across5 real building categories and confirms no revival on interior re-entry. The red case was an unregistered tavern NPC182/1, faction510. Evidence: `work/Stationary-runtime-red.log`, `work/Stationary-runtime-pass.log`. Keeper/ordinary book-holder real save-load and report/sleep regressions pass (`work/Stationary-keeper-pass.log`);342 core tests and Unity build pass. Test kills remain in the isolated test process; this probe does not overwrite normal user saves.
+
+Successful human witness reports now show: “A witness has reported your crime to the guards.” The notice occurs only after responders are dispatched and a living direct witness exists. Existing report deduplication prevents repeat messages; hearing-only investigations and enemy-defense reports do not accuse the player. Native delayed-escape regression records one notice at the successful report (`work/Stationary-keeper-pass.log`).
+
 ## Flight speed amendment, 14 October 2026
 
 New flight uses a stable per-resident speed between 2.5 and 3.5 times the normal 1.3 m/s walking baseline, or 3.25–4.55 m/s. The multiplier derives from the resident's persisted appearance seed, so it does not change on each flight, scene transition or reload. Physical retreat and new planned indoor/exterior escape journeys use this speed. Planned escape speed is saved with the route and controls both interpolation and guard-report arrival time. Existing active escape saves with no speed field retain their historical 2.8 m/s timing. Four-decimal physical values survive DFU's decimal JSON conversion exactly; a live test initially showed 4.2341000000000006 becoming 4.2341 while arrival time remained unchanged.

@@ -80,8 +80,9 @@ namespace LivingCities.DFU
             start.NoWorld = false;
             start.EnableVideos = false;
             start.GodMode = true;
+            string freshCharacter = "LivingCitiesTest-" + Guid.NewGuid().ToString("N").Substring(0, 8);
             start.CharacterDocument = new CharacterDocument {
-                name = "LivingCitiesTest-" + Guid.NewGuid().ToString("N").Substring(0, 8),
+                name = freshCharacter,
                 backStory = new List<string> { "Disposable Living Cities integration-test character." },
                 biographyEffects = new List<string>() };
             start.StartMethod = StartGameBehaviour.StartMethods.NewCharacter;
@@ -106,6 +107,11 @@ namespace LivingCities.DFU
             // Dismiss only the disposable new-character introduction, leaving the HUD.
             if (DaggerfallUI.UIManager.TopWindow is DaggerfallMessageBox)
                 DaggerfallUI.UIManager.PopWindow();
+            if (Array.IndexOf(arguments, "-livingcities-fresh-previews") >= 0)
+            {
+                yield return FreshPreviewSaves.Run(GetComponent<StreetPopulation>(), GetComponent<GuardPopulation>(), freshCharacter);
+                yield break;
+            }
             VerifyGeometry(directory, nav);
             int homes = 0, doors = 0, walkable = 0;
             int bestDistance = int.MaxValue;
@@ -168,16 +174,165 @@ namespace LivingCities.DFU
             var adapter = GetComponent<LivingCitiesMod>();
             var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
-            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-refuge-probe") >= 0 ||
+            bool crossRegionTripProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-cross-region-trip-probe")>=0;
+            bool residentTripProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-resident-trip-probe")>=0;
+            bool dailyItineraryProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-daily-itinerary-probe")>=0;
+            bool outdoorArrivalProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-outdoor-arrival-probe")>=0;
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-haunting-dawn-probe") >= 0 || RuntimeTiming.Enabled || residentTripProbe || crossRegionTripProbe || dailyItineraryProbe || outdoorArrivalProbe)
+            {
+                game.SaveLoadManager.EnumerateSaves();
+                var testArguments=Environment.GetCommandLineArgs();
+                int saveArgument=Array.IndexOf(testArguments,"-livingcities-fixture-save");
+                string citySave=saveArgument>=0 && saveArgument+1<testArguments.Length ? testArguments[saveArgument+1] : "Living Cities - Daggerfall city preview";
+                int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, citySave);
+                Debug.Log("LIVING_CITIES_CITY_FIXTURE: "+citySave);
+                if (fixture < 0) throw new InvalidOperationException("Daggerfall preview fixture missing.");
+                loaded = false; game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
+                float limit = Time.realtimeSinceStartup + 60;
+                while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
+                if (!loaded || !streets.Ready) throw new InvalidOperationException("Daggerfall preview load timed out.");
+                if(outdoorArrivalProbe)
+                {
+                    yield return OutdoorArrivalContinuityProbe.Run(adapter,streets);
+                }
+                else if(dailyItineraryProbe) yield return DailyItineraryProbe.Run(adapter,streets);
+                else if(RuntimeTiming.Enabled)
+                {
+                    yield return PerformanceProbe.Run();
+                    yield return DailyItineraryProbe.Run(adapter,streets);
+                    yield return MurderWitnessProbe.Run(adapter,streets);
+                }
+                else if(crossRegionTripProbe) yield return CrossRegionTripProbe.Run();
+                else if(residentTripProbe) yield return ResidentTripProbe.Run();
+                else yield return HauntingDawnProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: targeted city probe.");
+                yield break;
+            }
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-dialogue-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-refuge-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-regional-probe") >= 0)
             {
                 game.SaveLoadManager.EnumerateSaves();
                 int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - inside Gothway Garden");
+                if (fixture < 0) fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "People - Gothway Garden");
                 if (fixture < 0) throw new InvalidOperationException("Exterior fixture missing.");
                 loaded = false; game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
                 float limit = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Exterior fixture load timed out.");
+                if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-dialogue-probe") >= 0)
+                {
+                    ResidentActor person = null;
+                    float actorDeadline = Time.realtimeSinceStartup + 15;
+                    while (!person && Time.realtimeSinceStartup < actorDeadline)
+                    {
+                        foreach (var candidate in FindObjectsOfType<ResidentActor>())
+                            if (candidate.Person && candidate.Resident.IsAlive &&
+                                candidate.Resident.AgeGroup == ResidentAgeGroup.Adult)
+                            { person = candidate; break; }
+                        if (!person) yield return new WaitForSecondsRealtime(0.5f);
+                    }
+                    if (!person) throw new InvalidOperationException("Dialogue probe has no talkable resident.");
+                    var dialogueGuards = adapter.GetComponent<GuardPopulation>();
+                    float garrisonDeadline = Time.realtimeSinceStartup + 60;
+                    while(dialogueGuards && !dialogueGuards.OwnsSettlement && Time.realtimeSinceStartup < garrisonDeadline)
+                        yield return null;
+                    if(!dialogueGuards || !dialogueGuards.OwnsSettlement)
+                        throw new InvalidOperationException("Dialogue crime probe requires completed garrison setup before pausing in Talk.");
+                    game.TalkManager.TalkToMobileNPC(person.Person);
+                    yield return new WaitForSecondsRealtime(0.3f);
+                    var talk = DaggerfallUI.UIManager.TopWindow as DaggerfallWorkshop.Game.UserInterface.DaggerfallTalkWindow;
+                    if (talk == null) throw new InvalidOperationException("Dialogue probe did not open native Talk window.");
+                    DaggerfallWorkshop.Game.UserInterface.TextBox input = null;
+                    foreach (var component in talk.NativePanel.Components)
+                    {
+                        var field = component as DaggerfallWorkshop.Game.UserInterface.TextBox;
+                        if (field != null && field.Name == "LivingCitiesSayInput") { input = field; break; }
+                    }
+                    if (input == null || !input.Enabled)
+                        throw new InvalidOperationException("Free-text input missing from native Talk window.");
+                    if (!talk.IsSetup || talk.NativePanel.Components[talk.NativePanel.Components.Count - 1] != input)
+                        throw new InvalidOperationException("Free-text input was not added after Talk window setup.");
+                    if (input.Position != new Vector2(123, 8) || input.Size != new Vector2(124, 38))
+                        throw new InvalidOperationException("Editor is not in the classic upper question panel.");
+                    input.SetFocus();
+                    if (!input.HasFocus() || DaggerfallUI.Instance.ProcessHotKeySequences() !=
+                        HotkeySequence.HotkeySequenceProcessStatus.Disabled)
+                        throw new InvalidOperationException("Typing in free-text input still dispatches native Talk shortcuts.");
+                    talk.SetFocus(null);
+                    if (DaggerfallUI.Instance.ProcessHotKeySequences() ==
+                        HotkeySequence.HotkeySequenceProcessStatus.Disabled)
+                        throw new InvalidOperationException("Native Talk shortcuts stayed disabled after input lost focus.");
+                    input.SetFocus();
+                    Debug.Log("LIVING_CITIES_DIALOGUE_FOCUS_PASS: shortcuts suppressed only while typing.");
+                    input.Text = "Hello";
+                    yield return new WaitForSecondsRealtime(2f);
+                    ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-dialogue-input.png"));
+                    yield return new WaitForSecondsRealtime(1f);
+                    Debug.Log("LIVING_CITIES_DIALOGUE_PROBE_PASS: post-setup input present; position=" + input.Rectangle);
+                    var scroller = input as WrappedDialogueInput;
+                    if (scroller == null) throw new InvalidOperationException("Dialogue input has no clipping viewport.");
+                    string shortDraft = input.Text;
+                    input.Text = "A long question that must wrap inside the upper panel without covering the portrait or neighbouring panels. This suffix must remain visible while typing more text and using several rows in the original question area.";
+                    yield return new WaitForSecondsRealtime(0.3f);
+                    if (scroller.LineCount < 4 || scroller.VisibleFirstLine == 0 || scroller.VisibleCaretX > input.Size.x - 4)
+                        throw new InvalidOperationException("Long dialogue input failed to wrap and scroll around caret.");
+                    ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "People-dialogue-scroll.png"));
+                    yield return new WaitForSecondsRealtime(0.5f);
+                    var setCaret = typeof(DaggerfallWorkshop.Game.UserInterface.TextBox).GetMethod("SetCursorPosition", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
+                    setCaret.Invoke(input, new object[] { 0 });
+                    yield return new WaitForSecondsRealtime(0.2f);
+                    if (scroller.VisibleFirstLine != 0 || scroller.VisibleCaretX != 0)
+                        throw new InvalidOperationException("Dialogue input Home did not return viewport to beginning.");
+                    input.Text = shortDraft;
+                    Debug.Log("LIVING_CITIES_DIALOGUE_SCROLL_PASS: wrapped upper panel; vertical overflow bounded; end/home caret visible.");
+                    var nativeQuestion = (DaggerfallWorkshop.Game.UserInterface.TextLabel)typeof(DaggerfallWorkshop.Game.UserInterface.DaggerfallTalkWindow)
+                        .GetField("textlabelPlayerSays", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(talk);
+                    nativeQuestion.Text = "Where is the nearest temple?";
+                    yield return null; yield return null;
+                    if (input.Text != nativeQuestion.Text || nativeQuestion.Enabled)
+                        throw new InvalidOperationException("Native question preview did not become editable text.");
+                    input.Text = "My edited question";
+                    yield return null; yield return null;
+                    if (input.Text != "My edited question") throw new InvalidOperationException("Native preview overwrote edited draft.");
+                    input.Text = shortDraft;
+                    var flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+                    var transcriptField = talk.GetType().GetField("listboxConversation", flags);
+                    var transcript = transcriptField.GetValue(talk) as DaggerfallWorkshop.Game.UserInterface.ListBox;
+                    var submit = typeof(LivingCitiesMod).GetMethod("SubmitFreeText", flags);
+                    if (transcript == null || submit == null)
+                        throw new InvalidOperationException("Dialogue submission or transcript adapter missing.");
+                    int beforeReply = transcript.Count;
+                    string question = input.Text;
+                    input.Text = string.Empty;
+                    float started = Time.realtimeSinceStartup;
+                    submit.Invoke(adapter, new object[] { talk, question });
+                    float replyDeadline = started + 30f;
+                    while (transcript.Count == beforeReply && Time.realtimeSinceStartup < replyDeadline)
+                        yield return null;
+                    if (transcript.Count != beforeReply + 2 ||
+                        transcript.GetItem(beforeReply).textLabel.Text != question)
+                        throw new InvalidOperationException("Native dialogue transcript did not receive the submitted question and reply.");
+                    string answer = transcript.GetItem(beforeReply + 1).textLabel.Text;
+                    if (string.IsNullOrWhiteSpace(answer) || answer == FreeTextDialogue.FallbackAnswer ||
+                        answer.Contains("considering another question"))
+                        throw new InvalidOperationException("Live dialogue returned a fallback instead of a model reply: " + answer);
+                    Debug.Log("LIVING_CITIES_DIALOGUE_REPLY_PASS: seconds=" + (Time.realtimeSinceStartup - started).ToString("F2") +
+                        "; answer=" + answer);
+                    yield return new WaitForSecondsRealtime(0.5f);
+                    ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-dialogue-reply.png"));
+                    yield return new WaitForSecondsRealtime(1f);
+                    yield return DialogueHistoryProbe.Run(adapter, talk);
+                    DialogueClockProbe.Run(adapter, talk, transcript);
+                    yield return GroundedConversationProbe.Run(adapter, talk, submit, transcript, person.Resident.Id);
+                    HouseholdGreetingProbe.Run(streets);
+                    yield return HouseholdConsentProbe.Run(adapter, streets);
+                    yield return DispositionPricingProbe.Run();
+                    yield return DialogueHostilityProbe.Run();
+                    yield return RosyInteriorCompatibility.VerifyTransitionLifetime();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: native free-text field and live model reply.");
+                    yield break;
+                }
                 if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-regional-probe") >= 0)
                 {
                     yield return RegionalIdentityProbe.Run();
@@ -187,6 +342,7 @@ namespace LivingCities.DFU
                 yield break;
             }
             if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-keeper-response-probe") >= 0 ||
+                Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-inn-alarm-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-shop-visit-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-crowd-probe") >= 0 ||
                 Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-citizen-threat-probe") >= 0 ||
@@ -203,6 +359,12 @@ namespace LivingCities.DFU
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Keeper fixture load timed out.");
                 yield return new WaitForSecondsRealtime(1);
+                if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-inn-alarm-probe") >= 0)
+                {
+                    yield return InnAlarmProbe.Run();
+                    Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: inn-wide civilian alarm.");
+                    yield break;
+                }
                 if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-defense-ledger-probe") >= 0)
                 {
                     yield return DefenseLedgerProbe.Run();
@@ -286,10 +448,36 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_LOAD_PASS: " + (inside ? "inside" : "outside") + "; households=" + town.Households.Count);
             }
             string[] probeArguments = Environment.GetCommandLineArgs();
+            if (Array.IndexOf(probeArguments, "-livingcities-running-pilot-probe") >= 0)
+            {
+                if (game.PlayerEnterExit.IsPlayerInside)
+                    throw new InvalidOperationException("Running pilot probe requires an exterior fixture.");
+                yield return RunningPilotProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Archive 385 running pilot preview.");
+                yield break;
+            }
+            if(Array.IndexOf(probeArguments,"-livingcities-stationary-probe")>=0)
+            {
+                yield return StationaryNpcProbe.Run();
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: ordinary stationary NPCs.");
+                yield break;
+            }
             if (Array.IndexOf(probeArguments, "-livingcities-city-traveler-probe") >= 0)
             {
                 yield return DaggerfallTravelerProbe.Run();
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall traveler gates; character="+character);
+                yield break;
+            }
+            if (Array.IndexOf(probeArguments, "-livingcities-wall-quarter-probe") >= 0)
+            {
+                yield return DaggerfallTravelerProbe.Run(false,true);
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: wall quarter beds; character="+character);
+                yield break;
+            }
+            if (Array.IndexOf(probeArguments, "-livingcities-gate-guard-probe") >= 0)
+            {
+                yield return DaggerfallTravelerProbe.Run(true);
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall gate guards; character="+character);
                 yield break;
             }
             if (Array.IndexOf(probeArguments, "-livingcities-tavern-survey-probe") >= 0)
@@ -417,6 +605,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Native family dialogue opened for a different person.");
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-female-dialogue.png"));
                 yield return new WaitForSecondsRealtime(0.5f);
+                adapter.ProbeBereavementGreeting(mother.Id);
                 DaggerfallUI.Instance.PopToHUD();
                 Debug.Log("LIVING_CITIES_FAMILY_DIALOGUE_PASS: " + motherActor.Person.NameNPC + "; female portrait=" + motherActor.Person.PersonFaceRecordId);
                 var hiddenForTheft = new HashSet<GameObject>();

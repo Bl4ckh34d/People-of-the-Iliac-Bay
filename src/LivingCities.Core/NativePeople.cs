@@ -66,7 +66,9 @@ namespace LivingCities.Core
             var person = state.NativePeople.Find(p => p.Id == id);
             Require(person != null, "Unknown native person.");
             var alarm = NativeResponse(id);
-            if (alarm != null && now < CivilianAlarms.ActiveUntil(alarm)) return false;
+            bool resolvedMurderWitness = alarm != null && alarm.PlayerAttributed && alarm.CrimeResolved &&
+                CivilianAlarms.IsPersistentMurderWitness(alarm, id);
+            if (alarm != null && now < CivilianAlarms.ActiveUntil(alarm) && !resolvedMurderWitness) return false;
             person.ResponseIncidentId = null; return true;
         }
         private static string NativeId(int town, int building, int hash)

@@ -100,7 +100,7 @@ namespace LivingCities.DFU
         public void Activate(RaycastHit hit)
         {
             if (hit.distance > 3 || !Streets) return;
-            DaggerfallUI.AddHUDText("The body lies still.");
+            Streets.OpenCorpseInventory(IncidentId);
         }
     }
 }

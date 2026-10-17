@@ -222,7 +222,10 @@ namespace LivingCities.DFU
                 int index = actor.GetComponent<SleepingPose>().ViewIndex;
                 var blanket = actor.transform.Find("Sleeping blanket");
                 var atlas = (SleepingArt.Atlas)typeof(SleepingPose).GetField("art", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(actor.GetComponent<SleepingPose>());
-                float pixelAspect = atlas.Views[2].height*atlas.Texture.height/(atlas.Views[2].width*atlas.Texture.width);
+                var source=atlas.Views[atlas.Views.Length==1?0:2];
+                float pixelAspect = atlas.Views.Length==1
+                    ? source.width*atlas.Texture.width/(source.height*atlas.Texture.height)
+                    : source.height*atlas.Texture.height/(source.width*atlas.Texture.width);
                 if (Mathf.Abs(blanket.localScale.x/blanket.localScale.y-pixelAspect)>0.001f)
                     throw new InvalidOperationException("Sleeping drawing stretches source pixels.");
                 if (Mathf.Abs(Vector3.Dot(blanket.forward, Vector3.up)) < 0.999f ||

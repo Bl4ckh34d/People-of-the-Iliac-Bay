@@ -1,0 +1,85 @@
+{
+  "batch": {
+    "name": "batch-18",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-18.png",
+    "items": [
+      {
+        "id": "flat-184-21",
+        "archive": 184,
+        "record": 21,
+        "kind": "flat",
+        "caption": "bearded old man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-21.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-22",
+        "archive": 184,
+        "record": 22,
+        "kind": "flat",
+        "caption": "woman with a staff",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-22.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-23",
+        "archive": 184,
+        "record": 23,
+        "kind": "flat",
+        "caption": "woman in green pants",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-23.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-24",
+        "archive": 184,
+        "record": 24,
+        "kind": "flat",
+        "caption": "dark-haired rogue",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-24.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-25",
+        "archive": 184,
+        "record": 25,
+        "kind": "flat",
+        "caption": "fair-haired youth",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-25.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-26",
+        "archive": 184,
+        "record": 26,
+        "kind": "flat",
+        "caption": "red-haired woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-26.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-27",
+        "archive": 184,
+        "record": 27,
+        "kind": "flat",
+        "caption": "pathetic beggar",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-27.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-28",
+        "archive": 184,
+        "record": 28,
+        "kind": "flat",
+        "caption": "red-headed vixen",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-28.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-184-21 (bearded old man); 2: flat-184-22 (woman with a staff); 3: flat-184-23 (woman in green pants); 4: flat-184-24 (dark-haired rogue); 5: flat-184-25 (fair-haired youth); 6: flat-184-26 (red-haired woman); 7: flat-184-27 (pathetic beggar); 8: flat-184-28 (red-headed vixen). First cell elderly bald male with long white beard. Cells 2,3 blonde women; cell4 black shoulder-length haired clean-shaven man; cell5 blond clean-shaven man; cell6 brown bob-haired woman; cell7 fair-haired clean-shaven young male; cell8 long dark brown-haired woman.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-afe63414-a3ef-4230-919b-07deb41e403f.png",
+  "status": "generated-awaiting-runtime-validation"
+}

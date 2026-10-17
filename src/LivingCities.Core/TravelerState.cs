@@ -26,6 +26,43 @@ namespace LivingCities.Core
     }
     public sealed partial class WorldStateStore
     {
+        public long TravelerVisitRevision { get; private set; }
+        public List<TravelerVisit> TravelerVisitsDuring(int settlementId,double start,double end)
+        {
+            Require(settlementId>=0 && DefenseTime(start) && DefenseTime(end) && end>start,"Invalid traveler window.");
+            var result=new List<TravelerVisit>();
+            foreach(var visit in state.TravelerVisits)
+            {
+                if(visit.SettlementId!=settlementId) continue;
+                var journey=Journey(Traveler(visit.PersonId),visit);
+                if(journey.EntryAt<end && journey.ExitAt>start) result.Add(visit);
+            }
+            return result;
+        }
+        public List<TravelerVisit> TravelerVisitsFor(int settlementId)
+        { return state.TravelerVisits.FindAll(v=>v.SettlementId==settlementId); }
+        public TravelerPerson Traveler(string id)
+        { return state.Travelers.Find(p=>p.Id==id); }
+        public string TravelerBed(string visitId,double now)
+        {
+            Require(DefenseTime(now),"Invalid traveler bed time.");
+            var visit=state.TravelerVisits.Find(v=>v.Id==visitId);
+            Require(visit!=null,"Unknown traveler visit.");
+            if(visit.Admission!=TravelerAdmission.Admitted || !Traveler(visit.PersonId).IsAlive) return null;
+            var tavern=Lodging(visit.SettlementId,visit.TavernKey);
+            var booking=tavern.Bookings.Find(b=>b.Id==visit.BookingId);
+            if(booking==null || now<booking.StartsAt || now>=booking.EndsAt) return null;
+            var room=tavern.Rooms.Find(r=>r.Id==booking.RoomId);
+            string selected=null;
+            foreach(var bed in room.Beds) if(selected==null || StringComparer.Ordinal.Compare(bed,selected)<0) selected=bed;
+            return selected;
+        }
+        public TravelerJourney TravelerJourneyFor(string visitId)
+        {
+            var visit=state.TravelerVisits.Find(v=>v.Id==visitId);
+            Require(visit!=null,"Unknown traveler visit.");
+            return Journey(state.Travelers.Find(p=>p.Id==visit.PersonId),visit);
+        }
         public void RegisterTraveler(TravelerPerson person)
         {
             var copied=CopyTraveler(person);
@@ -63,6 +100,7 @@ namespace LivingCities.Core
                 Require(journey.EntryAt>=otherJourney.ExitAt || otherJourney.EntryAt>=journey.ExitAt,"Traveler visits overlap.");
             }
             state.TravelerVisits.Add(copy);
+            TravelerVisitRevision++;
         }
         public bool TryAdmitTraveler(string visitId,double now)
         {
@@ -72,17 +110,62 @@ namespace LivingCities.Core
             var person=state.Travelers.Find(p=>p.Id==visit.PersonId); var journey=Journey(person,visit);
             if(now<journey.CheckInAt) return false;
             string booking="traveler-booking:"+visit.Id;
-            bool admitted=person.IsAlive && now<journey.CheckOutAt && TryBookLodging(visit.SettlementId,visit.TavernKey,
+            bool admitted=person.IsAlive && now<journey.CheckOutAt && !InnUnderInvestigation(visit.SettlementId,visit.TavernKey,now) && TryBookLodging(visit.SettlementId,visit.TavernKey,
                 booking,person.Id,person.HomeSettlement,false,1,journey.CheckInAt,journey.CheckOutAt);
             visit.AttemptedAt=now; visit.Admission=admitted ? TravelerAdmission.Admitted : TravelerAdmission.Refused;
             visit.BookingId=admitted ? booking : null;
+            TravelerVisitRevision++;
             return admitted;
+        }
+        private bool InnUnderInvestigation(int settlementId,int buildingKey,double now)
+        {
+            var roster=state.Garrisons.Find(g=>g.SettlementId==settlementId);
+            if(roster==null) return false;
+            // Evaluate admission at its due time even when the interior is unloaded.
+            // Do not rewind or otherwise mutate the live roster during catch-up.
+            var preview=GuardRoster.CopyValidated(roster); preview.Advance(now);
+            return preview.Reports.Exists(r=>r.BuildingKey==buildingKey && r.OccupiesScene && r.HasArrival &&
+                now>=r.FirstArrivalAt && now<r.FirstArrivalAt+UnwitnessedScene.OccupationSeconds &&
+                preview.Guards.Exists(g=>r.GuardIds.Contains(g.Id) && (g.IsAlive || g.DiedAt>now)));
+        }
+        // Call after registering the complete demand window and reconciling native
+        // player receipts. Budget limits commits, never skips earlier arrivals.
+        public int AdvanceTravelerAdmissions(int settlementId,double now,int maximumAttempts,int? reconciledTavern=null)
+        {
+            Require(DefenseTime(now) && maximumAttempts>0 && maximumAttempts<=10000 && (!reconciledTavern.HasValue || reconciledTavern.Value>=0) &&
+                state.Settlements.Exists(t=>t.SettlementId==settlementId),"Invalid traveler admission catch-up.");
+            var pending=new List<KeyValuePair<double,TravelerVisit>>();
+            foreach(var visit in state.TravelerVisits)
+            {
+                if(visit.SettlementId!=settlementId || visit.Admission!=TravelerAdmission.Pending ||
+                    (reconciledTavern.HasValue && visit.TavernKey!=reconciledTavern.Value) ||
+                    !state.Lodgings.Exists(t=>t.SettlementId==settlementId && t.BuildingKey==visit.TavernKey)) continue;
+                var person=state.Travelers.Find(p=>p.Id==visit.PersonId);
+                double at=Journey(person,visit).CheckInAt;
+                if(at<=now) pending.Add(new KeyValuePair<double,TravelerVisit>(at,visit));
+            }
+            pending.Sort((a,b)=> {
+                int time=a.Key.CompareTo(b.Key);
+                return time!=0 ? time : StringComparer.Ordinal.Compare(a.Value.Id,b.Value.Id);
+            });
+            int attempts=Math.Min(maximumAttempts,pending.Count);
+            for(int index=0;index<attempts;index++) TryAdmitTraveler(pending[index].Value.Id,pending[index].Key);
+            return attempts;
+        }
+        public bool HasDueTravelerAdmission(int settlementId,int tavern,double now)
+        {
+            Require(settlementId>=0 && tavern>=0 && DefenseTime(now),"Invalid traveler admission query.");
+            foreach(var visit in state.TravelerVisits)
+                if(visit.SettlementId==settlementId && visit.TavernKey==tavern && visit.Admission==TravelerAdmission.Pending &&
+                    Journey(Traveler(visit.PersonId),visit).CheckInAt<=now) return true;
+            return false;
         }
         public bool KillTraveler(string personId,double now)
         {
             Require(DefenseTime(now),"Invalid traveler death time.");
             var person=state.Travelers.Find(p=>p.Id==personId); Require(person!=null,"Unknown traveler.");
             if(!person.IsAlive) return false;
+            Require(!state.AlarmIncidents.Exists(a=>a.VictimId==personId && a.StartedAt>now),"Traveler death precedes violence.");
             Require(!state.TravelerVisits.Exists(v=>v.PersonId==personId &&
                 v.Admission==TravelerAdmission.Admitted && v.AttemptedAt>now),"Traveler death precedes admission.");
             person.IsAlive=false; person.DiedAt=now; return true;
@@ -90,6 +173,8 @@ namespace LivingCities.Core
         private static TravelerJourney Journey(TravelerPerson person,TravelerVisit visit)
         {
             var route=new List<RoutePoint>(); foreach(var p in visit.Route) route.Add(new RoutePoint(p.X,p.Z));
+            if(visit.Admission==TravelerAdmission.Refused)
+                return TravelerJourney.CreateRefused(person.AppearanceSeed,visit.DesiredArrival,visit.CommuteSeconds,visit.Walled,route,visit.AttemptedAt);
             return TravelerJourney.Create(person.AppearanceSeed,visit.DesiredArrival,visit.Nights,visit.CommuteSeconds,visit.Walled,route);
         }
         private static TravelerPerson CopyTraveler(TravelerPerson person)
@@ -117,16 +202,19 @@ namespace LivingCities.Core
                 copy.Route.Add(new SavedRoutePoint { X=point.X,Z=point.Z });
             }
             var journey=Journey(person,copy);
+            // Native JSON uses limited decimal precision. At calendar epochs near
+            // 1e10 seconds, recomputing entry + commute can differ by ~0.00005s.
+            // Keep strict identity/room ownership while allowing sub-ms time loss.
             Require(visit.Admission==TravelerAdmission.Pending ? visit.AttemptedAt==-1 && visit.BookingId==null :
-                DefenseTime(visit.AttemptedAt) && visit.AttemptedAt>=journey.CheckInAt,"Invalid traveler admission outcome.");
+                DefenseTime(visit.AttemptedAt) && visit.AttemptedAt+0.001>=journey.CheckInAt,"Invalid traveler admission outcome.");
             if(visit.Admission==TravelerAdmission.Admitted)
             {
                 Require(person.IsAlive || person.DiedAt>=visit.AttemptedAt,"Traveler death precedes admission.");
                 var tavern=world.Lodgings.Find(t=>t.SettlementId==visit.SettlementId && t.BuildingKey==visit.TavernKey);
                 var booking=tavern==null ? null : tavern.Bookings.Find(b=>b.Id==visit.BookingId);
                 Require(visit.BookingId=="traveler-booking:"+visit.Id && booking!=null && !booking.Player && booking.GuestId==person.Id &&
-                    booking.HomeSettlement==person.HomeSettlement && booking.PartySize==1 && booking.StartsAt==journey.CheckInAt &&
-                    booking.EndsAt==journey.CheckOutAt && visit.AttemptedAt<journey.CheckOutAt,"Traveler lacks matching paid room.");
+                    booking.HomeSettlement==person.HomeSettlement && booking.PartySize==1 && Math.Abs(booking.StartsAt-journey.CheckInAt)<0.001 &&
+                    Math.Abs(booking.EndsAt-journey.CheckOutAt)<0.001 && visit.AttemptedAt<journey.CheckOutAt,"Traveler lacks matching paid room.");
             }
             else Require(visit.BookingId==null && !world.Lodgings.Exists(t=>t.Bookings.Exists(b=>b.Id=="traveler-booking:"+visit.Id)),
                 "Unadmitted traveler has a booking.");

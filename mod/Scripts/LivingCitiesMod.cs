@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DaggerfallConnect;
+using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
@@ -8,15 +9,18 @@ using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Game.UserInterface;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using LivingCities.Core;
 using UnityEngine;
 
 namespace LivingCities.DFU
 {
-    public sealed class LivingCitiesMod : MonoBehaviour, IHasModSaveData
+    public sealed partial class LivingCitiesMod : MonoBehaviour, IHasModSaveData
     {
         private WorldStateStore store = new WorldStateStore(0);
+        public readonly BasicRoadsNetwork RoadNetwork = new BasicRoadsNetwork();
         private readonly NativeTavernRentals nativeRentals = new NativeTavernRentals();
+        private BankHouseListings bankListings;
         private QuestOfferBindings questOffers;
         // Explicit eligible adapters use this service before their offer is displayed.
         // No general-purpose residency guessing or automatic quest rewriting is enabled.
@@ -33,6 +37,8 @@ namespace LivingCities.DFU
         private Mod mod;
         private StreetPopulation streets;
         private GuardPopulation guards;
+        private RoadTravelActors roadActors;
+        private LocalDialogueClient localDialogue;
         private bool exteriorGuardsEnabled;
         private IDisposable guardLifetimeHook;
         private bool streetPopulationEnabled;
@@ -47,6 +53,9 @@ namespace LivingCities.DFU
         private SettlementPopulation current;
         private bool panel, saveFault;
         private bool uiRegistered, redirectingChildTalk;
+        private ResidentActor conversationActor;
+        private bool localDialogueEnabled;
+        private int localDialogueTimeoutMilliseconds = 1500;
         private float nextCheck;
         private string diagnostic = "Awaiting a loaded settlement.";
         public Type SaveDataType { get { return typeof(WorldState); } }
@@ -54,15 +63,22 @@ namespace LivingCities.DFU
         [Invoke(StateManager.StateTypes.Start, 10)]
         public static void Init(InitParams initParams)
         {
-            var host = new GameObject("Living Cities");
+            HouseholdPropertyKeyItem.Register();
+            var host = new GameObject("People of the Iliac Bay");
             DontDestroyOnLoad(host);
             var component = host.AddComponent<LivingCitiesMod>();
             component.streets = host.AddComponent<StreetPopulation>();
             component.guards = host.AddComponent<GuardPopulation>();
+            component.roadActors=host.AddComponent<RoadTravelActors>();
+            component.localDialogue=host.AddComponent<LocalDialogueClient>();
+            component.roadActors.Install(()=>component.store,()=>!component.saveFault && component.options.Enabled && component.streetPopulationEnabled);
+            host.AddComponent<HauntingLifetime>().Install(()=>!component.saveFault && component.options.Enabled);
             component.streets.QuestOwnsResident = id => component.questOffers != null && component.questOffers.OwnsResident(id);
             component.streets.SetSleepingArt(initParams.Mod);
             component.streets.InstallReactionHook();
             component.nativeRentals.Install(()=>component.store,()=>!component.saveFault && component.options.Enabled);
+            component.bankListings=new BankHouseListings(()=>component.store,()=>!component.saveFault && component.options.Enabled);
+            component.bankListings.Install();
             host.AddComponent<DefenseCombatAdapter>().Install(()=>component.store,
                 ()=>!component.saveFault && component.options.Enabled && component.guards.OwnsSettlement);
             var lifetimeType = Type.GetType("LivingCities.QuestHooks.NativeGuardLifetimeHooks, LivingCities.QuestHooks", true);
@@ -72,6 +88,7 @@ namespace LivingCities.DFU
             initParams.Mod.SaveDataInterface = component;
             initParams.Mod.LoadSettingsCallback = component.LoadSettings;
             initParams.Mod.LoadSettings();
+            component.InstallConversationHooks();
             DaggerfallUI.UIManager.OnWindowChange += component.OnWindowChange;
             component.uiRegistered = true;
             initParams.Mod.IsReady = true;
@@ -87,7 +104,10 @@ namespace LivingCities.DFU
         }
         private void OnDestroy()
         {
+            if (conversationHooks != null) conversationHooks.Dispose();
+            ResetTravelPlanning();
             nativeRentals.Dispose();
+            if(bankListings!=null) bankListings.Dispose();
             if (guardLifetimeHook != null) guardLifetimeHook.Dispose();
             ClearQuestOffers();
             StartGameBehaviour.OnNewGame -= ResetWorld;
@@ -97,12 +117,24 @@ namespace LivingCities.DFU
         }
         private void OnWindowChange(object sender, EventArgs args)
         {
+            if (!DaggerfallUI.UIManager.ContainsWindow(DaggerfallUI.Instance.TalkWindow))
+            {
+                if (localDialogue) localDialogue.Cancel();
+                conversationSessionOpen = false;
+                conversationBusy = false;
+                if (conversationActor)
+                {
+                    conversationActor.SetConversationFacing(false);
+                    conversationActor = null;
+                }
+            }
             if (redirectingChildTalk || !(DaggerfallUI.UIManager.TopWindow is DaggerfallTalkWindow)) return;
             if (GameManager.Instance.TalkManager.CurrentNPCType != TalkManager.NPCType.Mobile) return;
             var person = GameManager.Instance.TalkManager.MobileNPC;
             var actor = person ? person.GetComponent<ResidentActor>() : null;
             if (!actor || !actor.Resident.IsAlive) return;
-            if (streets && streets.IsAlarmed(actor.Resident.Id))
+            if ((streets && streets.IsAlarmed(actor.Resident.Id)) ||
+                store.HoldsPartnerGrudge(actor.Resident,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()))
             {
                 redirectingChildTalk = true;
                 try
@@ -116,7 +148,14 @@ namespace LivingCities.DFU
                 finally { redirectingChildTalk = false; }
                 return;
             }
-            if (actor.Resident.AgeGroup != ResidentAgeGroup.Child) return;
+            if (actor.Resident.AgeGroup != ResidentAgeGroup.Child)
+            {
+                if (conversationActor && conversationActor != actor) conversationActor.SetConversationFacing(false);
+                conversationActor = actor;
+                actor.SetConversationFacing(true);
+                ShowBereavementGreeting(actor.Resident);
+                return;
+            }
             // Use the public window boundary only for this mod's child actors.
             // Native adult conversations and vanilla NPCs retain their own windows.
             redirectingChildTalk = true;
@@ -129,6 +168,9 @@ namespace LivingCities.DFU
         }
         private void LoadSettings(ModSettings settings, ModSettingsChange change)
         {
+            ResetTravelPlanning();
+            visitorOriginWeights=new VisitorOriginWeights(settings.GetInt("Travel", "NearbyOriginWeight"),
+                settings.GetInt("Travel", "DistantOriginWeight"),settings.GetInt("Travel", "ForeignOriginWeight"));
             if (guards) guards.Clear();
             exteriorGuardsEnabled = settings.GetBool("General", "ExperimentalExteriorGuards");
             if (guards)
@@ -158,6 +200,13 @@ namespace LivingCities.DFU
                 settings.GetBool("Diagnostics", "EnableF8Panel"));
             if (!options.DiagnosticsEnabled) panel = false;
             questHouseholdsEnabled = settings.GetBool("General", "QuestHouseholds");
+            localDialogueEnabled = settings.GetBool("Dialogue", "EnableFreeText");
+            localDialogueTimeoutMilliseconds = Mathf.Clamp(settings.GetInt("Dialogue", "TimeoutMilliseconds"), 100, 10000);
+            dialoguePrewarmEnabled = settings.GetBool("Dialogue", "PrewarmModel");
+            conversationDispositionEnabled = settings.GetBool("Dialogue", "ConversationDisposition");
+            conversationMapRequestsEnabled = settings.GetBool("Dialogue", "MapRequests");
+            dialoguePrewarmQueued = false;
+            if (!localDialogueEnabled && localDialogue) localDialogue.Cancel();
             if (questHouseholdsEnabled && !saveFault && questOffers == null)
                 questOffers = CreateQuestOffers();
             nextCheck = 0;
@@ -165,6 +214,9 @@ namespace LivingCities.DFU
         }
         private void ResetWorld()
         {
+            bereavementGreetings.Clear();
+            ResetTravelPlanning();
+            if(roadActors) roadActors.Clear();
             if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
@@ -173,6 +225,9 @@ namespace LivingCities.DFU
         }
         private void BeforeLoad(SaveData_v1 ignored)
         {
+            bereavementGreetings.Clear();
+            ResetTravelPlanning();
+            if(roadActors) roadActors.Clear();
             if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
@@ -186,10 +241,13 @@ namespace LivingCities.DFU
         {
             if (saveFault) throw new InvalidOperationException("Living Cities save restore failed; refusing to overwrite population data.");
             if (guards) guards.Capture();
+            if (streets) streets.CaptureObservedVisits();
             return store.Snapshot();
         }
         public void RestoreSaveData(object saveData)
         {
+            ResetTravelPlanning();
+            if(roadActors) roadActors.Clear();
             if (guards) guards.Clear();
             ClearQuestOffers();
             if (streets) streets.Clear();
@@ -206,6 +264,16 @@ namespace LivingCities.DFU
         }
         private void Update()
         {
+            UpdateEmbeddedDialogue();
+            AdvanceTravelPlanning();
+            long started=RuntimeTiming.Start();
+            try { UpdatePopulation(); }
+            finally { RuntimeTiming.End("population-refresh",started); }
+        }
+        private DaggerfallWorkshop.Game.Utility.CityNavigation pendingNavigation;
+        private void UpdatePopulation()
+        {
+            nativeRentals.AdvanceSurvey();
             if (options.DiagnosticsEnabled && Input.GetKeyDown(KeyCode.F8)) panel = !panel;
             if (Time.unscaledTime < nextCheck) return;
             nextCheck = Time.unscaledTime + options.RefreshSeconds;
@@ -213,20 +281,48 @@ namespace LivingCities.DFU
             if (saveFault) { diagnostic = "Population suspended: save restore failed or is in progress."; return; }
             GameManager game = GameManager.Instance;
             if (game == null || !game.IsReady || !game.IsPlayingGame() || !game.PlayerGPS.HasCurrentLocation) return;
+            var readyNavigation=game.StreamingWorld.GetCurrentCityNavigation();
+            // Only guard route preparation needs the native Start peer. Keep
+            // population restoration available during the initial load callback.
+            bool deferGuardRoutes=readyNavigation && readyNavigation!=pendingNavigation;
+            pendingNavigation=readyNavigation;
             BuildingDirectory directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             if (directory == null || directory.BuildingCount == 0) { current = null; diagnostic = "Awaiting settlement layout."; return; }
             if (current == null || current.SettlementId != directory.MapID)
             {
-                current = store.GetOrCreateFamilies(directory.MapID, HousingSurvey.Read(directory));
+                long familiesStarted=RuntimeTiming.Start();
+                try
+                {
+                    recoveryHomes = HousingSurvey.Read(directory);
+                    recoveryScanIndex = 0;
+                    current = store.GetOrCreateFamilies(directory.MapID, recoveryHomes);
+                }
+                finally { RuntimeTiming.End("population-families",familiesStarted); }
                 Debug.Log("LIVING_CITIES_SETTLEMENT: " + directory.MapID + "; households=" + current.Households.Count);
             }
-            RegionalIdentityAdapter.Initialize(current);
-            nativeRentals.Refresh(store,directory);
+            if (AdvanceHouseholdRecoveryOne(directory, game))
+                Debug.Log("LIVING_CITIES_HOUSEHOLD_RECOVERED: " + directory.MapID);
+            long identitiesStarted=RuntimeTiming.Start();
+            try { RegionalIdentityAdapter.Initialize(current); }
+            finally { RuntimeTiming.End("population-identities",identitiesStarted); }
+            long rentalStarted=RuntimeTiming.Start();
+            try { nativeRentals.Refresh(store,directory); }
+            finally { RuntimeTiming.End("tavern-inventory",rentalStarted); }
             if (streets && streetPopulationEnabled)
+            {
+                long streetsStarted=RuntimeTiming.Start();
+                try {
                 streets.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current,
                     store, options.WakeHour, options.SleepHour);
-            if (guards && exteriorGuardsEnabled && streets && streets.Ready)
-                guards.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current, store);
+                } finally { RuntimeTiming.End("population-street-setup",streetsStarted); }
+            }
+            if (guards && exteriorGuardsEnabled && streets && streets.Ready && !deferGuardRoutes)
+            {
+                long guardsStarted=RuntimeTiming.Start();
+                try { guards.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), current, store); }
+                finally { RuntimeTiming.End("population-guard-setup",guardsStarted); }
+            }
+            if(streetPopulationEnabled) BeginDailyTravel(directory);
             int alive = 0, dead = 0, sleeping = 0, children = 0;
             long minute = (long)(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds() / 60);
             foreach (Household home in current.Households)
@@ -253,7 +349,7 @@ namespace LivingCities.DFU
         {
             var game = GameManager.Instance;
             return "enabled=" + options.Enabled + "; streets=" + streetPopulationEnabled + "; saveFault=" + saveFault +
-                "; playing=" + game.IsPlayingGame() + "; paused=" + GameManager.IsGamePaused + "; window=" +
+                "; ready=" + game.IsReady + "; playing=" + game.IsPlayingGame() + "; paused=" + GameManager.IsGamePaused + "; window=" +
                 (DaggerfallUI.UIManager.TopWindow == null ? "null" : DaggerfallUI.UIManager.TopWindow.GetType().Name) +
                 "; location=" + game.PlayerGPS.HasCurrentLocation + "; status=" + diagnostic;
         }

@@ -17,6 +17,7 @@ namespace LivingCities.DFU
         public static IEnumerator Run()
         {
             var game=GameManager.Instance;
+            CheckRetreatCorridor(game.PlayerMotor.transform.position+Vector3.up*100);
             yield return CheckKeeper();
             game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(1);
             var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
@@ -49,7 +50,12 @@ namespace LivingCities.DFU
                 while(Time.realtimeSinceStartup<deadline) { actor=streets.FindActor(resident.Id); if(actor && actor.gameObject.activeInHierarchy) break; yield return null; }
                 if(!actor || !actor.gameObject.activeInHierarchy) throw new InvalidOperationException("Threat fixture citizen did not render.");
                 Vector3 before=actor.transform.position;
-                enemy=GameObjectHelper.CreateFoeGameObjects(before+Vector3.right*2,MobileTypes.Thief,1,MobileReactions.Passive)[0];
+                var homeward=geometry.ScenePoint(schedule.EvaluateSeconds(time-2).Position)+Vector3.up-before; homeward.y=0;
+                if(homeward.sqrMagnitude<0.001f) throw new InvalidOperationException("Threat fixture needs a moving route segment.");
+                homeward.Normalize();
+                // Attacker blocks the route home; innocent player stands on the safe side.
+                game.PlayerMotor.transform.position=before-homeward*6;
+                enemy=GameObjectHelper.CreateFoeGameObjects(before+homeward*2,MobileTypes.Thief,1,MobileReactions.Passive)[0];
                 enemy.SetActive(true); yield return null;
                 enemy.GetComponent<EnemyMotor>().IsHostile=true; enemy.GetComponent<EnemyMotor>().enabled=false;
                 enemy.GetComponent<EnemySenses>().enabled=false; enemy.GetComponent<EnemyAttack>().enabled=false;
@@ -60,20 +66,80 @@ namespace LivingCities.DFU
                     if(alarm!=null && alarm.ThreatId!=null) break; yield return null;
                 }
                 if(alarm==null || alarm.ThreatId==null || alarm.VictimId!=null) throw new InvalidOperationException("Hostile sighting did not create a non-murder alarm.");
-                yield return new WaitForSecondsRealtime(1.5f);
+                float initialGap=Vector3.Distance(actor.transform.position,enemy.transform.position);
+                deadline=Time.realtimeSinceStartup+1.5f;
+                while(Time.realtimeSinceStartup<deadline && actor && actor.gameObject.activeInHierarchy)
+                {
+                    if(Vector3.Distance(actor.transform.position,enemy.transform.position)<initialGap-0.2f)
+                        throw new InvalidOperationException("Fleeing citizen moved toward the hostile instead of away.");
+                    yield return null;
+                }
                 var person=alarm.People.Find(p=>p.ResidentId==resident.Id);
                 if(person.Reaction!=CivilianReaction.Flee || (!person.ReachedRefuge && (!actor || Vector3.Distance(before,actor.transform.position)<0.5f)))
                     throw new InvalidOperationException("Citizen did not physically flee or reach home.");
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None) throw new InvalidOperationException("Threat response accused the innocent player.");
+                if(actor && actor.gameObject.activeInHierarchy && Vector3.Distance(actor.transform.position,enemy.transform.position)<initialGap+0.5f)
+                    throw new InvalidOperationException("Citizen failed to gain distance from the hostile blocking home: before="+before+
+                        "; current="+actor.transform.position+"; enemy="+enemy.transform.position+"; initialGap="+initialGap);
+                Debug.Log("LIVING_CITIES_FLIGHT_SAFETY_PASS: hostile blocks home, innocent player on opposite side; citizen increases threat clearance.");
                 var json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
                 var restored=new WorldStateStore(42); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
                 if(restored.ActiveAlarm(resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()).ThreatId!=alarm.ThreatId)
                     throw new InvalidOperationException("Native serializer lost citizen threat ownership.");
+                // Controlled final approach exercises the real runtime arrival hook;
+                // the hostile-blocking-home case above already verifies actual flight.
+                var homePoint=routine.Route[0];
+                person.X=homePoint.X;person.Z=homePoint.Z;
+                var homeWorld=geometry.ScenePoint(new RoutePoint(homePoint.X,homePoint.Z));
+                var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
+                person.Y=directory.transform.InverseTransformPoint(homeWorld).y;
+                game.PlayerMotor.transform.position=homeWorld+Vector3.up*2+Vector3.right*5;
+                yield return new WaitForSecondsRealtime(1);
+                double arrived=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                BuildingSummary homeSummary;
+                if(!person.ReachedRefuge || !person.RefugeSealed || !store.ShelterLocked(alarm.SettlementId,resident.HomeKey,arrived) ||
+                    !directory.GetBuildingSummary(resident.HomeKey,out homeSummary) ||
+                    game.PlayerObject.GetComponent<PlayerActivate>().BuildingIsUnlocked(homeSummary))
+                    throw new InvalidOperationException("Physical home arrival did not seal the native shelter door.");
+                var shelterJson=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
+                restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),shelterJson));
+                if(!restored.ShelterLocked(alarm.SettlementId,resident.HomeKey,arrived) ||
+                    restored.ShelterLocked(alarm.SettlementId,resident.HomeKey,arrived+3600))
+                    throw new InvalidOperationException("Native saved shelter lock lost expiry.");
+                DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(3600);
+                if(store.ShelterLocked(alarm.SettlementId,resident.HomeKey,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()))
+                    throw new InvalidOperationException("Shelter remained sealed after one hour.");
+                Debug.Log("LIVING_CITIES_SHELTER_LOCK_PASS: runtime home arrival, native locked door, native JSON and one-hour expiry.");
                 Debug.Log("LIVING_CITIES_CITIZEN_THREAT_PASS: actual hostile sighting, physical flight/home refuge, no murder charge, native serialization; guards disabled; resident="+resident.Id);
             }
             finally { field.SetValue(selected,original); guards.EnemyDefense=defense; if(enemy) UnityEngine.Object.Destroy(enemy); }
         }
         public static IEnumerator RunWelfare() { yield return CheckKeeper(true); }
+        private static void CheckRetreatCorridor(Vector3 origin)
+        {
+            var floor=GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var wall=GameObject.CreatePrimitive(PrimitiveType.Cube);
+            try
+            {
+                floor.transform.position=origin-Vector3.up*0.1f;floor.transform.localScale=new Vector3(12,0.2f,12);
+                wall.transform.position=origin+new Vector3(2,1.5f,0);wall.transform.localScale=new Vector3(0.3f,3,3);
+                wall.SetActive(false);Physics.SyncTransforms();Vector3 end;
+                if(!CivilianFlightSteering.TryDirectRetreat(origin,origin+Vector3.right*4,out end))
+                    throw new InvalidOperationException("Retreat corridor rejected a clear supported floor.");
+                wall.SetActive(true);Physics.SyncTransforms();
+                if(CivilianFlightSteering.TryDirectRetreat(origin,origin+Vector3.right*4,out end))
+                    throw new InvalidOperationException("Retreat corridor crosses a solid wall.");
+                wall.SetActive(false);floor.transform.localScale=new Vector3(3,0.2f,12);Physics.SyncTransforms();
+                if(CivilianFlightSteering.TryDirectRetreat(origin,origin+Vector3.right*4,out end))
+                    throw new InvalidOperationException("Retreat corridor crosses unsupported ground.");
+                Debug.Log("LIVING_CITIES_RETREAT_CORRIDOR_PASS: supported floor allowed; walls and drops rejected.");
+            }
+            finally
+            {
+                floor.SetActive(false);wall.SetActive(false);
+                UnityEngine.Object.Destroy(floor);UnityEngine.Object.Destroy(wall);Physics.SyncTransforms();
+            }
+        }
         private static IEnumerator CheckKeeper(bool welfare=false)
         {
             var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;

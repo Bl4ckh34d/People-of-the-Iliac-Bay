@@ -1,0 +1,85 @@
+{
+  "batch": {
+    "name": "batch-19",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-19.png",
+    "items": [
+      {
+        "id": "flat-184-29",
+        "archive": 184,
+        "record": 29,
+        "kind": "flat",
+        "caption": "blonde wearing blue",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-29.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-30",
+        "archive": 184,
+        "record": 30,
+        "kind": "flat",
+        "caption": "dark-skinned woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-30.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-31",
+        "archive": 184,
+        "record": 31,
+        "kind": "flat",
+        "caption": "bald slave",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-31.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-32",
+        "archive": 184,
+        "record": 32,
+        "kind": "flat",
+        "caption": "dark warrior woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-32.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-33",
+        "archive": 184,
+        "record": 33,
+        "kind": "flat",
+        "caption": "dark buxom wench",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-33.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-184-34",
+        "archive": 184,
+        "record": 34,
+        "kind": "flat",
+        "caption": "man on horseback",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-34.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-334-0",
+        "archive": 334,
+        "record": 0,
+        "kind": "flat",
+        "caption": "Provlith",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-334-0.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-334-1",
+        "archive": 334,
+        "record": 1,
+        "kind": "flat",
+        "caption": "Popudax",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-334-1.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-184-29 (blonde wearing blue); 2: flat-184-30 (dark-skinned woman); 3: flat-184-31 (bald slave); 4: flat-184-32 (dark warrior woman); 5: flat-184-33 (dark buxom wench); 6: flat-184-34 (man on horseback); 7: flat-334-0 (Provlith); 8: flat-334-1 (Popudax). All outputs fully covered, only faces and close-fitting headgear visible. Preserve skin colour and original hair, beard and age; no beard on clean-shaven faces.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-2f4ccbc4-6e8e-4690-b8ff-2d5998295587.png",
+  "status": "generated-awaiting-runtime-validation"
+}

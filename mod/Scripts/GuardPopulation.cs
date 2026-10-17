@@ -53,17 +53,24 @@ namespace LivingCities.DFU
         private IDisposable hooks;
         private string reportId;
         private readonly Dictionary<string, GuardActor> actors = new Dictionary<string, GuardActor>();
+        private InteriorGeometry interiorNavigation;
         private readonly Dictionary<GameObject, bool> nativeGuards = new Dictionary<GameObject, bool>();
         private float nextRoutes, nextInvestigation;
         private bool awaitingSight;
         private Coroutine approachSurvey;
+        private Coroutine setupSurvey;
+        private BuildingDirectory setupDirectory;
+        private TownGeometry setupGeometry,setupEntrances;
+        private List<SavedRoutePoint> setupPosts;
         private DaggerfallInterior interior;
         private Vector3? entryGround;
         public bool OwnsSettlement { get { return OwnsTown(); } }
         private bool OwnsTown()
         {
             var game = GameManager.Instance;
-            return isActiveAndEnabled && directory && Roster != null && game != null && game.IsPlayingGame() &&
+            // A paused dialogue does not relinquish settlement ownership. Hiding
+            // guards here ends combat, causing vanilla to reset its surrender flag.
+            return isActiveAndEnabled && directory && Roster != null && game != null &&
                 !game.SaveLoadManager.LoadInProgress &&
                 game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId == directory.MapID &&
                 (!game.PlayerEnterExit.IsPlayerInside || (game.PlayerEnterExit.IsPlayerInsideBuilding &&
@@ -88,6 +95,19 @@ namespace LivingCities.DFU
                 }
                 return;
             }
+            if(!GameManager.Instance.PlayerEnterExit.IsPlayerInside)
+            {
+                if(setupDirectory!=town)
+                {
+                    Clear(); setupDirectory=town;
+                    setupSurvey=StartCoroutine(PrepareGuardSetup(town,navigation));
+                    return;
+                }
+                if(setupPosts==null || setupEntrances==null) return;
+            }
+            var preparedGeometry=setupDirectory==town ? setupGeometry : null;
+            var preparedPosts=setupDirectory==town ? setupPosts : null;
+            var preparedEntrances=setupDirectory==town ? setupEntrances : null;
             Clear();
             if (GameManager.Instance.PlayerEnterExit.IsPlayerInside && store.GetGuards(town.MapID) == null) return;
             var routines = store.GetRoutines(town.MapID);
@@ -96,12 +116,12 @@ namespace LivingCities.DFU
             foreach (var home in population.Households) residents += home.Residents.Count;
             int count = GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType), residents);
             var savedRoster = store.GetGuards(town.MapID);
-            var postSurvey=new TownGeometry(town,navigation,false);
+            var postSurvey=preparedGeometry ?? new TownGeometry(town,navigation,false);
             publicPostSurveyPending=GameManager.Instance.PlayerEnterExit.IsPlayerInside;
             var posts=new List<SavedRoutePoint>();
             if(publicPostSurveyPending)
             { foreach(var guard in savedRoster.Guards) if(guard.IsAlive) posts.Add(guard.Post); }
-            else posts=postSurvey.SurveyGuardPosts(350);
+            else posts=preparedPosts ?? postSurvey.SurveyGuardPosts(350);
             publicPostSites=publicPostSurveyPending ? new List<SavedRoutePoint>() : posts;
             if (posts.Count < count && savedRoster == null) count = posts.Count;
             if (count == 0 && savedRoster == null) return;
@@ -110,39 +130,32 @@ namespace LivingCities.DFU
             for (int i = 0; i < Math.Min(count,posts.Count); i++) selected.Add(posts[i * posts.Count / Math.Min(count,posts.Count)]);
             worldStore = store;
             directory = town; geometry = postSurvey;
+            refugeGeometry=preparedEntrances;
             Roster = store.GetOrCreateGuards(town.MapID, count, selected);
             Roster.Advance(Now());
-            // Reconstruct idle saved guards at valid public posts. Preserve active
-            // patrols, responses, refuge journeys, deaths and all identities.
-            if(savedRoster!=null && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)
-                foreach(var guard in Roster.Guards)
-                {
-                    if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted || Roster.IsOnPatrol(guard.Id) ||
-                        posts.Exists(p=>Math.Abs(p.X-guard.Post.X)<0.05 && Math.Abs(p.Z-guard.Post.Z)<0.05)) continue;
-                    List<SavedRoutePoint> relocation=null; double best=double.MaxValue;
-                    foreach(var post in posts)
-                    {
-                        if(Roster.Guards.Exists(g=>g.Id!=guard.Id && g.IsAlive && Math.Pow(g.Post.X-post.X,2)+Math.Pow(g.Post.Z-post.Z,2)<0.64)) continue;
-                        double distance=Math.Pow(post.X-guard.Post.X,2)+Math.Pow(post.Z-guard.Post.Z,2);
-                        if(distance>=best) continue;
-                        var route=geometry.RouteBetweenPoints(guard.Post,post);
-                        if(route.Count>=2) { best=distance; relocation=route; }
-                    }
-                    if(relocation!=null) Roster.MovePost(guard.Id,relocation,Now(),1.3,12);
-                }
+            long gateSetupStarted=RuntimeTiming.Start();
+            try { InitializeGateGuardPosts(); }
+            finally {RuntimeTiming.End("guard-initial-gate-posts",gateSetupStarted);}
+            // Saved posts may predate a layout mod. Repair them through the sliced
+            // migration worker, never by draining thousands of paths during load.
+            nextPostMigration=0;
             if (count > Roster.Target)
             {
                 try { Roster.IncreaseTarget(count,posts); }
                 catch (ArgumentException) { Debug.Log("LIVING_CITIES_GARRISON_EXPANSION_PENDING: insufficient distinct reachable posts."); }
             }
             foreach (var patrol in Roster.Patrols) patrolTemplates.Add(PatrolPairPlan.CopyValidated(patrol.Plan));
-            approachSurvey = StartCoroutine(SurveyApproaches(navigation));
-            patrolSurvey = StartCoroutine(SurveyPatrols());
+            long approachStart=RuntimeTiming.Start();
+            try {approachSurvey = StartCoroutine(SurveyApproaches(navigation));}
+            finally {RuntimeTiming.End("guard-initial-approach",approachStart);}
+            long patrolStart=RuntimeTiming.Start();
+            try {patrolSurvey = StartCoroutine(SurveyPatrols());}
+            finally {RuntimeTiming.End("guard-initial-patrol",patrolStart);}
             foreach (var guard in Roster.Guards)
                 if (guard.IsAlive && guard.IncidentId != null) { reportId = guard.IncidentId; break; }
             var type = Type.GetType("LivingCities.QuestHooks.NativeGuardHooks, LivingCities.QuestHooks", true);
             hooks = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool>(OwnsTown),
-                new Action<bool>(ReportNative), new Func<Vector3, Vector3, GameObject>(ResolveNative) });
+                new Action<bool>(immediate => ReportNative(immediate)), new Func<Vector3, Vector3, GameObject>(ResolveNative) });
             // Existing transient municipal reinforcements predate roster ownership.
             // Retire them once; quest-owned actors retain their native ownership.
             foreach (var body in UnityEngine.Object.FindObjectsOfType<DaggerfallEnemy>())
@@ -162,43 +175,126 @@ namespace LivingCities.DFU
             // timestamp (~12 billion seconds) rounds to 1024-second increments.
             return (double)now.ToSeconds() + (double)now.Second - Math.Floor(now.Second);
         }
+        private IEnumerator PrepareGuardSetup(BuildingDirectory town,CityNavigation navigation)
+        {
+            yield return BackgroundWork.Wait(()=>setupDirectory==town && town);
+            if(setupDirectory!=town || !town) yield break;
+            var postGeometry=new TownGeometry(town,navigation,false);
+            var result=new TownGeometry.GuardPostResult();
+            var entrances=new TownGeometry(town,navigation,false);
+            foreach(var operation in new[]{postGeometry.SurveyGuardPostSteps(350,result),entrances.ReadEntranceSteps(),postGeometry.SurveyGatePostSteps()})
+            {
+                try
+                {
+                    while(setupDirectory==town && town)
+                    {
+                        var game=GameManager.Instance;
+                        if(GameManager.IsGamePaused || game.PlayerEnterExit.IsPlayerInside || !town.gameObject.activeInHierarchy ||
+                            game.StreamingWorld.GetCurrentBuildingDirectory()!=town) {yield return null; continue;}
+                        bool more; long started=RuntimeTiming.Start();
+                        try {more=operation.MoveNext();}
+                        finally {RuntimeTiming.End("guard-setup-survey-slice",started);}
+                        if(!more) break;
+                        yield return null;
+                    }
+                }
+                finally {(operation as IDisposable)?.Dispose();}
+                if(setupDirectory!=town || !town) yield break;
+            }
+            setupGeometry=postGeometry; setupPosts=result.Posts; setupEntrances=entrances;
+            setupSurvey=null;
+        }
+        private sealed class ApproachWork
+        {
+            public int Building;
+            public SavedRoutePoint Target;
+            public List<GuardRecord> Guards;
+            public Dictionary<string,List<SavedRoutePoint>> Routes;
+        }
         private IEnumerator SurveyApproaches(CityNavigation navigation)
         {
             while (!OwnsExterior || !directory.gameObject.activeInHierarchy)
                 yield return null;
             // Door discovery and physics queries must run against the active exterior.
-            var survey = new TownGeometry(directory, navigation);
+            // Approaches, haunting refuges and wall shifts use the same loaded
+            // settlement entrance geometry. Clear() invalidates it on scene change.
+            if(refugeGeometry==null)
+            {
+                long entrancesStarted=RuntimeTiming.Start();
+                try {refugeGeometry=new TownGeometry(directory,navigation);}
+                finally {RuntimeTiming.End("guard-entrance-survey",entrancesStarted);}
+            }
+            var survey = refugeGeometry;
             int completed = 0;
+            var work=new List<ApproachWork>();
             foreach (var entry in survey.Entrances)
             {
-                if (Roster.BuildingApproaches.Exists(a => a.BuildingKey == entry.Key)) continue;
                 var routes = new Dictionary<string, List<SavedRoutePoint>>();
+                var cached=Roster.BuildingApproaches.Find(a=>a.BuildingKey==entry.Key);
+                if(cached!=null) foreach(var route in cached.Routes) routes[route.GuardId]=route.Points;
                 var door = entry.Value.LocalDoor;
                 var target = new SavedRoutePoint { X = door.x, Z = door.z };
                 // The roster can gain recruits during the coroutine. Use a stable
                 // post survey snapshot; replacements can reuse the same post route.
                 var guards = new List<GuardRecord>(Roster.Guards);
-                foreach (var guard in guards)
+                guards.Sort((a,b)=>{
+                    double ax=a.Post.X-target.X,az=a.Post.Z-target.Z,bx=b.Post.X-target.X,bz=b.Post.Z-target.Z;
+                    int order=(ax*ax+az*az).CompareTo(bx*bx+bz*bz);
+                    return order!=0 ? order : string.CompareOrdinal(a.Id,b.Id);
+                });
+                work.Add(new ApproachWork {Building=entry.Key,Target=target,Guards=guards,Routes=routes});
+                if(work.Count%8==0) yield return null;
+            }
+            // Give each building its nearest available response route before
+            // filling every distant guard route for the first building.
+            for(int rank=0;rank<Roster.Guards.Count;rank++)
+                foreach(var entry in work)
                 {
+                    if(rank>=entry.Guards.Count) continue;
+                    var guard=entry.Guards[rank];var target=entry.Target;var routes=entry.Routes;
+                    if(routes.ContainsKey(guard.Id)) continue;
                     while (!OwnsTown() || GameManager.Instance.PlayerEnterExit.IsPlayerInside ||
                         !directory.gameObject.activeInHierarchy || GameManager.IsGamePaused)
                         yield return null;
-                    var route = survey.RouteBetweenPoints(guard.Post, target);
-                    if (route.Count >= 2) routes.Add(guard.Id, route);
+                    var prepared=new TownGeometry.RouteResult();
+                    var routeWork=survey.ReadRouteSteps(guard.Post,target,prepared,()=>OwnsExterior &&
+                        directory.gameObject.activeInHierarchy && !GameManager.IsGamePaused);
+                    bool finished=false;
+                    try
+                    {
+                        while(!finished)
+                        {
+                            while(!OwnsExterior || !directory.gameObject.activeInHierarchy || GameManager.IsGamePaused)
+                                yield return null;
+                            long slice=RuntimeTiming.Start();
+                            var budget=System.Diagnostics.Stopwatch.StartNew();
+                            try
+                            {
+                                // Consume cheap internal yields in the same frame. Waiting
+                                // one frame per small search/validation step delays readiness.
+                                do {finished=!routeWork.MoveNext();}
+                                while(!finished && budget.Elapsed.TotalMilliseconds<4);
+                            }
+                            finally {RuntimeTiming.End("guard-approach-route-slice",slice);}
+                            if(!finished) yield return null;
+                        }
+                    }
+                    finally {(routeWork as IDisposable)?.Dispose();}
+                    var route = prepared.Points;
+                    if (route!=null && route.Count >= 2)
+                    {
+                        routes.Add(guard.Id, route);
+                        Roster.CacheBuildingApproach(entry.Building,target,routes);
+                        if(routes.Count==1) completed++;
+                    }
                     yield return null;
                 }
-                if (routes.Count > 0)
-                {
-                    Roster.CacheBuildingApproach(entry.Key, target, routes);
-                    completed++;
-                }
-            }
             Debug.Log("LIVING_CITIES_GUARD_APPROACHES_READY: buildings=" + Roster.BuildingApproaches.Count + "; added=" + completed);
             approachSurvey = null;
         }
         private SavedRoutePoint Local(Vector3 position)
         { var p = directory.transform.InverseTransformPoint(position); return new SavedRoutePoint { X = p.x, Z = p.z }; }
-        private void ReportNative(bool immediate)
+        private void ReportNative(bool immediate, Vector3? rememberedOutdoorPosition = null)
         {
             if (!OwnsTown()) return;
             {
@@ -212,7 +308,8 @@ namespace LivingCities.DFU
                 if (resident && streets && streets.ReactionsEnabled && streets.FindActor(resident.Resident.Id) == resident &&
                     resident.Resident.IsAlive) return;
             }
-            var room = GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ? GameManager.Instance.PlayerEnterExit.Interior : null;
+            var room = !rememberedOutdoorPosition.HasValue && GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ?
+                GameManager.Instance.PlayerEnterExit.Interior : null;
             int? building = room ? (int?)room.EntryDoor.buildingKey : null;
             var currentReport = Roster.Reports.Find(r => r.Id == reportId);
             if (currentReport != null && (currentReport.BuildingKey != building || currentReport.Investigation)) reportId = null;
@@ -248,7 +345,7 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_GUARD_BUILDING_DISPATCH: building=" + building + "; responders=" + responders.Count);
                 return;
             }
-            var target = Local(GameManager.Instance.PlayerMotor.transform.position);
+            var target = Local(rememberedOutdoorPosition ?? GameManager.Instance.PlayerMotor.transform.position);
             var routes = new Dictionary<string, List<SavedRoutePoint>>();
             Roster.Advance(now);
             foreach (var guard in Roster.Guards)
@@ -260,6 +357,20 @@ namespace LivingCities.DFU
             var sent = Roster.Dispatch(reportId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12);
             Debug.Log("LIVING_CITIES_GUARD_DISPATCH: " + reportId + "; responders=" + sent.Count);
         }
+        public void ReportWitnessedInteriorLoot()
+        {
+            if (!GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding ||
+                GameManager.Instance.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None) return;
+            // Reuse finite physical building responses, including pending geometry.
+            ReportNative(true);
+        }
+        public void ReportDialogueOffense()
+        {
+            if(GameManager.Instance.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None)
+                ReportNative(true);
+        }
+        public bool HasAvailableDialogueGuards()
+        { return OwnsTown() && Roster != null && Roster.Guards.Exists(guard => guard.IsAlive && guard.Duty == GuardDuty.Posted); }
         public bool CanInvestigate(int buildingKey)
         { return OwnsTown() && Roster.BuildingApproaches.Exists(a => a.BuildingKey == buildingKey && a.Routes.Count > 0); }
         private void RetryNativeReports(double now)
@@ -290,53 +401,105 @@ namespace LivingCities.DFU
         public List<SavedRoutePoint> WitnessRoute(int buildingKey, double now)
         {
             if (!OwnsTown()) return null;
-            var approach = Roster.BuildingApproaches.Find(a => a.BuildingKey == buildingKey);
-            if (approach == null) return null;
             Roster.Advance(now);
-            List<SavedRoutePoint> best = null; double shortest = double.MaxValue;
-            foreach (var route in approach.Routes)
+            var plan=Roster.PlanWitnessRoute(buildingKey,now);
+            return plan==null ? null : plan.Route;
+        }
+        private readonly Dictionary<string,double> nextWitnessRoute=new Dictionary<string,double>();
+        public void PrepareWitnessAdvance(CivilianIncident alarm,AlarmPerson person,double now)
+        {
+            double previous=person.EscapeAdvancedAt;
+            if(previous==0 || previous>now) previous=now;
+            if(!OwnsTown() || alarm.SettlementId!=directory.MapID || now<person.Escape.ExitAt) return;
+            var threat=WitnessThreat(alarm);
+            if(threat==null) return;
+            // Replan from the last simulated position before consuming elapsed time.
+            // Crossing the doorway starts this decision at the exact exit time.
+            double at=Math.Max(previous,Math.Max(person.Escape.ExitAt,person.Escape.RedirectedAt));
+            var before=new AlarmPerson(); var after=new AlarmPerson();
+            person.Escape.Advance(before,at); person.Escape.Advance(after,now);
+            double next;
+            // A newly approaching attacker overrides the normal replan cadence.
+            if(nextWitnessRoute.TryGetValue(person.ResidentId,out next) && now<next &&
+                FlightSafety.SafeStep(before.X,before.Z,after.X,after.Z,threat.X,threat.Z)) return;
+            person.Escape.Advance(person,at);
+            var plan=Roster.PlanWitnessRoute(alarm.BuildingKey,now,new SavedRoutePoint{X=person.X,Z=person.Z},threat,true);
+            if(plan!=null) person.Escape=person.Escape.RedirectExterior(at,plan.Route);
+            nextWitnessRoute[person.ResidentId]=now+6;
+        }
+        private SavedRoutePoint WitnessThreat(CivilianIncident alarm)
+        {
+            var game=GameManager.Instance;
+            // Exterior routes must never use the player's coordinates inside a building.
+            if(game.PlayerEnterExit.IsPlayerInside) return null;
+            if(alarm.ThreatId==null) return Local(game.PlayerMotor.transform.position);
+            Vector3 target;
+            return TryHostileThreatPosition(alarm.ThreatId,out target) ? Local(target) : null;
+        }
+        private void ReplanEscapedWitnesses(CivilianIncident alarm,double now,StreetPopulation streets)
+        {
+            if(alarm.Scene!=null && alarm.Scene.Reported || Roster.Reports.Exists(r=>r.GuardIds.Count>0 &&
+                (r.Id=="civilian:"+alarm.Id || r.Id=="inn-alarm:"+alarm.Id || r.Id=="discovery:"+alarm.Id))) return;
+            var threat=WitnessThreat(alarm);
+            foreach(var person in alarm.People)
             {
-                if (!Roster.Guards.Exists(g => g.IsAlive && g.Duty == GuardDuty.Posted && !Roster.IsOnPatrol(g.Id) &&
-                    Math.Abs(g.Post.X-route.Points[0].X) < 0.05 && Math.Abs(g.Post.Z-route.Points[0].Z) < 0.05)) continue;
-                double length = 0;
-                for (int i = 1; i < route.Points.Count; i++)
-                { double x = route.Points[i].X-route.Points[i-1].X, z = route.Points[i].Z-route.Points[i-1].Z; length += Math.Sqrt(x*x+z*z); }
-                if (length >= shortest) continue;
-                shortest = length; best = route.Points.ConvertAll(p => new SavedRoutePoint { X = p.X, Z = p.Z });
+                if(person.Escape==null || now<person.Escape.ExitAt || !CivilianAlarms.PersonActive(alarm,person,now) ||
+                    person.Reaction!=CivilianReaction.Flee || !streets.IsLivingResident(person.ResidentId)) continue;
+                double next;
+                if(nextWitnessRoute.TryGetValue(person.ResidentId,out next) && now<next) continue;
+                nextWitnessRoute[person.ResidentId]=now+(threat==null ? 24 : 6);
+                var plan=Roster.PlanWitnessRoute(alarm.BuildingKey,now,new SavedRoutePoint{X=person.X,Z=person.Z},threat,threat!=null);
+                if(plan!=null) person.Escape=person.Escape.RedirectExterior(now,plan.Route);
             }
-            if (best != null) best.Reverse();
-            return best;
         }
         public void ReportEscapedWitness(CivilianIncident alarm, double now)
         {
-            if (alarm==null || !OwnsTown() || alarm.SettlementId != directory.MapID || alarm.BuildingKey < 0 || now >= CivilianAlarms.ActiveUntil(alarm)) return;
+            if (alarm==null || !OwnsTown() || alarm.SettlementId != directory.MapID || alarm.BuildingKey < 0 ||
+                (now >= CivilianAlarms.ActiveUntil(alarm) && !(alarm.PlayerAttributed && !alarm.CrimeResolved))) return;
             if(alarm.ThreatId!=null && !EnemyDefense) return;
             string id = "civilian:" + alarm.Id;
             if (Roster.Reports.Exists(r => r.Id == id && r.GuardIds.Count > 0)) return;
             var streets = GetComponent<StreetPopulation>();
             Roster.Advance(now);
-            bool reached = false;
+            bool reached = false, reachedDirectWitness = false;
             var informed=new HashSet<string>();
             foreach (var person in alarm.People)
             {
-                if (!person.DirectWitness && person.HeardViolence && person.Escape != null && person.Escape.Arrived(now) &&
+                if(!CivilianAlarms.PersonActive(alarm,person,now)) continue;
+                if (!person.DirectWitness && person.HeardViolence && person.Escape != null && now>=person.Escape.ExitAt &&
                     alarm.Scene != null && worldStore.ReportHeardViolence(alarm.Id, person.ResidentId, now))
                 {
                     UpdateInvestigations(now);
                     Debug.Log("LIVING_CITIES_GUARD_HEARING_REPORT: " + alarm.Id + "; neutral physical contact");
                 }
-                if (!person.DirectWitness || person.Reaction != CivilianReaction.Flee || person.Escape == null ||
-                    !person.Escape.Arrived(now) || !streets.IsLivingResident(person.ResidentId)) continue;
-                foreach(var guard in Roster.Guards)
-                    if(guard.IsAlive && guard.Duty==GuardDuty.Posted && guard.Interior==null &&
-                        Math.Abs(Roster.Position(guard.Id,now).X-person.X)<0.5 && Math.Abs(Roster.Position(guard.Id,now).Z-person.Z)<0.5)
-                    { reached=true; informed.Add(guard.Id); }
+                if ((!person.DirectWitness && !person.InnAlarm && !person.CorpseObserver) || person.Reaction != CivilianReaction.Flee || person.Escape == null ||
+                    now<person.Escape.ExitAt || !streets.IsLivingResident(person.ResidentId)) continue;
+                foreach(var guardId in Roster.GuardsInReportingRange(new SavedRoutePoint{X=person.X,Z=person.Z},now))
+                    { reached=true; if(person.DirectWitness) reachedDirectWitness=true; informed.Add(guardId); }
             }
-            if (!reached) return;
-            var sent = Roster.DispatchBuilding(id, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12,
-                false,alarm.ThreatId==null ? null : informed,alarm.ThreatId);
+            if (!reached) { ReplanEscapedWitnesses(alarm,now,streets); return; }
+            // An inn-wide alarm tells occupants to escape, but does not identify the
+            // player as the murderer. A non-witness can send guards to inspect the inn;
+            // only an actual direct witness creates the accusation report.
+            bool neutralInnReport = alarm.ThreatId == null && !reachedDirectWitness;
+            string dispatchId = neutralInnReport ? "inn-alarm:" + alarm.Id : id;
+            if(Roster.Reports.Exists(r=>r.Id==dispatchId && r.GuardIds.Count>0)) return;
+            var sent = Roster.DispatchBuilding(dispatchId, alarm.BuildingKey, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, 12,
+                neutralInnReport,alarm.ThreatId==null ? null : informed,alarm.ThreatId,
+                !neutralInnReport && alarm.ThreatId==null && alarm.Corpse!=null);
             if (sent.Count == 0) return;
-            if(alarm.ThreatId==null) { reportId = id; GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder; }
+            if(alarm.ThreatId==null && !neutralInnReport)
+            {
+                reportId = id;
+                if (alarm.Corpse != null)
+                {
+                    GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
+                    if (alarm.PlayerAttributed) worldStore.MarkMurderAccusationIssued(alarm.Id);
+                }
+                else if (GameManager.Instance.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
+                    GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
+                WitnessReportNotice(alarm);
+            }
             Debug.Log("LIVING_CITIES_GUARD_ESCAPE_REPORT: " + id + "; building=" + alarm.BuildingKey + "; responders=" + sent.Count);
         }
         private GameObject ResolveNative(Vector3 position, Vector3 direction)
@@ -364,7 +527,8 @@ namespace LivingCities.DFU
             if (!OwnsTown() || GameManager.Instance.PlayerEnterExit.IsPlayerInside || incident == null ||
                 !incident.HasLocation || incident.BuildingKey != -1 || incident.SettlementId != directory.MapID) return;
             double now = Now();
-            if (now < incident.StartedAt || now >= incident.ExpiresAt) return;
+            if (incident.Corpse == null || now < incident.StartedAt || incident.CrimeResolved ||
+                (now >= incident.ExpiresAt && !incident.PlayerAttributed)) return;
             string id = "civilian:" + incident.Id;
             var reported = Roster.Reports.Find(r => r.Id == id);
             if (reported != null && reported.GuardIds.Count > 0) return;
@@ -385,7 +549,17 @@ namespace LivingCities.DFU
             if (sent.Count == 0) return;
             reportId = id;
             GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
+            if (incident.PlayerAttributed) worldStore.MarkMurderAccusationIssued(incident.Id);
+            WitnessReportNotice(incident);
             Debug.Log("LIVING_CITIES_GUARD_WITNESS_REPORT: " + id + "; responders=" + sent.Count);
+        }
+        private void WitnessReportNotice(CivilianIncident incident)
+        {
+            var streets=GetComponent<StreetPopulation>();
+            if(incident.ThreatId!=null || !streets ||
+                !incident.People.Exists(p=>p.DirectWitness && streets.IsLivingResident(p.ResidentId))) return;
+            DaggerfallUI.AddHUDText("A witness has reported your crime to the guards.");
+            Debug.Log("LIVING_CITIES_WITNESS_REPORT_NOTICE: "+incident.Id);
         }
         private GuardActor View(GuardRecord guard, double now)
         {
@@ -447,6 +621,12 @@ namespace LivingCities.DFU
         }
         private void Update()
         {
+            long started=RuntimeTiming.Start();
+            try { UpdatePopulation(); }
+            finally { RuntimeTiming.End("guard-population",started); }
+        }
+        private void UpdatePopulation()
+        {
             AdvanceSceneWarnings();
             if (worldStore != null && !GameManager.IsGamePaused && Time.unscaledTime >= nextInvestigation)
             { nextInvestigation = Time.unscaledTime + 1; UpdateInvestigations(Now()); }
@@ -457,10 +637,14 @@ namespace LivingCities.DFU
             if (interior != loaded)
             {
                 ClearViews(); interior = loaded;
-                entryGround = interior ? new InteriorGeometry(interior).EntryGround : null;
+                interiorNavigation = interior ? new InteriorGeometry(interior) : null;
+                entryGround = interiorNavigation == null ? (Vector3?)null : interiorNavigation.EntryGround;
             }
             Roster.Advance(now);
             ReleaseSafeRefuges(now);
+            long gateStarted=RuntimeTiming.Start();
+            try { UpdateGateGuardDuty(now); }
+            finally { RuntimeTiming.End("guard-gate-duty",gateStarted); }
             if (Roster.Recruit(now) > 0)
             {
                 if (patrolSurvey != null) StopCoroutine(patrolSurvey);
@@ -469,7 +653,7 @@ namespace LivingCities.DFU
                 patrolSurvey = StartCoroutine(SurveyPatrols());
             }
             if (Time.unscaledTime >= nextPatrolTick)
-            { nextPatrolTick = Time.unscaledTime + 1; UpdateNightPatrols(now); }
+            { nextPatrolTick = Time.unscaledTime + 1; UpdateNightPatrols(now); UpdateDayRest(now); }
             if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None)
             {
                 reportId = null; awaitingSight = false;
@@ -481,11 +665,7 @@ namespace LivingCities.DFU
             if (routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) RetryNativeReports(now);
             if (awaitingSight && routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) ReportNative(false);
             if (interior) { if(routeTick) RefreshInteriorThreats(); UpdateInterior(now); return; }
-            if(Time.unscaledTime>=nextPostMigration)
-            {
-                nextPostMigration=Time.unscaledTime+5;
-                MigrateDeferredPost(now);
-            }
+            UpdatePostMigration();
             HideNative();
             if (routeTick) SurveyEnemyThreats(now);
             foreach (var guard in Roster.Guards)
@@ -539,14 +719,18 @@ namespace LivingCities.DFU
                 else
                 {
                     actor.Place(now);
+                    if(TryResumeKnownPursuit(guard,actor,now)) continue;
                     if ((guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching) &&
                         game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None && !game.PlayerEntity.IsInvisible &&
                         CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20)) actor.BeginCombat(now);
                 }
             }
         }
+        private float nextPursuitRecruitment;
         private void LateUpdate()
         {
+            if(OwnsTown() && !GameManager.IsGamePaused && Time.unscaledTime>=nextPursuitRecruitment)
+            { nextPursuitRecruitment=Time.unscaledTime+0.5f; RecruitNearbyPursuitGuards(Now()); }
             if (OwnsTown() && !GameManager.IsGamePaused && Time.unscaledTime >= nextTorchUpdate)
             { nextTorchUpdate = Time.unscaledTime + 0.25f; UpdateTorches(); }
         }
@@ -603,18 +787,25 @@ namespace LivingCities.DFU
                 var actor = View(guard, now); actor.gameObject.SetActive(true);
                 if (guard.Interior.Returning) { actor.EndCombat(); actor.Place(now); continue; }
                 if(UpdateInteriorEnemyDefense(guard,actor,report,now)) continue;
-                if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None && (report == null || !report.Investigation))
+                if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None && (report == null || !report.OccupiesScene))
                 {
                     actor.EndCombat(); actor.Capture(now);
                     Roster.EndInteriorSearch(guard.Id, now); actor.Place(now);
                     continue;
                 }
                 actor.Capture(now);
-                if (report != null && report.Investigation && game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None &&
+                if(game.PlayerEntity.CrimeCommitted==PlayerEntity.Crimes.None) actor.EndCombat();
+                if(report!=null && report.OccupiesScene && Roster.InteriorPursuitExpired(guard.Id,now))
+                {
+                    actor.EndCombat(); Roster.FinishInteriorPursuit(guard.Id,now);
+                    Debug.Log("LIVING_CITIES_SCENE_PURSUIT_EXPIRED: "+guard.Id+"; accusation retained");
+                }
+                if (report != null && report.OccupiesScene) UpdateCrimeSceneInterior(guard, report, actor, now);
+                if (report != null && report.OccupiesScene && game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None &&
                     !game.PlayerEntity.IsInvisible && CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
                 {
                     if (report.Warning == null) report.Warning = new CrimeSceneWarning();
-                    if (report.Warning.Begin()) DaggerfallUI.AddHUDText("Leave this crime scene. You have ten seconds to exit the house.");
+                    if (report.Warning.Begin()) ShowSceneWarning(report, (int)Math.Ceiling(report.Warning.Remaining));
                 }
                 if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None && !game.PlayerEntity.IsInvisible &&
                     CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20))
@@ -623,19 +814,26 @@ namespace LivingCities.DFU
         }
         private void ClearViews()
         {
+            nextWitnessRoute.Clear();
             Capture();
             foreach (var pair in actors) if (pair.Value) { pair.Value.EndCombat(); Destroy(pair.Value.gameObject); }
             actors.Clear();
+            crimeSceneMotions.Clear();
         }
         private void HideViews()
         { foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeSelf) { pair.Value.Capture(Now()); pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); } }
         public void Clear()
         {
+            CancelPostMigration();
+            if(setupSurvey!=null) {StopCoroutine(setupSurvey); setupSurvey=null;}
+            setupDirectory=null; setupGeometry=null; setupEntrances=null; setupPosts=null;
+            CancelGateDutyWork();
+            gateDutySurveyed=false; gateDutyPosts.Clear(); gateDutyPairs.Clear(); nextGateDutyTick=0; gateApproachesDirty=false;
             if (approachSurvey != null) { StopCoroutine(approachSurvey); approachSurvey = null; }
             if (patrolSurvey != null) { StopCoroutine(patrolSurvey); patrolSurvey = null; }
             patrolTemplates.Clear();
             defenseEnemies.Clear();
-            refugeInteriors.Clear(); refugeGeometry=null;
+            refugeInteriors.Clear(); wallBedRoutes.Clear(); refugeGeometry=null;
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);

@@ -13,6 +13,26 @@ namespace LivingCities.DFU
         public readonly List<Vector3> LocalAnchors = new List<Vector3>();
         public Vector3? EntryGround { get; private set; }
         public bool IsComplete { get; private set; }
+        public List<Vector3> StandingNear(Vector3 localTarget,float range)
+        {
+            var candidates=new List<Vector3>();
+            foreach(var floor in floors.Values)
+            {
+                var local=interior.transform.InverseTransformPoint(floor);
+                if(Mathf.Abs(local.y-localTarget.y)<2 && (local-localTarget).sqrMagnitude<range*range) candidates.Add(local);
+            }
+            candidates.Sort((a,b)=>{
+                int d=(a-localTarget).sqrMagnitude.CompareTo((b-localTarget).sqrMagnitude);
+                if(d!=0) return d;d=a.x.CompareTo(b.x);return d!=0?d:a.z.CompareTo(b.z);
+            });
+            var result=new List<Vector3>();
+            foreach(var candidate in candidates)
+            {
+                bool near=false;foreach(var chosen in result) if((chosen-candidate).sqrMagnitude<CrowdMotion.Separation*CrowdMotion.Separation) {near=true;break;}
+                if(!near) result.Add(candidate);if(result.Count>=12) break;
+            }
+            return result;
+        }
         private readonly System.Func<Vector3,Vector3,bool> boundary;
         private readonly DaggerfallInterior interior;
         private readonly float Radius;
@@ -20,12 +40,19 @@ namespace LivingCities.DFU
         private float BodyBase { get { return 0.5f + Radius + 0.01f; } }
         private readonly float bodyTop;
         private const float GridStep = 0.2f;
+        private const int RouteSimplifyLookahead = 16;
+        private const int RouteSimplifyChecks = 24;
+        private const float RouteSimplifyDistance = 2.4f;
+        private const float RouteSimplifyHeight = 0.35f;
         private readonly Dictionary<Vector3Int, Vector3> floors = new Dictionary<Vector3Int, Vector3>();
         private readonly Dictionary<Vector3Int, Vector3Int> parents = new Dictionary<Vector3Int, Vector3Int>();
+        private sealed class FloorEdge { public Vector3Int To; public Vector3? Corner; }
+        private readonly Dictionary<Vector3Int, List<FloorEdge>> floorEdges = new Dictionary<Vector3Int, List<FloorEdge>>();
         private const float MaximumRise = 0.5f;
         private readonly Dictionary<Vector3Int, Vector3> stepCorners = new Dictionary<Vector3Int, Vector3>();
+        private System.Collections.IEnumerator survey;
         public InteriorGeometry(DaggerfallInterior interior,float bodyRadius=0.24f,float top=1.65f,
-            Vector3? surveySeed=null,System.Func<Vector3,Vector3,bool> boundary=null)
+            Vector3? surveySeed=null,System.Func<Vector3,Vector3,bool> boundary=null,bool sampleFloorOnly=false,bool deferSurvey=false)
         {
             this.interior = interior;
             this.boundary=boundary;
@@ -47,17 +74,35 @@ namespace LivingCities.DFU
                             // Enter markers identify the doorway's floor. Starting the
                             // ray two metres higher can select the attic above this room.
                             found = Floor(marker + new Vector3(x * 0.8f, 0, z * 0.8f), 0.2f, surveySeed.HasValue ? 0.4f : 5, out seed) && Clear(seed);
-                if (found) break;
             }
             if (!found) return;
             EntryGround = seed;
+            // Bed partitioning only needs the entrance floor and direct floor probes.
+            // It builds separate door-bounded room graphs below; do not flood the
+            // entire inn once more merely to use StandBesideBed.
+            if(sampleFloorOnly) return;
             floors.Add(Vector3Int.zero, seed);
+            floorEdges.Add(Vector3Int.zero,new List<FloorEdge>());
+            survey=Survey(markers,seed);
+            if(!deferSurvey) while(AdvanceSurvey()) { }
+        }
+        public bool AdvanceSurvey()
+        {
+            if(survey==null) return false;
+            if(survey.MoveNext()) return true;
+            survey=null; return false;
+        }
+        private System.Collections.IEnumerator Survey(List<Vector3> markers,Vector3 seed)
+        {
             var queue = new Queue<Vector3>(); queue.Enqueue(seed);
             var seen = new HashSet<Vector3Int>(); seen.Add(Vector3Int.zero);
             var occupants = interior.GetComponentsInChildren<StaticNPC>();
             int visited = 0;
+            long slice=System.Diagnostics.Stopwatch.GetTimestamp();
             while (queue.Count > 0 && visited++ < 12000)
             {
+                if((visited&31)==0 && (System.Diagnostics.Stopwatch.GetTimestamp()-slice)*1000d/System.Diagnostics.Stopwatch.Frequency>=2)
+                { yield return null; slice=System.Diagnostics.Stopwatch.GetTimestamp(); }
                 Vector3 point = queue.Dequeue();
                 bool suitable = true;
                 foreach (var marker in markers)
@@ -73,7 +118,7 @@ namespace LivingCities.DFU
                     Vector3 floor;
                     if (!Floor(candidate, 0.55f, 1.1f, out floor) || Mathf.Abs(floor.y - point.y) > MaximumRise + 0.001f || !Clear(floor)) continue;
                     var cell = Cell(floor, seed);
-                    if (seen.Contains(cell) || Mathf.Abs(cell.x) > 100 || Mathf.Abs(cell.z) > 100 || Mathf.Abs(cell.y) > 150) continue;
+                    if (cell==Cell(point,seed) || Mathf.Abs(cell.x) > 100 || Mathf.Abs(cell.z) > 100 || Mathf.Abs(cell.y) > 150) continue;
                     Vector3 corner = Vector3.zero; bool stepped = false;
                     bool reachable = false;
                     if (Mathf.Abs(floor.y-point.y) > 0.01f)
@@ -84,19 +129,128 @@ namespace LivingCities.DFU
                         stepped = reachable = Clear(corner) && SweepsClear(point,corner) && SweepsClear(corner,floor);
                     }
                     else reachable = SweepsClear(point, floor);
-                    if (reachable)
+                    if (!reachable) continue;
+                    if (!seen.Contains(cell))
                     {
-                        seen.Add(cell); floors.Add(cell, floor);
+                        seen.Add(cell); floors.Add(cell, floor); floorEdges.Add(cell,new List<FloorEdge>());
                         parents.Add(cell, Cell(point, seed));
                         if (stepped) stepCorners.Add(cell, corner);
                         queue.Enqueue(floor);
                     }
+                    AddFloorEdge(Cell(point,seed),cell,stepped ? (Vector3?)corner : null);
                 }
             }
             if (queue.Count > 0) Debug.LogWarning("LIVING_CITIES_INTERIOR_SURVEY_LIMIT: building=" + interior.EntryDoor.buildingKey + "; nodes=" + floors.Count);
             IsComplete=queue.Count==0;
         }
+        private void AddFloorEdge(Vector3Int from,Vector3Int to,Vector3? corner)
+        {
+            List<FloorEdge> edges;
+            if(floorEdges.TryGetValue(from,out edges) && !ContainsEdge(edges,to)) edges.Add(new FloorEdge { To=to,Corner=corner });
+            if(floorEdges.TryGetValue(to,out edges) && !ContainsEdge(edges,from)) edges.Add(new FloorEdge { To=from,Corner=corner });
+        }
+        private static bool ContainsEdge(List<FloorEdge> edges,Vector3Int target)
+        { foreach(var edge in edges) if(edge.To==target) return true; return false; }
+        public List<GuardPoint3> FindLocalDetour(Vector3 ground,IList<Vector3> crowd,float separation,
+            IList<GuardPoint3> rejoinRoute,out int rejoinIndex,int maximumVisited=160,float minimumRejoinDistance=0.65f)
+        {
+            rejoinIndex=-1;var empty=new List<GuardPoint3>();
+            if(!EntryGround.HasValue || !Clear(ground) || crowd==null || separation<=0 || maximumVisited<1 ||
+                float.IsNaN(minimumRejoinDistance) || float.IsInfinity(minimumRejoinDistance) || minimumRejoinDistance<0 || rejoinRoute==null) return empty;
+            var goals=new Dictionary<Vector3Int,int>();float along=0;Vector3 prior=ground;
+            for(int i=0;i<rejoinRoute.Count && along<4.5f;i++)
+            {
+                var point=rejoinRoute[i];var world=interior.transform.TransformPoint(new Vector3((float)point.X,(float)point.Y,(float)point.Z));
+                along+=Vector3.Distance(prior,world);prior=world;
+                var delta=world-ground;delta.y=0;
+                if(delta.sqrMagnitude<minimumRejoinDistance*minimumRejoinDistance || delta.sqrMagnitude>4.5f*4.5f || Mathf.Abs(world.y-ground.y)>0.5f) continue;
+                var cell=Cell(world,EntryGround.Value);
+                if(floors.ContainsKey(cell) && !goals.ContainsKey(cell)) goals.Add(cell,i);
+            }
+            if(goals.Count==0) return empty;
+            var starts=new List<KeyValuePair<Vector3Int,float>>();
+            var centerCell=Cell(ground,EntryGround.Value);
+            for(int y=-2;y<=2;y++) for(int z=-6;z<=6;z++) for(int x=-6;x<=6;x++)
+            {
+                var cell=centerCell+new Vector3Int(x,y,z);Vector3 floor;
+                if(!floors.TryGetValue(cell,out floor)) continue;
+                var delta=floor-ground;
+                if(delta.sqrMagnitude>1.21f || Mathf.Abs(delta.y)>0.3f) continue;
+                starts.Add(new KeyValuePair<Vector3Int,float>(cell,delta.sqrMagnitude));
+            }
+            starts.Sort((a,b)=>a.Value.CompareTo(b.Value));
+            int visited=0,startsChecked=0;
+            foreach(var startCandidate in starts)
+            {
+                if(visited>=maximumVisited || startsChecked++>=32) break;
+                var start=startCandidate.Key;var startGround=floors[start];
+                if(boundary!=null && !boundary(ground,startGround) || !SweepsClear(ground,startGround)) continue;
+                bool supported=true;
+                for(float t=0;t<=1;t+=0.2f)
+                {
+                    var sample=Vector3.Lerp(ground,startGround,t);Vector3 floor;
+                    if(!Floor(sample,0.4f,0.8f,out floor) || Mathf.Abs(floor.y-sample.y)>0.3f) {supported=false;break;}
+                }
+                if(!supported || !CrowdSeparated(ground,startGround,crowd,separation)) continue;
+                var queue=new Queue<Vector3Int>();var previous=new Dictionary<Vector3Int,Vector3Int>();
+                var seen=new HashSet<Vector3Int>();queue.Enqueue(start);seen.Add(start);
+                while(queue.Count>0 && visited++<maximumVisited)
+                {
+                    var cell=queue.Dequeue();if(goals.ContainsKey(cell))
+                    {
+                        rejoinIndex=goals[cell];var cells=new List<Vector3Int>();var cursor=cell;cells.Add(cursor);
+                        while(cursor!=start){cursor=previous[cursor];cells.Add(cursor);}cells.Reverse();
+                        var route=new List<GuardPoint3> { LocalPoint(ground) };
+                        foreach(var pathCell in cells)
+                        {
+                            if(pathCell!=start)
+                            {
+                                var from=previous[pathCell];
+                                foreach(var edge in floorEdges[from]) if(edge.To==pathCell && edge.Corner.HasValue) {route.Add(LocalPoint(edge.Corner.Value));break;}
+                            }
+                            route.Add(LocalPoint(floors[pathCell]));
+                        }
+                        return route;
+                    }
+                    List<FloorEdge> edges;
+                    if(!floorEdges.TryGetValue(cell,out edges)) continue;
+                    foreach(var edge in edges)
+                    {
+                        if(seen.Contains(edge.To)) continue;
+                        Vector3 from=floors[cell],to=floors[edge.To];
+                        if((to-ground).sqrMagnitude>3.5f*3.5f || Mathf.Abs(to.y-ground.y)>1.5f) continue;
+                        Vector3 corner=edge.Corner.HasValue?edge.Corner.Value:Vector3.zero;
+                        if(edge.Corner.HasValue && !CrowdSeparated(from,corner,crowd,separation)) continue;
+                        if(!CrowdSeparated(edge.Corner.HasValue?corner:from,to,crowd,separation)) continue;
+                        seen.Add(edge.To);previous.Add(edge.To,cell);queue.Enqueue(edge.To);
+                    }
+                }
+            }
+            return empty;
+        }
+        private bool CrowdSeparated(Vector3 from,Vector3 to,IList<Vector3> crowd,float separation)
+        {
+            Vector3 delta=to-from;Vector3 horizontalDelta=delta;horizontalDelta.y=0;float square=horizontalDelta.sqrMagnitude;
+            foreach(var other in crowd)
+            {
+                if(Mathf.Abs(other.y-from.y)>2.1f && Mathf.Abs(other.y-to.y)>2.1f) continue;
+                var initial=from-other;initial.y=0;
+                if(initial.sqrMagnitude<separation*separation-0.0001f)
+                {
+                    var final=to-other;final.y=0;
+                    if(Vector3.Dot(initial,horizontalDelta)<-0.0001f || final.sqrMagnitude<initial.sqrMagnitude-0.0001f) return false;
+                    continue;
+                }
+                var relative=other-from;relative.y=0;
+                float t=square<0.000001f?0:Mathf.Clamp01(Vector3.Dot(relative,horizontalDelta)/square);
+                var closest=from+delta*t-other;closest.y=0;
+                if(closest.sqrMagnitude<separation*separation-0.0001f) return false;
+            }
+            return true;
+        }
         public List<GuardPoint3> RouteToExit(Vector3 ground)
+        { return SimplifySupportedRoute(RouteToExitRaw(ground)); }
+        private List<GuardPoint3> RouteToExitRaw(Vector3 ground)
         {
             var route = new List<GuardPoint3>();
             if (!EntryGround.HasValue || !Clear(ground)) return route;
@@ -131,7 +285,7 @@ namespace LivingCities.DFU
             }
             return route;
         }
-        public bool StandBesideBed(BedAnchor bed, out Vector3 ground)
+        public bool StandBesideBed(BedAnchor bed, out Vector3 ground, bool requireReachable=false)
         {
             Vector3 center = interior.transform.TransformPoint(bed.LocalCenter);
             Vector3 side = interior.transform.TransformDirection(bed.LocalSideDirection);
@@ -140,19 +294,21 @@ namespace LivingCities.DFU
                 foreach (float along in new[] { 0f,-0.25f,0.25f })
                 {
                     Vector3 candidate = center+side*sign*(bed.Width*0.5f+Radius+0.15f)+head*along*bed.Length;
-                    if (Floor(candidate,0.1f,1.6f,out ground) && ground.y < center.y-0.1f && Clear(ground)) return true;
+                    if (Floor(candidate,0.1f,1.6f,out ground) && ground.y < center.y-0.1f && Clear(ground) && (!requireReachable || RouteToExit(ground).Count>=2)) return true;
                 }
             foreach (float sign in new[] { -1f,1f })
             {
                 Vector3 candidate = center+head*sign*(bed.Length*0.5f+Radius+0.15f);
-                if (Floor(candidate,0.1f,1.6f,out ground) && ground.y < center.y-0.1f && Clear(ground)) return true;
+                if (Floor(candidate,0.1f,1.6f,out ground) && ground.y < center.y-0.1f && Clear(ground) && (!requireReachable || RouteToExit(ground).Count>=2)) return true;
             }
             ground=Vector3.zero; return false;
         }
         public List<GuardPoint3> RouteBetween(Vector3 localFrom,Vector3 localTo)
         {
-            var a=RouteToExit(interior.transform.TransformPoint(localFrom));
-            var b=RouteToExit(interior.transform.TransformPoint(localTo));
+            // Preserve the complete parent chains until their shared ancestor is
+            // found. Simplify only after the two surveyed paths have been joined.
+            var a=RouteToExitRaw(interior.transform.TransformPoint(localFrom));
+            var b=RouteToExitRaw(interior.transform.TransformPoint(localTo));
             if(a.Count<2 || b.Count<2) return new List<GuardPoint3>();
             int ai=a.Count-1,bi=b.Count-1;
             while(ai>0 && bi>0 && Vector3.Distance(Point(a[ai-1]),Point(b[bi-1]))<0.001f) { ai--; bi--; }
@@ -160,9 +316,75 @@ namespace LivingCities.DFU
             for(int i=0;i<=ai;i++) route.Add(a[i]);
             for(int i=bi-1;i>=0;i--) route.Add(b[i]);
             if(route.Count==1) route.Add(new GuardPoint3 { X=route[0].X,Y=route[0].Y,Z=route[0].Z });
-            return route;
+            return SimplifySupportedRoute(route);
+        }
+        private List<GuardPoint3> SimplifySupportedRoute(IList<GuardPoint3> route)
+        {
+            if(route==null || route.Count<3) return route==null ? new List<GuardPoint3>() : new List<GuardPoint3>(route);
+            return InteriorRouteSimplifier.Simplify(route,ShortcutSupportedAndClear,RouteSimplifyLookahead,
+                RouteSimplifyChecks,RouteSimplifyDistance,RouteSimplifyHeight);
+        }
+        private bool ShortcutSupportedAndClear(GuardPoint3 fromLocal,GuardPoint3 toLocal)
+        {
+            Vector3 from=interior.transform.TransformPoint(Point(fromLocal));
+            Vector3 to=interior.transform.TransformPoint(Point(toLocal));
+            if(Mathf.Abs(to.y-from.y)>RouteSimplifyHeight || !SweepsClear(from,to)) return false;
+            float distance=Vector3.Distance(from,to);
+            int segments=Mathf.Max(1,Mathf.CeilToInt(distance/0.2f));
+            for(int i=0;i<=segments;i++)
+            {
+                Vector3 sample=Vector3.Lerp(from,to,i/(float)segments),floor;
+                if(!Floor(sample,0.4f,0.8f,out floor) || Mathf.Abs(floor.y-sample.y)>0.12f) return false;
+            }
+            return true;
+        }
+        public List<Vector3> ApproachPoints(Vector3 localTarget,float radius,float verticalTolerance)
+        {
+            var target=interior.transform.TransformPoint(localTarget);
+            var points=new List<Vector3>();
+            // Standing anchors are deliberately sparse and capped at 80. Interaction
+            // routes must use the surveyed walkable floor, including upper rooms.
+            foreach(var floor in floors.Values)
+            {
+                float x=floor.x-target.x,z=floor.z-target.z;
+                if(x*x+z*z<=radius*radius && Mathf.Abs(floor.y-target.y)<=verticalTolerance)
+                    points.Add(interior.transform.InverseTransformPoint(floor));
+            }
+            points.Sort((a,b)=>(a-localTarget).sqrMagnitude.CompareTo((b-localTarget).sqrMagnitude));
+            return points;
+        }
+        public List<Vector3> NearbyApproachPoints(Vector3 localTarget,float radius,float verticalTolerance,int maximum)
+        {
+            var points=new List<Vector3>();
+            if(!EntryGround.HasValue || radius<0 || verticalTolerance<0 || maximum<1) return points;
+            Vector3 target=interior.transform.TransformPoint(localTarget);
+            Vector3Int center=Cell(target,EntryGround.Value);
+            int horizontalCells=Mathf.CeilToInt(radius/GridStep);
+            int verticalCells=Mathf.CeilToInt(verticalTolerance/0.2f);
+            for(int y=-verticalCells;y<=verticalCells;y++)
+                for(int z=-horizontalCells;z<=horizontalCells;z++)
+                    for(int x=-horizontalCells;x<=horizontalCells;x++)
+                    {
+                        Vector3 floor;
+                        if(!floors.TryGetValue(center+new Vector3Int(x,y,z),out floor)) continue;
+                        float dx=floor.x-target.x,dz=floor.z-target.z;
+                        if(dx*dx+dz*dz>radius*radius || Mathf.Abs(floor.y-target.y)>verticalTolerance) continue;
+                        points.Add(interior.transform.InverseTransformPoint(floor));
+                    }
+            points.Sort((a,b)=>(a-localTarget).sqrMagnitude.CompareTo((b-localTarget).sqrMagnitude));
+            if(points.Count>maximum) points.RemoveRange(maximum,points.Count-maximum);
+            return points;
         }
         private static Vector3 Point(GuardPoint3 point) { return new Vector3((float)point.X,(float)point.Y,(float)point.Z); }
+        public bool HasClearLine(Vector3 from, Vector3 to)
+        {
+            if (boundary != null && !boundary(from, to)) return false;
+            Vector3 delta = to - from;
+            if (delta.sqrMagnitude < 0.000001f) return true;
+            foreach (var hit in Physics.RaycastAll(from, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+                if (SurveyBlocker(hit.collider)) return false;
+            return true;
+        }
         // Rest markers can lie over mattresses; associate them with nearby visible
         // floor in this region without requiring a walkable path onto the mattress.
         public bool ContainsRestMarker(Vector3 marker)

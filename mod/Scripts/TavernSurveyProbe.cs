@@ -3,14 +3,172 @@ using System.Collections;
 using System.Collections.Generic;
 using LivingCities.Core;
 using DaggerfallConnect;
+using DaggerfallConnect.Arena2;
+using DaggerfallConnect.Utility;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Serialization;
 using UnityEngine;
 
 namespace LivingCities.DFU
 {
     public static class TavernSurveyProbe
     {
+        private static void VerifyVisitSettlement(WorldState saved,string resident,int town)
+        {
+            var trip=saved.ResidentTrips.Find(t=>t.ResidentId==resident);
+            if(trip==null || trip.InnStays.Count==0 || trip.InnReceptions.Count==0)
+                throw new InvalidOperationException("Visit settlement fixture lacks lodging records.");
+            if(trip.InnStays.Exists(s=>s.SettlementId!=town) || trip.InnReceptions.Exists(r=>r.SettlementId!=town) ||
+                trip.ServiceExits.Exists(e=>e.SettlementId!=town))
+                throw new InvalidOperationException("Native serializer lost visit settlement identity.");
+            if(trip.InnStays.Exists(s=>string.IsNullOrEmpty(s.VisitId)) || trip.InnReceptions.Exists(r=>string.IsNullOrEmpty(r.VisitId)) ||
+                trip.ServiceExits.Exists(e=>string.IsNullOrEmpty(e.VisitId)))
+                throw new InvalidOperationException("Native serializer lost stable visit ID.");
+            var legacy=(WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),saved));
+            var old=legacy.ResidentTrips.Find(t=>t.ResidentId==resident);
+            foreach(var stay in old.InnStays) {stay.SettlementId=null;stay.VisitId=null;}
+            foreach(var reception in old.InnReceptions) {reception.SettlementId=null;reception.VisitId=null;}
+            foreach(var exit in old.ServiceExits) {exit.SettlementId=null;exit.VisitId=null;}
+            var migrated=new WorldStateStore(1);migrated.Restore(legacy);
+            var copy=migrated.Snapshot().ResidentTrips.Find(t=>t.ResidentId==resident);
+            if(copy.InnStays.Exists(s=>s.SettlementId!=town) || copy.InnReceptions.Exists(r=>r.SettlementId!=town) ||
+                copy.ServiceExits.Exists(e=>e.SettlementId!=town) || copy.InnStays[0].BookingId!=trip.InnStays[0].BookingId)
+                throw new InvalidOperationException("Legacy visit migration changed settlement or payment identity.");
+            for(int i=0;i<trip.InnStays.Count;i++)
+                if(copy.InnStays[i].VisitId!=trip.InnStays[i].VisitId) throw new InvalidOperationException("Legacy stay inferred wrong visit ID.");
+            for(int i=0;i<trip.InnReceptions.Count;i++)
+                if(copy.InnReceptions[i].VisitId!=trip.InnReceptions[i].VisitId) throw new InvalidOperationException("Legacy reception inferred wrong visit ID.");
+            for(int i=0;i<trip.ServiceExits.Count;i++)
+                if(copy.ServiceExits[i].VisitId!=trip.ServiceExits[i].VisitId) throw new InvalidOperationException("Legacy exit inferred wrong visit ID.");
+            Debug.Log("LIVING_CITIES_VISIT_SETTLEMENT_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; native fields and legacy inference.");
+            Debug.Log("LIVING_CITIES_VISIT_ID_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; stable IDs and legacy inference.");
+        }
+        private static void VerifyRemoteClaims(BuildingDirectory directory,StaticDoor entry,TavernRoomSurvey.Result inventory)
+        {
+            var local=new WorldStateStore(1); local.GetOrCreate(directory.MapID,new int[0]);
+            local.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
+            NativeInnOccupants.Claim(local,directory,entry,inventory.Rooms,inventory.Occupants,100);
+            var remote=new WorldStateStore(1); remote.GetOrCreate(directory.MapID,new int[0]);
+            remote.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
+            uint seed=DFRandom.Seed;
+            NativeInnOccupants.Claim(remote,directory.MapID,directory.LocationData,entry,inventory.Rooms,inventory.Occupants,100);
+            if(DFRandom.Seed!=seed) throw new InvalidOperationException("Remote claims changed global random state.");
+            var a=local.NativePeopleFor(directory.MapID); var b=remote.NativePeopleFor(directory.MapID);
+            if(a.Count!=b.Count) throw new InvalidOperationException("Remote native identity count differs.");
+            foreach(var person in a)
+            {
+                var other=b.Find(p=>p.Id==person.Id);
+                if(other==null || other.Name!=person.Name || other.Race!=person.Race ||
+                    remote.NativeLodgingBed(person.Id)!=local.NativeLodgingBed(person.Id))
+                    throw new InvalidOperationException("Remote native room claim differs.");
+            }
+            var foreign=directory.LocationData; foreign.LocationIndex++;
+            for(int r=0;r<MapsFile.RegionRaces.Length;r++)
+                if(MapsFile.RegionRaces[r]!=MapsFile.RegionRaces[foreign.RegionIndex]) {foreign.RegionIndex=r;break;}
+            var alternate=new WorldStateStore(1); alternate.GetOrCreate(directory.MapID,new int[0]);
+            alternate.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
+            NativeInnOccupants.Claim(alternate,directory.MapID,foreign,entry,inventory.Rooms,inventory.Occupants,100);
+            foreach(var person in alternate.NativePeopleFor(directory.MapID))
+                if(person.FactionId==0 && person.Race!=MapsFile.RegionRaces[foreign.RegionIndex]+1)
+                    throw new InvalidOperationException("Remote occupant inherited player region.");
+            if(DFRandom.Seed!=seed) throw new InvalidOperationException("Foreign claims changed global random state.");
+            Debug.Log("LIVING_CITIES_REMOTE_CLAIMS_PASS: building="+entry.buildingKey+"; people="+a.Count);
+        }
+        private static void VerifyRemoteReceipt(BuildingDirectory directory,StaticDoor entry,TavernRoomSurvey.Result inventory)
+        {
+            int marker=-1; string room=null;
+            foreach(var pair in inventory.Markers) {marker=pair.Key;room=pair.Value;break;}
+            if(marker<0) throw new InvalidOperationException("No rental marker for receipt fixture.");
+            var store=new WorldStateStore(1); store.GetOrCreate(directory.MapID,new int[0]);
+            var receipt=new RoomRental_v1 {mapID=directory.MapID,buildingKey=entry.buildingKey,allocatedBedIndex=marker,expiryTime=1000};
+            NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,100);
+            NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,200);
+            var ledger=store.Snapshot().Lodgings[0];
+            if(ledger.Bookings.Count!=1 || !ledger.Bookings[0].Player || ledger.Bookings[0].RoomId!=room || ledger.Bookings[0].EndsAt!=1000)
+                throw new InvalidOperationException("Remote registration lost or duplicated paid receipt.");
+            var paidRoom=ledger.Rooms.Find(r=>r.Id==room);
+            if(ledger.Occupants.Exists(o=>paidRoom.Beds.Contains(o.BedId)))
+                throw new InvalidOperationException("Permanent occupant displaced paid player room.");
+            if(store.TryBookLodging(directory.MapID,entry.buildingKey,"conflicting-remote-guest","visitor",777,false,1,200,500,room))
+                throw new InvalidOperationException("Remote guest double-booked player room.");
+            var invalid=new WorldStateStore(1); invalid.GetOrCreate(directory.MapID,new int[0]);
+            receipt.allocatedBedIndex=int.MaxValue; bool rejected=false;
+            try {NativeTavernRentals.RegisterInventory(invalid,directory.MapID,directory.LocationData,entry,inventory,receipt,100);}
+            catch(InvalidOperationException) {rejected=true;}
+            if(!rejected || invalid.Snapshot().Lodgings.Count!=0 || invalid.NativePeopleFor(directory.MapID).Count!=0)
+                throw new InvalidOperationException("Invalid receipt partially registered destination.");
+            Debug.Log("LIVING_CITIES_REMOTE_RECEIPT_PASS: building="+entry.buildingKey);
+        }
+        private static void VerifyLocalPatronFlow(DaggerfallInterior room,InteriorGeometry geometry,WorldState saved,int town,double now)
+        {
+            var store=new WorldStateStore(1); store.Restore(saved);
+            var people=store.NativePeopleFor(town);
+            Func<StaticNPC,bool> isLivingKeeper=npc=>
+            {
+                var person=people.Find(p=>p.WorkKey==room.EntryDoor.buildingKey && p.NativeHash==npc.Data.hash);
+                return person!=null && person.IsAlive;
+            };
+            var absent=new ShopVisitGeometry(room,geometry,null);
+            var absentVisit=absent.Create("inn-probe-absent",1,now+10,now+7210);
+            if(absent.TavernKeeper || absentVisit!=null)
+                throw new InvalidOperationException("Tavern patron flow used a keeper without a living-keeper resolver.");
+            var rejected=new ShopVisitGeometry(room,geometry,npc=>false);
+            if(rejected.Create("inn-probe-dead",2,now+10,now+7210)!=null)
+                throw new InvalidOperationException("Tavern patron flow fell back after all keepers were rejected.");
+
+            StaticNPC expected=null;
+            foreach(var npc in room.GetComponentsInChildren<StaticNPC>())
+            {
+                FactionFile.FactionData faction;
+                if(isLivingKeeper(npc) && GameManager.Instance.PlayerEntity.FactionData.GetFactionData(npc.Data.factionID,out faction) &&
+                    faction.sgroup==(int)FactionFile.SocialGroups.Merchants) {expected=npc;break;}
+            }
+            bool keeperAlive=true;
+            var rechecked=new ShopVisitGeometry(room,geometry,npc=>keeperAlive && isLivingKeeper(npc));
+            if(expected && rechecked.TavernKeeper!=expected) throw new InvalidOperationException("Tavern geometry missed living keeper at survey time.");
+            keeperAlive=false;
+            if(rechecked.Create("inn-probe-became-dead",4,now+10,now+7210)!=null)
+                throw new InvalidOperationException("Tavern patron flow used a keeper who died after survey.");
+            var visits=new ShopVisitGeometry(room,geometry,isLivingKeeper);
+            if(!expected)
+            {
+                if(visits.Create("inn-probe-no-living",3,now+10,now+7210)!=null || visits.TavernKeeper)
+                    throw new InvalidOperationException("Tavern without living keeper created local patron visit.");
+                Debug.Log("LIVING_CITIES_TAVERN_PATRON_PASS: building="+room.EntryDoor.buildingKey+"; no living keeper; no local fallback.");
+                return;
+            }
+            double start=now+10,end=now+7210;
+            var journey=visits.Create("inn-probe-local",3,start,end);
+            if(journey==null || visits.TavernKeeper!=expected)
+                throw new InvalidOperationException("Tavern local patron did not select living keeper.");
+            var stops=new List<ShopOccupancy>(journey.Occupancies());
+            if(stops.Count<3 || stops[0].Start<start || stops[0].End<=stops[0].Start)
+                throw new InvalidOperationException("Tavern local patron lacks keeper and common-room stops.");
+            var keeperLocal=room.transform.InverseTransformPoint(expected.transform.position);
+            double keeperDistance=Math.Sqrt(Math.Pow(stops[0].Position.X-keeperLocal.x,2)+Math.Pow(stops[0].Position.Y-keeperLocal.y,2)+
+                Math.Pow(stops[0].Position.Z-keeperLocal.z,2));
+            if(keeperDistance>2.5) throw new InvalidOperationException("Tavern local patron stopped away from living keeper.");
+            int browsing=0;
+            var bedGrounds=new List<Vector3>();
+            foreach(var bed in BedGeometry.Read(room)) {Vector3 ground;if(geometry.StandBesideBed(bed,out ground)) bedGrounds.Add(ground);}
+            for(int i=1;i<stops.Count;i++)
+            {
+                browsing++; double nearestBed=double.MaxValue;
+                foreach(var bed in bedGrounds)
+                {
+                    double dx=stops[i].Position.X-bed.x,dy=stops[i].Position.Y-bed.y,dz=stops[i].Position.Z-bed.z;
+                    nearestBed=Math.Min(nearestBed,dx*dx+dy*dy+dz*dz);
+                }
+                if(nearestBed<6.25) throw new InvalidOperationException("Tavern local patron browsed beside bedroom bed.");
+            }
+            if(browsing<2 || journey.Evaluate(start).Phase!=ShopVisitPhase.Walking ||
+                journey.Evaluate(stops[stops.Count-1].End+0.1).Phase!=ShopVisitPhase.Leaving ||
+                journey.Evaluate(end).Phase!=ShopVisitPhase.Complete)
+                throw new InvalidOperationException("Tavern local patron did not browse then leave through entrance route.");
+            Debug.Log("LIVING_CITIES_TAVERN_PATRON_PASS: building="+room.EntryDoor.buildingKey+"; keeper="+expected.Data.hash+
+                "; keeper-first, common-room stops="+browsing+", exit route, missing/dead keeper fallback rejected.");
+        }
         public static IEnumerator Run()
         {
             var game=GameManager.Instance;
@@ -21,7 +179,10 @@ namespace LivingCities.DFU
             if(taverns.Count==0) throw new InvalidOperationException("No taverns to survey.");
             yield return VerifyExteriorInventory(directory,taverns.Count,taverns[0].buildingKey);
             var streetGeometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation());
-            int totalBeds=0;
+            var metadata=new UnloadedSettlementSurvey.Result();
+            yield return UnloadedSettlementSurvey.ReadSteps(directory.LocationData,metadata);
+            int totalBeds=0,totalOccupants=0,totalSleepVerified=0,missingSleepArt=0;
+            bool socialMovementChecked=false;
             foreach(var tavern in taverns)
             {
                 DaggerfallStaticDoors owner=null; StaticDoor entry=default(StaticDoor);
@@ -43,7 +204,64 @@ namespace LivingCities.DFU
                 var playerPosition=game.PlayerMotor.transform.position;
                 int people=UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length;
                 Dictionary<int,string> unloadedMarkers;
-                var unloadedRooms=TavernRoomSurvey.ReadUnloaded(owner.transform,entry,out unloadedMarkers);
+                Dictionary<int,string> unloadedOccupants;
+                var unloadedRooms=TavernRoomSurvey.ReadUnloaded(owner.transform,entry,out unloadedMarkers,out unloadedOccupants);
+                UnloadedSettlementSurvey.Entrance remoteDoor=null;
+                foreach(var candidate in metadata.Grid.Entrances)
+                    if(candidate.BuildingKey==tavern.buildingKey) {remoteDoor=candidate;break;}
+                if(remoteDoor==null) throw new InvalidOperationException("Metadata inn entrance missing.");
+                var remote=new TavernRoomSurvey.Result();
+                yield return TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,remote,()=>true);
+                if(!remote.KeeperHash.HasValue || remote.ReceptionRoute==null || remote.ReceptionRoute.Count<2)
+                    throw new InvalidOperationException("Remote inn lacks keeper approach geometry.");
+                if(remote.Rooms==null || remote.Rooms.Count!=unloadedRooms.Count || remote.Markers.Count!=unloadedMarkers.Count ||
+                    remote.Occupants.Count!=unloadedOccupants.Count) throw new InvalidOperationException("Remote inn inventory differs from native entrance survey.");
+                for(int r=0;r<unloadedRooms.Count;r++)
+                    if(remote.Rooms[r].Id!=unloadedRooms[r].Id || string.Join(",",remote.Rooms[r].Beds.ToArray())!=string.Join(",",unloadedRooms[r].Beds.ToArray()))
+                        throw new InvalidOperationException("Remote inn room identity mismatch.");
+                foreach(var marker in unloadedMarkers) if(remote.Markers[marker.Key]!=marker.Value)
+                    throw new InvalidOperationException("Remote rental marker mismatch.");
+                foreach(var occupant in unloadedOccupants) if(remote.Occupants[occupant.Key]!=occupant.Value)
+                    throw new InvalidOperationException("Remote permanent occupant mismatch.");
+                var cancelled=new TavernRoomSurvey.Result();
+                yield return TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,cancelled,()=>false);
+                if(cancelled.Rooms!=null) throw new InvalidOperationException("Cancelled remote inventory was published.");
+                VerifyRemoteClaims(directory,remoteDoor.NativeDoor,remote);
+                VerifyRemoteReceipt(directory,remoteDoor.NativeDoor,remote);
+                if(tavern.buildingKey==taverns[0].buildingKey)
+                {
+                    bool valid=true; var interrupted=new TavernRoomSurvey.Result();
+                    var first=TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,interrupted,()=>valid);
+                    var secondResult=new TavernRoomSurvey.Result();
+                    var second=TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,secondResult,()=>valid);
+                    try
+                    {
+                        while(first.MoveNext() && !GameObject.Find("Living Cities remote inn owner")) yield return null;
+                        if(!GameObject.Find("Living Cities remote inn owner")) throw new InvalidOperationException("Remote cancellation fixture never started.");
+                        if(!second.MoveNext() || secondResult.Rooms!=null) throw new InvalidOperationException("Concurrent survey bypassed queue.");
+                        valid=false;
+                        if(first.MoveNext() || second.MoveNext() || interrupted.Rooms!=null || secondResult.Rooms!=null ||
+                            GameObject.Find("Living Cities remote inn owner")) throw new InvalidOperationException("Cancelled remote survey retained geometry or results.");
+                    }
+                    finally {(first as IDisposable)?.Dispose();(second as IDisposable)?.Dispose();}
+                    Debug.Log("LIVING_CITIES_REMOTE_CANCEL_PASS: active and queued surveys cleaned up.");
+                }
+                Debug.Log("LIVING_CITIES_REMOTE_INN_PASS: building="+tavern.buildingKey);
+                var sliced=new TavernRoomSurvey.Result();
+                var operation=TavernRoomSurvey.ReadUnloadedSteps(owner.transform,entry,sliced);
+                int slices=0;
+                try { while(operation.MoveNext()) { slices++; yield return null; } }
+                finally { (operation as IDisposable)?.Dispose(); }
+                if(slices<1 || sliced.Rooms.Count!=unloadedRooms.Count || sliced.Markers.Count!=unloadedMarkers.Count ||
+                    sliced.Occupants.Count!=unloadedOccupants.Count) throw new InvalidOperationException("Sliced tavern survey differs from synchronous survey.");
+                for(int r=0;r<unloadedRooms.Count;r++)
+                    if(sliced.Rooms[r].Id!=unloadedRooms[r].Id || string.Join(",",sliced.Rooms[r].Beds.ToArray())!=string.Join(",",unloadedRooms[r].Beds.ToArray()))
+                        throw new InvalidOperationException("Sliced survey changed bedroom partition.");
+                foreach(var marker in unloadedMarkers) if(sliced.Markers[marker.Key]!=marker.Value)
+                    throw new InvalidOperationException("Sliced survey changed rental marker.");
+                foreach(var occupant in unloadedOccupants) if(sliced.Occupants[occupant.Key]!=occupant.Value)
+                    throw new InvalidOperationException("Sliced survey changed native bed ownership.");
+                Debug.Log("LIVING_CITIES_SLICED_TAVERN_PASS: building="+tavern.buildingKey+"; slices="+slices);
                 if(game.IsPlayerInside || game.PlayerMotor.transform.position!=playerPosition ||
                     UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length!=people)
                     throw new InvalidOperationException("Unloaded tavern survey changed player scene or spawned people.");
@@ -51,12 +269,54 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
                 var room=game.PlayerEnterExit.Interior;
                 if(!room || room.EntryDoor.buildingKey!=tavern.buildingKey) throw new InvalidOperationException("Wrong tavern loaded.");
+                // PopToHUD above resumes gameplay. Give the live controller an Update
+                // before reading its keeper bindings and interior navigation; the
+                // entrance description window previously kept IsPlayingGame false.
+                var liveStreets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();
+                var boundInterior=typeof(StreetPopulation).GetField("interior",
+                    System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+                float bindingDeadline=Time.realtimeSinceStartup+30;
+                do { yield return null; }
+                while(liveStreets && (!liveStreets.Ready || (DaggerfallInterior)boundInterior.GetValue(liveStreets)!=room) &&
+                    Time.realtimeSinceStartup<bindingDeadline);
+                if(!liveStreets || !liveStreets.Ready || (DaggerfallInterior)boundInterior.GetValue(liveStreets)!=room)
+                    throw new InvalidOperationException("Live inn controller did not bind after entrance UI closed; " +
+                        "controller="+(liveStreets!=null)+"; enabled="+(liveStreets && liveStreets.isActiveAndEnabled)+
+                        "; streetsReady="+(liveStreets && liveStreets.Ready)+"; bound="+
+                        (liveStreets ? Convert.ToString(boundInterior.GetValue(liveStreets)) : "absent")+"; "+
+                        UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().TestStatus());
                 var beds=BedGeometry.Read(room); totalBeds+=beds.Count;
                 var rest=room.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Rest);
                 for(int index=0;index<rest.Length;index++)
                     Debug.Log("LIVING_CITIES_TAVERN_REST: building="+tavern.buildingKey+"; index="+index+
                         "; position="+room.transform.InverseTransformPoint(rest[index]).ToString("F3"));
                 var navigation=new InteriorGeometry(room); int reachable=0;
+                StaticNPC surveyedKeeper=null;
+                foreach(var npc in room.GetComponentsInChildren<StaticNPC>())
+                    if(npc.Data.hash==remote.KeeperHash.Value) {surveyedKeeper=npc;break;}
+                if(!surveyedKeeper || !navigation.EntryGround.HasValue) throw new InvalidOperationException("Remote keeper not found in loaded inn.");
+                var currentState=(WorldState)UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().GetSaveData();
+                VerifyLocalPatronFlow(room,navigation,currentState,directory.MapID,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+                if(!socialMovementChecked)
+                {
+                    var adapter=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+                    yield return InnSocialMovementProbe.Run(adapter,adapter.GetComponent<StreetPopulation>(),room);
+                    socialMovementChecked=true;
+                }
+                var start=remote.ReceptionRoute[0];var counterEnd=remote.ReceptionRoute[remote.ReceptionRoute.Count-1];
+                var startWorld=room.transform.TransformPoint(new Vector3((float)start.X,(float)start.Y,(float)start.Z));
+                var endWorld=room.transform.TransformPoint(new Vector3((float)counterEnd.X,(float)counterEnd.Y,(float)counterEnd.Z));
+                if(Vector3.Distance(startWorld,navigation.EntryGround.Value)>0.3f ||
+                    Vector3.Distance(endWorld+Vector3.up,surveyedKeeper.transform.position)>4)
+                    throw new InvalidOperationException("Remote reception endpoints disagree with actual entry or keeper.");
+                for(int step=1;step<remote.ReceptionRoute.Count;step++)
+                {
+                    var a=remote.ReceptionRoute[step-1];var b=remote.ReceptionRoute[step];
+                    if(!navigation.HasClearLine(room.transform.TransformPoint(new Vector3((float)a.X,(float)a.Y+1,(float)a.Z)),
+                        room.transform.TransformPoint(new Vector3((float)b.X,(float)b.Y+1,(float)b.Z))))
+                        throw new InvalidOperationException("Remote reception route crosses loaded inn geometry.");
+                }
+                Debug.Log("LIVING_CITIES_REMOTE_RECEPTION_PASS: building="+tavern.buildingKey+"; keeper="+remote.KeeperHash+"; points="+remote.ReceptionRoute.Count);
                 var bedIds=new HashSet<int>();
                 foreach(var bed in beds)
                 {
@@ -69,7 +329,19 @@ namespace LivingCities.DFU
                 var doors=room.GetComponentsInChildren<DaggerfallActionDoor>();
                 VerifyRooms(room,beds,doors);
                 Dictionary<int,string> loadedMarkers;
-                var loadedRooms=TavernRoomSurvey.Read(room,out loadedMarkers);
+                Dictionary<int,string> loadedOccupants;
+                var loadedRooms=TavernRoomSurvey.Read(room,out loadedMarkers,out loadedOccupants);
+                totalOccupants+=loadedOccupants.Count;
+                if(loadedOccupants.Count!=unloadedOccupants.Count) throw new InvalidOperationException("Loaded/unloaded inn occupants differ.");
+                foreach(var occupant in loadedOccupants)
+                {
+                    string otherBed;
+                    if(!unloadedOccupants.TryGetValue(occupant.Key,out otherBed) || otherBed!=occupant.Value)
+                        throw new InvalidOperationException("Loaded/unloaded native bed assignment differs.");
+                    if(!Array.Exists(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==occupant.Key))
+                        throw new InvalidOperationException("Assigned inn occupant does not exist in native layout.");
+                    Debug.Log("LIVING_CITIES_INN_OCCUPANT_SURVEY: building="+tavern.buildingKey+"; hash="+occupant.Key+"; bed="+occupant.Value);
+                }
                 if(unloadedRooms.Count!=loadedRooms.Count || unloadedMarkers.Count!=loadedMarkers.Count)
                     throw new InvalidOperationException("Unloaded tavern room or marker count differs from actual interior.");
                 foreach(var group in loadedRooms)
@@ -83,9 +355,58 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Unloaded tavern marker allocation differs from actual interior.");
                 Debug.Log("LIVING_CITIES_UNLOADED_TAVERN_PASS: building="+tavern.buildingKey+"; rooms/markers match loaded interior; player scene and native people unchanged.");
                 yield return VerifyUnrentedInventory(room,directory.MapID);
+                yield return new WaitForSecondsRealtime(2);
+                var live=(WorldState)UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().GetSaveData();
+                var ledger=live.Lodgings.Find(t=>t.SettlementId==directory.MapID && t.BuildingKey==tavern.buildingKey);
+                foreach(var occupant in loadedOccupants)
+                {
+                    if(!ledger.Rooms.Exists(r=>r.Beds.Contains(occupant.Value))) continue;
+                    var person=live.NativePeople.Find(p=>p.SettlementId==directory.MapID && p.WorkKey==tavern.buildingKey && p.NativeHash==occupant.Key);
+                    if(person==null || !ledger.Occupants.Exists(o=>o.PersonId==person.Id && o.BedId==occupant.Value))
+                        throw new InvalidOperationException("Native bedroom occupant lacks automatic lodging claim.");
+                }
+                if(ledger.Occupants.Count>0)
+                {
+                    var clock=DaggerfallUnity.Instance.WorldTime.Now;
+                    double night=(Math.Floor(clock.ToSeconds()/86400d)+1)*86400+7200;
+                    clock.RaiseTime((float)(night-clock.ToSeconds())); DaggerfallUI.Instance.PopToHUD();
+                    yield return new WaitForSecondsRealtime(3);
+                    foreach(var claim in ledger.Occupants)
+                    {
+                        var person=live.NativePeople.Find(p=>p.Id==claim.PersonId);
+                        // These eight appearances are an explicitly documented art gap,
+                        // not evidence that survey or sleeping behavior has passed.
+                        if(person.TextureArchive==184 && person.TextureRecord>=5 && person.TextureRecord<=12 &&
+                            SleepArtCatalog.Find(person.TextureArchive,person.TextureRecord)==null)
+                        {
+                            missingSleepArt++;
+                            Debug.LogWarning("LIVING_CITIES_INN_SLEEP_ART_MISSING: "+person.Id+"; texture=184:"+person.TextureRecord);
+                            continue;
+                        }
+                        var npc=Array.Find(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==person.NativeHash);
+                        var pose=npc ? npc.GetComponent<SleepingPose>() : null;
+                        if(!pose || !pose.Active) throw new InvalidOperationException("Claimed native inn occupant does not sleep at night: id="+person.Id+
+                            "; alive="+person.IsAlive+"; texture="+person.TextureArchive+":"+person.TextureRecord+
+                            "; npc="+(npc!=null)+"; pose="+(pose!=null)+"; paused="+GameManager.IsGamePaused+
+                            "; playing="+game.IsPlayingGame()+"; time="+clock.ToSeconds()+"; bed="+claim.BedId);
+                        totalSleepVerified++;
+                    }
+                    clock.RaiseTime(10*3600); DaggerfallUI.Instance.PopToHUD();
+                    yield return new WaitForSecondsRealtime(3);
+                    foreach(var claim in ledger.Occupants)
+                    {
+                        var person=live.NativePeople.Find(p=>p.Id==claim.PersonId);
+                        var npc=Array.Find(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==person.NativeHash);
+                        var pose=npc.GetComponent<SleepingPose>();
+                        if(pose && pose.Active) throw new InvalidOperationException("Native inn occupant remains asleep at midday.");
+                    }
+                    Debug.Log("LIVING_CITIES_INN_NATIVE_SLEEP_PASS: building="+tavern.buildingKey+"; occupants="+ledger.Occupants.Count);
+                }
                 yield return VerifyNativeRental(room,directory.MapID);
                 TavernPaymentProbe.Run(room,directory.MapID);
                 TavernRestProbe.Run(room,directory.MapID);
+                yield return VerifyBookedResident(room,directory.MapID);
+                yield return VerifyRefusedResident(room,directory.MapID);
                 foreach(var door in doors)
                     Debug.Log("LIVING_CITIES_TAVERN_DOOR: building="+tavern.buildingKey+"; id="+door.LoadID+
                         "; position="+room.transform.InverseTransformPoint(door.transform.position).ToString("F3")+
@@ -97,7 +418,159 @@ namespace LivingCities.DFU
                     "; reachableBeds="+reachable+"; actionDoors="+doors.Length);
                 game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(1);
             }
-            Debug.Log("LIVING_CITIES_TAVERN_SURVEY_PASS: taverns="+taverns.Count+"; beds="+totalBeds+"; native interior census complete.");
+            if(totalOccupants==0 || totalSleepVerified==0) throw new InvalidOperationException("Inn occupant fixture did not exercise bedroom occupants with sleeping art.");
+            Debug.Log("LIVING_CITIES_TAVERN_SURVEY_PASS: taverns="+taverns.Count+"; beds="+totalBeds+"; assignedOccupants="+totalOccupants+
+                "; sleepingVerified="+totalSleepVerified+"; missingSleepArt="+missingSleepArt+"; native interior census complete.");
+        }
+        private static IEnumerator VerifyBookedResident(DaggerfallInterior room,int town)
+        {
+            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>();
+            var baseline=(WorldState)mod.GetSaveData(); var clock=DaggerfallUnity.Instance.WorldTime.Now;
+            clock.RaiseTime((float)(86400-clock.ToSeconds()%86400));
+            double now=clock.ToSeconds(); var store=new WorldStateStore(1); store.Restore(baseline);
+            var person=store.GetOrCreate(102,new[]{30},1).Households[0].Residents[0];
+            if(SleepArtCatalog.ForResident(person)==null) throw new InvalidOperationException("Resident inn fixture lacks sleeping art.");
+            var trip=ResidentTrip.Create(person.Id,102,town,now-100,3600,100,
+                new[]{new RoutePoint(207,212),new RoutePoint(207,213)});
+            trip.Destination=new ResidentDestination {ExitWalkSeconds=10,
+                Stops=new List<ResidentVisitStop> {new ResidentVisitStop {BuildingKey=room.EntryDoor.buildingKey,Purpose=ResidentVisitPurpose.Inn,
+                    WalkSeconds=10,DwellSeconds=14*3600,Route=new List<SavedRoutePoint> {new SavedRoutePoint {X=0,Z=0},new SavedRoutePoint {X=1,Z=0}}}},
+                ExitRoute=new List<SavedRoutePoint> {new SavedRoutePoint {X=1,Z=0},new SavedRoutePoint {X=0,Z=0}}};
+            double firstLeave=now+10+14*3600,returnEnter=firstLeave+10+3600+10,finalCheckout=returnEnter+14*3600;
+            trip.Destination.Stops[0].KeepRoomUntil=finalCheckout;
+            trip.Destination.Stops.Add(new ResidentVisitStop {BuildingKey=999999,Purpose=ResidentVisitPurpose.Guild,
+                WalkSeconds=10,DwellSeconds=3600,Route=new List<SavedRoutePoint>{new SavedRoutePoint {X=1},new SavedRoutePoint {X=2}}});
+            trip.Destination.Stops.Add(new ResidentVisitStop {BuildingKey=room.EntryDoor.buildingKey,Purpose=ResidentVisitPurpose.Inn,
+                WalkSeconds=10,DwellSeconds=14*3600,Route=new List<SavedRoutePoint>{new SavedRoutePoint {X=2},new SavedRoutePoint {X=1}}});
+            store.ScheduleResidentTrip(trip);
+            try
+            {
+                mod.RestoreSaveData(store.Snapshot()); clock.RaiseTime(12);
+                ResidentInnReception reception=null; float receptionDeadline=Time.realtimeSinceStartup+10;
+                while(Time.realtimeSinceStartup<receptionDeadline)
+                {
+                    var pending=(WorldState)mod.GetSaveData(); var pendingTrip=pending.ResidentTrips.Find(t=>t.ResidentId==person.Id);
+                    if(pendingTrip.InnStays.Count>0) throw new InvalidOperationException("Resident booked before approaching keeper.");
+                    if(pendingTrip.InnReceptions.Count>0) {reception=ResidentInnReception.Copy(pendingTrip.InnReceptions[0]); break;}
+                    yield return null;
+                }
+                if(reception==null) throw new InvalidOperationException("Resident has no native keeper approach.");
+                clock.RaiseTime((float)Math.Max(0,reception.CounterAt+1-clock.ToSeconds())); yield return null;
+                var counterActor=streets.FindActor(person.Id);
+                if(!counterActor) throw new InvalidOperationException("Resident missing at keeper.");
+                clock.RaiseTime((float)Math.Max(0,reception.ServiceEndsAt+1-clock.ToSeconds()));
+                yield return new WaitForSecondsRealtime(2);
+                var saved=(WorldState)mod.GetSaveData(); var active=saved.ResidentTrips.Find(t=>t.ResidentId==person.Id);
+                if(active.InnStays.Count!=1 || active.InnStays[0].Admission!=TravelerAdmission.Admitted)
+                    throw new InvalidOperationException("Resident inn fixture did not acquire a room.");
+                clock.RaiseTime(600); float deadline=Time.realtimeSinceStartup+10;
+                while((!streets.FindActor(person.Id) || !streets.FindActor(person.Id).IsSleeping) && Time.realtimeSinceStartup<deadline) yield return null;
+                var actor=streets.FindActor(person.Id);
+                if(!actor || !actor.IsSleeping) throw new InvalidOperationException("Admitted resident did not sleep in booked inn bed.");
+                var evidence=new WorldStateStore(1); evidence.Restore((WorldState)mod.GetSaveData());
+                string bedId=evidence.ResidentInnBed(person.Id,clock.ToSeconds());
+                var bed=BedGeometry.Read(room).Find(b=>"bed:"+b.RecordIndex==bedId);
+                if(bed==null || Vector3.Distance(actor.transform.position,room.transform.TransformPoint(bed.LocalCenter)+Vector3.up*0.18f)>0.05f)
+                    throw new InvalidOperationException("Resident sleeps away from the actually booked bed.");
+                mod.RestoreSaveData((WorldState)mod.GetSaveData()); yield return new WaitForSecondsRealtime(2);
+                actor=streets.FindActor(person.Id);
+                if(!actor || !actor.IsSleeping) throw new InvalidOperationException("Resident inn sleep lost on restore.");
+                clock.RaiseTime((float)(now+12*3600-clock.ToSeconds())); yield return new WaitForSecondsRealtime(1);
+                actor=streets.FindActor(person.Id);
+                if(!actor || actor.IsSleeping || streets.GetState(person.Id,clock.ToSeconds()).Activity==Activity.Sleep)
+                    throw new InvalidOperationException("Resident inn guest did not wake at midday.");
+                var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+                var plans=(System.Collections.IDictionary)typeof(StreetPopulation).GetField("residentRooms",flags).GetValue(streets);
+                var roomPlan=plans[person.Id];
+                var walk=(TravelerRoomWalk)roomPlan.GetType().GetField("Walk").GetValue(roomPlan);
+                double checkout=firstLeave;
+                clock.RaiseTime((float)(checkout-walk.Duration+1-clock.ToSeconds())); yield return null;
+                var before=actor.transform.position;
+                yield return new WaitForSecondsRealtime(1);
+                if(actor.IsSleeping || Vector3.Distance(before,actor.transform.position)<0.1f)
+                    throw new InvalidOperationException("Resident inn guest did not physically walk out at checkout.");
+                clock.RaiseTime((float)(checkout+1-clock.ToSeconds())); yield return new WaitForSecondsRealtime(1);
+                if(streets.FindActor(person.Id)) throw new InvalidOperationException("Resident inn guest remained indoors after checkout.");
+                var persisted=(WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),mod.GetSaveData()));
+                VerifyVisitSettlement(persisted,person.Id,town);
+                mod.RestoreSaveData(persisted);
+                evidence.Restore(persisted);
+                if(evidence.ResidentInnBed(person.Id,checkout+100)!=bedId)
+                    throw new InvalidOperationException("Daytime excursion released paid room.");
+                clock.RaiseTime((float)(returnEnter+600-clock.ToSeconds())); yield return new WaitForSecondsRealtime(2);
+                actor=streets.FindActor(person.Id);
+                var returned=(WorldState)mod.GetSaveData(); evidence.Restore(returned);
+                if(!actor || evidence.ResidentInnBed(person.Id,clock.ToSeconds())!=bedId ||
+                    returned.ResidentTrips.Find(t=>t.ResidentId==person.Id).InnStays.Count!=1)
+                    throw new InvalidOperationException("Returning guest lost room or paid twice.");
+                clock.RaiseTime((float)(now+86400+3600-clock.ToSeconds())); yield return new WaitForSecondsRealtime(2);
+                actor=streets.FindActor(person.Id);
+                if(!actor || !actor.IsSleeping) throw new InvalidOperationException("Returning guest did not sleep on second night.");
+                clock.RaiseTime((float)(finalCheckout+1-clock.ToSeconds())); yield return new WaitForSecondsRealtime(1);
+                evidence.Restore((WorldState)mod.GetSaveData());
+                if(streets.FindActor(person.Id) || evidence.ResidentInnBed(person.Id,clock.ToSeconds())!=null)
+                    throw new InvalidOperationException("Final checkout retained guest or room claim.");
+                Debug.Log("LIVING_CITIES_RESIDENT_ROOM_HOLD_PASS: building="+room.EntryDoor.buildingKey+"; excursion, serialized return, second night and checkout.");
+                Debug.Log("LIVING_CITIES_RESIDENT_INN_ROOM_PASS: building="+room.EntryDoor.buildingKey+"; booked bed, sleep restore, daytime waking and physical checkout.");
+            }
+            finally {mod.RestoreSaveData(baseline);}
+        }
+        private static IEnumerator VerifyRefusedResident(DaggerfallInterior room,int town)
+        {
+            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var streets=mod.GetComponent<StreetPopulation>();
+            var baseline=(WorldState)mod.GetSaveData();
+            var clock=DaggerfallUnity.Instance.WorldTime.Now; double now=clock.ToSeconds();
+            var store=new WorldStateStore(1); store.Restore(baseline);
+            var person=store.GetOrCreate(100,new[]{30},1).Households[0].Residents[0];
+            int key=room.EntryDoor.buildingKey;
+            // Fill every remaining rentable room in this disposable test population.
+            for(int i=0;i<100;i++)
+                if(!store.TryBookLodging(town,key,"probe-full:"+i,"probe-guest:"+i,101,false,1,now,now+7200)) break;
+            var trip=ResidentTrip.Create(person.Id,100,town,now-100,3600,100,
+                new[]{new RoutePoint(207,212),new RoutePoint(207,213)});
+            trip.Destination=new ResidentDestination {ExitWalkSeconds=20,
+                Stops=new List<ResidentVisitStop> {new ResidentVisitStop {BuildingKey=key,Purpose=ResidentVisitPurpose.Inn,
+                    WalkSeconds=10,DwellSeconds=3600,Route=new List<SavedRoutePoint> {new SavedRoutePoint {X=0,Z=0},new SavedRoutePoint {X=1,Z=0}}}},
+                ExitRoute=new List<SavedRoutePoint> {new SavedRoutePoint {X=2,Z=0},new SavedRoutePoint {X=0,Z=0}}};
+            trip.Destination.Stops.Add(new ResidentVisitStop {BuildingKey=999999,Purpose=ResidentVisitPurpose.Guild,
+                WalkSeconds=10,DwellSeconds=3600,Route=new List<SavedRoutePoint> {new SavedRoutePoint {X=1,Z=0},new SavedRoutePoint {X=2,Z=0}}});
+            store.ScheduleResidentTrip(trip);
+            try
+            {
+                mod.RestoreSaveData(store.Snapshot()); clock.RaiseTime(12);
+                ResidentServiceExit exit=null; float deadline=Time.realtimeSinceStartup+12;
+                while(Time.realtimeSinceStartup<deadline)
+                {
+                    var saved=(WorldState)mod.GetSaveData(); var active=saved.ResidentTrips.Find(t=>t.ResidentId==person.Id);
+                    if(active.InnReceptions.Count>0)
+                    {
+                        double serviceEnds=ResidentInnReception.Copy(active.InnReceptions[0]).ServiceEndsAt;
+                        if(clock.ToSeconds()<serviceEnds) clock.RaiseTime((float)(serviceEnds+1-clock.ToSeconds()));
+                    }
+                    if(active.InnStays.Count>0 && active.InnStays[0].Admission!=TravelerAdmission.Refused)
+                        throw new InvalidOperationException("Full inn admitted resident visitor.");
+                    if(active.ServiceExits.Count>0) {exit=active.ServiceExits[0]; break;}
+                    yield return null;
+                }
+                if(exit==null) throw new InvalidOperationException("Refused resident did not prepare physical inn exit.");
+                var persisted=(WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),mod.GetSaveData()));
+                VerifyVisitSettlement(persisted,person.Id,town);
+                var returning=persisted.ResidentTrips.Find(t=>t.ResidentId==person.Id);
+                if(returning.Destination.Stops.Count!=1 || returning.Destination.ExitRoute[0].X!=1 ||
+                    returning.Destination.ExitRoute[returning.Destination.ExitRoute.Count-1].X!=0)
+                    throw new InvalidOperationException("Refused resident retained later appointments or wrong return route.");
+                mod.RestoreSaveData(persisted);
+                double ends=ResidentServiceExit.Copy(exit).ExitAt;
+                clock.RaiseTime((float)Math.Max(0,ends+1-clock.ToSeconds()));
+                yield return new WaitForSecondsRealtime(1);
+                if(streets.FindActor(person.Id)) throw new InvalidOperationException("Refused resident remained inside after exit.");
+                var restored=new WorldStateStore(1); restored.Restore(persisted);
+                if(restored.IsResidentAway(person.Id,returning.HomeAt+1))
+                    throw new InvalidOperationException("Refused resident did not return home after serialized exit.");
+                Debug.Log("LIVING_CITIES_RESIDENT_INN_REFUSAL_PASS: building="+key+"; native admission, physical exit, cancelled appointments and serialized return home.");
+            }
+            finally {mod.RestoreSaveData(baseline);}
         }
         private static IEnumerator VerifyExteriorInventory(BuildingDirectory directory,int expected,int paidBuilding)
         {
@@ -156,7 +629,7 @@ namespace LivingCities.DFU
                     yield return null;
                 }
                 Dictionary<int,string> mapping; TavernRoomSurvey.Read(interior,out mapping);
-                if(lodging==null || lodging.Rooms.Count!=new HashSet<string>(mapping.Values).Count || lodging.Bookings.Count!=0 ||
+                if(lodging==null || lodging.Rooms.FindAll(r=>!r.NonRentable).Count!=new HashSet<string>(mapping.Values).Count || lodging.Bookings.Count!=0 ||
                     player.GetGoldAmount()!=gold || player.GetRentedRoom(town,building)!=null)
                     throw new InvalidOperationException("Unrented tavern did not register guest inventory without payment or bookings.");
                 Debug.Log("LIVING_CITIES_UNRENTED_INVENTORY_PASS: building="+building+"; guestRooms="+lodging.Rooms.Count+"; no receipt, booking or charge.");

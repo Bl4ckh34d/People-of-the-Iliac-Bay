@@ -26,8 +26,9 @@ namespace LivingCities.DFU
                 player.RentedRooms.RemoveAll(r=>r.mapID==town && r.buildingKey==building);
                 player.GoldPieces=5000;
                 Dictionary<int,string> markers; var all=TavernRoomSurvey.Read(interior,out markers);
+                foreach(var room in all) room.NonRentable=!new HashSet<string>(markers.Values).Contains(room.Id);
                 var rooms=all.FindAll(r=>new HashSet<string>(markers.Values).Contains(r.Id));
-                var store=Store(host); store.RegisterLodging(town,building,rooms);
+                var store=Store(host); store.RegisterLodging(town,building,all);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
                 foreach(var room in rooms) store.TryBookLodging(town,building,"full:"+room.Id,"guest:"+room.Id,town+1,false,1,now,now+172800,room.Id);
                 Confirm(1,5);
@@ -38,7 +39,7 @@ namespace LivingCities.DFU
                 if(player.GoldPieces!=5000 || player.GetRentedRoom(town,building)!=null)
                     throw new InvalidOperationException("Free rental bypassed full tavern capacity.");
                 DaggerfallUI.Instance.PopToHUD();
-                host.RestoreSaveData(before); store=Store(host); store.RegisterLodging(town,building,rooms);
+                host.RestoreSaveData(before); store=Store(host); store.RegisterLodging(town,building,all);
                 for(int i=0;i<rooms.Count-1;i++) store.TryBookLodging(town,building,"held:"+rooms[i].Id,"guest:"+i,town+1,false,1,now,now+172800,rooms[i].Id);
                 Confirm(1,player.GetGoldAmount()+1);
                 if(player.GoldPieces!=5000 || player.GetRentedRoom(town,building)!=null)

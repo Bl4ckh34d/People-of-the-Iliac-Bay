@@ -12,6 +12,19 @@ namespace LivingCities.Core
     }
     public sealed partial class GuardRoster
     {
+        public List<string> GuardsInReportingRange(SavedRoutePoint witness,double now)
+        {
+            var point=CopyPoint(witness);
+            Require(Time(now),"Invalid witness contact time.");
+            Advance(now);
+            var result=new List<string>();
+            foreach(var guard in Guards)
+            {
+                if(!guard.IsAlive || guard.Duty!=GuardDuty.Posted || guard.Interior!=null || guard.Refuge!=null) continue;
+                if(Distance(Position(guard.Id,now),point)<=0.75) result.Add(guard.Id);
+            }
+            return result;
+        }
         public List<GuardPatrolAssignment> Patrols = new List<GuardPatrolAssignment>();
         public bool IsOnPatrol(string id) { return PatrolFor(id) != null; }
         public bool IsPatrolMoving(string id, double now)
@@ -73,6 +86,15 @@ namespace LivingCities.Core
             var patrol = PatrolFor(id);
             if (patrol != null && now <= patrol.Plan.StartsAt) { Patrols.Remove(patrol); return; }
             if (patrol != null && !patrol.InterruptedAt.HasValue) patrol.InterruptedAt = now;
+        }
+        public void ScheduleDayRest(string id,double until,double now)
+        {
+            Require(Time(now) && Time(until) && until>now,"Invalid daytime guard rest.");
+            Advance(now);
+            var guard=Find(id);
+            Require(guard.IsAlive && guard.Duty==GuardDuty.Posted && guard.Interior==null && guard.Refuge==null,
+                "Only available guards can begin daytime rest.");
+            guard.DayRestUntil=until;
         }
         private static SavedRoutePoint Along(List<SavedRoutePoint> route, double along)
         {

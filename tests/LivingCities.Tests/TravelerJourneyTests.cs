@@ -10,6 +10,29 @@ namespace LivingCities.Tests
         { return TravelerJourney.Create(seed,arrival,nights,commute,walls,new[] { new RoutePoint(0,0),new RoutePoint(30,0),new RoutePoint(30,40) }); }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Refused travelers return immediately without acquiring a stay and respect closed gates",()=>{
+                var route=new[]{new RoutePoint(0,0),new RoutePoint(30,0)};
+                var journey=TravelerJourney.CreateRefused(1,43200,600,false,route,43800);
+                Check.Equal(TravelerPhase.Leaving,journey.Evaluate(43800).Phase);
+                Check.Equal(15d,journey.Evaluate(44100).Position.X);
+                Check.Equal(TravelerPhase.Departed,journey.Evaluate(44400).Phase);
+                Check.True(!journey.Evaluate(43800).WithinStay);
+                var gated=TravelerJourney.CreateRefused(1,17*3600,1800,true,route,17.5*3600);
+                Check.Equal(30*3600d,gated.ExitAt);
+                Check.Equal(TravelerPhase.WaitingForGate,gated.Evaluate(18*3600).Phase);
+                Check.Throws<ArgumentException>(()=>TravelerJourney.CreateRefused(1,43200,600,false,route,43700));
+            }));
+            cases.Add(("Inn walking reconstructs arrival stairs and checkout from absolute time",()=>{
+                var route=new[]{new GuardPoint3(),new GuardPoint3{X=3,Y=4},new GuardPoint3{X=8,Y=4}};
+                var walk=TravelerRoomWalk.Create(route,100,500,2);
+                Check.Equal(3d,walk.Evaluate(110).Position.X); Check.Equal(4d,walk.Evaluate(110).Position.Y);
+                Check.True(walk.Evaluate(110).Walking); Check.True(!walk.Evaluate(120).Walking);
+                Check.Equal(8d,walk.Evaluate(300).Position.X);
+                Check.Equal(3d,walk.Evaluate(490).Position.X); Check.True(walk.Evaluate(490).Walking);
+                Check.Equal(0d,walk.Evaluate(500).Position.X); Check.True(!walk.Evaluate(500).Walking);
+                route[1].Y=999; Check.Equal(4d,walk.Evaluate(110).Position.Y);
+                Check.Throws<ArgumentException>(()=>TravelerRoomWalk.Create(route,100,101,2));
+            }));
             cases.Add(("Walled travelers wait for dawn but unwalled arrivals can enter at night",()=>{
                 var walled=Make(true,20*3600); var village=Make(false,20*3600);
                 Check.Equal(30*3600d,walled.EntryAt); Check.Equal(20*3600d,village.EntryAt);

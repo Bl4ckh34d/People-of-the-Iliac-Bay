@@ -2,6 +2,35 @@
   "Version": "1.0",
   "Sections": [
     {
+      "Name": "Travel",
+      "Description": "Relative weights for incoming visitor origins. Defaults are 60/35/5. Weights are normalized; all zero disables incoming origin discovery. Failed routes are skipped, so observed arrivals can differ. Nearby means the nearest sixteen supported settlements in the same region.",
+      "IsAdvanced": false,
+      "Keys": [
+        {
+          "Min": 0, "Max": 100, "Value": 60,
+          "Name": "NearbyOriginWeight",
+          "Description": "Weight for nearby settlements in the same political region.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
+        {
+          "Min": 0, "Max": 100, "Value": 35,
+          "Name": "DistantOriginWeight",
+          "Description": "Weight for other settlements in the same region, outside the nearby group.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        },
+        {
+          "Min": 0, "Max": 100, "Value": 5,
+          "Name": "ForeignOriginWeight",
+          "Description": "Weight for origins in another political region. Race follows the hometown independently. A connected road route is required.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        }
+      ],
+      "$version": "v1"
+    },
+    {
       "Name": "Awareness",
       "Description": "Household access and theft detection in settlements. Disabling restores native behavior without deleting saved residents.",
       "IsAdvanced": false,
@@ -170,6 +199,49 @@
           "Value": 22,
           "Name": "SleepHour",
           "Description": "Hour residents go to sleep at home.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
+        }
+      ],
+      "$version": "v1"
+    },
+    {
+      "Name": "Dialogue",
+      "Description": "Local free-text conversation with native topic knowledge, validated map requests and personal disposition. Type in the bottom field and press Enter. Uses only 127.0.0.1:8080/completion.",
+      "IsAdvanced": false,
+      "Keys": [
+        {
+          "Value": true,
+          "Name": "EnableFreeText",
+          "Description": "Enable bottom text field for talkable NPCs. Requires a compatible local llama.cpp server at 127.0.0.1:8080/completion.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
+          "Name": "PrewarmModel",
+          "Description": "After game starts, load local model on background worker. Gameplay never waits for this request.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
+          "Name": "ConversationDisposition",
+          "Description": "Free-text tone changes this NPC's personal disposition. Insult -8, rude -2, polite +1. Repeated lines do not stack on the same day; goodwill is limited to +3 per day.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
+          "Name": "MapRequests",
+          "Description": "Allow explicit free-text map requests for real known local buildings. Native knowledge and indoor restrictions still apply.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Min": 100, "Max": 10000, "Value": 1500,
+          "Name": "TimeoutMilliseconds",
+          "Description": "Maximum local-model wait in milliseconds. Failure or timeout shows a safe non-factual fallback.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         }

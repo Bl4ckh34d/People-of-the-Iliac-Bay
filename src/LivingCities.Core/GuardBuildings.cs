@@ -42,7 +42,7 @@ namespace LivingCities.Core
             if (index < 0) BuildingApproaches.Add(validated); else BuildingApproaches[index] = validated;
         }
         public List<GuardRecord> DispatchBuilding(string incidentId, int buildingKey, double now,
-            int maximumResponders, double speed, double timeScale, bool investigation = false, ISet<string> informedGuards = null, string threatId = null)
+            int maximumResponders, double speed, double timeScale, bool investigation = false, ISet<string> informedGuards = null, string threatId = null, bool crimeScene = false)
         {
             Require(buildingKey >= 0 && !string.IsNullOrWhiteSpace(incidentId) && Time(now) &&
                 maximumResponders >= 0 && maximumResponders <= 256 && Finite(speed) && speed > 0 &&
@@ -52,6 +52,8 @@ namespace LivingCities.Core
             Require(existing==null || existing.ThreatId==threatId,"Building report target cannot change.");
             Require(existing == null || existing.BuildingKey == buildingKey, "Report cannot change its destination.");
             Require(existing == null || existing.Investigation == investigation, "Report cannot change its investigation policy.");
+            Require(!crimeScene || threatId==null,"Threat response cannot carry a murder accusation scene.");
+            Require(existing==null || existing.CrimeScene==crimeScene,"Report cannot change its crime scene policy.");
             if (existing != null && existing.GuardIds.Count > 0) return ReportGuards(existing);
             var approach = BuildingApproaches.Find(a => a.BuildingKey == buildingKey);
             if (approach == null) return new List<GuardRecord>();
@@ -83,10 +85,20 @@ namespace LivingCities.Core
             report.BuildingKey = buildingKey; report.Entrance = CopyPoint(approach.Entrance);
             report.AwaitingApproach = false;
             report.Investigation = investigation;
-            if (investigation) foreach (var guard in sent)
+            report.CrimeScene = crimeScene;
+            if (report.OccupiesScene)
             {
-                guard.SearchUntil = guard.ArrivesAt + UnwitnessedScene.OccupationSeconds;
-                report.Arrivals.Add(new GuardArrivalEvidence { GuardId = guard.Id, ScheduledAt = guard.ArrivesAt });
+                double firstArrival = double.MaxValue;
+                foreach (var guard in sent)
+                {
+                    firstArrival = Math.Min(firstArrival, guard.ArrivesAt);
+                    report.Arrivals.Add(new GuardArrivalEvidence { GuardId = guard.Id, ScheduledAt = guard.ArrivesAt });
+                }
+                if (firstArrival != double.MaxValue)
+                {
+                    report.InvestigationUntil = firstArrival + UnwitnessedScene.OccupationSeconds;
+                    foreach (var guard in sent) guard.SearchUntil = report.InvestigationUntil;
+                }
             }
             return sent;
         }

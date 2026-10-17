@@ -19,7 +19,7 @@ namespace LivingCities.DFU
         {
             bool lifted=GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0);
             foreach(var guard in Roster.Guards)
-                if(guard.IsAlive && guard.Refuge!=null && !guard.Refuge.ReleasedAt.HasValue)
+                if(guard.IsAlive && guard.Refuge!=null && !guard.Refuge.WallDuty && !guard.Refuge.ReleasedAt.HasValue)
                 {
                     var release=SettlementHaunting.FirstSafeTime(Roster.SettlementId,lifted,guard.Refuge.StartsAt,now);
                     if(release.HasValue) guard.Refuge.Release(release.Value);

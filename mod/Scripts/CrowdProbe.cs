@@ -44,6 +44,7 @@ namespace LivingCities.DFU
             }
             if(!found) throw new InvalidOperationException("No long street segment for crowd probe.");
             var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
+            VerifyHaltBystanderCadence(streets,from,to);
             bool modEnabled=mod.enabled,streetEnabled=streets.enabled,guardEnabled=guards.enabled;
             mod.enabled=false; streets.enabled=false; guards.enabled=false; streets.Clear(); guards.Clear();
             var vanilla=directory.GetComponent<PopulationManager>(); bool vanillaEnabled=vanilla && vanilla.enabled;
@@ -62,7 +63,8 @@ namespace LivingCities.DFU
                 a.Initialize(new Resident { Id="crowd-a",FullName="Crowd Walker A",AppearanceSeed=1 },1,game.StreamingWorld.GetCurrentCityNavigation());
                 b.Initialize(new Resident { Id="crowd-b",FullName="Crowd Walker B",AppearanceSeed=2 },2,game.StreamingWorld.GetCurrentCityNavigation());
                 a.Place(from,delta); b.Place(to,-delta);
-                float started=Time.realtimeSinceStartup; float minimum=10;
+                float started=Time.realtimeSinceStartup; float minimum=10,earlyAvoidanceGap=0;
+                var crossingSide=Vector3.Cross(Vector3.up,delta.normalized);
                 while(Time.realtimeSinceStartup-started<12)
                 {
                     float progress=Mathf.Min(1,(Time.realtimeSinceStartup-started)*1.3f/6);
@@ -70,12 +72,16 @@ namespace LivingCities.DFU
                     b.Place(Vector3.Lerp(to,from,progress),-delta,progress==1);
                     if(!first.activeSelf || !second.activeSelf) throw new InvalidOperationException("Crowd actors lost valid placement.");
                     float distance=Vector3.Distance(first.transform.position,second.transform.position);
+                    if(earlyAvoidanceGap==0 && (Mathf.Abs(Vector3.Dot(first.transform.position-from,crossingSide))>0.02f ||
+                        Mathf.Abs(Vector3.Dot(second.transform.position-to,crossingSide))>0.02f)) earlyAvoidanceGap=distance;
                     minimum=Mathf.Min(minimum,distance);
-                    if(distance<0.80f) throw new InvalidOperationException("Crowd actors overlapped: "+distance);
+                    if(distance<0.50f) throw new InvalidOperationException("Crowd actors overlapped: "+distance);
                     yield return null;
                 }
                 if(Vector3.Distance(first.transform.position,to+Vector3.up)>0.3f || Vector3.Distance(second.transform.position,from+Vector3.up)>0.3f)
                     throw new InvalidOperationException("Opposing street walkers did not pass: "+first.transform.position+" / "+second.transform.position);
+                if(earlyAvoidanceGap<=1.1f) throw new InvalidOperationException("Walkers waited until close range to evade: "+earlyAvoidanceGap);
+                Debug.Log("LIVING_CITIES_COMFORT_AVOIDANCE_PASS: lateral correction began at separation="+earlyAvoidanceGap);
                 Debug.Log("LIVING_CITIES_CROWD_PASS: actual opposing street walkers pass; minimum separation="+minimum);
                 first.GetComponent<CrowdMotion>().ResetPlacement(); second.GetComponent<CrowdMotion>().ResetPlacement();
                 a.Place(from,delta); b.Place(to,-delta);
@@ -123,6 +129,24 @@ namespace LivingCities.DFU
                         if(Static(hit.collider)) return false;
             }
             return true;
+        }
+        private static void VerifyHaltBystanderCadence(StreetPopulation streets,Vector3 guardPosition,Vector3 playerPosition)
+        {
+            if(GuardActor.PursuitHaltDue(19.9f,20f) || !GuardActor.PursuitHaltDue(20f,20f) ||
+                GuardActor.PursuitHaltDue(39.9f,40f) || !GuardActor.PursuitHaltDue(40f,40f))
+                throw new InvalidOperationException("Pursuit Halt cadence did not retain its twenty-second boundary.");
+            if(BystanderResponse.Evaluate(8,11,BystanderPosture.Resume)!=BystanderPosture.Retreat ||
+                BystanderResponse.Evaluate(15,11,BystanderPosture.Resume)!=BystanderPosture.Watch ||
+                BystanderResponse.Evaluate(21,11,BystanderPosture.Resume)!=BystanderPosture.Resume ||
+                BystanderResponse.Evaluate(10,11,BystanderPosture.Retreat)!=BystanderPosture.Retreat)
+                throw new InvalidOperationException("Live bystander posture thresholds or hysteresis changed.");
+            GuardActor.PublishPlayerHalt(guardPosition,playerPosition,20f);
+            var type=typeof(StreetPopulation); var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+            var heard=(Vector3)type.GetField("lastHaltGuardPosition",flags).GetValue(streets);
+            var radius=(float)type.GetField("lastHaltAudibleRange",flags).GetValue(streets);
+            if(Vector3.Distance(heard,guardPosition)>0.01f || Math.Abs(radius-20f)>0.01f)
+                throw new InvalidOperationException("StreetPopulation did not receive the guard Halt event with its hearing range.");
+            Debug.Log("LIVING_CITIES_CROWD_HALT_PASS: listener receives guard origin/range; twenty-second repeats; stable retreat/watch thresholds and hysteresis pass.");
         }
         private static bool Static(Collider collider)
         {

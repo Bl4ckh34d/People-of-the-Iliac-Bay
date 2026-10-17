@@ -1,0 +1,92 @@
+{
+  "batch": {
+    "name": "batch-12",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-12.png",
+    "items": [
+      {
+        "id": "flat-182-54",
+        "archive": 182,
+        "record": 54,
+        "kind": "flat",
+        "caption": "hooded man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-54.png",
+        "aliases": [
+          "flat-182-55"
+        ]
+      },
+      {
+        "id": "flat-182-56",
+        "archive": 182,
+        "record": 56,
+        "kind": "flat",
+        "caption": "hooded woman",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-56.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-57",
+        "archive": 182,
+        "record": 57,
+        "kind": "flat",
+        "caption": "nearly naked man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-57.png",
+        "aliases": [
+          "flat-357-10"
+        ]
+      },
+      {
+        "id": "flat-182-58",
+        "archive": 182,
+        "record": 58,
+        "kind": "flat",
+        "caption": "nearly naked man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-58.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-59",
+        "archive": 182,
+        "record": 59,
+        "kind": "flat",
+        "caption": "blacksmith",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-59.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-0",
+        "archive": 183,
+        "record": 0,
+        "kind": "flat",
+        "caption": "regal fairie",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-0.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-1",
+        "archive": 183,
+        "record": 1,
+        "kind": "flat",
+        "caption": "regal fairie",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-1.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-2",
+        "archive": 183,
+        "record": 2,
+        "kind": "flat",
+        "caption": "guard",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-2.png",
+        "aliases": [
+          "flat-334-15",
+          "flat-357-12"
+        ]
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-182-54 (hooded man); 2: flat-182-56 (hooded woman); 3: flat-182-57 (nearly naked man); 4: flat-182-58 (nearly naked man); 5: flat-182-59 (blacksmith); 6: flat-183-0 (regal fairie); 7: flat-183-1 (regal fairie); 8: flat-183-2 (guard). Preserve actual gender and apparent age shown, without inventing facial hair. Young children and clean-shaven adults must stay beardless.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-72d6b423-6315-463a-abff-706a77cb10a2.png",
+  "status": "generated-awaiting-runtime-validation"
+}

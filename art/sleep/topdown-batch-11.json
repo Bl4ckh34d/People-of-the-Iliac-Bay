@@ -1,0 +1,85 @@
+{
+  "batch": {
+    "name": "batch-11",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-11.png",
+    "items": [
+      {
+        "id": "flat-182-46",
+        "archive": 182,
+        "record": 46,
+        "kind": "flat",
+        "caption": "handsome young man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-46.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-47",
+        "archive": 182,
+        "record": 47,
+        "kind": "flat",
+        "caption": "pretty young lady",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-47.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-48",
+        "archive": 182,
+        "record": 48,
+        "kind": "flat",
+        "caption": "blond whore",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-48.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-49",
+        "archive": 182,
+        "record": 49,
+        "kind": "flat",
+        "caption": "juggler",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-49.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-50",
+        "archive": 182,
+        "record": 50,
+        "kind": "flat",
+        "caption": "flutist",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-50.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-51",
+        "archive": 182,
+        "record": 51,
+        "kind": "flat",
+        "caption": "lutist",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-51.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-52",
+        "archive": 182,
+        "record": 52,
+        "kind": "flat",
+        "caption": "drummer",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-52.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-182-53",
+        "archive": 182,
+        "record": 53,
+        "kind": "flat",
+        "caption": "young bellringer",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-53.png",
+        "aliases": []
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-182-46 (handsome young man); 2: flat-182-47 (pretty young lady); 3: flat-182-48 (blond whore); 4: flat-182-49 (juggler); 5: flat-182-50 (flutist); 6: flat-182-51 (lutist); 7: flat-182-52 (drummer); 8: flat-182-53 (young bellringer). Preserve actual gender and apparent age shown, without inventing facial hair. Young children and clean-shaven adults must stay beardless.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-ea9b12b5-44dd-40df-a2f7-5fd0a9e49f7c.png",
+  "status": "generated-awaiting-runtime-validation"
+}

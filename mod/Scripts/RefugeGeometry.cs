@@ -11,10 +11,18 @@ namespace LivingCities.DFU
     {
         public static List<List<GuardPoint3>> Survey(Transform owner,StaticDoor door)
         {
-            if(!owner || door.doorType!=DoorTypes.Building) throw new ArgumentException("Missing refuge building door.");
             var result=new List<List<GuardPoint3>>();
+            var operation=SurveySteps(owner,door,result);
+            try { while(operation.MoveNext()) { } }
+            finally { (operation as IDisposable)?.Dispose(); }
+            return result;
+        }
+        public static System.Collections.IEnumerator SurveySteps(Transform owner,StaticDoor door,List<List<GuardPoint3>> result,
+            List<WallQuarterBeds.SurveyedBed> beds=null)
+        {
+            if(!owner || door.doorType!=DoorTypes.Building) throw new ArgumentException("Missing refuge building door.");
             var temporary=new GameObject("Living Cities isolated refuge geometry");
-            // A synchronous model-only layout cannot register people or furniture
+            // A model-only layout cannot register people or furniture
             // interactions. Move it above the world before querying colliders.
             var offset=Vector3.up*100;
             var shifted=door; shifted.ownerPosition+=offset;
@@ -22,14 +30,29 @@ namespace LivingCities.DFU
             {
                 var interior=temporary.AddComponent<DaggerfallInterior>();
                 var climate=ClimateSwaps.FromAPIClimateBase(GameManager.Instance.PlayerGPS.ClimateSettings.ClimateType);
-                if(!interior.DoLayoutAutomap(owner,shifted,climate)) return result;
+                if(!interior.DoLayoutAutomap(owner,shifted,climate)) yield break;
                 temporary.transform.position=door.ownerPosition+(Vector3)door.buildingMatrix.GetColumn(3)+offset;
                 temporary.transform.rotation=GameObjectHelper.QuaternionFromMatrix(door.buildingMatrix);
                 foreach(var renderer in temporary.GetComponentsInChildren<Renderer>()) renderer.enabled=false;
                 Physics.SyncTransforms();
-                var geometry=new InteriorGeometry(interior);
+                yield return null;
+                var geometry=new InteriorGeometry(interior,deferSurvey:true);
+                while(geometry.AdvanceSurvey()) yield return null;
+                if(beds!=null)
+                    foreach(var bed in BedGeometry.Read(interior))
+                    {
+                        yield return null;
+                        Vector3 beside;
+                        if(!geometry.StandBesideBed(bed,out beside)) continue;
+                        var route=geometry.RouteToExit(beside);
+                        if(route.Count<2) continue;
+                        route.Reverse();
+                        beds.Add(new WallQuarterBeds.SurveyedBed {Anchor=bed,EntranceRoute=route});
+                    }
+                int checkedAnchors=0;
                 foreach(var anchor in geometry.LocalAnchors)
                 {
+                    if(++checkedAnchors%4==0) yield return null;
                     var ground=temporary.transform.TransformPoint(anchor);
                     // Do not reserve a foot position on a riser/ledge boundary.
                     // Small scene-transform rounding must not select another tread.
@@ -47,7 +70,6 @@ namespace LivingCities.DFU
                     if(route.Count<2) continue;
                     route.Reverse(); result.Add(route);
                 }
-                return result;
             }
             finally
             {

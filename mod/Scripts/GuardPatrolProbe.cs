@@ -53,6 +53,19 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Both patrol guards must walk with animated sprites.");
             if (!a.GetComponentInChildren<Light>() || !a.GetComponentInChildren<Light>().enabled)
                 throw new InvalidOperationException("Nearby night patrol must carry a lit torch.");
+            if(controller.Roster.BuildingApproaches.Count==0) throw new InvalidOperationException("Patrol routing probe needs a surveyed building.");
+            int witnessBuilding=controller.Roster.BuildingApproaches[0].BuildingKey;
+            var witnessPoint=plan.Position(leader,ExactNow()-6);
+            var routingWatch=System.Diagnostics.Stopwatch.StartNew();
+            var witnessPlan=controller.Roster.PlanWitnessRoute(witnessBuilding,ExactNow(),witnessPoint);
+            routingWatch.Stop();
+            if(witnessPlan==null || (witnessPlan.GuardId!=leader && witnessPlan.GuardId!=follower) || witnessPlan.Length>3)
+                throw new InvalidOperationException("Witness failed to select the nearby moving patrol on surveyed streets.");
+            var witnessCopy=GuardRoster.CopyValidated(controller.Roster).PlanWitnessRoute(witnessBuilding,ExactNow(),witnessPoint);
+            if(witnessCopy==null || witnessCopy.GuardId!=witnessPlan.GuardId)
+                throw new InvalidOperationException("Saved patrol routing changed the witness target.");
+            Debug.Log("LIVING_CITIES_PATROL_WITNESS_ROUTE_PASS: native surveyed patrol selected from nearby street point; restore retains target; route metres="+
+                witnessPlan.Length+"; query milliseconds="+routingWatch.Elapsed.TotalMilliseconds);
             bool visible=false; game.PlayerMotor.CancelMovement=true;
             foreach(var direction in new[] { Vector3.forward,Vector3.back,Vector3.right,Vector3.left })
             {

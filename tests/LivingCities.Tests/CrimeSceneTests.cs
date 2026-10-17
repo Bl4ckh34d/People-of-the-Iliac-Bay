@@ -27,16 +27,123 @@ namespace LivingCities.Tests
         }
         internal static void Add(List<(string, Action)> cases)
         {
-            cases.Add(("Confirmed corpses persist until departure and cleanup without reappearing", () => {
+            cases.Add(("Witnessed murder keeps accusation policy while allowing corpse inspection",()=>{
+                CivilianIncident alarm; var store=Scene(out alarm); alarm.Scene=null;
+                store.ConfirmCorpse(alarm.Id,100,7,1,2,3);
+                var roster=store.GetOrCreateGuards(1,1,new[]{new SavedRoutePoint()}); var guard=roster.Guards[0];
+                roster.CacheBuildingApproach(7,new SavedRoutePoint{X=10},new Dictionary<string,List<SavedRoutePoint>> {
+                    {guard.Id,new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=10}}} });
+                string id="civilian:"+alarm.Id;
+                roster.DispatchBuilding(id,7,110,1,2,10,false,null,null,true);
+                var report=roster.Reports.Find(r=>r.Id==id);
+                Check.True(report.CrimeScene && !report.Investigation);
+                roster.Advance(161); roster.EnterBuilding(guard.Id,7,161,new GuardPoint3());
+                Check.True(store.AssignCorpseInspector(alarm.Id,id,161));
+                roster.ObserveInterior(guard.Id,new GuardPoint3(),1,161,true,new GuardPoint3{X=2});
+                Check.True(!roster.InteriorPursuitExpired(guard.Id,460));
+                Check.True(roster.InteriorPursuitExpired(guard.Id,461));
+                Check.Near(3760,guard.SearchUntil);
+                store.AdvanceCrimeSceneInspection(alarm.Id,guard.Id,5,false,true,true,162);
+                Check.True(!alarm.Corpse.Cleared);
+                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.True(restored.GetGuards(1).InteriorPursuitExpired(guard.Id,461));
+                restored.AdvanceCrimeSceneInspection(alarm.Id,guard.Id,5,false,false,true,170);
+                var saved=restored.Snapshot();
+                Check.True(saved.AlarmIncidents[0].Corpse.Cleared);
+                Check.True(!saved.Garrisons[0].Reports[0].Investigation);
+                Check.Near(3760,saved.Garrisons[0].Reports[0].InvestigationUntil);
+                var savedRoster=restored.GetGuards(1);
+                savedRoster.FinishInteriorPursuit(guard.Id,461);
+                Check.True(!savedRoster.InteriorPursuitExpired(guard.Id,500));
+                savedRoster.ObserveInterior(guard.Id,new GuardPoint3(),1,500,true,new GuardPoint3{X=3});
+                Check.True(!savedRoster.InteriorPursuitExpired(guard.Id,799));
+                Check.True(savedRoster.InteriorPursuitExpired(guard.Id,800));
+                var invalid=restored.Snapshot(); invalid.Garrisons[0].Guards[0].Interior.PursuitUntil=double.NaN;
+                Check.Throws<ArgumentException>(()=>restored.Restore(invalid));
+            }));
+            cases.Add(("Neutral corpse report assigns an arrived inspector and preserves cleanup across restore", () => {
+                CivilianIncident alarm; var store=Scene(out alarm); alarm.Scene=null;
+                store.ConfirmCorpse(alarm.Id,100,7,1,2,3);
+                var roster=store.GetOrCreateGuards(1,1,new[]{new SavedRoutePoint()});
+                var guard=roster.Guards[0];
+                roster.CacheBuildingApproach(7,new SavedRoutePoint{X=10},new Dictionary<string,List<SavedRoutePoint>> {
+                    {guard.Id,new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=10}}} });
+                string report="inn-alarm:"+alarm.Id;
+                roster.DispatchBuilding(report,7,110,1,2,10,true);
+                Check.True(!store.AssignCorpseInspector(alarm.Id,report,111));
+                roster.Advance(161); roster.EnterBuilding(guard.Id,7,161,new GuardPoint3());
+                Check.True(store.AssignCorpseInspector(alarm.Id,report,161));
+                store.AdvanceCrimeSceneInspection(alarm.Id,guard.Id,2,false,false,true,162);
+                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.Near(3,restored.GetCrimeSceneCorpseSnapshot(alarm.Id).InspectionRemainingRealSeconds);
+                restored.AdvanceCrimeSceneInspection(alarm.Id,guard.Id,3,false,false,true,165);
+                var saved=restored.Snapshot();
+                Check.True(saved.AlarmIncidents[0].Corpse.Cleared);
+                var again=new WorldStateStore(0); again.Restore(saved);
+                Check.Equal(0,again.ObserveCorpses(1,7,166).Count);
+            }));
+            cases.Add(("Dead corpse inspector is replaced by an arrived responder without extending occupation", () => {
+                CivilianIncident alarm; var store=Scene(out alarm); alarm.Scene=null;
+                store.ConfirmCorpse(alarm.Id,100,7,1,2,3);
+                var posts=new[]{new SavedRoutePoint(),new SavedRoutePoint{X=2}};
+                var roster=store.GetOrCreateGuards(1,2,posts);
+                var routes=new Dictionary<string,List<SavedRoutePoint>>();
+                for(int i=0;i<2;i++) routes[roster.Guards[i].Id]=new List<SavedRoutePoint>{posts[i],new SavedRoutePoint{X=10}};
+                roster.CacheBuildingApproach(7,new SavedRoutePoint{X=10},routes);
+                string id="inn-alarm:"+alarm.Id;
+                roster.DispatchBuilding(id,7,110,2,2,10,true); roster.Advance(161);
+                foreach(var guard in roster.Guards) roster.EnterBuilding(guard.Id,7,161,new GuardPoint3());
+                Check.True(store.AssignCorpseInspector(alarm.Id,id,161));
+                string first=alarm.Corpse.InspectionGuardId;
+                double deadline=roster.Reports[0].InvestigationUntil;
+                store.AdvanceCrimeSceneInspection(alarm.Id,first,2,false,false,true,162);
+                Check.True(!store.AssignCorpseInspector(alarm.Id,id,162));
+                Check.Near(3,alarm.Corpse.InspectionRemainingRealSeconds);
+                roster.Kill(first,163);
+                var abandoned=new WorldStateStore(0); abandoned.Restore(store.Snapshot());
+                var other=abandoned.GetGuards(1).Guards.Find(g=>g.Id!=first);
+                abandoned.GetGuards(1).Kill(other.Id,163);
+                Check.True(!abandoned.AssignCorpseInspector(alarm.Id,id,164));
+                Check.True(!abandoned.GetCrimeSceneCorpseSnapshot(alarm.Id).Cleared);
+                var expired=new WorldStateStore(0); expired.Restore(store.Snapshot());
+                Check.True(!expired.AssignCorpseInspector(alarm.Id,id,deadline+1));
+                var restored=new WorldStateStore(0); restored.Restore(store.Snapshot());
+                Check.True(restored.AssignCorpseInspector(alarm.Id,id,164));
+                var body=restored.GetCrimeSceneCorpseSnapshot(alarm.Id);
+                Check.True(body.InspectionGuardId!=first);
+                Check.Near(5,body.InspectionRemainingRealSeconds);
+                Check.Near(deadline,restored.GetGuards(1).Reports[0].InvestigationUntil);
+                restored.AdvanceCrimeSceneInspection(alarm.Id,body.InspectionGuardId,5,false,false,true,169);
+                Check.True(restored.GetCrimeSceneCorpseSnapshot(alarm.Id).Cleared);
+                Check.True(!restored.AssignCorpseInspector(alarm.Id,id,170));
+            }));
+            cases.Add(("Investigator clears indoor corpse only after five unpaused seconds at body", () => {
                 CivilianIncident alarm; var store = Scene(out alarm);
                 store.ConfirmCorpse(alarm.Id, 100);
+                var readOnlyBody = store.GetCrimeSceneCorpseSnapshot(alarm.Id);
+                readOnlyBody.InspectionRemainingRealSeconds = 0;
+                Check.Near(5, alarm.Corpse.InspectionRemainingRealSeconds);
                 Check.Equal(1, store.ObserveCorpses(1, 7, 200000).Count);
                 store.ObserveCrimeScenes(1, -1, 200001); Dispatch(store, alarm);
                 Check.Equal(1, store.ObserveCorpses(1, -1, 200002).Count);
                 store.DiscoverCrimeScene(alarm.Id, 200501);
-                Check.Equal(0, store.ObserveCorpses(1, -1, 200501).Count);
+                Check.Equal(1, store.ObserveCorpses(1, -1, 200501).Count);
+                var roster = store.GetGuards(1); var guard = roster.Guards[0];
+                Check.Equal(guard.Id, alarm.Corpse.InspectionGuardId);
+                roster.EnterBuilding(guard.Id, 7, 200501, new GuardPoint3());
+                store.AdvanceCrimeSceneInspection(alarm.Id, guard.Id, 2, true, false, true, 200502);
+                Check.Near(5, alarm.Corpse.InspectionRemainingRealSeconds);
+                store.AdvanceCrimeSceneInspection(alarm.Id, guard.Id, 2, false, true, true, 200503);
+                Check.Near(5, alarm.Corpse.InspectionRemainingRealSeconds);
+                store.AdvanceCrimeSceneInspection(alarm.Id, guard.Id, 2, false, false, true, 200504);
                 var restored = new WorldStateStore(0); restored.Restore(store.Snapshot());
-                Check.Equal(0, restored.ObserveCorpses(1, 7, 200600).Count);
+                var restoredBody = restored.Snapshot().AlarmIncidents[0].Corpse;
+                Check.Near(3, restoredBody.InspectionRemainingRealSeconds);
+                var restoredGuard = restored.GetGuards(1).Guards[0];
+                restored.AdvanceCrimeSceneInspection(alarm.Id, restoredGuard.Id, 2, false, false, true, 200600);
+                Check.Equal(1, restored.ObserveCorpses(1, 7, 200600).Count);
+                restored.AdvanceCrimeSceneInspection(alarm.Id, restoredGuard.Id, 1, false, false, true, 200601);
+                Check.Equal(0, restored.ObserveCorpses(1, 7, 200601).Count);
                 Check.True(restored.Snapshot().AlarmIncidents[0].Corpse.Cleared);
             }));
             cases.Add(("Corpse position follows death rather than the first assault", () => {
@@ -155,6 +262,22 @@ namespace LivingCities.Tests
                 roster.ObserveInterior(guard.Id, new GuardPoint3(), 1, 601, true, new GuardPoint3 { X = 2 });
                 Check.Near(4200, guard.SearchUntil);
                 Check.Near(4200, GuardRoster.CopyValidated(roster).Guards[0].SearchUntil);
+            }));
+            cases.Add(("All scene responders leave at first arrival occupation deadline", () => {
+                var posts = new[] { new SavedRoutePoint(), new SavedRoutePoint { X = 10 } };
+                var roster = GuardRoster.Create(1, 2, 2, posts);
+                var routes = new Dictionary<string, List<SavedRoutePoint>>();
+                routes[roster.Guards[0].Id] = new List<SavedRoutePoint> { posts[0], new SavedRoutePoint { X = 100 } };
+                routes[roster.Guards[1].Id] = new List<SavedRoutePoint> { posts[1], new SavedRoutePoint { X = 100 } };
+                roster.CacheBuildingApproach(7, new SavedRoutePoint { X = 100 }, routes);
+                roster.DispatchBuilding("discovery:multi", 7, 100, 2, 2, 10, true);
+                double first = Math.Min(roster.Guards[0].ArrivesAt, roster.Guards[1].ArrivesAt);
+                Check.Near(first + UnwitnessedScene.OccupationSeconds, roster.Reports[0].InvestigationUntil);
+                Check.Near(roster.Reports[0].InvestigationUntil, roster.Guards[0].SearchUntil);
+                Check.Near(roster.Reports[0].InvestigationUntil, roster.Guards[1].SearchUntil);
+                var restored = GuardRoster.CopyValidated(roster);
+                Check.Near(roster.Reports[0].InvestigationUntil, restored.Reports[0].InvestigationUntil);
+                Check.Near(roster.Reports[0].InvestigationUntil, restored.Guards[1].SearchUntil);
             }));
         }
     }

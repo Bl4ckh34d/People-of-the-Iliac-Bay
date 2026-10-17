@@ -1,4 +1,5 @@
 using DaggerfallConnect.Arena2;
+using DaggerfallConnect;
 using DaggerfallConnect.Utility;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
@@ -14,7 +15,16 @@ namespace LivingCities.DFU
         {
             var gps=GameManager.Instance.PlayerGPS;
             var bank=gps.CurrentRegionIndex>=0 ? (NameHelper.BankTypes)MapsFile.RegionRaces[gps.CurrentRegionIndex] : NameHelper.BankTypes.Breton;
-            var people=gps.ClimateSettings.People;
+            Initialize(population,bank,gps.ClimateSettings.People);
+        }
+        public static void Initialize(SettlementPopulation population,DFLocation hometown)
+        {
+            if(hometown.RegionIndex<0 || hometown.RegionIndex>=MapsFile.RegionRaces.Length)
+                throw new System.ArgumentException("Invalid hometown region.");
+            Initialize(population,(NameHelper.BankTypes)MapsFile.RegionRaces[hometown.RegionIndex],hometown.Climate.People);
+        }
+        private static void Initialize(SettlementPopulation population,NameHelper.BankTypes bank,FactionFile.FactionRaces people)
+        {
             int race=(int)(people==FactionFile.FactionRaces.Redguard ? Races.Redguard :
                 people==FactionFile.FactionRaces.Nord ? Races.Nord : Races.Breton);
             uint previous=DFRandom.Seed;

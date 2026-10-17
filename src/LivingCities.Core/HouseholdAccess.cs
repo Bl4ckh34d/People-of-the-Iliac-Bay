@@ -1,9 +1,21 @@
 using System;
+using System.Collections.Generic;
 
 namespace LivingCities.Core
 {
     public static class HouseholdAccess
     {
+        public static bool HasLivingOccupant(int building, IEnumerable<Resident> people,
+            Func<Resident, ActivitySnapshot> state)
+        {
+            foreach (var person in people)
+            {
+                if (!person.IsAlive) continue;
+                var current = state(person);
+                if (current.BuildingKey == building && current.Activity != Activity.Travel) return true;
+            }
+            return false;
+        }
         public static ActivitySnapshot EffectiveState(ActivitySnapshot scheduled, AlarmPerson alarm, double now)
         {
             if (double.IsNaN(now) || double.IsInfinity(now) || now < 0)

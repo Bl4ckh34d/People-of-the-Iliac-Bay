@@ -10,12 +10,27 @@ namespace LivingCities.DFU
     public sealed class CrowdMotion : MonoBehaviour
     {
         private static readonly HashSet<CrowdMotion> bodies=new HashSet<CrowdMotion>();
-        private float offset,radius=0.4f;
+        public const float BodyRadius=0.25f;
+        public const float Separation=BodyRadius*2+0.02f;
+        private float offset;
+        private const float radius=BodyRadius;
         private bool placed;
         private Vector3 lastTarget;
         public bool HasPlacement { get { return placed; } }
+        private bool resumeWithoutReconstruction;
+        private int comfortPassingSide;
+        private double comfortLateralOffset;
+        public void ResumeFromPause() { resumeWithoutReconstruction=true; }
         public void Configure(float groundOffset) { offset=groundOffset; }
-        public void ResetPlacement() { placed=false; }
+        public void ResetPlacement() { placed=false; comfortPassingSide=0; comfortLateralOffset=0; }
+        // A saved body already has a known location. Do not run the new-spawn
+        // ring search, which can teleport it when another body reconstructs first.
+        public void RestorePlacement(Vector3 ground)
+        {
+            transform.position=ground+Vector3.up*offset;
+            lastTarget=ground;placed=true;resumeWithoutReconstruction=true;
+            comfortPassingSide=0;comfortLateralOffset=0;
+        }
         private void Awake() { bodies.Add(this); }
         private void OnDestroy() { bodies.Remove(this); }
         private Vector3 Ground { get { return transform.position-Vector3.up*offset; } }
@@ -34,37 +49,55 @@ namespace LivingCities.DFU
             }
             return result;
         }
-        public bool Place(Vector3 target,out Vector3 actual)
+        public List<Vector3> NeighbourPositions(Vector3 center)
+        {
+            var result=new List<Vector3>();
+            foreach(var point in Neighbours(center)) result.Add(Vector(point));
+            return result;
+        }
+        public bool Place(Vector3 target,out Vector3 actual,bool comfortWalking=true)
         {
             var change=placed ? target-lastTarget : Vector3.zero;
-            bool reconstruct=!placed || change.sqrMagnitude>4;
+            bool physicalTarget=resumeWithoutReconstruction;
+            bool reconstruct=!placed || change.sqrMagnitude>4 && !resumeWithoutReconstruction;
+            resumeWithoutReconstruction=false;
             lastTarget=target;
             if(reconstruct)
             {
+                comfortPassingSide=0;
+                comfortLateralOffset=0;
                 var others=Neighbours(target);
                 for(int ring=0;ring<=3;ring++) for(int direction=0;direction<(ring==0 ? 1 : 8);direction++)
                 {
                     float angle=direction*Mathf.PI*0.25f;
-                    var candidate=target+new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*(ring*0.85f);
+                    var candidate=target+new Vector3(Mathf.Cos(angle),0,Mathf.Sin(angle))*(ring*(Separation+0.03f));
                     bool occupied=false;
                     foreach(var other in others)
                     {
                         var delta=candidate-Vector(other); delta.y=0;
-                        if(Math.Abs(candidate.y-other.Y)<2.1 && delta.sqrMagnitude<0.82f*0.82f) { occupied=true; break; }
+                        if(Math.Abs(candidate.y-other.Y)<2.1 && delta.sqrMagnitude<Separation*Separation) { occupied=true; break; }
                     }
                     if(!occupied && Clear(target,candidate))
                     {
                         actual=candidate; placed=true; transform.position=actual+Vector3.up*offset; return true;
                     }
                 }
-                actual=Ground; return false;
+                // A failed first placement has no valid body to show. A visible
+                // body already on supported ground must not vanish merely because
+                // the schedule's new target cannot currently be reconstructed.
+                actual=Ground; return placed;
             }
             var from=Ground;
-            double maximum=Math.Max(ResidentMovement.WalkSpeed*Time.deltaTime,change.magnitude);
+            double maximum=physicalTarget ? ResidentMovement.WalkSpeed*Time.deltaTime :
+                Math.Max(ResidentMovement.WalkSpeed*Time.deltaTime,change.magnitude);
             // Long frame stalls must not sweep through a whole crowd in one step.
             maximum=Math.Min(maximum,0.5);
-            var result=CrowdSteering.Move(Point(from),Point(target),Neighbours(from),0.82,maximum,
-                candidate=>Clear(from,Vector(candidate)));
+            if(!comfortWalking) { comfortPassingSide=0; comfortLateralOffset=0; }
+            var neighbours=Neighbours(from);
+            var result=comfortWalking ? CrowdSteering.MoveComfort(Point(from),Point(target),neighbours,Separation,1.1,1.8,
+                maximum,ref comfortPassingSide,ref comfortLateralOffset,Point(change),candidate=>Clear(from,Vector(candidate)),true) :
+                CrowdSteering.Move(Point(from),Point(target),neighbours,Separation,maximum,
+                    candidate=>Clear(from,Vector(candidate)));
             actual=Vector(result); transform.position=actual+Vector3.up*offset; return true;
         }
         private bool Clear(Vector3 from,Vector3 to)

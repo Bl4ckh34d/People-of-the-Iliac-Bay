@@ -22,6 +22,7 @@ namespace LivingCities.DFU
         private readonly CityNavigation navigation;
         private readonly Transform origin;
         private readonly Terrain terrain;
+        private readonly BuildingDirectory directory;
         public readonly SortedDictionary<int, Entrance> Entrances = new SortedDictionary<int, Entrance>();
         public int RejectedDoors { get; private set; }
         public int Width { get { return navigation.NavGridWidth; } }
@@ -30,16 +31,25 @@ namespace LivingCities.DFU
         {
             if (directory == null || navigation == null) throw new ArgumentNullException();
             this.navigation = navigation;
+            this.directory = directory;
             origin = directory.transform;
             var location = directory.GetComponent<DaggerfallLocation>();
             var terrainObject = GameManager.Instance.StreamingWorld.GetTerrainFromPixel(location.Summary.MapPixelX, location.Summary.MapPixelY);
             terrain = terrainObject ? terrainObject.GetComponent<Terrain>() : null;
             if (!mapEntrances) return;
+            var operation=ReadEntranceSteps();
+            while(operation.MoveNext()) {}
+        }
+        public System.Collections.IEnumerator ReadEntranceSteps()
+        {
+            var found=new SortedDictionary<int,Entrance>();
+            int work=0;
             foreach (var owner in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
             {
                 if (owner.Doors == null) continue;
                 for (int i = 0; i < owner.Doors.Length; i++)
                 {
+                    if(++work%8==0) yield return null;
                     if (owner.Doors[i].doorType != DoorTypes.Building) continue;
                     int key = owner.Doors[i].buildingKey;
                     BuildingSummary building;
@@ -52,10 +62,12 @@ namespace LivingCities.DFU
                     Vector3 local = origin.InverseTransformPoint(door);
                     Entrance existing;
                     // Multiple entrances: stable geometric ordering, never hierarchy order.
-                    if (Entrances.TryGetValue(key, out existing) && Compare(local, existing.LocalDoor) >= 0) continue;
-                    Entrances[key] = new Entrance { BuildingKey = key, Cell = cell, LocalDoor = local };
+                    if (found.TryGetValue(key, out existing) && Compare(local, existing.LocalDoor) >= 0) continue;
+                    found[key] = new Entrance { BuildingKey = key, Cell = cell, LocalDoor = local };
                 }
             }
+            Entrances.Clear();
+            foreach(var pair in found) Entrances.Add(pair.Key,pair.Value);
         }
         public int Cost(int x, int z)
         {

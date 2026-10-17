@@ -1,0 +1,91 @@
+{
+  "batch": {
+    "name": "batch-14",
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\batch-14.png",
+    "items": [
+      {
+        "id": "flat-183-11",
+        "archive": 183,
+        "record": 11,
+        "kind": "flat",
+        "caption": "queen",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-11.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-12",
+        "archive": 183,
+        "record": 12,
+        "kind": "flat",
+        "caption": "cowled monk",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-12.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-13",
+        "archive": 183,
+        "record": 13,
+        "kind": "flat",
+        "caption": "handsome young king",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-13.png",
+        "aliases": [
+          "flat-334-19"
+        ]
+      },
+      {
+        "id": "flat-183-14",
+        "archive": 183,
+        "record": 14,
+        "kind": "flat",
+        "caption": "stunning brunette",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-14.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-15",
+        "archive": 183,
+        "record": 15,
+        "kind": "flat",
+        "caption": "blind old crone",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-15.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-16",
+        "archive": 183,
+        "record": 16,
+        "kind": "flat",
+        "caption": "stylish fat man",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-16.png",
+        "aliases": [
+          "flat-334-20"
+        ]
+      },
+      {
+        "id": "flat-183-17",
+        "archive": 183,
+        "record": 17,
+        "kind": "flat",
+        "caption": "bedraggled witch",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-17.png",
+        "aliases": []
+      },
+      {
+        "id": "flat-183-18",
+        "archive": 183,
+        "record": 18,
+        "kind": "flat",
+        "caption": "gorgeous Redguard",
+        "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-183-18.png",
+        "aliases": [
+          "flat-334-21"
+        ]
+      }
+    ]
+  },
+  "columns": 4,
+  "rows": 2,
+  "prompt": "Use case: identity-preserve. Create ONE production Daggerfall pixel-art sleeping sprite atlas. Image1 is approved sleeper geometry and style. Image2 is an indexed original-game NPC contact sheet: use its faces as identity references, NOT its grey background, poses, text or props. Output square transparent canvas, EXACTLY 4 equal columns and 2 equal rows. Each cell contains ONE COMPLETE overhead sleeping person, head toward TOP, feet toward BOTTOM. Keep sprites within their own cell, separated by generous fully transparent margins. Match approved image1 proportions: total silhouette about 2.35 times its width, same head/body ratio; do not elongate. Green thick blanket covers ENTIRE body neck to toes, white pillow behind head. No exposed body or limbs, no weapons, no held items, no animals or mounts. Eyes closed, calm asleep. Preserve each referenced NPC's skin colour, apparent age, gender presentation, hair colour/style/baldness and beard; retain close-fitting hoods/headdresses when they hide hair in source, never invent visible hair beneath an opaque hood. Children remain childlike, no adult beard. One contiguous head/pillow/blanket silhouette per cell. Coarse low-resolution pixel art, limited palette, no smooth illustration. Straight top-down, no perspective, no bed frame. No text, grid lines, labels, checkerboard or background shadows. Actual alpha transparency. Read image2 left to right top row then bottom row; identical cell ordering in output. Exact cell identities: 1: flat-183-11 (queen); 2: flat-183-12 (cowled monk); 3: flat-183-13 (handsome young king); 4: flat-183-14 (stunning brunette); 5: flat-183-15 (blind old crone); 6: flat-183-16 (stylish fat man); 7: flat-183-17 (bedraggled witch); 8: flat-183-18 (gorgeous Redguard). Preserve actual gender and apparent age shown, without inventing facial hair. Young children and clean-shaven adults must stay beardless.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a135ac-12fe-7041-9e19-3dbc601bd8cb\\exec-a3f51c7e-8b5b-4e96-9cd4-b3cbdfdce009.png",
+  "status": "generated-awaiting-runtime-validation"
+}

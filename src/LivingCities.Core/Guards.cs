@@ -26,11 +26,15 @@ namespace LivingCities.Core
         public double ReturnRate;
         public GuardInteriorState Interior;
         public GuardRefugeJourney Refuge;
+        public GuardPostRecall PostRecall;
         public double HealthFraction = 1;
         public GuardEffectSnapshot Effects;
         public GuardDuty Duty;
         public List<SavedRoutePoint> Route = new List<SavedRoutePoint>();
         public double DepartedAt, ArrivesAt, SearchUntil, DiedAt;
+        // A night-patrol guard keeps this through its physical return to post,
+        // then begins its daytime wall-bed rest when a route is available.
+        public double DayRestUntil;
     }
     [Serializable]
     public sealed class GuardArrivalEvidence
@@ -48,9 +52,12 @@ namespace LivingCities.Core
         public CrimeSceneWarning Warning;
         public List<GuardArrivalEvidence> Arrivals = new List<GuardArrivalEvidence>();
         public bool Investigation;
+        public bool CrimeScene;
+        public bool OccupiesScene { get { return Investigation || CrimeScene; } }
         public bool AwaitingApproach;
         public bool HasArrival;
         public double FirstArrivalAt;
+        public double InvestigationUntil;
         public string Id;
         public int? BuildingKey;
         public SavedRoutePoint Entrance;
@@ -172,6 +179,7 @@ namespace LivingCities.Core
             {
                 var guard = candidates[i];
                 guard.Route = copies[guard.Id]; guard.IncidentId = incidentId;
+                guard.DayRestUntil=0;
                 guard.ResponseOrigin = CopyPoint(guard.Route[0]);
                 guard.ReturnPath = returns[guard.Id]; guard.ReturnRate = gameSecondsPerRealSecond / metresPerRealSecond;
                 InterruptPatrol(guard.Id, now);
@@ -192,6 +200,7 @@ namespace LivingCities.Core
             Require(Time(now), "Invalid guard time.");
             foreach (var guard in Guards)
             {
+                CancelInterruptedRecall(guard);
                 if (!guard.IsAlive) continue;
                 if (guard.Refuge != null)
                 {
@@ -204,7 +213,7 @@ namespace LivingCities.Core
                 {
                     guard.Duty = GuardDuty.Searching;
                     var report = Reports.Find(r => r.Id == guard.IncidentId);
-                    if (report != null && report.Investigation)
+                    if (report != null && report.OccupiesScene)
                     {
                         report.Arrivals.Find(a => a.GuardId == guard.Id).Arrived = true;
                         if (!report.HasArrival || guard.ArrivesAt < report.FirstArrivalAt)
@@ -218,8 +227,14 @@ namespace LivingCities.Core
                 if (guard.Duty == GuardDuty.Returning && now >= guard.ArrivesAt)
                 { guard.Duty = GuardDuty.Posted; guard.Route.Clear(); guard.IncidentId = null;
                     guard.ResponseOrigin = null; guard.ReturnPath = null; guard.ReturnRate = 0; }
+                AdvancePostRecall(guard,now);
+                if (guard.DayRestUntil > 0 && now >= guard.DayRestUntil && guard.Refuge == null)
+                    guard.DayRestUntil=0;
             }
             Patrols.RemoveAll(p => now >= PatrolFinishedAt(p));
+            Reports.RemoveAll(r=>(r.Id.StartsWith("post:",StringComparison.Ordinal) ||
+                r.Id.StartsWith("gate-recall:",StringComparison.Ordinal)) &&
+                !Guards.Exists(g=>g.IncidentId==r.Id || g.PostRecall!=null && g.PostRecall.OutboundIncidentId==r.Id));
         }
         public SavedRoutePoint Position(string id, double now)
         {
@@ -321,6 +336,16 @@ namespace LivingCities.Core
         private static bool Finite(double value) { return !double.IsNaN(value) && !double.IsInfinity(value); }
         private static bool Time(double value) { return Finite(value) && value >= 0; }
         private static void Require(bool condition, string message) { if (!condition) throw new ArgumentException(message); }
+        private static double InvestigationDeadline(GuardReport report, double fallbackArrival)
+        {
+            if (report.InvestigationUntil > 0) return report.InvestigationUntil;
+            double first = double.MaxValue;
+            if (report.Arrivals != null)
+                foreach (var arrival in report.Arrivals)
+                    if (arrival != null) first = Math.Min(first, arrival.ScheduledAt);
+            if (first == double.MaxValue) first = fallbackArrival;
+            return first + UnwitnessedScene.OccupationSeconds;
+        }
         public static GuardRoster CopyValidated(GuardRoster source)
         {
             Require(source != null && source.SettlementId >= 0 && source.Target >= 0 && source.Target <= 350 && source.NextIdentity >= 0 &&
@@ -332,7 +357,7 @@ namespace LivingCities.Core
             {
                 Require(guard != null && !string.IsNullOrWhiteSpace(guard.Id) && ids.Add(guard.Id) && Enum.IsDefined(typeof(GuardDuty), guard.Duty) &&
                     guard.IsAlive == (guard.Duty != GuardDuty.Dead) && Time(guard.DepartedAt) && Time(guard.ArrivesAt) &&
-                    Time(guard.SearchUntil) && Time(guard.DiedAt), "Invalid guard identity or state.");
+                    Time(guard.SearchUntil) && Time(guard.DiedAt) && Time(guard.DayRestUntil), "Invalid guard identity or state.");
                 if (guard.IsAlive) alive++;
                 Require(Finite(guard.HealthFraction) && guard.HealthFraction >= 0 && guard.HealthFraction <= 1 &&
                     (!guard.IsAlive || guard.HealthFraction > 0), "Invalid guard health.");
@@ -355,15 +380,18 @@ namespace LivingCities.Core
                     Require(route.Count >= 2 && guard.IncidentId != null && guard.ArrivesAt >= guard.DepartedAt &&
                         source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.GuardIds != null && r.GuardIds.Contains(guard.Id)), "Invalid responding guard.");
                 double searchUntil = guard.SearchUntil;
+                var assignedReport = source.Reports.Find(r => r != null && r.Id == guard.IncidentId);
+                bool investigation = assignedReport != null && assignedReport.OccupiesScene;
+                double investigationUntil = investigation ? InvestigationDeadline(assignedReport, guard.ArrivesAt) : 0;
                 // The unpublished discovery preview used six hours. Normalize only
                 // that exact occupation floor; preserve active pursuit and history.
-                if (source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.Investigation) &&
+                if (investigation &&
                     (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching ||
                     (guard.Duty == GuardDuty.Engaged && guard.Interior != null && !guard.Interior.Returning)) &&
-                    searchUntil == guard.ArrivesAt + 21600)
-                    searchUntil = guard.ArrivesAt + UnwitnessedScene.OccupationSeconds;
+                    (searchUntil == guard.ArrivesAt + 21600 || assignedReport.InvestigationUntil == 0))
+                    searchUntil = investigationUntil;
                 if (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching)
-                    Require(searchUntil == guard.ArrivesAt + (source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.Investigation) ? UnwitnessedScene.OccupationSeconds : 300) &&
+                    Require(searchUntil == (investigation ? investigationUntil : guard.ArrivesAt + 300) &&
                         Distance(CopyPoint(guard.ResponseOrigin ?? guard.Post), route[0]) < 0.05 &&
                         (returnPath == null || Distance(returnPath[0], route[route.Count - 1]) < 0.05), "Invalid guard search deadline or route origin.");
                 if (guard.Duty == GuardDuty.Returning)
@@ -380,7 +408,7 @@ namespace LivingCities.Core
                     "Invalid guard effect snapshot.");
                 copy.Guards.Add(new GuardRecord { Id = guard.Id, IncidentId = guard.IncidentId, ReplacedById = guard.ReplacedById,
                     Effects = guard.Effects==null ? null : new GuardEffectSnapshot { Json=guard.Effects.Json,MagicMinute=guard.Effects.MagicMinute },
-                    Refuge = refuge,
+                    Refuge = refuge, PostRecall=CopyPostRecall(guard.PostRecall),
                     Interior = CopyInterior(guard),
                     AppearanceSeed = guard.AppearanceSeed, IsAlive = guard.IsAlive, Post = CopyPoint(guard.Post), Duty = guard.Duty,
                     DeathPosition = guard.DeathPosition == null ? null : CopyPoint(guard.DeathPosition),
@@ -389,9 +417,21 @@ namespace LivingCities.Core
                     LastSeenSuspect = guard.LastSeenSuspect == null ? null : CopyPoint(guard.LastSeenSuspect),
                     ResponseOrigin = guard.ResponseOrigin == null ? null : CopyPoint(guard.ResponseOrigin),
                     ReturnPath = returnPath, ReturnRate = guard.ReturnRate,
-                    Route = route, DepartedAt = guard.DepartedAt, ArrivesAt = guard.ArrivesAt, SearchUntil = searchUntil, DiedAt = guard.DiedAt });
+                    Route = route, DepartedAt = guard.DepartedAt, ArrivesAt = guard.ArrivesAt, SearchUntil = searchUntil, DiedAt = guard.DiedAt,
+                    DayRestUntil = guard.DayRestUntil });
             }
             Require(alive <= source.Target && source.NextIdentity == source.Guards.Count, "Invalid guard allocation count.");
+            var occupiedBeds = new Dictionary<int, HashSet<int>>();
+            foreach (var guard in copy.Guards)
+            {
+                if (!guard.IsAlive) continue;
+                var rest = guard.Refuge ?? guard.PostRecall?.WallDuty;
+                if (rest == null || !rest.RestBedRecord.HasValue) continue;
+                HashSet<int> beds;
+                if (!occupiedBeds.TryGetValue(rest.BuildingKey, out beds))
+                    occupiedBeds.Add(rest.BuildingKey, beds = new HashSet<int>());
+                Require(beds.Add(rest.RestBedRecord.Value), "Duplicate saved guard bed reservation.");
+            }
             var sequence = new Dictionary<string, int>();
             for (int i = 0; i < source.NextIdentity; i++)
             {
@@ -410,7 +450,8 @@ namespace LivingCities.Core
                     !report.Investigation &&
                     report.SearchRoute == null && report.Warning == null, "Invalid saved defense report.");
                 bool outdoorSearch = report.Investigation && !report.BuildingKey.HasValue;
-                Require(report.Warning == null || (report.Investigation && report.BuildingKey.HasValue), "Warning needs an indoor investigation.");
+                Require(!report.CrimeScene || report.BuildingKey.HasValue && report.ThreatId==null,"Invalid accused crime scene.");
+                Require(report.Warning == null || (report.OccupiesScene && report.BuildingKey.HasValue), "Warning needs an indoor investigation.");
                 Require(!report.AwaitingApproach || report.BuildingKey.HasValue && !report.Investigation &&
                     report.GuardIds.Count == 0 && report.Warning == null && report.Entrance == null,
                     "Invalid queued building report.");
@@ -425,14 +466,16 @@ namespace LivingCities.Core
                         "Invalid saved outdoor search route.");
                 }
                 else Require(report.SearchRoute == null && report.SearchLaps == 0, "Unexpected outdoor search route.");
-                Require(Time(report.FirstArrivalAt) && (report.HasArrival ? report.Investigation && report.GuardIds.Count > 0 : report.FirstArrivalAt == 0),
+                Require(Time(report.FirstArrivalAt) && (report.HasArrival ? report.OccupiesScene && report.GuardIds.Count > 0 : report.FirstArrivalAt == 0),
                     "Invalid investigation arrival evidence.");
                 var saved = new GuardReport { Id = report.Id, BuildingKey = report.BuildingKey, Investigation = report.Investigation,
+                    CrimeScene = report.CrimeScene,
                     ThreatId = report.ThreatId,
                     AwaitingApproach = report.AwaitingApproach,
                     SearchRoute = patrol, SearchLaps = report.SearchLaps,
                     Warning = CrimeSceneWarning.Copy(report.Warning),
                     HasArrival = report.HasArrival, FirstArrivalAt = report.FirstArrivalAt,
+                    InvestigationUntil = report.InvestigationUntil,
                     Entrance = report.Entrance == null ? null : CopyPoint(report.Entrance) }; var responders = new HashSet<string>();
                 foreach (var id in report.GuardIds)
                 { Require(id != null && ids.Contains(id) && responders.Add(id), "Unknown or duplicate responder."); saved.GuardIds.Add(id); }
@@ -443,7 +486,7 @@ namespace LivingCities.Core
                 double firstArrival = double.MaxValue;
                 foreach (var arrival in report.Arrivals ?? new List<GuardArrivalEvidence>())
                 {
-                    Require(arrival != null && report.Investigation && responders.Contains(arrival.GuardId) &&
+                    Require(arrival != null && report.OccupiesScene && responders.Contains(arrival.GuardId) &&
                         arrivalIds.Add(arrival.GuardId) && Time(arrival.ScheduledAt), "Invalid responder arrival evidence.");
                     var guard = copy.Find(arrival.GuardId);
                     if (guard.IncidentId == report.Id && (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching))
@@ -455,9 +498,19 @@ namespace LivingCities.Core
                     saved.Arrivals.Add(new GuardArrivalEvidence { GuardId = arrival.GuardId,
                         ScheduledAt = arrival.ScheduledAt, Arrived = arrival.Arrived });
                 }
-                Require(!report.Investigation || arrivalIds.Count == responders.Count, "Missing responder arrival evidence.");
+                Require(!report.OccupiesScene || arrivalIds.Count == responders.Count, "Missing responder arrival evidence.");
                 Require(report.HasArrival == (firstArrival != double.MaxValue) &&
                     report.FirstArrivalAt == (report.HasArrival ? firstArrival : 0), "Invalid first investigation arrival.");
+                if (report.OccupiesScene && saved.Arrivals.Count > 0)
+                {
+                    double scheduledFirst = double.MaxValue;
+                    foreach (var arrival in saved.Arrivals) scheduledFirst = Math.Min(scheduledFirst, arrival.ScheduledAt);
+                    double deadline = scheduledFirst + UnwitnessedScene.OccupationSeconds;
+                    Require(Time(deadline) && (report.InvestigationUntil == 0 || Math.Abs(report.InvestigationUntil - deadline) < 0.001),
+                        "Invalid investigation occupation deadline.");
+                    saved.InvestigationUntil = deadline;
+                }
+                else Require(report.InvestigationUntil == 0, "Unexpected investigation occupation deadline.");
                 if (saved.BuildingKey.HasValue || outdoorSearch)
                     foreach (var guard in copy.Guards)
                         if (guard.IsAlive && guard.IncidentId == saved.Id && guard.Duty != GuardDuty.Returning)
