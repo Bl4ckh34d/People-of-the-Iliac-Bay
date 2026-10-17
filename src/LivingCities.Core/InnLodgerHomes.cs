@@ -30,7 +30,7 @@ namespace LivingCities.Core
             InnLodgerHomeReservation existing;
             if(personId!=null && innLodgerHomeIndex.TryGetValue(personId,out existing)) return CopyLodgerHome(existing);
             var person=state.NativePeople.Find(p=>p.Id==personId);
-            if(person==null || !person.IsAlive || person.HomeKey>=0 || homeTown==person.SettlementId ||
+            if(person==null || !person.IsAlive || person.RetiredBedroomFlat || person.HomeKey>=0 || homeTown==person.SettlementId ||
                 string.IsNullOrEmpty(roomId) || profile.BedCount<=0 || !profile.AvailableForResidents ||
                 HousingReservedForRecovery(homeTown,profile.BuildingKey)) return null;
             var inn=state.Lodgings.Find(t=>t.SettlementId==person.SettlementId && t.BuildingKey==person.WorkKey);
@@ -79,7 +79,7 @@ namespace LivingCities.Core
                     item.HomeSettlement>=0 && item.HomeSettlement!=item.InnSettlement && item.HomeKey>=0 && item.BedCapacity>0 &&
                     item.BedSlot>=0 && item.BedSlot<item.BedCapacity && item.Generation>=0 && DefenseTime(item.ReservedAt),"Invalid inn lodger home reservation.");
                 var person=world.NativePeople.Find(p=>p.Id==item.PersonId);
-                Require(person!=null && person.SettlementId==item.InnSettlement && person.WorkKey==item.InnKey && person.HomeKey<0,
+                Require(person!=null && !person.RetiredBedroomFlat && person.SettlementId==item.InnSettlement && person.WorkKey==item.InnKey && person.HomeKey<0,
                     "Lodger home lost its native identity or conflicts with a local home.");
                 var inn=world.Lodgings.Find(t=>t.SettlementId==item.InnSettlement && t.BuildingKey==item.InnKey);
                 Require(inn!=null && inn.Rooms.Exists(r=>r.Id==item.RoomId && !r.NonRentable),"Lodger home lacks a guest bedroom.");

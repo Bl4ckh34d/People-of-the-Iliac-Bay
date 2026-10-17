@@ -4,6 +4,17 @@ $repo = Split-Path $PSScriptRoot -Parent
 $destination = Join-Path $DfuRoot 'daggerfall-unity/Assets/Game/Mods/LivingCities'
 if (-not (Test-Path -LiteralPath (Join-Path $DfuRoot 'daggerfall-unity/ProjectSettings/ProjectVersion.txt'))) { throw 'DFU Unity project missing.' }
 New-Item -ItemType Directory -Path "$destination/Core", "$destination/Scripts", "$destination/Editor", "$destination/Textures", "$destination/Libraries" -Force | Out-Null
+foreach ($sourcePair in @(@('mod/Scripts','Scripts'), @('src/LivingCities.Core','Core'), @('tools/Editor','Editor'))) {
+    $sourceDirectory = Join-Path $repo $sourcePair[0]
+    $managedDirectory = (Resolve-Path -LiteralPath (Join-Path $destination $sourcePair[1])).Path
+    $managedRoot = (Resolve-Path -LiteralPath $destination).Path
+    if (-not $managedDirectory.StartsWith($managedRoot + [IO.Path]::DirectorySeparatorChar)) { throw 'Deployment cleanup escaped the managed mod directory.' }
+    foreach ($obsolete in Get-ChildItem -LiteralPath $managedDirectory -Filter '*.cs' -File) {
+        if (-not (Test-Path -LiteralPath (Join-Path $sourceDirectory $obsolete.Name))) {
+            Remove-Item -LiteralPath $obsolete.FullName
+        }
+    }
+}
 Copy-Item -LiteralPath "$repo/work/Harmony/net472/0Harmony.dll" -Destination "$destination/Libraries/0Harmony.dll.bytes" -Force
 Copy-Item -LiteralPath "$repo/src/LivingCities.QuestHooks/bin/Release/net472/LivingCities.QuestHooks.dll" -Destination "$destination/Libraries/LivingCities.QuestHooks.dll.bytes" -Force
 Copy-Item -LiteralPath "$repo/mod/Notices/Harmony-LICENSE.txt" -Destination "$destination/Libraries/Harmony-LICENSE.txt" -Force

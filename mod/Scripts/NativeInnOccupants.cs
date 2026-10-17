@@ -52,6 +52,8 @@ namespace LivingCities.DFU
                     var person=store.RegisterNativePerson(settlement,entry.buildingKey,hash,name,
                         data.gender==Genders.Male ? ResidentSex.Male : ResidentSex.Female,(int)data.race,
                         data.factionID,data.billboardArchiveIndex,data.billboardRecordIndex);
+                    // Only loaded, verified retirement releases an authored claim.
+                    // Passive faction metadata alone cannot exclude quest/actions.
                     if(person.IsAlive && bedroom) store.TryClaimLodgingBed(settlement,entry.buildingKey,person.Id,bed,now);
                 }
             }

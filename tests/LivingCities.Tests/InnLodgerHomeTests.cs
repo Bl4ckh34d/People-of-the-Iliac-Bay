@@ -62,7 +62,7 @@ namespace LivingCities.Tests
             }));
             cases.Add(("Legacy saves restore with no fabricated lodger homes",()=>{
                 NativePerson person;var store=Fixture(out person);var legacy=store.Snapshot();legacy.Version=23;legacy.InnLodgerHomes=null;
-                store.Restore(legacy);Check.True(store.InnLodgerHome(person.Id)==null);Check.Equal(24,store.Snapshot().Version);
+                store.Restore(legacy);Check.True(store.InnLodgerHome(person.Id)==null);Check.Equal(25,store.Snapshot().Version);
             }));
             cases.Add(("A reserved lodger bed cannot be reused by a local native worker",()=>{
                 NativePerson person;var store=Fixture(out person);

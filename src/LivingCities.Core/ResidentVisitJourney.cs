@@ -129,8 +129,10 @@ namespace LivingCities.Core
             result.EndsAt=result.exitAt+result.exitSeconds;
             foreach(var stop in result.stops)
                 if(!Finite(stop.Data.KeepRoomUntil) || stop.Data.KeepRoomUntil<0 || stop.Data.KeepRoomUntil>0 &&
-                    (stop.Data.Purpose!=ResidentVisitPurpose.Inn || stop.Data.KeepRoomUntil<stop.EndAt || stop.Data.KeepRoomUntil>result.EndsAt))
-                    throw new ArgumentException("Room reservation exceeds itinerary or ends before inn visit.");
+                    (stop.Data.Purpose!=ResidentVisitPurpose.Inn || stop.Data.KeepRoomUntil<stop.EndAt && !SameTime(stop.Data.KeepRoomUntil,stop.EndAt) ||
+                        stop.Data.KeepRoomUntil>result.EndsAt && !SameTime(stop.Data.KeepRoomUntil,result.EndsAt)))
+                    throw new ArgumentException("Room reservation exceeds itinerary or ends before inn visit: hold="+
+                        stop.Data.KeepRoomUntil.ToString("R")+"; visitEnd="+stop.EndAt.ToString("R")+"; itineraryEnd="+result.EndsAt.ToString("R"));
             if(!Finite(result.EndsAt) || result.EndsAt<=arrival || result.EndsAt-arrival>60*86400)
                 throw new ArgumentException("Destination itinerary exceeds bounded visit duration.");
             return result;

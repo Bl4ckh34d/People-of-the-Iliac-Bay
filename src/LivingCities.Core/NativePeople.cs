@@ -6,7 +6,7 @@ namespace LivingCities.Core
 {
     public sealed partial class WorldStateStore
     {
-        public Household CreateKeeperHousehold(string id, HomeProfile profile)
+        public Household CreateKeeperHousehold(string id, HomeProfile profile,bool partnerOnly=false)
         {
             ValidateNativeHome(profile);
             var person = state.NativePeople.Find(p => p.Id == id);
@@ -14,14 +14,16 @@ namespace LivingCities.Core
             var town = state.Settlements.Find(t => t.SettlementId == person.SettlementId);
             var existing = town.Households.Find(h => h.BuildingKey == profile.BuildingKey);
             if (existing != null) return existing.HeadId == person.Id ? existing : null;
-            if (!person.IsAlive || person.HomeKey != person.WorkKey || person.BedSlot != 0 || person.BedCapacity != profile.BedCount || profile.BedCount <= 0) return null;
+            if (!person.IsAlive || person.HomeKey != person.WorkKey || person.BedSlot < 0 || person.BedCapacity != profile.BedCount || profile.BedCount <= 0) return null;
             var staff = state.NativePeople.FindAll(p => p != person && p.SettlementId == person.SettlementId && p.HomeKey == person.HomeKey);
             var slots = new List<int>();
             for (int slot = 0; slot < profile.BedCount; slot++) if (!staff.Exists(p => p.BedSlot == slot)) slots.Add(slot);
+            if(!slots.Remove(person.BedSlot)) return null;
+            slots.Insert(0,person.BedSlot);
             int split = person.Name.LastIndexOf(' ');
             if (split <= 0 || split == person.Name.Length - 1) return null;
             var family = Population.CreateFamilies(state.WorldSeed, person.SettlementId,
-                new[] { new HomeProfile(profile.BuildingKey, slots.Count, profile.FootprintArea) }).Households[0];
+                new[] { new HomeProfile(profile.BuildingKey, partnerOnly ? System.Math.Min(2,slots.Count) : slots.Count, profile.FootprintArea) }).Households[0];
             family.BedCapacity = profile.BedCount;
             // Two beds in a shop explicitly permit the keeper and a partner.
             if (slots.Count >= 2 && family.Residents.Count == 1)
@@ -48,6 +50,8 @@ namespace LivingCities.Core
             for (int index = 0; index < family.Residents.Count; index++) family.Residents[index].BedSlot = slots[index];
             family.HeadId = person.Id; family.Surname = person.Name.Substring(split + 1);
             head.NativeIdentity = person;
+            if(partnerOnly && family.Residents.Count>1)
+                family.Residents.Find(r=>r.Id!=person.Id).Sex=ResidentSex.Female;
             var candidate = Snapshot();
             candidate.Settlements.Find(t => t.SettlementId == person.SettlementId).Households.Add(family);
             CopyValidated(candidate); // Commit only after all identity, relationship and bed checks pass.
@@ -97,6 +101,7 @@ namespace LivingCities.Core
             Require(person != null && onSite != null && onSite.BuildingKey == person.WorkKey && residentialHomes != null,
                 "Invalid native housing request.");
             ValidateNativeHome(onSite);
+            if(person.RetiredBedroomFlat) return false;
             if (person.HomeKey >= 0) return true;
             var homes = new SortedDictionary<int, HomeProfile>();
             foreach (var home in residentialHomes)
@@ -152,6 +157,7 @@ namespace LivingCities.Core
             Require(person.HomeKey == -1 ? person.BedSlot == -1 && person.BedCapacity == 0 :
                 person.HomeKey >= 0 && person.BedCapacity > 0 && person.BedCapacity <= 16384 &&
                 person.BedSlot >= 0 && person.BedSlot < person.BedCapacity, "Invalid native bed reservation.");
+            Require(!person.RetiredBedroomFlat || person.HomeKey<0,"Retired bedroom flat still has a local bed.");
             Require(person.ResponseIncidentId == null || world.AlarmIncidents.Exists(a => a.Id == person.ResponseIncidentId &&
                 a.SettlementId == person.SettlementId && a.People.Exists(p => p.ResidentId == person.Id)), "Invalid native response binding.");
             if (person.HomeKey >= 0)
@@ -160,7 +166,7 @@ namespace LivingCities.Core
                 var home = town.Households.Find(h => h.BuildingKey == person.HomeKey);
                 Require(home != null || person.HomeKey == person.WorkKey, "Native home is neither work site nor known residence.");
                 if (home != null) Require(home.BedCapacity == person.BedCapacity && (home.HeadId == person.Id ?
-                    person.BedSlot == 0 && home.Residents[0].Id == person.Id && (home.Residents[0].BedSlot == -1 || home.Residents[0].BedSlot == 0) &&
+                    home.Residents[0].Id == person.Id && (home.Residents[0].BedSlot == -1 ? person.BedSlot==0 : home.Residents[0].BedSlot==person.BedSlot) &&
                     home.Residents[0].Sex == person.Sex && home.Residents[0].IsAlive == person.IsAlive && home.Residents[0].FullName == person.Name &&
                     home.Residents[0].Race == person.Race : !FamilyBedSlots(home).Contains(person.BedSlot)),
                     "Native bed overlaps saved family or capacity changed.");
@@ -193,7 +199,7 @@ namespace LivingCities.Core
                     WorkKey = person.WorkKey, NativeHash = person.NativeHash, Sex = person.Sex, Race = person.Race,
                     FactionId = person.FactionId, TextureArchive = person.TextureArchive, TextureRecord = person.TextureRecord,
                     IsAlive = person.IsAlive, HomeKey = person.HomeKey, BedSlot = person.BedSlot, BedCapacity = person.BedCapacity,
-                    ResponseIncidentId = person.ResponseIncidentId });
+                    ResponseIncidentId = person.ResponseIncidentId,RetiredBedroomFlat=world.Version>=25 && person.RetiredBedroomFlat });
             }
             return result;
         }

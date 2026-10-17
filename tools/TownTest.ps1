@@ -19,6 +19,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$OccupiedApproachProbe,
     [switch]$BusinessIdentityProbe,
     [switch]$InnLodgerHomeProbe,
+    [switch]$BedroomReplacementProbe,
     [switch]$BedProbe,
     [switch]$SleepProbe,
     [switch]$RunningPilotProbe,
@@ -69,7 +70,7 @@ if ($FreshPreviews) {
 }
 if ($FixtureCharacter) { $arguments += ' -livingcities-fixture-character ' + $FixtureCharacter }
 if ($FixtureSaveName) {
-    if (-not $FixtureCharacter -or -not ($PerformanceProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
+    if (-not $FixtureCharacter -or -not ($PerformanceProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe -or $ResidentTripProbe -or $CrossRegionTripProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
     $arguments += ' -livingcities-fixture-save "' + $FixtureSaveName + '"'
 }
 if ($QuestProbe) { $arguments += ' -livingcities-quest-probe' }
@@ -114,7 +115,7 @@ if ($BusinessIdentityProbe) {
     if (-not $FixtureCharacter) { throw 'Business identity probe requires a disposable fixture character.' }
     $arguments += ' -livingcities-business-identity-probe'
 }
-if ($InnLodgerHomeProbe) {
+if ($InnLodgerHomeProbe -or $BedroomReplacementProbe) {
     if (-not $FixtureCharacter) { throw 'Inn lodger home probe requires a disposable fixture character.' }
     $arguments += ' -livingcities-inn-lodger-home-probe'
 }
@@ -195,7 +196,7 @@ try {
     if (-not $passed) { throw "Town test did not finish within $testTimeout seconds." }
     if ($OccupiedApproachProbe -and ($body -notmatch 'LIVING_CITIES_OCCUPIED_APPROACH_PASS:' -or $body -notmatch 'LIVING_CITIES_FREE_BROWSE_PASS:')) { throw 'Occupied approach and free browse checks did not finish.' }
     if ($BusinessIdentityProbe -and ($body -notmatch 'LIVING_CITIES_BUSINESS_IDENTITY_PASS:' -or $body -notmatch 'LIVING_CITIES_NO_INN_KEYS_PASS:' -or $body -notmatch 'LIVING_CITIES_ACTIVE_SPEAKER_PASS:')) { throw 'Business identity, active speaker and inn key checks did not finish.' }
-    if ($InnLodgerHomeProbe -and $body -notmatch 'LIVING_CITIES_INN_LODGER_HOME_PASS:') { throw 'Inn lodger household checks did not finish.' }
+    if (($InnLodgerHomeProbe -or $BedroomReplacementProbe) -and $body -notmatch 'LIVING_CITIES_BEDROOM_REPLACEMENT_PASS:') { throw 'Bedroom replacement checks did not finish.' }
     if ($MovementClockProbe -and $body -notmatch 'LIVING_CITIES_MOVEMENT_CLOCK_PASS:') { throw 'Physical NPC speed and 2x clock checks did not complete.' }
     if ($PerformanceProbe -and $body -notmatch 'LIVING_CITIES_PERFORMANCE_PASS:') { throw 'Performance samples did not complete.' }
     if ($PerformanceProbe -and $body -notmatch 'LIVING_CITIES_MURDER_WITNESS_PASS:') { throw 'Murder witness persistence probe did not complete.' }

@@ -2,7 +2,7 @@
 
 Current coverage and source ownership are below. Planned behavior belongs in [Roadmap](ROADMAP.md); dated implementation details and older requirements remain in [History](HISTORY.md). This guide does not certify all NPCs, quests or buildings.
 
-Keeper role follows the native selling/repair or room-rental service, not merely a building key or bed. Bed-backed shop tenants can retain access keys without being keepers. Inns issue no inn keys; only known permanent homes supply lodger/patron home keys. Ordinary authored guest-bedroom occupants now receive persistent remote household reservations when real capacity is available. Main-hall occupants and non-rentable staff rooms remain separate; quest/service actors are excluded. No duplicate resident is created at home. Checkout and physical return journeys remain future work. See [reservation boundaries](DEVELOPMENT.md#inn-bedroom-household-reservations--17-october-2026).
+Keeper role follows native selling/repair or room rental, not merely a building key or bed. Ordinary authored guest-bedroom flats are replaced by the normal mobile traveler population; no instant guests are generated. Main-hall people, non-rentable inn staff rooms and quest/service actors remain separate. Living retired flats release their former bed/home reservations without fake deaths; dead identities retain corpse evidence. Ordinary upstairs shop-bedroom tenants are replaced by an on-site keeper household with at most one female partner when a second bed is free. Existing families and protected actors remain intact. Inns issue no inn keys. See [replacement boundaries](DEVELOPMENT.md#bedroom-flat-replacement-and-shop-households--17-october-2026).
 
 | Area | Current boundary / remaining work |
 | --- | --- |

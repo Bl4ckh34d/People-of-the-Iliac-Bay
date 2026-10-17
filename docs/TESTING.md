@@ -8,7 +8,21 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — inn-bedroom household reservations, 17 October 2026
+## Latest acceptance — bedroom replacement and on-site shopkeeper, 17 October 2026
+
+Installed bundle SHA-256: `60C14B18A5F4E7CD0FE028AC509FCA3996B4FD4E65A8FEB57E02229CE68A0497`, matching `dist/livingcities.dfmod`.
+
+- **700/700 core tests passed**; runtime compilation has zero warnings/errors; Unity build/install passed using the existing normal-editor fallback. New regressions first failed for retirement, keeper relocation, a keeper whose protected staff occupied bed 0, and sub-millisecond overnight timestamp drift.
+- Core checks cover release of living flats' local/remote claims without fake deaths, memory retention, persisted retirement, refusal to reclaim retired beds, preservation of deceased-person evidence, protected existing families, failed relocation rollback, and a new keeper household with one female partner sharing the surname. Protected staff can keep bed 0 while the keeper and partner take beds 1 and 2.
+- Native `-BedroomReplacementProbe` loaded `People - Shop entrance`, visited actual interiors and verified **two inn-bedroom flats removed, nine main-hall people retained, two shop-bedroom flats removed**, no lingering native bed/home claims, and retirement surviving native serialization. At 01:00 the actual keeper had an active sleeping pose at the exact assigned shop bed. No player save was overwritten.
+- Repeat: `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -BedroomReplacementProbe`. Evidence: `work/bedroom-replacement-red.log`, `shop-owner-bedroom-red.log`, `keeper-protected-bed-red.log`, `overnight-rounding-red.log`, `bedroom-replacement-core.log`, `bedroom-replacement-runtime.log`, `bedroom-replacement-build.log`, `bedroom-replacement-native.log`, `bedroom-replacement-native-player.log`.
+- The broader normal-traveler run passed native assertions for a three-day original-resident trip, two keeper-bound nights without prepayment, capacity fallback, source-home absence, native serialization and same-identity home actor/lock return. It exposed and now passes the room-hold precision regression; native return-boundary drift measured **0.000003814697265625 seconds**. The probe uses the restored canonical boundary rather than the unrounded pre-save value.
+
+**The full travel suite did not pass.** Its subsequent loaded house-to-wilderness bridge failed for house `66306`: `Home has no clear join to the regional road.` This conservative collision rejection remains open; do not present preceding itinerary/return assertions as a verified physical road handoff. Repeat: `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -FixtureSaveName 'People - Daggerfall day' -ResidentTripProbe`. Evidence: `work/bedroom-normal-trip-native-player.log`.
+
+Replacement does not instantly populate empty beds or certify every full-day physical visit in every modded layout. Passive surveys keep authored claims until a loaded eligibility check can safely retire the actual actor; unvisited inns may therefore retain conservative capacity. Quest/action/service actors and non-rentable inn staff rooms remain protected. Missing directional artwork for diverse stationary flats stays on the roadmap; current travelers use mobile art.
+
+## Prior acceptance — inn-bedroom household reservations, 17 October 2026
 
 Installed bundle SHA-256: `E331D6B9404968A9592CE105AD3A48B97F68AB5FD73ECDB536C9483455A2111B`, matching `dist/livingcities.dfmod`.
 

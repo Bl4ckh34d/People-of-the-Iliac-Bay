@@ -176,8 +176,8 @@ namespace LivingCities.DFU
             SaveLoadManager.OnLoad += OnLoaded;
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-inn-lodger-home-probe")>=0)
             {
-                yield return InnLodgerHomeProbe.Run(adapter,streets,character);
-                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: inn lodger homes.");
+                yield return BedroomReplacementProbe.Run(adapter,streets,character);
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: bedroom replacements.");
                 yield break;
             }
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-business-identity-probe")>=0)

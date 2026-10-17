@@ -230,6 +230,10 @@ namespace LivingCities.DFU
                 rooms=all; markers=mapping;
             }
             store.RegisterLodging(directory.MapID,interior.EntryDoor.buildingKey,rooms);
+            var guests=new Dictionary<int,string>();
+            if(bedroomOccupants!=null) foreach(var person in bedroomOccupants)
+                if(rooms.Exists(r=>r.Id==person.Value && !r.NonRentable)) guests.Add(person.Key,person.Value);
+            BedroomFlatReplacement.Apply(store,interior,DFLocation.BuildingTypes.Tavern,guests);
         }
 
         private bool Rent(int building,int days,int price,Action close)

@@ -6,7 +6,7 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 24;
+        public int Version = 25;
         public uint WorldSeed;
         public List<ConversationAttitude> ConversationAttitudes = new List<ConversationAttitude>();
         public List<NpcConversationMemory> ConversationMemories = new List<NpcConversationMemory>();
@@ -175,7 +175,7 @@ namespace LivingCities.Core
         }
         public TownRoutineState GetRoutines(int settlementId)
         {
-            Require(state.Version >= 1 && state.Version <= 24, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 25, "Unsupported save schema.");
             if (state.Version == 1) return null;
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
@@ -213,7 +213,7 @@ namespace LivingCities.Core
         public void SetRoutines(TownRoutineState routines)
         {
             if (routines == null) throw new ArgumentNullException(nameof(routines));
-            Require(state.Version >= 1 && state.Version <= 24, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 25, "Unsupported save schema.");
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
             var settlement = FindRoutineSettlement(state, routines.SettlementId);
@@ -328,7 +328,7 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 24, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 25, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             copy.ConversationAttitudes = CopyConversationAttitudes(source);

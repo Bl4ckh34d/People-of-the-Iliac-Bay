@@ -67,6 +67,7 @@ namespace LivingCities.Core
                 p.SettlementId==town && p.WorkKey==building),"Invalid native lodging occupant.");
             var room=tavern.Rooms.Find(r=>r.Beds.Contains(bed));
             Require(room!=null,"Unknown occupant bed.");
+            if(state.NativePeople.Exists(p=>p.Id==personId && p.RetiredBedroomFlat)) return false;
             foreach(var other in state.Lodgings)
             {
                 var prior=other.Occupants.Find(o=>o.PersonId==personId);
@@ -220,7 +221,7 @@ namespace LivingCities.Core
                 foreach(var occupant in source.Occupants)
                 {
                     Require(occupant!=null && DefenseTime(occupant.StartsAt) && beds.Contains(occupant.BedId) &&
-                        world.NativePeople.Exists(p=>p.Id==occupant.PersonId && p.SettlementId==source.SettlementId && p.WorkKey==source.BuildingKey) &&
+                        world.NativePeople.Exists(p=>p.Id==occupant.PersonId && !p.RetiredBedroomFlat && p.SettlementId==source.SettlementId && p.WorkKey==source.BuildingKey) &&
                         !copy.Occupants.Exists(o=>o.PersonId==occupant.PersonId || o.BedId==occupant.BedId),"Invalid native lodging claim.");
                     copy.Occupants.Add(new LodgingOccupant {PersonId=occupant.PersonId,BedId=occupant.BedId,StartsAt=occupant.StartsAt});
                 }

@@ -132,7 +132,7 @@ namespace LivingCities.DFU
             if (!npc || !interior || worldStore == null || population == null ||
                 npc.GetComponent<QuestResourceBehaviour>() || npc.GetComponent<DaggerfallAction>() ||
                 npc.Data.context != StaticNPC.Context.Building || npc.Data.buildingKey != interior.EntryDoor.buildingKey) return null;
-            return worldStore.NativePeopleFor(population.SettlementId).Find(p => p.WorkKey == npc.Data.buildingKey && p.NativeHash == npc.Data.hash);
+            return worldStore.NativePeopleFor(population.SettlementId).Find(p => !p.RetiredBedroomFlat && p.WorkKey == npc.Data.buildingKey && p.NativeHash == npc.Data.hash);
         }
         private System.Action<System.Exception> BeginKeeperHit(Transform target)
         {
@@ -340,6 +340,7 @@ namespace LivingCities.DFU
                 }
             }
             nextKeeperSurvey = Time.unscaledTime + 1;
+            if(keeperHome!=null) ReplaceShopBedrooms();
             var keepers = new List<NativePerson>();
             foreach (var npc in interior.GetComponentsInChildren<StaticNPC>(true))
             {
@@ -359,7 +360,11 @@ namespace LivingCities.DFU
                 var keeper = worldStore.RegisterNativePerson(population.SettlementId, data.buildingKey, data.hash, npc.DisplayName,
                     data.gender == DaggerfallWorkshop.Game.Entity.Genders.Female ? ResidentSex.Female : ResidentSex.Male,
                     (int)data.race, data.factionID, data.billboardArchiveIndex, data.billboardRecordIndex);
+                if(keeper.RetiredBedroomFlat) {npc.gameObject.SetActive(false);continue;}
                 if(!merchant) continue;
+                int previousHome=keeper.HomeKey;
+                worldStore.PreferNativeWorkplaceBed(keeper.Id,keeperHome);
+                if(previousHome!=keeper.HomeKey) keeperSchedules.Remove(keeper.Id);
                 if (keeper.HomeKey < 0 && worldStore.AssignNativeBed(keeper.Id, keeperHome, keeperHomes))
                     Debug.Log("LIVING_CITIES_KEEPER_HOME: " + keeper.Id + "; " + keeper.Name + "; home=" + keeper.HomeKey + "; bed=" + keeper.BedSlot);
                 keepers.Add(keeper);
@@ -367,7 +372,7 @@ namespace LivingCities.DFU
             // Preserve all original staff reservations before adding a family to spare beds.
             foreach (var keeper in keepers)
             {
-                var family = worldStore.CreateKeeperHousehold(keeper.Id, keeperHome);
+                var family = worldStore.CreateKeeperHousehold(keeper.Id, keeperHome,partnerOnly:true);
                 if (family != null)
                 {
                     uint previousSeed = DFRandom.Seed;

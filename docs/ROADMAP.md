@@ -25,7 +25,23 @@ The [current inventory](NPC-SYSTEMS.md#inventory) describes implemented coverage
 
 ## Proposed sequence
 
-### Completed reservation slice: permanent homes for authored inn-bedroom lodgers
+### Completed slice: replace repeating bedroom flats and reuse normal travelers
+
+The user superseded the authored-lodger mobility design: remove ordinary repeating guest-bedroom flats and let independent normal mobile travelers fill rooms as they arrive. Empty rooms do not create instant guests. Keep quest/action/individual/service actors, main-hall inn people and non-rentable inn staff rooms. Normal travelers retain their own home identities and existing resident-trip itinerary, physical interior followers and road actors; no second mobility implementation is required for the old flats.
+
+- [x] Core: retire ordinary bedroom representation without fake deaths or deleting memory. Release living flats' temporary inn claims and remote household reservations; preserve death/corpse evidence and other household members. Prevent new claims for retired flats.
+- [x] Runtime source: classify actual rentable inn bedrooms; stop automatic native-lodger home allocation. Leave non-rentable inn staff rooms and main-hall people separate. Replace ordinary upstairs shop-bedroom tenants while preserving service and quest actors.
+- [x] Shop source: prefer a real free on-site bed for the actual keeper, safely release an old off-site bed claim, and create at most one female partner sharing the surname in a new household. Preserve existing families and protected occupied beds.
+- [x] Acceptance of replacement: core regressions, runtime compile and owned-player bedroom/keeper/serialization checks. Normal multi-day planning, bed admission and same-identity home absence/return also passed their native assertions.
+- [ ] Full travel acceptance remains open: the broader native trip run fails at a loaded house-to-wilderness bridge (`Home has no clear join to the regional road`, house 66306). It passed preceding overnight and home-return assertions but did not complete road handoff. Normal full-day room movement still needs a tracked physical acceptance scenario; removing flats alone does not prove that path.
+
+Deferred art: preserve the inventory of diverse mod-added stationary appearances. Later generate and integrate their missing walking, running, idle and sleeping directions. Current replacement travelers use existing mobile NPC art. Do not generate this large sprite set in this slice.
+
+Guard distribution investigation: a live Daggerfall log records a 24-guard roster, four gates and two patrol templates. Saved fixtures contain 408 homes, 290 residents and 24 living guards, matching the 8% city quota. Targets can expand after population increases. Gate allocation can consume up to 18 slots; default actor radius is 160 m. No recent quota reduction was found. Confirm live active/visible/post/patrol counts and fresh-survey versus saved-census agreement before tuning. Preserve the requested two inside/two outside gate arrangement while improving central coverage; no guard fix was applied in this slice.
+
+### Prior reservation slice: superseded by normal traveler replacement
+
+The 693-test reservation build remains historical evidence and a readable migration schema. The current replacement policy above stops new authored-lodger allocations and releases eligible living records; it does not erase deceased-person evidence.
 
 1. [x] Retain all ordinary bedroom occupants separately from entrance-connected hall occupants and non-rentable staff rooms, including excess bedroom occupants lacking an individual temporary bed. Keep service providers, individual factions and quest-controlled actors native.
 2. [x] Persist a household bed-slot reservation linked to the original native person without another resident at home. Reserve capacity before filling unseen homes; use only genuinely free beds in known homes. Exclude dedicated sale buildings, player deeds and all non-settled household recoveries, including bank-sale properties.
@@ -52,10 +68,10 @@ Some work can be scoped independently: installation documentation and spoiler-pr
 
 - Reserve housing for authored local stall owners, staff needing off-site homes and shop tenants before filling remaining homes. Keep traveler hometown reservations intact.
 - Stall workers have slightly varied opening/closing commutes. Markets may stay open longer on weekends while demand remains, within finite closing and safety limits. Local residents can browse multiple stalls as well as indoor shops.
-- Ordinary authored inn-bedroom occupants become visiting travelers with stable origins and a reason for visiting. They leave for daytime activities, return to lodging, and eventually check out and travel home. Quest actors and staff are classified separately.
+- Ordinary authored inn-bedroom flats are removed in favor of independent normal mobile travelers with homes, daytime visits and finite stays. Preserve main-hall people, non-rentable inn staff rooms and quest/service actors. Diverse stationary appearances remain a later sprite-integration project.
 - Allow two authored inn-room occupants to share one bed through an explicit capacity/claim exception and a proposed shared blanket with appearance-specific heads. Do not double all household capacity or infer a romance from co-occupancy.
 - Ordinary guild/temple/castle staff keep their workplace duties; off-site daily routines are not required now. Reserve reachable beds if present and preserve each native service role.
-- Upstairs shop-bedroom occupants are residential tenants. Their beds are unavailable to the shopkeeper. Tenants carry valid access keys and may return after closing; the same persistent key can be looted after death.
+- Ordinary upstairs shop-bedroom flats are removed so the actual keeper can live on site. A spare bed can house one female partner sharing the surname. Preserve quest/service actors and existing generated households; retain tenant/key behavior for protected or legacy cases rather than deleting their histories.
 - Main and side quest actors keep original identity and script control. Only reviewed capabilities may be enabled per role/stage. Recruitment excludes main-quest and side-quest actors.
 
 ## Existing obligations retained
@@ -103,7 +119,7 @@ Roles can change. A citizen can become quest-owned after accepting a quest; a qu
 Allocation order for a new or completing settlement:
 
 1. Preserve existing saved identities, occupied homes, player property, active rentals and quest placement constraints.
-2. Survey authored bedroom tenants/lodgers and real beds; reserve explicit room occupancy before keeper allocation.
+2. Survey real beds and protected authored occupants. Retire ordinary bedroom flats under the current replacement policy; retain protected/native bed claims before keeper allocation.
 3. Reserve on-site staff/keeper beds where actually free and suitable.
 4. Assign local workers who need off-site homes to remaining residential capacity, before generated families fill it.
 5. Preserve reserved traveler hometown households and merge them by stable identity rather than generating another copy.
@@ -128,6 +144,8 @@ A keeper with a legitimate unoccupied on-site bed can live at the shop. Otherwis
 Tenant access must not reopen public commerce or unlock all internal rooms. Key permissions distinguish public business entrance, tenant residence and private areas where applicable. A killed tenant's genuine key becomes corpse loot once, retains building scope across saves, and permits the player's nighttime entry without granting ownership of merchandise. Native crime/quest door overrides retain priority. No permanent dead-person duplicate may deliver another key.
 
 ### Authored inn occupants — H07–H09
+
+**Current policy override:** ordinary repeating guest-bedroom flats are removed and capacity is used by normal mobile resident travelers. The following full adoption/shared-bed proposal is deferred, not the current implementation. Preserve main-hall people, non-rentable staff rooms and quest/service actors. Restore diverse stationary appearances only after their art coverage and mobility integration are ready.
 
 Ordinary non-quest bedroom occupants become travelers staying in that inn, not permanent immobile decorations. Assign a stable home outside the destination settlement and reserve that person in the origin population before it is fully generated. Prefer actual supported settlements; a proposed origin beyond the simulated map must be an explicit abstract origin, not a fabricated visitable house.
 

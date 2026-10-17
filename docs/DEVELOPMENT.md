@@ -2,7 +2,21 @@
 
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
-## Inn-bedroom household reservations — 17 October 2026
+## Bedroom flat replacement and shop households — 17 October 2026
+
+The user superseded mobilization of repeating authored bedroom flats. Ordinary rentable inn-bedroom flats now retire from physical simulation; independent normal resident travelers occupy available rooms through the existing travel/admission system. Empty rooms do not spawn instant replacement people. Main-hall people, non-rentable inn staff rooms, named individuals, native services, quest resources and action-controlled actors are preserved. The diverse mod-added stationary appearances remain in the art backlog; current travelers use mobile NPC art.
+
+Schema 25 saves `NativePerson.RetiredBedroomFlat`. Retirement is not death: native identity, conversation history and disposition remain recorded. It releases that living flat's temporary inn claim, local bedroom bed claim and foreign household reservation without changing other household members. Dead identities retain corpse/home-key evidence. Retired identities cannot regain beds or foreign reservations. Loaded classification owns retirement; passive surveys conservatively retain authored bed claims until actual eligibility is known. Previously created native-lodger homes remain readable for migration, but the allocator and its superseded native probe are removed from runtime packaging.
+
+Ordinary occupants of actual bed-bearing upstairs shop rooms are retired before keeper allocation. The actual service keeper prefers a real free on-site bed, including safe relocation from a former off-site native bed claim. Existing family membership is never dissolved. New shop households use `partnerOnly` mode: keeper plus at most one female partner sharing the surname when another bed is free. Existing households remain unchanged. A protected staff member can retain bed 0 while the keeper and partner use beds 1 and 2. Native-head validation and sleep placement respect the actual reserved slot.
+
+The deployment script removes obsolete `.cs` files only within the three managed mod source directories before copying current source, so deleted adapters do not remain in subsequent bundles. See [Testing](TESTING.md#latest-acceptance) for measured acceptance and remaining travel limitations.
+
+The broader overnight regression exposed strict room-hold bounds after native JSON rounded large absolute timestamps. These bounds now use the existing 1 ms timestamp tolerance; multi-second invalid holds remain rejected. A separate probe compared an unrounded pre-save home-arrival boundary with the restored trip; it now uses the restored authoritative boundary. The measured native difference was 0.000003814697265625 seconds. Overnight serialization, original identity and home absence/return then passed; the full road test still rejects one loaded house-to-wilderness bridge and remains open.
+
+## Prior inn-bedroom household reservations — 17 October 2026
+
+The following records the earlier reservation implementation. New allocations are superseded by bedroom replacement above; retained schema-24 records support migration and deceased-person evidence.
 
 Schema 24 adds `InnLodgerHomeReservation`, linking the original `NativePerson` to a permanent household, generation and real bed slot in another settlement. No second `Resident` is created at home. The source inn identity stays unchanged; home dialogue and corpse-key lookup consult the reservation. Home-state queries keep that person away while the authored inn representation remains authoritative. This slice does not invent departure, checkout or return movement.
 
@@ -20,7 +34,7 @@ Accepted by 693 core tests, runtime compilation, Unity build/install and the nat
 
 A shop tenant with a saved home and bed claim keeps building access without becoming a keeper. Inns issue no property key, including for innkeepers and temporary bed occupants; known permanent-home keys remain valid. Runtime filters both new claims and old unclaimed ledger entries while retaining taken flags. Old inn keys already held in inventory no longer bypass the door hook. Previously transferred non-inn keys lack issuer provenance and are not deleted or retroactively revoked; distinguishing a historical invalid business claim from a valid home key requires a later migration design.
 
-Do not confuse this role correction with universal housing. Ordinary authored guest-bedroom occupants now receive permanent remote household reservations when real capacity is available. Main-hall people may be local staff/patrons or visitors and are not assigned foreign homes by this allocator. Native quests remain excluded; broader local adoption and physical visitor routines remain planned.
+Do not confuse this role correction with universal housing. Main-hall people may be local staff/patrons or visitors and are not assigned foreign homes. Ordinary bedroom flats are now replaced under the policy above; native quests remain excluded from replacement. Broader local adoption remains planned.
 
 ## Occupied interior approaches — 17 October 2026
 

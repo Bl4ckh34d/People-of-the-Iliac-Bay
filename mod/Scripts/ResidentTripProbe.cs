@@ -428,8 +428,10 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Late day visit failed capacity-aware overnight promotion: "+lateDay.Unavailable);
                 var lateDayStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());lateDayStore.Restore(lodgingStore.Snapshot());
                 lateDayStore.ScheduleResidentTrip(lateDay.Trip);lateDayStore.Restore(RoundTrip(lateDayStore.Snapshot()));
+                var restoredLateTrip=lateDayStore.GetResidentDialogueTrip(lateDay.Trip.ResidentId);
+                Debug.Log("LIVING_CITIES_NATIVE_TRIP_ROUNDING: homeDelta="+(restoredLateTrip.HomeAt-lateDay.Trip.HomeAt).ToString("R"));
                 if(!lateDayStore.IsResidentAway(lateDay.Trip.ResidentId,lateDay.Trip.InnReceptions[0].VisitEnterAt+60) ||
-                    lateDayStore.IsResidentAway(lateDay.Trip.ResidentId,lateDay.Trip.HomeAt))
+                    lateDayStore.IsResidentAway(lateDay.Trip.ResidentId,restoredLateTrip.HomeAt))
                     throw new InvalidOperationException("Promoted day visit lost original home absence or return.");
                 Debug.Log("LIVING_CITIES_DAY_VISIT_LODGING_PASS: one-day request promotes to one keeper-bound night before original service; no prepayment; native restore.");
                 var remoteHomes=new System.Collections.Generic.List<BuildingSummary>();

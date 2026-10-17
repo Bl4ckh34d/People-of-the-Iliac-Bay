@@ -16,6 +16,7 @@ namespace LivingCities.Core
         public int SettlementId, WorkKey, NativeHash, Race, FactionId, TextureArchive, TextureRecord;
         public ResidentSex Sex;
         public bool IsAlive = true;
+        public bool RetiredBedroomFlat;
         public int HomeKey = -1, BedSlot = -1, BedCapacity;
     }
     public sealed class HomeProfile
