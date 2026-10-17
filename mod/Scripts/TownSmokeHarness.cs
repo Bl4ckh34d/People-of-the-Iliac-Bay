@@ -205,11 +205,12 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: shared archive timeline probe.");
                 yield break;
             }
+            bool gateGuardProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-gate-guard-probe")>=0;
             bool crossRegionTripProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-cross-region-trip-probe")>=0;
             bool residentTripProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-resident-trip-probe")>=0;
             bool dailyItineraryProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-daily-itinerary-probe")>=0;
             bool outdoorArrivalProbe=Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-outdoor-arrival-probe")>=0;
-            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-haunting-dawn-probe") >= 0 || RuntimeTiming.Enabled || residentTripProbe || crossRegionTripProbe || dailyItineraryProbe || outdoorArrivalProbe)
+            if (Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-haunting-dawn-probe") >= 0 || RuntimeTiming.Enabled || residentTripProbe || crossRegionTripProbe || dailyItineraryProbe || outdoorArrivalProbe || (gateGuardProbe && Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-fixture-save")>=0))
             {
                 game.SaveLoadManager.EnumerateSaves();
                 var testArguments=Environment.GetCommandLineArgs();
@@ -222,7 +223,8 @@ namespace LivingCities.DFU
                 float limit = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Daggerfall preview load timed out.");
-                if(outdoorArrivalProbe)
+                if(gateGuardProbe) yield return GateGuardProbe.Run(FindObjectOfType<GuardPopulation>());
+                else if(outdoorArrivalProbe)
                 {
                     yield return OutdoorArrivalContinuityProbe.Run(adapter,streets);
                 }

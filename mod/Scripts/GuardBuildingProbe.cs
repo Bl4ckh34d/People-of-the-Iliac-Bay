@@ -26,7 +26,7 @@ namespace LivingCities.DFU
             {yield return null;controller=adapter.GetComponent<GuardPopulation>();}
             if(!controller || controller.Roster==null) throw new InvalidOperationException("Guard building fixture did not initialize its roster.");
             var postDirectory=game.StreamingWorld.GetCurrentBuildingDirectory();
-            var postSites=new TownGeometry(postDirectory,game.StreamingWorld.GetCurrentCityNavigation(),false).SurveyGuardPosts(350);
+            var postSites=new TownGeometry(postDirectory,game.StreamingWorld.GetCurrentCityNavigation(),false).SurveyGuardPosts(GuardRoster.MaximumTarget);
             if(postSites.Count==0) throw new InvalidOperationException("No public guard post sites surveyed.");
             foreach(var posted in controller.Roster.Guards)
                 if(posted.IsAlive && posted.Duty==GuardDuty.Posted && !controller.Roster.IsOnPatrol(posted.Id) &&

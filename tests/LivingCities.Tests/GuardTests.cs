@@ -500,15 +500,49 @@ namespace LivingCities.Tests
                 Check.Equal(GuardDuty.Posted, roster.Guards[0].Duty);
                 Check.Equal(0.5, roster.Guards[0].HealthFraction);
             }));
-            cases.Add(("Guard policy uses eight percent with one tiny-hamlet guard and larger settlement floors", () => {
-                Check.Equal(1, GuardRoster.TargetCount(SettlementScale.Hamlet, 12));
-                Check.Equal(8, GuardRoster.TargetCount(SettlementScale.Town, 30));
-                Check.Equal(16, GuardRoster.TargetCount(SettlementScale.City, 80));
-                Check.Equal(80, GuardRoster.TargetCount(SettlementScale.City, 1000));
-                Check.Equal(1, GuardRoster.TargetCount(SettlementScale.Hamlet, 39));
-                Check.Equal(8, GuardRoster.TargetCount(SettlementScale.Hamlet, 40));
-                Check.Equal(15, GuardRoster.TargetCount(SettlementScale.Town, 181));
-                Check.Equal(350, GuardRoster.TargetCount(SettlementScale.City, int.MaxValue));
+            cases.Add(("Guard policy doubles each old settlement quota including floors rounding and cap", () => {
+                Check.Equal(2, GuardRoster.TargetCount(SettlementScale.Hamlet, 12));
+                Check.Equal(16, GuardRoster.TargetCount(SettlementScale.Town, 30));
+                Check.Equal(32, GuardRoster.TargetCount(SettlementScale.City, 80));
+                Check.Equal(160, GuardRoster.TargetCount(SettlementScale.City, 1000));
+                Check.Equal(2, GuardRoster.TargetCount(SettlementScale.Hamlet, 39));
+                Check.Equal(16, GuardRoster.TargetCount(SettlementScale.Hamlet, 40));
+                Check.Equal(30, GuardRoster.TargetCount(SettlementScale.Town, 181));
+                Check.Equal(48, GuardRoster.TargetCount(SettlementScale.City, 290));
+                Check.Equal(700, GuardRoster.TargetCount(SettlementScale.City, int.MaxValue));
+            }));
+            cases.Add(("Gate slots are extra for every settlement size and survive the base cap", () => {
+                foreach (SettlementScale scale in Enum.GetValues(typeof(SettlementScale)))
+                    foreach (int population in new[] { 0, 12, 39, 40, 181, 290, 1000, int.MaxValue })
+                    {
+                        int ordinary = GuardRoster.TargetCount(scale, population);
+                        Check.Equal(ordinary, GuardRoster.TargetWithGateSlots(ordinary, 0));
+                        Check.Equal(ordinary + 16, GuardRoster.TargetWithGateSlots(ordinary, 4));
+                    }
+                Check.Equal(64, GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City, 290), 4));
+                Check.Throws<ArgumentException>(() => GuardRoster.TargetWithGateSlots(700, -1));
+                Check.Throws<ArgumentException>(() => GuardRoster.TargetWithGateSlots(700, GuardRoster.MaximumGateCount + 1));
+            }));
+            cases.Add(("Old guard roster expansion preserves deaths injuries and identities without repeated growth", () => {
+                var roster = Roster(24); string dead = roster.Guards[0].Id, injured = roster.Guards[1].Id;
+                roster.Kill(dead, 100); roster.Guards[1].HealthFraction = 0.4;
+                var posts = Enumerable.Range(0, 64).Select(i => new SavedRoutePoint { X = i * 10 }).ToList();
+                int target = GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City, 290), 4);
+                Check.Equal(40, roster.IncreaseTarget(target, posts));
+                var options = new JsonSerializerOptions { IncludeFields = true };
+                var restored = GuardRoster.CopyValidated(JsonSerializer.Deserialize<GuardRoster>(JsonSerializer.Serialize(roster, options), options));
+                Check.Equal(0, restored.IncreaseTarget(target, posts));
+                Check.Equal(64, restored.Target); Check.Equal(64, restored.Guards.Count);
+                Check.Equal(63, restored.Guards.Count(g => g.IsAlive));
+                Check.True(!restored.Guards.Find(g => g.Id == dead).IsAlive);
+                Check.Near(0.4, restored.Guards.Find(g => g.Id == injured).HealthFraction);
+                Check.Equal(64, restored.Guards.Select(g => g.Id).Distinct().Count());
+            }));
+            cases.Add(("Large doubled roster with gate extras validates and restores above old cap", () => {
+                int target = GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City, int.MaxValue), 4);
+                var roster = Roster(target);
+                Check.Equal(716, GuardRoster.CopyValidated(roster).Target);
+                Check.Throws<ArgumentException>(() => Roster(GuardRoster.MaximumTarget + 1));
             }));
             cases.Add(("Roster has permanent unique deterministic identities", () => {
                 var a = Roster(); var b = Roster();

@@ -2,6 +2,8 @@
 
 See [Roadmap](ROADMAP.md) for planned adapters; all dated results below retain their stated scope. Installed does not mean every quest or layout is tested.
 
+**17 October guard-density follow-up:** the full Daggerfall gate probe verifies the expanded roster, gate placement/facing, physical pre-close return, recall while inside an inn, and sliced wall-route equivalence. Its later wall-quarter screenshot stage currently fails with `No visible camera position beside patrolling wall guard.` in quarter building 768. This is an open probe/layout investigation, not accepted wall-rendering coverage. The focused `-GateGuardProbe -GuardQuotaOnly` run covers roster size, native restore and rendered gate posts without claiming the later wall-camera stage. The test's old 12× return-window assumption was separately corrected to use the current world clock rate. No new frame-time improvement or whole-world performance result is claimed.
+
 <a id="quests"></a>
 
 # Quest Pack 1 and Quest Actions Extension audit

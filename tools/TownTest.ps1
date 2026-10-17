@@ -10,6 +10,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$TavernSurveyProbe,
     [switch]$CityTravelerProbe,
     [switch]$GateGuardProbe,
+    [switch]$GuardQuotaOnly,
     [switch]$WallQuarterProbe,
     [switch]$StationaryNpcProbe,
     [switch]$DialogueProbe,
@@ -50,6 +51,7 @@ param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent)
     [switch]$DefenseLedgerProbe,
     [switch]$WelfareProbe)
 $ErrorActionPreference = 'Stop'
+if ($GuardQuotaOnly -and -not $GateGuardProbe) { throw 'GuardQuotaOnly requires GateGuardProbe.' }
 if ($RunningPilotProbe -and -not $FixtureCharacter) { throw 'Running pilot probe requires a disposable fixture character.' }
 if ($InnAlarmProbe -and -not $FixtureCharacter) { throw 'Inn alarm probe requires a disposable fixture character.' }
 $repo = Split-Path $PSScriptRoot -Parent
@@ -70,7 +72,7 @@ if ($FreshPreviews) {
 }
 if ($FixtureCharacter) { $arguments += ' -livingcities-fixture-character ' + $FixtureCharacter }
 if ($FixtureSaveName) {
-    if (-not $FixtureCharacter -or -not ($PerformanceProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe -or $ResidentTripProbe -or $CrossRegionTripProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
+    if (-not $FixtureCharacter -or -not ($PerformanceProbe -or $DailyItineraryProbe -or $OutdoorArrivalProbe -or $ResidentTripProbe -or $CrossRegionTripProbe -or $GateGuardProbe)) { throw 'FixtureSaveName requires FixtureCharacter and a city probe.' }
     $arguments += ' -livingcities-fixture-save "' + $FixtureSaveName + '"'
 }
 if ($QuestProbe) { $arguments += ' -livingcities-quest-probe' }
@@ -104,6 +106,7 @@ if ($GuardDefenseProbe) { $arguments += ' -livingcities-guard-defense-probe' }
 if ($TavernSurveyProbe) { $arguments += ' -livingcities-tavern-survey-probe' }
 if ($CityTravelerProbe) { $arguments += ' -livingcities-city-traveler-probe' }
 if ($GateGuardProbe) { $arguments += ' -livingcities-gate-guard-probe' }
+if ($GuardQuotaOnly) { $arguments += ' -livingcities-guard-quota-only' }
 if ($WallQuarterProbe) { $arguments += ' -livingcities-wall-quarter-probe' }
 if ($StationaryNpcProbe) { $arguments += ' -livingcities-stationary-probe' }
 if ($DialogueProbe) { $arguments += ' -livingcities-dialogue-probe' }
@@ -228,11 +231,12 @@ try {
     if ($HauntingDawnProbe -and $body -notmatch 'LIVING_CITIES_HAUNTING_INN_DAWN_PASS:') { throw 'Haunting inn dawn check did not complete.' }
     if ($HauntingDawnProbe -and $body -notmatch 'LIVING_CITIES_HAUNTING_PENDING_PASS:') { throw 'Haunting delayed placement check did not complete.' }
     if ($CityTravelerProbe -and $body -notmatch 'LIVING_CITIES_CITY_TRAVELER_PASS:') { throw 'Daggerfall traveler gate test did not complete.' }
-    if ($GateGuardProbe -and $body -notmatch 'LIVING_CITIES_GATE_GUARD_PASS:') { throw 'Daggerfall gate sentry probe did not complete.' }
+    if ($GateGuardProbe -and -not $GuardQuotaOnly -and $body -notmatch 'LIVING_CITIES_GATE_GUARD_PASS:') { throw 'Daggerfall gate sentry probe did not complete.' }
+    if ($GateGuardProbe -and $body -notmatch 'LIVING_CITIES_GUARD_QUOTA_PASS:') { throw 'Guard quota and native restore check did not complete.' }
     if ($GateGuardProbe -and $body -notmatch 'LIVING_CITIES_GATE_GUARD_VIEW_PASS:') { throw 'Daggerfall gate sentry rendering check did not complete.' }
-    if ($GateGuardProbe -and $body -notmatch 'LIVING_CITIES_GATE_INDOOR_RECALL_PASS:') { throw 'Gate recall while inside an inn did not complete.' }
-    if ($GateGuardProbe -and $body -notmatch 'LIVING_CITIES_WALL_DUTY_PASS:') { throw 'Wall patrol and morning return did not complete.' }
-    if ($GateGuardProbe -and $body -notmatch 'LIVING_CITIES_WALL_SLICES_PASS:') { throw 'Wall survey equivalence and cancellation did not complete.' }
+    if ($GateGuardProbe -and -not $GuardQuotaOnly -and $body -notmatch 'LIVING_CITIES_GATE_INDOOR_RECALL_PASS:') { throw 'Gate recall while inside an inn did not complete.' }
+    if ($GateGuardProbe -and -not $GuardQuotaOnly -and $body -notmatch 'LIVING_CITIES_WALL_DUTY_PASS:') { throw 'Wall patrol and morning return did not complete.' }
+    if ($GateGuardProbe -and -not $GuardQuotaOnly -and $body -notmatch 'LIVING_CITIES_WALL_SLICES_PASS:') { throw 'Wall survey equivalence and cancellation did not complete.' }
     if ($GateGuardProbe -and $body -notmatch 'LIVING_CITIES_GUARD_SETUP_SLICES_PASS:') { throw 'Guard setup survey equivalence and cancellation did not complete.' }
     if ($WallQuarterProbe -and $body -notmatch 'LIVING_CITIES_QUARTER_BEDS_PASS:') { throw 'Wall quarter furniture check did not complete.' }
     if ($CityTravelerProbe -and $body -notmatch 'LIVING_CITIES_TRAVELER_ACTOR_PASS:') { throw 'Daggerfall traveler actor test did not complete.' }

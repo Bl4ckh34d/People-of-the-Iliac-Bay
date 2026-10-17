@@ -46,6 +46,7 @@ namespace LivingCities.DFU
         { get { int count = 0; foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeInHierarchy) count++; return count; } }
         private WorldStateStore worldStore;
         private BuildingDirectory directory;
+        private int baseGuardTarget;
         private bool publicPostSurveyPending;
         private List<SavedRoutePoint> publicPostSites=new List<SavedRoutePoint>();
         private float nextPostMigration;
@@ -85,13 +86,9 @@ namespace LivingCities.DFU
                 if(publicPostSurveyPending && !GameManager.Instance.PlayerEnterExit.IsPlayerInside)
                 {
                     // Finishing a deferred survey must not destroy active pursuers.
-                    publicPostSites=new TownGeometry(town,navigation,false).SurveyGuardPosts(350);
-                    publicPostSurveyPending=false;
                     int occupants=0; foreach(var home in population.Households) occupants+=home.Residents.Count;
-                    int target=GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType),occupants);
-                    if(target>Roster.Target)
-                        try { Roster.IncreaseTarget(target,publicPostSites); }
-                        catch(ArgumentException) { Debug.Log("LIVING_CITIES_GARRISON_EXPANSION_PENDING: insufficient public posts."); }
+                    baseGuardTarget=GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType),occupants);
+                    if(setupSurvey==null) setupSurvey=StartCoroutine(PrepareDeferredGuardSetup(town,navigation));
                 }
                 return;
             }
@@ -114,14 +111,15 @@ namespace LivingCities.DFU
             if (routines == null) return;
             int residents = 0;
             foreach (var home in population.Households) residents += home.Residents.Count;
-            int count = GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType), residents);
+            baseGuardTarget = GuardRoster.TargetCount(SettlementClassification.FromLocationType((int)town.LocationData.MapTableData.LocationType), residents);
             var savedRoster = store.GetGuards(town.MapID);
             var postSurvey=preparedGeometry ?? new TownGeometry(town,navigation,false);
             publicPostSurveyPending=GameManager.Instance.PlayerEnterExit.IsPlayerInside;
+            int count = GuardRoster.TargetWithGateSlots(baseGuardTarget, publicPostSurveyPending ? 0 : postSurvey.SurveyGateGuardPosts().Count);
             var posts=new List<SavedRoutePoint>();
             if(publicPostSurveyPending)
             { foreach(var guard in savedRoster.Guards) if(guard.IsAlive) posts.Add(guard.Post); }
-            else posts=preparedPosts ?? postSurvey.SurveyGuardPosts(350);
+            else posts=preparedPosts ?? postSurvey.SurveyGuardPosts(GuardRoster.MaximumTarget);
             publicPostSites=publicPostSurveyPending ? new List<SavedRoutePoint>() : posts;
             if (posts.Count < count && savedRoster == null) count = posts.Count;
             if (count == 0 && savedRoster == null) return;
@@ -139,11 +137,6 @@ namespace LivingCities.DFU
             // Saved posts may predate a layout mod. Repair them through the sliced
             // migration worker, never by draining thousands of paths during load.
             nextPostMigration=0;
-            if (count > Roster.Target)
-            {
-                try { Roster.IncreaseTarget(count,posts); }
-                catch (ArgumentException) { Debug.Log("LIVING_CITIES_GARRISON_EXPANSION_PENDING: insufficient distinct reachable posts."); }
-            }
             foreach (var patrol in Roster.Patrols) patrolTemplates.Add(PatrolPairPlan.CopyValidated(patrol.Plan));
             long approachStart=RuntimeTiming.Start();
             try {approachSurvey = StartCoroutine(SurveyApproaches(navigation));}
@@ -175,6 +168,41 @@ namespace LivingCities.DFU
             // timestamp (~12 billion seconds) rounds to 1024-second increments.
             return (double)now.ToSeconds() + (double)now.Second - Math.Floor(now.Second);
         }
+        // Keep existing pursuers alive while completing the survey deferred by an
+        // indoor load. The larger roster must never drain a survey on one frame.
+        private IEnumerator PrepareDeferredGuardSetup(BuildingDirectory town,CityNavigation navigation)
+        {
+            var roster=Roster;
+            var surveyed=new TownGeometry(town,navigation,false);
+            var result=new TownGeometry.GuardPostResult();
+            try
+            {
+                yield return BackgroundWork.Wait(()=>directory==town && town && ReferenceEquals(Roster,roster));
+                foreach(var operation in new[] { surveyed.SurveyGuardPostSteps(GuardRoster.MaximumTarget,result), surveyed.SurveyGatePostSteps() })
+                {
+                    try
+                    {
+                        while(directory==town && town && ReferenceEquals(Roster,roster))
+                        {
+                            var game=GameManager.Instance;
+                            if(GameManager.IsGamePaused || game.PlayerEnterExit.IsPlayerInside || !town.gameObject.activeInHierarchy ||
+                                game.StreamingWorld.GetCurrentBuildingDirectory()!=town)
+                            { yield return null; continue; }
+                            bool more; long started=RuntimeTiming.Start();
+                            try { more=operation.MoveNext(); }
+                            finally { RuntimeTiming.End("guard-deferred-survey-slice",started); }
+                            if(!more) break;
+                            yield return null;
+                        }
+                    }
+                    finally { (operation as IDisposable)?.Dispose(); }
+                    if(directory!=town || !town || !ReferenceEquals(Roster,roster)) yield break;
+                }
+                geometry=surveyed; publicPostSites=result.Posts; publicPostSurveyPending=false;
+                InitializeGateGuardPosts();
+            }
+            finally { setupSurvey=null; }
+        }
         private IEnumerator PrepareGuardSetup(BuildingDirectory town,CityNavigation navigation)
         {
             yield return BackgroundWork.Wait(()=>setupDirectory==town && town);
@@ -182,7 +210,7 @@ namespace LivingCities.DFU
             var postGeometry=new TownGeometry(town,navigation,false);
             var result=new TownGeometry.GuardPostResult();
             var entrances=new TownGeometry(town,navigation,false);
-            foreach(var operation in new[]{postGeometry.SurveyGuardPostSteps(350,result),entrances.ReadEntranceSteps(),postGeometry.SurveyGatePostSteps()})
+            foreach(var operation in new[]{postGeometry.SurveyGuardPostSteps(GuardRoster.MaximumTarget,result),entrances.ReadEntranceSteps(),postGeometry.SurveyGatePostSteps()})
             {
                 try
                 {

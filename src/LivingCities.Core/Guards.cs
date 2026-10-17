@@ -116,15 +116,27 @@ namespace LivingCities.Core
                 }
             }
         }
+        // Preserve the old quota's rounding before doubling. Gate duty is additional,
+        // never a share deducted from ordinary town coverage.
+        public const int MaximumBaseTarget = 700;
+        public const int GateSlotsPerGate = 4;
+        public const int MaximumGateCount = 256;
+        public const int MaximumTarget = MaximumBaseTarget + GateSlotsPerGate * MaximumGateCount;
+        public static int TargetWithGateSlots(int baseTarget, int gates)
+        {
+            Require(baseTarget >= 0 && baseTarget <= MaximumBaseTarget && gates >= 0 && gates <= MaximumGateCount,
+                "Invalid gate garrison allocation.");
+            return baseTarget + gates * GateSlotsPerGate;
+        }
         public static int TargetCount(SettlementScale scale, int residents)
         {
             Require(residents >= 0 && (scale == SettlementScale.Hamlet || scale == SettlementScale.Town || scale == SettlementScale.City), "Invalid settlement population.");
-            if (scale == SettlementScale.Hamlet && residents < 40) return 1;
-            return Math.Min(350, Math.Max(scale == SettlementScale.City ? 16 : 8, (int)Math.Ceiling(residents * 0.08)));
+            if (scale == SettlementScale.Hamlet && residents < 40) return 2;
+            return 2 * (int)Math.Min(350d, Math.Max(scale == SettlementScale.City ? 16d : 8d, Math.Ceiling(residents * 0.08)));
         }
         public static GuardRoster Create(int settlementId, uint seed, int count, IList<SavedRoutePoint> posts)
         {
-            Require(settlementId >= 0 && count >= 0 && count <= 350 && posts != null && (count == 0 || posts.Count > 0), "Invalid garrison allocation.");
+            Require(settlementId >= 0 && count >= 0 && count <= MaximumTarget && posts != null && (count == 0 || posts.Count > 0), "Invalid garrison allocation.");
             foreach (var post in posts) CopyPoint(post);
             var roster = new GuardRoster { SettlementId = settlementId, Seed = seed, Target = count };
             for (int i = 0; i < count; i++) roster.Guards.Add(roster.NewGuard(posts[i % posts.Count]));
@@ -138,7 +150,7 @@ namespace LivingCities.Core
         }
         public int IncreaseTarget(int requested, IList<SavedRoutePoint> posts)
         {
-            Require(requested >= 0 && requested <= 350 && posts != null,"Invalid garrison expansion.");
+            Require(requested >= 0 && requested <= MaximumTarget && posts != null,"Invalid garrison expansion.");
             if (requested <= Target) return 0;
             var unused = new List<SavedRoutePoint>();
             foreach (var post in posts)
@@ -149,7 +161,7 @@ namespace LivingCities.Core
             int added = requested-Target;
             Require(unused.Count >= added,"Expansion needs distinct unoccupied posts.");
             var preview = CopyValidated(this); preview.Target = requested;
-            for (int i=0;i<added;i++) preview.Guards.Add(preview.NewGuard(unused[i]));
+            for (int i=0;i<added;i++) preview.Guards.Add(preview.NewGuard(unused[i * unused.Count / added]));
             CopyValidated(preview);
             int oldCount = Guards.Count;
             for (int i=oldCount;i<preview.Guards.Count;i++) Guards.Add(preview.Guards[i]);
@@ -391,7 +403,7 @@ namespace LivingCities.Core
         }
         public static GuardRoster CopyValidated(GuardRoster source)
         {
-            Require(source != null && source.SettlementId >= 0 && source.Target >= 0 && source.Target <= 350 && source.NextIdentity >= 0 &&
+            Require(source != null && source.SettlementId >= 0 && source.Target >= 0 && source.Target <= MaximumTarget && source.NextIdentity >= 0 &&
                 source.Guards != null && source.Reports != null && (source.LastRecruitment == -1 || Time(source.LastRecruitment)), "Invalid garrison.");
             var copy = new GuardRoster { SettlementId = source.SettlementId, Target = source.Target, NextIdentity = source.NextIdentity,
                 Seed = source.Seed, LastRecruitment = source.LastRecruitment };

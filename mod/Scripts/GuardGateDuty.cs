@@ -73,6 +73,12 @@ namespace LivingCities.DFU
                 AddGatePair(site.GateIndex, 0, site.InsideReturnLeft, site.OutsideLeft);
                 AddGatePair(site.GateIndex, 1, site.InsideReturnRight, site.OutsideRight);
             }
+            int target = GuardRoster.TargetWithGateSlots(baseGuardTarget, sites.Count);
+            if (target > Roster.Target && !publicPostSurveyPending)
+                try { Roster.IncreaseTarget(target, publicPostSites); }
+                catch (ArgumentException) { Debug.Log("LIVING_CITIES_GARRISON_EXPANSION_PENDING: insufficient distinct reachable posts."); }
+            Debug.Log("LIVING_CITIES_GARRISON_BUDGET: base=" + baseGuardTarget + "; gateSlots=" +
+                (sites.Count * GuardRoster.GateSlotsPerGate) + "; target=" + Roster.Target);
             BindExistingGateGuards();
             gateDutySurveyed = true;
             Debug.Log("LIVING_CITIES_GATE_POST_SURVEY: gates=" + sites.Count + "; pairedPosts=" + gateDutyPairs.Count);
@@ -259,7 +265,6 @@ namespace LivingCities.DFU
 
         private System.Collections.IEnumerator SelectStaticGateGuard(GateDutyPost post,HashSet<string> assigned,Action<GuardRecord> complete)
         {
-            if(EligibleGateGuards(assigned)<=Mathf.Max(4,Roster.Target/4)) yield break;
             foreach(var guard in GateCandidates(assigned,post.Point))
             {
                 var source=guard.Post;var prepared=new TownGeometry.RouteResult();
@@ -275,7 +280,7 @@ namespace LivingCities.DFU
 
         private System.Collections.IEnumerator SelectGateGuard(GateDutyPair pair,HashSet<string> assigned,Action<GuardRecord> complete)
         {
-            if(!IsVanillaGateOpen(pair.Gate,Now()) || EligibleGateGuards(assigned)<=Mathf.Max(4,Roster.Target/4)) yield break;
+            if(!IsVanillaGateOpen(pair.Gate,Now())) yield break;
             if(pair.ReturnRoute==null)
             {
                 var prepared=new TownGeometry.RouteResult();
@@ -320,8 +325,6 @@ namespace LivingCities.DFU
             result.Points[result.Points.Count-1]=new SavedRoutePoint {X=to.X,Z=to.Z};
         }
 
-        private int EligibleGateGuards(HashSet<string> assigned)
-        { int count=0; foreach(var guard in Roster.Guards) if(EligibleGateGuard(guard,assigned)) count++; return count; }
         private List<GuardRecord> GateCandidates(HashSet<string> assigned,SavedRoutePoint target)
         {
             var candidates=Roster.Guards.FindAll(g=>EligibleGateGuard(g,assigned));

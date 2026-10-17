@@ -128,6 +128,29 @@ namespace LivingCities.DFU
             }
             return true;
         }
+        private static void VerifyQuota(GuardPopulation guards, int gates)
+        {
+            const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+            var host = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", flags).GetValue(host);
+            int residents = 0;
+            foreach (var home in population.Households) residents += home.Residents.Count;
+            int ordinary = GuardRoster.TargetCount(SettlementClassification.FromLocationType(
+                (int)GameManager.Instance.PlayerGPS.CurrentLocation.MapTableData.LocationType), residents);
+            int target = GuardRoster.TargetWithGateSlots(ordinary, gates);
+            var roster = guards.Roster;
+            int gateGuards = roster.Guards.FindAll(g => g.IsAlive && guards.IsGateGuard(g.Id)).Count;
+            int townGuards = roster.Guards.FindAll(g => g.IsAlive && !guards.IsGateGuard(g.Id)).Count;
+            if (roster.Target != target || gateGuards != gates * 4 || townGuards != ordinary)
+                throw new InvalidOperationException("Guard quota mismatch: target=" + roster.Target + "; ordinary=" + townGuards + "; gates=" + gateGuards);
+            var json = DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Serialize(typeof(GuardRoster), roster);
+            var restored = GuardRoster.CopyValidated((GuardRoster)DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Deserialize(typeof(GuardRoster), json));
+            if (restored.Target != target || restored.Guards.Count != roster.Guards.Count ||
+                restored.IncreaseTarget(target, new List<SavedRoutePoint>()) != 0)
+                throw new InvalidOperationException("Native guard quota restore grew the roster.");
+            Debug.Log("LIVING_CITIES_GUARD_QUOTA_PASS: residents=" + residents + "; ordinary=" + townGuards +
+                "; gateGuards=" + gateGuards + "; target=" + target + "; native restore remains idempotent.");
+        }
         public static IEnumerator Run(GuardPopulation guards)
         {
             if(!guards) guards=UnityEngine.Object.FindObjectOfType<GuardPopulation>();
@@ -150,9 +173,9 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Gate probe is not in an owned loaded city exterior.");
                 var gates=OrderedGates(directory);
                 var geometry=new TownGeometry(directory,navigation,false);
-                var expectedPosts=geometry.SurveyGuardPosts(350);
+                var expectedPosts=geometry.SurveyGuardPosts(GuardRoster.MaximumTarget);
                 var postResult=new TownGeometry.GuardPostResult();
-                var postSteps=geometry.SurveyGuardPostSteps(350,postResult);
+                var postSteps=geometry.SurveyGuardPostSteps(GuardRoster.MaximumTarget,postResult);
                 int preparationSlices=0;
                 while(postSteps.MoveNext())
                 {
@@ -181,7 +204,7 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Sliced guard entrance differs.");
                 }
                 var cancelledPosts=new TownGeometry.GuardPostResult();
-                var cancelledSteps=geometry.SurveyGuardPostSteps(350,cancelledPosts);
+                var cancelledSteps=geometry.SurveyGuardPostSteps(GuardRoster.MaximumTarget,cancelledPosts);
                 cancelledSteps.MoveNext(); (cancelledSteps as IDisposable)?.Dispose();
                 if(cancelledPosts.Posts!=null) throw new InvalidOperationException("Cancelled guard survey published partial posts.");
                 Debug.Log("LIVING_CITIES_GUARD_SETUP_SLICES_PASS: posts="+expectedPosts.Count+"; entrances="+expectedEntrances.Entrances.Count+"; slices="+preparationSlices+"; cancellation leaves no partial posts.");
@@ -217,6 +240,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Finite garrison did not reach four distinct assigned gate posts per gate; assigned="+
                         guards.GateGuardDutySnapshots(Now()).Count+"; required="+(sites.Count*4)+".");
 
+                VerifyQuota(guards, sites.Count);
                 var first=sites[0];
                 var left=geometry.ScenePoint(new RoutePoint(first.InsideLeft.X,first.InsideLeft.Z));
                 var right=geometry.ScenePoint(new RoutePoint(first.InsideRight.X,first.InsideRight.Z));
@@ -237,6 +261,7 @@ namespace LivingCities.DFU
                 yield return new WaitForEndOfFrame();
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"LivingCities-gate-posts.png"));
                 Debug.Log("LIVING_CITIES_GATE_GUARD_VIEW_PASS: four actual gate actors match assigned posts and facing.");
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-guard-quota-only")>=0) yield break;
 
                 // Keep this day's armed recalls. Advancing to next noon would correctly
                 // complete them offscreen and skip the movement interval under test.
@@ -247,7 +272,7 @@ namespace LivingCities.DFU
                     new[] { site.OutsideLeft,site.InsideReturnLeft },new[] { site.OutsideRight,site.InsideReturnRight } })
                 {
                     var route=geometry.GateRouteBetweenPoints(pair[0],pair[1]);
-                    double travel=RouteLength(route)*12/1.3;
+                    double travel=RouteLength(route)*DaggerfallUnity.Instance.WorldTime.TimeScale/1.3;
                     var sliced=new TownGeometry.RouteResult();int routeFrame=Time.frameCount;
                     yield return geometry.ReadGateRouteSteps(pair[0],pair[1],sliced,()=>true);
                     if(sliced.Points==null || sliced.Points.Count!=route.Count || Time.frameCount<=routeFrame)
@@ -263,7 +288,7 @@ namespace LivingCities.DFU
                 Debug.Log("LIVING_CITIES_GATE_ROUTE_SLICES_PASS: all native gate return paths match synchronous geometry; cancellation publishes nothing.");
                 if(startAt<=Now()) throw new InvalidOperationException("Gate return routes leave no daytime window for a pre-close test.");
                 DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(startAt-Now()));
-                float closeDeadline=Time.realtimeSinceStartup+(float)((longestReturn+180)/12+20);
+                float closeDeadline=Time.realtimeSinceStartup+(float)((longestReturn+180)/DaggerfallUnity.Instance.WorldTime.TimeScale+20);
                 bool sawPhysicalMovement=false;
                 while(Time.realtimeSinceStartup<closeDeadline)
                 {

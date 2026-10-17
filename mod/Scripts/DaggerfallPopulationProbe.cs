@@ -34,7 +34,11 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Haunted city resident remains outside home at night.");
                     checkedResidents++;
                 }
-                if(checkedResidents<100 || streets.PlannedCount<100 || guards.Roster.Target!=GuardRoster.TargetCount(SettlementScale.City,residents))
+                var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
+                var geometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation(),false);
+                int expected=GuardRoster.TargetWithGateSlots(GuardRoster.TargetCount(SettlementScale.City,residents),
+                    geometry.SurveyGateGuardPosts().Count);
+                if(checkedResidents<100 || streets.PlannedCount<100 || guards.Roster.Target!=expected)
                     throw new InvalidOperationException("Incomplete city population or incorrect garrison scale.");
                 Debug.Log("LIVING_CITIES_CITY_POPULATION_PASS: residents="+residents+"; plans="+streets.PlannedCount+
                     "; guards="+guards.Roster.Target+"; initialSeconds="+(Time.realtimeSinceStartup-started));

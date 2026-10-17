@@ -8,7 +8,17 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — bedroom replacement and on-site shopkeeper, 17 October 2026
+## Latest acceptance — doubled guard targets with separate gate slots, 17 October 2026
+
+Installed bundle SHA-256: `B6700C752BF1D17E144B2F3D6F25877BFD31CC9895A00A71AFAC5C4F709F5BB1`, matching `dist/livingcities.dfmod`.
+
+- **704/704 core tests passed**; runtime compilation has zero warnings/errors. Unity build/install passed using the normal-editor fallback. Regressions first reproduced the unchanged quota and additions clustered at one end of the available posts.
+- Core coverage verifies doubling for all settlement scales, floors, hamlet threshold, rounding and the former cap; additional gate slots; allocation/restore above the old 350 limit; preserved deaths, injuries and identities; reload idempotence; and distributed expansion without partially allocating unavailable posts.
+- The focused native run loaded `People - Daggerfall day`: 290 residents produced **48 ordinary guards plus 16 gate guards, 64 total**. All four gates acquired two inside/two outside guards. Native serialization/restore did not grow the roster; actual rendered actors at one gate matched their assigned positions and facing. Sliced setup produced 630 public posts and 532 entrances, with cancellation publishing no partial results. The process exited successfully without overwriting a player save.
+- Repeat: `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -FixtureSaveName 'People - Daggerfall day' -GateGuardProbe -GuardQuotaOnly`. Evidence: `work/guard-density-red.log`, `guard-density-spread-red.log`, `guard-density-core.log`, `guard-density-runtime.log`, `guard-density-build.log`, `guard-density-native.log`, and `guard-density-native-player.log`.
+- A preceding full gate run also passed physical recall before closure, eight persisted recalls while inside an inn, and sliced wall-route equivalence. Its later camera-placement check failed in wall quarter 768; see Compatibility. The focused pass does not certify that later stage. The old test's hardcoded 12× timing was corrected after reproducing its premature deadline at the current 2× clock. No frame-time benchmark or native visit to every settlement size is claimed.
+
+## Prior acceptance — bedroom replacement and on-site shopkeeper, 17 October 2026
 
 Installed bundle SHA-256: `60C14B18A5F4E7CD0FE028AC509FCA3996B4FD4E65A8FEB57E02229CE68A0497`, matching `dist/livingcities.dfmod`.
 

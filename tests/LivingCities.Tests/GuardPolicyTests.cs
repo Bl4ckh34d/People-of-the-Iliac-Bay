@@ -9,11 +9,11 @@ namespace LivingCities.Tests
         private static SavedRoutePoint P(double x) { return new SavedRoutePoint { X=x }; }
         internal static void Add(List<(string,Action)> cases)
         {
-            cases.Add(("Garrison capacity supports 350 guards and rejects higher allocations",()=>{
-                var roster=GuardRoster.Create(1,42,350,new[] { P(0) });
-                Check.Equal(350,GuardRoster.CopyValidated(roster).Target);
-                Check.Throws<ArgumentException>(()=>GuardRoster.Create(1,42,351,new[] { P(0) }));
-                roster.Target=351; Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(roster));
+            cases.Add(("Garrison capacity supports doubled base plus gate reserves and rejects higher allocations",()=>{
+                var roster=GuardRoster.Create(1,42,GuardRoster.MaximumTarget,new[] { P(0) });
+                Check.Equal(GuardRoster.MaximumTarget,GuardRoster.CopyValidated(roster).Target);
+                Check.Throws<ArgumentException>(()=>GuardRoster.Create(1,42,GuardRoster.MaximumTarget+1,new[] { P(0) }));
+                roster.Target=GuardRoster.MaximumTarget+1; Check.Throws<ArgumentException>(()=>GuardRoster.CopyValidated(roster));
             }));
             cases.Add(("Increasing saved garrison target preserves old posts, deaths and identity sequence",()=>{
                 var roster=GuardRoster.Create(1,42,2,new[] { P(0),P(10) });
@@ -32,11 +32,18 @@ namespace LivingCities.Tests
                 Check.Equal(1,copy.Recruit(100+7*86400));
                 Check.Equal(6,copy.Guards.Count); Check.True(!copy.Guards[0].IsAlive);
             }));
+            cases.Add(("Added guards use the full available post range rather than one end of town",()=>{
+                var roster=GuardRoster.Create(1,42,1,new[] {P(0)});
+                var posts=new List<SavedRoutePoint>(); for(int i=1;i<=20;i++) posts.Add(P(i*10));
+                roster.IncreaseTarget(5,posts);
+                Check.Near(10,roster.Guards[1].Post.X);
+                Check.Near(160,roster.Guards[4].Post.X);
+            }));
             cases.Add(("Garrison expansion with insufficient distinct posts fails without partial identities",()=>{
                 var roster=GuardRoster.Create(1,42,2,new[] { P(0),P(10) });
                 Check.Throws<ArgumentException>(()=>roster.IncreaseTarget(4,new[] { P(0),P(10),P(20),P(20) }));
                 Check.Equal(2,roster.Target); Check.Equal(2,roster.NextIdentity); Check.Equal(2,roster.Guards.Count);
-                Check.Throws<ArgumentException>(()=>roster.IncreaseTarget(351,new[] { P(20) }));
+                Check.Throws<ArgumentException>(()=>roster.IncreaseTarget(GuardRoster.MaximumTarget+1,new[] { P(20) }));
             }));
             cases.Add(("Each assigned guard can issue Halt only once per report, including after reload",()=>{
                 var roster=GuardRoster.Create(1,42,1,new[] { P(0) }); var guard=roster.Guards[0];

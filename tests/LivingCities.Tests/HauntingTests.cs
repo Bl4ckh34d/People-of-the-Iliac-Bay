@@ -268,9 +268,9 @@ namespace LivingCities.Tests
                 Check.Equal(SettlementScale.City,SettlementClassification.FromLocationType(0));
                 Check.Equal(SettlementScale.Town,SettlementClassification.FromLocationType(1));
                 Check.Equal(SettlementScale.Hamlet,SettlementClassification.FromLocationType(2));
-                Check.Equal(16,GuardRoster.TargetCount(SettlementClassification.FromLocationType(0),10));
-                Check.Equal(8,GuardRoster.TargetCount(SettlementClassification.FromLocationType(1),10));
-                Check.Equal(1,GuardRoster.TargetCount(SettlementClassification.FromLocationType(2),10));
+                Check.Equal(32,GuardRoster.TargetCount(SettlementClassification.FromLocationType(0),10));
+                Check.Equal(16,GuardRoster.TargetCount(SettlementClassification.FromLocationType(1),10));
+                Check.Equal(2,GuardRoster.TargetCount(SettlementClassification.FromLocationType(2),10));
                 foreach(int other in new[] { -1,3,4,5,6,7,8,9,10,11,12,13,14,65535 })
                     Check.Throws<ArgumentOutOfRangeException>(()=>SettlementClassification.FromLocationType(other));
             }));
