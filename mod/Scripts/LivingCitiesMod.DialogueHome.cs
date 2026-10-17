@@ -32,8 +32,9 @@ namespace LivingCities.DFU
             {
                 NativePerson native = FindConversationNative(currentSettlement);
                 if (native == null || !native.IsAlive || native.Id != conversationPersonId) return false;
-                homeSettlement = native.SettlementId;
-                homeKey = native.HomeKey;
+                var reservation=store.InnLodgerHome(native.Id);
+                homeSettlement = reservation!=null ? reservation.HomeSettlement : native.SettlementId;
+                homeKey = reservation!=null ? reservation.HomeKey : native.HomeKey;
             }
 
             if (homeSettlement < 0 || homeKey < 0) return false;

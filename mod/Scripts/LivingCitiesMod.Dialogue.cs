@@ -272,7 +272,8 @@ namespace LivingCities.DFU
                 if(RMBLayout.IsShop(summary.BuildingType) && person!=null && person.HomeKey==building && person.BedSlot>=0)
                     return "residential tenant above the shop, not its keeper or owner";
                 if(summary.BuildingType==DFLocation.BuildingTypes.Tavern)
-                    return person!=null && store.NativeLodgingBed(person.Id)!=null ? "inn bedroom lodger; permanent origin not yet verified; not the keeper" :
+                    return person!=null && store.InnLodgerHome(person.Id)!=null ? "inn bedroom lodger with a verified permanent home elsewhere; not the keeper" :
+                        person!=null && store.NativeGuestBedroom(person.Id)!=null ? "inn bedroom lodger; permanent origin not yet verified; not the keeper" :
                         "inn occupant; local staff, local patron or visiting status not yet verified; not the keeper";
                 if(RMBLayout.IsShop(summary.BuildingType)) return "shop visitor, not its keeper or owner";
             }

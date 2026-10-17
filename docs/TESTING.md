@@ -8,7 +8,19 @@ Performance work must record game/build/save/mod combination and measured frame 
 
 <a id="latest-acceptance"></a>
 
-## Latest acceptance — keeper identity, tenancy and keys, 17 October 2026
+## Latest acceptance — inn-bedroom household reservations, 17 October 2026
+
+Installed bundle SHA-256: `E331D6B9404968A9592CE105AD3A48B97F68AB5FD73ECDB536C9483455A2111B`, matching `dist/livingcities.dfmod`.
+
+- **693/693 core tests passed**. New regressions first reproduced missing permanent homes, sole-lodger vacancy recovery and admission into a pending replacement household. Runtime compilation has zero warnings/errors; Unity build/install passed through the existing normal-editor license fallback.
+- Core coverage includes guest/staff/hall separation, excess bedroom occupants, capacity reservation before family generation, known full homes without eviction, unavailable and bank-sale property exclusions, partial-town completion, schema-23 migration, corrupt/duplicate records, bed conflicts, death, historical generations and save restore after recovery rejection.
+- The owned-player probe loaded `People - Shop entrance`, entered actual inns and allocated homes for native bedroom occupants. For example, Luck Sheffield (`npc:206728581:131078:-105`) reserved hometown `1380150225`, home `65538`, slot 0. Nine entrance-connected main-hall NPCs received no foreign reservations.
+- The probe completed that actual hometown's population from surveyed profiles, then used native `SaveLoadManager` serialization/deserialization and store restore. The same person, home and slot remained; no duplicate generated home resident existed, the absence query remained true, and conversation home lookup resolved the reservation. Dedicated sale-building and temporary player-deed checks rejected residential availability through the production survey helper.
+- Repeat: `./tools/TownTest.ps1 -FixtureCharacter LivingCitiesTest-9a5f197b -InnLodgerHomeProbe`. Evidence: `work/inn-lodger-home-red.log`, `inn-lodger-recovery-red.log`, `inn-lodger-recovery-race-red.log`, `inn-lodger-home-core.log`, `inn-lodger-home-build.log`, `inn-lodger-home-native.log`, and `inn-lodger-home-native-player.log`.
+
+No player save was overwritten. This verifies data identity, hometown completion and native serialization, not a rendered visit to the hometown or physical checkout/return travel. Shared temporary beds, universal main-hall housing and every modded inn layout remain outside acceptance. Previously allocated property is not retroactively evicted.
+
+## Prior acceptance — keeper identity, tenancy and keys, 17 October 2026
 
 Installed bundle SHA-256: `32A9B56F837CAF2826D5BC8A66C92344F622F09FAC4CD8A68FEBDA0332982ACD`, matching `dist/livingcities.dfmod`.
 

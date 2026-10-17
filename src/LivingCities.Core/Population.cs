@@ -22,8 +22,9 @@ namespace LivingCities.Core
     {
         public readonly int BuildingKey, BedCount;
         public readonly double FootprintArea;
-        public HomeProfile(int buildingKey, int bedCount = -1, double footprintArea = 0)
-        { BuildingKey = buildingKey; BedCount = bedCount; FootprintArea = footprintArea; }
+        public readonly bool AvailableForResidents;
+        public HomeProfile(int buildingKey, int bedCount = -1, double footprintArea = 0,bool availableForResidents = true)
+        { BuildingKey = buildingKey; BedCount = bedCount; FootprintArea = footprintArea; AvailableForResidents=availableForResidents; }
     }
     [Serializable]
     public sealed class Resident
@@ -90,8 +91,8 @@ namespace LivingCities.Core
                 // absolute capacity. Unknown or bedless layouts get no residents.
                 double[] cumulative = { 0.32 - 0.18 * sizePreference, 0.70 - 0.31 * sizePreference,
                     0.92 - 0.25 * sizePreference, 0.99 - 0.08 * sizePreference };
-                int count = capacity == 0 ? 0 : 1;
-                while (count < capacity)
+                int count = capacity == 0 || !profile.AvailableForResidents ? 0 : 1;
+                while (profile.AvailableForResidents && count < capacity)
                 {
                     double threshold = count <= 4 ? cumulative[count - 1] :
                         1 - (1 - cumulative[3]) * Math.Pow(0.5, count - 4);

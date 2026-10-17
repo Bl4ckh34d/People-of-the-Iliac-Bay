@@ -22,7 +22,7 @@ namespace LivingCities.Core
         {
             if(property==null) throw new ArgumentNullException(nameof(property));
             lastDeath=0;cleared=true;
-            bool confirmed=home.Residents.Count>0,living=false;
+            bool confirmed=home.Residents.Count>0 || HouseholdInnLodgers(settlementId,home.BuildingKey).Count>0,living=false;
             var permanentIds=new HashSet<string>();
             foreach(var person in home.Residents)
             {
@@ -52,6 +52,14 @@ namespace LivingCities.Core
                 if(incident==null) {confirmed=false;cleared=false;continue;}
                 lastDeath=Math.Max(lastDeath,incident.Corpse.DiedAt);
                 cleared &= incident.Corpse.Cleared;
+            }
+            foreach(var reserved in HouseholdInnLodgers(settlementId,home.BuildingKey))
+            {
+                var lodger=state.NativePeople.Find(p=>p.Id==reserved.PersonId);permanentCount++;
+                if(lodger.IsAlive) {nativeAlive=true;living=true;confirmed=false;continue;}
+                var incident=state.AlarmIncidents.Find(a=>a.VictimId==lodger.Id && a.Corpse!=null);
+                if(incident==null) {confirmed=false;cleared=false;continue;}
+                lastDeath=Math.Max(lastDeath,incident.Corpse.DiedAt);cleared &= incident.Corpse.Cleared;
             }
             return new HouseholdRecoveryEligibility {AllPermanentResidentsConfirmedDead=confirmed,
                 PriorPermanentResidentCount=permanentCount,HasLivingPermanentResident=living,
@@ -125,7 +133,8 @@ namespace LivingCities.Core
                     Require(history!=null && history.RetiredAt>=item.RecoveryAt,"Settled recovery lacks retired household.");
                     home=history.Household;
                 }
-                Require(home.Generation==item.Generation && home.Residents.Count>0 && home.Residents.TrueForAll(r=>!r.IsAlive),"Recovery references a living or different household.");
+                var lodgers=target.InnLodgerHomes.FindAll(r=>r.HomeSettlement==item.SettlementId && r.HomeKey==item.BuildingKey && r.Generation==item.Generation);
+                Require(home.Generation==item.Generation && home.Residents.Count+lodgers.Count>0 && home.Residents.TrueForAll(r=>!r.IsAlive),"Recovery references a living or different household.");
                 double last=0;
                 var permanentIds=new HashSet<string>();
                 foreach(var member in home.Residents)
@@ -148,6 +157,14 @@ namespace LivingCities.Core
                     Require(incident!=null,"Recovery lacks confirmed native death evidence.");
                     last=Math.Max(last,incident.Corpse.DiedAt);
                     Require(item.Status==HouseholdRecoveryStatus.Pending || incident.Corpse.Cleared,"Activated recovery has an uncleared native corpse.");
+                }
+                foreach(var reservation in lodgers)
+                {
+                    var person=target.NativePeople.Find(p=>p.Id==reservation.PersonId);
+                    Require(person!=null && !person.IsAlive,"Recovery references a living absent lodger.");
+                    var incident=target.AlarmIncidents.Find(a=>a.VictimId==person.Id && a.Corpse!=null);
+                    Require(incident!=null && (item.Status==HouseholdRecoveryStatus.Pending || incident.Corpse.Cleared),"Lodger recovery lacks confirmed cleanup evidence.");
+                    last=Math.Max(last,incident.Corpse.DiedAt);
                 }
                 Require(last==item.ConfirmedLastDeathAt,"Recovery extinction timestamp differs from death evidence.");
                 result.Add(item);

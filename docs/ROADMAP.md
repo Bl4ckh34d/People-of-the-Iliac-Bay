@@ -25,6 +25,15 @@ The [current inventory](NPC-SYSTEMS.md#inventory) describes implemented coverage
 
 ## Proposed sequence
 
+### Completed reservation slice: permanent homes for authored inn-bedroom lodgers
+
+1. [x] Retain all ordinary bedroom occupants separately from entrance-connected hall occupants and non-rentable staff rooms, including excess bedroom occupants lacking an individual temporary bed. Keep service providers, individual factions and quest-controlled actors native.
+2. [x] Persist a household bed-slot reservation linked to the original native person without another resident at home. Reserve capacity before filling unseen homes; use only genuinely free beds in known homes. Exclude dedicated sale buildings, player deeds and all non-settled household recoveries, including bank-sale properties.
+3. [x] Allocate origins through the existing 60/35/5 nearby/distant/foreign pool in cancellable background slices. Preserve identities and reservations across repeat visits and save/reload. Resolve permanent-home dialogue/key lookup and home absence from the reservation.
+4. [x] Verify completion, capacity conflicts, legacy/corrupt saves, bank exclusions, death/recovery and no duplicate home residents. Accepted by 693 core tests and a native inn fixture; see [Testing](TESTING.md#latest-acceptance).
+
+Departure, daytime visitor routines, checkout and return mobility remain a later slice. No fabricated checkout timer places a still-authored inn NPC at home. Main-hall staff/local patrons retain their existing roles; universal local housing and shared temporary beds remain future work.
+
 | Order | Work package | Exit condition |
 | --- | --- | --- |
 | 0 | Stabilize observed movement, itinerary/dialogue agreement, door transitions and frame stalls | A tracked person reaches the stated destination, enters/exits physically, and remains the same person after reload; repeatable frame-time evidence |
@@ -67,7 +76,7 @@ Access policy: assigned shop home/bed grants a tenant a shop key without keeper 
 
 After the clock and memory updates, recommended next selectable slice: finish the existing destination/door/movement regression, then implement the read-only actor census. Alternative: prioritize story-safe context if plot leakage is the immediate concern. Choose one bounded slice before code changes; companions and exhaustive Quest Pack adaptation are not that slice.
 
-User-selected candidate after keeper/key correction: classify authored inn occupants before assigning origins. Ordinary bedroom occupants default to visiting lodgers from outside town. Main-hall occupants may be local staff, local patrons or visitors; do not assign all of them foreign homes based only on being in an inn. The room-rental service identifies the keeper separately. Quest-controlled people retain native ownership. Confirmed visitors need stable identities and reserved permanent household slots in their hometown before remaining homes are generated; preserve reservations and absence from home across save/reload. Already-populated hometowns require a reconciliation policy without silently evicting families. This extends the existing generated-traveler origin mechanism; it is not already implemented for every authored inn occupant. Patrons/lodgers carry only known permanent-home keys, never temporary inn keys; no home means no invented key. Broader physical routines and return travel follow reservation/identity acceptance.
+The selected authored inn-bedroom reservation slice is accepted above. Main-hall occupants may be local staff, local patrons or visitors; they are not assigned foreign homes solely because they are in an inn. The room-rental service identifies the keeper separately, and quest-controlled people retain native ownership. Known hometowns provide only genuinely free beds; families are never evicted to fit a new lodger. Broader physical routines and return travel remain the follow-up. Patrons/lodgers carry only known permanent-home keys, never temporary inn keys; no home means no invented key.
 
 <a id="detailed-design"></a>
 

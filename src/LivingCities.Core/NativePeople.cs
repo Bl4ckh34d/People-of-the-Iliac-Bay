@@ -118,13 +118,14 @@ namespace LivingCities.Core
         }
         private bool ReserveNativeBed(NativePerson person, HomeProfile home, bool residential)
         {
-            if (home.BedCount <= 0) return false;
+            if (home.BedCount <= 0 || !home.AvailableForResidents || HousingReservedForRecovery(person.SettlementId,home.BuildingKey)) return false;
             var town = state.Settlements.Find(t => t.SettlementId == person.SettlementId);
             var household = town.Households.Find(h => h.BuildingKey == home.BuildingKey);
             if (residential && household == null) return false;
             if (household != null && household.BedCapacity != home.BedCount) return false;
             var occupied = household == null ? new HashSet<int>() : FamilyBedSlots(household);
             var used = new HashSet<int>();
+            foreach(var lodger in HouseholdInnLodgers(person.SettlementId,home.BuildingKey)) used.Add(lodger.BedSlot);
             foreach (var existing in state.NativePeople)
                 if (existing.SettlementId == person.SettlementId && existing.HomeKey == home.BuildingKey)
                 {

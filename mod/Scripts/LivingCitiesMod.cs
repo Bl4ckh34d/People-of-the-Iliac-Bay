@@ -80,6 +80,7 @@ namespace LivingCities.DFU
             component.nativeRentals.Install(()=>component.store,()=>!component.saveFault && component.options.Enabled);
             component.bankListings=new BankHouseListings(()=>component.store,()=>!component.saveFault && component.options.Enabled);
             component.bankListings.Install();
+            host.AddComponent<InnLodgerHomeAllocator>().Install(()=>component.store,()=>!component.saveFault && component.options.Enabled,component.nativeRentals);
             host.AddComponent<DefenseCombatAdapter>().Install(()=>component.store,
                 ()=>!component.saveFault && component.options.Enabled && component.guards.OwnsSettlement);
             var lifetimeType = Type.GetType("LivingCities.QuestHooks.NativeGuardLifetimeHooks, LivingCities.QuestHooks", true);

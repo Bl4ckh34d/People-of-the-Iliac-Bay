@@ -37,6 +37,13 @@ namespace LivingCities.DFU
         private List<LodgingRoom> rooms;
         private Dictionary<int,string> markers;
         private Dictionary<int,string> roomOccupants;
+        private Dictionary<int,string> bedroomOccupants;
+        public string BedroomFor(DaggerfallInterior room,int hash)
+        {
+            string id;
+            return surveyed==room && bedroomOccupants!=null && bedroomOccupants.TryGetValue(hash,out id) &&
+                rooms!=null && rooms.Exists(r=>r.Id==id && !r.NonRentable) ? id : null;
+        }
         private string lastFailure;
         private Func<WorldStateStore> getStore;
         private Func<bool> available;
@@ -217,7 +224,7 @@ namespace LivingCities.DFU
             if(rooms==null)
             {
                 Dictionary<int,string> mapping;
-                var all=TavernRoomSurvey.Read(interior,out mapping,out roomOccupants);
+                var all=TavernRoomSurvey.Read(interior,out mapping,out roomOccupants,out bedroomOccupants);
                 var eligible=new HashSet<string>(mapping.Values);
                 foreach(var room in all) room.NonRentable=!eligible.Contains(room.Id);
                 rooms=all; markers=mapping;

@@ -4,6 +4,7 @@ using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Utility;
 using LivingCities.Core;
 using UnityEngine;
@@ -18,6 +19,7 @@ namespace LivingCities.DFU
         {
             public List<LodgingRoom> Rooms;
             public Dictionary<int,string> Markers,Occupants;
+            public Dictionary<int,string> BedroomOccupants;
             public int? KeeperHash;
             public List<GuardPoint3> ReceptionRoute;
         }
@@ -39,6 +41,9 @@ namespace LivingCities.DFU
         public static List<LodgingRoom> Read(DaggerfallInterior interior,out Dictionary<int,string> markerRooms)
         { Dictionary<int,string> occupants; return Read(interior,out markerRooms,out occupants); }
         public static List<LodgingRoom> Read(DaggerfallInterior interior,out Dictionary<int,string> markerRooms,out Dictionary<int,string> occupants)
+        {Dictionary<int,string> bedrooms;return Read(interior,out markerRooms,out occupants,out bedrooms);}
+        public static List<LodgingRoom> Read(DaggerfallInterior interior,out Dictionary<int,string> markerRooms,out Dictionary<int,string> occupants,
+            out Dictionary<int,string> bedrooms)
         {
             var markers=interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Rest);
             var barriers=new List<DoorBoundary>();
@@ -59,7 +64,7 @@ namespace LivingCities.DFU
                     barriers.Add(new DoorBoundary { Inverse=matrix.inverse,Bounds=bounds });
                 }
             }
-            return Partition(interior,markers,barriers,out markerRooms,out occupants);
+            return Partition(interior,markers,barriers,out markerRooms,out occupants,out bedrooms);
         }
         // Model-only layout plus passive record data: no NPC, quest or save registration.
         public static List<LodgingRoom> ReadUnloaded(Transform owner,StaticDoor door,out Dictionary<int,string> markerRooms)
@@ -96,7 +101,7 @@ namespace LivingCities.DFU
                 operation=ReadUnloadedSteps(owner.transform,door,pending,ClimateSwaps.FromAPIClimateBase(climate),entrance.SourceBlock,true);
                 while(stillValid() && operation.MoveNext()) yield return null;
                 if(stillValid() && pending.Rooms!=null)
-                {result.Rooms=pending.Rooms;result.Markers=pending.Markers;result.Occupants=pending.Occupants;
+                {result.Rooms=pending.Rooms;result.Markers=pending.Markers;result.Occupants=pending.Occupants;result.BedroomOccupants=pending.BedroomOccupants;
                     result.KeeperHash=pending.KeeperHash;result.ReceptionRoute=pending.ReceptionRoute;}
             }
             finally
@@ -201,24 +206,29 @@ namespace LivingCities.DFU
             }
         }
         private static List<LodgingRoom> Partition(DaggerfallInterior interior,Vector3[] markers,List<DoorBoundary> barriers,
-            out Dictionary<int,string> markerRooms,out Dictionary<int,string> occupants)
+            out Dictionary<int,string> markerRooms,out Dictionary<int,string> occupants,out Dictionary<int,string> bedrooms)
         {
             var result=new Result();
             var operation=PartitionSteps(interior,markers,barriers,result);
             while(operation.MoveNext()) { }
-            markerRooms=result.Markers; occupants=result.Occupants; return result.Rooms;
+            markerRooms=result.Markers; occupants=result.Occupants;bedrooms=result.BedroomOccupants; return result.Rooms;
         }
         private static System.Collections.IEnumerator PartitionSteps(DaggerfallInterior interior,Vector3[] markers,
             List<DoorBoundary> barriers,Result output)
         {
             var markerRooms=new Dictionary<int,string>();
             var occupants=new Dictionary<int,string>();
+            var bedrooms=new Dictionary<int,string>();
             var nativePoints=new SortedDictionary<int,Vector3>();
             var entry=interior.EntryDoor;
             var block=DaggerfallUnity.Instance.ContentReader.BlockFileReader.GetBlock(entry.blockIndex);
             foreach(var person in block.RmbBlock.SubRecords[entry.recordIndex].Interior.BlockPeopleRecords)
                 nativePoints.Add(StaticNPC.GetPositionHash(person.XPos,person.YPos,person.ZPos),
                     interior.transform.TransformPoint(new Vector3(person.XPos,-person.YPos,person.ZPos)*MeshReader.GlobalScale));
+            foreach(var npc in interior.GetComponentsInChildren<StaticNPC>(true))
+                if(npc.Data.context==StaticNPC.Context.Building && npc.Data.buildingKey==entry.buildingKey &&
+                    !npc.GetComponent<QuestResourceBehaviour>() && !nativePoints.ContainsKey(npc.Data.hash))
+                    nativePoints.Add(npc.Data.hash,npc.transform.position);
             Func<Vector3,Vector3,bool> allowed=(a,b)=>!barriers.Exists(d=>d.Blocks(a,b));
             var beds=BedGeometry.Read(interior); beds.Sort((a,b)=>a.RecordIndex.CompareTo(b.RecordIndex));
             var general=new InteriorGeometry(interior,sampleFloorOnly:true);
@@ -251,6 +261,7 @@ namespace LivingCities.DFU
                     foreach(var person in nativePoints)
                     {
                         if(!region.ContainsRestMarker(person.Value+Vector3.up*.5f)) continue;
+                        bedrooms.Add(person.Key,room.Id);
                         if(occupants.ContainsKey(person.Key)) throw new InvalidOperationException("Native occupant belongs to multiple bedrooms.");
                         if(bedIndex>=room.Beds.Count)
                         {
@@ -270,7 +281,7 @@ namespace LivingCities.DFU
                 yield return null;
             }
             if(markerRooms.Count!=markers.Length) throw new InvalidOperationException("Unmapped native rental marker; building="+interior.EntryDoor.buildingKey);
-            output.Rooms=result; output.Markers=markerRooms; output.Occupants=occupants;
+            output.Rooms=result; output.Markers=markerRooms; output.Occupants=occupants;output.BedroomOccupants=bedrooms;
         }
     }
 }

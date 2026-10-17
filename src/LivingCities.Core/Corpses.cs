@@ -44,6 +44,8 @@ namespace LivingCities.Core
                 native.WorkKey == confirmedKeeperWorkplace.Value, "Confirmed keeper workplace does not match the victim.");
             if (alarm.Corpse.PropertyKeyClaimsInitialized) return false;
             var claims = new List<CorpsePropertyKeyClaim>();
+            var lodging=InnLodgerHome(alarm.VictimId);
+            if(lodging!=null) claims.Add(new CorpsePropertyKeyClaim {SettlementId=lodging.HomeSettlement,BuildingKey=lodging.HomeKey});
             // A visitor carries the key to the original home, never the building
             // where the corpse happens to be found. Retired generations retain it.
             foreach (var town in state.Settlements)

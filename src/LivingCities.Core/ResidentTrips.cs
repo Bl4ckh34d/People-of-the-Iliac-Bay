@@ -386,6 +386,8 @@ namespace LivingCities.Core
         public bool IsResidentAway(string id,double now)
         {
             Require(DefenseTime(now),"Invalid resident absence time.");
+            InnLodgerHomeReservation lodging;
+            if(innLodgerHomeIndex.TryGetValue(id,out lodging) && now>=lodging.ReservedAt) return true;
             residentTripIndex.TryGetValue(id,out var trip);
             var observed=trip==null ? null : IndexedObservedVisit(trip.ResidentId);
             return trip!=null && now>=trip.HomeLeavesAt && now<trip.HomeAtFor(now,observed);
@@ -532,6 +534,9 @@ namespace LivingCities.Core
         }
         public ActivitySnapshot LocalResidentState(string id,double now,ActivitySnapshot scheduled)
         {
+            InnLodgerHomeReservation lodging;
+            if(innLodgerHomeIndex.TryGetValue(id,out lodging) && now>=lodging.ReservedAt)
+                return new ActivitySnapshot(Activity.Visit,-1,new RoutePoint(0,0),0);
             if(!IsResidentAway(id,now)) return scheduled;
             var trip=residentTripIndex[id]; var position=trip.Evaluate(now,IndexedObservedVisit(trip.ResidentId));
             return new ActivitySnapshot(IsHomeWalk(position.Phase) ? Activity.Travel : Activity.Visit,-1,

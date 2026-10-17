@@ -174,6 +174,12 @@ namespace LivingCities.DFU
             var adapter = GetComponent<LivingCitiesMod>();
             var streets = GetComponent<StreetPopulation>();
             SaveLoadManager.OnLoad += OnLoaded;
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-inn-lodger-home-probe")>=0)
+            {
+                yield return InnLodgerHomeProbe.Run(adapter,streets,character);
+                Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: inn lodger homes.");
+                yield break;
+            }
             if(Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-business-identity-probe")>=0)
             {
                 yield return BusinessIdentityProbe.Run(adapter,streets,character);

@@ -2,13 +2,25 @@
 
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
+## Inn-bedroom household reservations — 17 October 2026
+
+Schema 24 adds `InnLodgerHomeReservation`, linking the original `NativePerson` to a permanent household, generation and real bed slot in another settlement. No second `Resident` is created at home. The source inn identity stays unchanged; home dialogue and corpse-key lookup consult the reservation. Home-state queries keep that person away while the authored inn representation remains authoritative. This slice does not invent departure, checkout or return movement.
+
+The loaded room survey retains every ordinary guest-bedroom occupant, including occupants without an individual temporary bed. Entrance-connected main-hall occupants, non-rentable staff rooms, native service keepers, individual factions and quest-controlled actors are excluded. Existing temporary bed capacity is unchanged; shared beds and sleeping art remain future work.
+
+The allocator uses the existing 60/35/5 nearby/distant/foreign origin pool. Passive building metadata and cancellable background surveys find real residential capacity without loading remote scenes. An unseen home reserves the lodger's slot before generating its remaining family. A known home needs a genuinely free slot; no family is evicted. Unresolved candidates retain no fabricated home or key. Partial-town completion preserves the reserved home and slot.
+
+New allocations exclude dedicated `HouseForSale` buildings, player deeds, faction property and every non-settled household recovery, including bank-sale listings. A living absent lodger prevents vacancy recovery. Confirmed death and cleanup allow recovery, including a household whose only member was the lodger; the historical reservation remains tied to the retired generation. A regression caught and now prevents a second lodger entering a pending replacement household and invalidating its saved recovery. Previously allocated homes are not automatically evicted by this change.
+
+Accepted by 693 core tests, runtime compilation, Unity build/install and the native inn reservation probe. See [Testing](TESTING.md#latest-acceptance) for the measured scope.
+
 ## Keeper services, tenancy and keys — 17 October 2026
 
 `NativeBusinessServices` mirrors native `PlayerActivate.StaticNPCClick`: ordinary merchant service/repair in a shop or room rental in an inn establishes keeper role; guild/custom service and quest-control branches take precedence. `WorkKey` is the authored NPC's source/work building, not proof of ownership. Dialogue now compares the current static speaker's full native identity and service role before supplying keeper/business context. It carries social role into free chat and does not infer work duties from placement alone. Mobile/static identity, memory, child checks and listener origin use `TalkManager.CurrentNPCType`.
 
 A shop tenant with a saved home and bed claim keeps building access without becoming a keeper. Inns issue no property key, including for innkeepers and temporary bed occupants; known permanent-home keys remain valid. Runtime filters both new claims and old unclaimed ledger entries while retaining taken flags. Old inn keys already held in inventory no longer bypass the door hook. Previously transferred non-inn keys lack issuer provenance and are not deleted or retroactively revoked; distinguishing a historical invalid business claim from a valid home key requires a later migration design.
 
-Do not confuse this role correction with universal housing. Generated travelers have origins/reservations; authored inn occupants do not all have permanent remote households. Main-hall people may be local staff/patrons or visitors. Ordinary bedroom occupants are candidates for visitor adoption, with native quests excluded. That classification and housing work remains planned.
+Do not confuse this role correction with universal housing. Ordinary authored guest-bedroom occupants now receive permanent remote household reservations when real capacity is available. Main-hall people may be local staff/patrons or visitors and are not assigned foreign homes by this allocator. Native quests remain excluded; broader local adoption and physical visitor routines remain planned.
 
 ## Occupied interior approaches — 17 October 2026
 

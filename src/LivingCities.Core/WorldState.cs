@@ -6,7 +6,7 @@ namespace LivingCities.Core
     [Serializable]
     public sealed class WorldState
     {
-        public int Version = 23;
+        public int Version = 24;
         public uint WorldSeed;
         public List<ConversationAttitude> ConversationAttitudes = new List<ConversationAttitude>();
         public List<NpcConversationMemory> ConversationMemories = new List<NpcConversationMemory>();
@@ -19,6 +19,7 @@ namespace LivingCities.Core
         public List<GuardRoster> Garrisons = new List<GuardRoster>();
         public List<EntryReport> EntryReports = new List<EntryReport>();
         public List<NativePerson> NativePeople = new List<NativePerson>();
+        public List<InnLodgerHomeReservation> InnLodgerHomes = new List<InnLodgerHomeReservation>();
         public List<DefenseCombatant> DefenseCombatants = new List<DefenseCombatant>();
         public List<TavernLodging> Lodgings = new List<TavernLodging>();
         public List<TravelerPerson> Travelers = new List<TravelerPerson>();
@@ -46,7 +47,8 @@ namespace LivingCities.Core
         public bool HasSettlement(int settlementId) { return state.Settlements.Exists(s=>s.SettlementId==settlementId); }
         public Household ReserveHousehold(int settlementId,HomeProfile home)
         {
-            if(home==null || home.BedCount<=0) throw new ArgumentException("A reserved household requires surveyed beds.");
+            if(home==null || home.BedCount<=0 || !home.AvailableForResidents || HousingReservedForRecovery(settlementId,home.BuildingKey))
+                throw new ArgumentException("A reserved household requires available surveyed beds.");
             var generated=Population.CreateFamilies(state.WorldSeed,settlementId,new[]{home}).Households[0];
             var town=state.Settlements.Find(s=>s.SettlementId==settlementId);
             if(town!=null)
@@ -121,7 +123,9 @@ namespace LivingCities.Core
             Require(index >= 0 && town.Households[index].Generation == expectedGeneration,
                 "Current household generation changed before retirement.");
             var retired = town.Households[index];
-            Require(retired.Residents.Count > 0 && retired.Residents.TrueForAll(r => !r.IsAlive),
+            Require(!candidate.InnLodgerHomes.Exists(r=>r.HomeSettlement==settlementId && r.HomeKey==buildingKey && r.Generation==expectedGeneration &&
+                candidate.NativePeople.Exists(p=>p.Id==r.PersonId && p.IsAlive)),"A living absent lodger still belongs to this household.");
+            Require((retired.Residents.Count > 0 || candidate.InnLodgerHomes.Exists(r=>r.HomeSettlement==settlementId && r.HomeKey==buildingKey && r.Generation==expectedGeneration)) && retired.Residents.TrueForAll(r => !r.IsAlive),
                 "Every household member must be confirmed dead before retirement.");
             candidate.HouseholdHistory.Add(new RetiredHousehold { SettlementId = settlementId,
                 RetiredAt = retiredAt, Household = retired });
@@ -162,6 +166,7 @@ namespace LivingCities.Core
             if(conversationArchive!=null && candidate.ConversationArchive==null)
                 candidate.ConversationArchive=SharedConversationArchive.LegacyCheckpoint(candidate.WorldSeed);
             state = candidate;
+            innLodgerHomeIndex.Clear();foreach(var home in state.InnLodgerHomes) innLodgerHomeIndex.Add(home.PersonId,home);
             memoryIndex=restoredMemories; memoryIndexOwner=state;
             IndexResidentTrips();
             IndexObservedVisits();
@@ -170,7 +175,7 @@ namespace LivingCities.Core
         }
         public TownRoutineState GetRoutines(int settlementId)
         {
-            Require(state.Version >= 1 && state.Version <= 23, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 24, "Unsupported save schema.");
             if (state.Version == 1) return null;
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
@@ -208,7 +213,7 @@ namespace LivingCities.Core
         public void SetRoutines(TownRoutineState routines)
         {
             if (routines == null) throw new ArgumentNullException(nameof(routines));
-            Require(state.Version >= 1 && state.Version <= 23, "Unsupported save schema.");
+            Require(state.Version >= 1 && state.Version <= 24, "Unsupported save schema.");
             Require(state.Settlements != null, "Missing settlements.");
             Require(state.Routines != null, "Missing routine cache.");
             var settlement = FindRoutineSettlement(state, routines.SettlementId);
@@ -323,7 +328,7 @@ namespace LivingCities.Core
         private static WorldState CopyValidated(WorldState source)
         {
             if (source == null) throw new ArgumentNullException(nameof(source));
-            Require(source.Version >= 1 && source.Version <= 23, "Unsupported save schema.");
+            Require(source.Version >= 1 && source.Version <= 24, "Unsupported save schema.");
             Require(source.Settlements != null, "Missing settlements.");
             var copy = new WorldState { WorldSeed = source.WorldSeed };
             copy.ConversationAttitudes = CopyConversationAttitudes(source);
@@ -394,7 +399,10 @@ namespace LivingCities.Core
                         historyKeys.Add(HistoryKey(retired.SettlementId, retired.Household.BuildingKey, retired.Household.Generation)),
                         "Invalid or duplicate retired household generation.");
                     var archived = CopyHousehold(source, retired.SettlementId, retired.Household, identities);
-                    Require(archived.Residents.Count > 0 && archived.Residents.TrueForAll(r => !r.IsAlive),
+                    bool hasLodger=source.Version>=24 && source.InnLodgerHomes!=null && source.InnLodgerHomes.Exists(r=>r!=null &&
+                        r.HomeSettlement==retired.SettlementId && r.HomeKey==archived.BuildingKey && r.Generation==archived.Generation &&
+                        source.NativePeople!=null && source.NativePeople.Exists(p=>p.Id==r.PersonId && !p.IsAlive));
+                    Require((archived.Residents.Count > 0 || hasLodger) && archived.Residents.TrueForAll(r => !r.IsAlive),
                         "Retired household contains a living member.");
                     copy.HouseholdHistory.Add(new RetiredHousehold { SettlementId = retired.SettlementId,
                         RetiredAt = retired.RetiredAt, Household = archived });
@@ -443,6 +451,7 @@ namespace LivingCities.Core
             copy.NativePeople = CopyNativePeople(source);
             copy.DefenseCombatants = CopyDefense(source,copy);
             copy.Lodgings = CopyLodgings(source,copy);
+            copy.InnLodgerHomes=CopyInnLodgerHomes(source,copy);
             CopyTravelers(source,copy,identities);
             copy.VisitDepartures=CopyVisitDepartures(source);
             if(source.Version>=19) copy.ObservedVisits=CopyObservedVisits(source);

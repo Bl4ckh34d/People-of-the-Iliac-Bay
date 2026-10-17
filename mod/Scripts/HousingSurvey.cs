@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Banking;
 using DaggerfallWorkshop.Utility;
 using LivingCities.Core;
 using UnityEngine;
@@ -68,9 +69,17 @@ namespace LivingCities.DFU
                     area = meshes && meshes.GetModelData(model, out data) ? Footprint(data.Vertices) : 0;
                     areas.Add(model, area);
                 }
-                result.Add(new HomeProfile(pair.Key, beds, area));
+                result.Add(new HomeProfile(pair.Key, beds, area,AvailableForResidents(location,pair.Value)));
             }
             return result;
+        }
+        public static bool AvailableForResidents(DFLocation location,BuildingSummary building)
+        {
+            if(building.BuildingType==DFLocation.BuildingTypes.HouseForSale || building.FactionId!=0) return false;
+            var deeds=DaggerfallBankManager.Houses;if(deeds==null) return false;
+            foreach(var deed in deeds)
+                if(deed!=null && deed.mapID==location.MapTableData.MapId && deed.buildingKey==building.buildingKey) return false;
+            return true;
         }
 
         public static double Footprint(Vector3[] vertices)

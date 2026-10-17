@@ -50,6 +50,16 @@ namespace LivingCities.Core
             }
             return null;
         }
+        public string NativeGuestBedroom(string personId)
+        {
+            foreach(var inn in state.Lodgings)
+            {
+                var bed=inn.Occupants.Find(o=>o.PersonId==personId);
+                var room=bed==null ? null : inn.Rooms.Find(r=>!r.NonRentable && r.Beds.Contains(bed.BedId));
+                if(room!=null) return room.Id;
+            }
+            return null;
+        }
         public bool TryClaimLodgingBed(int town,int building,string personId,string bed,double now)
         {
             var tavern=Lodging(town,building);
