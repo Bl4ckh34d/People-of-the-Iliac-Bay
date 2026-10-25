@@ -1,10 +1,12 @@
 param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$UseDeployedSource,
     [switch]$CountersOnly, [switch]$Overnight, [switch]$ValidatePlaytest, [switch]$ValidateArrival,
     [switch]$ValidateWardrobe, [switch]$ValidateCrowd, [switch]$ValidateShopping, [switch]$ValidateSpeech, [switch]$ShoppingBuyerOnly,
-    [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport)
+    [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport,
+    [switch]$ValidateStaticTrade)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
+if($ValidateStaticTrade -and $ValidatePlaytest){throw 'Run static and mobile personal trade as separate owned fixtures.'}
 $repo=Split-Path $PSScriptRoot -Parent
 $dfu=Split-Path $repo -Parent
 $editor=[IO.Path]::GetFullPath('C:/Program Files/Unity/Hub/Editor/2019.4.40f1/Editor/Unity.exe')
@@ -58,6 +60,7 @@ if($ValidateLeisure){$arguments+=' -peopleoftheiliacbay-verify-leisure'}
 if($ValidateMorningShop){$arguments+=' -peopleoftheiliacbay-verify-morning-shop'}
 if($ValidateInnDiversion){$arguments+=' -peopleoftheiliacbay-verify-inn-diversion'}
 if($ValidateMurderReport){$arguments+=' -peopleoftheiliacbay-verify-murder-report'}
+if($ValidateStaticTrade){$arguments+=' -peopleoftheiliacbay-verify-static-trade'}
 if($ValidateCrowd){$arguments+=' -peopleoftheiliacbay-verify-crowd'}
 if($ValidateShopping){$arguments+=' -peopleoftheiliacbay-verify-shopping'}
 if($ValidateSpeech){$arguments+=' -peopleoftheiliacbay-verify-return-voice'}
@@ -67,6 +70,7 @@ $previousProbe=$env:POTIB_ROADMAP_PROBE
 try{
     $env:POTIB_EDITOR_PROFILE_ROOT=$runRoot
     if($ValidatePlaytest){$env:POTIB_ROADMAP_PROBE='personal-trade'}
+    if($ValidateStaticTrade){$env:POTIB_ROADMAP_PROBE='static-personal-trade'}
     $owned=Start-Process -FilePath $editor -ArgumentList $arguments -WindowStyle Hidden -PassThru
     $owned.Id | Set-Content -LiteralPath (Join-Path $runRoot 'editor-pid.txt')
     Write-Output "Owned Unity profiling PID $($owned.Id); results: $runRoot"

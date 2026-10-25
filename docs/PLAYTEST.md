@@ -1,12 +1,14 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `18C45F34122F`, um 05:34 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2120 Core-Tests bestehen. Neu ist der anonyme Mord-Meldeauftrag: Ein zustimmender erwachsener Bewohner läuft draußen zur erreichbaren Wache und übergibt den Bericht. Die Meldung bleibt Hörensagen; beide Beteiligten erinnern sich daran. Nativer Laufweg und lokale LLM-Auswahl bestehen getrennte Tests. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Ein vollständiger Gesprächsdurchlauf mit den normalen Bereitschaftseinstellungen bleibt offen.
+Spielbarer Zwischenbuild `37348187B72D`, um 06:04 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu ist der anonyme Mord-Meldeauftrag: Ein zustimmender erwachsener Bewohner läuft draußen zur erreichbaren Wache und übergibt den Bericht. Die Meldung bleibt Hörensagen; beide Beteiligten erinnern sich daran. Nativer Laufweg und lokale LLM-Auswahl bestehen getrennte Tests. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Ein vollständiger Gesprächsdurchlauf mit den normalen Bereitschaftseinstellungen bleibt offen.
 
 Der Inn-Fehler besteht den gezielten nativen Test: Tresen, stabiler Sitzplatz, Speicherstand und Spieler-Ausgang. Freie Fluchtbewegung erreicht im nativen Test 13,16 km/h statt zuvor 5,54 km/h. Vollständiger Hash und Prüfgrenzen stehen in [TESTING.md](TESTING.md); die [Arbeitsliste](WORKLIST-2026-10-26.md) enthält die übrigen offenen Punkte.
 
 Für diesen kurzen Test besonders hilfreich: um 09:10 beim Kleiderladen warten, später tatsächlichen Eintritt/Rückkehr beobachten; persönliche Trankpreise und Null-Gold-Pergamenthandel prüfen; stationäre Markt-NPCs nach wirklich beobachteten Ereignissen erneut ansprechen. Die neue stationäre Wahrnehmung und kurze Begegnungen sind noch nicht nativ abgenommen. Automatische Marktrollen sind noch nicht implementiert.
 
 ## Start
+
+Neu im Build 06:04: persönlicher Handel mit einem statischen Ladenhändler besteht Fensterübergang, Abbruch, Teilstapel-Kauf und Rückverkauf. Ursache war eine ungültig erzeugte Trankflasche im separaten Händler-Inventar. Regalwaren bleiben davon getrennt. Weitere statische Rollen und freie Handelsformulierungen bleiben offen.
 
 `DFU/Play DFU.lnk` wie gewohnt starten. Der Launcher startet Gemma und Breeze. Alle vorhandenen Spielstände sind Testdaten. Die automatisierten Prüfungen sind beendet; das Spiel ist für deinen eigenen Start frei.
 
@@ -23,7 +25,7 @@ Leihen benötigt bekanntes Vertrauen ab75 und eignet sich erst für vertraute NP
 
 ## Noch offen
 
-- Persönlicher Handel mit statischen Laden-/Gilden-NPCs: Fensterübergang scheitert im aktuellen gezielten Test.
+- Persönlicher Handel mit weiteren statischen Rollen und Gilden-NPCs: Der Ladenhändler besteht jetzt Fensterübergang, Abbruch, Kauf und Rückverkauf; diese weiteren Rollen und freie LLM-Formulierungen bleiben separat zu prüfen.
 - Gemischter Tausch und sämtliche freien Handelsformulierungen sind noch nicht vollständig im Spiel geprüft.
 - Bezahltes Mitreisen, Enter→Wait in weiteren Gebäuden, Shield, Training und neue Kampffunktionen haben offene Abnahmen.
 - Springen/Klettern, bewegliche Dungeonplattformen und vollständige NPC-Haft sind noch nicht fertig.

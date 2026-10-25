@@ -1,5 +1,11 @@
 # Testing and verification status
 
+## Installed static trade repair — 26 October 2026, 06:04
+
+Distribution and Player bundle SHA256 both equal **`37348187B72D59E52294C067404ACA645F72678306AD5797315788743E55D0CB`**. `Build.ps1 -InteractiveOnly -ReusePortraitExport` completed with Unity integration checks and owned editor exit 0. Core **2121/2121**, static-role/merchant-variety regression **1,247 assertions**, RuntimeCompile, 70 PowerShell syntax checks, tooling protocols and source policy pass. The first simultaneous offline test invocation collided over the shared Core output DLL; the sequential rerun completed successfully (`work/static-merchant-green.log`).
+
+The [static personal trade audit](audits/2026-10-26-static-personal-trade.md) traces the previously refused window to a merchant-generated potion bottle whose native recipe changes during restore. The fix removes that invalid template from initial merchant stock and preserves exact inventory authority. Native `static-trade-04` passes real Talk handoff, cancel, partial-stack purchase for 126 g, resale for 81 g, exact UIDs/wallets and unchanged shelves. Other static roles, free LLM wording and mixed barter remain open.
+
 ## Routine distribution and physical groups — 26 October 2026
 
 The [native distribution audit](audits/2026-10-26-routine-destination-distribution.md) records 1,074 planned visits across 286 residents and distinguishes those plans from observed arrivals. It corrects an absolute-time versus daily-time error in the diagnostic. `leisure-physical-03` passes actual three-body spacing, partner facing with a nearby player, partner context and slot reuse. Free approach, complete autonomous encounters and further destination concentration checks remain open. This diagnostic/documentation checkpoint does not replace the installed Player bundle.

@@ -8,7 +8,9 @@ namespace PeopleOfTheIliacBay.Core
     // Saved native items/UIDs take authority after the first successful opening.
     public static class NpcMerchantStock
     {
-        private static readonly int[] Templates={82,83,84,85,86,87,88,89,247,248,249,252,253,279,133,134,135,136,137,138,139};
+        // Template 83 is DFU's potion bottle. Creating it as ordinary junk
+        // leaves no recipe; native load assigns one and changes its payload.
+        private static readonly int[] Templates={82,84,85,86,87,88,89,247,248,249,252,253,279,133,134,135,136,137,138,139};
 
         public static IReadOnlyList<NpcStartingBelonging> Generate(uint worldSeed,string personId)
         {

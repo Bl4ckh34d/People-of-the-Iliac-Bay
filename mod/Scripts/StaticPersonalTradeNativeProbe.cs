@@ -47,6 +47,9 @@ namespace PeopleOfTheIliacBay.DFU
                 "Static personal trade requires its explicit owned fixture.");
             Require(game != null && game.IsReady && game.PlayerEntity != null && game.PlayerGPS.HasCurrentLocation &&
                 game.PlayerGPS.CurrentLocation.Name == FixtureLocation, "Static personal trade requires the Gothway Garden fixture.");
+            var clock=DaggerfallUnity.Instance.WorldTime.Now;
+            clock.RaiseTime((float)((12*3600-clock.ToSeconds()%86400+86400)%86400));
+            DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
             if (game.PlayerEnterExit.IsPlayerInside)
             {
                 game.PlayerEnterExit.TransitionExterior();
@@ -105,7 +108,7 @@ namespace PeopleOfTheIliacBay.DFU
                 string reason;
                 Require(NativeStaticNpcInventoryOwner.TryOpen(store, keeper, fixture.Person, NpcArchetype.Merchant,
                     out owner, out reason) && owner != null && owner.Binding != null, reason);
-                var seeded = ItemBuilder.CreateItem(ItemGroups.UselessItems1, (int)UselessItems1.Glass_Bottle);
+                var seeded = ItemBuilder.CreateItem(ItemGroups.UselessItems1, (int)UselessItems1.Glass_Jar);
                 seeded.value = 100;
                 seeded.stackCount = 2;
                 owner.Binding.Items.AddItem(seeded, noStack: true);
@@ -277,11 +280,50 @@ namespace PeopleOfTheIliacBay.DFU
             var method = typeof(PeopleOfTheIliacBayMod).GetMethod("TryOpenConversationPersonalTradeWindow", Private);
             Require(method != null, "Static conversation commerce handoff is unavailable.");
             var args = new object[] { talk, null };
-            Require((bool)method.Invoke(host, args), "Actual static Talk trade handoff refused: " + args[1]);
+            bool opened=(bool)method.Invoke(host,args);
+            if(!opened)LogAdmissionState(host,talk);
+            Require(opened, "Actual static Talk trade handoff refused: " + args[1]);
             var window = DaggerfallUI.UIManager.TopWindow as PersonalTradeWindow;
             Require(window != null && !(DaggerfallUI.UIManager.TopWindow is DaggerfallTalkWindow),
                 "Static Talk did not close into the owned native personal-trade window.");
             return window;
+        }
+
+        private static void LogAdmissionState(PeopleOfTheIliacBayMod host,DaggerfallTalkWindow talk)
+        {
+            var type=typeof(PeopleOfTheIliacBayMod);var game=GameManager.Instance;
+            var streets=(StreetPopulation)type.GetField("streets",Private).GetValue(host);
+            var store=GetStore(streets);var npc=game.TalkManager.StaticNPC;
+            var party=new object[]{talk,null,null,NpcArchetype.Citizen};
+            bool resolved=(bool)type.GetMethod("TryResolveStaticPersonalTradeParty",Private).Invoke(host,party);
+            var person=party[2] as NativePerson;
+            var role=new object[]{npc,NpcArchetype.Citizen};
+            bool roleFound=(bool)type.GetMethod("StaticPersonalTradeRole",BindingFlags.Static|BindingFlags.NonPublic).Invoke(null,role);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIC_TRADE_ADMISSION: resolved="+resolved+
+                "; sessionOpen="+ConversationOpen(host)+"; memoryWindow="+ReferenceEquals(type.GetField("memoryWindow",Private).GetValue(host),talk)+
+                "; topWindow="+ReferenceEquals(DaggerfallUI.UIManager.TopWindow,talk)+"; saveFault="+type.GetField("saveFault",Private).GetValue(host)+
+                "; person="+(person==null?"null":person.Id)+"; nativeMatch="+NativeStaticNpcInventoryOwner.Matches(npc,person)+
+                "; role="+roleFound+":"+role[1]+"; streetsReady="+(streets && streets.Ready)+
+                "; serviceBlocked="+(streets && streets.KeeperServiceBlocked(npc))+
+                "; ledger="+(person!=null && store.HasNpcInventory(person.Id)));
+            if(person==null || !store.HasNpcInventory(person.Id))return;
+            NativeStaticNpcInventoryOwner owner;string reason;
+            bool bound=NativeStaticNpcInventoryOwner.TryOpen(store,npc,person,(NpcArchetype)role[1],out owner,out reason);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIC_TRADE_BINDING: opened="+bound+"; reason="+reason);
+            if(!bound)return;
+            var saved=store.ReadNpcInventory(person.Id);var items=NativeNpcInventoryBridge.CaptureItems(owner.Binding.Items);
+            bool willing=(bool)type.GetMethod("StaticPersonalTradeWilling",Private).Invoke(host,
+                new object[]{store,npc,person,role[1],owner,game.PlayerEntity});
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIC_TRADE_AUTHORITY: willing="+willing+
+                "; savedRevision="+saved.Revision+"; bindingRevision="+owner.Binding.Revision+
+                "; matches="+NpcInventoryReadAuthority.Matches(saved,person.Id,owner.Binding.Revision,items));
+            foreach(var item in items)
+            {
+                var original=saved.Items.Find(row=>row.Uid==item.Uid);
+                if(original!=null && original.NativePayload==item.NativePayload)continue;
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIC_TRADE_PAYLOAD: saved="+(original==null?"missing":original.NativePayload)+"; live="+item.NativePayload);
+                break;
+            }
         }
 
         private static PersonalTradeWindowSession Session(PersonalTradeWindow window)

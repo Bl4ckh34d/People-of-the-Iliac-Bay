@@ -8,6 +8,12 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
+            cases.Add(("Merchant starting stock never creates an uninitialized native potion",()=>
+            {
+                for(uint seed=0;seed<100;seed++)foreach(var item in NpcMerchantStock.Generate(seed,"merchant:"+seed))
+                    Check.True(item.Group!=NpcStartingItemGroup.UselessItems1 || item.TemplateIndex!=83,
+                        "Native Glass_Bottle acquires a potion recipe on load and changes the saved inventory payload.");
+            }));
             cases.Add(("Mundane starting goods never create native potion-template glass bottles",()=>
             {
                 for(uint seed=0;seed<100;seed++)foreach(var item in NpcStartingBelongings.Generate(seed,"person",NpcArchetype.Citizen))

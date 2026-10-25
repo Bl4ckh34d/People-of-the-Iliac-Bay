@@ -27,7 +27,7 @@ Der aktuelle Entwicklungsbuild ist im lokalen Player installiert. Start und kurz
 | Gesundheit | Native Tränke und Selbstzauber, begrenzte HP-Tranknutzung, Schlafheilung; selbstständiger Tempel-/Gildenbesuch mit Zahlung, Behandlung und Rückkehr; Begleiter erhält und nutzt Gegengift. | Shield und weitere Begleiterzauber; zusätzliche Kampf-/Dungeon-Situationen. |
 | Wachen | Kontrollierte körperliche/magische Angriffe lösen passende native Reaktionen aus; echter Schaden; Leichenentfernung, Zeugen, Sichtkontakt und Suche; maximal sechs Wachen. | Freie Täterentscheidungen und Flucht; Festnahme nur mit wirklich nutzbarer Zelle; weitere Innenraumfälle. |
 | Erinnerung und Beziehung | Gespeicherte Persönlichkeit, Stimmung, Angst/Groll und relevante Ereignisse; bekannter Vergiftungsgrund im Gespräch; native Streetwise/Etikette/Mercantile-Praxis. | Weitere positive/negative Erlebnisse, Zusagen und allgemeine Dialogqualität. |
-| Persönlicher Handel | Mobile Bewohner: Vorschau/Abbruch, Teilstapel-Kauf, Verkauf, exaktes Gold, Feilschgrenze und Stimmung; Leihen/Rückgabe mit echter UID, auch nach Vertrauensverlust, ohne Follow abzubrechen. | Statischer persönlicher Handel verweigert noch die geprüfte Übergabe ins Fenster; gemischter Tausch und freie Gemma-Handelsanfragen benötigen weitere Spielabnahme. |
+| Persönlicher Handel | Mobile Bewohner: Vorschau/Abbruch, Teilstapel-Kauf, Verkauf, exaktes Gold, Feilschgrenze und Stimmung; Leihen/Rückgabe mit echter UID, auch nach Vertrauensverlust, ohne Follow abzubrechen. Statischer Ladenhändler: Fensterübergang, Abbruch, Kauf und Rückverkauf nativ geprüft; Regalbestand bleibt getrennt. | Weitere statische Rollen, gemischter Tausch und freie Gemma-Handelsanfragen benötigen weitere Spielabnahme. |
 | Besitz und Begleiter | Native Rollen-/Geschlechtspools, persönliches Geld und belegter Hausschlüssel sind integriert. Erste Erzeugung und Persistenz werden beim Build geprüft. | Breite Ingame-Abnahme der Pools, bezahltes Mitreisen, Fortschritt, Reparatur und Training. |
 
 Handel setzt Bereitschaft voraus; Mercantile beeinflusst Preise und Gegenangebote, ist keine Zugangssperre. Das NPC-Geld bleibt internes Kaufbudget. Schlechte eingereichte Angebote verschlechtern die Stimmung, vorteilhafte Abschlüsse verbessern sie. Leihen verlangt bekanntes Vertrauen ab75; die Rückgabe eines belegten Gegenstands verlangt kein erneutes Vertrauen. Schlüssel, ausgerüstete und geschützte Gegenstände bleiben unverkäuflich.
@@ -38,7 +38,7 @@ Das vereinfachte Handelsfenster zeigt NPC-Items links und Spieler-Items rechts, 
 ## Nächste Umsetzungsschritte
 
 1. **Diesen Build im normalen Spiel prüfen:** Bewegung, Tagesleben, Gespräche, Ortsauskunft und persönlicher Handel. Gemeldete Fehler haben Vorrang.
-2. **Handel abschließen:** statischen Fensterübergang korrigieren; freien Gesprächseinstieg und gemischten Tausch durchgehend prüfen.
+2. **Handel abschließen:** korrigierten statischen Fensterübergang bei weiteren Rollen prüfen; freien Gesprächseinstieg und gemischten Tausch durchgehend prüfen.
 3. **Vorhandene Aktionsadapter fertig prüfen:** Enter→Wait, bezahlte Ortswechsel, Tempeltraining, Reparatur, Shield und Übergaben an andere Personen.
 4. **Gesundheit und Wachreaktionen abrunden:** freie Täterreaktionen und Verfolgung durch beobachtete Türen; Festnahme erst nach Nachweis nutzbarer Gefängnisgeometrie.
 5. **Navigation erweitern:** zusätzliche Innen-/Dungeonblöcke, Springen, Klettern und die Thronplattform in Privateer's Hold.
