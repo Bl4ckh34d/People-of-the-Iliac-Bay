@@ -166,7 +166,8 @@ try {
     & $sync -ArtRoot $fixtureArtRoot -CatalogPath $fixtureCatalogPath -Destination $newPortraitPackage
     $newPortraitRegistry = Get-Content -LiteralPath (Join-Path $newPortraitPackage 'portrait-split-manifest.json.bytes') -Raw | ConvertFrom-Json
     if ($newPortraitRegistry.schemaVersion -ne 2 -or $newPortraitRegistry.portraits.Count -ne 1 -or
-        $newPortraitRegistry.portraits[0].record -ne 72 -or $newPortraitRegistry.portraits[0].catalogStatus -ne 'parent-reviewed-user-review-pending') {
+        $newPortraitRegistry.portraits[0].record -ne 72 -or
+        $newPortraitRegistry.portraits[0].catalogStatus -ne [string]$sourceEntry.status) {
         throw 'Catalog sync did not include the pending newly published portrait with its original review status.'
     }
 

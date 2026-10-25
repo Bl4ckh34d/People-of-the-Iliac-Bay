@@ -1,6 +1,6 @@
 # People of the Iliac Bay
 
-Source audit updated 26 October 2026: fixes cover local HTTP redirects, personal barter quote validation, allied guard cleanup, damaged PowerShell tooling and obsolete regression fixtures. See the [audit report](docs/audits/2026-10-26-code-audit.md) for verification and limits. These source changes have not been installed or tested in a fresh game session. Installed-bundle evidence remains dated in [Testing](docs/TESTING.md). Start with the [short playtest guide](docs/PLAYTEST.md) and [roadmap](docs/ROADMAP.md). Normal play uses Gemma + Breeze.
+Source audit updated 26 October 2026: fixes cover local HTTP redirects, personal barter quote validation, allied guard cleanup, damaged PowerShell tooling and obsolete regression fixtures. See the [audit report](docs/audits/2026-10-26-code-audit.md) for verification and limits. The checked-out source plus the local portrait source set builds and is installed as bundle `3BF9B591AD93`; Core 2082/2082, Breeze protocol 22/22, runtime compilation, the 50-portrait catalog package and Unity integration pass. No fresh in-game acceptance session has run for this exact bundle. Start with the [short playtest guide](docs/PLAYTEST.md), [Testing](docs/TESTING.md) and [roadmap](docs/ROADMAP.md). Normal play uses Gemma + Breeze.
 
 A Daggerfall Unity mod that brings NPCs to life through persistent households, daily itineraries, visitors, finite guards, crime reactions, and optional local LLM dialogue.
 
