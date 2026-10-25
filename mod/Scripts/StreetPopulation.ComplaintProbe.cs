@@ -127,6 +127,40 @@ namespace PeopleOfTheIliacBay.DFU
                                 "; kmh="+kmh+"; travel="+travelled+"; report="+(report!=null)+"; charge="+(charge!=null));
                         Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLAINT_PASS: travelMetres="+travelled+"; realSeconds="+seconds+
                             "; averageKmh="+kmh+"; maxStep="+maxStep+"; bodyProgress=true; restore=true; delayedCharge=true; finiteGuards=true; LLMSelectionNotTested=true");
+                        // Dispatch was verified above. End the controlled player crime
+                        // before testing routine resumption: a witness may legitimately
+                        // stand and watch the ensuing guard confrontation otherwise.
+                        game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
+                        double resumedTravel=0;float resumedMaxStep=0;
+                        var deliveredPosition=current;
+                        float resumeUntil=Time.realtimeSinceStartup+10;
+                        while(Time.realtimeSinceStartup<resumeUntil)
+                        {
+                            yield return null;
+                            witness=FindActor(person);
+                            if(!witness || !witness.gameObject.activeInHierarchy)
+                                throw new InvalidOperationException("Delivered complaint body disappeared before visible resumption.");
+                            current=witness.transform.position;
+                            step=Vector3.Distance(previous,current);previous=current;
+                            resumedTravel+=step;resumedMaxStep=Mathf.Max(resumedMaxStep,step);
+                            if(step>0.9f)
+                                throw new InvalidOperationException("Delivered complaint runner jumped back to routine: "+step);
+                            if(worldStore.GetDialogueComplaint(person)!=null ||
+                                worldStore.ReadNpcConversationBoundary(person,clock.ToSeconds()).ReportStatus!=NpcConversationBoundaryReportStatus.Delivered ||
+                                guards.Roster.Guards.Count!=guardCount)
+                                throw new InvalidOperationException("Delivered complaint restarted or created additional guards.");
+                        }
+                        if(resumedTravel<1 || Vector3.Distance(current,deliveredPosition)<0.5f)
+                        {
+                            var native=witness.GetComponent<NativeResidentNavigation>();
+                            throw new InvalidOperationException("Delivered complaint did not resume visible progress: "+resumedTravel+
+                                "; paused="+GameManager.IsGamePaused+"; activity="+GetState(person,clock.ToSeconds()).Activity+
+                                "; watching="+bystanderPostures.ContainsKey(person)+"; reaction="+(Reaction(person,clock.ToSeconds())!=null)+
+                                "; native="+(native?native.PathState+"; failure="+native.FailureReason:"missing"));
+                        }
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLAINT_RESUME_PASS: travelMetres="+resumedTravel+
+                            "; maxStep="+resumedMaxStep+"; displacement="+Vector3.Distance(current,deliveredPosition)+
+                            "; reportRemainsDelivered=true; finiteGuards=true; controlledCrimeCleared=true; reaction="+(Reaction(person,clock.ToSeconds())!=null));
                         yield break;
                     }
                     var local=directory.transform.InverseTransformPoint(current-Vector3.up);

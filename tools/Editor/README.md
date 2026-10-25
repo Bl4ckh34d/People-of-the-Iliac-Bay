@@ -27,6 +27,10 @@ Do not interpret a fixture setup failure or timeout as gameplay acceptance.
 issued speech receipt, then observes actual travel, saved body position, a
 mid-route snapshot round trip and finite guard dispatch. The incident position
 must pass physical clearance and guard-response routing before the test begins.
+After verifying dispatch, it clears the controlled native crime and observes ten
+seconds of routine movement without jumps, restarted complaints or extra guards.
+This isolates resumption from the guard confrontation; it does not test arrest
+or escape resolution.
 It does not exercise free-text model classification or native disk save/load.
 Add `-ValidateComplaintWait` to fault-inject an unreachable response location,
 verify five seconds of standing/facing without a charge, then restore the real

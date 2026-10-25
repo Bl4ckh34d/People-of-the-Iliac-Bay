@@ -1,5 +1,17 @@
 # Testing and verification status
 
+## Complaint routine resumption — 26 October 2026, 07:58
+
+`complaint-resume-02` passes ten seconds of physical movement after delivery and
+explicit native clearing of the controlled crime: 15.10244 m travelled, maximum
+step 0.42643 m, report still delivered and no additional guards. This isolates
+routine resumption from the legitimate intervening guard confrontation; natural
+arrest/escape resolution is not covered. The first run left the crime active
+and cannot establish a routine defect from its stationary witness. Runtime
+compilation, 2121/2121 Core checks, source policy and whitespace checks pass.
+Only the opt-in fixture and documentation change; installed bundle remains
+`A31A6036B1AF`. See the [audit](audits/2026-10-26-physical-dialogue-complaint.md#routine-resumption-after-the-controlled-encounter).
+
 ## Complaint arrival hold — 26 October 2026, 07:47
 
 Installed and distribution SHA256 both equal **`A31A6036B1AF075ACFC25EBFF2D998F5FCB27D4E64AFCABC47CF99D0B6BB88F5`**. Unity build/integration exits 0; Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, source policy, tooling checks and whitespace checks pass.

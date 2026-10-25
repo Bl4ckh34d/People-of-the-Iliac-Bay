@@ -96,3 +96,28 @@ Build/install at 07:47: distribution and Player SHA256 both equal
 Unity integration/build exits 0. Core 2121/2121, runtime and QuestHooks builds,
 source policy, tooling checks and whitespace checks pass. Owned editor exits;
 Hub remains untouched. This package supersedes the earlier housing-cache bundle.
+
+## Routine resumption after the controlled encounter
+
+`-ValidateComplaint` now also observes ten real seconds after delivery. The
+fixture first verifies the exact dispatched report and player charge, then
+clears that controlled crime through the native property. This separates routine
+resumption from the guard confrontation, during which watching in place is a
+valid response. It does not simulate a complete arrest, acquittal or escape.
+
+The initial `complaint-resume-01` demanded movement with the crime still active
+and observed only 0.000397 m of movement. It is not proof of broken routine
+resumption: the test had not ended the intervening guard encounter. No production
+code was changed based on that result.
+
+`complaint-resume-02` passes with the controlled crime cleared: 15.10244 m of
+travel and 15.10205 m displacement over ten seconds, maximum step 0.42643 m.
+The report remains delivered, no complaint restarts, the guard count stays fixed
+and no civilian reaction is active at the end. Preceding complaint travel is
+9.15787 m at 7.09647 km/h. The editor exits with `complete`, without an
+`Exception:` entry. Core 2121/2121, runtime compilation, source-policy and
+whitespace checks pass.
+
+This adds an acceptance check only. Installed bundle `A31A6036B1AF` remains
+unchanged. Natural resumption after an actual guard confrontation, native disk
+restore, offscreen handling, free-text initiation and retry cost remain open.
