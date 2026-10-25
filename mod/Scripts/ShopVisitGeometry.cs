@@ -51,7 +51,8 @@ namespace PeopleOfTheIliacBay.DFU
             shelves.Sort((a,b)=>{ int x=a.x.CompareTo(b.x); return x!=0 ? x : a.z.CompareTo(b.z); });
             foreach(var npc in room.GetComponentsInChildren<StaticNPC>())
             {
-                if(NativeBusinessServices.IsKeeper(npc,room.BuildingData.BuildingType) &&
+                if((NativeBusinessServices.IsKeeper(npc,room.BuildingData.BuildingType) ||
+                    room.BuildingData.BuildingType==DaggerfallConnect.DFLocation.BuildingTypes.Bank && NativeBusinessServices.IsBankClerk(npc)) &&
                     (!IsTavern || this.livingTavernKeeper!=null && this.livingTavernKeeper(npc)))
                 {
                     counter=room.transform.InverseTransformPoint(npc.transform.position);

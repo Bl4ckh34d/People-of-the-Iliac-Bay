@@ -29,6 +29,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             PersonalTradeWindowSession session;
             if (!TryCreateStaticPersonalTradeWindowSession(talk, out session, out reason)) return false;
+            CapturePersonalTradePortrait(talk, session);
             DaggerfallUI.Instance.PopToHUD();
             PersonalTradeWindow.Open(DaggerfallUI.UIManager, null, session, mod);
             return true;
@@ -48,7 +49,9 @@ namespace PeopleOfTheIliacBay.DFU
             npc = manager.StaticNPC;
             string id = StaticConversationPersonId(npc);
             if (!string.Equals(id, conversationPersonId, StringComparison.Ordinal)) return false;
-            person = store.NativePersonInSettlement(npc.Data.mapID, id);
+            int exteriorTown,exteriorHash;
+            int settlement=NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash)?exteriorTown:npc.Data.mapID;
+            person = store.NativePersonInSettlement(settlement, id);
             return NativeStaticNpcInventoryOwner.Matches(npc, person) && StaticPersonalTradeRole(npc, out role) &&
                 StaticPersonalTradeAvailable(store, npc, person, role, null, game.PlayerEntity);
         }
@@ -57,9 +60,15 @@ namespace PeopleOfTheIliacBay.DFU
         {
             role = NpcArchetype.Citizen;
             var game = GameManager.Instance;
+            int exteriorTown,exteriorHash;
+            if(NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash))
+            {
+                role=NativeExteriorNpcIdentity.IsMerchant(npc)?NpcArchetype.Merchant:NpcArchetype.Citizen;
+                return true;
+            }
             var directory = game == null ? null : game.StreamingWorld.GetCurrentBuildingDirectory();
             BuildingSummary building;
-            if (!npc || !game.PlayerEnterExit.IsPlayerInsideBuilding || !game.PlayerEnterExit.Interior ||
+            if (!npc || game==null || !game.PlayerEnterExit.IsPlayerInsideBuilding || !game.PlayerEnterExit.Interior ||
                 game.PlayerEnterExit.Interior.EntryDoor.buildingKey != npc.Data.buildingKey || !directory ||
                 !directory.GetBuildingSummary(npc.Data.buildingKey, out building)) return false;
             if (building.BuildingType == DFLocation.BuildingTypes.Tavern && NativeBusinessServices.IsKeeper(npc, building.BuildingType))
@@ -139,7 +148,7 @@ namespace PeopleOfTheIliacBay.DFU
                 NpcWillingNow = () => StaticPersonalTradeWilling(sessionStore, npc, person, role, sessionOwner, player),
                 PlayerConsentedNow = () => !saveFault && ReferenceEquals(store, sessionStore) && GameManager.Instance != null &&
                     ReferenceEquals(GameManager.Instance.PlayerEntity, player),
-                NpcValuesItemNow = item => PersonalTradeItemDisposable(item) && item.value > 0,
+                NpcValuesItemNow = PersonalTradeItemDisposable,
                 OccupationallyDisposableNow = PersonalTradeItemDisposable,
                 ItemUniqueNow = item => item != null && item.IsArtifact,
                 ItemSourceAllowedNow = item => PersonalTradeItemSourceAllowed(sessionStore, personId, item) ||
@@ -209,7 +218,7 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     acceptedRound = null;
                     quote = new PersonalTradeWindowQuote { NetGoldToNpc = currentNetGoldToNpc, CanSubmit = false,
-                        Status = "Their current total is " + PersonalTradeGoldText(currentNetGoldToNpc) + "." };
+                        Status = "" };
                     acceptedQuote = quote;
                     return true;
                 }
@@ -219,10 +228,11 @@ namespace PeopleOfTheIliacBay.DFU
                 var result = NpcCommerceHagglingPolicy.Decide(round);
                 acceptedRound = result.Disposition == NpcCommerceHaggleDisposition.Accept ? round : null;
                 quote = new PersonalTradeWindowQuote { NetGoldToNpc = result.PriceGold, CanSubmit = acceptedRound != null,
+                    ExpectedNetGoldToNpc = currentNetGoldToNpc,
                     Disposition = result.Disposition, ProposalMoodDelta = result.ProposalMoodDelta, ProposalRound = round.Round,
                     ProposalEffectId = NpcCommerceHagglingPolicy.ProposalEffectId(haggle.NegotiationId, round.Round),
-                    Status = acceptedRound != null ? "The offer is accepted." :
-                        "Their current total is " + PersonalTradeGoldText(result.PriceGold) + "." };
+                    Status = acceptedRound != null ? "The offer is accepted." : result.Disposition == NpcCommerceHaggleDisposition.Reject
+                        ? "They refuse that offer." : "They suggest another amount." };
                 acceptedQuote = quote;
                 return true;
             };
@@ -291,7 +301,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var item = source.GetItem(line.ItemUid);
                 int price = StaticPersonalTradeItemQuote(sessionStore, npc, person, role, owner, player, item, line.Quantity,
                     line.Direction == PersonalBarterDirection.NpcToPlayer ? PlayerCommerceKind.Buy : PlayerCommerceKind.Sell);
-                if (price < 1) return false;
+                if (price < 0) return false;
                 total += line.Direction == PersonalBarterDirection.NpcToPlayer ? price : -price;
             }
             if (total < -NpcInventoryLimits.MaximumWalletGold || total > NpcInventoryLimits.MaximumWalletGold) return false;
@@ -312,12 +322,13 @@ namespace PeopleOfTheIliacBay.DFU
             int quantity, PlayerCommerceKind kind)
         {
             if (!StaticPersonalTradeAvailable(sessionStore, npc, person, role, owner, player) || item == null ||
-                !PersonalTradeItemDisposable(item) || quantity < 1 || quantity > item.stackCount) return 0;
+                !PersonalTradeItemDisposable(item) || quantity < 1 || quantity > item.stackCount) return -1;
+            if (item.value == 0) return 0;
             var personality = sessionStore.ReadNpcPersonality(person.Id);
             bool buying = kind == PlayerCommerceKind.Buy;
             int multiplier = buying && personality != null && personality.Greed == "greedy" ? 3 : buying ? 2 : 1;
-            long total = (long)Math.Max(1, item.value) * quantity * multiplier;
-            if (total < 1 || total > NpcInventoryLimits.MaximumWalletGold) return 0;
+            long total = (long)item.value * quantity * multiplier;
+            if (total < 1 || total > NpcInventoryLimits.MaximumWalletGold) return -1;
             int price = Math.Max(1, DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateTradePrice((int)total, 10, !buying));
             int disposition;
             return dispositionCommerceEnabled && conversationDispositionEnabled && sessionStore.TryGetActualConversationDisposition(person.Id, out disposition)

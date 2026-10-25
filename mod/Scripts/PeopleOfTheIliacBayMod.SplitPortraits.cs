@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.UserInterface;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
@@ -79,6 +81,19 @@ namespace PeopleOfTheIliacBay.DFU
         private SplitPortraitRuntimeOverlay.Presentation CaptureSplitPortraitPresentation(
             SplitPortraitRuntimeOverlay.Binding binding)
         {
+            if(binding.BoundTrade!=null)
+            {
+                string owner="trade:"+binding.Revision.ToString(CultureInfo.InvariantCulture);
+                string tradeEmotion=binding.BoundTrade.PortraitEmotion??"neutral";
+                var tradeEye=splitPortraitBlink.Advance(owner,true,Time.realtimeSinceStartup,false);
+                string gaze=splitPortraitGaze==null?null:splitPortraitGaze.Advance(owner,true,Time.realtimeSinceStartup,
+                    splitPortraitOverlay.HasCompleteGazePairForEmotion(tradeEmotion));
+                if(lastPortraitPresentation==null || lastPortraitPresentation.EmotionId!=tradeEmotion ||
+                    lastPortraitPresentation.EyePhase!=tradeEye || lastPortraitPresentation.MouthShape!=PortraitMouthShape.X ||
+                    lastPortraitPresentation.GazeId!=gaze)
+                    lastPortraitPresentation=new SplitPortraitRuntimeOverlay.Presentation(tradeEmotion,tradeEye,PortraitMouthShape.X,gaze);
+                return lastPortraitPresentation;
+            }
             bool changed = portraitStateBindingRevision != binding.Revision;
             if (changed)
             {
@@ -182,6 +197,13 @@ namespace PeopleOfTheIliacBay.DFU
                 speechPresentationByRequest[requestId] = new CapturedSpeechPresentation
                     { Speaker = CurrentConversationSpeakerObject(), Token = token, State = state };
             return true;
+        }
+
+        private void CapturePersonalTradePortrait(DaggerfallTalkWindow talk,PersonalTradeWindowSession session)
+        {
+            string emotion=splitPortraitOverlay!=null && splitPortraitOverlay.BoundTalk==talk && lastPortraitPresentation!=null
+                ? lastPortraitPresentation.EmotionId : "neutral";
+            session.Portrait=SplitPortraitRuntimeOverlay.CaptureTradePortrait(talk,emotion);
         }
 
         private void ResetPortraitPresentation()

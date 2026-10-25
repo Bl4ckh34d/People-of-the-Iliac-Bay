@@ -19,6 +19,7 @@ namespace PeopleOfTheIliacBay.Core
         // Opaque native SaveLoadManager payload for an ordinary actor's exact spellbook.
         public string NativeSpellbook;
         public NpcTreatmentVisit TreatmentVisit;
+        public NpcCashVisit CashVisit;
         public bool HasPendingHealthEpisode;
         public double HealthEpisodeStartedAt, HealthEpisodeLastChangedAt;
         public int HealthEpisodeInitialHealth, HealthEpisodeFinalHealth, HealthEpisodeMaximumHealth;
@@ -146,6 +147,7 @@ namespace PeopleOfTheIliacBay.Core
             foreach(var entry in source.NpcActors)
             {
                 if(entry!=null)ValidateTreatmentVisit(entry.TreatmentVisit);
+                if(entry!=null)ValidateCashVisit(entry.CashVisit,entry.PersonId);
                 Require(entry!=null && (entry.NativeConditions==null || entry.VitalsInitialized &&
                     entry.NativeConditions.Length>0 && entry.NativeConditions.Length<=131072) &&
                     (entry.NativeSpellbook==null || entry.VitalsInitialized &&
@@ -225,6 +227,7 @@ namespace PeopleOfTheIliacBay.Core
                 VitalsCapturedAt=value.VitalsCapturedAt,VitalsRevision=value.VitalsRevision,NativeConditions=value.NativeConditions,
                 NativeSpellbook=value.NativeSpellbook,
                 TreatmentVisit=CopyTreatmentVisit(value.TreatmentVisit),
+                CashVisit=CopyCashVisit(value.CashVisit),
                 HasPendingHealthEpisode=value.HasPendingHealthEpisode,HealthEpisodeStartedAt=value.HealthEpisodeStartedAt,
                 HealthEpisodeLastChangedAt=value.HealthEpisodeLastChangedAt,HealthEpisodeInitialHealth=value.HealthEpisodeInitialHealth,
                 HealthEpisodeFinalHealth=value.HealthEpisodeFinalHealth,HealthEpisodeMaximumHealth=value.HealthEpisodeMaximumHealth,

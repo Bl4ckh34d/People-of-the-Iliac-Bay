@@ -154,6 +154,7 @@ namespace PeopleOfTheIliacBay.DFU
         private bool JointBodyFree(string id,double now)
         {return !worldStore.IsResidentAway(id,now) && !IsAlarmed(id) && worldStore.ActiveAlarm(id,now)==null &&
             worldStore.ActiveNpcAction(id)==null && worldStore.ActiveNpcTask(id)==null && !HasActiveNpcHealthCare(id) &&
+            !worldStore.NeedsNpcCashErrand(id,now) && worldStore.ReadNpcCashVisit(id)==null && worldStore.ReadNpcCashWait(id)==null &&
             !shopDepartures.ContainsKey(id) && !HasDialogueComplaint(id);}
         private bool JointDoorBodyMatches(ResidentActor actor,HouseholdRouteCursor checkpoint)
         {

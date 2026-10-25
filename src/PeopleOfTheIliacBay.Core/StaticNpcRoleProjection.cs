@@ -17,10 +17,12 @@ namespace PeopleOfTheIliacBay.Core
         public readonly int BillboardRecord;
         public readonly bool VerifiedShopkeeper;
         public readonly bool VerifiedInnkeeper;
+        public readonly bool MerchantSocialGroup;
 
         public NativeStaticRoleFacts(bool factionResolved, bool customFaction, int factionId,
             bool individualFaction, bool nobilitySocialGroup, bool bardsGuildGroup, int factionFaceIndex,
-            int billboardArchive, int billboardRecord, bool verifiedShopkeeper, bool verifiedInnkeeper)
+            int billboardArchive, int billboardRecord, bool verifiedShopkeeper, bool verifiedInnkeeper,
+            bool merchantSocialGroup = false)
         {
             FactionResolved = factionResolved;
             CustomFaction = customFaction;
@@ -33,6 +35,7 @@ namespace PeopleOfTheIliacBay.Core
             BillboardRecord = billboardRecord;
             VerifiedShopkeeper = verifiedShopkeeper;
             VerifiedInnkeeper = verifiedInnkeeper;
+            MerchantSocialGroup = merchantSocialGroup;
         }
     }
 
@@ -56,6 +59,8 @@ namespace PeopleOfTheIliacBay.Core
             if (facts.VerifiedInnkeeper) return ConversationDialogueRole.Innkeeper;
             if (facts.VerifiedShopkeeper) return ConversationDialogueRole.Shopkeeper;
             if (IsKnownRoyal(facts)) return ConversationDialogueRole.Royalty;
+            if (facts.FactionResolved && !facts.CustomFaction && facts.MerchantSocialGroup)
+                return ConversationDialogueRole.Merchant;
 
             // Native FLATS.CFG records 182/5 and 182/6 have exact "jester"
             // captions. This proves role identity, not active performance.
@@ -91,6 +96,7 @@ namespace PeopleOfTheIliacBay.Core
                 case ConversationDialogueRole.Jester: return "jester";
                 case ConversationDialogueRole.BardGuildMember: return "member of the Bards guild";
                 case ConversationDialogueRole.Royalty: return "royalty";
+                case ConversationDialogueRole.Merchant: return "merchant (native merchant faction; no shop ownership or travel schedule inferred)";
                 default: return "unknown";
             }
         }

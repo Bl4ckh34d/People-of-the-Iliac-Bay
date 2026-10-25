@@ -6,6 +6,8 @@ internal static class Program
 {
     private static int Main()
     {
+        try { OfferMoodUsesNpcBenefit(); Console.WriteLine("PASS offer mood uses NPC benefit in both payment directions"); }
+        catch(Exception error) { Console.Error.WriteLine("FAIL offer mood: "+error.Message); return 1; }
         try { QuoteDoesNotRequireBaselineFunds(); Console.WriteLine("PASS quote and payment are separate"); }
         catch(Exception error) { Console.Error.WriteLine("FAIL quote and payment are separate: "+error.Message); return 1; }
         try { MixedLinesNeedOneAtomicBasket(); Console.WriteLine("PASS mixed basket"); }
@@ -24,7 +26,34 @@ internal static class Program
         catch(Exception error) { Console.Error.WriteLine("FAIL native split receipt: "+error.Message); return 1; }
         try { BasketMercantileTallyReservesOnce(); Console.WriteLine("PASS basket Mercantile tally"); }
         catch(Exception error) { Console.Error.WriteLine("FAIL basket Mercantile tally: "+error.Message); return 1; }
-        Console.WriteLine("9/9 passed"); return 0;
+        Console.WriteLine("10/10 passed"); return 0;
+    }
+
+    private static void OfferMoodUsesNpcBenefit()
+    {
+        foreach(int expected in new[]{100,-100})
+        {
+            var order=Order();order.NetGoldToNpc=expected;
+            var binding=NpcCommerceHaggleBasketBinding.Bind(order,expected-50);
+            var generous=binding.CreateRound(expected,expected+10,1,50,50,0);
+            Need(NpcCommerceHagglingPolicy.Decide(generous).ProposalMoodDelta==0,"Less than 50% benefit must not change mood.");
+            Need(NpcCommerceHagglingPolicy.Decide(binding.CreateRound(expected,expected,2,50,50,0)).ProposalMoodDelta==0,
+                "Exact asking price must keep mood unchanged.");
+            Need(NpcCommerceHagglingPolicy.Decide(binding.CreateRound(expected,expected-1,3,50,50,0)).ProposalMoodDelta==0,
+                "Less than 50% disadvantage must not change mood.");
+            Need(NpcCommerceHagglingPolicy.Decide(binding.CreateRound(expected,expected-60,4,50,50,0)).ProposalMoodDelta==-1,
+                "A 60% disadvantage must nudge mood -1.");
+            Need(NpcCommerceHagglingPolicy.Decide(binding.CreateRound(expected,expected-100,5,50,50,0)).ProposalMoodDelta==-2,
+                "A 100% disadvantage must nudge mood -2.");
+            Need(NpcCommerceHagglingPolicy.CommittedTradeMoodDelta(binding,expected+10)==0,
+                "Commit must not add a second mood reward to the submitted offer.");
+        }
+        var smallOrder=Order();smallOrder.NetGoldToNpc=5;
+        var small=NpcCommerceHaggleBasketBinding.Bind(smallOrder,0);
+        Need(NpcCommerceHagglingPolicy.Decide(small.CreateRound(5,7,1,50,50,0)).ProposalMoodDelta==0,"40% rounded up.");
+        Need(NpcCommerceHagglingPolicy.Decide(small.CreateRound(5,8,2,50,50,0)).ProposalMoodDelta==1,"Integer 60% benefit missed.");
+        Need(NpcCommerceHagglingPolicy.Decide(small.CreateRound(5,10,3,50,50,0)).ProposalMoodDelta==2,"Double price must give +2.");
+        Need(NpcCommerceHagglingPolicy.Decide(small.CreateRound(5,20,4,50,50,0)).ProposalMoodDelta==6,"Triple benefit must give +6.");
     }
 
     private static void QuoteDoesNotRequireBaselineFunds()
@@ -147,11 +176,16 @@ internal static class Program
         var buy=Order();buy.Lines.RemoveAt(1);var buyState=State();buyState.Lines.RemoveAt(1);
         Need(PersonalBarterContract.CanBegin(buy,buyState),"single NPC-to-player basket rejected");
         buy.NetGoldToNpc=0;
-        Need(!PersonalBarterContract.CanBegin(buy,buyState),"free one-way non-loan basket admitted");
+        Need(PersonalBarterContract.CanBegin(buy,buyState),"zero-value one-way item trade rejected");
+        var free=NpcCommerceHaggleBasketBinding.Bind(buy,0);
+        Need(NpcCommerceHagglingPolicy.Decide(free.CreateRound(0,0,1,50,50,0)).Disposition==NpcCommerceHaggleDisposition.Accept,
+            "zero-value item could not be quoted and accepted");
         buy.Lines[0].LoanPurpose=LoanPurpose.Return;buy.Lines[0].OriginReceiptId="loan:1";
         Need(PersonalBarterContract.CanBegin(buy,buyState),"receipt-bound one-way return rejected");
         var sell=Order();sell.Lines.RemoveAt(0);var sellState=State();sellState.Lines.RemoveAt(0);
         Need(PersonalBarterContract.CanBegin(sell,sellState),"single player-to-NPC basket rejected");
+        sell.NetGoldToNpc=0;
+        Need(PersonalBarterContract.CanBegin(sell,sellState),"zero-value item could not be traded back");
         sell.Lines.Clear();sellState.Lines.Clear();
         Need(!PersonalBarterContract.CanBegin(sell,sellState),"gold-only empty basket admitted");
     }

@@ -20,6 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if(!interior || indoorGeometry==null || worldStore==null || population==null) return;
             CaptureHouseholdInns(now);
+            CaptureBankVisitors(now);
             foreach(var pair in physicalShopVisits)
             {
                 if(pair.Value.HouseholdDayId!=null)continue;

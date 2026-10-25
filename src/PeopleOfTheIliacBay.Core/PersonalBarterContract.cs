@@ -81,7 +81,7 @@ namespace PeopleOfTheIliacBay.Core
             long npcAfter=(long)state.NpcWalletGold+order.NetGoldToNpc;
             if(requirePayment && (playerAfter<0 || playerAfter>NpcInventoryLimits.MaximumWalletGold ||
                 npcAfter<0 || npcAfter>NpcInventoryLimits.MaximumWalletGold))return false;
-            var seen=new HashSet<ulong>();bool fromNpc=false,fromPlayer=false,loan=false;
+            var seen=new HashSet<ulong>();
             for(int index=0;index<order.Lines.Count;index++)
             {
                 var line=order.Lines[index];var current=state.Lines[index];
@@ -93,20 +93,18 @@ namespace PeopleOfTheIliacBay.Core
                     current.ItemKnownStolen || current.ItemQuestProtected || current.ItemCurrency || !ValidLoan(line) || !seen.Add(line.ItemUid))return false;
                 if(line.Direction==PersonalBarterDirection.PlayerToNpc)
                 {
-                    fromPlayer=true;loan|=line.LoanPurpose!=LoanPurpose.None;
                     if(!Id(line.ExpectedPlayerInventoryToken) || line.ExpectedPlayerInventoryToken!=current.PlayerInventoryToken ||
                         current.PlayerInventoryToken!=PlayerCommerceContract.InventorySnapshotToken("player",
                             state.PlayerInventoryContainerId,line.ItemUid,current.SourceQuantity))return false;
                 }
                 else
                 {
-                    fromNpc=true;loan|=line.LoanPurpose!=LoanPurpose.None;
                     if(line.ExpectedPlayerInventoryToken!=null || current.PlayerInventoryToken!=null)return false;
                 }
             }
-            // A free one-way move is never ordinary commerce: it needs the
-            // durable lending/return tag. Mixed zero-net baskets are barter.
-            return fromNpc && fromPlayer || order.NetGoldToNpc!=0 || loan;
+            // Real zero-value items can move without gold. Item eligibility,
+            // consent, source ownership and loan receipts are still checked above.
+            return true;
         }
 
         private static bool Id(string value) { return !string.IsNullOrWhiteSpace(value) && value.Length<=240; }

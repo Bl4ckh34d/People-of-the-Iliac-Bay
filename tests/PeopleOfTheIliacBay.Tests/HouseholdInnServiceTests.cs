@@ -189,7 +189,7 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.Throws<ArgumentException>(()=>new WorldStateStore(0).Restore(saved));
             }));
             cases.Add(("Shared service restore rejects an orphan projected refusal",()=>{
-                var f=Prepared(secondGold:0);Advance(f,f.Departure+700);var saved=f.Store.Snapshot();saved.HouseholdInnServices.Clear();
+                var f=Prepared(secondGold:1);Advance(f,f.Departure+700);var saved=f.Store.Snapshot();saved.HouseholdInnServices.Clear();
                 Check.Throws<ArgumentException>(()=>new WorldStateStore(0).Restore(saved));
             }));
             cases.Add(("Shared service restore derives counter chronology from retained native routes",()=>{
@@ -218,10 +218,39 @@ namespace PeopleOfTheIliacBay.Tests
                 {Check.Near(0,cursor.ObservedAt);Check.Equal("world-time-projection",Field<string>(cursor,"SourceKind"));Check.True(Field<double?>(cursor,"ServiceStartsAt").HasValue);}
             }));
             cases.Add(("Shared service refuses unaffordable pair before any new debit or shared seating",()=>{
-                var f=Prepared(secondGold:0);var service=Advance(f,f.Departure+700);
+                var f=Prepared(secondGold:1);var service=Advance(f,f.Departure+700);
                 Check.Equal("refused",Field<string>(service,"Outcome"));Check.Equal(20,f.Store.ReadNpcInventory("mother").WalletGold);
                 Check.Equal(40,f.Store.ReadNpcInventory(f.Keeper.Id).WalletGold);Check.True(Field<string>(service,"FirstSeatId")==null);
                 Check.True(Field<NpcInnConsumptionReceipt>(service,"SecondReceipt").Outcome==NpcInnConsumptionOutcome.InsufficientFunds);
+            }));
+            cases.Add(("Empty wallet blocks a new family Inn outing before departure",()=>{
+                Check.Throws<ArgumentException>(()=>Prepared(secondGold:0));
+                Check.Throws<ArgumentException>(()=>Prepared(firstGold:0));
+            }));
+            cases.Add(("Spending the last gold does not interrupt an already paid shared Inn visit",()=>{
+                var f=Prepared(firstGold:2,secondGold:2);Advance(f,f.Departure+700);
+                Check.Equal(0,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.True(!f.Store.NeedsNpcCashErrand("mother",f.Departure+701));
+                Check.True(!f.Store.NeedsNpcCashErrand("father",f.Departure+701));
+                var moved=f.Store.AdvanceHouseholdJointSimulation(f.Plan.Id,f.Departure+701);
+                Check.True(moved.PauseReason!="partner-unavailable");
+            }));
+            cases.Add(("Cash errand preserves partner waiting context through save and return",()=>{
+                var f=Prepared();var point=new NpcActionTarget{Kind=NpcActionTargetKind.WorldPoint,SettlementId=2,BuildingKey=-1,
+                    WorldSpaceId="settlement:2",X=3,Z=4};
+                var visit=new NpcCashVisit{Bank=true,ProviderKey=20,ReturnKey=7,Position=point,
+                    WaitingPartnerId="father",Rendezvous=point,PartnerWaitPosition=point};
+                Check.True(f.Store.SaveNpcCashVisit(f.Store.CaptureNpcVitalsWriteEpoch(),"mother",visit));
+                var waiting=f.Store.ReadNpcCashWait("father");Check.True(waiting!=null);Check.Near(3,waiting.PartnerWaitPosition.X);
+                Check.True(f.Store.ReadNpcCashWait("mother")==null);
+                waiting.PartnerWaitPosition.X=99;Check.Near(3,f.Store.ReadNpcCashWait("father").PartnerWaitPosition.X);
+                var restored=new WorldStateStore(0);restored.Restore(f.Store.Snapshot());
+                Check.True(restored.ReadNpcCashWait("father")!=null);
+                var paused=restored.AdvanceHouseholdJointSimulation(f.Plan.Id,f.Departure+301);
+                Check.Equal("partner-unavailable",paused.PauseReason);
+                Check.True(restored.SaveNpcCashVisit(restored.CaptureNpcVitalsWriteEpoch(),"mother",null));
+                Check.True(restored.ReadNpcCashWait("father")==null);
+                Check.True(restored.AdvanceHouseholdJointSimulation(f.Plan.Id,f.Departure+302).PauseReason!="partner-unavailable");
             }));
             cases.Add(("Unloaded service preserves the exact counter time before a large jump",()=>{
                 var f=Prepared();var pending=Advance(f,f.Departure+301);

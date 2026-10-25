@@ -10,7 +10,7 @@ namespace PeopleOfTheIliacBay.Core
     public enum ConversationIdentityKind { StablePerson, EphemeralSpeaker }
     public enum ConversationContextFactStatus { Unknown, Verified }
     public enum ConversationContextFactSource { Save, NativeActor, LiveObservation, NpcSceneObservation, Derived, CommittedEffect, NotObserved }
-    public enum ConversationDialogueRole { ManagedResident, Guard, Shopkeeper, Innkeeper, Traveler, Unknown, Jester, BardGuildMember, Royalty }
+    public enum ConversationDialogueRole { ManagedResident, Guard, Shopkeeper, Innkeeper, Traveler, Unknown, Jester, BardGuildMember, Royalty, Merchant }
     public enum ConversationNpcActivity { Stationary, Walking, Working, Sleeping, Talking, Unknown }
     public enum ConversationTextSpeaker { Npc, Player }
 

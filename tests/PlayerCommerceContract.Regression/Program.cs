@@ -743,12 +743,12 @@ internal static class Program
         True(binding.Matches(order), "Exact basket did not match bound quote");
         var result = NpcCommerceHagglingPolicy.Decide(binding.CreateRound(50, -15, 1, 50, 50, 0));
         Equal(NpcCommerceHaggleDisposition.Reject, result.Disposition);
-        Equal(-1, result.ProposalMoodDelta);
+        Equal(-2, result.ProposalMoodDelta);
         var acceptedRound = binding.CreateRound(50, 25, 2, 100, 100, 100);
         result = NpcCommerceHagglingPolicy.Decide(acceptedRound);
         Equal(NpcCommerceHaggleDisposition.Accept, result.Disposition);
         Equal(25, result.PriceGold);
-        Equal(1, NpcCommerceHagglingPolicy.CommittedTradeMoodDelta(binding, result.PriceGold));
+        Equal(0, NpcCommerceHagglingPolicy.CommittedTradeMoodDelta(binding, result.PriceGold));
         True(NpcCommerceHagglingPolicy.TryResolveAcceptedBasketNetGold(binding, order, 50, acceptedRound, out var approved),
             "Fresh bound accepted basket did not resolve");
         Equal(25, approved);

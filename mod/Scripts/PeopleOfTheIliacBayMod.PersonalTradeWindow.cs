@@ -19,6 +19,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             PersonalTradeWindowSession session;
             if (!TryCreatePersonalTradeWindowSession(out session, out reason)) return false;
+            CapturePersonalTradePortrait(talk, session);
             var actor = conversationActor;
             string person = conversationPersonId;
             bool pauseCurrentWork = PersonalTradeCurrentWorkCanPause(store, person);
@@ -60,7 +61,7 @@ namespace PeopleOfTheIliacBay.DFU
                 NpcWillingNow = () => PersonalTradeWilling(sessionStore, actor, person),
                 PlayerConsentedNow = () => !saveFault && ReferenceEquals(store, sessionStore) && GameManager.Instance != null &&
                     ReferenceEquals(GameManager.Instance.PlayerEntity, player),
-                NpcValuesItemNow = item => PersonalTradeItemDisposable(item) && item.value > 0,
+                NpcValuesItemNow = PersonalTradeItemDisposable,
                 OccupationallyDisposableNow = PersonalTradeItemDisposable,
                 ItemUniqueNow = item => item != null && item.IsArtifact,
                 // Bridge separately binds direction to the exact source
@@ -136,7 +137,7 @@ namespace PeopleOfTheIliacBay.DFU
                     // zero-gold player bid. SEND can explicitly accept it.
                     acceptedRound = null;
                     quote = new PersonalTradeWindowQuote { NetGoldToNpc = currentNetGoldToNpc,
-                        CanSubmit = false, Status = "Their current total is " + PersonalTradeGoldText(currentNetGoldToNpc) + "." };
+                        CanSubmit = false, Status = "" };
                     acceptedQuote = quote;
                     return true;
                 }
@@ -146,10 +147,12 @@ namespace PeopleOfTheIliacBay.DFU
                 var result = NpcCommerceHagglingPolicy.Decide(round);
                 acceptedRound = result.Disposition == NpcCommerceHaggleDisposition.Accept ? round : null;
                 quote = new PersonalTradeWindowQuote { NetGoldToNpc = result.PriceGold,
+                    ExpectedNetGoldToNpc = currentNetGoldToNpc,
                     CanSubmit = acceptedRound != null,
                     Disposition = result.Disposition, ProposalMoodDelta = result.ProposalMoodDelta,
                     ProposalRound = round.Round, ProposalEffectId = NpcCommerceHagglingPolicy.ProposalEffectId(haggle.NegotiationId, round.Round),
-                    Status = acceptedRound != null ? "The offer is accepted." : "Their current total is " + PersonalTradeGoldText(result.PriceGold) + "." };
+                    Status = acceptedRound != null ? "The offer is accepted." : result.Disposition == NpcCommerceHaggleDisposition.Reject
+                        ? "They refuse that offer." : "They suggest another amount." };
                 acceptedQuote = quote;
                 return true;
             };
@@ -297,7 +300,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var item = source.GetItem(line.ItemUid);
                 int price = PersonalTradeItemQuote(actor, person, item, line.Quantity,
                     line.Direction == PersonalBarterDirection.NpcToPlayer ? PlayerCommerceKind.Buy : PlayerCommerceKind.Sell);
-                if (price < 1) return false;
+                if (price < 0) return false;
                 total += line.Direction == PersonalBarterDirection.NpcToPlayer ? price : -price;
             }
             if (total < -NpcInventoryLimits.MaximumWalletGold || total > NpcInventoryLimits.MaximumWalletGold) return false;
@@ -307,11 +310,12 @@ namespace PeopleOfTheIliacBay.DFU
         { int result; return order != null && TryQuotePersonalTrade(actor, person, order.Lines, out result) ? result : int.MaxValue; }
         private int PersonalTradeItemQuote(ResidentActor actor, string person, DaggerfallUnityItem item, int quantity, PlayerCommerceKind kind)
         {
-            if (!PersonalTradeActorAvailable(actor, person) || item == null || !PersonalTradeItemDisposable(item) || quantity < 1 || quantity > item.stackCount) return 0;
+            if (!PersonalTradeActorAvailable(actor, person) || item == null || !PersonalTradeItemDisposable(item) || quantity < 1 || quantity > item.stackCount) return -1;
+            if (item.value == 0) return 0;
             var personality = store.ReadNpcPersonality(person); bool buying = kind == PlayerCommerceKind.Buy;
             int multiplier = buying ? personality != null && personality.Greed == "greedy" ? 3 : 2 : 1;
-            long total = (long)Math.Max(1, item.value) * quantity * multiplier;
-            if (total < 1 || total > NpcInventoryLimits.MaximumWalletGold) return 0;
+            long total = (long)item.value * quantity * multiplier;
+            if (total < 1 || total > NpcInventoryLimits.MaximumWalletGold) return -1;
             int price = Math.Max(1, DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateTradePrice((int)total, 10, !buying)); int disposition;
             return dispositionCommerceEnabled && conversationDispositionEnabled && store.TryGetActualConversationDisposition(person, out disposition)
                 ? buying ? DispositionPricing.ApplyPurchaseDispositionPrice(price, disposition) : DispositionPricing.ApplySaleDispositionPrice(price, disposition) : price;

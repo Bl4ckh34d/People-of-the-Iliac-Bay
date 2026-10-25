@@ -7,6 +7,12 @@ namespace PeopleOfTheIliacBay.Core
 
     public static class NpcNeedDestinationPolicy
     {
+        public static NpcNeedDestinationKind SelectBanking(bool hasBank,bool bankOpen,bool homeAccessible)
+        {
+            if(hasBank)return bankOpen?NpcNeedDestinationKind.Bank:NpcNeedDestinationKind.None;
+            return homeAccessible?NpcNeedDestinationKind.Home:NpcNeedDestinationKind.None;
+        }
+
         public static NpcNeedDestinationKind Select(NpcNeedPurpose purpose, NpcHomeAccess homeAccess,
             bool homeFeasible, bool externalFeasible)
         {

@@ -13,7 +13,7 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private readonly WorldStateStore store;
         private readonly HouseholdDayPlan source;
-        private readonly ResidentActor first,second;
+        private ResidentActor first,second;
         private readonly DaggerfallInterior room;
         private readonly InteriorGeometry geometry;
         private readonly ShopVisitGeometry activities;
@@ -27,6 +27,18 @@ namespace PeopleOfTheIliacBay.DFU
         internal bool Complete {get;private set;}
         internal bool Exiting {get{return exiting;}}
         internal bool RequiresRecovery {get{return rejected;}}
+        internal void PauseForCash(double now)
+        {Capture(now);FirstVisit.Pause(now);SecondVisit.Pause(now);}
+        internal void ResumeAfterCash(ResidentActor returning,double now)
+        {
+            if(!returning || returning.transform.parent!=room.transform)throw new ArgumentException("Cash return must reach the same Inn.");
+            if(returning.Resident.Id==source.First.ResidentId)first=returning;
+            else if(returning.Resident.Id==source.Second.ResidentId)second=returning;
+            else throw new ArgumentException("Cash return has the wrong family member.");
+            FirstVisit.Pause(now);SecondVisit.Pause(now);
+            FirstVisit.SuspendAndReplanFromActual(first,room);SecondVisit.SuspendAndReplanFromActual(second,room);
+            RememberPositions();
+        }
         private HouseholdJointInnMotion(WorldStateStore store,HouseholdDayPlan source,ResidentActor first,ResidentActor second,
             DaggerfallInterior room,InteriorGeometry geometry,ShopVisitGeometry activities,
             Func<ResidentActor,PhysicalShopVisit,double,bool> purchase,IList<AppointmentPlaceRoute> pointRoutes)

@@ -922,6 +922,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
             SurveyKeeperIdentities();
             UpdateInnServiceCatalog(seconds);
+            UpdateBankCounterSurvey();
             PrepareHouseholdOwners(seconds);
             UpdateTravelerActors(seconds);
             UpdateDestinationActors(seconds);
@@ -962,7 +963,8 @@ namespace PeopleOfTheIliacBay.DFU
             Vector3 player = game.PlayerMotor.transform.position;
             PrepareStreetChats(seconds);
             BeginHouseholdJointFrame();
-            var actorSpawnBudget = new PopulationSpawnBudget(4);
+            var actorSpawnBudget = new PopulationSpawnBudget(4,2);
+            long actorSpawnStarted=System.Diagnostics.Stopwatch.GetTimestamp();
             foreach (var plan in RuntimePlansWithPaidDoor(seconds))
             {
                 if(simulatedFamilyFrame.Contains(plan.Resident.Id))continue;
@@ -1010,7 +1012,8 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 if (!actor)
                 {
-                    if (actors.Count >= 80 || !actorSpawnBudget.TryConsume()) continue;
+                    if (actors.Count >= 80 || !actorSpawnBudget.TryConsume(
+                        (System.Diagnostics.Stopwatch.GetTimestamp()-actorSpawnStarted)*1000d/System.Diagnostics.Stopwatch.Frequency)) continue;
                     var go = Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject, directory.transform);
                     go.name = "People of the Iliac Bay " + plan.Resident.Id;
                     actor = go.AddComponent<ResidentActor>();
@@ -1132,6 +1135,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if(state.Activity==Activity.Visit && indoorGeometry.EntryGround.HasValue)
                         actor.transform.position=indoorGeometry.EntryGround.Value+Vector3.up;
                 }
+                if(reaction==null && ApplyNpcCashVisit(plan,ref actor,seconds,false))continue;
                 if(reaction==null && state.Activity==Activity.Visit && !sharedInn)
                 {
                     AlarmPerson departure; bool home;
@@ -1494,6 +1498,7 @@ namespace PeopleOfTheIliacBay.DFU
             ClearHouseholdInns();
             ClearAppointmentApproaches();
             ClearPhysicalShopVisits();
+            bankVisitors.Clear();cashMotions.Clear();
             ClearInnChats();
             streetChats.Clear();nextStreetChat.Clear();nextChatScan=0;
             partnerRetaliation.Clear();nextGrudgeCheck.Clear();
@@ -1561,6 +1566,8 @@ namespace PeopleOfTheIliacBay.DFU
             ResetInnServiceCatalogCapture();
             healthCareChecks.Clear();healthCareEpoch=null;
             medicalMotions.Clear();medicalChecks.Clear();medicalServices=null;
+            cashMotions.Clear();cashChecks.Clear();
+            (bankCounterSurvey as IDisposable)?.Dispose();bankCounterSurvey=null;bankCounters.Clear();bankVisitors.Clear();
             lastPopulationSeconds=-1;reconstructInteriorVisits=false;
             nextSafetyReconciliation=0;
             nextSafetyReconciliationPlan=0;

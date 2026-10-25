@@ -27,6 +27,7 @@ namespace PeopleOfTheIliacBay.DFU
     {
         // Signed net: positive means player pays NPC; negative means NPC pays player.
         public int NetGoldToNpc;
+        public int ExpectedNetGoldToNpc;
         public bool CanSubmit;
         public string Status;
         // Factory-owned evidence for one submitted proposal, never UI text edits.
@@ -37,6 +38,7 @@ namespace PeopleOfTheIliacBay.DFU
 
     public sealed class PersonalTradeWindowSession
     {
+        public PersonalTradePortrait Portrait;
         public readonly string NpcId,PlayerLabel,NpcLabel;
         public readonly long StoreEpoch;
         public readonly ItemCollection PlayerItems,NpcItems;
@@ -64,10 +66,27 @@ namespace PeopleOfTheIliacBay.DFU
         }
     }
 
+    public sealed class PersonalTradePortrait
+    {
+        public UnityEngine.Object Speaker;
+        public Texture2D NativeSource;
+        public int Record;
+        public string StartingEmotion;
+    }
+
     // Cropped trade artwork and native ItemListScroller renderer. It deliberately
     // never calls ItemCollection.Transfer, SplitStack, Clear, or AddItem.
     public sealed class PersonalTradeWindow : DaggerfallPopupWindow
     {
+        public static PersonalTradeWindow Active { get; private set; }
+        public PersonalTradePortrait Portrait { get { return session.Portrait; } }
+        public Panel PortraitPanel { get; private set; }
+        public string PortraitEmotion { get; private set; }
+        public bool IsPortraitVisible
+        {
+            get { var input=uiManager.TopWindow as GoldInputMessageBox;
+                return uiManager.TopWindow==this || input!=null && input.Trade==this; }
+        }
         private static readonly Color PanelColor=new Color(0.24f,0.25f,0.27f,1f);
         private static Texture2D tradeBackground;
         private readonly Mod mod;
@@ -78,11 +97,11 @@ namespace PeopleOfTheIliacBay.DFU
         private readonly List<DisplayRow> displayRows=new List<DisplayRow>();
         private ItemListScroller playerScroller,npcScroller;
         private TextLabel playerGoldLabel,npcQuoteLabel,offerLabel,statusLabel;
-        private TextLabel npcPriceDirection,offerDirection;
         private PersonalTradeWindowQuote quote;
         private int playerOfferGold;
         private bool hasPlayerOffer;
         private bool committed,closed;
+        private float closeAfterTrade;
 
         private sealed class DisplayRow
         {
@@ -108,7 +127,7 @@ namespace PeopleOfTheIliacBay.DFU
             NativePanel.BackgroundColor=PanelColor;
             NativePanel.BackgroundTexture=LoadBackground();
             SetupLabels();SetupScrollers();SetupButtons();RefreshView();
-            SetStatus("Select items. Click your offer to change the gold amount.");
+            SetStatus("Select items. Click a gold field to set the amount.");
         }
 
         private Texture2D LoadBackground()
@@ -124,38 +143,48 @@ namespace PeopleOfTheIliacBay.DFU
             tradeBackground=texture;return texture;
         }
 
-        public override void OnPush() { if(IsSetup)RefreshView(); }
+        public override void OnPush() { Active=this;if(IsSetup)RefreshView(); }
+        public override void Update()
+        {
+            base.Update();
+            if(committed && Time.unscaledTime>=closeAfterTrade)
+                uiManager.PostMessage(WindowMessages.wmCloseWindow);
+        }
         public override void OnPop()
         {
             if(closed)return;
+            if(Active==this)Active=null;
             closed=true;staging.Clear();
             if(session.Closed!=null)session.Closed(committed,committed?"":statusLabel==null?"Trade cancelled.":statusLabel.Text);
         }
 
         private void SetupLabels()
         {
-            AddLabel(new Rect(4,20,62,10),NativePanel).Text=Clip(session.NpcLabel,15);
+            AddLabel(new Rect(4,16,62,8),NativePanel).Text=Clip(session.NpcLabel,15);
+            if(Portrait!=null && Portrait.NativeSource)
+            {
+                PortraitPanel=DaggerfallUI.AddPanel(new Rect(19,24,32,32),NativePanel);
+                PortraitPanel.BackgroundTexture=Portrait.NativeSource;
+                PortraitEmotion=Portrait.StartingEmotion??"neutral";
+            }
             AddLabel(new Rect(123,20,61,10),NativePanel).Text=Clip(session.PlayerLabel,15);
             playerGoldLabel=AddLabel(new Rect(123,36,61,10),NativePanel);
             // The empty upper center is reserved for replies and instructions.
             statusLabel=AddLabel(new Rect(74,17,40,49),NativePanel);
             statusLabel.TextScale=0.70f;statusLabel.WrapText=true;statusLabel.WrapWords=true;
             statusLabel.MaxCharacters=110;
-            AddPriceField(new Rect(75,80,38,17),out npcPriceDirection,out npcQuoteLabel);
-            AddPriceField(new Rect(75,125,38,17),out offerDirection,out offerLabel);
+            npcQuoteLabel=AddPriceField(new Rect(75,80,38,17));
+            offerLabel=AddPriceField(new Rect(75,125,38,17));
         }
 
-        private void AddPriceField(Rect rect,out TextLabel direction,out TextLabel amount)
+        private TextLabel AddPriceField(Rect rect)
         {
             var panel=DaggerfallUI.AddPanel(rect,NativePanel);
-            direction=AddLabel(new Rect(1,1,rect.width-2,7),panel);
-            amount=AddLabel(new Rect(1,9,rect.width-2,7),panel);
-            foreach(var label in new[]{direction,amount})
-            {
-                label.TextColor=new Color(0.10f,0.10f,0.08f,1f);label.ShadowPosition=Vector2.zero;
-                label.HorizontalAlignment=HorizontalAlignment.Center;
-                label.TextScale=0.75f;
-            }
+            var amount=AddLabel(new Rect(1,1,rect.width-2,rect.height-2),panel);
+            amount.TextColor=new Color(0.10f,0.10f,0.08f,1f);amount.ShadowPosition=Vector2.zero;
+            amount.HorizontalAlignment=HorizontalAlignment.Center;
+            amount.VerticalAlignment=VerticalAlignment.Middle;
+            return amount;
         }
 
         private static TextLabel AddLabel(Rect rect,Panel parent)
@@ -192,7 +221,8 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void SetupButtons()
         {
-            AddButton(new Rect(74,124,40,19),"Change your net gold offer",PromptPrice);
+            AddButton(new Rect(74,79,40,19),"Gold the NPC pays you",()=>PromptPrice(PersonalTradeSide.Npc));
+            AddButton(new Rect(74,124,40,19),"Gold you pay the NPC",()=>PromptPrice(PersonalTradeSide.Player));
             AddButton(new Rect(74,157,40,20),"Offer the selected items and gold",SubmitOffer);
             AddButton(new Rect(74,183,40,20),"Clear marked items",ClearOffer);
             AddButton(new Rect(72,211,44,26),"Cancel trade",CloseUnchanged);
@@ -204,11 +234,12 @@ namespace PeopleOfTheIliacBay.DFU
             button.BackgroundColor=Color.clear;
             button.MouseOverBackgroundColor=new Color(1f,1f,1f,0.10f);
             button.ToolTip=defaultToolTip;button.ToolTipText=toolTip;
-            button.OnMouseClick+=(sender,position)=>action();
+            button.OnMouseClick+=(sender,position)=>{if(!committed)action();};
         }
 
         private void Toggle(PersonalTradeSide side,DaggerfallUnityItem item)
         {
+            if(committed)return;
             var row=FindRow(item);if(row==null)return;
             if(row.Preview.Incoming)
             {
@@ -227,6 +258,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void PromptQuantity(PersonalTradeSide side,DaggerfallUnityItem item)
         {
+            if(committed)return;
             var row=FindRow(item);if(row==null)return;
             if(row.Preview.Incoming)
             {
@@ -234,8 +266,9 @@ namespace PeopleOfTheIliacBay.DFU
                 {SetStatus("That pending item changed.");return;}
                 SelectionChanged();return;
             }
-            var box=new DaggerfallInputMessageBox(uiManager,this);
-            box.SetTextBoxLabel("Quantity to mark");box.TextBox.Numeric=true;box.TextBox.MaxCharacters=8;
+            var box=new GoldInputMessageBox(uiManager,this);
+            box.SetTextBoxLabel("Quantity to mark:");box.InputDistanceX=6;
+            box.TextBox.Numeric=true;box.TextBox.MaxCharacters=8;
             box.TextBox.Text=(Quantity(row.Preview.SourceSide,row.Preview.ItemUid)==0?SourceStackCount(row.Preview.SourceSide,row.Preview.ItemUid):
                 Quantity(row.Preview.SourceSide,row.Preview.ItemUid)).ToString(CultureInfo.InvariantCulture);
             box.OnGotUserInput+=(sender,input)=>
@@ -248,21 +281,36 @@ namespace PeopleOfTheIliacBay.DFU
             box.Show();
         }
 
-        private void PromptPrice()
+        private void PromptPrice(PersonalTradeSide payer)
         {
             if(staging.Lines.Count==0){SetStatus("Select items first.");return;}
-            var box=new DaggerfallInputMessageBox(uiManager,this);
-            box.SetTextBoxLabel("Your net gold offer (+ pay NPC, - NPC pays you)");box.TextBox.MaxCharacters=9;
-            box.TextBox.Text=playerOfferGold.ToString(CultureInfo.InvariantCulture);
+            var box=new GoldInputMessageBox(uiManager,this);
+            box.SetTextBoxLabel(payer==PersonalTradeSide.Npc?"NPC pays you:":"You pay NPC:");
+            box.InputDistanceX=6;
+            box.TextBox.Numeric=true;box.TextBox.NumericMode=NumericMode.Natural;box.TextBox.MaxCharacters=10;
+            int current=hasPlayerOffer?playerOfferGold:quote==null?0:quote.NetGoldToNpc;
+            bool samePayer=payer==PersonalTradeSide.Npc?current<0:current>0;
+            box.TextBox.Text=(samePayer?Math.Abs((long)current):0).ToString(CultureInfo.InvariantCulture);
             box.OnGotUserInput+=(sender,input)=>
             {
-                int value;if(!int.TryParse(input,NumberStyles.AllowLeadingSign,CultureInfo.InvariantCulture,out value) ||
-                    value<(int)-NpcInventoryLimits.MaximumWalletGold || value>NpcInventoryLimits.MaximumWalletGold)
+                int value;if(!PersonalTradeMoney.TryParseAmount(payer,input,out value))
                     SetStatus("Invalid gold offer.");
-            else {playerOfferGold=value;hasPlayerOffer=true;RequestQuote();}
+                else {playerOfferGold=value;hasPlayerOffer=true;SetStatus("");}
                 RefreshView();
             };
             box.Show();
+        }
+
+        private sealed class GoldInputMessageBox : DaggerfallInputMessageBox
+        {
+            internal readonly PersonalTradeWindow Trade;
+            private IMECompositionMode previousIME;
+            public GoldInputMessageBox(IUserInterfaceManager manager,PersonalTradeWindow previous) : base(manager,previous)
+            { AllowIME=false;Trade=previous; }
+            public override void OnPush()
+            { previousIME=Input.imeCompositionMode;Input.imeCompositionMode=IMECompositionMode.Off;base.OnPush(); }
+            public override void OnPop()
+            { base.OnPop();Input.imeCompositionMode=previousIME; }
         }
 
         private bool SetQuantity(PersonalTradeSide side,DaggerfallUnityItem item,int quantity)
@@ -302,7 +350,7 @@ namespace PeopleOfTheIliacBay.DFU
             // This is only a displayed NPC baseline until an edit or OFFER marks
             // it as a player bid.
             if(!hasPlayerOffer)playerOfferGold=next.NetGoldToNpc;
-            SetStatus(string.IsNullOrWhiteSpace(next.Status)?"NPC named a total price.":next.Status);
+            SetStatus(next.Status);
             RefreshView();
         }
 
@@ -319,7 +367,15 @@ namespace PeopleOfTheIliacBay.DFU
             var proposal=PersonalTradeWindowProposal.Create(session.NpcId,session.StoreEpoch,staging,playerOfferGold,hasPlayerOffer);
             try { if(session.ProposalSubmitted!=null)session.ProposalSubmitted(proposal,quote); }
             catch(Exception error){SetStatus(error.Message);return;}
-            if(!quote.CanSubmit)return;
+            PortraitEmotion=playerOfferGold>quote.ExpectedNetGoldToNpc?"happy":
+                playerOfferGold<quote.ExpectedNetGoldToNpc?(quote.ProposalMoodDelta<=-2?"angry":"sad"):
+                Portrait==null?"neutral":Portrait.StartingEmotion;
+            if(!quote.CanSubmit)
+            {
+                // Show the NPC's counteroffer as the new total. The next OFFER
+                // accepts that visible amount unless the player edits it again.
+                hasPlayerOffer=false;playerOfferGold=quote.NetGoldToNpc;RefreshView();return;
+            }
             string receiptId,reason;
             try
             {
@@ -327,7 +383,8 @@ namespace PeopleOfTheIliacBay.DFU
                 {SetStatus(string.IsNullOrWhiteSpace(reason)?"Trade was not committed.":reason);RefreshView();return;}
             }
             catch(Exception error){SetStatus(error.Message);RefreshView();return;}
-            committed=true;SetStatus("Trade committed.");uiManager.PostMessage(WindowMessages.wmCloseWindow);
+            committed=true;staging.Clear();hasPlayerOffer=false;quote=null;RefreshView();
+            SetStatus("Trade completed.");closeAfterTrade=Time.unscaledTime+1.5f;
         }
 
         private void ClearOffer() { staging.Clear();playerOfferGold=0;hasPlayerOffer=false;quote=null;SetStatus("Offer cleared.");RefreshView(); }
@@ -339,15 +396,23 @@ namespace PeopleOfTheIliacBay.DFU
             if(playerScroller!=null)playerScroller.Items=playerRows;
             if(npcScroller!=null)npcScroller.Items=npcRows;
             if(playerGoldLabel!=null)playerGoldLabel.Text="Gold: "+SafeGold(session.ReadPlayerGold);
-            SetPrice(npcPriceDirection,npcQuoteLabel,quote==null?(int?)null:quote.NetGoldToNpc);
-            SetPrice(offerDirection,offerLabel,quote==null && !hasPlayerOffer?(int?)null:playerOfferGold);
+            int? net=hasPlayerOffer?playerOfferGold:quote==null?(int?)null:quote.NetGoldToNpc;
+            SetPrice(npcQuoteLabel,PersonalTradeSide.Npc,net);
+            SetPrice(offerLabel,PersonalTradeSide.Player,net);
         }
 
-        private static void SetPrice(TextLabel direction,TextLabel amount,int? net)
+        private static void SetPrice(TextLabel amount,PersonalTradeSide payer,int? net)
         {
-            if(direction==null || amount==null)return;
-            direction.Text=!net.HasValue?"":net.Value>0?"You pay":net.Value<0?"You get":"Even swap";
-            amount.Text=net.HasValue?Math.Abs((long)net.Value).ToString(CultureInfo.InvariantCulture)+" g":"--";
+            if(amount==null)return;
+            string text=PersonalTradeMoney.FieldText(payer,net);
+            var font=amount.Font??DaggerfallUI.DefaultFont;
+            float width=font.CalculateTextWidth(text,Vector2.one);
+            // Reserve five of the widest digits plus the suffix, including for
+            // replacement fonts. Larger totals shrink further instead of clipping.
+            for(char digit='0';digit<='9';digit++)
+                width=Math.Max(width,font.CalculateTextWidth(new string(digit,5)+" g",Vector2.one));
+            amount.TextScale=Math.Min(1.2f,Math.Min(36f/Math.Max(1f,width),15f/Math.Max(1f,font.GlyphHeight)));
+            amount.Text=text;
         }
 
         private void BuildPreviewRows()
@@ -366,13 +431,14 @@ namespace PeopleOfTheIliacBay.DFU
             }
         }
 
-        private static void AddSource(ItemCollection items,PersonalTradeSide side,List<PersonalTradeSourceItem> destination)
+        private void AddSource(ItemCollection items,PersonalTradeSide side,List<PersonalTradeSourceItem> destination)
         {
             if(items==null)return;
             for(int index=0;index<items.Count;index++)
             {
                 var item=items.GetItem(index);
-                if(item!=null)destination.Add(new PersonalTradeSourceItem(side,item.UID,item.stackCount,item.ItemGroup==ItemGroups.Currency));
+                if(item!=null && (session.CanStage==null || session.CanStage(side,item)))
+                    destination.Add(new PersonalTradeSourceItem(side,item.UID,item.stackCount,item.ItemGroup==ItemGroups.Currency));
             }
         }
 

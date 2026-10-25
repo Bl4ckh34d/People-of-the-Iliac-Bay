@@ -97,7 +97,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!npc || !npc.gameObject.activeInHierarchy || !RDBLayout.IsNPCFlat(npc.Data.billboardArchiveIndex) ||
                     (npc.transform.position-actor.transform.position).sqrMagnitude>16)continue;
                 var d=npc.Data;var point=directory.transform.InverseTransformPoint(npc.transform.position);
-                int hash=unchecked((int)StableSeed.Combine((uint)d.hash,(uint)Mathf.RoundToInt(point.x*10),(uint)Mathf.RoundToInt(point.z*10),0));
+                int hash=NativeExteriorNpcIdentity.Hash(npc,directory.transform);
                 var native=worldStore.RegisterNativePerson(directory.MapID,-1,hash,npc.DisplayName,
                     d.gender==Genders.Female?ResidentSex.Female:ResidentSex.Male,(int)d.race,d.factionID,d.billboardArchiveIndex,d.billboardRecordIndex);
                 if(native.IsAlive && TryQuestionCorpsePerson(alarm,guard,actor,native.Id,npc.DisplayName,npc.transform.position,true,now))return true;

@@ -1,11 +1,35 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using PeopleOfTheIliacBay.Core;
 
 namespace PeopleOfTheIliacBay.DFU
 {
     // UI-only selection. It never owns or moves a native inventory item.
     public enum PersonalTradeSide { Player, Npc }
+
+    public static class PersonalTradeMoney
+    {
+        // The clicked field chooses the payer; the user only enters a magnitude.
+        public static bool TryParseAmount(PersonalTradeSide payer,string input,out int net)
+        {
+            net=0;
+            if(string.IsNullOrEmpty(input))return false;
+            foreach(char character in input)if(character<'0' || character>'9')return false;
+            int amount;
+            if(!int.TryParse(input,NumberStyles.None,CultureInfo.InvariantCulture,out amount) ||
+                amount>NpcInventoryLimits.MaximumWalletGold)return false;
+            net=payer==PersonalTradeSide.Npc?-amount:amount;
+            return true;
+        }
+
+        public static string FieldText(PersonalTradeSide payer,int? net)
+        {
+            if(net.HasValue && net.Value==0 && payer==PersonalTradeSide.Player)return "0 g";
+            if(!net.HasValue || (payer==PersonalTradeSide.Npc?net.Value>=0:net.Value<=0))return string.Empty;
+            return Math.Abs((long)net.Value).ToString(CultureInfo.InvariantCulture)+" g";
+        }
+    }
 
     public sealed class PersonalTradeLine
     {

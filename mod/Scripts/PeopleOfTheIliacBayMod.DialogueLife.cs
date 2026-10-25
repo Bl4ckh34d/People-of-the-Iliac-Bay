@@ -98,8 +98,12 @@ namespace PeopleOfTheIliacBay.DFU
                     ConversationBuildingName(native.HomeKey),
                     game.PlayerEnterExit.IsPlayerInsideBuilding &&
                     game.PlayerEnterExit.BuildingDiscoveryData.buildingKey == native.WorkKey);
-            else if(native!=null)
-                plan="No verified work duties or daily itinerary are available for you. Your original placement in this building does not mean you own or operate it.";
+            else if(native!=null && staticSpeaker)
+            {
+                var verifiedRole=CaptureVerifiedStaticRole(game.TalkManager.StaticNPC);
+                plan=ConversationLifeContext.NativeStaticDuty(verifiedRole.HasValue?
+                    StaticNpcRoleProjection.RoleText(verifiedRole.Value):null);
+            }
             else if(staticSpeaker)
             {
                 var verifiedRole = CaptureVerifiedStaticRole(game.TalkManager.StaticNPC);

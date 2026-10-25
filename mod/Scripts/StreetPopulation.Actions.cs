@@ -547,9 +547,11 @@ namespace PeopleOfTheIliacBay.DFU
             RetryPaidCompanionSettlements();
             bool nativeOwnsMovement=nativeReaction!=null || IsAlarmed(plan.Resident.Id);
             if(!IsTravelerActionPlan(plan) && !IsPaidDoorActionPlan(plan))ObserveHomeSleep(plan,actor,now);
-            if(!nativeOwnsMovement && TryTreatNpcConditions(actor,now))return true;
-            if(ApplyNpcMedicalVisit(plan,ref actor,now,nativeOwnsMovement))return true;
+            if(!nativeOwnsMovement && TryTreatNpcConditions(actor,now)){CancelCashForCare(plan.Resident.Id);return true;}
+            if(ApplyNpcMedicalVisit(plan,ref actor,now,nativeOwnsMovement)){CancelCashForCare(plan.Resident.Id);return true;}
             bool healthOwnsRoutine=!nativeOwnsMovement && PrepareNpcHealthCare(plan,ref actor,now);
+            if(healthOwnsRoutine)CancelCashForCare(plan.Resident.Id);
+            if(!healthOwnsRoutine && ApplyNpcCashVisit(plan,ref actor,now,nativeOwnsMovement))return true;
             // Reconcile completed effects and deliver failures during danger, but
             // never dispatch the next Ready step before native reaction takes movement.
             AdvanceConversationTask(plan.Resident.Id,actor,now,!nativeOwnsMovement);

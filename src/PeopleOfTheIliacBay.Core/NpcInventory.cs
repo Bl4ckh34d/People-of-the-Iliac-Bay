@@ -68,6 +68,8 @@ namespace PeopleOfTheIliacBay.Core
         // item record when caller only needs to distinguish missing from empty.
         public bool HasNpcInventory(string personId)
         {return IndexedNpcInventory(personId)!=null;}
+        public bool HasEmptyNpcWallet(string personId)
+        {var inventory=IndexedNpcInventory(personId);return inventory!=null && inventory.WalletGold==0;}
         public string NpcInventoryItemOwner(ulong uid)
         {IndexedNpcInventory(null);string owner;return npcItemOwners.TryGetValue(uid,out owner)?owner:null;}
         public string CorpseInventoryOwner(string incidentId)

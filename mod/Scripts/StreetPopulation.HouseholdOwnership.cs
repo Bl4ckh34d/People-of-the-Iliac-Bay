@@ -33,6 +33,9 @@ namespace PeopleOfTheIliacBay.DFU
             simulatedFamilyFrame.Clear();if(worldStore==null || population==null || geometry==null)return;
             foreach(var progress in worldStore.ReadActiveHouseholdJoints(population.SettlementId))
             {
+                // Cash detours own the collector; the partner keeps the shared
+                // checkpoint instead of being hidden with the whole family.
+                if(FamilyNeedsCash(progress))continue;
                 var sim=worldStore.ReadHouseholdJointSimulation(progress.SettlementId,progress.HomeKey);
                 if(sim!=null && sim.Active)
                 {

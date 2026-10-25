@@ -96,7 +96,7 @@ namespace PeopleOfTheIliacBay.DFU
             return ReadUnloadedSteps(owner,door,result,ClimateSwaps.FromAPIClimateBase(GameManager.Instance.PlayerGPS.ClimateSettings.ClimateType));
         }
         public static System.Collections.IEnumerator ReadServiceSteps(Transform owner,StaticDoor door,
-            DFLocation.ClimateBaseType climate,Result result,Func<bool> stillValid)
+            DFLocation.ClimateBaseType climate,Result result,Func<bool> stillValid,bool bank=false)
         {
             if(!owner || result==null || stillValid==null)throw new ArgumentException("Missing unloaded Inn service source.");
             result.Rooms=null;result.Markers=null;result.Occupants=null;result.BedroomOccupants=null;
@@ -107,7 +107,7 @@ namespace PeopleOfTheIliacBay.DFU
             try
             {
                 var pending=new Result();
-                operation=ReadUnloadedSteps(owner,door,pending,ClimateSwaps.FromAPIClimateBase(climate),null,true,true);
+                operation=ReadUnloadedSteps(owner,door,pending,ClimateSwaps.FromAPIClimateBase(climate),null,true,!bank,bank);
                 while(owner && stillValid() && operation.MoveNext())yield return null;
                 if(owner && stillValid() && pending.Rooms!=null)CopyResult(pending,result);
             }
@@ -167,7 +167,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(models==null) throw new MissingMethodException(type.FullName,"AddModels");
             models.Invoke(interior,new object[]{new PlayerGPS.DiscoveredBuilding {buildingType=DFLocation.BuildingTypes.AllValid},true});
         }
-        private static System.Collections.IEnumerator ReadUnloadedSteps(Transform owner,StaticDoor door,Result result,ClimateBases climate,DFBlock? sourceBlock=null,bool reception=false,bool service=false)
+        private static System.Collections.IEnumerator ReadUnloadedSteps(Transform owner,StaticDoor door,Result result,ClimateBases climate,DFBlock? sourceBlock=null,bool reception=false,bool service=false,bool bank=false)
         {
             if(!owner || door.doorType!=DoorTypes.Building) throw new ArgumentException("Missing tavern entrance.");
             var temporary=new GameObject("People of the Iliac Bay isolated tavern survey");
@@ -208,12 +208,16 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 foreach(var renderer in temporary.GetComponentsInChildren<Renderer>()) renderer.enabled=false;
                 Physics.SyncTransforms();
-                FurnitureSeatCatalog.ForSurvey(interior,block);
-                operation=PartitionSteps(interior,markers.ToArray(),barriers,result,block);
-                while(operation.MoveNext()) yield return null;
+                if(!bank)
+                {
+                    FurnitureSeatCatalog.ForSurvey(interior,block);
+                    operation=PartitionSteps(interior,markers.ToArray(),barriers,result,block);
+                    while(operation.MoveNext()) yield return null;
+                }
+                else result.Rooms=new List<LodgingRoom>();
                 if(reception)
                 {
-                    operation=ReadReceptionSteps(interior,block,result,barriers,climate,service);
+                    operation=ReadReceptionSteps(interior,block,result,barriers,climate,service,bank);
                     while(operation.MoveNext()) yield return null;
                 }
             }
@@ -224,7 +228,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
         }
         private static System.Collections.IEnumerator ReadReceptionSteps(DaggerfallInterior interior,DFBlock block,Result result,
-            List<DoorBoundary> barriers,ClimateBases climate,bool service)
+            List<DoorBoundary> barriers,ClimateBases climate,bool service,bool bank=false)
         {
             // Passive records identify the keeper without spawning a native NPC.
             var geometry=new InteriorGeometry(interior,deferSurvey:true);
@@ -236,11 +240,14 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!GameManager.Instance.PlayerEntity.FactionData.GetFactionData(person.FactionID,out faction) ||
                     faction.sgroup!=(int)FactionFile.SocialGroups.Merchants) continue;
                 if(service && !NativeBusinessServices.OffersKeeperService(person.FactionID,DFLocation.BuildingTypes.Tavern))continue;
+                if(bank && !NativeBusinessServices.OffersBankService(person.FactionID))continue;
                 var target=new Vector3(person.XPos,-person.YPos,person.ZPos)*MeshReader.GlobalScale;
                 Vector3? counter=null;float distance=16;
-                foreach(var anchor in geometry.LocalAnchors)
+                foreach(var anchor in bank?geometry.ApproachPoints(target,2.5f,2):geometry.LocalAnchors)
                 {
                     float d=(anchor-target).sqrMagnitude;
+                    // Reachable customer side of the counter, with personal space.
+                    if(bank && (d<0.64f || geometry.RouteBetween(interior.transform.InverseTransformPoint(geometry.EntryGround.Value),anchor).Count<2))continue;
                     if(d<distance && Mathf.Abs(anchor.y-target.y)<2) {counter=anchor;distance=d;}
                 }
                 if(!counter.HasValue) continue;

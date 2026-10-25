@@ -30,13 +30,26 @@ namespace PeopleOfTheIliacBay.DFU
         private static string StaticConversationPersonId(StaticNPC npc)
         {
             if(!npc)return null;var data=npc.Data;string key;
+            int exteriorTown,exteriorHash;
+            if(NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash))
+                return NativeExteriorNpcIdentity.PersonId(exteriorTown,exteriorHash);
             return TryNativeCastleLayoutKey(npc,out key)?WorldStateStore.NativeLayoutPersonId(data.mapID,key,data.hash):
                 "npc:"+data.mapID.ToString(CultureInfo.InvariantCulture)+":"+
                 data.buildingKey.ToString(CultureInfo.InvariantCulture)+":"+data.hash.ToString(CultureInfo.InvariantCulture);
         }
 
-        private void RegisterNativeCastleConversationPerson(StaticNPC npc)
+        private void RegisterNativeStaticConversationPerson(StaticNPC npc)
         {
+            int exteriorTown,exteriorHash;
+            if(!saveFault && store!=null && NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash))
+            {
+                if(store.CurrentPopulation(exteriorTown)==null)return;
+                var exterior=npc.Data;
+                store.RegisterNativePerson(exteriorTown,-1,exteriorHash,npc.DisplayName,
+                    exterior.gender==Genders.Female?ResidentSex.Female:ResidentSex.Male,
+                    (int)exterior.race,exterior.factionID,exterior.billboardArchiveIndex,exterior.billboardRecordIndex);
+                return;
+            }
             string key;
             if(saveFault || store==null || !TryNativeCastleLayoutKey(npc,out key))return;
             var data=npc.Data;

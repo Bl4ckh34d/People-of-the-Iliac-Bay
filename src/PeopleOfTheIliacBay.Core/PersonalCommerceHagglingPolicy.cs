@@ -153,7 +153,7 @@ namespace PeopleOfTheIliacBay.Core
                 order.ExpectedPlayerWalletToken.Length > 1024 || order.Lines == null || order.Lines.Count < 1 ||
                 order.Lines.Count > PersonalBarterContract.MaximumLines) return false;
             var seen = new HashSet<ulong>();
-            bool fromNpc = false, fromPlayer = false, loan = false;
+            bool fromNpc = false, fromPlayer = false;
             long total = 0;
             foreach (var line in order.Lines)
             {
@@ -164,17 +164,17 @@ namespace PeopleOfTheIliacBay.Core
                 if (total > int.MaxValue) return false;
                 if (line.Direction == PersonalBarterDirection.NpcToPlayer)
                 {
-                    fromNpc = true; loan |= line.LoanPurpose != LoanPurpose.None;
+                    fromNpc = true;
                     if (line.ExpectedPlayerInventoryToken != null) return false;
                 }
                 else
                 {
-                    fromPlayer = true; loan |= line.LoanPurpose != LoanPurpose.None;
+                    fromPlayer = true;
                     if (string.IsNullOrWhiteSpace(line.ExpectedPlayerInventoryToken) ||
                         line.ExpectedPlayerInventoryToken.Length > 1024) return false;
                 }
             }
-            return fromNpc && fromPlayer || order.NetGoldToNpc != 0 || loan;
+            return fromNpc || fromPlayer;
         }
     }
 
@@ -258,7 +258,7 @@ namespace PeopleOfTheIliacBay.Core
                 {
                     Disposition = NpcCommerceHaggleDisposition.Reject,
                     PriceGold = round.CurrentNetGoldToNpc,
-                    ProposalMoodDelta = PoorBasketProposalMood(round),
+                    ProposalMoodDelta = BasketProposalMood(round),
                 };
             long distance = (long)round.CurrentNetGoldToNpc - round.NpcMinimumNetGoldToNpc;
             double percent = Math.Max(10d, Math.Min(50d, ConcessionPercent(round.PlayerMercantile,
@@ -271,7 +271,7 @@ namespace PeopleOfTheIliacBay.Core
             {
                 Disposition = accepted ? NpcCommerceHaggleDisposition.Accept : NpcCommerceHaggleDisposition.CounterOffer,
                 PriceGold = accepted ? round.PlayerNetGoldToNpc : counter,
-                ProposalMoodDelta = 0,
+                ProposalMoodDelta = BasketProposalMood(round),
             };
         }
 
@@ -313,10 +313,10 @@ namespace PeopleOfTheIliacBay.Core
 
         public static int CommittedTradeMoodDelta(NpcCommerceHaggleBasketBinding binding, int netGoldToNpc)
         {
-            if (binding == null || netGoldToNpc < binding.NpcMinimumNetGoldToNpc ||
-                netGoldToNpc > binding.InitialNetGoldToNpc) throw new ArgumentOutOfRangeException(nameof(netGoldToNpc));
-            int advantage = (netGoldToNpc - binding.NpcMinimumNetGoldToNpc) / binding.TotalItemQuantity;
-            return advantage >= 60 ? 3 : advantage >= 30 ? 2 : advantage >= 10 ? 1 : 0;
+            if (binding == null || netGoldToNpc < binding.NpcMinimumNetGoldToNpc)
+                throw new ArgumentOutOfRangeException(nameof(netGoldToNpc));
+            // Personal baskets apply their nudge once on OFFER, not again on receipt.
+            return 0;
         }
 
         public static string ProposalEffectId(string negotiationId, int round)
@@ -351,13 +351,15 @@ namespace PeopleOfTheIliacBay.Core
             return percent > 35 ? -4 : percent > 15 ? -2 : -1;
         }
 
-        private static int PoorBasketProposalMood(NpcCommerceHaggleBasketRound round)
+        private static int BasketProposalMood(NpcCommerceHaggleBasketRound round)
         {
-            long gap = (long)round.NpcMinimumNetGoldToNpc - round.PlayerNetGoldToNpc;
-            long scale = Math.Max(1L, Math.Max(Math.Abs((long)round.InitialNetGoldToNpc),
-                Math.Abs((long)round.NpcMinimumNetGoldToNpc)));
-            long percent = gap * 100 / scale;
-            return percent > 35 ? -4 : percent > 15 ? -2 : -1;
+            long benefit = (long)round.PlayerNetGoldToNpc - round.CurrentNetGoldToNpc;
+            // Integer gold throughout. A zero-price basket has no percentage
+            // baseline and receives no proportional mood reward or penalty.
+            long scale = Math.Abs((long)round.CurrentNetGoldToNpc);
+            if(scale==0)return 0;
+            long steps=Math.Abs(benefit)*2/scale;
+            return Math.Sign(benefit)*(int)Math.Min(100L,steps);
         }
 
         private static void Validate(NpcCommerceHaggleRound round)
@@ -385,7 +387,8 @@ namespace PeopleOfTheIliacBay.Core
                 round.NpcMinimumNetGoldToNpc > round.InitialNetGoldToNpc ||
                 round.CurrentNetGoldToNpc < round.NpcMinimumNetGoldToNpc ||
                 round.CurrentNetGoldToNpc > round.InitialNetGoldToNpc ||
-                round.PlayerNetGoldToNpc > round.InitialNetGoldToNpc)
+                round.PlayerNetGoldToNpc < -NpcInventoryLimits.MaximumWalletGold ||
+                round.PlayerNetGoldToNpc > NpcInventoryLimits.MaximumWalletGold)
                 throw new ArgumentOutOfRangeException();
             ValidateId(round.NegotiationId);
             PersonalBargainingAdjustment(round.NpcTrust, round.NpcMood);

@@ -287,6 +287,8 @@ namespace PeopleOfTheIliacBay.DFU
             if(resource && resource.QuestUID!=0 && resource.TargetSymbol!=null)
                 return "quest-person:"+resource.QuestUID+":"+resource.TargetSymbol.Name;
             string castleKey;
+            int exteriorTown,exteriorHash;
+            if(NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash))return StaticConversationPersonId(npc);
             if(TryNativeCastleLayoutKey(npc,out castleKey))return StaticConversationPersonId(npc);
             // Unowned custom/dungeon actors need an explicit stable identity adapter.
             return null;

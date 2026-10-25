@@ -20,7 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
                     !CivilianResponses.Sees(npc.transform.position,victim,20)||
                     player.Entity.IsInvisible||!CivilianResponses.Sees(npc.transform.position,player.transform.position,20))continue;
                 var d=npc.Data;var local=directory.transform.InverseTransformPoint(npc.transform.position);
-                int hash=unchecked((int)StableSeed.Combine((uint)d.hash,(uint)Mathf.RoundToInt(local.x*10),(uint)Mathf.RoundToInt(local.z*10),0));
+                int hash=NativeExteriorNpcIdentity.Hash(npc,directory.transform);
                 var native=worldStore.RegisterNativePerson(population.SettlementId,-1,hash,npc.DisplayName,
                     d.gender==Genders.Female?ResidentSex.Female:ResidentSex.Male,(int)d.race,d.factionID,d.billboardArchiveIndex,d.billboardRecordIndex);
                 if(!native.IsAlive)continue;

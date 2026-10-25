@@ -39,10 +39,18 @@ namespace PeopleOfTheIliacBay.DFU
 
         public static bool Matches(StaticNPC npc, NativePerson person)
         {
-            if (!npc || person == null || npc.IsChildNPC || npc.Data.context != StaticNPC.Context.Building ||
+            if (!npc || person == null || npc.IsChildNPC ||
                 npc.GetComponent<QuestResourceBehaviour>() != null || npc.GetComponent<DaggerfallAction>() != null ||
                 !npc.gameObject.activeInHierarchy || !person.IsAlive || person.RetiredBedroomFlat) return false;
             var data = npc.Data;
+            int exteriorTown,exteriorHash;
+            if(NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash))
+                return person.Id==NativeExteriorNpcIdentity.PersonId(exteriorTown,exteriorHash) &&
+                    person.SettlementId==exteriorTown && person.WorkKey==-1 && person.NativeHash==exteriorHash &&
+                    person.FactionId==data.factionID && person.TextureArchive==data.billboardArchiveIndex &&
+                    person.TextureRecord==data.billboardRecordIndex && person.Race==(int)data.race &&
+                    person.Sex==(data.gender==Genders.Female?ResidentSex.Female:ResidentSex.Male);
+            if(data.context!=StaticNPC.Context.Building)return false;
             return person.SettlementId == data.mapID && person.WorkKey == data.buildingKey &&
                 person.NativeHash == data.hash && person.FactionId == data.factionID &&
                 person.Sex == (data.gender == Genders.Female ? ResidentSex.Female : ResidentSex.Male) &&
@@ -62,7 +70,9 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if (store == null || string.IsNullOrWhiteSpace(personId)) throw new ArgumentException("Static owner is invalid.");
             var items = new ItemCollection();
-            foreach (var entry in NpcStartingBelongings.Generate(store.WorldSeed, personId, role))
+            var initialStock=role==NpcArchetype.Merchant?NpcMerchantStock.Generate(store.WorldSeed,personId):
+                NpcStartingBelongings.Generate(store.WorldSeed, personId, role);
+            foreach (var entry in initialStock)
             {
                 ItemGroups group;
                 switch (entry.Group)

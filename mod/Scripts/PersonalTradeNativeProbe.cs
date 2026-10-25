@@ -117,6 +117,7 @@ namespace PeopleOfTheIliacBay.DFU
                     game.PlayerEntity.GoldPieces==playerGold-sellNet && store.ReadNpcInventory(selected.Resident.Id).WalletGold==npcGold+sellNet,
                     "Confirmed sale did not transfer the real item and accepted net gold.");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_SELL_PASS: nativeWindow=true; exactItem=true; exactGold=true; net="+sellNet);
+                yield return FreeParchmentRoundTrip(host,game,selected,store,owner);
                 if(Environment.GetEnvironmentVariable("POTIB_TRADE_EXTENDED")=="1")
                 {
                     yield return PersonalTradeHagglingNativeProbe.Run(host,selected,store,selectedItem);
@@ -140,6 +141,38 @@ namespace PeopleOfTheIliacBay.DFU
                 "Actual Talk trade handoff refused: "+args[1]);
             var window=DaggerfallUI.UIManager.TopWindow as PersonalTradeWindow;
             Require(window!=null,"Talk handoff did not open the owned trade window.");return window;
+        }
+        private static IEnumerator FreeParchmentRoundTrip(PeopleOfTheIliacBayMod host,GameManager game,
+            ResidentActor actor,WorldStateStore store,NativeNpcInventoryOwner owner)
+        {
+            var parchment=ItemBuilder.CreateItem(ItemGroups.UselessItems2,(int)UselessItems2.Parchment);
+            Require(parchment.value==0,"Native parchment fixture is not zero-valued.");
+            game.PlayerEntity.Items.AddItem(parchment,noStack:true);
+            int playerGold=game.PlayerEntity.GoldPieces,npcGold=store.ReadNpcInventory(actor.Resident.Id).WalletGold;
+            foreach(var side in new[]{PersonalTradeSide.Player,PersonalTradeSide.Npc})
+            {
+                DaggerfallUI.Instance.PopToHUD();DaggerfallTalkWindow talk=null;
+                yield return ConversationMoodProbe.OpenTalk(host,game,actor,value=>talk=value);
+                var window=Open(host,talk);yield return null;yield return null;
+                var session=(PersonalTradeWindowSession)Field(window,"session");
+                foreach(object row in (System.Collections.IEnumerable)Field(window,"displayRows"))
+                {
+                    var preview=(PersonalTradePreviewRow)row.GetType().GetField("Preview").GetValue(row);
+                    var source=preview.SourceSide==PersonalTradeSide.Player?session.PlayerItems:session.NpcItems;
+                    Require(session.CanStage(preview.SourceSide,source.GetItem(preview.ItemUid)),"Untradeable item remained visible.");
+                }
+                Stage(window,side,parchment,1);Call(window,"RequestQuote");
+                var quote=(PersonalTradeWindowQuote)Field(window,"quote");
+                Require(quote!=null && quote.NetGoldToNpc==0,"Parchment did not produce a zero-gold quote.");
+                Call(window,"SubmitOffer");yield return null;yield return null;
+                var destination=side==PersonalTradeSide.Player?owner.Binding.Items:game.PlayerEntity.Items;
+                parchment=destination.GetItem(parchment.UID);
+                Require(parchment!=null,"Zero-gold parchment trade did not move the actual item.");
+                Require(game.PlayerEntity.GoldPieces==playerGold && store.ReadNpcInventory(actor.Resident.Id).WalletGold==npcGold,
+                    "Zero-gold parchment trade changed a wallet.");
+                yield return new WaitForSecondsRealtime(1.6f);
+            }
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_PARCHMENT_PASS: nativeZeroValue=true; bothDirections=true; walletsUnchanged=true; eligibilityFiltered=true");
         }
         internal static void CaptureTradeContext(PeopleOfTheIliacBayMod host,DaggerfallTalkWindow talk,string text)
         {

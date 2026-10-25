@@ -57,7 +57,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 var data = manager.StaticNPC.Data;
                 // Match the core's native identity when available, including shop heads.
-                RegisterNativeCastleConversationPerson(manager.StaticNPC);
+                RegisterNativeStaticConversationPerson(manager.StaticNPC);
                 conversationPersonId = StaticConversationPersonId(manager.StaticNPC);
             }
             conversationHomeTopicAvailable = false;

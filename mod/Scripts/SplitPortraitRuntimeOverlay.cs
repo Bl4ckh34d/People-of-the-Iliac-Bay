@@ -25,16 +25,18 @@ namespace PeopleOfTheIliacBay.DFU
         {
             public readonly UnityEngine.Object Speaker;
             public readonly DaggerfallTalkWindow BoundTalk;
+            public readonly PersonalTradeWindow BoundTrade;
             public readonly int BoundRecord;
             public readonly Texture2D NativeSource;
             public readonly Panel PortraitPanel;
             public readonly int Revision;
 
             internal Binding(UnityEngine.Object speaker, DaggerfallTalkWindow talk, int record,
-                Texture2D source, Panel panel, int revision)
+                Texture2D source, Panel panel, int revision, PersonalTradeWindow trade=null)
             {
                 Speaker = speaker;
                 BoundTalk = talk;
+                BoundTrade = trade;
                 BoundRecord = record;
                 NativeSource = source;
                 PortraitPanel = panel;
@@ -149,14 +151,18 @@ namespace PeopleOfTheIliacBay.DFU
 
             if (!SameBinding(binding, current))
             {
+                // Talk-to-trade transfers the same native portrait. Keep decoded
+                // animation frames instead of loading the complete face again.
+                var reusableFace=face!=null && binding!=null && binding.BoundRecord==current.BoundRecord &&
+                    ReferenceEquals(binding.NativeSource,current.NativeSource)?face:null;
                 RestoreCurrentBinding();
                 bindingRevision++;
                 binding = current;
-                face = null;
+                face = reusableFace;
                 lastEmotion = null;
                 lastGaze = null;
                 Diagnostic = registryError == null ? "split-portrait-runtime-binding-changed" : registryError;
-                TryBuildFace(binding);
+                if(face==null)TryBuildFace(binding);
             }
 
             if (binding == null) return;
@@ -373,9 +379,9 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void RestoreNativePortrait(Binding previous)
         {
-            if (previous == null || previous.BoundTalk == null || previous.PortraitPanel == null || !composite) return;
+            if (previous == null || previous.PortraitPanel == null || !composite) return;
             if (previous.PortraitPanel.BackgroundTexture != composite) return;
-            Texture2D currentNative = GetNativePortrait(previous.BoundTalk);
+            Texture2D currentNative = previous.BoundTrade!=null?previous.NativeSource:GetNativePortrait(previous.BoundTalk);
             if (currentNative) previous.PortraitPanel.BackgroundTexture = currentNative;
         }
 
@@ -388,6 +394,15 @@ namespace PeopleOfTheIliacBay.DFU
         private bool TryReadCurrentBinding(out Binding current)
         {
             current = null;
+            var trade=PersonalTradeWindow.Active;
+            if(trade!=null && trade.IsSetup && trade.IsPortraitVisible && trade.Portrait!=null && trade.PortraitPanel!=null)
+            {
+                var portrait=trade.Portrait;
+                if(!portrait.Speaker || !portrait.NativeSource)return false;
+                current=binding!=null && binding.BoundTrade==trade?binding:
+                    new Binding(portrait.Speaker,null,portrait.Record,portrait.NativeSource,trade.PortraitPanel,bindingRevision+1,trade);
+                return true;
+            }
             if (PortraitField == null || PortraitPanelField == null || DaggerfallUI.UIManager == null)
             {
                 Diagnostic = "split-portrait-runtime-native-fields-unavailable";
@@ -417,6 +432,18 @@ namespace PeopleOfTheIliacBay.DFU
         private static Texture2D GetNativePortrait(DaggerfallTalkWindow talk)
         {
             return talk == null || PortraitField == null ? null : PortraitField.GetValue(talk) as Texture2D;
+        }
+
+        public static PersonalTradePortrait CaptureTradePortrait(DaggerfallTalkWindow talk,string startingEmotion)
+        {
+            var manager=GameManager.Instance==null?null:GameManager.Instance.TalkManager;
+            var source=GetNativePortrait(talk);
+            if(manager==null || !source)return null;
+            var mobile=manager.CurrentNPCType==TalkManager.NPCType.Mobile?manager.MobileNPC:null;
+            UnityEngine.Object speaker=mobile?(UnityEngine.Object)mobile:manager.StaticNPC;
+            if(!speaker)return null;
+            return new PersonalTradePortrait {Speaker=speaker,NativeSource=source,Record=mobile?mobile.PersonFaceRecordId:-1,
+                StartingEmotion=startingEmotion??"neutral"};
         }
 
         private static bool SameBinding(Binding left, Binding right)

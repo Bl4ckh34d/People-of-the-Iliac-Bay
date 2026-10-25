@@ -178,7 +178,7 @@ namespace PeopleOfTheIliacBay.DFU
             // Fixed appointments are composed as a pair afterward. These are
             // the other known native obligations, including measured travel.
             if(worldStore.IsResidentAwayDuring(id,from,until) || worldStore.ActiveNpcAction(id)!=null ||
-                worldStore.ActiveNpcTask(id)!=null || HasActiveNpcHealthCare(id) || shopDepartures.ContainsKey(id) ||
+                worldStore.ActiveNpcTask(id)!=null || HasActiveNpcHealthCare(id) || worldStore.ReadNpcCashVisit(id)!=null || shopDepartures.ContainsKey(id) ||
                 worldStore.ActiveAlarm(id,from)!=null || IsAlarmed(id))return false;
             var observed=worldStore.GetObservedVisit(id);
             return observed==null || !observed.AffectsRoutineDuring(from,until);
@@ -199,7 +199,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             string id=plan.Resident.Id;
             if(worldStore.ActiveAlarm(id,now)!=null || IsAlarmed(id) || worldStore.IsResidentAway(id,now) ||
-                worldStore.ActiveNpcAction(id)!=null || worldStore.ActiveNpcTask(id)!=null || HasActiveNpcHealthCare(id) ||
+                worldStore.ActiveNpcAction(id)!=null || worldStore.ActiveNpcTask(id)!=null || HasActiveNpcHealthCare(id) || worldStore.ReadNpcCashVisit(id)!=null ||
                 shopDepartures.ContainsKey(id) || !allowRecovery && worldStore.HasRoutineRecovery(id))return false;
             var trip=worldStore.GetResidentDialogueTrip(id);if(trip!=null && trip.HomeAt>now)return false;
             var observed=worldStore.GetObservedVisit(id);

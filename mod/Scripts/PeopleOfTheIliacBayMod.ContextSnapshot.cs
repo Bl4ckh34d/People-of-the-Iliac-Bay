@@ -46,11 +46,21 @@ namespace PeopleOfTheIliacBay.DFU
             string plan;
             var medical=activeStore.ReadNpcTreatmentVisit(resident.Id);
             var care=activeStore.ReadNpcHealthCare(resident.Id);
+            var cashWait=activeStore.ReadNpcCashWait(resident.Id);
+            var cashVisit=activeStore.ReadNpcCashVisit(resident.Id);
             if(medical!=null)
                 plan=medical.Returning?"medical visit ended; returning to the ordinary routine":
                     "seeking treatment at "+ConversationBuildingName(medical.ProviderKey)+"; treatment not yet completed";
             else if(care!=null && care.Phase!=NpcHealthCarePhase.Recovered && now>=care.StartedAt)
                 plan="ordinary work and visits interrupted for recovery";
+            else if(cashWait!=null)
+                plan=(speaker.ManagedActor.IsSeated?"waiting at the table for my partner":"waiting here for my partner")+
+                    "; my partner is collecting money before joining me; our shared outing is paused, not cancelled";
+            else if(cashVisit!=null)
+                plan=cashVisit.Returning?(cashVisit.WaitingPartnerId!=null?"returning to my waiting partner after a cash errand":"returning from a cash errand"):
+                    cashVisit.WaitingForBank?"waiting for an opportunity to collect money before shopping or visiting an Inn":
+                    "collecting money at "+ConversationBuildingName(cashVisit.ProviderKey)+
+                        (cashVisit.WaitingPartnerId!=null?"; my partner is waiting for me":"; ordinary visits will resume afterwards");
             else
             {
                 int destination;
@@ -847,7 +857,8 @@ namespace PeopleOfTheIliacBay.DFU
                 factionResolved && faction.sgroup == (int)FactionFile.SocialGroups.Nobility,
                 factionResolved && faction.ggroup == (int)FactionFile.GuildGroups.Bards,
                 factionResolved ? faction.face : -1, data.billboardArchiveIndex, data.billboardRecordIndex,
-                verifiedShopkeeper, verifiedInnkeeper);
+                verifiedShopkeeper, verifiedInnkeeper,
+                factionResolved && faction.sgroup == (int)FactionFile.SocialGroups.Merchants);
             return StaticNpcRoleProjection.Resolve(facts);
         }
 
@@ -856,8 +867,10 @@ namespace PeopleOfTheIliacBay.DFU
             if (store == null) return null;
             var data=npc.Data;string expectedId=StaticConversationPersonId(npc);
             if (!string.Equals(conversationPersonId, expectedId, StringComparison.Ordinal)) return null;
-            NativePerson person = store.NativePersonInSettlement(data.mapID,expectedId);
-            if (person == null || person.NativeHash != data.hash)
+            int exteriorTown,exteriorHash;
+            bool exterior=NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash);
+            NativePerson person = store.NativePersonInSettlement(exterior?exteriorTown:data.mapID,expectedId);
+            if (person == null || person.NativeHash != (exterior?exteriorHash:data.hash))
                 return null;
             // Match the established native-personality seed used by DialogueLife.
             return person.NativeLayoutKey!=null?ConversationNameSeed(person.Id,person.SettlementId):

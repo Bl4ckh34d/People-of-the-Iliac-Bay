@@ -158,6 +158,8 @@ if ($OutdoorNavigationProbe) {
         Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_CANCEL_PASS:' @{nativeWindow='true'; lowMercantile20='true'; previewUnchanged='true'; cancelUnchanged='true'}
         Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_BUY_PASS:' @{nativeWindow='true'; lowMercantile20='true'; exactItem='true'; exactGold='true'; nativeMercantile='true'}
         Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_SELL_PASS:' @{nativeWindow='true'; exactItem='true'; exactGold='true'}
+        Assert-TownOnce 'PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_PARCHMENT_PASS:'
+        Assert-ProbeReceipt $body 'PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_PARCHMENT_PASS:' @{nativeZeroValue='true'; bothDirections='true'; walletsUnchanged='true'; eligibilityFiltered='true'}
         if ($env:POTIB_TRADE_EXTENDED -eq '1') {
             Assert-TownOnce 'PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_HAGGLING_NATIVE_PASS:'
             Assert-TownOnce 'PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_LOAN_NATIVE_PASS:'

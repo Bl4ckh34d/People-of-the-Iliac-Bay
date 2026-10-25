@@ -142,7 +142,9 @@ namespace PeopleOfTheIliacBay.DFU
             if (quest && quest.QuestUID != 0 && quest.TargetSymbol != null)
                 return "quest-person:" + quest.QuestUID + ":" + quest.TargetSymbol.Name;
             string castleKey;
-            if (npc.Data.context != StaticNPC.Context.Building && !TryNativeCastleLayoutKey(npc,out castleKey)) return null;
+            int exteriorTown,exteriorHash;
+            if (npc.Data.context != StaticNPC.Context.Building && !TryNativeCastleLayoutKey(npc,out castleKey) &&
+                !NativeExteriorNpcIdentity.TryRead(npc,out exteriorTown,out exteriorHash)) return null;
             return StaticConversationPersonId(npc);
         }
 

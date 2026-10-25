@@ -255,7 +255,7 @@ namespace PeopleOfTheIliacBay.Core
                 if(person==null || !person.IsAlive || person.IsQuestProtected || person.NativeIdentity!=null ||
                     visit!=null && visit.HouseholdDayId!=actual.HouseholdDayId && visit.AffectsRoutineDuring(now,now+1) ||
                     state.NativePeople.Exists(p=>p.Id==id) || IsResidentAway(id,now) || ActiveAlarm(id,now)!=null || ActiveNpcAction(id)!=null || ActiveNpcTask(id)!=null ||
-                    care!=null && care.Phase!=NpcHealthCarePhase.Recovered || HasNpcTreatmentVisit(id) || GetDialogueComplaint(id)!=null ||
+                    care!=null && care.Phase!=NpcHealthCarePhase.Recovered || HasNpcTreatmentVisit(id) || ReadNpcCashVisit(id)!=null || NeedsNpcCashErrand(id,now) || GetDialogueComplaint(id)!=null ||
                     state.NpcMagicCareTasks.Exists(t=>t.PersonId==id && t.Phase==NpcMagicCareTaskPhase.Reserved))return false;
             }
             return true;

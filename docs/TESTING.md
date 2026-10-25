@@ -1,14 +1,31 @@
 # Testing and verification status
 
-## Trade-slot layout repair — 26 October 2026, source only
+## Personal trade and cash errands — 26 October 2026
+
+Installed test bundle SHA256: `A4460B010E2CD792BE075E62E9DE5BEA93124C1425AC13208C7608FD39463D3D`. `work/roadmap-static-roles/trade-cash-build.log` records successful Unity build, integration and installation. It contains the trade-slot, parchment, eligibility, numeric-entry, payment-field, portrait and offer-mood changes, plus the first bank/home cash-visit implementation. The user is testing that package; no replacement or owned game fixture was started during their test.
+
+Later **source-only** changes make bank visitors walk to a surveyed native clerk, face the clerk for 8–15 real seconds and walk out before resuming their routine. Empty wallets block new unpaid outings until cash is collected. Shared outings retain a rendezvous while one partner collects money; a waiting partner keeps an existing seat and receives an explicit current-journey fact for dialogue. Already paid Inn visits can finish with zero remaining gold. These new bank/family paths have not been packaged or accepted in game.
+
+Current offline evidence in `work/roadmap-static-roles/verified-*.log`:
+
+- Core: 2087/2087, including zero-wallet departure admission, completing an already paid visit, saved partner waiting context and resumed shared simulation.
+- Personal barter: 10/10; player commerce: 20/20. Native-zero-value one-way trades, integer 50% mood steps and no duplicate commit reward pass.
+- Trade-window harness: digits only, payment direction, five-digit display and empty opposite field pass.
+- Cash-restock harness: provider/opening policy, clerk-route timing, arrival, wallet revision, save/restore, stale epoch and duplicate-withdrawal guards pass.
+- Static-role/stock harness: 1247 assertions; Inn-consumption regressions pass. Native market-stall geometry classification remains open.
+- RuntimeCompile: zero warnings/errors. A compile is not rendered UI or walking-path acceptance.
+
+The native personal-trade fixture now requires the `PERSONAL_TRADE_PARCHMENT_PASS` receipt for a zero-value round trip. That new fixture has not run yet. Native acceptance still needs: both money dialogs, portrait continuity, offer reactions, parchment return, clerk approach/dwell/exit, closed-bank deferral, no-bank home withdrawal, and a family cash detour with save/load and a seated waiting partner. Fixed native decorative/service NPCs have no managed mobile routine owner; cash errands do not claim to mobilize them.
+
+## Trade-slot layout repair — 26 October 2026, installed test build
 
 The reported screenshot showed up to four icons inside each painted inventory slot. `PersonalTradeWindow.NewScroller` was copying the global Enhanced Item Lists setting (eight rows by two columns) onto artwork with four vertical slots. The custom window now always creates four rows and one column, so each slot holds one item entry (a stack still remains one entry). Native scrolling and selection use that same four-cell geometry; the player's global inventory setting is unchanged.
 
-Runtime compilation passes with zero warnings and errors. Installation and rendered in-game verification are pending: the user explicitly chose to keep the current game running. The running bundle has not been replaced.
+Runtime compilation and the subsequent Unity build/install passed. The initial request to leave the running game untouched was respected; installation occurred after that game closed. Rendered in-game acceptance remains the user's current playtest.
 
 ## Source audit repairs — 26 October 2026
 
-The [audit report](audits/2026-10-26-code-audit.md) records the corrected transport, barter, guard-cleanup, tooling and fixture defects, plus current offline verification. These repairs have not been deployed to a new bundle or verified in a new game session. All installed-package and native claims below are historical evidence for their stated checkpoints, not acceptance of this source revision.
+The [audit report](audits/2026-10-26-code-audit.md) records the corrected transport, barter, guard-cleanup, tooling and fixture defects. These repairs were included in the later installed bundles. All native claims below remain historical evidence for their stated checkpoints, not acceptance of the newer trade/cash source.
 
 ## Current trade UI package —25 October
 

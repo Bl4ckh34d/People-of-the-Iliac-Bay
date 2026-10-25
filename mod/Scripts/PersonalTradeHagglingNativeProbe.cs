@@ -58,7 +58,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(bound!=null && bound.InitialNetGoldToNpc==nativeBase && nativeBase-bound.NpcMinimumNetGoldToNpc>=10,
                     "Existing stock cannot demonstrate a positive per-item haggling advantage.");
                 int fixedLimit=bound.NpcMinimumNetGoldToNpc;
-                var poor=Proposal(session,staging,fixedLimit-1,true);
+                var poor=Proposal(session,staging,Math.Min(fixedLimit-1,nativeBase-(int)Math.Ceiling(nativeBase*0.5)),true);
                 Require(session.Prepare(poor,out var firstPoor,out reason) && firstPoor.Disposition==NpcCommerceHaggleDisposition.Reject &&
                     firstPoor.ProposalMoodDelta<0,"Very poor submitted price was not rejected with a negative mood effect.");
                 session.ProposalSubmitted(poor,firstPoor);
@@ -89,8 +89,8 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(session.Submit(generous,accepted,out receiptId,out reason) && !string.IsNullOrWhiteSpace(receiptId),
                     "Accepted real haggling basket did not commit: "+reason);
                 int expected=NpcCommerceHagglingPolicy.CommittedTradeMoodDelta(bound,nativeBase);
-                Require(expected>0 && Mood(store,actor.Resident.Id)==moodBeforeReceipt+expected,
-                    "Committed advantage did not improve mood exactly once.");
+                Require(expected==0 && Mood(store,actor.Resident.Id)==moodBeforeReceipt,
+                    "Committed trade must not apply the offer mood a second time.");
                 int moodAfterReceipt=Mood(store,actor.Resident.Id);
                 session.ProposalSubmitted(generous,accepted);
                 Require(Mood(store,actor.Resident.Id)==moodAfterReceipt,"Completed receipt mood was replayed.");

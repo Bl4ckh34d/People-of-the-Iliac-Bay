@@ -38,6 +38,15 @@ internal static class RoleProjectionRegressionRunner
         Equal(null, StaticNpcRoleProjection.Resolve(Facts(700, true, false, true, false, false)), "other guild affiliation unknown");
         Equal(ConversationDialogueRole.Shopkeeper, StaticNpcRoleProjection.Resolve(Facts(shopkeeper: true)), "existing verified keeper role retained");
         Equal(null, StaticNpcRoleProjection.Resolve(Facts(archive: 182, record: 7)), "unsupported profession remains unknown");
+        Equal(ConversationDialogueRole.Merchant, StaticNpcRoleProjection.Resolve(new NativeStaticRoleFacts(
+            true,false,469,false,false,false,-1,184,0,false,false,true)), "native merchant group establishes profession");
+        Equal(null, StaticNpcRoleProjection.Resolve(new NativeStaticRoleFacts(
+            false,false,469,false,false,false,-1,184,0,false,false,true)), "unresolved merchant group does not establish profession");
+        Equal(null, StaticNpcRoleProjection.Resolve(new NativeStaticRoleFacts(
+            true,true,469,false,false,false,-1,184,0,false,false,true)), "custom recycled merchant faction requires its own adapter");
+        Equal(ConversationDialogueRole.Innkeeper, StaticNpcRoleProjection.Resolve(new NativeStaticRoleFacts(
+            true,false,469,false,false,false,-1,184,0,false,true,true)), "actual inn service takes priority over merchant group");
+        MerchantStock();
 
         string unknown = StaticNpcRoleProjection.StaticActorContext(null);
         if (unknown.IndexOf("unknown", StringComparison.Ordinal) < 0 || unknown.IndexOf("quest persona", StringComparison.Ordinal) < 0 ||
@@ -62,6 +71,31 @@ internal static class RoleProjectionRegressionRunner
             throw new InvalidOperationException("Static role policy must not bleed into mobile speakers.");
         assertions++;
         Console.WriteLine("Production-linked static role regressions passed: " + assertions + " assertions.");
+    }
+
+    private static void MerchantStock()
+    {
+        var variants=new System.Collections.Generic.HashSet<string>();
+        for(int identity=0;identity<100;identity++)
+        {
+            string id="native-market:"+identity;
+            var first=NpcMerchantStock.Generate(123,id);
+            var again=NpcMerchantStock.Generate(123,id);
+            if(first.Count<10 || first.Count>14 || first.Count<=NpcStartingBelongings.MaximumDistinctItems*3)
+                throw new InvalidOperationException("Merchant must have substantially more goods than a resident.");
+            var seen=new System.Collections.Generic.HashSet<int>();
+            string signature="";
+            for(int i=0;i<first.Count;i++)
+            {
+                if(!seen.Add(first[i].TemplateIndex) || first[i].Count!=1 || first[i].TemplateIndex==276)
+                    throw new InvalidOperationException("Stock duplicated a template or generated currency.");
+                Equal(first[i].TemplateIndex,again[i].TemplateIndex,"repeatable merchant stock");
+                signature+=first[i].TemplateIndex+",";
+            }
+            variants.Add(signature);
+        }
+        if(variants.Count<50)throw new InvalidOperationException("Merchant stocks lack identity-specific variety.");
+        assertions++;
     }
 
     private static ConversationContextSnapshot Snapshot(ConversationActorCategory category,
