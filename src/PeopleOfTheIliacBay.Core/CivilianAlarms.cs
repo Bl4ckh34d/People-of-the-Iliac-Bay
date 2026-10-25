@@ -151,6 +151,7 @@ namespace PeopleOfTheIliacBay.Core
             Require(incident.ThreatId == null && incident.VictimId != null && incident.Corpse != null,
                 "Only confirmed non-hostile deaths can be attributed to the player.");
             incident.PlayerAttributed = true;
+            RememberPlayerMurderWitnesses(incident);
             foreach (var person in incident.People)
                 if (CivilianAlarms.IsPersistentMurderWitness(incident, person.ResidentId)) person.Reaction = CivilianReaction.Flee;
         }
@@ -197,6 +198,7 @@ namespace PeopleOfTheIliacBay.Core
             if (!person.DirectWitness && person.HeardViolence && person.Escape == null)
                 person.Reaction = CivilianAlarms.ChooseReaction(resident);
             person.DirectWitness = true;
+            RememberSceneViolence(incident,residentId,now);
             var native = state.NativePeople.Find(p => p.Id == residentId);
             if (native != null) native.ResponseIncidentId = incident.Id;
             return person;

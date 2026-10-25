@@ -42,7 +42,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return result;
             }
             finally
-            { temporary.SetActive(false); UnityEngine.Object.Destroy(temporary); Physics.SyncTransforms(); }
+            { if(temporary){temporary.SetActive(false); UnityEngine.Object.Destroy(temporary); Physics.SyncTransforms();} }
         }
 
         public static List<QuarterBed> Furnish(DaggerfallInterior interior,int capacity=2)

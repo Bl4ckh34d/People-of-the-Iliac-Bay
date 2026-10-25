@@ -17,6 +17,26 @@ namespace PeopleOfTheIliacBay.Tests
             cases.Add(("Observed visit store validates, copies, restores and removes records", StorePersistence));
             cases.Add(("Observed visit store accepts trip destination stops and historical dead owners", TripDestinationAndDeadOwner));
             cases.Add(("Observed visit rejects invalid bounds and disconnected legs", RejectInvalid));
+            cases.Add(("Temporary Inn diversion can buy, checkpoint, skip time and exit without losing its visit owner",()=>
+            {
+                var store=new WorldStateStore(17);var resident=store.GetOrCreate(1,new[]{7},1).Households[0].Residents[0];
+                var diversion=new ClosedShopVisit {PersonId=resident.Id,SettlementId=1,Building=20,Inn=30,StartedAt=100,
+                    Opening=600,ReturnAt=900,EndsAt=1200,WalkSeconds=60,Pastime=ClosedShopPastime.Inn,
+                    InnRoute=new List<SavedRoutePoint>{Saved(0,0),Saved(10,0)}};
+                store.SaveClosedShopVisit(diversion);
+                var observed=Create();observed.ResidentId=resident.Id;observed.SettlementId=1;observed.BuildingKey=30;
+                observed.ObservedAt=200;observed.PlannedEndAt=840;observed.ResumeUntil=1200;
+                store.StoreObservedVisit(observed);
+                store.ForgetClosedShopVisit(resident.Id); // Runtime wait expires while the physical visit can still finish.
+                observed.ObservedAt=1300;store.StoreObservedVisit(observed);
+                var restored=new WorldStateStore(18);restored.Restore(store.Snapshot());
+                Check.Equal(30,restored.GetObservedVisit(resident.Id).BuildingKey);
+                observed.BuildingKey=31;Check.Throws<ArgumentException>(()=>restored.StoreObservedVisit(observed));
+                observed.BuildingKey=30;observed.PlannedEndAt=1500;observed.ResumeUntil=1500;
+                Check.Throws<ArgumentException>(()=>restored.StoreObservedVisit(observed));
+                restored.RemoveObservedVisit(resident.Id);restored.ForgetClosedShopVisit(resident.Id);
+                Check.Equal(0,restored.Snapshot().ClosedShopVisits.Count);
+            }));
         }
 
         private static void RouteCorners()

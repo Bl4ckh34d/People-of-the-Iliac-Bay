@@ -545,11 +545,13 @@ namespace PeopleOfTheIliacBay.Core
             if (nextInbox.DetailRevision == long.MaxValue) return false;
             nextInbox.DetailRevision++;
             nextInbox = NpcExperienceInbox.CopyValidated(nextInbox, IsKnownNpcExperienceIdentity);
+            var nextSceneMemories=PrepareAppraisedSceneMemory(evidence,appraisal.MoodDelta);
             // No allocations, callbacks or fallible operations after this point.
             state.ConversationMoods = nextMoods;
             state.ConversationAttitudes = nextAttitudes;
             state.NpcRelationships = nextRelationships;
             state.NpcExperienceInbox = nextInbox;
+            if(nextSceneMemories!=null){state.SceneMemories=nextSceneMemories;sceneMemoryOwner=null;SceneMemoryRevision++;}
             return true;
         }
 

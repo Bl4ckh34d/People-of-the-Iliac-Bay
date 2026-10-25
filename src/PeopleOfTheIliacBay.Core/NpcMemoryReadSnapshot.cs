@@ -17,6 +17,8 @@ namespace PeopleOfTheIliacBay.Core
         internal double NextFutureRecordAt;
         internal double NextFutureTreatmentAt;
         internal string TreatmentAuthority;
+        internal long SceneRevision;
+        internal string SceneRecall;
         public string PersonId { get; internal set; }
         public NpcMemoryReadKind Kind { get; internal set; }
         public string Text { get; internal set; }
@@ -38,6 +40,8 @@ namespace PeopleOfTheIliacBay.Core
             if (!ValidMemoryReadInput(personId, now, maximumCharacters, 2000) ||
                 query == null || query.Length > 160) return false;
             string text = RecallConversation(personId, query, now, maximumCharacters);
+            string scene=RecallSceneEvents(personId,now,Math.Min(maximumCharacters,1200));
+            if(!string.IsNullOrEmpty(scene))text=CleanMemory(scene+" "+text,maximumCharacters);
             NpcTreatmentRecallEvidence treatment = CaptureNpcTreatmentRecall(personId, query, now, maximumCharacters);
             if (!string.IsNullOrEmpty(treatment.Text))
             {
@@ -52,6 +56,7 @@ namespace PeopleOfTheIliacBay.Core
                     if (entry.At > now && entry.At < nextFuture) nextFuture = entry.At;
             read = NewMemoryReadSnapshot(personId, now, maximumCharacters, NpcMemoryReadKind.Memory, text);
             read.JournalCount = journal == null ? 0 : journal.Entries.Count;
+            read.SceneRevision=SceneMemoryRevision;read.SceneRecall=scene;
             read.NextFutureRecordAt = nextFuture;
             read.NextFutureTreatmentAt = treatment.NextFutureTreatmentAt;
             read.TreatmentAuthority = treatment.Authority;
@@ -89,6 +94,8 @@ namespace PeopleOfTheIliacBay.Core
                 // Journals are append-only between restores/saves. A save changes
                 // the pinned head; restoring even that same head replaces State.
                 return (journal == null ? 0 : journal.Entries.Count) == read.JournalCount &&
+                    string.Equals(read.SceneRecall,
+                        RecallSceneEvents(read.PersonId,now,Math.Min(read.MaximumCharacters,1200)),StringComparison.Ordinal) &&
                     now < read.NextFutureRecordAt && now < read.NextFutureTreatmentAt &&
                     string.Equals(read.TreatmentAuthority, TreatmentRecallAuthority(read.PersonId), StringComparison.Ordinal);
             }

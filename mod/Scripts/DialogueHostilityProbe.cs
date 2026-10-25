@@ -119,6 +119,10 @@ namespace PeopleOfTheIliacBay.DFU
                     if (actor)
                     {
                         Vector3 current = actor.transform.position - Vector3.up;
+                        var pending=store.GetDialogueComplaint(personId);
+                        var local=actor.transform.parent.InverseTransformPoint(current);
+                        if(pending!=null && Vector3.Distance(local,new Vector3((float)pending.X,(float)pending.Y,(float)pending.Z))>0.01f)
+                            throw new InvalidOperationException("Reporting progress advanced beyond the actual NPC body.");
                         if (Vector3.Distance(last, current) > 0.05f) moved = true;
                         last = current;
                     }

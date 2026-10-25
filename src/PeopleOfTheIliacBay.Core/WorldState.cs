@@ -6,7 +6,7 @@ namespace PeopleOfTheIliacBay.Core
     [Serializable]
     public sealed class WorldState
     {
-        public const int CurrentVersion = 81;
+        public const int CurrentVersion = 82;
         public int Version = CurrentVersion;
         public string NpcFrameworkScopeId = Guid.NewGuid().ToString("N");
         public List<NpcMotivationState> NpcMotivations = new List<NpcMotivationState>();
@@ -30,6 +30,8 @@ namespace PeopleOfTheIliacBay.Core
         public List<ConversationAttitude> ConversationAttitudes = new List<ConversationAttitude>();
         public List<ConversationMood> ConversationMoods = new List<ConversationMood>();
         public List<NpcConversationMemory> ConversationMemories = new List<NpcConversationMemory>();
+        public List<NpcSceneMemory> SceneMemories = new List<NpcSceneMemory>();
+        public List<ClosedShopVisit> ClosedShopVisits = new List<ClosedShopVisit>();
         public ConversationArchiveCheckpoint ConversationArchive;
         public ConversationCueArchiveCheckpoint ConversationCueArchive;
         public HauntingRoutineDay HauntingDay;
@@ -554,6 +556,8 @@ namespace PeopleOfTheIliacBay.Core
             copy.ConversationAttitudes = CopyConversationAttitudes(source);
             copy.ConversationMoods = CopyConversationMoods(source);
             copy.ConversationMemories = CopyConversationMemories(source);
+            copy.SceneMemories = CopySceneMemories(source);
+            copy.ClosedShopVisits = CopyClosedShopVisits(source);
             copy.ConversationArchive = ConversationArchiveCheckpoint.CopyValidated(source.ConversationArchive);
             if (source.Version < 54)
             {

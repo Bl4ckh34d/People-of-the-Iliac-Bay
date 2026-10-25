@@ -7,6 +7,19 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
+            cases.Add(("Redistributing a ten-o-clock shop never creates an early queue and spreads arrivals over the morning",()=>
+            {
+                double earliest=double.MaxValue,latest=0;
+                for(uint seed=1;seed<=500;seed++)
+                {
+                    var source=Routine();source.Itinerary.Stops[0].OpenMinute=600;
+                    var result=DailyOutingDistribution.Spread(source,seed,6,22);
+                    double arrival=result.ItineraryDepartureSeconds+result.Itinerary.Stops[0].WalkSeconds;
+                    Check.True(arrival>=36000,"Departure jitter must respect actual arrival, not the clamped entry time.");
+                    earliest=Math.Min(earliest,arrival);latest=Math.Max(latest,arrival);
+                }
+                Check.True(latest-earliest>=90*60);
+            }));
             cases.Add(("Native service windows retain late shops, all-day taverns and early closures", () =>
             {
                 DailyServiceWindow window;
@@ -70,7 +83,7 @@ namespace PeopleOfTheIliacBay.Tests
                     var source = Routine();
                     var result = DailyOutingDistribution.Spread(source, seed, 6, 22);
                     var journey = ResidentVisitJourney.Create(result.ItineraryDepartureSeconds, result.Itinerary);
-                    Check.True(result.ItineraryDepartureSeconds>=8*3600 && result.ItineraryDepartureSeconds<=10*3600);
+                    Check.True(result.ItineraryDepartureSeconds>=8*3600 && result.ItineraryDepartureSeconds<=12*3600);
                     departures.Add(result.ItineraryDepartureSeconds);
                     Check.True(journey.EndsAt <= 18 * 3600 + 45 * 60);
                     foreach (var visit in journey.ScheduledVisits())

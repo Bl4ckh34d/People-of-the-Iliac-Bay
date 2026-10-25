@@ -16,6 +16,8 @@ namespace PeopleOfTheIliacBay.DFU
         public int Orientation {get;private set;}
         public int Frame {get;private set;}
         public Vector3 Heading {get {return heading;}}
+        internal void Face(Vector3 direction)
+        {direction.y=0;if(direction.sqrMagnitude>0.01f)heading=direction.normalized;}
         public bool UsesNativeFront {get {return active && Orientation==0;}}
         public void Configure(DaggerfallBillboard source,KeeperStandingArt art,Vector3 forward)
         {

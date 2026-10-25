@@ -238,7 +238,7 @@ namespace PeopleOfTheIliacBay.DFU
             finally
             {
                 try{(operation as IDisposable)?.Dispose();}
-                finally{temporary.SetActive(false);UnityEngine.Object.Destroy(temporary);Physics.SyncTransforms();}
+                finally{if(temporary){temporary.SetActive(false);UnityEngine.Object.Destroy(temporary);Physics.SyncTransforms();}}
             }
         }
         private static System.Collections.IEnumerator ReadReceptionSteps(DaggerfallInterior interior,DFBlock block,Result result,

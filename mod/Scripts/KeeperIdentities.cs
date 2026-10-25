@@ -382,6 +382,7 @@ namespace PeopleOfTheIliacBay.DFU
                     data.gender == DaggerfallWorkshop.Game.Entity.Genders.Female ? ResidentSex.Female : ResidentSex.Male,
                     (int)data.race, data.factionID, data.billboardArchiveIndex, data.billboardRecordIndex);
                 if(keeper.RetiredBedroomFlat) {npc.gameObject.SetActive(false);continue;}
+                BindStationaryObserver(npc,keeper);
                 if(!merchant) continue;
                 int previousHome=keeper.HomeKey;
                 worldStore.PreferNativeWorkplaceBed(keeper.Id,keeperHome);

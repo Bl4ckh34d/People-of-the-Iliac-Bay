@@ -71,6 +71,29 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new InvalidOperationException("Crowd recovery failed: minimumGap="+minimum+"; maximumStep="+maximumStep);
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CROWD_RECOVERY_PASS: actors=6; minimumGap="+minimum+"; maximumStep="+maximumStep);
 
+                // Measure the rendered body on the already verified clear apron.
+                // A resumed physical route must retain its urgent pace rather
+                // than silently inheriting the ordinary walking cap.
+                var runner=actors[0];float measuredTime=0,measuredDistance=0;
+                double intendedSpeed=ResidentMovement.FleeSpeed(runner.Resident.AppearanceSeed);
+                deadline=Time.realtimeSinceStartup+3;
+                while(Vector3.Distance(runner.transform.position-Vector3.up,center)>0.6f && Time.realtimeSinceStartup<deadline)
+                {
+                    float frame=Time.unscaledDeltaTime;
+                    var before=runner.transform.position;
+                    var ground=before-Vector3.up;
+                    runner.GetComponent<CrowdMotion>().ResumeFromPause();
+                    runner.Place(Vector3.MoveTowards(ground,center,(float)intendedSpeed*frame),center-ground,fleeing:true,preferNative:false);
+                    // Long-frame collision caps are tested above, not mistaken
+                    // for the configured unobstructed movement speed here.
+                    if(frame>0 && frame<=0.1f){measuredTime+=frame;measuredDistance+=Vector3.Distance(before,runner.transform.position);}
+                    yield return null;
+                }
+                float measuredSpeed=measuredTime>0?measuredDistance/measuredTime:0;
+                if(measuredSpeed*3.6f<3.5f || measuredSpeed<intendedSpeed*0.9)
+                    throw new InvalidOperationException("Urgent rendered pace is capped: measuredKmh="+measuredSpeed*3.6f+"; intendedKmh="+intendedSpeed*3.6);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_URGENT_SPEED_PASS: measuredKmh="+measuredSpeed*3.6f+"; intendedKmh="+intendedSpeed*3.6+"; minimumKmh=3.5");
+
                 // A sign-sized solid collider is directly between the NPC and an
                 // otherwise safer destination. Distance from danger alone is insufficient.
                 var from=actors[0].transform.position-Vector3.up;

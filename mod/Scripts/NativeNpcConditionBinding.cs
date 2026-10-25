@@ -23,6 +23,7 @@ namespace PeopleOfTheIliacBay.DFU
         private object epoch;
         private EntityEffectManager effects;
         private string lastPacket;
+        private int rememberedDiseases,rememberedPoisons;
 
         public static void BindTo(GameObject actor,WorldStateStore world,Resident person)
         {
@@ -36,12 +37,14 @@ namespace PeopleOfTheIliacBay.DFU
             if(binding.lastPacket!=null)
                 effects.RestoreInstancedBundleSaveData(ReadRestorableBundles(binding.lastPacket,
                     DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()));
+            binding.rememberedDiseases=effects.DiseaseCount;binding.rememberedPoisons=effects.PoisonCount;
         }
 
         public void Capture()
         {
             if(store==null || !effects || resident==null || !resident.IsAlive ||
                 !store.IsNpcVitalsWriteEpochCurrent(epoch))return;
+            RememberConditionChanges(false);
             if(effects.PoisonCount==0 && effects.DiseaseCount==0 && lastPacket==null &&
                 effects.FindIncumbentEffect<Shield>()==null)return;
             var conditions=new List<EntityEffectManager.EffectBundleSaveData_v1>();
@@ -55,6 +58,20 @@ namespace PeopleOfTheIliacBay.DFU
                 lastPacket=packet;
                 var vitals=GetComponent<NativeNpcVitalsBinding>();if(vitals)vitals.RebaselineAfterExternalCommit();
             }
+        }
+
+        internal void RememberConditionChanges(bool playerTreatment)
+        {
+            if(store==null || !effects || resident==null || !store.IsNpcVitalsWriteEpochCurrent(epoch))return;
+            if(effects.DiseaseCount>rememberedDiseases)
+                NativeSceneRecollection.Remember(store,resident.Id,"illness:"+Guid.NewGuid().ToString("N"),NpcSceneEventKind.Illness,
+                    "I became ill. I do not know the source of the illness.",-3,resident.Id);
+            if(effects.DiseaseCount<rememberedDiseases || effects.PoisonCount<rememberedPoisons)
+                NativeSceneRecollection.Remember(store,resident.Id,"recovery:"+Guid.NewGuid().ToString("N"),NpcSceneEventKind.Recovery,
+                    "My "+(effects.DiseaseCount<rememberedDiseases?"disease":"poisoning")+" improved"+
+                    (playerTreatment?" after the player treated me.":". I do not know who caused this recovery."),3,
+                    resident.Id,playerTreatment?NpcDirectedRelationship.PlayerTargetId:null);
+            rememberedDiseases=effects.DiseaseCount;rememberedPoisons=effects.PoisonCount;
         }
 
         private static bool IsShield(EntityEffectManager.EffectBundleSaveData_v1 bundle)

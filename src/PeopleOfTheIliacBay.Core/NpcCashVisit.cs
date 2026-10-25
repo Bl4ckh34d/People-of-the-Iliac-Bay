@@ -100,7 +100,11 @@ namespace PeopleOfTheIliacBay.Core
             var copy=CopyNpcProgress(current);copy.CashVisit.Returning=true;copy.CashVisit.ServiceAt=0;
             if(!CommitNpcInventoryTransaction("cash-visit:"+inventoryRevision,new[]{new NpcInventoryUpdate {
                 PersonId=id,ExpectedRevision=inventoryRevision,WalletGold=gold,Items=inventory.Items}}))return false;
-            state.NpcActors[state.NpcActors.IndexOf(current)]=copy;npcActorIndex[id]=copy;return true;
+            state.NpcActors[state.NpcActors.IndexOf(current)]=copy;npcActorIndex[id]=copy;
+            RememberSceneEvent(id,"cash-visit:"+inventoryRevision,NpcSceneEventKind.CashVisit,now,
+                visit.Position.SettlementId,providerKey,"I had run out of spending money, so I collected "+gold+
+                " gold "+(visit.Bank?"from the bank":"at home")+" before continuing my plans.",1,id);
+            return true;
         }
 
         private static void ValidateCashVisit(NpcCashVisit visit,string id)

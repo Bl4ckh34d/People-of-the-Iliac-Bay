@@ -28,9 +28,16 @@ namespace PeopleOfTheIliacBay.Core
                 latest -= stop.WalkSeconds;
             }
             double earliest = Math.Max(wake * 3600d, 8 * 3600);
+            double elapsed=0;
+            foreach(var stop in data.Stops)
+            {
+                elapsed+=stop.WalkSeconds;
+                if(stop.Purpose==ResidentVisitPurpose.Shop)earliest=Math.Max(earliest,stop.OpenMinute*60d-elapsed);
+                elapsed+=stop.DwellSeconds;
+            }
             // This is the first outing. Later native day windows provide the
             // afternoon/evening activity; a late start would consume those slots.
-            latest = Math.Min(latest, earliest + 2 * 3600);
+            latest = Math.Min(latest,Math.Min(12*3600,earliest+2*3600));
             if (latest < earliest) return source;
             uint rank = seed;
             unchecked { rank ^= rank >> 16; rank *= 0x7feb352du; rank ^= rank >> 15; rank *= 0x846ca68bu; rank ^= rank >> 16; }

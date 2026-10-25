@@ -92,8 +92,14 @@ namespace PeopleOfTheIliacBay.DFU
             try
             {
                 if (!TryOpenConversationPersonalTradeWindow(window, out tradeReason))
-                    AppendDialoguePair(window, text, string.IsNullOrWhiteSpace(tradeReason)
-                        ? "I cannot trade right now." : tradeReason);
+                {
+                    string answer=string.IsNullOrWhiteSpace(tradeReason)?"I cannot trade right now.":tradeReason;
+                    AppendDialoguePair(window, text, answer);
+                    NativeSceneRecollection.Remember(store,conversationPersonId,"trade-refused:"+Guid.NewGuid().ToString("N"),NpcSceneEventKind.Trade,
+                        "I declined the player's trade request. My stated answer was: "+answer+
+                        " No item or gold changed hands. My current walk or destination is not a verified reason for this refusal.",
+                        0,conversationPersonId,NpcDirectedRelationship.PlayerTargetId);
+                }
             }
             finally { personalCommerceBeforeClose=null; }
             // Kept only as a source-compatible private fallback while old saves
@@ -365,18 +371,10 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if (!CurrentPersonalCommerceActor(person) || item == null || !PersonalCommerceDisposable(item) ||
                 quantity < 1 || quantity > item.stackCount) return 0;
-            var personality = store.ReadNpcPersonality(person);
             bool buying = kind == PlayerCommerceKind.Buy;
-            int multiplier = buying ? (personality != null && personality.Greed == "greedy" ? 3 : 2) : 1;
-            long total = (long)Math.Max(1, item.value) * quantity * multiplier;
-            if (total < 1 || total > NpcInventoryLimits.MaximumWalletGold) return 0;
-            // Personal sellers have no shop quality; use DFU's neutral counterparty.
-            int price = Math.Max(1, FormulaHelper.CalculateTradePrice((int)total, 10, !buying));
-            int disposition;
-            return dispositionCommerceEnabled && conversationDispositionEnabled &&
-                store.TryGetActualConversationDisposition(person, out disposition)
-                ? (buying ? DispositionPricing.ApplyPurchaseDispositionPrice(price, disposition)
-                    : DispositionPricing.ApplySaleDispositionPrice(price, disposition)) : price;
+            int favour=dispositionCommerceEnabled && conversationDispositionEnabled?
+                store.PersonalTradeFavour(person,ConversationActionTime()):0;
+            return Math.Max(0,NativePersonalTradePricing.Quote(item,quantity,buying,favour:favour));
         }
 
         private List<PlayerCommerceCandidate> BuildPersonalCommerceCandidates()

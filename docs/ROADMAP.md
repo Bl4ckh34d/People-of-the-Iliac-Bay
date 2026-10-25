@@ -2,6 +2,8 @@
 
 Stand: 25. Oktober 2026. Dieser Plan ersetzt die früheren Architektur- und Zwischenstandslisten.
 
+Aktive Ergänzungen vom 26. Oktober 2026 stehen in der [Implementierungs- und Abnahmecheckliste](WORKLIST-2026-10-26.md). Diese Fehlerbehebung und Spielabnahme haben Vorrang vor neuen späteren Roadmap-Systemen.
+
 ## Leitlinie
 
 Sichtbare Kernsysteme zuerst. Bestehende DFU-Mechaniken verwenden. Nur Zustand speichern und berechnen, der Verhalten, Begegnungen, Gespräche oder tatsächlichen Besitz beeinflusst. Kein Zusatzsystem als Voraussetzung für ein einfaches sichtbares Verhalten.
@@ -87,6 +89,8 @@ Kleinster Umsetzungsschritt: vorhandene Wachreaktion, tatsächliche Täteridenti
 - Diese Regeln ändern weder native Feindschaft noch Questschutz und verhindern keine Heilung.
 
 ## Später, nach funktionierenden Kernabläufen
+
+- **Stationäre Menschen und Marktplatzrollen:** Auch durch andere Mods als Dekoration platzierte NPCs sind gleichwertige Personen mit eigener Identität, Wahrnehmung, bewerteten Erinnerungen und Gesprächskontext. Dazu gehören Marktstandhändler ohne Handelsmenü, Bedienungen innen und außen, der Bühnenunterhalter, Schauspielerinnen und Obdachlose. Später Rollen möglichst aus tatsächlicher Platzierung, Stand/Tisch und Waren-Props bestimmen; wiederverwendete Sprites allein beweisen keinen Beruf. Für mehrdeutige Szenen gezielte Layout-/Ortszuordnungen erlauben. Verifizierte Rolle, Arbeitsplatz und gegenwärtige Tätigkeit ins Kontextfenster aufnehmen; stationäre Arbeit ist zunächst ihr Alltag, ohne erfundene mobile Tagespläne. Handelsmenüs, Warenbestände und zusätzliche Routinen folgen erst nach zuverlässiger Rollenbestimmung. Die laufende Erinnerungs-/Begegnungsanbindung ist bereits Teil der aktiven Checkliste, diese automatische Rollenzuweisung noch nicht.
 
 - **Spracheingabe-Modelltest (STT):** Auf Nutzerwunsch vom25. Oktober2026 **Underdog Bark 3.0 Plus** als Kandidaten testen (korrigiert von Pro). Erwarteter Nutzen laut Nutzer: kleiner und ähnlich gut; noch nicht verifiziert. Zuerst genaue Modellidentität und tatsächliche STT-Eignung bestätigen, danach Speicherbedarf, CPU-/GPU-Latenz, Erkennungsqualität und Verhalten bei Stille/Hintergrundgeräuschen messen. Modellentscheidung und Integration bleiben offen; dieser Eintrag startet keine STT-Implementierung.
 - **Begleiter:** Rekrutierung, Gruppenverwaltung, Mitreisen und Kampfhilfe. Einfache tageweise Bezahlung mit klaren Kündigungsregeln; keine minutengenaue Treuhand-/Erstattungsarchitektur. Bei Stadtaufenthalten wenige begründete Erledigungen und ein klarer Treffpunkt. | LIFE-19,24,25,47 |

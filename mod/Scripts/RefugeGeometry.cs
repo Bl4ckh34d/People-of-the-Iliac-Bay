@@ -73,9 +73,12 @@ namespace PeopleOfTheIliacBay.DFU
             }
             finally
             {
-                temporary.SetActive(false);
-                UnityEngine.Object.Destroy(temporary);
-                Physics.SyncTransforms();
+                if(temporary)
+                {
+                    temporary.SetActive(false);
+                    UnityEngine.Object.Destroy(temporary);
+                    Physics.SyncTransforms();
+                }
             }
         }
     }

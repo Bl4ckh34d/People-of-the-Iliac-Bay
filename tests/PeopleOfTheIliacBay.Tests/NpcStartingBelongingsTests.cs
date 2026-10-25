@@ -8,6 +8,11 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
+            cases.Add(("Mundane starting goods never create native potion-template glass bottles",()=>
+            {
+                for(uint seed=0;seed<100;seed++)foreach(var item in NpcStartingBelongings.Generate(seed,"person",NpcArchetype.Citizen))
+                    Check.True(item.TemplateIndex!=83,"Native Glass_Bottle is a potion, not ordinary junk.");
+            }));
             cases.Add(("NPC starting belongings regenerate from world seed identity and pinned archetype", () =>
             {
                 var first = NpcStartingBelongings.Generate(42, "citizen:one", NpcArchetype.Citizen);
@@ -40,7 +45,7 @@ namespace PeopleOfTheIliacBay.Tests
                     foreach (var item in plan)
                     {
                         Check.True(item.Count == 1, "Starting goods must remain modest single-item entries.");
-                        Check.True(item.TemplateIndex == 83 || item.TemplateIndex == 86 || item.TemplateIndex == 132 ||
+                        Check.True(item.TemplateIndex == 82 || item.TemplateIndex == 86 || item.TemplateIndex == 132 ||
                             item.TemplateIndex == 133 || item.TemplateIndex == 249 || item.TemplateIndex == 279,
                             "Plan contains unsupported template.");
                     }

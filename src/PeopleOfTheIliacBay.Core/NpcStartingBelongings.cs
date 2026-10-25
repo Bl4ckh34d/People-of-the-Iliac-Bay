@@ -25,7 +25,7 @@ namespace PeopleOfTheIliacBay.Core
     public static class NpcStartingBelongings
     {
         public const int MaximumDistinctItems = 3;
-        private const uint GenerationVersion = 1;
+        private const uint GenerationVersion = 2;
         private const uint Domain = 0x42454c31u; // BEL1
         private const uint HealingPotionGenerationVersion = 1;
         private const uint HealingPotionDomain = 0x48504f31u; // HPO1
@@ -108,7 +108,7 @@ namespace PeopleOfTheIliacBay.Core
                 else if (templateRoll == 3 && (archetype == NpcArchetype.Merchant || archetype == NpcArchetype.Innkeeper))
                     result.Add(new NpcStartingBelonging(NpcStartingItemGroup.Jewellery, 133, 1)); // Amulet
                 else if (templateRoll == 0)
-                    result.Add(new NpcStartingBelonging(NpcStartingItemGroup.UselessItems1, 83, 1)); // Glass Bottle
+                    result.Add(new NpcStartingBelonging(NpcStartingItemGroup.UselessItems1, 82, 1)); // Glass Jar; 83 is a native potion template
                 else if (templateRoll == 1)
                     result.Add(new NpcStartingBelonging(NpcStartingItemGroup.UselessItems1, 86, 1)); // Small Sack
                 else

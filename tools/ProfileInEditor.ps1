@@ -1,6 +1,7 @@
 param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$UseDeployedSource,
     [switch]$CountersOnly, [switch]$Overnight, [switch]$ValidatePlaytest, [switch]$ValidateArrival,
-    [switch]$ValidateWardrobe, [switch]$ValidateCrowd, [switch]$ValidateShopping, [switch]$ValidateSpeech, [switch]$ShoppingBuyerOnly)
+    [switch]$ValidateWardrobe, [switch]$ValidateCrowd, [switch]$ValidateShopping, [switch]$ValidateSpeech, [switch]$ShoppingBuyerOnly,
+    [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
@@ -53,6 +54,9 @@ if($Overnight){$arguments+=' -peopleoftheiliacbay-profile-overnight'}
 if($ValidatePlaytest){$arguments+=' -peopleoftheiliacbay-verify-playtest'}
 if($ValidateArrival){$arguments+=' -peopleoftheiliacbay-verify-arrival'}
 if($ValidateWardrobe){$arguments+=' -peopleoftheiliacbay-verify-wardrobe'}
+if($ValidateLeisure){$arguments+=' -peopleoftheiliacbay-verify-leisure'}
+if($ValidateMorningShop){$arguments+=' -peopleoftheiliacbay-verify-morning-shop'}
+if($ValidateInnDiversion){$arguments+=' -peopleoftheiliacbay-verify-inn-diversion'}
 if($ValidateCrowd){$arguments+=' -peopleoftheiliacbay-verify-crowd'}
 if($ValidateShopping){$arguments+=' -peopleoftheiliacbay-verify-shopping'}
 if($ValidateSpeech){$arguments+=' -peopleoftheiliacbay-verify-return-voice'}

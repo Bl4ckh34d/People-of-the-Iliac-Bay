@@ -1,5 +1,33 @@
 # Testing and verification status
 
+## Installed repair checkpoint — 26 October 2026, 05:07
+
+Distribution and Player bundle SHA256 both equal **`DE1428CD851DDE8457339E9C8F64843F23628AAEA929CB55B4EBE22C477CD7F8`**. The owned build editor exited successfully; Unity serializer, adapter lifecycle, contract and bundle integration checks passed (`../work/peopleoftheiliacbay-build.log`). The first build caught an uninitialized `ResidentActor` in the editor facing fixture; the urgent-speed override now preserves pre-initialization behavior, and the full build passed on retry. Core **2117/2117** (`work/checkpoint-core.log`), runtime compile, tooling syntax/protocols, source policy and whitespace checks pass. The following focused native evidence is included; the full [worklist](WORKLIST-2026-10-26.md) remains open.
+
+## Subsequent Inn regression and source repairs
+
+`urgent-speed-before` reproduces a rendered urgent movement cap: **5.535 km/h** versus **13.165 km/h** requested. `urgent-speed-after` passes the same body measurement at **13.165 km/h**, six-body separation (minimum gap 3 m; maximum frame step 0.50002 m), and a nonzero free escape direction around a sign-sized obstacle. Long frames retain their collision-safe step cap and are excluded from the configured-speed measurement. This verifies shared urgent body motion, not every pursuit or complaint route. Complaint progress now stores the actual body location before deciding whether a guard was reached; its full delivery fixture remains pending. The successful after-run contains no `Exception:` entries.
+
+The corrected controlled native fixture passes in `inn-diversion-fix-03` and `urgent-movement-01`: an unplanned Inn visit reaches its counter checkpoint with standing pose, holds a real seat for five seconds, survives snapshot restore and allows the player's normal faded exterior transition. The probe uses native Inn geometry and an explicitly controlled diversion intent; it does not prove the full exterior journey or every family/chat interruption. The latter run confirms the first shutdown cleanup repair but exposes another destroyed temporary-room cleanup in `TavernRoomSurvey`; that is corrected in source. The subsequent `urgent-speed-after` shutdown contains no exception entries.
+
+Current offline suite: **2117/2117** (`work/event-valence-green.log`, repeated in `work/checkpoint-core.log`). New regressions cover paired social buy/sell quotes, renewed hostile incidents, exact native killer attribution versus late corpse discovery, and friend/enemy valuation of health and pursuit. Each regression first failed on the preceding implementation. These repairs are included in the 05:07 checkpoint above.
+
+The 04:31 quick build has a confirmed critical Inn diversion defect. `../Player/PortableAppdata/Player.log` records `Observed visit target is not in the resident's scheduled routine or trip` during counter processing and the player's native pre-transition callback. The latter interrupts the player's faded exit. Source now validates matching persisted closed-shop Inn diversions, retains their authorization while an observed visit still refers to them, and isolates NPC checkpoint exceptions from player transitions. The core regression passes; the latest core run is 2113/2113 (`work/scene-memory-final-core.log`).
+
+`inn-diversion-fix-01` did not validate the repair in-game: its controlled visitor failed entry placement before reaching counter, seat or player-exit assertions. The fixture clears the player from the entry before placing the visitor and asserts placement immediately. `inn-diversion-fix-02` was blocked before launch by a running Player; only the later successful runs count as acceptance. Source also corrects first-person trade refusal text and records the stated refusal in scene memory. That dialogue wording still needs an in-game conversation check.
+
+## Requested quick test build — 26 October 2026, 04:31
+
+Unity build and serializer/adapter/contracts checks passed; the owned build editor exited successfully. Distribution and installed Player bundle both have SHA256 **`0F2C10A3A74E60B71E4C865BF034011D2D6DEA48447E1BB4116867AB1F839B0C`**. This is an intermediate source checkpoint, not completion of the [active worklist](WORKLIST-2026-10-26.md). RuntimeCompile has zero warnings/errors and the core suite passes **2109/2109** (`work/pre-test-build-tests.log`). Build log: `../work/peopleoftheiliacbay-build.log`.
+
+Native evidence preceding this build:
+
+- `memories-trade-02`: actual stamina recipe base 25 g, native buy 33 g/sell 18 g for the test character; invalid generic potion rejected; cancel, real buy/sell receipts, zero-value parchment both ways and inventory ownership checks passed.
+- `memories-morning-01`: ordinary saved schedules at 09:10 produced four clothing-store waiters, four diversion plans, two grouped participants, one Inn choice and four different return times; no remaining wait past 10:45. This verifies planning and timing, not actual Inn entry/return or physical group facing.
+- `memories-leisure-01/02`: controlled group fixture failed to find a safe apron. Ground-height and survey-readiness fixes compile, but the controlled native check has not passed. Do not treat the morning planning check as a replacement.
+
+Ordinary stationary NPCs now receive observers and can participate in bounded short encounters. Native market encounter, save/reload identity and occlusion checks remain open. Later automatic scene-based role assignment is only a roadmap item. No new before/after performance claim is made for this checkpoint. Historical package evidence below remains attributed to its original build.
+
 ## Loitering, outfits, conversations and shop follow-up — 26 October 2026
 
 The user closed the game and authorized native Unity testing. Owned editor processes use copied disposable saves and settings. Unity build, serializer/adapter/contracts integration and installation pass in `work/playtest-2026-10-26/unity-build.log`. Installed bundle and `dist` both have SHA256 **`97484F8D8D8A78C79D049DA40BB74CA519804DE1605FE20056F9772915DE1054`**. All owned editor/build processes and both test-owned speech processes are stopped. Historical sections below describe their own earlier packages.

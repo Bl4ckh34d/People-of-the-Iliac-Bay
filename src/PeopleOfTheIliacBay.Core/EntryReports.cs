@@ -29,6 +29,9 @@ namespace PeopleOfTheIliacBay.Core
             var existing = state.EntryReports.Find(r => r.Id == report.Id);
             if (existing != null) return existing;
             state.EntryReports.Add(report);
+            foreach(string witness in report.CitizenWitnesses)
+                RememberSceneEvent(witness,report.Id,NpcSceneEventKind.Burglary,now,settlement,building,
+                    "I witnessed the player entering this building without permission.");
             return report;
         }
         public void TellGuardAboutEntry(string reportId, string citizenId, string guardId, double now)

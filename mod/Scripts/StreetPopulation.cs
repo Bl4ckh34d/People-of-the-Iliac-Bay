@@ -793,7 +793,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(TryScheduledPaidDoorPlan(plan,seconds,out paidDoorState))return paidDoorState;
             ActivitySnapshot travelerState;
             if(TryTravelerScheduled(plan,seconds,out travelerState))return travelerState;
-            return worldStore.LocalResidentState(plan.Resident.Id,seconds,ObservedSchedule(plan,seconds,ActiveSchedule(plan)));
+            return worldStore.LocalResidentState(plan.Resident.Id,seconds,ClosedShopState(plan,seconds,ObservedSchedule(plan,seconds,ActiveSchedule(plan))));
         }
         private DailySchedule ActiveSchedule(Plan plan)
         {
@@ -803,7 +803,7 @@ namespace PeopleOfTheIliacBay.DFU
             DailySchedule scheduled;
             if(!TryRuntimeHouseholdSchedule(plan,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),out scheduled))
                 scheduled=AppointmentSchedule(plan,restricted ? plan.HauntedSchedule : plan.Schedule,restricted);
-            return RecoveredSchedule(plan,scheduled,restricted);
+            return ClosedShopSchedule(plan,RecoveredSchedule(plan,scheduled,restricted),DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
         }
         private void FinishBuild(int settlementId)
         {
@@ -923,6 +923,7 @@ namespace PeopleOfTheIliacBay.DFU
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
             SurveyKeeperIdentities();
+            SurveyStationaryObservers();
             phase=RuntimeTiming.Start("inn-service-catalog");
             try { UpdateInnServiceCatalog(seconds); }
             finally { RuntimeTiming.End("inn-service-catalog",phase); }
@@ -967,13 +968,16 @@ namespace PeopleOfTheIliacBay.DFU
                 responses.WarnNearby(actors.Values, seconds, interior ? interior.EntryDoor.buildingKey : -1,
                     id => GetState(id, seconds).Activity == Activity.Sleep);
             AdvanceOffscreenDialogueComplaints(seconds);
+            ObserveSceneMemories(seconds);
+            ObserveStationaryMemories(seconds);
+            PrepareStreetChats(seconds);
             if (game.PlayerEnterExit.IsPlayerInside)
             {
                 if (interior) UpdateInterior(seconds); else ClearActors();
                 return;
             }
             Vector3 player = game.PlayerMotor.transform.position;
-            PrepareStreetChats(seconds);
+            PrepareClosedShopLeisure(seconds);
             BeginHouseholdJointFrame();
             var actorSpawnBudget = new PopulationSpawnBudget(4,2);
             long actorSpawnStarted=System.Diagnostics.Stopwatch.GetTimestamp();
@@ -1082,7 +1086,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if (ApplyHaltBystander(actor, player, position, seconds)) continue;
                 if (PlaceStreetChat(actor,seconds)) continue;
                 if (DeferHouseholdJointBody(plan,actor)) continue;
-                if (PlaceClosedShopWait(plan,actor,state)) continue;
+                if (PlaceClosedShopWait(plan,actor,state,seconds)) continue;
                 var next = worldStore.IsResidentAway(plan.Resident.Id,seconds+0.1) ? Scheduled(plan,seconds+0.1) :
                     EntryState(plan.Resident.Id, seconds + 0.1, Scheduled(plan,seconds + 0.1));
                 Vector3 direction = next.Activity == Activity.Travel || next.Activity==Activity.Meeting ? geometry.ScenePoint(next.Position) - position :
@@ -1283,6 +1287,7 @@ namespace PeopleOfTheIliacBay.DFU
                     bedClaim = bedClaims[plan.Resident.Id];
                     actor.Sleep(interior.transform, indoorBeds[bedClaim.BedRecordIndex], art);
                 }
+                else if(reaction==null && PlaceStreetChat(actor,seconds)) { }
                 else if(reaction==null && state.Activity==Activity.Visit && PlaceShopVisit(actor,seconds)) { }
                 else actor.Place(interior.transform.TransformPoint(indoorGeometry.LocalAnchors[slot]), Vector3.forward, true,freeStanding:state.Activity==Activity.Home||state.Activity==Activity.Visit);
                 RecognizePartnerKiller(actor,seconds,interior.transform,interior.EntryDoor.buildingKey);
@@ -1522,8 +1527,7 @@ namespace PeopleOfTheIliacBay.DFU
             ClearPhysicalShopVisits();
             bankVisitors.Clear();cashMotions.Clear();
             ClearInnChats();
-            streetChats.Clear();nextStreetChat.Clear();nextChatScan=0;
-            closedShopWaits.Clear();
+            ClearStreetChats();nextStreetChat.Clear();nextChatScan=0;
             partnerRetaliation.Clear();nextGrudgeCheck.Clear();
             foreach (var actor in actors.Values) if (actor) { actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
             actors.Clear();
@@ -1574,12 +1578,13 @@ namespace PeopleOfTheIliacBay.DFU
             foreach (var view in corpses.Values) if (view) { view.SetActive(false); Destroy(view); }
             corpses.Clear();
         }
+        private bool destroyingPopulation;
         public void Clear()
         {
             // Town/fast-travel changes can advance the clock before teardown.
             // Yield at the last actual frame so unloaded time remains consumable.
-            if(lastPopulationSeconds>=0)YieldHouseholds(lastPopulationSeconds);
-            if(!GameManager.Instance.IsPlayerInside && roadTravelActors && worldStore!=null)
+            if(!destroyingPopulation && lastPopulationSeconds>=0)YieldHouseholds(lastPopulationSeconds);
+            if(!destroyingPopulation && !GameManager.Instance.IsPlayerInside && roadTravelActors && worldStore!=null)
             {
                 double now=lastPopulationSeconds>=0?lastPopulationSeconds:ActionNow();
                 foreach(var actor in new List<ResidentActor>(actors.Values))
@@ -1616,12 +1621,13 @@ namespace PeopleOfTheIliacBay.DFU
             RestoreHouseFlats();
             FlushOutdoorDeparture();
             if (building != null) { StopCoroutine(building); building = null; }
-            ClearActors(); homeSleepClocks.Clear();homeSleepEpoch=null;
+            ClearActors();closedShopWaits.Clear();nextClosedShopPlan=0; homeSleepClocks.Clear();homeSleepEpoch=null;
             ClearCorpses(); ClearPaidDoorPlans(); plans.Clear(); Ready = false;
             needsExterior = false;
             interior = null; indoorGeometry = null; indoorSlots.Clear();
             shopGeometry=null; shopJourneys.Clear(); ClearPhysicalShopVisits(); shopDepartures.Clear(); shopVisitDay=-1;
             population = null; indoorBeds.Clear(); bedClaims.Clear();
+            stationaryParticipants.Clear();stationaryScene=null;stationaryMemoryScratch.Clear();
             responses = null; worldStore = null;
             if (ownsVanilla && vanilla)
             {
@@ -1630,6 +1636,6 @@ namespace PeopleOfTheIliacBay.DFU
             }
             hiddenVanilla.Clear(); ownsVanilla = false; vanilla = null; directory = null; geometry = null;
         }
-        private void OnDestroy() { DisposePlayerShopProvenanceHook(); DisposeCorpseInventory(); RemoveEntryAwareness(); Clear(); if (runningPilotAtlas) Destroy(runningPilotAtlas); if (sleepingArt != null) sleepingArt.Dispose(); if (keeperStandingArt!=null) keeperStandingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); if (keeperServiceHook != null) keeperServiceHook.Dispose(); }
+        private void OnDestroy() { destroyingPopulation=true; DisposePlayerShopProvenanceHook(); DisposeCorpseInventory(); RemoveEntryAwareness(); Clear(); if (runningPilotAtlas) Destroy(runningPilotAtlas); if (sleepingArt != null) sleepingArt.Dispose(); if (keeperStandingArt!=null) keeperStandingArt.Dispose(); if (reactionHook != null) reactionHook.Dispose(); if (householdDoorHook != null) householdDoorHook.Dispose(); if (theftHook != null) theftHook.Dispose(); if (keeperServiceHook != null) keeperServiceHook.Dispose(); }
     }
 }

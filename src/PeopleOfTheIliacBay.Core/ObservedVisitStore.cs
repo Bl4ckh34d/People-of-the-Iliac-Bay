@@ -175,7 +175,15 @@ namespace PeopleOfTheIliacBay.Core
                     { knownTarget = true; break; }
                 }
             }
+            if(!knownTarget && world.ClosedShopVisits!=null)
+                knownTarget=world.ClosedShopVisits.Exists(visit=>ClosedShopVisitOwnsObservation(visit,observed));
             Require(knownTarget, "Observed visit target is not in the resident's scheduled routine or trip.");
+        }
+        private static bool ClosedShopVisitOwnsObservation(ClosedShopVisit visit,ObservedVisit observed)
+        {
+            return visit.PersonId==observed.ResidentId && visit.SettlementId==observed.SettlementId &&
+                visit.Inn==observed.BuildingKey && visit.Inn>=0 && observed.ObservedAt>=visit.StartedAt &&
+                Math.Abs(observed.PlannedEndAt-(visit.ReturnAt-visit.WalkSeconds))<=0.001;
         }
     }
 }

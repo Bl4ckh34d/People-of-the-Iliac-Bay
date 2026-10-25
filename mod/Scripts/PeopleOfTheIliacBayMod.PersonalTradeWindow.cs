@@ -36,12 +36,14 @@ namespace PeopleOfTheIliacBay.DFU
         private bool TryCreatePersonalTradeWindowSession(out PersonalTradeWindowSession session, out string reason)
         {
             session = null;
-            reason = "This person cannot trade now.";
+            reason = "I cannot arrange a trade right now.";
             var actor = conversationActor;
             string person = conversationPersonId;
             var game = GameManager.Instance;
-            if (!PersonalTradeActorAvailable(actor, person) || !PersonalTradeWilling(actor, person) || game == null ||
+            if (!PersonalTradeActorAvailable(actor, person) || game == null ||
                 game.PlayerEntity == null || game.PlayerEntity.Items == null) return false;
+            if(!PersonalTradeWilling(actor,person))
+            {reason="I don't want to trade with you right now.";return false;}
             var owner = actor.GetComponent<NativeNpcInventoryOwner>();
             var behaviour = actor.GetComponent<DaggerfallEntityBehaviour>();
             if (owner == null || owner.Binding == null || behaviour == null || behaviour.Entity == null ||
@@ -55,6 +57,7 @@ namespace PeopleOfTheIliacBay.DFU
             DaggerfallEntity entity = behaviour.Entity;
             PlayerEntity player = game.PlayerEntity;
             long epoch = saved.Revision;
+            int priceFavour=dispositionCommerceEnabled && conversationDispositionEnabled?sessionStore.PersonalTradeFavour(person,ConversationActionTime()):0;
             var checks = new PersonalBarterLiveChecks
             {
                 NpcAdultNow = () => PersonalTradeActorAvailable(sessionStore, actor, person),
@@ -111,7 +114,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if (haggle == null || fingerprint != basket)
                 {
                     int baseNet;
-                    if (!TryQuotePersonalTrade(actor, person, lines, out baseNet))
+                    if (!TryQuotePersonalTrade(actor, person, lines, out baseNet, priceFavour))
                     { failure = "The current basket cannot be priced."; return false; }
                     if (!NativeNpcInventoryBridge.TryPreparePersonalBarter(sessionStore, binding, entity, player,
                         "personal-barter:" + Guid.NewGuid().ToString("N"), lines, baseNet, checks, out prepared, out failure, quoteOnly:true))
@@ -174,10 +177,12 @@ namespace PeopleOfTheIliacBay.DFU
                     !quote.CanSubmit || fingerprint != PersonalTradeBasketFingerprint(proposal) ||
                     !PersonalTradeProposalCurrent(proposal, person, epoch, sessionStore, binding, entity, player, checks)) return false;
                 PersonalBarterReceipt receipt;
+                string recollection=CapturePersonalTradeMemory(proposal,player.Items,binding.Items,haggle.InitialNetGoldToNpc);
                 if (!NativeNpcInventoryBridge.TryPersonalBarter(sessionStore, binding, entity, player, prepared,
-                    ConversationActionTime(), checks, haggle, () => PersonalTradeCurrentBaseNet(actor, person, prepared), acceptedRound,
+                    ConversationActionTime(), checks, haggle, () => PersonalTradeCurrentBaseNet(actor, person, prepared, priceFavour), acceptedRound,
                     out receipt, out failure)) return false;
                 receiptId = PersonalTradeCommitBoundary.SourceBoundId("receipt", receipt.TransactionId);
+                RememberPersonalTrade(sessionStore,person,receiptId,recollection,NpcEventValence.Trade(receipt.NetGoldToNpc,haggle.InitialNetGoldToNpc));
                 if (sessionStore.TryReservePersonalBarterMercantileTally(receipt.TransactionId))
                     player.TallySkill(DFCareer.Skills.Mercantile, 1);
                 applyMoodOnce(NpcCommerceHagglingPolicy.TradeEffectId(receiptId),
@@ -187,6 +192,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return true;
             };
             string label = actor.Person == null || string.IsNullOrWhiteSpace(actor.Person.NameNPC) ? "NPC" : actor.Person.NameNPC;
+            var rememberClose=PersonalTradeCloseMemory(sessionStore,person);
             session = new PersonalTradeWindowSession(person, epoch, player.Items, binding.Items,
                 () => player.GoldPieces, () => { var current = sessionStore.ReadNpcInventory(person); return current == null ? 0 : current.WalletGold; },
                 prepare, submit, (side, item) => PersonalTradeItemDisposable(item) &&
@@ -194,6 +200,7 @@ namespace PeopleOfTheIliacBay.DFU
                         : PersonalTradeItemSourceAllowed(sessionStore, null, item)), "Player", label,
                 (committed, closeReason) =>
                 {
+                    rememberClose(committed,closeReason);
                     if (actor != null && actor.Resident != null && actor.Resident.Id == person)
                         actor.SetConversationFacing(false);
                 }, proposalSubmitted);
@@ -235,6 +242,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         private static bool PersonalTradeItemDisposable(DaggerfallUnityItem item)
         { return item != null && item.stackCount > 0 && !item.IsQuestItem && !item.IsEquipped && !item.IsSummoned && !item.IsArtifact &&
+            (!item.IsPotion || GameManager.Instance.EntityEffectBroker.GetPotionRecipe(item.PotionRecipeKey)!=null) &&
             !item.RepairData.IsBeingRepaired() && !(item is HouseholdPropertyKeyItem) && item.ItemGroup != ItemGroups.Currency &&
             item.ItemGroup != ItemGroups.Transportation && item.ItemGroup != ItemGroups.Deeds; }
 
@@ -289,7 +297,7 @@ namespace PeopleOfTheIliacBay.DFU
         { return action != null && !NpcActionExecutor.IsTerminal(action) &&
             (action.Kind == NpcActionKind.Follow || action.Kind == NpcActionKind.Wait); }
 
-        private bool TryQuotePersonalTrade(ResidentActor actor, string person, IList<PersonalBarterLine> lines, out int net)
+        private bool TryQuotePersonalTrade(ResidentActor actor, string person, IList<PersonalBarterLine> lines, out int net, int priceFavour=0)
         {
             net = 0; var owner = actor == null ? null : actor.GetComponent<NativeNpcInventoryOwner>();
             var player = GameManager.Instance == null ? null : GameManager.Instance.PlayerEntity;
@@ -300,26 +308,20 @@ namespace PeopleOfTheIliacBay.DFU
                 var source = line.Direction == PersonalBarterDirection.NpcToPlayer ? owner.Binding.Items : player.Items;
                 var item = source.GetItem(line.ItemUid);
                 int price = PersonalTradeItemQuote(actor, person, item, line.Quantity,
-                    line.Direction == PersonalBarterDirection.NpcToPlayer ? PlayerCommerceKind.Buy : PlayerCommerceKind.Sell);
+                    line.Direction == PersonalBarterDirection.NpcToPlayer ? PlayerCommerceKind.Buy : PlayerCommerceKind.Sell, priceFavour);
                 if (price < 0) return false;
                 total += line.Direction == PersonalBarterDirection.NpcToPlayer ? price : -price;
             }
             if (total < -NpcInventoryLimits.MaximumWalletGold || total > NpcInventoryLimits.MaximumWalletGold) return false;
             net = (int)total; return true;
         }
-        private int PersonalTradeCurrentBaseNet(ResidentActor actor, string person, PersonalBarterOrder order)
-        { int result; return order != null && TryQuotePersonalTrade(actor, person, order.Lines, out result) ? result : int.MaxValue; }
-        private int PersonalTradeItemQuote(ResidentActor actor, string person, DaggerfallUnityItem item, int quantity, PlayerCommerceKind kind)
+        private int PersonalTradeCurrentBaseNet(ResidentActor actor, string person, PersonalBarterOrder order, int priceFavour=0)
+        { int result; return order != null && TryQuotePersonalTrade(actor, person, order.Lines, out result, priceFavour) ? result : int.MaxValue; }
+        private int PersonalTradeItemQuote(ResidentActor actor, string person, DaggerfallUnityItem item, int quantity, PlayerCommerceKind kind, int priceFavour=0)
         {
             if (!PersonalTradeActorAvailable(actor, person) || item == null || !PersonalTradeItemDisposable(item) || quantity < 1 || quantity > item.stackCount) return -1;
-            if (item.value == 0) return 0;
-            var personality = store.ReadNpcPersonality(person); bool buying = kind == PlayerCommerceKind.Buy;
-            int multiplier = buying ? personality != null && personality.Greed == "greedy" ? 3 : 2 : 1;
-            long total = (long)item.value * quantity * multiplier;
-            if (total < 1 || total > NpcInventoryLimits.MaximumWalletGold) return -1;
-            int price = Math.Max(1, DaggerfallWorkshop.Game.Formulas.FormulaHelper.CalculateTradePrice((int)total, 10, !buying)); int disposition;
-            return dispositionCommerceEnabled && conversationDispositionEnabled && store.TryGetActualConversationDisposition(person, out disposition)
-                ? buying ? DispositionPricing.ApplyPurchaseDispositionPrice(price, disposition) : DispositionPricing.ApplySaleDispositionPrice(price, disposition) : price;
+            bool buying = kind == PlayerCommerceKind.Buy;
+            return NativePersonalTradePricing.Quote(item,quantity,buying,favour:priceFavour);
         }
         private static string PersonalTradeBasketFingerprint(PersonalTradeWindowProposal proposal)
         { if (proposal == null || proposal.Lines == null) return null; string result = proposal.NpcId + "|" + proposal.StoreEpoch; foreach (var line in proposal.Lines) result += "|" + (int)line.Side + ":" + line.ItemUid + ":" + line.Quantity; return result; }

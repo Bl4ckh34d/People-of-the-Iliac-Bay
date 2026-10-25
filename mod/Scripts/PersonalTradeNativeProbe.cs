@@ -24,6 +24,9 @@ namespace PeopleOfTheIliacBay.DFU
                 game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal),"Personal trade requires an owned explicit fixture.");
             var store=(WorldStateStore)typeof(StreetPopulation).GetField("worldStore",Private).GetValue(streets);
             Require(store!=null,"The loaded street population has no authoritative world store.");
+            var clock=DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now;
+            clock.RaiseTime((float)((12*3600-clock.ToSeconds()%86400+86400)%86400));
+            DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
             ResidentActor selected=null;DaggerfallUnityItem selectedItem=null;NativeNpcInventoryOwner owner=null;
             float deadline=Time.realtimeSinceStartup+75;
             while(!selected && Time.realtimeSinceStartup<deadline)
@@ -43,7 +46,17 @@ namespace PeopleOfTheIliacBay.DFU
             Require(selected && owner,"No existing adult with a bound personal inventory appeared.");
             // Controlled disposable fixture stock, not production generation:
             // historical test ledgers can correctly be empty and must not refill.
-            selectedItem=ItemBuilder.CreateItem(ItemGroups.UselessItems1,(int)UselessItems1.Glass_Bottle);
+            var stamina=ItemBuilder.CreatePotion(221871);
+            Require(stamina!=null && stamina.IsPotion && stamina.value==25,"Native stamina potion recipe/base value changed.");
+            int potionBuy=NativePersonalTradePricing.Quote(stamina,1,true),potionSell=NativePersonalTradePricing.Quote(stamina,1,false);
+            Require(potionBuy>0 && potionSell>0,"Native potion pricing failed.");
+            for(int favour=-45;favour<=45;favour++)
+                Require(NativePersonalTradePricing.Quote(stamina,1,false,favour:favour)<=
+                    NativePersonalTradePricing.Quote(stamina,1,true,favour:favour),"Social potion buyback exceeds purchase price.");
+            var invalidPotion=ItemBuilder.CreateItem(ItemGroups.UselessItems1,(int)UselessItems1.Glass_Bottle);
+            Require(NativePersonalTradePricing.Quote(invalidPotion,1,true)==-1,"Uninitialized potion admitted as cheap stock.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_POTION_PRICE_PASS: staminaBase="+stamina.value+"; nativeBuy="+potionBuy+"; nativeSell="+potionSell+"; invalidBottleRejected=true");
+            selectedItem=ItemBuilder.CreateItem(ItemGroups.UselessItems1,(int)UselessItems1.Glass_Jar);
             selectedItem.value=100;selectedItem.stackCount=2;
             owner.Binding.Items.AddItem(selectedItem,noStack:true);owner.Capture();
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_FIXTURE: existingResident="+selected.Resident.Id+
@@ -71,6 +84,8 @@ namespace PeopleOfTheIliacBay.DFU
                     game.PlayerEntity.GoldPieces==playerGold && store.ReadNpcInventory(selected.Resident.Id).WalletGold==npcGold &&
                     store.ReadNpcInventory(selected.Resident.Id).Revision==revision,"Cancel changed actual items or wallets.");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_CANCEL_PASS: nativeWindow=true; lowMercantile20=true; previewUnchanged=true; cancelUnchanged=true");
+                Require(store.RecallSceneEvents(selected.Resident.Id,DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),2000)
+                    .Contains("No items or gold changed hands"),"Cancelled personal trade was not remembered.");
 
                 yield return ConversationMoodProbe.OpenTalk(host,game,selected,value=>talk=value);
                 window=Open(host,talk);yield return null;yield return null;

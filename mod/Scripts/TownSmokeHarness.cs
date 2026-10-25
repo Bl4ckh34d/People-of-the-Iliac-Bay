@@ -501,7 +501,13 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-profile-only")>=0)
                     {
-                        if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-wardrobe")>=0)
+                        if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-inn-diversion")>=0)
+                            yield return streets.VerifyInnDiversionTransition();
+                        else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-morning-shop")>=0)
+                            yield return streets.VerifyMorningClothingShop();
+                        else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-leisure")>=0)
+                            yield return streets.VerifyClosedShopLeisure();
+                        else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-wardrobe")>=0)
                             Debug.Log(NativeNpcOutfitProbe.Run());
                         else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-crowd")>=0)
                             yield return NativePopulationPlaytestProbe.Run(streets);

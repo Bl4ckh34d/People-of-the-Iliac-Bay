@@ -68,6 +68,7 @@ namespace PeopleOfTheIliacBay.DFU
             var checkpoint=visit.Capture(actor,interior,indoorGeometry,now,population.SettlementId);
             if(checkpoint==null)return false;
             var choice=visit.PurchaseSelection;
+            string boughtName=choice.Shelf && choice.Shelf.Items.GetItem(choice.Uid)!=null?choice.Shelf.Items.GetItem(choice.Uid).LongName:null;
             NativePerson seller;var owner=actor.GetComponent<NativeNpcInventoryOwner>();
             string reason="No affordable available item.";bool purchased=false;
             if(choice.Shelf && owner && owner.Binding!=null && TryShopSeller(out seller) && seller.Id==choice.SellerId)
@@ -95,6 +96,10 @@ namespace PeopleOfTheIliacBay.DFU
             // or buy a replacement item without going through another visit.
             visit.CounterPurchaseResolved=true;checkpoint.CounterPurchaseResolved=true;
             worldStore.StoreObservedVisit(checkpoint);
+            NativeSceneRecollection.Remember(worldStore,actor.Resident.Id,"shopping:"+interior.EntryDoor.buildingKey+":"+
+                HouseholdInnVisitProvenance.WireTime(visit.OriginalEndAt),NpcSceneEventKind.Shopping,
+                purchased?"I bought "+boughtName+" for "+choice.Price+" gold and am carrying it until I return home.":
+                "I browsed this shop and left without buying an item.",purchased?1:0,actor.Resident.Id);
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_AMBIENT_SHOP_PURCHASE: resident="+actor.Resident.Id+
                 "; purchased="+purchased+"; item="+choice.Uid+"; gold="+(purchased?choice.Price:0)+"; reason="+reason);
             return true;

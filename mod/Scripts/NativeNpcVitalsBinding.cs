@@ -77,6 +77,7 @@ namespace PeopleOfTheIliacBay.DFU
                 NativeNpcStartingSpells.EnsureKnownSpells(gameObject,world,person);
             if(spellbook!=null)spellbook.Capture();
             NativeNpcConditionBinding.BindTo(gameObject,world,person);
+            NativeNpcSceneObserver.BindTo(gameObject,world);
         }
 
         private void Update()
@@ -126,15 +127,18 @@ namespace PeopleOfTheIliacBay.DFU
             if(!bound || !isActiveAndEnabled || store!=expectedStore || !source ||
                 source!=GameManager.Instance.PlayerEntityBehaviour || entity==null || resident==null ||
                 !NpcVitalsBindingPolicy.Eligible(resident.IsAlive,resident.AgeGroup==ResidentAgeGroup.Adult,resident.IsQuestProtected) ||
-                !store.IsNpcVitalsWriteEpochCurrent(writeEpoch) || entity.CurrentHealth<=0 || entity.CurrentHealth>=maximumHealth)return null;
+                !store.IsNpcVitalsWriteEpochCurrent(writeEpoch) || entity.CurrentHealth<=0)return null;
             CaptureChangedResources(false);
+            var conditionMemory=GetComponent<NativeNpcConditionBinding>();if(conditionMemory)conditionMemory.RememberConditionChanges(false);
             int before=entity.CurrentHealth,magicka=entity.CurrentMagicka;
             long revision=vitalsRevision;var epoch=writeEpoch;var nativeEntity=entity;
             return error=>
             {
                 if(error!=null || !this || !isActiveAndEnabled || store!=expectedStore || entity!=nativeEntity ||
                     !source || source!=GameManager.Instance.PlayerEntityBehaviour || !resident.IsAlive ||
-                    !store.IsNpcVitalsWriteEpochCurrent(epoch) || entity.CurrentHealth<=before)return;
+                    !store.IsNpcVitalsWriteEpochCurrent(epoch))return;
+                if(conditionMemory)conditionMemory.RememberConditionChanges(true);
+                if(entity.CurrentHealth<=before)return;
                 store.TryCaptureObservedPlayerHealing(epoch,resident.Id,archetype,before,magicka,
                     entity.CurrentHealth,entity.CurrentMagicka,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),revision);
                 RebaselineAfterExternalCommit();

@@ -36,6 +36,9 @@ namespace PeopleOfTheIliacBay.DFU
 
         private bool ContinueLocalOutdoorArrival(Plan plan, ResidentActor actor, ActivitySnapshot current, double seconds)
         {
+            bool diversion;
+            bool continuing=ContinueClosedShopArrival(plan,actor,current,seconds,out diversion);
+            if(diversion)return continuing;
             if (plan == null || plan.Resident == null || !plan.Resident.IsAlive ||
                 current.Activity != Activity.Visit && current.Activity != Activity.Home ||
                 plan.Routine == null) return false;

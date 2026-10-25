@@ -21,8 +21,19 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!source.Entity.IsInvisible&&actor&&actor!=victim&&actor.Resident.IsAlive&&actor.gameObject.activeInHierarchy&&!actor.IsSleeping&&
                     CivilianResponses.Sees(actor.transform.position,victim.transform.position,20)&&CivilianResponses.Sees(actor.transform.position,source.transform.position,20))witnesses.Add(actor);
             ObserveExteriorStaticWitnesses(alarm,victim.transform.position,now,source);
+            var body=victim.GetComponent<DaggerfallEntityBehaviour>();int healthBefore=body && body.Entity!=null?body.Entity.CurrentHealth:0;
             return error=>{
-                if(error!=null||store!=worldStore||!victim||victim.Resident.IsAlive)return;
+                if(error!=null||store!=worldStore||!victim)return;
+                if(body && body.Entity!=null && body.Entity.CurrentHealth<healthBefore && source && source.Entity!=null)
+                {
+                    string occurrence="attack:"+Guid.NewGuid().ToString("N");
+                    NativeSceneRecollection.Remember(store,victim.Resident.Id,occurrence,NpcSceneEventKind.Assault,
+                        "I was attacked by "+source.Entity.Name+". I do not know why.",-3,victim.Resident.Id);
+                    foreach(var witness in witnesses)if(witness)
+                        NativeSceneRecollection.Remember(store,witness.Resident.Id,occurrence,NpcSceneEventKind.Assault,
+                            "I saw "+source.Entity.Name+" attack "+victim.Person.NameNPC+". I do not know why.",subject:victim.Resident.Id);
+                }
+                if(victim.Resident.IsAlive)return;
                 if(!source)return;
                 var evidence=source.GetComponent<GuardAttackEvidence>();if(!evidence)evidence=source.gameObject.AddComponent<GuardAttackEvidence>();
                 evidence.Until=now+3600;

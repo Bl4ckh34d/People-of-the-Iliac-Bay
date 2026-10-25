@@ -8,6 +8,8 @@ namespace PeopleOfTheIliacBay.Tests
         private static int Main()
         {
             var cases = new List<(string Name, Action Body)>();
+            ClosedShopLeisureTests.Add(cases);
+            NpcSceneMemoryTests.Add(cases);
             AgenticDialogueUiPolicyTests.Add(cases);
             NpcAcuteFearTests.Add(cases);
             ConversationContextAcuteFearTests.Add(cases);

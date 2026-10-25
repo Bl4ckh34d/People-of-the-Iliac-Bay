@@ -6,7 +6,7 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Local test bundle **97484F8D8D8A** is built and installed; package integration and the focused native checks above pass. Whole-town closed-shop behavior and complete bank/family cash detours still need broader in-game acceptance.
+Local test bundle **DE1428CD851D** is built and installed (26 October, 05:07); Unity package integration and **2117/2117** core checks pass. It includes event memory, social pricing, closed-shop diversions and ordinary stationary NPC observers/encounters. The unplanned-Inn checkpoint no longer aborts the player's exit in the controlled native regression; urgent physical movement now retains its running speed. New stationary encounters, full diversion journeys and the requested anonymous murder-report action still need work and acceptance. The [active implementation and test checklist](docs/WORKLIST-2026-10-26.md) records that scope.
 
 ## Project status
 

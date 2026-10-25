@@ -181,6 +181,9 @@ namespace PeopleOfTheIliacBay.DFU
             conversationBusy=true;
             string sharedActivity=CurrentConversationSharedActivityContext(memoryOpenedAt);
             string prompt=ConversationReentry.Prompt(memoryOpenedAt-returningGreetingElapsed,memoryOpenedAt);
+            string recentEvents=store.RecallSceneEvents(memoryPersonId,memoryOpenedAt,1200);
+            if(!string.IsNullOrWhiteSpace(recentEvents))prompt+=" Your own recent experiences: "+recentEvents+
+                " Let the greeting naturally reflect a relevant shared experience, especially today's trade or cancelled trade. Do not invent a transaction, motive, or previous question.";
             if(!string.IsNullOrWhiteSpace(sharedActivity))prompt+=" Current shared activity: "+sharedActivity;
             bool refuses=ListenerRefusesFurtherCommunication(conversationPersonId);
             if(refuses) prompt="The player approached again after you ended the previous conversation. " +
@@ -274,6 +277,7 @@ namespace PeopleOfTheIliacBay.DFU
                 recalledMemory=store.RecallConversation(memoryPersonId,query,now,2000);
             }
             string context=" "+recalledMemory+" "+ConversationRoomPresence();
+            context+=" "+store.RecallSceneEvents(memoryPersonId,now,1200);
             string moodCauses=string.Empty;
             try { moodCauses=store.DescribeRecentConversationMoodCauses(memoryPersonId,now,600); }
             catch { }

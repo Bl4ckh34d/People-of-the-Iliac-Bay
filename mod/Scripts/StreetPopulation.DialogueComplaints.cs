@@ -87,6 +87,8 @@ namespace PeopleOfTheIliacBay.DFU
 
             Vector3 position = directory.transform.TransformPoint(new Vector3((float)complaint.X,
                 (float)complaint.Y, (float)complaint.Z));
+            var crowd=actor.GetComponent<CrowdMotion>();
+            if(crowd && crowd.HasPlacement)position=actor.transform.position-Vector3.up;
             var guards = GetComponent<GuardPopulation>();
             Vector3 guardPosition;
             if (!guards || !guards.TryGetComplaintGuardPosition(complaint.GuardId, out guardPosition))
@@ -143,11 +145,14 @@ namespace PeopleOfTheIliacBay.DFU
                     { proposed.y = hit.point.y; supported = true; break; }
                 if (supported) position = proposed; else blocked = true;
             }
+            actor.Place(position, destination - position, blocked || move.sqrMagnitude < 0.000001f,
+                !blocked && move.sqrMagnitude > 0.000001f);
+            // Collision/separation may stop short of the requested step. Only
+            // the actual body may establish saved progress or guard arrival.
+            position=actor.transform.position-Vector3.up;
             var saved = directory.transform.InverseTransformPoint(position);
             complaint.X = saved.x; complaint.Y = saved.y; complaint.Z = saved.z;
             worldStore.SetDialogueComplaint(complaint);
-            actor.Place(position, destination - position, blocked || move.sqrMagnitude < 0.000001f,
-                !blocked && move.sqrMagnitude > 0.000001f);
 
             Vector3 currentGuard;
             if (guards.TryGetComplaintGuardPosition(complaint.GuardId, out currentGuard) &&

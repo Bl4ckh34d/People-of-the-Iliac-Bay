@@ -11,8 +11,13 @@ namespace PeopleOfTheIliacBay.DFU
         private void CaptureObservedTransition(PlayerEnterExit.TransitionEventArgs args)
         {
             if(GameManager.Instance.SaveLoadManager.LoadInProgress) return;
-            CaptureObservedVisits();
-            YieldHouseholds(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            // Native DFU has already faded the player's view before invoking
+            // this callback. A rejected NPC checkpoint must never abort that
+            // player's transition coroutine and leave the screen black.
+            try {CaptureObservedVisits();}
+            catch(Exception error){Debug.LogError("PEOPLE_OF_THE_ILIAC_BAY_TRANSITION_CHECKPOINT_REJECTED: "+error);}
+            try {YieldHouseholds(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());}
+            catch(Exception error){Debug.LogError("PEOPLE_OF_THE_ILIAC_BAY_TRANSITION_HOUSEHOLD_REJECTED: "+error);}
         }
         public void CaptureObservedVisits()
         { CaptureObservedVisits(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()); }

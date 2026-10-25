@@ -20,12 +20,15 @@ namespace PeopleOfTheIliacBay.Core
         {return Math.Floor(now/86400d)==selectedDay?dateSchedule:dateSource;}
         public List<ResidentVisitSnapshot> ScheduledVisits(double absoluteSeconds)
         {
+            if(interludeSource!=null)return InterludeVisits(absoluteSeconds);
             if(!Finite(absoluteSeconds) || absoluteSeconds<0)throw new ArgumentOutOfRangeException(nameof(absoluteSeconds));
             if(recoveryPlan!=null && !RecoveryApplies(absoluteSeconds))return recoverySource.ScheduledVisits(absoluteSeconds);
             return dateSource==null?ScheduledVisits():ScheduleOn(absoluteSeconds).ScheduledVisits(absoluteSeconds);
         }
         public bool ContainsVisitBuilding(int buildingKey,double absoluteSeconds)
         {
+            if(interludeSource!=null)return interludeSource.ContainsVisitBuilding(buildingKey,absoluteSeconds)||
+                Math.Floor(absoluteSeconds/86400)==Math.Floor(interludeFrom/86400) && interludeSchedule.ContainsVisitBuilding(buildingKey,absoluteSeconds);
             if(!Finite(absoluteSeconds) || absoluteSeconds<0)throw new ArgumentOutOfRangeException(nameof(absoluteSeconds));
             if(recoveryPlan!=null && !RecoveryApplies(absoluteSeconds))return recoverySource.ContainsVisitBuilding(buildingKey,absoluteSeconds);
             return dateSource==null?ContainsVisitBuilding(buildingKey):ScheduleOn(absoluteSeconds).ContainsVisitBuilding(buildingKey,absoluteSeconds);

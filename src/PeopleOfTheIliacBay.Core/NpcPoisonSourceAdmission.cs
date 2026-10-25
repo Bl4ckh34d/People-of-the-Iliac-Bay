@@ -125,6 +125,7 @@ namespace PeopleOfTheIliacBay.Core
             ticket.Consumed = true;
             evidence = disposition == NpcPoisonCaptureDisposition.Queued
                 ? NpcExperienceEvent.CopyValidated(preparedEvidence) : null;
+            if(evidence!=null)RememberVerifiedExperience(evidence);
             return disposition;
         }
 
@@ -150,6 +151,7 @@ namespace PeopleOfTheIliacBay.Core
                 state.NpcPoisonOnsets = validated.NpcPoisonOnsets;
                 state.NpcExperienceInbox = validated.NpcExperienceInbox;
                 evidence = NpcExperienceEvent.CopyValidated(projected);
+                RememberVerifiedExperience(evidence);
                 return true;
             }
             catch (ArgumentException) { return false; }

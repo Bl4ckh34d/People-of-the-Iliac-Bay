@@ -1,6 +1,8 @@
-# Spieltest — 25. Oktober 2026
+# Spieltest — 26. Oktober 2026
 
-Spielbarer Entwicklungsbuild `B730177389F8`, bereits installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Vollständiger Hash und Prüfgrenzen stehen in [TESTING.md](TESTING.md).
+Spielbarer Zwischenbuild `DE1428CD851D`, um 05:07 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2117 Core-Tests bestehen. Der gemeldete Inn-Fehler besteht den gezielten nativen Test: Tresen, stabiler Sitzplatz, Speicherstand und Spieler-Ausgang. Fluchtbewegung erreicht im freien nativen Test 13,16 km/h statt der zuvor begrenzten 5,54 km/h. Korrigierte Handels-Ablehnungstexte, soziale Preisgrenzen und Erinnerungsreparaturen sind enthalten. Vollständiger Hash und Prüfgrenzen stehen in [TESTING.md](TESTING.md). Die [Arbeitsliste](WORKLIST-2026-10-26.md) enthält offene Implementierungen und Spieltests; insbesondere ist der neue anonyme Mord-Meldeauftrag noch nicht implementiert.
+
+Für diesen kurzen Test besonders hilfreich: um 09:10 beim Kleiderladen warten, später tatsächlichen Eintritt/Rückkehr beobachten; persönliche Trankpreise und Null-Gold-Pergamenthandel prüfen; stationäre Markt-NPCs nach wirklich beobachteten Ereignissen erneut ansprechen. Die neue stationäre Wahrnehmung und kurze Begegnungen sind noch nicht nativ abgenommen. Automatische Marktrollen sind noch nicht implementiert.
 
 ## Start
 

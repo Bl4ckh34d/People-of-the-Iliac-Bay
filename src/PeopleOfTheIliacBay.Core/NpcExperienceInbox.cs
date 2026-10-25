@@ -598,6 +598,7 @@ namespace PeopleOfTheIliacBay.Core
             NpcExperienceInbox prepared;
             if (!TryPrepareVerifiedNativeExperience(nativeEvent, out prepared)) return false;
             state.NpcExperienceInbox = prepared;
+            RememberVerifiedExperience(nativeEvent);
             return true;
         }
 
@@ -613,6 +614,7 @@ namespace PeopleOfTheIliacBay.Core
             try { prepared = NpcExperienceInbox.CopyValidated(prepared, IsKnownNpcExperienceIdentity); }
             catch (ArgumentException) { return false; }
             state.NpcExperienceInbox = prepared;
+            RememberVerifiedExperience(nativeEvent);
             return true;
         }
 

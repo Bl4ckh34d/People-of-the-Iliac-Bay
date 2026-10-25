@@ -37,6 +37,9 @@ namespace PeopleOfTheIliacBay.DFU
         {
             bool outdoors;
             var game=GameManager.Instance;
+            string social;
+            if(streets && streets.TryStreetChatContext(speaker.PersonId,now,out social))
+                return ConversationContextFact<string>.Verified(social,ConversationContextFactSource.LiveObservation,now);
             if(!speaker.ManagedActor || speaker.ManagedActor.Resident==null || !streets || !streets.Ready ||
                 !game.PlayerGPS.HasCurrentLocation || !outdoorsFact.TryGetVerified(out outdoors) ||
                 streets.IsAlarmed(speaker.PersonId))return null;
@@ -63,6 +66,9 @@ namespace PeopleOfTheIliacBay.DFU
                         (cashVisit.WaitingPartnerId!=null?"; my partner is waiting for me":"; ordinary visits will resume afterwards");
             else
             {
+                string leisure;
+                if(streets.TryClosedShopContext(speaker.ManagedActor,now,ConversationBuildingName,out leisure))
+                    return ConversationContextFact<string>.Verified(leisure.Length>384?leisure.Substring(0,384):leisure,ConversationContextFactSource.LiveObservation,now);
                 int destination;
                 if(outdoors && streets.TryCurrentNavigationBuilding(speaker.ManagedActor,out destination))
                     plan=destination==resident.HomeKey?"returning home; still outdoors":

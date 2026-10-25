@@ -268,6 +268,9 @@ namespace PeopleOfTheIliacBay.DFU
             else if(native)native.Pause();
             if(!nativeMoved)
             {
+                // A resumed physical flee/report route must not inherit the
+                // ordinary walking cap from initial body configuration.
+                if(crowd && Resident!=null)crowd.Configure(1,fleeing&&!standing?ResidentMovement.FleeSpeed(Resident.AppearanceSeed):WalkingSpeed);
                 if(crowd && !crowd.Place(ground,out actual,comfortWalking&&!standing,waitAtOccupiedTarget,seatAccess,placementAllowed)) { gameObject.SetActive(false); return; }
                 if(!crowd) transform.position=ground+Vector3.up;
             }

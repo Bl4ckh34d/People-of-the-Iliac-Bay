@@ -89,6 +89,7 @@ namespace PeopleOfTheIliacBay.Core
         {return recoveryPlan!=null && now>=recoveryPlan.CreatedAt && now<(recoveryPlan.AbsoluteDay+1d)*86400d;}
         public double ReturnHomeAt(double daySeconds)
         {
+            if(interludeSource!=null)return interludeSource.ReturnHomeAt(daySeconds);
             if(dateSource!=null)return ScheduleOn(daySeconds).ReturnHomeAt(daySeconds);
             if(recoveryPlan!=null)return RecoveryApplies(daySeconds)?recoveryPlan.EndsAt:recoverySource.ReturnHomeAt(daySeconds);
             double day = Math.Floor(daySeconds / 86400) * 86400;
@@ -261,6 +262,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             if (!Finite(absoluteSeconds) || absoluteSeconds < 0)
                 throw new ArgumentOutOfRangeException(nameof(absoluteSeconds));
+            if(interludeSource!=null)return InterludeAt(absoluteSeconds).EvaluateSeconds(absoluteSeconds);
             if(dateSource!=null)return ScheduleOn(absoluteSeconds).EvaluateSeconds(absoluteSeconds);
             if(recoveryPlan!=null)return RecoveryApplies(absoluteSeconds)?recoveryPlan.Evaluate(absoluteSeconds):recoverySource.EvaluateSeconds(absoluteSeconds);
             // Reduce to the day before division to retain sub-minute precision even
@@ -269,6 +271,7 @@ namespace PeopleOfTheIliacBay.Core
         }
         public bool TryVisitWindow(double now,out double startsAt,out double endsAt)
         {
+            if(interludeSource!=null)return InterludeAt(now).TryVisitWindow(now,out startsAt,out endsAt);
             if (!Finite(now) || now < 0) throw new ArgumentOutOfRangeException(nameof(now));
             if(dateSource!=null)return ScheduleOn(now).TryVisitWindow(now,out startsAt,out endsAt);
             if(recoveryPlan!=null && !RecoveryApplies(now))return recoverySource.TryVisitWindow(now,out startsAt,out endsAt);
@@ -295,6 +298,12 @@ namespace PeopleOfTheIliacBay.Core
         }
         public bool TryVisitWindowForBuilding(double now, int buildingKey, out double startsAt, out double endsAt)
         {
+            if(interludeSource!=null)
+            {
+                if(InInterlude(now) && interludeSchedule.ContainsVisitBuilding(buildingKey,now))
+                    return interludeSchedule.TryVisitWindowForBuilding(now,buildingKey,out startsAt,out endsAt);
+                return interludeSource.TryVisitWindowForBuilding(now,buildingKey,out startsAt,out endsAt);
+            }
             if (!Finite(now) || now < 0) throw new ArgumentOutOfRangeException(nameof(now));
             if(dateSource!=null)return ScheduleOn(now).TryVisitWindowForBuilding(now,buildingKey,out startsAt,out endsAt);
             if(recoveryPlan!=null && !RecoveryApplies(now))return recoverySource.TryVisitWindowForBuilding(now,buildingKey,out startsAt,out endsAt);
@@ -336,9 +345,10 @@ namespace PeopleOfTheIliacBay.Core
             endsAt = day + close * 60;
             return awayActivity == Activity.Visit && work == buildingKey;
         }
-        public bool HasVisit { get { return dateSource!=null ? dateSchedule.HasVisit : composedOutings != null ? AnyComposedVisit() : itineraryVisits != null ? itineraryVisits.Length > 0 : awayActivity==Activity.Visit && work>=0; } }
+        public bool HasVisit { get { return interludeSource!=null ? interludeSource.HasVisit||interludeSchedule.HasVisit : dateSource!=null ? dateSchedule.HasVisit : composedOutings != null ? AnyComposedVisit() : itineraryVisits != null ? itineraryVisits.Length > 0 : awayActivity==Activity.Visit && work>=0; } }
         public List<ResidentVisitSnapshot> ScheduledVisits()
         {
+            if(interludeSource!=null)return InterludeVisits(interludeFrom);
             // Parameterless metadata describes the selected date. Consumers
             // looking across calendar boundaries must pass their query time.
             if(dateSource!=null)return dateSchedule.ScheduledVisits();
@@ -353,6 +363,7 @@ namespace PeopleOfTheIliacBay.Core
         }
         public bool ContainsVisitBuilding(int buildingKey)
         {
+            if(interludeSource!=null)return interludeSource.ContainsVisitBuilding(buildingKey)||interludeSchedule.ContainsVisitBuilding(buildingKey);
             if(dateSource!=null)return dateSchedule.ContainsVisitBuilding(buildingKey);
             if (composedOutings != null)
             {
@@ -372,7 +383,7 @@ namespace PeopleOfTheIliacBay.Core
         public ActivitySnapshot Evaluate(long absoluteMinute)
         {
             if (absoluteMinute < 0) throw new ArgumentOutOfRangeException(nameof(absoluteMinute));
-            if(recoveryPlan!=null || dateSource!=null)return EvaluateSeconds(absoluteMinute*60d);
+            if(interludeSource!=null || recoveryPlan!=null || dateSource!=null)return EvaluateSeconds(absoluteMinute*60d);
             return EvaluateMinuteOfDay(absoluteMinute % 1440);
         }
         private ActivitySnapshot EvaluateMinuteOfDay(double minute)

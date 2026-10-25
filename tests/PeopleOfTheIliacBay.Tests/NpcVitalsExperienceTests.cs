@@ -328,6 +328,9 @@ namespace PeopleOfTheIliacBay.Tests
             Check.Equal(NpcResponsibleActorAttribution.Known,healing.ResponsibleActorAttribution);
             Check.Equal(NpcDirectedRelationship.PlayerTargetId,healing.ResponsibleActorId);
             Check.Equal(8L,healing.NativeImpactDetails.TotalHealing);
+            string recollection=store.RecallSceneEvents(id,102,2000);
+            Check.True(recollection.Contains("injured") && recollection.Contains("player") && recollection.Contains("healed"));
+            Check.Equal(2,store.Snapshot().SceneMemories.Count);
             Check.Equal(0L,healing.NativeImpactDetails.TotalDamage);
             Check.Equal(0,store.FlushNpcHealthExperiences(200,0,10).Count);
             string before=SnapshotText(store);
