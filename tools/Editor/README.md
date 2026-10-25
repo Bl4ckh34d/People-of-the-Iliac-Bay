@@ -28,6 +28,10 @@ issued speech receipt, then observes actual travel, saved body position, a
 mid-route snapshot round trip and finite guard dispatch. The incident position
 must pass physical clearance and guard-response routing before the test begins.
 It does not exercise free-text model classification or native disk save/load.
+Add `-ValidateComplaintWait` to fault-inject an unreachable response location,
+verify five seconds of standing/facing without a charge, then restore the real
+incident and verify delivery. This option requires `-ValidateComplaint`; it does
+not claim a naturally blocked door or path was reproduced.
 See the [physical complaint audit](../../docs/audits/2026-10-26-physical-dialogue-complaint.md).
 
 Each 20-second observation phase and native 1/3-hour loiter records its own CPU

@@ -130,7 +130,11 @@ namespace PeopleOfTheIliacBay.DFU
                 geometry.ScenePoint(new RoutePoint((float)complaint.Route[complaint.NextWaypoint].X,
                     (float)complaint.Route[complaint.NextWaypoint].Z)) : guardPosition;
             destination.y = position.y;
-            Vector3 move = Vector3.MoveTowards(position, destination, elapsed * 3.4f) - position;
+            // Arrival is independent of whether guard dispatch can currently
+            // succeed. Do not keep steering into/around the listener while the
+            // exact report remains pending (for example, no route to its scene).
+            bool atGuard=Vector3.Distance(position,guardPosition)<=2.25f;
+            Vector3 move = atGuard ? Vector3.zero : Vector3.MoveTowards(position, destination, elapsed * 3.4f) - position;
             bool blocked = false;
             if (move.sqrMagnitude > 0.000001f)
                 foreach (var hit in Physics.CapsuleCastAll(position + Vector3.up * 0.3f, position + Vector3.up * 1.65f,
@@ -145,7 +149,7 @@ namespace PeopleOfTheIliacBay.DFU
                     { proposed.y = hit.point.y; supported = true; break; }
                 if (supported) position = proposed; else blocked = true;
             }
-            actor.Place(position, destination - position, blocked || move.sqrMagnitude < 0.000001f,
+            actor.Place(position, (atGuard?guardPosition:destination) - position, blocked || move.sqrMagnitude < 0.000001f,
                 !blocked && move.sqrMagnitude > 0.000001f);
             // Collision/separation may stop short of the requested step. Only
             // the actual body may establish saved progress or guard arrival.

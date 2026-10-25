@@ -1,6 +1,8 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `8E9FEDB6437F`, um 07:11 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Ein gemessener Ladeblock sinkt von 3.097 ms auf 8,92 ms: Die Wohnraumerfassung verwendet jetzt DFUs vorhandene Gebäudedaten. Alle 408 Hausprofile stimmen exakt mit dem bisherigen Lesen überein. Vergleichbare Ein-/Drei-Stunden-Loiterläufe bestehen; der separate Hänger von etwa 1,7 Sekunden während des Zeitsprungs bleibt offen.
+Spielbarer Zwischenbuild `A31A6036B1AF`, um 07:47 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu: Ein meldender NPC bleibt bei der Wache stehen und schaut zu ihr, wenn die Meldung noch nicht verarbeitet werden kann. Der native Test prüft fünf Sekunden stabilen Stand, keine vorzeitige Strafanzeige und erfolgreiche Übergabe nach Wiederherstellung des Wegs. Freier Dialog und Rückkehr zur Tagesroutine bleiben separat offen.
+
+Der vorherige Ladefix bleibt enthalten: Die Wohnraumerfassung verwendet DFUs vorhandene Gebäudedaten; der gemessene Ladeblock sinkt von 3.097 ms auf 8,92 ms. Alle 408 Hausprofile stimmen exakt überein. Der separate Editor-Zeitsprung-Hänger stammt überwiegend aus virtueller Asset-Suche; die Ursache sämtlicher gemeldeter Player-Freezes ist damit nicht geklärt.
 
 Der vorherige Zeugenfix bleibt enthalten: Stationäre Außen-NPCs werden bei Angriffen nicht mehr im Schlaf oder ohne Sichtkontakt als Augenzeugen eingetragen. Zehn kontrollierte native Fälle prüfen Zeugenstatus und Erinnerung; vollständige Kampfszenen bleiben separat offen. Die bisherigen Gesundheits- und Restore-Prüfungen für mobile und stationäre Beobachter bestehen weiterhin.
 

@@ -3,10 +3,11 @@ param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$Use
     [switch]$ValidateWardrobe, [switch]$ValidateCrowd, [switch]$ValidateShopping, [switch]$ValidateSpeech, [switch]$ShoppingBuyerOnly,
     [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport,
     [switch]$ValidateStaticTrade, [switch]$ValidateStreetEncounter, [switch]$ValidateSceneObservers, [switch]$ValidateHousing,
-    [switch]$ClimateDetails, [switch]$ValidateComplaint)
+    [switch]$ClimateDetails, [switch]$ValidateComplaint, [switch]$ValidateComplaintWait)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
+if($ValidateComplaintWait -and -not $ValidateComplaint){throw '-ValidateComplaintWait requires -ValidateComplaint.'}
 if($ValidateStaticTrade -and $ValidatePlaytest){throw 'Run static and mobile personal trade as separate owned fixtures.'}
 if($ClimateDetails -and ($ValidateArrival -or $ValidateWardrobe -or $ValidateCrowd -or $ValidateShopping -or
     $ValidateLeisure -or $ValidateMorningShop -or $ValidateInnDiversion -or $ValidateMurderReport -or
@@ -60,6 +61,7 @@ $arguments='-projectPath "'+$project+'" -executeMethod PeopleOfTheIliacBayEditor
 if($CountersOnly){$arguments+=' -peopleoftheiliacbay-profile-counters-only'}
 if($ClimateDetails){$arguments+=' -peopleoftheiliacbay-profile-climate'}
 if($ValidateComplaint){$arguments+=' -peopleoftheiliacbay-verify-complaint'}
+if($ValidateComplaintWait){$arguments+=' -peopleoftheiliacbay-verify-complaint-wait'}
 if($Overnight){$arguments+=' -peopleoftheiliacbay-profile-overnight'}
 if($ValidatePlaytest){$arguments+=' -peopleoftheiliacbay-verify-playtest'}
 if($ValidateArrival){$arguments+=' -peopleoftheiliacbay-verify-arrival'}

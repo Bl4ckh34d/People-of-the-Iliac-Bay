@@ -57,6 +57,42 @@ behavior when a legitimate incident becomes unreachable also needs a deliberate
 test: the witness should not circle the guard indefinitely while dispatch fails.
 Do not weaken receipt validation or invent an investigation to hide that case.
 
-This checkpoint adds only an opt-in fixture and documentation. The installed
-housing-cache bundle remains unchanged; no new Player package is required for
-the verified production behavior.
+The initial `b581d2e` checkpoint added only the fixture and documentation. The
+following repair changes production movement and requires a new package.
+
+## Arrival hold and recovery
+
+`-ValidateComplaintWait` extends the same fixture with explicit fault injection.
+It captures a valid incident first, temporarily substitutes a nearby point with
+no response route in the pending record, and never moves the player into that
+invalid point. After five seconds of waiting beside the guard, it restores the
+real incident and requires successful dispatch with the same receipt. This tests
+dispatch unavailability; it is not a reproduction of a real door closing.
+
+`complaint-wait-red` fails: 17.21317 m travelled during the five-second check,
+2.83928 m maximum drift, facing dot −0.60353 and an active walking animation.
+The movement code still steered toward the guard's centre after reaching the
+2.25 m reporting radius. If dispatch failed, steering and crowd avoidance kept
+the witness moving around the listener.
+
+The production fix uses the existing arrival radius to stop locomotion and face
+the guard target independently of dispatch success. Report validation, expiry,
+incident coordinates and charges are unchanged. If the guard moves out of range,
+ordinary approach resumes. No successful report or investigation is fabricated.
+
+`complaint-wait-green` completes the five-second check with 0.000397 m movement
+and drift, facing dot 0.9999999 and a frozen directional standing animation. No
+charge is created while response routing is unavailable. Restoring the actual
+incident permits normal finite dispatch. Travel excluding the intentional wait
+averages 7.65423 km/h; largest body step is 0.499976 m. The same saved-progress
+and snapshot checks pass. The run has no exception or teardown-warning entries.
+
+The pending-case fix covers visible locomotion, not retry-cost optimization,
+offscreen arrival, actual door interruption, mutual guard-body facing or routine
+resumption after delivery. Those remain separate checks.
+
+Build/install at 07:47: distribution and Player SHA256 both equal
+`A31A6036B1AF075ACFC25EBFF2D998F5FCB27D4E64AFCABC47CF99D0B6BB88F5`.
+Unity integration/build exits 0. Core 2121/2121, runtime and QuestHooks builds,
+source policy, tooling checks and whitespace checks pass. Owned editor exits;
+Hub remains untouched. This package supersedes the earlier housing-cache bundle.

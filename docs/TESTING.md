@@ -1,5 +1,11 @@
 # Testing and verification status
 
+## Complaint arrival hold — 26 October 2026, 07:47
+
+Installed and distribution SHA256 both equal **`A31A6036B1AF075ACFC25EBFF2D998F5FCB27D4E64AFCABC47CF99D0B6BB88F5`**. Unity build/integration exits 0; Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, source policy, tooling checks and whitespace checks pass.
+
+`complaint-wait-red` reproduces 17.21 m of circling in five seconds during a deliberately unavailable response route. `complaint-wait-green` holds within 0.000397 m, faces the guard target, stops walking animation and creates no early charge. Restoring the real scene permits dispatch using the same receipt; travel excluding the wait averages 7.65 km/h. The test uses explicit fault injection, not a naturally closing door. See the [audit](audits/2026-10-26-physical-dialogue-complaint.md#arrival-hold-and-recovery). Free-text initiation, actual guard-body mutual facing, offscreen behavior and post-delivery routine resumption remain open.
+
 ## Physical direct-threat complaint — 26 October 2026
 
 `complaint-travel-03` passes actual witness travel and delayed finite dispatch:

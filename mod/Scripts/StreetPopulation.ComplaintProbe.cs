@@ -15,6 +15,7 @@ namespace PeopleOfTheIliacBay.DFU
         // Controlled semantic classification; all travel and dispatch use normal updates.
         internal IEnumerator VerifyDialogueComplaint()
         {
+            bool verifyWaiting=Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-complaint-wait")>=0;
             var game=GameManager.Instance;var clock=DaggerfallUnity.Instance.WorldTime.Now;
             clock.RaiseTime((float)((43200-clock.ToSeconds()%86400+86400)%86400));
             DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
@@ -52,7 +53,7 @@ namespace PeopleOfTheIliacBay.DFU
             string person=witness.Resident.Id;int guardCount=guards.Roster.Guards.Count;
             // A side offset may land inside a building. Verify the incident point
             // before using it; an unreachable test placement cannot prove delivery.
-            bool incidentPlaced=false;var crowd=witness.GetComponent<CrowdMotion>();
+            bool incidentPlaced=false;Vector3? unavailableIncident=null;var crowd=witness.GetComponent<CrowdMotion>();
             var guardLocal=directory.transform.InverseTransformPoint(guardPosition);
             foreach(var offset in new[]{Vector3.right*3,Vector3.left*3,Vector3.forward*3,Vector3.back*3})
             {
@@ -60,12 +61,14 @@ namespace PeopleOfTheIliacBay.DFU
                 var ground=geometry.ScenePoint(new RoutePoint(candidate.x,candidate.z));
                 var response=geometry.RouteBetweenPoints(new SavedRoutePoint {X=guardLocal.x,Z=guardLocal.z},
                     new SavedRoutePoint {X=candidate.x,Z=candidate.z});
-                if(response==null || response.Count<2 || !crowd || !crowd.CanTraverseTo(ground))continue;
+                if(response==null || response.Count<2){unavailableIncident=directory.transform.InverseTransformPoint(ground);continue;}
+                if(incidentPlaced || !crowd || !crowd.CanTraverseTo(ground))continue;
                 game.PlayerMotor.transform.position=ground+Vector3.up;Physics.SyncTransforms();incidentPlaced=true;
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLAINT_INCIDENT: ground="+ground+"; responseWaypoints="+response.Count);
-                break;
+                if(!verifyWaiting || unavailableIncident.HasValue)break;
             }
             if(!incidentPlaced)throw new InvalidOperationException("No collision-clear reachable incident placement beside the witness.");
+            if(verifyWaiting && !unavailableIncident.HasValue)throw new InvalidOperationException("Waiting fixture lacks a deliberately unreachable response point.");
             if(StartDialogueComplaint(witness,person) || guards.TryReportLegacyDialogueComplaintAt(witness.transform.position))
                 throw new InvalidOperationException("Receiptless dislike started a police report.");
             NpcObservedSpeechSession session;NpcObservedSpeechTicket ticket;NpcSpeechActClassification classification;
@@ -84,7 +87,18 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new InvalidOperationException("Controlled threat did not start its physical complaint.");
                 Vector3 previous=witness.transform.position;double travelled=0;float maxStep=0;
                 float started=Time.realtimeSinceStartup,nextTrace=started+10;bool restoredProgress=false;
+                float waitingSince=-1,waitSeconds=0,maxWaitDrift=0;double waitingTravel=0;
+                Vector3 waitPosition=Vector3.zero;bool waitingPassed=false;
                 var first=worldStore.GetDialogueComplaint(person);
+                var realIncident=new Vector3((float)first.CrimeX,(float)first.CrimeY,(float)first.CrimeZ);
+                if(verifyWaiting)
+                {
+                    // Fault injection: temporarily make response routing unavailable,
+                    // then restore the real captured scene after the standing check.
+                    // The player is NOT moved into this deliberately invalid location.
+                    first.CrimeX=unavailableIncident.Value.x;first.CrimeY=unavailableIncident.Value.y;first.CrimeZ=unavailableIncident.Value.z;
+                    worldStore.SetDialogueComplaint(first);
+                }
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLAINT_START: resident="+person+"; guard="+first.GuardId+
                     "; routeMetres="+shortest+"; initialMetres="+Vector3.Distance(previous-Vector3.up,guardPosition));
                 deadline=started+120;
@@ -101,13 +115,13 @@ namespace PeopleOfTheIliacBay.DFU
                     var state=worldStore.ReadNpcConversationBoundary(person,clock.ToSeconds());
                     if(pending==null)
                     {
-                        double seconds=Time.realtimeSinceStartup-started;double kmh=travelled/seconds*3.6;
+                        double seconds=Time.realtimeSinceStartup-started-waitSeconds;double kmh=(travelled-waitingTravel)/seconds*3.6;
                         var report=guards.Roster.Reports.Find(row=>row.Id=="dialogue:"+boundary.ReceiptId);
                         var charge=worldStore.ReadNpcVerbalCharge();
                         if(state.ReportStatus!=NpcConversationBoundaryReportStatus.Delivered || report==null ||
                             report.GuardIds.Count==0 || charge==null || charge.ReceiptId!=boundary.ReceiptId ||
                             game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Assault ||
-                            guards.Roster.Guards.Count!=guardCount || travelled<2 || kmh<3.5 || !restoredProgress ||
+                            guards.Roster.Guards.Count!=guardCount || travelled<2 || kmh<3.5 || !restoredProgress || verifyWaiting&&!waitingPassed ||
                             Vector3.Distance(current-Vector3.up,guardPosition)>2.5f)
                             throw new InvalidOperationException("Complaint delivery failed: status="+state.ReportStatus+
                                 "; kmh="+kmh+"; travel="+travelled+"; report="+(report!=null)+"; charge="+(charge!=null));
@@ -122,6 +136,27 @@ namespace PeopleOfTheIliacBay.DFU
                         pending.CrimeX!=first.CrimeX || pending.CrimeY!=first.CrimeY || pending.CrimeZ!=first.CrimeZ)
                         throw new InvalidOperationException("Complaint progress diverged from its body or charged before delivery.");
                     guards.TryGetComplaintGuardPosition(pending.GuardId,out guardPosition);
+                    if(verifyWaiting && !waitingPassed && Vector3.Distance(current-Vector3.up,guardPosition)<=2.25f)
+                    {
+                        if(waitingSince<0){waitingSince=Time.realtimeSinceStartup;waitPosition=current;}
+                        else {waitingTravel+=step;maxWaitDrift=Mathf.Max(maxWaitDrift,Vector3.Distance(current,waitPosition));}
+                        if(Time.realtimeSinceStartup-waitingSince>=5)
+                        {
+                            var facing=guardPosition-(current-Vector3.up);facing.y=0;
+                            float dot=Vector3.Dot(witness.transform.forward,facing.normalized);
+                            var billboard=witness.Person.Asset;
+                            bool stopped=billboard && (billboard.IsIdle || (float)typeof(MobilePersonBillboard).GetField("animSpeed",
+                                BindingFlags.Instance|BindingFlags.NonPublic).GetValue(billboard)==0);
+                            if(waitingTravel>0.75 || maxWaitDrift>0.35f || dot<0.95f || !stopped)
+                                throw new InvalidOperationException("Failed complaint did not wait at guard: travel="+waitingTravel+
+                                    "; drift="+maxWaitDrift+"; facing="+dot+"; stopped="+stopped);
+                            waitSeconds=Time.realtimeSinceStartup-waitingSince;waitingPassed=true;
+                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPLAINT_WAIT_PASS: seconds="+waitSeconds+"; travel="+waitingTravel+
+                                "; drift="+maxWaitDrift+"; facing="+dot+"; stopped=true; noCharge=true; responseLocationFaultInjected=true");
+                            pending.CrimeX=realIncident.x;pending.CrimeY=realIncident.y;pending.CrimeZ=realIncident.z;
+                            worldStore.SetDialogueComplaint(pending);first=pending;
+                        }
+                    }
                     if(Time.realtimeSinceStartup>=nextTrace)
                     {
                         nextTrace+=20;
