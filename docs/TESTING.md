@@ -1,5 +1,13 @@
 # Testing and verification status
 
+## Native observer restore boundary — 26 October 2026, 06:40
+
+Installed and distribution SHA256 both equal **`B0D591C4C65A1B94424A5EA1495BF594F626971D75315652D957C4267FECCD52`**. Unity build/integration exits 0. Core **2121/2121**, RuntimeCompile without warnings/errors, source policy, 70 PowerShell syntax/no-regex checks, tooling protocols and whitespace checks pass. Owned editors exited; Unity Hub remains untouched.
+
+The [native observer audit](audits/2026-10-26-native-scene-observer-boundaries.md) records the red/green reproduction. Mobile binding carried an old health observation across a restored world epoch; the next sample invented an observed injury. Changed bindings now discard that baseline and detach old spell subscriptions, while unchanged bindings preserve observation continuity.
+
+`scene-observers-green` passes visible injury/healing and negative checks for native occlusion, invisibility, facing/range, inactive bodies and controlled sleep state for one real mobile and one stationary person. Reappearance and rebind do not retrospectively invent an event, and subsequent visible changes still work. The run completes without exception entries. It invokes production samples at controlled instants against a detached ledger; natural bed entry, normal polling timing, full save-file reload and other event producers are not established by this fixture.
+
 ## Stationary street encounter acceptance — 26 October 2026, 06:23
 
 Installed and distribution SHA256 both equal **`827B27138D6D53B3955B998D36B95578352D0CA46281EF5ECA533F3DA9F91194`**. Unity build/integration completed with exit 0; Core **2121/2121**, RuntimeCompile, source policy, 70 PowerShell syntax checks, tooling protocols and whitespace checks pass. Owned test/build editors exited; Unity Hub remains untouched.

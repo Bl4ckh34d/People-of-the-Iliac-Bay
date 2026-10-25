@@ -1,6 +1,8 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `827B27138D6D`, um 06:23 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu geprüft sind kurze Begegnungen mit einem stationären Markt-NPC: Blick zum Partner, Kontext und Erinnerung für beide sowie Weiterlaufen zum bisherigen Ziel. Die anfängliche Nähe wurde im Test arrangiert. Zusätzlich ist ein Zugriff auf ein bereits zerstörtes Inn-Vermessungsobjekt beim Beenden repariert.
+Spielbarer Zwischenbuild `B0D591C4C65A`, um 06:40 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Ein mobiler Beobachter konnte nach Restore und Neu-Binden einen alten Gesundheitsunterschied als gerade beobachtete Verletzung speichern; das ist repariert. Kontrollierte native Tests prüfen sichtbare Verletzung/Heilung, Sichtschutz, Unsichtbarkeit, Blickrichtung/Reichweite, inaktive Körper, Schlafzustand und die Bindungsgrenze bei mobilen und stationären NPCs. Ein vollständiger Spielstand-Neuladetest bleibt separat offen.
+
+Kurze Begegnungen mit einem stationären Markt-NPC bestehen den kontrollierten Test: Blick zum Partner, Kontext und Erinnerung für beide sowie Weiterlaufen zum bisherigen Ziel. Die anfängliche Nähe wurde dabei arrangiert. Der vorherige Fix für ein bereits zerstörtes Inn-Vermessungsobjekt bleibt enthalten.
 
 Der anonyme Mord-Meldeauftrag bleibt enthalten: Ein zustimmender erwachsener Bewohner läuft draußen zur erreichbaren Wache und übergibt den Bericht. Die Meldung bleibt Hörensagen; beide Beteiligten erinnern sich daran. Nativer Laufweg und lokale LLM-Auswahl bestehen getrennte Tests. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Ein vollständiger Gesprächsdurchlauf mit den normalen Bereitschaftseinstellungen bleibt offen.
 

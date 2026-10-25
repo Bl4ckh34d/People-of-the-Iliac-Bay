@@ -28,6 +28,10 @@ namespace PeopleOfTheIliacBay.DFU
             var body=owner.GetComponent<ResidentActor>();if(!body)return;
             var observer=owner.GetComponent<NativeNpcSceneObserver>();
             if(!observer)observer=owner.AddComponent<NativeNpcSceneObserver>();
+            if(observer.store==world && observer.actor==body && world.IsNpcVitalsWriteEpochCurrent(observer.epoch))return;
+            // A new world binding cannot compare this player's health with an
+            // observation from before restore. An unchanged binding keeps continuity.
+            observer.Detach();observer.sawPlayer=false;
             observer.store=world;observer.epoch=world.CaptureNpcVitalsWriteEpoch();observer.actor=body;
             observer.nextSample=Time.unscaledTime+(body.Resident.AppearanceSeed%1000)/1000f;
         }
