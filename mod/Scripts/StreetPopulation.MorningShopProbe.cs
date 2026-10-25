@@ -52,7 +52,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var types=new SortedDictionary<string,int>();var buildings=new SortedDictionary<string,int>();
             var hours=new SortedDictionary<string,int>();var available=new SortedDictionary<string,int>();
-            double day=Math.Floor(now/86400)*86400;int residents=0,visits=0;
+            int residents=0,visits=0;
             foreach(var entry in geometry.Entrances)
             {
                 BuildingSummary summary;if(!directory.GetBuildingSummary(entry.Key,out summary))continue;
@@ -66,16 +66,20 @@ namespace PeopleOfTheIliacBay.DFU
                 // diversions. These are scheduled visits, not observed arrivals.
                 foreach(var visit in plan.Schedule.ScheduledVisits(now))
                 {
-                    if(visit.EnterAt<day || visit.EnterAt>=day+86400)continue;
+                    // The query chooses the calendar day's schedule; its visit
+                    // metadata remains seconds since midnight, not absolute time.
+                    if(visit.EnterAt<0 || visit.EnterAt>=86400)
+                        throw new InvalidOperationException("Ordinary routine visit is outside its daily clock.");
                     BuildingSummary summary;if(!directory.GetBuildingSummary(visit.BuildingKey,out summary))continue;
                     visits++;string type=summary.BuildingType.ToString();int count;
                     types.TryGetValue(type,out count);types[type]=count+1;
                     string building=type+":"+visit.BuildingKey;buildings.TryGetValue(building,out count);buildings[building]=count+1;
-                    string hour=((int)((visit.EnterAt-day)/3600)).ToString("D2")+":"+type;
+                    string hour=((int)(visit.EnterAt/3600)).ToString("D2")+":"+type;
                     hours.TryGetValue(hour,out count);hours[hour]=count+1;
                 }
             }
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_DISTRIBUTION: residents="+residents+"; plannedVisits="+visits+"; observedArrivals=false");
+            if(visits==0)throw new InvalidOperationException("Destination audit contains no planned visits; it cannot establish a distribution.");
             foreach(var row in available)Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_AVAILABLE: type="+row.Key+"; entrances="+row.Value);
             foreach(var row in types)Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_TYPE: type="+row.Key+"; visits="+row.Value);
             foreach(var row in buildings)Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_BUILDING: key="+row.Key+"; visits="+row.Value);

@@ -1,5 +1,9 @@
 # Testing and verification status
 
+## Routine distribution and physical groups — 26 October 2026
+
+The [native distribution audit](audits/2026-10-26-routine-destination-distribution.md) records 1,074 planned visits across 286 residents and distinguishes those plans from observed arrivals. It corrects an absolute-time versus daily-time error in the diagnostic. `leisure-physical-03` passes actual three-body spacing, partner facing with a nearby player, partner context and slot reuse. Free approach, complete autonomous encounters and further destination concentration checks remain open. This diagnostic/documentation checkpoint does not replace the installed Player bundle.
+
 ## Anonymous guard reporting — 26 October 2026
 
 Installed at 05:34: distribution and Player SHA256 both equal **`18C45F34122F436430A5DB8626B8D7394B85AD58D07F3A2FEB411C8E661F4138`**. `Build.ps1 -InteractiveOnly -ReusePortraitExport` completed with Unity integration checks and editor exit 0. RuntimeCompile has no warnings/errors; 70 PowerShell scripts parse, tooling protocols and source policy pass. The owned model server and test/build editors were stopped or exited; Unity Hub remains untouched.
