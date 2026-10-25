@@ -1,5 +1,16 @@
 # Testing and verification status
 
+## Native climate profiling — 26 October 2026
+
+Opt-in `-ClimateDetails` adds native timing to the normal editor loiter fixture.
+The [investigation](audits/2026-10-26-native-climate-profile.md) attributes a
+1,625 ms CPU frame to repeated billboard replacement lookup. Mesh climate work
+takes approximately 4 ms. This is diagnostic evidence, not a production fix:
+virtual-mod lookup differs from the release bundle path. The installed housing
+build below remains unchanged. QuestHooks and RuntimeCompile pass without
+warnings/errors; Core 2121/2121, source policy, tooling syntax/protocols and the
+launcher rejection of incompatible focused fixtures pass.
+
 ## Housing startup performance — 26 October 2026, 07:11
 
 Installed and distribution SHA256 both equal **`8E9FEDB6437F7338AB5937D498B5AFA3E275BC15D89F1361643E88AAA02F3F76`**. Unity build/integration exits 0. Core **2121/2121**, RuntimeCompile without warnings/errors, source policy, 70 PowerShell syntax/no-regex checks, tooling protocols and whitespace checks pass.

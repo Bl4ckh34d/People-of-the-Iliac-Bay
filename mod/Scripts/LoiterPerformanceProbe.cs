@@ -15,6 +15,17 @@ namespace PeopleOfTheIliacBay.DFU
     {
         internal static IEnumerator Run(StreetPopulation streets)
         {
+            IDisposable timing=null;
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-profile-climate")>=0)
+            {
+                var type=Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeClimateTimingHooks, PeopleOfTheIliacBay.QuestHooks",true);
+                timing=(IDisposable)Activator.CreateInstance(type,new object[]{new Func<string,long>(RuntimeTiming.Start),new Action<string,long>(RuntimeTiming.End)});
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CLIMATE_TIMING_ACTIVE: native behavior unchanged; nested durations are inclusive.");
+            }
+            using(timing) {yield return RunObserved(streets);}
+        }
+        private static IEnumerator RunObserved(StreetPopulation streets)
+        {
             var game=GameManager.Instance;
             if(!streets || !streets.Ready || game.PlayerEnterExit.IsPlayerInside)
                 throw new InvalidOperationException("Loiter profiling requires the exterior morning fixture.");

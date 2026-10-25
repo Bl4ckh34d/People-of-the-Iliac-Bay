@@ -60,3 +60,19 @@ Treat editor frame timings as diagnostic, not release-player performance.
 Keep the same fixture, mod list, camera, phase durations and profiler settings
 between comparisons. Preserve failed runs separately and exclude them from
 performance conclusions.
+
+`-ClimateDetails` adds scoped Harmony timing and native CPU samples to the normal
+loiter profile. It observes location/mesh/ground climate updates, billboard
+materials, replacement textures, disk imports and mod asset lookup. Original
+results and exceptions remain unchanged; the hooks are removed after the probe.
+Focused fixtures that bypass loiter reject this option. `-ValidatePlaytest` can
+still follow the normal profile. Compile QuestHooks before launch: deployment
+copies its existing DLL, while a package build compiles it automatically.
+
+Durations are inclusive and nested; do not sum parents and children. Compare
+binary CPU capture with `-CountersOnly`, and keep instrumentation identical for
+optimization comparisons. Neither variant proves release-player performance:
+DFU's editor-only virtual-mod `HasAsset` scans the manifest, whereas a packaged
+mod uses `AssetBundle.Contains`. Investigate that difference before changing
+production material refresh or caching behavior. See the
+[native climate investigation](../../docs/audits/2026-10-26-native-climate-profile.md).

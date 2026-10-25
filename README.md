@@ -10,6 +10,11 @@ Local test bundle **8E9FEDB6437F** is built and installed (26 October, 07:11); U
 
 ## Project status
 
+Native CPU profiling attributes the remaining editor time-skip spike to repeated
+billboard replacement lookup. The [climate investigation](docs/audits/2026-10-26-native-climate-profile.md)
+separates editor virtual-mod lookup from release behavior. No production texture
+optimization or resolution of all reported Player freezes is claimed.
+
 Static shopkeeper personal trade now passes native Talk-to-window handoff, cancellation, partial-stack purchase and resale, with exact gold/UID transfers and unchanged shop shelves. The merchant-specific starting pool no longer creates an uninitialized potion bottle that DFU changes on restore. See the [repair and native evidence](docs/audits/2026-10-26-static-personal-trade.md); other static roles and free-form LLM trade requests still need acceptance.
 
 Start with the [TL;DR roadmap](docs/ROADMAP.md), [future design/backlog](docs/ROADMAP.md#detailed-design), and [phased delivery plan](docs/ROADMAP.md#delivery-plan). These distinguish implemented behavior from proposed work. For playing and local-model setup, see the [installation guide](docs/INSTALLATION.md): there is no complete installer or published release bundle yet.
