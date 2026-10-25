@@ -38,4 +38,10 @@ The run completes: all four tracked residents retain their individual diversion 
 
 This fixture initially places bodies in their assigned group slots. It verifies occupied group spacing, facing and context, not free approach, a full autonomous encounter, the Inn round trip or behavior under every interruption. Those remain on the active worklist.
 
+The extended `leisure-approach-02` fixture starts all three bodies at surveyed points at least 2 m outside their slots. Production `PlaceClosedShopWait` and native navigation move them 2.093 m, 2.472 m and 2.400 m, with a maximum frame step of 0.092887 m. All arrive, keep a minimum 1.247063 m separation and face partners (minimum dot product 1). An expired return releases the waiting movement adapter and removes that participant from the other speaker's current conversation context. This is not a full scheduler-driven departure or shop entry. The first run failed before movement because its selected group lacked three clear approach corridors; the fixture now searches surveyed entrances for a valid setup without relaxing production collision or navigation rules.
+
+The additional animation assertion in `leisure-approach-03` was invalid: native `IsIdle` is deliberately false for `DirectionalStandingPose`, which holds a directional walking record with `animSpeed=0` or displays dedicated standing artwork. That failure does not prove running in place. The corrected assertion checks `ResidentActor.IsStandingStill` and requires zero native animation speed when a directional record is held.
+
+`leisure-approach-04` passes the complete extended fixture, including that animation check: body travel 2.096 m, 2.443 m and 2.400 m; maximum step 0.085675 m; minimum separation 1.247063 m; partner-facing dot product 1; stopped animation, slot reuse, real partner context and expired-wait release all pass. Runtime compilation has no warnings/errors. No production behavior changed for this acceptance extension.
+
 Runtime compilation passes without warnings or errors. The installed Player bundle is unchanged; this checkpoint changes an opt-in diagnostic and documents previously unverified behavior.

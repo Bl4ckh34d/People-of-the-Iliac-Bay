@@ -4,6 +4,8 @@
 
 The [native distribution audit](audits/2026-10-26-routine-destination-distribution.md) records 1,074 planned visits across 286 residents and distinguishes those plans from observed arrivals. It corrects an absolute-time versus daily-time error in the diagnostic. `leisure-physical-03` passes actual three-body spacing, partner facing with a nearby player, partner context and slot reuse. Free approach, complete autonomous encounters and further destination concentration checks remain open. This diagnostic/documentation checkpoint does not replace the installed Player bundle.
 
+The extended `leisure-approach-04` now verifies actual approach from starts more than 2 m outside the assigned slots, standing animation, partner facing, context, slot reuse and expired-wait release. All three bodies travel continuously (2.096–2.443 m, maximum frame step 8.6 cm). Full autonomous encounter formation and subsequent door entry remain separate from this controlled adapter test. The assertion uses the directional standing state and frozen animation speed; native `IsIdle=false` is expected for held directional walking records and did not establish an animation bug in run `03`.
+
 ## Anonymous guard reporting — 26 October 2026
 
 Installed at 05:34: distribution and Player SHA256 both equal **`18C45F34122F436430A5DB8626B8D7394B85AD58D07F3A2FEB411C8E661F4138`**. `Build.ps1 -InteractiveOnly -ReusePortraitExport` completed with Unity integration checks and editor exit 0. RuntimeCompile has no warnings/errors; 70 PowerShell scripts parse, tooling protocols and source policy pass. The owned model server and test/build editors were stopped or exited; Unity Hub remains untouched.
