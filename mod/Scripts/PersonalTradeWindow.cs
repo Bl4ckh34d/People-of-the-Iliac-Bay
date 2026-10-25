@@ -173,8 +173,9 @@ namespace PeopleOfTheIliacBay.DFU
 
         private ItemListScroller NewScroller(Rect rect,PersonalTradeSide side)
         {
-            bool enhanced=DaggerfallUnity.Settings.EnableEnhancedItemLists;
-            int rows=enhanced?8:4,columns=enhanced?2:1;
+            // This window's artwork has four full-width slots. The native
+            // enhanced inventory grid does not fit those painted boundaries.
+            const int rows=4,columns=1;
             float width=(rect.width-10)/columns,height=rect.height/rows;
             var cells=new Rect[rows*columns];
             for(int row=0;row<rows;row++)for(int column=0;column<columns;column++)

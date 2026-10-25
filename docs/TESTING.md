@@ -1,5 +1,11 @@
 # Testing and verification status
 
+## Trade-slot layout repair — 26 October 2026, source only
+
+The reported screenshot showed up to four icons inside each painted inventory slot. `PersonalTradeWindow.NewScroller` was copying the global Enhanced Item Lists setting (eight rows by two columns) onto artwork with four vertical slots. The custom window now always creates four rows and one column, so each slot holds one item entry (a stack still remains one entry). Native scrolling and selection use that same four-cell geometry; the player's global inventory setting is unchanged.
+
+Runtime compilation passes with zero warnings and errors. Installation and rendered in-game verification are pending: the user explicitly chose to keep the current game running. The running bundle has not been replaced.
+
 ## Source audit repairs — 26 October 2026
 
 The [audit report](audits/2026-10-26-code-audit.md) records the corrected transport, barter, guard-cleanup, tooling and fixture defects, plus current offline verification. These repairs have not been deployed to a new bundle or verified in a new game session. All installed-package and native claims below are historical evidence for their stated checkpoints, not acceptance of this source revision.
