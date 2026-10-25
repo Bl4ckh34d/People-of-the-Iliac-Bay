@@ -12,19 +12,18 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private void ObserveExteriorStaticWitnesses(CivilianIncident alarm,Vector3 victim,double now,DaggerfallEntityBehaviour attacker=null)
         {
-            if(!directory||worldStore==null||alarm.BuildingKey!=-1)return;
-            var player=attacker?attacker:GameManager.Instance.PlayerEntityBehaviour;
-            foreach(var npc in directory.GetComponentsInChildren<StaticNPC>())
+            if(!directory || worldStore==null || population==null || interior || alarm==null || alarm.BuildingKey!=-1)return;
+            var source=attacker?attacker:GameManager.Instance.PlayerEntityBehaviour;
+            if(!source || source.Entity==null || !source.gameObject.activeInHierarchy || source.Entity.IsInvisible)return;
+            SurveyStationaryObservers();
+            foreach(var entry in stationaryParticipants.Values)
             {
-                if(!npc.gameObject.activeInHierarchy||!RDBLayout.IsNPCFlat(npc.Data.billboardArchiveIndex)||
-                    !CivilianResponses.Sees(npc.transform.position,victim,20)||
-                    player.Entity.IsInvisible||!CivilianResponses.Sees(npc.transform.position,player.transform.position,20))continue;
-                var d=npc.Data;var local=directory.transform.InverseTransformPoint(npc.transform.position);
-                int hash=NativeExteriorNpcIdentity.Hash(npc,directory.transform);
-                var native=worldStore.RegisterNativePerson(population.SettlementId,-1,hash,npc.DisplayName,
-                    d.gender==Genders.Female?ResidentSex.Female:ResidentSex.Male,(int)d.race,d.factionID,d.billboardArchiveIndex,d.billboardRecordIndex);
-                if(!native.IsAlive)continue;
-                var witness=worldStore.Witness(alarm.Id,native.Id,now);if(witness==null)continue;
+                // Direct evidence requires the same awake, current-world and
+                // facing/LOS checks as other scene memories. Hearing is separate.
+                if(!entry.Npc || !entry.Observer || !entry.Observer.Sees(victim,20) ||
+                    !entry.Observer.Sees(source.transform.position,20))continue;
+                var local=directory.transform.InverseTransformPoint(entry.Npc.transform.position);
+                var witness=worldStore.Witness(alarm.Id,entry.Person.Id,now);if(witness==null)continue;
                 witness.StaticWitness=true;witness.HasPosition=true;witness.BuildingKey=-1;witness.X=local.x;witness.Y=local.y;witness.Z=local.z;
             }
         }

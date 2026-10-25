@@ -1,5 +1,11 @@
 # Testing and verification status
 
+## Stationary assault perception — 26 October 2026, 06:59
+
+Installed and distribution SHA256 both equal **`A0D371E5988DEB8A0CEDAA6ADE7D4DB7D48A96C921B0AE6777BCFD88635228F5`**. Unity build/integration exits 0. Core **2121/2121**, RuntimeCompile without warnings/errors, source policy, 70 PowerShell syntax/no-regex checks, tooling protocols and whitespace checks pass. Owned editors exited; Unity Hub remains untouched.
+
+The [stationary attack audit](audits/2026-10-26-static-attack-witnesses.md) records the red/green reproduction. `static-attack-red-02` admits a sleeping NPC as a direct witness and writes an assault memory. The repaired adapter shares the stationary observer registry and its perception checks. `static-attack-green` passes all ten adapter cases and the existing mobile/static health/restore checks. It completes without exception entries; unrelated DET material errors remain in startup. Actual combat/death, hearing, natural sleeping and full save-file reload are not established by this controlled adapter fixture.
+
 ## Native observer restore boundary — 26 October 2026, 06:40
 
 Installed and distribution SHA256 both equal **`B0D591C4C65A1B94424A5EA1495BF594F626971D75315652D957C4267FECCD52`**. Unity build/integration exits 0. Core **2121/2121**, RuntimeCompile without warnings/errors, source policy, 70 PowerShell syntax/no-regex checks, tooling protocols and whitespace checks pass. Owned editors exited; Unity Hub remains untouched.

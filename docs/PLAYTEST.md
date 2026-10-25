@@ -1,6 +1,6 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `B0D591C4C65A`, um 06:40 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Ein mobiler Beobachter konnte nach Restore und Neu-Binden einen alten Gesundheitsunterschied als gerade beobachtete Verletzung speichern; das ist repariert. Kontrollierte native Tests prüfen sichtbare Verletzung/Heilung, Sichtschutz, Unsichtbarkeit, Blickrichtung/Reichweite, inaktive Körper, Schlafzustand und die Bindungsgrenze bei mobilen und stationären NPCs. Ein vollständiger Spielstand-Neuladetest bleibt separat offen.
+Spielbarer Zwischenbuild `A0D371E5988D`, um 06:59 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Stationäre Außen-NPCs wurden bisher sogar im Schlaf als Augenzeugen eines Angriffs eingetragen. Der reparierte Angriffspfad prüft nun Wachzustand, Blickrichtung und Sichtlinie. Zehn kontrollierte native Fälle prüfen Zeugenstatus und Erinnerung; vollständige Kampfszenen bleiben separat offen. Die bisherigen Gesundheits- und Restore-Prüfungen für mobile und stationäre Beobachter bestehen weiterhin.
 
 Kurze Begegnungen mit einem stationären Markt-NPC bestehen den kontrollierten Test: Blick zum Partner, Kontext und Erinnerung für beide sowie Weiterlaufen zum bisherigen Ziel. Die anfängliche Nähe wurde dabei arrangiert. Der vorherige Fix für ein bereits zerstörtes Inn-Vermessungsobjekt bleibt enthalten.
 

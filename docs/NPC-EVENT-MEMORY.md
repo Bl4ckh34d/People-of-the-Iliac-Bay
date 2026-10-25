@@ -28,6 +28,8 @@ This extends the existing native experience/appraisal pipeline and conversation 
 
 Observers must be alive, awake and present. New scene perception uses distance, forward-facing visibility and native line of sight. It runs in bounded/staggered samples rather than scanning every entity every frame. Facts carry the affected person separately from the known responsible person. Unknown facts remain unknown.
 
+The exterior stationary assault adapter now shares that observer filter. A native regression reproduced sleeping eyewitnesses in the older path; ten controlled attack-adapter cases now pass, including victim/attacker facing, sleep, invisibility and occlusion. This verifies witness admission and memory, not full native damage/death or every producer. See the [stationary attack audit](audits/2026-10-26-static-attack-witnesses.md).
+
 Mobile and ordinary stationary scene identities share this store. A new generation of a hostile incident is a new event, while repeated sightings of the same generation do not renew it. Same-moment native confirmation of the killer can refine an eyewitness record without renewing its age. Seeing the body later records corpse discovery, not a witnessed killing or knowledge of its perpetrator. The transient eyewitness lookup ages out old samples instead of retaining every encounter forever.
 
 ## Evaluation and forgetting

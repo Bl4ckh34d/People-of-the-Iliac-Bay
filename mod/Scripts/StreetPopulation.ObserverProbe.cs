@@ -37,6 +37,11 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!mobile || !stationary)yield return null;
             }
             if(!mobile || !stationary)throw new InvalidOperationException("Observer fixture missing a visible native body: mobile="+mobile+"; stationary="+stationary);
+            bool violence=false;
+            foreach(var entry in stationaryParticipants.Values)
+                if(StaticChatEligible(entry,clock.ToSeconds()) && VerifyStationaryViolenceObserver(entry))
+                {violence=true;break;}
+            if(!violence)throw new InvalidOperationException("No stationary attack witness has a clear view in this fixture.");
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SCENE_OBSERVERS_PASS: mobile=true; stationary=true; nativeVisibility=true; epochBoundary=true");
         }
 
