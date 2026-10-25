@@ -40,6 +40,20 @@ namespace PeopleOfTheIliacBay.DFU
         private static readonly System.Reflection.FieldInfo nativeLocationCache=typeof(RMBLayout).GetField("locationCache",
             System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic);
 
+        // Read-only, operation-scoped view. Do not cache it between operations
+        // or mutate it: DFU owns the data and invalidates it for geometry variants.
+        internal static DFBlock[] Cached(DFLocation location)
+        {
+            int width=location.Exterior.ExteriorData.Width,height=location.Exterior.ExteriorData.Height;
+            if(width<1 || width>8 || height<1 || height>8)return null;
+            var cache=nativeLocationCache==null?null:
+                nativeLocationCache.GetValue(null) as List<KeyValuePair<int,DFBlock[]>>;
+            if(cache!=null)foreach(var entry in cache)
+                if(entry.Key==location.MapTableData.MapId && entry.Value!=null && entry.Value.Length==width*height)
+                    return entry.Value;
+            return null;
+        }
+
         internal sealed class Result
         {
             public DFBlock[] Blocks;
@@ -68,12 +82,8 @@ namespace PeopleOfTheIliacBay.DFU
             // Reuse DFU's current enriched data when available. Keep cancellation
             // and one-block-per-yield semantics, and detach mutable building rows.
             // No private cache is retained across DFU's variant invalidation.
-            var nativeCache=nativeLocationCache==null?null:
-                nativeLocationCache.GetValue(null) as List<KeyValuePair<int,DFBlock[]>>;
-            DFBlock[] cached=null;
-            if(nativeCache!=null)foreach(var entry in nativeCache)
-                if(entry.Key==location.MapTableData.MapId){cached=entry.Value;break;}
-            if(cached!=null && cached.Length==width*height)
+            var cached=Cached(location);
+            if(cached!=null)
             {
                 var detached=new DFBlock[cached.Length];
                 for(int i=0;i<cached.Length;i++)

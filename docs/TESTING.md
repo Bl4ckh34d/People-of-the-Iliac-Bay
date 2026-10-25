@@ -1,5 +1,13 @@
 # Testing and verification status
 
+## Housing startup performance — 26 October 2026, 07:11
+
+Installed and distribution SHA256 both equal **`8E9FEDB6437F7338AB5937D498B5AFA3E275BC15D89F1361643E88AAA02F3F76`**. Unity build/integration exits 0. Core **2121/2121**, RuntimeCompile without warnings/errors, source policy, 70 PowerShell syntax/no-regex checks, tooling protocols and whitespace checks pass.
+
+The [housing performance audit](audits/2026-10-26-housing-cache-performance.md) isolates the measured startup stall: 34 repeated block reads take 3,087.91 ms. Native cache reuse reduces the combined scope from 3,097.35 ms to 8.92 ms in matching full fixture runs. `housing-red` fails on repeated decoding; `housing-green` verifies zero redundant reads, exact parity for all 408 home profiles and normal fallback after native cache invalidation.
+
+Both `housing-baseline` and `housing-after` complete native one/three-hour loiters without exception entries. After-skip frame distributions remain similar with twelve active residents at the same game time; the separate approximately 1.7-second skip spike remains. Existing unrelated DET material startup errors remain. These counters do not measure startup allocation volume or establish the cause of every reported long freeze.
+
 ## Stationary assault perception — 26 October 2026, 06:59
 
 Installed and distribution SHA256 both equal **`A0D371E5988DEB8A0CEDAA6ADE7D4DB7D48A96C921B0AE6777BCFD88635228F5`**. Unity build/integration exits 0. Core **2121/2121**, RuntimeCompile without warnings/errors, source policy, 70 PowerShell syntax/no-regex checks, tooling protocols and whitespace checks pass. Owned editors exited; Unity Hub remains untouched.

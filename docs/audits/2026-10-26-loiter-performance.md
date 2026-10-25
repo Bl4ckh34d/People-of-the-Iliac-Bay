@@ -52,6 +52,8 @@ avoid capture-file I/O as a confounder.
 
 ## Remaining work
 
+- A later [housing survey comparison](2026-10-26-housing-cache-performance.md) removes a separate 3.1-second startup stall: housing reread 34 blocks already present in DFU's native cache. The combined startup scope falls to 8.92 ms with exact parity for all 408 home profiles. This is distinct from the inventory and time-skip measurements above.
+
 - Native `DaggerfallLocation.Update()` still produced roughly 1.6-second spikes
   during the time skip. Its source switches city-light/season textures; this is
   separate from the corrected inventory ownership read.

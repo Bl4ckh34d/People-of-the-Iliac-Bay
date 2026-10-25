@@ -501,7 +501,9 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-profile-only")>=0)
                     {
-                        if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-scene-observers")>=0)
+                        if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-housing")>=0)
+                            Debug.Log(HousingSurveyProbe.Run());
+                        else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-scene-observers")>=0)
                             yield return streets.VerifySceneObservers();
                         else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-street-encounter")>=0)
                             yield return streets.VerifyStreetEncounter();

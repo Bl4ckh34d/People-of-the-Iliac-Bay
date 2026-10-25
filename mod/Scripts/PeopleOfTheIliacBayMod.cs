@@ -512,11 +512,16 @@ namespace PeopleOfTheIliacBay.DFU
                 long familiesStarted=RuntimeTiming.Start();
                 try
                 {
-                    recoveryHomes = HousingSurvey.Read(directory);
+                    long housingStarted=RuntimeTiming.Start("population-housing-survey");
+                    try { recoveryHomes = HousingSurvey.Read(directory); }
+                    finally { RuntimeTiming.End("population-housing-survey",housingStarted); }
                     recoveryScanIndex = 0;
-                    current = store.GetOrCreateFamilies(directory.MapID, recoveryHomes);
+                    long generationStarted=RuntimeTiming.Start("population-family-store");
+                    try { current = store.GetOrCreateFamilies(directory.MapID, recoveryHomes); }
+                    finally { RuntimeTiming.End("population-family-store",generationStarted); }
                 }
                 finally { RuntimeTiming.End("population-families",familiesStarted); }
+                if(RuntimeTiming.Enabled)RuntimeTiming.Report("population-startup");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SETTLEMENT: " + directory.MapID + "; households=" + current.Households.Count);
             }
             if (AdvanceHouseholdRecoveryOne(directory, game))

@@ -28,6 +28,11 @@ namespace PeopleOfTheIliacBay.DFU
             var ordered = new SortedDictionary<int, BuildingSummary>();
             foreach (var home in homes) ordered.Add(home.buildingKey, home);
             var blocks = new Dictionary<int, DFBlock>();
+            // The loaded city already decoded these interiors. Reuse only DFU's
+            // current cache, and only with its actual content reader. A native
+            // invalidation or an uncached remote town retains the normal read path.
+            var dfu=DaggerfallUnity.Instance;
+            var cached=dfu && object.ReferenceEquals(reader,dfu.ContentReader)?IncrementalLocationBlocks.Cached(location):null;
             // The shipped mod compiler exposes DFU's readonly `in DFLocation`
             // argument as ref, unlike the Unity editor compiler. Resolve this API
             // once and invoke only once per block so both runtimes read the same data.
@@ -46,8 +51,20 @@ namespace PeopleOfTheIliacBay.DFU
                     int blockKey = y * location.Exterior.ExteriorData.Width + x;
                     if (!blocks.TryGetValue(blockKey, out block))
                     {
-                        string name = reader.BlockFileReader.CheckName((string)blockNameMethod.Invoke(reader.MapFileReader, new object[] { location, x, y }));
-                        reader.GetBlock(name, out block); blocks.Add(blockKey, block);
+                        if(cached!=null)
+                        {
+                            block=cached[blockKey];blocks.Add(blockKey,block);
+                        }
+                        else
+                        {
+                            long blockStarted=RuntimeTiming.Start("housing-block-read");
+                            try
+                            {
+                                string name = reader.BlockFileReader.CheckName((string)blockNameMethod.Invoke(reader.MapFileReader, new object[] { location, x, y }));
+                                reader.GetBlock(name, out block); blocks.Add(blockKey, block);
+                            }
+                            finally { RuntimeTiming.End("housing-block-read",blockStarted); }
+                        }
                     }
                     if (block.Type == DFBlock.BlockTypes.Rmb && block.RmbBlock.SubRecords != null &&
                         record >= 0 && record < block.RmbBlock.SubRecords.Length)
@@ -65,8 +82,13 @@ namespace PeopleOfTheIliacBay.DFU
                 double area;
                 if (!areas.TryGetValue(model, out area))
                 {
-                    ModelData data;
-                    area = meshes && meshes.GetModelData(model, out data) ? Footprint(data.Vertices) : 0;
+                    long modelStarted=RuntimeTiming.Start("housing-model-footprint");
+                    try
+                    {
+                        ModelData data;
+                        area = meshes && meshes.GetModelData(model, out data) ? Footprint(data.Vertices) : 0;
+                    }
+                    finally { RuntimeTiming.End("housing-model-footprint",modelStarted); }
                     areas.Add(model, area);
                 }
                 result.Add(new HomeProfile(pair.Key, beds, area,AvailableForResidents(location,pair.Value)));
