@@ -76,6 +76,7 @@ namespace PeopleOfTheIliacBay.DFU
                 ", price "+job.ServicePrice+" gold from the NPC's wallet. Payment and actual ownership are confirmed only at Completed. The NPC keeps the purchased item; a later handover requires a separate accepted transfer. ";
             if(!string.IsNullOrWhiteSpace(job.FailureReason)) text+="Observed interruption: "+job.FailureReason+" ";
             if(job.Kind==NpcActionKind.Interact) text+="This adapter only approaches and faces the other person; it does not generate their speech. ";
+            if(job.Kind==NpcActionKind.ReportMurder) text+="You agreed to carry the player's anonymous murder report to a guard. It is hearsay, not your eyewitness knowledge. Delivery is confirmed only at Completed. No crime location, suspect, arrest or investigation is established by this action. ";
             return text;
         }
         private bool TrySemanticActionConversation(DaggerfallTalkWindow window,string text,string history,

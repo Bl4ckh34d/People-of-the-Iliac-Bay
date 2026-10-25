@@ -1,6 +1,8 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `DE1428CD851D`, um 05:07 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2117 Core-Tests bestehen. Der gemeldete Inn-Fehler besteht den gezielten nativen Test: Tresen, stabiler Sitzplatz, Speicherstand und Spieler-Ausgang. Fluchtbewegung erreicht im freien nativen Test 13,16 km/h statt der zuvor begrenzten 5,54 km/h. Korrigierte Handels-Ablehnungstexte, soziale Preisgrenzen und Erinnerungsreparaturen sind enthalten. Vollständiger Hash und Prüfgrenzen stehen in [TESTING.md](TESTING.md). Die [Arbeitsliste](WORKLIST-2026-10-26.md) enthält offene Implementierungen und Spieltests; insbesondere ist der neue anonyme Mord-Meldeauftrag noch nicht implementiert.
+Spielbarer Zwischenbuild `18C45F34122F`, um 05:34 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2120 Core-Tests bestehen. Neu ist der anonyme Mord-Meldeauftrag: Ein zustimmender erwachsener Bewohner läuft draußen zur erreichbaren Wache und übergibt den Bericht. Die Meldung bleibt Hörensagen; beide Beteiligten erinnern sich daran. Nativer Laufweg und lokale LLM-Auswahl bestehen getrennte Tests. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Ein vollständiger Gesprächsdurchlauf mit den normalen Bereitschaftseinstellungen bleibt offen.
+
+Der Inn-Fehler besteht den gezielten nativen Test: Tresen, stabiler Sitzplatz, Speicherstand und Spieler-Ausgang. Freie Fluchtbewegung erreicht im nativen Test 13,16 km/h statt zuvor 5,54 km/h. Vollständiger Hash und Prüfgrenzen stehen in [TESTING.md](TESTING.md); die [Arbeitsliste](WORKLIST-2026-10-26.md) enthält die übrigen offenen Punkte.
 
 Für diesen kurzen Test besonders hilfreich: um 09:10 beim Kleiderladen warten, später tatsächlichen Eintritt/Rückkehr beobachten; persönliche Trankpreise und Null-Gold-Pergamenthandel prüfen; stationäre Markt-NPCs nach wirklich beobachteten Ereignissen erneut ansprechen. Die neue stationäre Wahrnehmung und kurze Begegnungen sind noch nicht nativ abgenommen. Automatische Marktrollen sind noch nicht implementiert.
 
@@ -15,6 +17,7 @@ Für diesen kurzen Test besonders hilfreich: um 09:10 beim Kleiderladen warten, 
 3. **Persönlicher Handel:** Einen normalen mobilen Bewohner um Handel bitten. Spieler-/NPC-Items prüfen, erst abbrechen, dann kaufen oder verkaufen. Einen niedrigeren Preis anbieten und das Gegenangebot beobachten.
 4. **Beziehung:** Freundlich sprechen, später erneut ansprechen. Nach einer Kränkung bleibt der NPC ablehnend; eine Entschuldigung löscht Groll nicht sofort.
 5. **Gesundheit und Wachen:** Vorhandene Behandlung, Hilfe und Wachreaktionen ausprobieren. Beobachtete Orte und konkrete Ereignisse beim Feedback nennen.
+6. **Mord melden lassen:** Draußen einen erwachsenen Bewohner bitten: `I saw a murder. Please find a guard and report it anonymously.` Nach Zustimmung das Gespräch schließen und den tatsächlichen Weg beobachten. Später nachfragen. Die Wache erhält keinen erfundenen Täter oder Tatort; eine Verhaftung oder Untersuchung wird dadurch nicht automatisch ausgelöst.
 
 Leihen benötigt bekanntes Vertrauen ab75 und eignet sich erst für vertraute NPCs. Rückgabe desselben geliehenen Gegenstands bleibt auch bei gesunkenem Vertrauen möglich.
 

@@ -873,17 +873,18 @@ namespace PeopleOfTheIliacBay.DFU
         private void ClearViews()
         {
             nextWitnessRoute.Clear();
-            Capture();
+            if(!destroyingPopulation)Capture();
             foreach (var pair in actors) if (pair.Value) { pair.Value.EndCombat(); Destroy(pair.Value.gameObject); }
             actors.Clear();
             crimeSceneMotions.Clear();
         }
         private void HideViews()
         { foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeSelf) { pair.Value.Capture(Now()); pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); } }
+        private bool destroyingPopulation;
         public void Clear()
         {
-            var game=GameManager.Instance;
-            if(worldStore!=null && directory && game!=null && !game.SaveLoadManager.LoadInProgress)
+            var game=destroyingPopulation?null:GameManager.Instance;
+            if(!destroyingPopulation && worldStore!=null && directory && game!=null && !game.SaveLoadManager.LoadInProgress)
             {
                 var streets=GetComponent<StreetPopulation>();
                 if(streets)streets.CaptureCorpseDeparture();
@@ -909,6 +910,6 @@ namespace PeopleOfTheIliacBay.DFU
             lastVisibilityScene = null;
             visibilityDiagnosticReason = null; visibilityDiagnosticAt = 0;
         }
-        private void OnDestroy() { Clear(); }
+        private void OnDestroy() { destroyingPopulation=true; Clear(); }
     }
 }

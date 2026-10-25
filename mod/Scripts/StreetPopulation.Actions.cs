@@ -30,6 +30,7 @@ namespace PeopleOfTheIliacBay.DFU
             public SelectedSeatAccess Seat;
             public SelectedSeatAccess DepartureSeat;
             public bool SeatEntry;
+            public bool Urgent;
         }
         private readonly Dictionary<string,ActionMotion> actionMotions=new Dictionary<string,ActionMotion>();
         private static double ActionNow()
@@ -157,6 +158,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         private List<NpcActionOption> BuildSemanticActionCandidates(ResidentActor actor,List<NpcActionOption> result)
         {
+            OfferMurderReportAction(actor,result);
             OfferOwnedHealingItemAction(actor,null,result,true);
             OfferCompanionCastActions(actor,null,result,true);
             OfferCombatActions(actor,null,result,true);
@@ -317,7 +319,7 @@ namespace PeopleOfTheIliacBay.DFU
             double now=ActionNow();
             if(kind==NpcActionKind.ChangeSchedule && IsTravelerActionPlan(plan))
             {reason="A traveler has no local household routine to abandon.";return false;}
-            if(kind!=NpcActionKind.Follow && kind!=NpcActionKind.Wait && kind!=NpcActionKind.MoveTo && kind!=NpcActionKind.Enter && kind!=NpcActionKind.Exit && kind!=NpcActionKind.Lead && kind!=NpcActionKind.Interact && kind!=NpcActionKind.ChangeSchedule && kind!=NpcActionKind.Purchase && kind!=NpcActionKind.TakeSeat && kind!=NpcActionKind.Transfer && !IsCombatAction(kind) &&
+            if(kind!=NpcActionKind.Follow && kind!=NpcActionKind.Wait && kind!=NpcActionKind.MoveTo && kind!=NpcActionKind.Enter && kind!=NpcActionKind.Exit && kind!=NpcActionKind.Lead && kind!=NpcActionKind.Interact && kind!=NpcActionKind.ReportMurder && kind!=NpcActionKind.ChangeSchedule && kind!=NpcActionKind.Purchase && kind!=NpcActionKind.TakeSeat && kind!=NpcActionKind.Transfer && !IsCombatAction(kind) &&
                 !(healthTask && (kind==NpcActionKind.UseHealingItem || kind==NpcActionKind.RestToHeal || kind==NpcActionKind.CastSpell)) &&
                 !(task==null && kind==NpcActionKind.UseHealingItem) &&
                 !(task==null && kind==NpcActionKind.CastSpell && decision.Option.CompanionCast!=null))
@@ -436,6 +438,8 @@ namespace PeopleOfTheIliacBay.DFU
         {
             target=Vector3.zero;arrival=0.25f;reason="Target is not available in this loaded place.";
             if(job.Target==null) return false;
+            if(job.Kind==NpcActionKind.ReportMurder)
+                return ResolveMurderReportGuard(job,out target,out arrival,out reason);
             if(IsCombatAction(job.Kind))
             {
                 var enemy=NativeNpcCombatAssist.Find(job.Target.PersonId);
@@ -612,6 +616,7 @@ namespace PeopleOfTheIliacBay.DFU
             ActionMotion motion;
             if(!actionMotions.TryGetValue(plan.Resident.Id,out motion) || motion.JobId!=job.Id)
             {motion=new ActionMotion {JobId=job.Id,LastProgress=actor.transform.position,ProgressAt=Time.unscaledTime};actionMotions[plan.Resident.Id]=motion;}
+            motion.Urgent=job.Kind==NpcActionKind.ReportMurder && !NpcActionExecutor.IsTerminal(job);
             if(motion.DepartureSeat!=null)
             {
                 if(!LeaveRoutineSeatForAction(actor,job,motion,now))return true;
@@ -717,9 +722,11 @@ namespace PeopleOfTheIliacBay.DFU
                         }
                         if(job.Kind==NpcActionKind.Transfer && !ExecuteInventoryAction(job,actor,now,out failure))
                         {EndAction(job,now,failure,true);return true;}
+                        if(job.Kind==NpcActionKind.ReportMurder && !DeliverMurderReport(job,actor,now,out failure))
+                        {EndAction(job,now,failure,true);return true;}
                         if(job.Kind==NpcActionKind.ChangeSchedule) ReanchorActionDeparture(plan,actor,motion,now,true);
                         if(job.Kind!=NpcActionKind.TakeSeat) actor.Place(actor.transform.position-Vector3.up,goal-(actor.transform.position-Vector3.up),true);
-                        if(job.Kind!=NpcActionKind.Purchase && job.Kind!=NpcActionKind.Transfer && job.Kind!=NpcActionKind.UseHealingItem && job.Kind!=NpcActionKind.RestToHeal && job.Kind!=NpcActionKind.CastSpell && !worldStore.ObserveNpcAction(job.Id,job.Revision,now,NpcActionObservation.Success(job.Id+":observed"))) return true;
+                        if(job.Kind!=NpcActionKind.ReportMurder && job.Kind!=NpcActionKind.Purchase && job.Kind!=NpcActionKind.Transfer && job.Kind!=NpcActionKind.UseHealingItem && job.Kind!=NpcActionKind.RestToHeal && job.Kind!=NpcActionKind.CastSpell && !worldStore.ObserveNpcAction(job.Id,job.Revision,now,NpcActionObservation.Success(job.Id+":observed"))) return true;
                         job=worldStore.ReadNpcAction(job.Id);
                         RememberActionOutcome(job,now);
                         string settlementError;
@@ -821,7 +828,7 @@ namespace PeopleOfTheIliacBay.DFU
                     }
                 }
             }
-            actor.ResumeFromSocialPause();actor.Place(target,target-actual,waitAtOccupiedTarget:true);
+            actor.ResumeFromSocialPause();actor.Place(target,target-actual,fleeing:motion.Urgent,waitAtOccupiedTarget:true);
         }
         private void EndAction(NpcActionJob job,double now,string reason,bool returnToRoutine)
         {

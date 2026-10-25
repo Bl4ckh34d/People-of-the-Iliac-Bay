@@ -20,6 +20,7 @@ namespace PeopleOfTheIliacBay.DFU
         private MobileUnit mobile;
         private double displayedAt;
         private float groundOffset;
+        public Vector3 GroundPosition {get {return transform.position-Vector3.up*groundOffset;}}
         private Coroutine combatStart;
         private GameObject torchBody;
         private Light torchLight;

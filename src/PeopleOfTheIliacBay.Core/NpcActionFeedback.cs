@@ -41,6 +41,7 @@ namespace PeopleOfTheIliacBay.Core
                     return actorName+" hands "+recipient+" "+job.Target.Quantity.ToString(CultureInfo.InvariantCulture)+" x "+itemName+".";
                 case NpcActionKind.MoveTo:return actorName+" reaches the agreed destination.";
                 case NpcActionKind.Interact:return actorName+" reaches the person you indicated.";
+                case NpcActionKind.ReportMurder:return actorName+" passes your anonymous murder report to a guard.";
                 case NpcActionKind.Wait:return actorName+" finishes waiting.";
                 case NpcActionKind.Follow:return actorName+" finishes accompanying you.";
                 case NpcActionKind.TakeSeat:return actorName+" finishes the agreed rest.";

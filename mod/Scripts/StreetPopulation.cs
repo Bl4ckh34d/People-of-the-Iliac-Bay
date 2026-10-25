@@ -1519,8 +1519,11 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void ClearActors()
         {
-            FlushHomeSleep();
-            YieldHouseholds(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            if(!destroyingPopulation)
+            {
+                FlushHomeSleep();
+                YieldHouseholds(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            }
             ClearHouseholdJointBodies();
             ClearHouseholdInns();
             ClearAppointmentApproaches();

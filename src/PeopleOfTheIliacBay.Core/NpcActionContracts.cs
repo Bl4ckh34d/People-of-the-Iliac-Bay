@@ -4,7 +4,7 @@ namespace PeopleOfTheIliacBay.Core
 {
     // Append persisted values only. Lead is deliberately distinct from MoveTo:
     // MoveTo relocates the NPC; Lead keeps the player with the NPC en route.
-    public enum NpcActionKind {MoveTo,Follow,Interact,Purchase,Transfer,Attack,CastSpell,Lockpick,Climb,TakeSeat,ChangeSchedule,Wait,UseHealingItem,RestToHeal,Lead,Enter,Exit,Defend}
+    public enum NpcActionKind {MoveTo,Follow,Interact,Purchase,Transfer,Attack,CastSpell,Lockpick,Climb,TakeSeat,ChangeSchedule,Wait,UseHealingItem,RestToHeal,Lead,Enter,Exit,Defend,ReportMurder}
     public enum NpcActionPhase {Proposed,Accepted,Approaching,Executing,Completed,Failed,Cancelled}
     public enum NpcActionTargetKind {Person,Building,WorldPoint,IndoorPoint,Container,Item}
     // Zero remains the schema-28 NPC-owned source direction.

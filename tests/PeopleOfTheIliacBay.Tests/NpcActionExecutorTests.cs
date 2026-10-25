@@ -19,6 +19,18 @@ namespace PeopleOfTheIliacBay.Tests
         }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            NpcMurderReportTests.Add(cases);
+            cases.Add(("An anonymous murder report is a distinct executable action, not an approach",()=>{
+                NpcActionKind report;
+                Check.True(Enum.TryParse("ReportMurder",out report),"Missing semantic guard report action.");
+                Check.True(NpcTaskContract.Supported(report));
+                var job=Job();job.Kind=report;
+                job.Target=new NpcActionTarget {Kind=NpcActionTargetKind.Person,PersonId="guard:1",SettlementId=1};
+                NpcActionExecutor.Validate(job);
+                Check.Equal(report,NpcActionExecutor.Copy(job).Kind);
+                Check.True(NpcActionFeedback.Describe(job,"Sara",null,null)==null,
+                    "Accepting the request cannot claim delivery.");
+            }));
             NpcFollowTransitionTests.Add(cases);
             cases.Add(("Only a bound paid Follow can last one full game day",()=>{
                 var ordinary=Job();ordinary.Kind=NpcActionKind.Follow;

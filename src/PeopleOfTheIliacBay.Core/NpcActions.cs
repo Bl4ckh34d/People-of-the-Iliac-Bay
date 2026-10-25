@@ -230,7 +230,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             ulong itemUid=0;
             if(value==null || !Identifier(value.Id,220) || !Identifier(value.ResidentId) || !Identifier(value.ProposalId) ||
-                (int)value.Kind<0 || (int)value.Kind>(int)NpcActionKind.Defend || (int)value.Phase<1 || (int)value.Phase>6 || value.Revision<1 ||
+                (int)value.Kind<0 || (int)value.Kind>(int)NpcActionKind.ReportMurder || (int)value.Phase<1 || (int)value.Phase>6 || value.Revision<1 ||
                 !Number(value.AcceptedAt) || !Number(value.DeadlineAt) || !Number(value.UpdatedAt) || value.AcceptedAt<0 ||
                 value.DeadlineAt<=value.AcceptedAt ||
                 (value.DeadlineAt-value.AcceptedAt>86400 && !NpcPaidCompanionAction.IsPaidFollowJob(value)) ||
@@ -240,6 +240,9 @@ namespace PeopleOfTheIliacBay.Core
                 value.Kind!=NpcActionKind.RestToHeal && value.ExpectedVitalsRevision!=0)
                 throw new ArgumentException("Vitals revision binding is only valid for rest treatment actions.");
             NpcActionContract.ValidateTarget(value.Target);
+            if(value.Kind==NpcActionKind.ReportMurder && (value.Target.Kind!=NpcActionTargetKind.Person ||
+                value.Target.SettlementId<0 || value.Target.PersonId=="player" || value.Target.PersonId==value.ResidentId))
+                throw new ArgumentException("A murder report needs a specific guard in a known settlement.");
             if(value.CompanionCast!=null)
             {
                 NpcCompanionCastSpec.CopyValidated(value.CompanionCast);
@@ -548,6 +551,8 @@ namespace PeopleOfTheIliacBay.Core
         public bool ObserveNpcAction(string id,long expectedRevision,double now,NpcActionObservation observation)
         {
             int index=state.NpcActions.FindIndex(j=>j.Id==id);NpcActionJob updated;
+            if(index>=0 && state.NpcActions[index].Kind==NpcActionKind.ReportMurder &&
+                observation!=null && observation.Phase==NpcActionPhase.Completed)return false;
             if(index>=0 && (state.NpcActions[index].Kind==NpcActionKind.UseHealingItem || state.NpcActions[index].Kind==NpcActionKind.RestToHeal || state.NpcActions[index].Kind==NpcActionKind.CastSpell && state.NpcActions[index].MagicHealing!=null) &&
                 observation!=null && observation.Phase==NpcActionPhase.Completed)return false;
             if(index>=0 && (state.NpcActions[index].Kind==NpcActionKind.Enter || state.NpcActions[index].Kind==NpcActionKind.Exit) &&
@@ -582,6 +587,7 @@ namespace PeopleOfTheIliacBay.Core
             int index=state.NpcActions.FindIndex(j=>j.Id==id);NpcActionJob completed;
             if(index<0 || applyEffect==null) return false;
             var current=state.NpcActions[index];var resident=ResolveResident(current.ResidentId);
+            if(current.Kind==NpcActionKind.ReportMurder)return false;
             if(resident==null || !resident.IsAlive || resident.IsQuestProtected || current.ServiceCode=="tavern-beer" && current.ServiceStep!=1 ||
                 current.ServiceCode==NpcShopCommerce.TrainingServiceCode && current.ServiceStep!=1 ||
                 !NpcActionExecutor.Advance(current,expectedRevision,now,

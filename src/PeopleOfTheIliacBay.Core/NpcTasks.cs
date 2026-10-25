@@ -51,6 +51,7 @@ namespace PeopleOfTheIliacBay.Core
                 case NpcActionKind.Follow:return "Follow";
                 case NpcActionKind.TakeSeat:return "Sit";
                 case NpcActionKind.Interact:return "Approach";
+                case NpcActionKind.ReportMurder:return "Report murder";
                 case NpcActionKind.Transfer:return "Handover";
                 case NpcActionKind.Purchase:return "Shop purchase";
                 case NpcActionKind.UseHealingItem:return "Healing item";
@@ -102,7 +103,7 @@ namespace PeopleOfTheIliacBay.Core
         public static bool IsTerminal(NpcTaskPlan task) { return task!=null && task.Phase>=NpcTaskPhase.Completed; }
         public static string ActionId(NpcTaskPlan task) { return task.Id+":step:"+task.CurrentStepIndex; }
         public static bool Supported(NpcActionKind kind)
-        { return kind==NpcActionKind.Wait || kind==NpcActionKind.MoveTo || kind==NpcActionKind.Follow || kind==NpcActionKind.TakeSeat || kind==NpcActionKind.Interact || kind==NpcActionKind.Transfer || kind==NpcActionKind.Purchase || kind==NpcActionKind.UseHealingItem || kind==NpcActionKind.RestToHeal || kind==NpcActionKind.CastSpell || kind==NpcActionKind.Lead || kind==NpcActionKind.Enter || kind==NpcActionKind.Exit; }
+        { return kind==NpcActionKind.Wait || kind==NpcActionKind.MoveTo || kind==NpcActionKind.Follow || kind==NpcActionKind.TakeSeat || kind==NpcActionKind.Interact || kind==NpcActionKind.ReportMurder || kind==NpcActionKind.Transfer || kind==NpcActionKind.Purchase || kind==NpcActionKind.UseHealingItem || kind==NpcActionKind.RestToHeal || kind==NpcActionKind.CastSpell || kind==NpcActionKind.Lead || kind==NpcActionKind.Enter || kind==NpcActionKind.Exit; }
         public static bool CanSourceAcquiredItem(NpcTaskStep step)
         {
             return step!=null && (step.Kind==NpcActionKind.Purchase || step.Kind==NpcActionKind.Transfer && step.Target!=null &&

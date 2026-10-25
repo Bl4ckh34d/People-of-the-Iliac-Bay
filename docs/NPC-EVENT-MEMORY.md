@@ -2,6 +2,8 @@
 
 This extends the existing native experience/appraisal pipeline and conversation journal. It does not replace native combat, commerce, perception or the month-gated conversation compaction service.
 
+`ReportMurder` adds an attributed communication event. After actual delivery, the messenger remembers relaying the player's anonymous murder claim; the guard remembers receiving an anonymous traveller's claim from a resident. Both enter the existing scene memory and journal with explicitly unverified content. This is a conversation event, not a witnessed murder, and it creates neither a killer attribution nor a native charge. Acceptance, cancellation and failure remain distinct action states. No crime location is inferred from where the report was delivered.
+
 ## What an NPC can remember
 
 | Source | Remembered facts | Limits |

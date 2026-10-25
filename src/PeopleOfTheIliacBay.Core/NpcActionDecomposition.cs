@@ -95,6 +95,7 @@ namespace PeopleOfTheIliacBay.Core
                 "A polite question can request actions. Count each explicitly requested distinct effect; do not combine sequential timed actions. " +
                 "Following a person for a duration is one action. Moving to a place then waiting there is two actions. " +
                 "Buying an item then giving it to someone is two actions. Do not invent steps for arrival or completion. " +
+                "Finding a guard in order to relay an anonymous murder report is one ReportMurder action: approach is included in delivery. Reporting and then doing a separate errand remains two actions. " +
                 "Quoted, reported, negated, hypothetical or conditional actions are not current requests. " +
                 "A polite question asking this NPC to act is a current request, not a hypothetical or conditional statement. " +
                 "Classify the whole current message, not individual keywords. This only identifies steps; willingness and native targets are checked later.\n" +

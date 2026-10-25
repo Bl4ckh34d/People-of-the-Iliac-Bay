@@ -110,6 +110,7 @@ namespace PeopleOfTheIliacBay.DFU
                 return;
             }
             if(job.Phase!=NpcActionPhase.Completed)return;
+            if(job.Kind==NpcActionKind.ReportMurder)return; // Delivery writes both participants' memories atomically.
             // Treatment memory reads the typed source receipt directly. Do not
             // add a generic arrival narrative for a healing effect.
             if(job.Kind==NpcActionKind.UseHealingItem || job.Kind==NpcActionKind.RestToHeal ||

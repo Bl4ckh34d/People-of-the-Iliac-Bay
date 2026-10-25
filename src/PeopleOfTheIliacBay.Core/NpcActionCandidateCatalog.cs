@@ -97,6 +97,7 @@ namespace PeopleOfTheIliacBay.Core
             if(option.Kind==NpcActionKind.MoveTo && option.Target.Kind==NpcActionTargetKind.Building)return "Walk to an actual local building entrance";
             if(option.Kind==NpcActionKind.Enter)return "Enter a local building through its actual door";
             if(option.Kind==NpcActionKind.Exit)return "Leave the current building through its door to the outdoors";
+            if(option.Kind==NpcActionKind.ReportMurder)return "Ask this NPC to find a guard and deliver an anonymous murder report";
             return option.Kind.ToString();
         }
         public IList<NpcActionOption> Select(string output)
