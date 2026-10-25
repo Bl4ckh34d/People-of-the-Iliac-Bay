@@ -1,5 +1,16 @@
 # Testing and verification status
 
+## Physical direct-threat complaint — 26 October 2026
+
+`complaint-travel-03` passes actual witness travel and delayed finite dispatch:
+10.94484 m in 4.92790 real seconds, averaging **7.99558 km/h**. Four existing
+guards respond only after arrival. Actual/saved position, retained incident
+coordinates and detached snapshot restore pass. Core 2121/2121, runtime compile
+and tooling checks pass. The two earlier fixtures used an unverified unreachable
+incident point and are excluded from acceptance. See the [audit and remaining
+boundaries](audits/2026-10-26-physical-dialogue-complaint.md). This is a controlled
+speech receipt, not full free-text dialogue acceptance. Installed bundle unchanged.
+
 ## Native climate profiling — 26 October 2026
 
 Opt-in `-ClimateDetails` adds native timing to the normal editor loiter fixture.

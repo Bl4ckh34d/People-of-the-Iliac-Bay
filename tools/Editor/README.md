@@ -23,6 +23,13 @@ the configured voice service and checks completed nonzero mixer output; it does
 not validate a language model's spontaneous wording.
 Do not interpret a fixture setup failure or timeout as gameplay acceptance.
 
+`-ValidateComplaint` starts an exterior direct-threat complaint from a controlled
+issued speech receipt, then observes actual travel, saved body position, a
+mid-route snapshot round trip and finite guard dispatch. The incident position
+must pass physical clearance and guard-response routing before the test begins.
+It does not exercise free-text model classification or native disk save/load.
+See the [physical complaint audit](../../docs/audits/2026-10-26-physical-dialogue-complaint.md).
+
 Each 20-second observation phase and native 1/3-hour loiter records its own CPU
 `.raw` under `work/playtest-2026-10-26/editor/<RunName>`. Deep Profiling stays off.
 `-CountersOnly` disables binary profiling for a second comparison without capture

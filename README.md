@@ -10,6 +10,11 @@ Local test bundle **8E9FEDB6437F** is built and installed (26 October, 07:11); U
 
 ## Project status
 
+Controlled direct-threat reporting now passes an actual outdoor journey and
+delayed dispatch of four existing guards: 10.94 m travelled at an average
+8.00 km/h. Free-text initiation and post-delivery routine resumption remain open;
+see the [physical complaint audit](docs/audits/2026-10-26-physical-dialogue-complaint.md).
+
 Native CPU profiling attributes the remaining editor time-skip spike to repeated
 billboard replacement lookup. The [climate investigation](docs/audits/2026-10-26-native-climate-profile.md)
 separates editor virtual-mod lookup from release behavior. No production texture
