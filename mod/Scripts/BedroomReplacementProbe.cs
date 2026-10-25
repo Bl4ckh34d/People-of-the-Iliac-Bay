@@ -7,14 +7,14 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class BedroomReplacementProbe
     {
         private const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
-        public static IEnumerator Run(LivingCitiesMod host,StreetPopulation streets,string character)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             var game=GameManager.Instance;game.SaveLoadManager.EnumerateSaves();
             int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"People - Shop entrance");
@@ -28,8 +28,8 @@ namespace LivingCities.DFU
             }
             finally {SaveLoadManager.OnLoad-=handler;}
             game.PlayerEntity.GodMode=true;
-            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",Private).GetValue(host);
-            var rentals=(NativeTavernRentals)typeof(LivingCitiesMod).GetField("nativeRentals",Private).GetValue(host);
+            var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",Private).GetValue(host);
+            var rentals=(NativeTavernRentals)typeof(PeopleOfTheIliacBayMod).GetField("nativeRentals",Private).GetValue(host);
             var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             var doors=new List<KeyValuePair<Transform,StaticDoor>>();
             foreach(var owner in directory.GetComponentsInChildren<DaggerfallStaticDoors>()) foreach(var door in owner.Doors)
@@ -91,11 +91,11 @@ namespace LivingCities.DFU
             if(innRemoved==0 || hallKept==0 || shopRemoved==0 || !shopOwner || !ownerSleeping)
                 throw new InvalidOperationException("Bedroom fixture lacks acceptance evidence: inn="+innRemoved+"; hall="+hallKept+"; shop="+shopRemoved+"; keeper="+shopOwner);
             var json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
-            var restored=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());
+            var restored=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
             restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
             int retired=0;foreach(var person in restored.NativePeopleFor(directory.MapID)) if(person.RetiredBedroomFlat) retired++;
             if(retired<innRemoved+shopRemoved) throw new InvalidOperationException("Bedroom retirement did not survive native serialization.");
-            Debug.Log("LIVING_CITIES_BEDROOM_REPLACEMENT_PASS: inn="+innRemoved+"; mainHall="+hallKept+"; shop="+shopRemoved+"; owner sleeps on-site; native serialize/restore; no fake deaths or lingering native reservations.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BEDROOM_REPLACEMENT_PASS: inn="+innRemoved+"; mainHall="+hallKept+"; shop="+shopRemoved+"; owner sleeps on-site; native serialize/restore; no fake deaths or lingering native reservations.");
         }
     }
 }

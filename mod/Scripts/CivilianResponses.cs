@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Generated residents witness violence and report it locally to the finite guard adapter.
     public sealed class CivilianResponses
@@ -15,20 +15,30 @@ namespace LivingCities.DFU
         private readonly int settlementId;
         private float nextWarnings;
         private readonly Action<CivilianIncident, Vector3> tellGuards;
-        public CivilianResponses(WorldStateStore store, int settlementId, Action<CivilianIncident, Vector3> tellGuards = null)
-        { this.store = store; this.settlementId = settlementId; this.tellGuards = tellGuards; }
+        private readonly Func<string, string, bool> continuesThreatResponse;
+        public CivilianResponses(WorldStateStore store, int settlementId, Action<CivilianIncident, Vector3> tellGuards = null,
+            Func<string, string, bool> continuesThreatResponse = null)
+        {
+            this.store = store; this.settlementId = settlementId; this.tellGuards = tellGuards;
+            this.continuesThreatResponse = continuesThreatResponse;
+        }
         public AlarmPerson Active(string id, double now)
         {
             var alarm = store.ActiveAlarm(id, now);
+            if (alarm != null && alarm.ThreatId != null && continuesThreatResponse != null &&
+                continuesThreatResponse(id, alarm.ThreatId)) return null;
             return alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
         }
         public void Threat(DaggerfallEntityBehaviour target,string threatId,IEnumerable<ResidentActor> actors,double now,int building,Func<string,bool> sleeping)
         {
+            if (!target || target.Entity == null || target.Entity.CurrentHealth <= 0 || target.Entity.IsInvisible ||
+                !target.gameObject.activeInHierarchy) return;
             CivilianIncident alarm=null;
             foreach(var actor in actors)
             {
-                if(!actor || !actor.Resident.IsAlive || actor.IsSleeping || sleeping(actor.Resident.Id) || !actor.gameObject.activeInHierarchy ||
-                    actor.Resident.IsQuestProtected || !Sees(actor.transform.position,target.transform.position,20)) continue;
+                if(!actor || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy) continue;
+                bool awake = !actor.IsSleeping && !sleeping(actor.Resident.Id);
+                if(!awake || actor.Resident.IsQuestProtected || !Sees(actor.transform.position,target.transform.position,20)) continue;
                 if(alarm==null)
                 {
                     alarm=store.RecordHostileThreat(settlementId,threatId,now);
@@ -40,6 +50,12 @@ namespace LivingCities.DFU
                 }
                 var person=store.Witness(alarm.Id,actor.Resident.Id,now);
                 Locate(person,actor,building);
+                if (person != null && person.DirectWitness)
+                {
+                    NpcNativeSafetyGoalLifecycle.TryObserveDirectThreat(store, actor.Resident.Id,
+                        alarm, person, now, actor.Resident.IsAlive, awake, actor.Resident.IsQuestProtected);
+                    actor.TryObserveAcuteThreatFear(store, threatId, NpcFearSeverity.Severe, now);
+                }
                 if(tellGuards!=null) tellGuards(alarm,actor.transform.position);
             }
         }
@@ -60,7 +76,7 @@ namespace LivingCities.DFU
                     victim.transform.position, sleeping(actor.Resident.Id) && Active(actor.Resident.Id, now) == null, now, building);
                 Locate(person, actor, building);
             }
-            Debug.Log("LIVING_CITIES_VIOLENCE: " + alarm.Id + "; witnesses=" + alarm.People.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_VIOLENCE: " + alarm.Id + "; witnesses=" + alarm.People.Count);
         }
         public void WarnNearby(IEnumerable<ResidentActor> actors, double now, int building, Func<string, bool> sleeping)
         {
@@ -155,7 +171,10 @@ namespace LivingCities.DFU
                         {
                             actor.NextCounterattack = Time.time + 1.5f;
                             actor.Counterattacks++;
-                            if (!game.PlayerEntity.GodMode) game.PlayerEntity.DecreaseHealth(2 + (int)(actor.Resident.AppearanceSeed % 4));
+                            var source=actor.GetComponent<DaggerfallEntityBehaviour>();
+                            int damage=2+(int)(actor.Resident.AppearanceSeed%4);
+                            if (!game.PlayerEntity.GodMode && source)
+                                game.PlayerEntityBehaviour.DamageHealthFromSource(source,damage,true,source.transform.position);
                         }
                     }
                 }

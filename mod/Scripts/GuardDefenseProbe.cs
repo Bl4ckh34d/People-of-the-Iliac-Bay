@@ -6,10 +6,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GuardDefenseProbe
     {
@@ -19,8 +19,8 @@ namespace LivingCities.DFU
             var controller = UnityEngine.Object.FindObjectOfType<GuardPopulation>();
             var option = typeof(GuardPopulation).GetField("EnemyDefense");
             if (option == null) throw new InvalidOperationException("Finite guard enemy defense is missing.");
-            var adapter = controller.GetComponent<LivingCitiesMod>();
-            typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(adapter,true);
+            var adapter = controller.GetComponent<PeopleOfTheIliacBayMod>();
+            typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(adapter,true);
             controller.NightPatrols = false; option.SetValue(controller,true);
             game.PlayerEntity.GodMode = true; game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.None;
             game.PlayerEntity.NoTargetMode = false;
@@ -96,11 +96,11 @@ namespace LivingCities.DFU
                 defender.Capture((double)now.ToSeconds()+now.Second-Math.Floor(now.Second));
                 double woundedHealth = assigned.HealthFraction;
                 string threatId = roster.Reports.Find(r => r.Id == assigned.IncidentId).ThreatId;
-                game.SaveLoadManager.Save(game.PlayerEntity.Name,"Living Cities - guard defense");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name,"People of the Iliac Bay - guard defense");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Defense save timed out.");
-                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name,"Living Cities - guard defense");
+                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name,"People of the Iliac Bay - guard defense");
                 game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 50;
                 while ((!loaded || controller.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -165,7 +165,7 @@ namespace LivingCities.DFU
                 if (!defender) throw new InvalidOperationException("Assault check has no active defender.");
                 if(enemy.GetComponent<DaggerfallEntityBehaviour>().Entity.CurrentHealth>=500 || questEnemy.IsAttackableByAI)
                     throw new InvalidOperationException("Guard did not damage hostile quest-owned attacker while preserving its AI flag.");
-                Debug.Log("LIVING_CITIES_QUEST_ATTACKER_DEFENSE_PASS: native damage to hostile quest-tagged human; quest AI flag preserved.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_QUEST_ATTACKER_DEFENSE_PASS: native damage to hostile quest-tagged human; quest AI flag preserved.");
                 if (defender.HaltWarnings != 1 || defender.GetComponent<EnemySounds>().enabled)
                     throw new InvalidOperationException("Hostile human did not receive exactly one initial Halt warning.");
                 enemy.transform.position = defender.transform.position + Vector3.forward;
@@ -182,7 +182,7 @@ namespace LivingCities.DFU
                 if (defender.DefenseTarget || defender.GetComponent<EnemySenses>().Target != game.PlayerEntityBehaviour ||
                     game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.Assault)
                     throw new InvalidOperationException("Player assault did not transfer defender to native criminal response.");
-                Debug.Log("LIVING_CITIES_GUARD_DEFENSE_PASS: pacified/inactive/blocked ignored; native enemy damage with infighting off; real enemy/guard reload and wounded health; innocent player uncharged; death return; prior crime retained; creatures silent; human Halt once; player assault takeover; save="+key);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DEFENSE_PASS: pacified/inactive/blocked ignored; native enemy damage with infighting off; real enemy/guard reload and wounded health; innocent player uncharged; death return; prior crime retained; creatures silent; human Halt once; player assault takeover; save="+key);
             }
             finally
             {
@@ -193,12 +193,12 @@ namespace LivingCities.DFU
                 if (enemy) UnityEngine.Object.Destroy(enemy);
             }
         }
-        private static IEnumerator VerifyOutdoorWelfare(LivingCitiesMod mod,GuardPopulation controller,GuardActor guard,DaggerfallEntityBehaviour target)
+        private static IEnumerator VerifyOutdoorWelfare(PeopleOfTheIliacBayMod mod,GuardPopulation controller,GuardActor guard,DaggerfallEntityBehaviour target)
         {
             var game=GameManager.Instance; var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             var geometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation(),false);
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
-            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",flags).GetValue(mod);
+            var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",flags).GetValue(mod);
             var origin=directory.transform.InverseTransformPoint(guard.transform.position);
             bool placed=false; bool god=game.PlayerEntity.GodMode; int health=game.PlayerEntity.CurrentHealth;
             var windowField=typeof(GuardPopulation).GetField("welfareWindow",flags);
@@ -234,7 +234,7 @@ namespace LivingCities.DFU
                 window.CloseWindow(); yield return null; yield return null;
                 if(!record.Death.WelfareConsumed || record.Death.PotionGranted || game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Outdoor welfare changed innocence or failed once-only decline.");
-                Debug.Log("LIVING_CITIES_OUTDOOR_WELFARE_PASS: actual defender witnesses native lawful kill, physically approaches and completes courtesy without charging player.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_OUTDOOR_WELFARE_PASS: actual defender witnesses native lawful kill, physically approaches and completes courtesy without charging player.");
             }
             finally
             {

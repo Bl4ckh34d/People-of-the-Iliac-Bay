@@ -1,12 +1,13 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class ResidentDepartureSurvey
     {
@@ -15,35 +16,53 @@ namespace LivingCities.DFU
         public bool Walled;
         // Prepare while the settlement is loaded. A failed bridge is not a licence
         // to interpolate through walls or trees; the caller must choose another trip.
-        public static ResidentDepartureSurvey Read(TownGeometry geometry,BuildingDirectory directory,int home,IReadOnlyList<RoutePoint> road)
+        public static IEnumerator ReadSteps(TownGeometry geometry,BuildingDirectory directory,int home,IReadOnlyList<RoutePoint> road,
+            ResidentDepartureSurvey result,Func<bool> stillValid)
         {
-            if(road==null || road.Count<2) throw new ArgumentException("Road route required.");
-            var exits=geometry.SurveyTravelerRoutes(home);
-            bool probe=Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-resident-trip-probe")>=0;
-            if(probe) Debug.Log("LIVING_CITIES_ROAD_JOIN_SURVEY: exits="+exits.Count+"; location="+directory.GetComponent<DaggerfallLocation>().Summary.MapPixelX+","+directory.GetComponent<DaggerfallLocation>().Summary.MapPixelY);
-            ResidentDepartureSurvey best=null;
-            for(int step=1;step<=9;step++)
+            if(geometry==null || !directory || result==null || stillValid==null || road==null || road.Count<2)
+                throw new ArgumentException("Road route and active settlement required.");
+            result.HomeRoute=null; result.Road=null;
+            if(!stillValid()) yield break;
+            // Use the same model-cleared street/gate connections as trip planning.
+            // Choosing a different exit and then drawing a straight bridge to the
+            // road can cut diagonally back through a city wall.
+            var surveyed=new UnloadedSettlementSurvey.Result();
+            yield return UnloadedSettlementSurvey.ReadSteps(directory.LocationData,surveyed);
+            if(!stillValid() || surveyed.Grid==null) yield break;
+            var accesses=new UnloadedSettlementSurvey.RoadAccessResult();
+            yield return surveyed.Grid.ReadRoadAccessSteps(road,accesses,stillValid);
+            if(!stillValid() || accesses.Accesses==null) yield break;
+            bool probe=Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-resident-trip-probe")>=0;
+            foreach(var access in accesses.Accesses)
             {
-                double f=step*0.05;
-                var join=new RoutePoint(road[0].X+(road[1].X-road[0].X)*f,road[0].Z+(road[1].Z-road[0].Z)*f);
+                if(!stillValid()) yield break;
                 Vector3 ground; Transform parent;
-                if(!RoadTravelActors.Wilderness(join) || !RoadTravelActors.Ground(join,out ground,out parent))
-                { if(probe) Debug.Log("LIVING_CITIES_ROAD_JOIN_SKIP: "+join.X+","+join.Z); continue; }
-                foreach(var exit in exits)
+                if(!RoadTravelActors.Wilderness(access.RoadPoint) || !RoadTravelActors.Ground(access.RoadPoint,out ground,out parent)) continue;
+                foreach(var entrance in surveyed.Grid.Entrances)
                 {
-                    var local=new List<RoutePoint>(exit.Points); local.Reverse();
-                    double gate=Length(local);
-                    Vector3 from=geometry.ScenePoint(local[local.Count-1]);
-                    var bridge=Bridge(from,ground,parent.GetComponent<Terrain>(),directory.transform);
-                    if(bridge==null) { if(probe) Debug.Log("LIVING_CITIES_ROAD_JOIN_BLOCKED: from="+from+"; to="+ground+"; distance="+Vector3.Distance(from,ground)); continue; }
-                    local.AddRange(bridge); double length=Length(local);
-                    if(best!=null && best.Metres<=length) continue;
-                    var trimmed=new List<RoutePoint> {join};
+                    if(entrance.BuildingKey!=home) continue;
+                    var candidate=new UnloadedSettlementSurvey.BuildingRoadRoute();
+                    yield return surveyed.Grid.ReadRoadBuildingRouteSteps(access,entrance,candidate,stillValid);
+                    if(!stillValid()) yield break;
+                    if(candidate.Points==null) continue;
+                    var local=new List<RoutePoint>(candidate.Points); local.Reverse();
+                    bool clear=true;
+                    for(int i=1;i<local.Count;i++)
+                    {
+                        if(Bridge(geometry.ScenePoint(local[i-1]),geometry.ScenePoint(local[i]),parent.GetComponent<Terrain>(),directory.transform,
+                            probe ? (Action<string>)(message=>Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_JOIN_REJECT: "+message)) : null)==null)
+                        {clear=false;break;}
+                        if(i%32==0) {yield return null;if(!stillValid()) yield break;}
+                    }
+                    if(!clear) continue;
+                    var trimmed=new List<RoutePoint> {access.RoadPoint};
                     for(int i=1;i<road.Count;i++) trimmed.Add(road[i]);
-                    best=new ResidentDepartureSurvey {HomeRoute=local,Road=trimmed,Metres=length,GateMetres=gate,Walled=exit.Walled};
+                    result.HomeRoute=local;result.Road=trimmed;result.Metres=Length(local);
+                    result.GateMetres=candidate.Metres-candidate.EntryGateMetres;result.Walled=candidate.Walled;
+                    if(probe) Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_JOIN_SURVEY: home="+home+"; candidatePoints="+local.Count+"; metres="+result.Metres);
+                    yield break;
                 }
             }
-            return best;
         }
         private static double Length(List<RoutePoint> points)
         {

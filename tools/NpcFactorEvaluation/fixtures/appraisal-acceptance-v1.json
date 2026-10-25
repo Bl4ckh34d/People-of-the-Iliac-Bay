@@ -1,0 +1,310 @@
+{
+  "schemaVersion": 1,
+  "fixtureId": "npc-experience-appraisal-acceptance-v1",
+  "provenance": "Runtime-independent acceptance cases grounded in current PeopleOfTheIliacBay.Core event, appointment producer, inbox, and appraisal request/response contracts. Synthetic identifiers/observations only. These cases define invariants, not calibrated relationship deltas or model text.",
+  "currentContractReferences": {
+    "eventFactories": [
+      "NpcExperienceEvent.FromNativeOutcome",
+      "NpcExperienceEvent.FromAttributedSpeech"
+    ],
+    "appraisal": [
+      "NpcExperienceAppraisalContract.CreateRequest",
+      "NpcExperienceAppraisalContract.TryParseResponse"
+    ],
+    "appointments": [
+      "NpcAppointmentExperience.TryCreate"
+    ],
+    "deduplication": [
+      "WorldStateStore.TryEnqueueNpcExperience",
+      "NpcExperienceEvent.DeduplicationKey"
+    ],
+    "transaction": "Do not assume a transaction member name. The parent-owned atomic consumer must be located and verified before wiring these cases."
+  },
+  "reviewRules": [
+    "Distinguish construction/request validity from semantic suitability and from atomic state acceptance.",
+    "Keep native causal facts separate from observer knowledge and attributed speech.",
+    "Use exact receipt/observer/speaker/episode/time binding for observed utterances.",
+    "Do not hard-code a target mood/affinity/trust/fear delta or exact sentence.",
+    "A rejected, replayed, stale, or wrong-branch proposal leaves all relevant state unchanged."
+  ],
+  "cases": [
+    {
+      "id": "appraisal.gift-known-vs-unknown-giver",
+      "family": "native money outcome",
+      "currentContractSupport": "request-and-parser-supported; appraisal is not an effect or an automatic trust grant",
+      "nativeEvidenceFactory": "NpcExperienceEvent.FromNativeOutcome",
+      "appraisalRequestFactory": "NpcExperienceAppraisalContract.CreateRequest",
+      "responseParser": "NpcExperienceAppraisalContract.TryParseResponse",
+      "arms": [
+        {
+          "id": "known-giver",
+          "event": {
+            "origin": "NativeOutcome",
+            "eventKind": "MoneyReceived",
+            "observerId": "npc:observer",
+            "subjectPersonId": "npc:observer",
+            "receiptId": "receipt:gift-known",
+            "episodeId": "episode:gift",
+            "outcomeId": "outcome:gift-known",
+            "observedGameTime": 110,
+            "responsibleActorAttribution": "Known",
+            "responsibleActorId": "player"
+          },
+          "npcKnowledge": {
+            "giver": "player",
+            "transfer": "confirmed native receipt"
+          },
+          "requestRelationshipTarget": "player",
+          "positiveAffinityCredit": "available positive credit",
+          "invariants": [
+            "Gift may inform mood and gradual affinity when giver is known and the relationship target is bound.",
+            "MoneyReceived never supports positive trust in the current parser.",
+            "No friendship or trust effect is implied as a fixed outcome."
+          ]
+        },
+        {
+          "id": "unknown-giver",
+          "event": {
+            "origin": "NativeOutcome",
+            "eventKind": "MoneyReceived",
+            "observerId": "npc:observer",
+            "subjectPersonId": "npc:observer",
+            "receiptId": "receipt:gift-unknown",
+            "episodeId": "episode:gift",
+            "outcomeId": "outcome:gift-unknown",
+            "observedGameTime": 110,
+            "responsibleActorAttribution": "Unknown",
+            "responsibleActorId": null
+          },
+          "npcKnowledge": {
+            "giver": "unknown",
+            "transfer": "confirmed native receipt"
+          },
+          "requestRelationshipTarget": null,
+          "positiveAffinityCredit": "available positive credit",
+          "invariants": [
+            "Do not attribute gratitude or resentment to the player.",
+            "Current request cannot target a relationship because giver attribution is unknown.",
+            "Mood appraisal may be considered; directed relationship changes require a known target."
+          ]
+        }
+      ],
+      "atomicAcceptance": {
+        "acceptOnlyWith": "response bound to current branch, evidence key and captured revisions",
+        "replay": "one canonical outcome can be consumed once per observer; repeated appraisal yields no second state change"
+      }
+    },
+    {
+      "id": "appraisal.native-rescue-vs-player-claim",
+      "family": "confirmed help versus speech claim",
+      "currentContractSupport": "native CombatHelp outcome and attributed speech are distinct origins; speech claim cannot establish outcome",
+      "arms": [
+        {
+          "id": "confirmed-rescue",
+          "event": {
+            "factory": "NpcExperienceEvent.FromNativeOutcome",
+            "origin": "NativeOutcome",
+            "eventKind": "CombatHelp",
+            "responsibleActorAttribution": "Known",
+            "responsibleActorId": "player",
+            "nativeOutcomeReceipt": "confirmed outcome"
+          },
+          "npcKnowledge": {
+            "help": "observed/confirmed native outcome"
+          },
+          "relationshipTarget": "player",
+          "invariants": [
+            "A real confirmed CombatHelp outcome may support a trust proposal when relationship evidence is bound.",
+            "The proposal remains distinct from a completed relationship update until atomic acceptance."
+          ]
+        },
+        {
+          "id": "unverified-rescue-claim",
+          "event": {
+            "factory": "NpcExperienceEvent.FromAttributedSpeech",
+            "origin": "AttributedSpeech",
+            "claimedEventKind": "CombatHelp",
+            "responsibleActorAttribution": "Unknown",
+            "claimedResponsibleActorId": "player",
+            "nativeOutcomeReceipt": null
+          },
+          "npcKnowledge": {
+            "help": "player said they rescued the NPC; no confirming outcome receipt"
+          },
+          "relationshipTarget": "player",
+          "invariants": [
+            "Keep the statement attributed to the speaker; do not convert it into a native rescue fact.",
+            "Current response parser rejects any trust change on attributed-speech events.",
+            "No rescue, gratitude, or reward is confirmed by the claim alone."
+          ]
+        }
+      ],
+      "atomicAcceptance": {
+        "replay": "same receipt and canonical outcome must not increase trust twice",
+        "claimIsolation": "speech and outcome evidence remain separate records"
+      }
+    },
+    {
+      "id": "appraisal.confirmed-player-no-show-vs-interruption",
+      "family": "appointments",
+      "currentContractSupport": "NpcAppointmentExperience.TryCreate supports confirmed attended/player-absent receipts; interrupted and npc-absent do not create blame evidence",
+      "arms": [
+        {
+          "id": "player-actually-absent-after-wait",
+          "appointmentStatus": "player-absent",
+          "appointmentOutcomeRecorded": true,
+          "nativeEvidenceProducer": "NpcAppointmentExperience.TryCreate",
+          "waitedForAppointment": true,
+          "playerPresentAtVenue": false,
+          "npcArrivedAndWaitedThroughDeadline": true,
+          "existingNoShowPenaltyAlreadyOwnedByAppointment": true,
+          "expectedExperienceEvent": "AppointmentNoShow",
+          "invariants": [
+            "Request creation requires actual native observed-wait evidence.",
+            "Consume the canonical appointment event once.",
+            "Do not apply the existing no-show penalty a second time during appraisal."
+          ]
+        },
+        {
+          "id": "npc-interrupted-before-confirmed-outcome",
+          "appointmentStatus": "interrupted",
+          "appointmentOutcomeRecorded": true,
+          "nativeEvidenceProducer": "NpcAppointmentExperience.TryCreate",
+          "waitedForAppointment": false,
+          "playerPresentAtVenue": null,
+          "npcArrivedAndWaitedThroughDeadline": false,
+          "existingNoShowPenaltyAlreadyOwnedByAppointment": false,
+          "expectedExperienceEvent": null,
+          "invariants": [
+            "No AppointmentNoShow event or blame for the player is created by interruption.",
+            "Current producer rejects this status as no-show evidence.",
+            "Do not infer who caused an interruption without separate observer-known evidence."
+          ]
+        },
+        {
+          "id": "npc-absent",
+          "appointmentStatus": "npc-absent",
+          "appointmentOutcomeRecorded": true,
+          "nativeEvidenceProducer": "NpcAppointmentExperience.TryCreate",
+          "waitedForAppointment": false,
+          "playerPresentAtVenue": false,
+          "npcArrivedAndWaitedThroughDeadline": false,
+          "expectedExperienceEvent": null,
+          "invariants": [
+            "NPC absence is not player absence.",
+            "No player no-show event is created."
+          ]
+        }
+      ],
+      "atomicAcceptance": {
+        "onceOnly": "The existing appointment outcome and penalty are authoritative; any subsequent relationship proposal consumes the receipt once without duplicating the established penalty."
+      }
+    },
+    {
+      "id": "appraisal.direct-vs-quoted-threat",
+      "family": "receipt-bound speech",
+      "currentContractSupport": "NpcObservedConversationTurn and speech-act response vocabulary exist; current event factory requires a claimed NpcExperienceEventKind even for speech-only threat, which is not a truthful fit",
+      "constructibleByCurrentSpeechEventFactory": false,
+      "contractGap": "Do not label a pure threat as Injury, StatusOnset, or another world-event claim merely to satisfy the current factory. A speech-only receipt/event representation is needed before this contrast can be fully executed through current CreateRequest.",
+      "contrast": {
+        "sameWords": "I will kill your sister.",
+        "directArm": {
+          "speaker": "player",
+          "observer": "npc:observer",
+          "receiptBound": true,
+          "episodeBound": true,
+          "target": "known family member",
+          "frame": "speaker directly threatens the family member"
+        },
+        "quotedArm": {
+          "speaker": "player",
+          "observer": "npc:observer",
+          "receiptBound": true,
+          "episodeBound": true,
+          "target": null,
+          "frame": "speaker quotes another person's line from a play; prior observer-known turn attributes the source"
+        },
+        "knownFamilyIds": [
+          "npc:family-member"
+        ]
+      },
+      "invariants": [
+        "Only receipt-bound observed text and same-episode context may classify the speech act.",
+        "Direct and quoted/reported threat remain distinct; quoted speech is not a direct threat.",
+        "Threatened future harm is not a verified injury, crime, culprit, or committed action.",
+        "Only the direct, observer-known self/family target may use the current severe negative bounds; the bounds remain provisional and do not prescribe an exact effect."
+      ],
+      "atomicAcceptance": {
+        "dedupe": "Canonical utterance ID plus observer and episode prevents replay as another threat.",
+        "adapter": "Future speech-only event contract must bind receipt, speaker, observer, episode, utterance and observed game time."
+      }
+    },
+    {
+      "id": "appraisal.severe-affinity-loss-independent-of-positive-cap",
+      "family": "direct-threat bounds and positive credit",
+      "currentContractSupport": "TryParseResponse uses supplied PositiveAffinityCredit as positive ceiling and separate provisional negative bound for a receipt-bound direct threat to observer/known family",
+      "requestState": {
+        "positiveAffinityCredit": "zero remaining positive credit",
+        "currentAffinity": "at current saved value",
+        "relationshipTarget": "known player speaker",
+        "knownFamilyIds": [
+          "npc:family-member"
+        ],
+        "expectedAffinityRevision": "current captured revision"
+      },
+      "evidence": {
+        "origin": "AttributedSpeech",
+        "canonicalUtterance": "receipt-bound direct threat to known family member",
+        "speechTargetPersonId": "npc:family-member"
+      },
+      "invariants": [
+        "Positive affinity must not exceed PositiveAffinityCredit.",
+        "Negative direct-threat appraisal is checked against its separate provisional severe-loss bound, not the positive-growth ceiling.",
+        "No numeric target delta is prescribed; boundary checks may read current Core constants.",
+        "Any eventual commit must match current branch, observer, speaker target, and affinity/relationship revisions."
+      ],
+      "currentLimit": "Speech-only event-construction gap described in appraisal.direct-vs-quoted-threat applies here too."
+    },
+    {
+      "id": "appraisal.atomic-branch-replay-stale-gates",
+      "family": "atomicity, replay, branch, and freshness",
+      "currentContractSupport": "event canonical dedupe is enforced at inbox enqueue; response parser echoes save branch, canonical evidence and expected revisions; atomic appraisal consumer is an integration seam unless parent transaction adds it",
+      "attempts": [
+        {
+          "id": "first-current-unique-event",
+          "branch": "branch:current",
+          "eventKey": "one observer-scoped canonical event",
+          "capturedRevisions": "match saved mood, affinity, and directed-relationship state",
+          "expected": "eligible for one atomic acceptance if the whole proposal validates"
+        },
+        {
+          "id": "same-event-replay",
+          "branch": "branch:current",
+          "eventKey": "same observer-scoped canonical event",
+          "capturedRevisions": "otherwise current",
+          "expected": "reject as duplicate; no second mood or relationship write"
+        },
+        {
+          "id": "branch-mismatch",
+          "branch": "branch:forked",
+          "eventKey": "same inherited event key",
+          "capturedRevisions": "response was prepared for branch:current",
+          "expected": "reject; do not silently import appraisal across branches"
+        },
+        {
+          "id": "stale-state-revision",
+          "branch": "branch:current",
+          "eventKey": "new event key",
+          "capturedRevisions": "at least one expected mood/affinity/relationship revision no longer current",
+          "expected": "reject with all target ledgers unchanged"
+        }
+      ],
+      "invariants": [
+        "Native event identity, branch and all affected revisions are checked before any write.",
+        "Mood, affinity and directed relationship changes plus inbox consumption are one atomic outcome: all accepted together or none changed.",
+        "Chat sequence or replayed appraisal is not a new event.",
+        "If transaction support has not landed, report this scenario as a missing integration seam instead of passing it against a fake method."
+      ]
+    }
+  ]
+}

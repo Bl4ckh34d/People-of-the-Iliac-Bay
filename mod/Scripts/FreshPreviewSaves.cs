@@ -8,7 +8,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Explicit test launcher only. Produces clean, crime-free outdoor previews
     // without importing old population state or pinning obsolete interior layouts.
@@ -18,7 +18,7 @@ namespace LivingCities.DFU
         public static IEnumerator Run(StreetPopulation streets, GuardPopulation guards, string character)
         {
             var game = GameManager.Instance;
-            if (!game.PlayerEntity.Name.StartsWith("LivingCitiesTest-", StringComparison.Ordinal) || game.PlayerEntity.Name != character)
+            if (!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal) || game.PlayerEntity.Name != character)
                 throw new InvalidOperationException("Fresh previews require a disposable test character.");
             expectedCharacter = character;
             if (game.PlayerGPS.CurrentLocation.Name != "Gothway Garden")
@@ -52,7 +52,7 @@ namespace LivingCities.DFU
             clock.RaiseTime((float)((22 * 3600 - clock.ToSeconds() % 86400 + 86400) % 86400));
             yield return new WaitForSecondsRealtime(5);
             yield return SaveAndReload("People - Daggerfall night", streets, guards);
-            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: fresh previews; character=" + game.PlayerEntity.Name + "; saves=5; reloads=5");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: fresh previews; character=" + game.PlayerEntity.Name + "; saves=5; reloads=5");
         }
 
         static void Noon()
@@ -103,7 +103,7 @@ namespace LivingCities.DFU
                             var normal = owner.GetDoorNormal(i); normal.y = 0; normal.Normalize();
                             game.PlayerMotor.transform.position = owner.GetDoorPosition(i) + normal * 2.5f + Vector3.up * 1.5f;
                             game.PlayerMotor.transform.rotation = Quaternion.LookRotation(-normal);
-                            Debug.Log("LIVING_CITIES_TOWN_PREVIEW_ENTRANCE: type=" + type + "; building=" + building.buildingKey);
+                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_PREVIEW_ENTRANCE: type=" + type + "; building=" + building.buildingKey);
                             return;
                         }
                 }
@@ -137,7 +137,7 @@ namespace LivingCities.DFU
                 if (game.PlayerEntity.Name != expectedCharacter || game.IsPlayerInside || game.PlayerGPS.CurrentLocation.MapTableData.MapId != map ||
                     game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Fresh preview must reload outdoors without a crime: " + name);
-                Debug.Log("LIVING_CITIES_TEST_SAVE: " + name + "; folder=" + game.SaveLoadManager.GetSaveFolder(key));
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TEST_SAVE: " + name + "; folder=" + game.SaveLoadManager.GetSaveFolder(key));
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
         }

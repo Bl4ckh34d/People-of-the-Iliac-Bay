@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DefineConstants>$(DefineConstants);NATIVE_NPC_COMBAT_ROLE_TEST</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+    <Compile Include="../../mod/Scripts/NativeNpcCombatRoleBinding.cs" Link="NativeNpcCombatRoleBinding.cs" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1869 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "path": "docs/ROADMAP.md",
+      "sha256": "900ff20c017f6de82f7103c98f1363ea8522e915423a6fc17388e2375a54da18"
+    },
+    {
+      "path": "docs/NPC-SYSTEMS.md",
+      "sha256": "1ec72f02be2b53b1a4758778e15370b7464b779f784a4a4f6804dffd03c991d0"
+    },
+    {
+      "path": "docs/2026-10-22-npc-conversation-acceptance.md",
+      "sha256": "7c9f6b06f8e510ece617accda88682b181d34e7d208b7741864f385ea990c1f4"
+    },
+    {
+      "path": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "sha256": "8eec3a56113817cc3f0550bc06605a29b7e252c4bfe22a30da1a868c89f147d2"
+    }
+  ],
+  "roadmap": [
+    {
+      "id": "IMM-01",
+      "diagnosticCases": [
+        "speech-mixed-1",
+        "speech-mixed-2",
+        "presentation-voice-1",
+        "presentation-voice-2"
+      ],
+      "nativeRunCards": [
+        "N01",
+        "N17",
+        "N18"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-02",
+      "diagnosticCases": [
+        "world-current-location-1",
+        "world-current-location-2",
+        "memory-time-1",
+        "memory-time-2",
+        "appointment-date-1",
+        "appointment-date-2",
+        "role-jester-1",
+        "role-jester-2",
+        "death-continuity-1",
+        "death-continuity-2",
+        "prompt-injection-1",
+        "prompt-injection-2"
+      ],
+      "nativeRunCards": [
+        "N01"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-03",
+      "diagnosticCases": [
+        "world-river-1",
+        "world-river-2",
+        "knowledge-container-1",
+        "knowledge-container-2",
+        "action-inventory-1",
+        "action-inventory-2",
+        "action-price-1",
+        "action-price-2",
+        "tools-unavailable-1",
+        "tools-unavailable-2"
+      ],
+      "nativeRunCards": [
+        "N02"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-04",
+      "diagnosticCases": [
+        "household-count-1",
+        "household-count-2",
+        "family-marriage-1",
+        "family-marriage-2",
+        "family-loss-1",
+        "family-loss-2",
+        "family-legacy-unknown-1",
+        "family-legacy-unknown-2",
+        "family-privacy-1",
+        "family-privacy-2",
+        "world-river-1",
+        "world-river-2",
+        "world-indoor-weather-1",
+        "world-indoor-weather-2",
+        "knowledge-rumor-1",
+        "knowledge-rumor-2",
+        "knowledge-container-1",
+        "knowledge-container-2",
+        "knowledge-neighbor-1",
+        "knowledge-neighbor-2",
+        "intentional-lie-1",
+        "intentional-lie-2",
+        "mood-unknown-cause-1",
+        "mood-unknown-cause-2",
+        "memory-false-shared-past-1",
+        "memory-false-shared-past-2",
+        "npc-gossip-1",
+        "npc-gossip-2",
+        "listener-privacy-1",
+        "listener-privacy-2",
+        "quest-disclosure-1",
+        "quest-disclosure-2",
+        "perception-sound-1",
+        "perception-sound-2",
+        "perception-sleep-1",
+        "perception-sleep-2",
+        "crime-report-1",
+        "crime-report-2",
+        "death-continuity-1",
+        "death-continuity-2",
+        "prompt-injection-1",
+        "prompt-injection-2"
+      ],
+      "nativeRunCards": [
+        "N02",
+        "N07",
+        "N11"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-05",
+      "diagnosticCases": [
+        "memory-correction-1",
+        "memory-correction-2",
+        "memory-false-shared-past-1",
+        "memory-false-shared-past-2",
+        "memory-promise-outcome-1",
+        "memory-promise-outcome-2",
+        "memory-time-1",
+        "memory-time-2",
+        "memory-branch-1",
+        "memory-branch-2",
+        "memory-unavailable-1",
+        "memory-unavailable-2",
+        "memory-compaction-1",
+        "memory-compaction-2"
+      ],
+      "nativeRunCards": [
+        "N03",
+        "N04",
+        "N10"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-06",
+      "diagnosticCases": [
+        "memory-compaction-1",
+        "memory-compaction-2"
+      ],
+      "nativeRunCards": [
+        "N03",
+        "N04"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-07",
+      "diagnosticCases": [
+        "friendship-farming-1",
+        "friendship-farming-2",
+        "memory-unavailable-1",
+        "memory-unavailable-2",
+        "appointment-no-show-1",
+        "appointment-no-show-2"
+      ],
+      "nativeRunCards": [
+        "N05",
+        "N10"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-08",
+      "diagnosticCases": [
+        "personality-refusal-1",
+        "personality-refusal-2",
+        "mood-known-cause-1",
+        "mood-known-cause-2",
+        "relationship-fear-trust-1",
+        "relationship-fear-trust-2",
+        "relationship-apology-1",
+        "relationship-apology-2",
+        "speech-reported-1",
+        "speech-reported-2",
+        "speech-hypothetical-1",
+        "speech-hypothetical-2",
+        "speech-direct-1",
+        "speech-direct-2",
+        "speech-negation-joke-1",
+        "speech-negation-joke-2",
+        "speech-mixed-1",
+        "speech-mixed-2",
+        "action-gift-receipt-1",
+        "action-gift-receipt-2",
+        "appointment-no-show-1",
+        "appointment-no-show-2",
+        "companion-contract-1",
+        "companion-contract-2",
+        "noble-authority-1",
+        "noble-authority-2",
+        "contract-retreat-1",
+        "contract-retreat-2"
+      ],
+      "nativeRunCards": [
+        "N05",
+        "N10",
+        "N16"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-09",
+      "diagnosticCases": [
+        "family-loss-1",
+        "family-loss-2",
+        "world-indoor-weather-1",
+        "world-indoor-weather-2",
+        "mood-known-cause-1",
+        "mood-known-cause-2",
+        "mood-unknown-cause-1",
+        "mood-unknown-cause-2",
+        "relationship-apology-1",
+        "relationship-apology-2"
+      ],
+      "nativeRunCards": [
+        "N05",
+        "N18"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-10",
+      "diagnosticCases": [
+        "friendship-farming-1",
+        "friendship-farming-2"
+      ],
+      "nativeRunCards": [
+        "N05"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-11",
+      "diagnosticCases": [
+        "household-count-1",
+        "household-count-2",
+        "family-marriage-1",
+        "family-marriage-2",
+        "family-legacy-unknown-1",
+        "family-legacy-unknown-2",
+        "family-privacy-1",
+        "family-privacy-2",
+        "smalltalk-dreams-1",
+        "smalltalk-dreams-2",
+        "smalltalk-joke-1",
+        "smalltalk-joke-2",
+        "personality-refusal-1",
+        "personality-refusal-2",
+        "intentional-lie-1",
+        "intentional-lie-2",
+        "relationship-fear-trust-1",
+        "relationship-fear-trust-2"
+      ],
+      "nativeRunCards": [
+        "N05"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-12",
+      "diagnosticCases": [
+        "schedule-departure-1",
+        "schedule-departure-2",
+        "schedule-time-skip-1",
+        "schedule-time-skip-2",
+        "market-seating-1",
+        "market-seating-2",
+        "market-browsing-1",
+        "market-browsing-2",
+        "companion-contract-1",
+        "companion-contract-2",
+        "contract-retreat-1",
+        "contract-retreat-2"
+      ],
+      "nativeRunCards": [
+        "N06",
+        "N15"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-13",
+      "diagnosticCases": [
+        "action-price-1",
+        "action-price-2",
+        "schedule-departure-1",
+        "schedule-departure-2",
+        "market-seating-1",
+        "market-seating-2"
+      ],
+      "nativeRunCards": [
+        "N06"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-14",
+      "diagnosticCases": [
+        "personality-refusal-1",
+        "personality-refusal-2",
+        "busy-pause-1",
+        "busy-pause-2",
+        "action-offer-1",
+        "action-offer-2",
+        "action-cancel-1",
+        "action-cancel-2",
+        "appointment-date-1",
+        "appointment-date-2",
+        "schedule-departure-1",
+        "schedule-departure-2",
+        "initiative-refusal-1",
+        "initiative-refusal-2"
+      ],
+      "nativeRunCards": [
+        "N06"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-15",
+      "diagnosticCases": [
+        "knowledge-rumor-1",
+        "knowledge-rumor-2",
+        "npc-gossip-1",
+        "npc-gossip-2",
+        "listener-privacy-1",
+        "listener-privacy-2"
+      ],
+      "nativeRunCards": [
+        "N07"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-16",
+      "diagnosticCases": [
+        "schedule-time-skip-1",
+        "schedule-time-skip-2",
+        "initiative-refusal-1",
+        "initiative-refusal-2"
+      ],
+      "nativeRunCards": [
+        "N04",
+        "N06",
+        "N12",
+        "N17"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-17",
+      "diagnosticCases": [
+        "action-unsupported-1",
+        "action-unsupported-2",
+        "role-jester-1",
+        "role-jester-2",
+        "role-keeper-1",
+        "role-keeper-2",
+        "quest-disclosure-1",
+        "quest-disclosure-2",
+        "quest-control-1",
+        "quest-control-2",
+        "combat-native-1",
+        "combat-native-2",
+        "noble-authority-1",
+        "noble-authority-2"
+      ],
+      "nativeRunCards": [
+        "N08"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-18",
+      "diagnosticCases": [
+        "intentional-lie-1",
+        "intentional-lie-2",
+        "memory-promise-outcome-1",
+        "memory-promise-outcome-2",
+        "speech-reported-1",
+        "speech-reported-2",
+        "speech-hypothetical-1",
+        "speech-hypothetical-2",
+        "speech-direct-1",
+        "speech-direct-2",
+        "speech-negation-joke-1",
+        "speech-negation-joke-2",
+        "speech-mixed-1",
+        "speech-mixed-2",
+        "busy-pause-1",
+        "busy-pause-2",
+        "action-unsupported-1",
+        "action-unsupported-2",
+        "action-inventory-1",
+        "action-inventory-2",
+        "action-borrowing-1",
+        "action-borrowing-2",
+        "action-gift-receipt-1",
+        "action-gift-receipt-2",
+        "action-offer-1",
+        "action-offer-2",
+        "action-cancel-1",
+        "action-cancel-2",
+        "appointment-no-show-1",
+        "appointment-no-show-2",
+        "crime-report-1",
+        "crime-report-2",
+        "market-browsing-1",
+        "market-browsing-2",
+        "combat-native-1",
+        "combat-native-2",
+        "tools-unavailable-1",
+        "tools-unavailable-2",
+        "prompt-injection-1",
+        "prompt-injection-2"
+      ],
+      "nativeRunCards": [
+        "N01",
+        "N09",
+        "N15",
+        "N16"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-19",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N10"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-20",
+      "diagnosticCases": [
+        "memory-branch-1",
+        "memory-branch-2"
+      ],
+      "nativeRunCards": [
+        "N03"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "IMM-21",
+      "diagnosticCases": [
+        "perception-sound-1",
+        "perception-sound-2",
+        "perception-sleep-1",
+        "perception-sleep-2"
+      ],
+      "nativeRunCards": [
+        "N11"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "B01",
+      "diagnosticCases": [
+        "memory-time-1",
+        "memory-time-2"
+      ],
+      "nativeRunCards": [
+        "N12"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "B02",
+      "diagnosticCases": [
+        "world-current-location-1",
+        "world-current-location-2",
+        "schedule-time-skip-1",
+        "schedule-time-skip-2"
+      ],
+      "nativeRunCards": [
+        "N12"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "B03",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N12"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "B04",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N12"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "I01",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N08"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "I02",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N08"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "I03",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N08"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H01",
+      "diagnosticCases": [
+        "role-jester-1",
+        "role-jester-2"
+      ],
+      "nativeRunCards": [
+        "N08",
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H02",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H03",
+      "diagnosticCases": [
+        "market-seating-1",
+        "market-seating-2",
+        "market-browsing-1",
+        "market-browsing-2"
+      ],
+      "nativeRunCards": [
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H04",
+      "diagnosticCases": [
+        "household-count-1",
+        "household-count-2",
+        "family-marriage-1",
+        "family-marriage-2",
+        "role-keeper-1",
+        "role-keeper-2"
+      ],
+      "nativeRunCards": [
+        "N08",
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H05",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H06",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H07",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H08",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H09",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "H10",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N08",
+        "N13"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "A01",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13",
+        "N18"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "A02",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N13",
+        "N18"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "Q01",
+      "diagnosticCases": [
+        "quest-control-1",
+        "quest-control-2",
+        "noble-authority-1",
+        "noble-authority-2"
+      ],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "Q02",
+      "diagnosticCases": [
+        "quest-disclosure-1",
+        "quest-disclosure-2"
+      ],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "Q03",
+      "diagnosticCases": [
+        "quest-control-1",
+        "quest-control-2"
+      ],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "Q04",
+      "diagnosticCases": [
+        "family-privacy-1",
+        "family-privacy-2",
+        "knowledge-neighbor-1",
+        "knowledge-neighbor-2",
+        "quest-disclosure-1",
+        "quest-disclosure-2"
+      ],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "Q05",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "Q06",
+      "diagnosticCases": [
+        "quest-control-1",
+        "quest-control-2"
+      ],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "Q07",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "M01",
+      "diagnosticCases": [
+        "family-loss-1",
+        "family-loss-2",
+        "memory-correction-1",
+        "memory-correction-2",
+        "memory-branch-1",
+        "memory-branch-2"
+      ],
+      "nativeRunCards": [
+        "N03"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "M02",
+      "diagnosticCases": [
+        "memory-compaction-1",
+        "memory-compaction-2"
+      ],
+      "nativeRunCards": [
+        "N03",
+        "N04"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "M03",
+      "diagnosticCases": [
+        "npc-gossip-1",
+        "npc-gossip-2",
+        "listener-privacy-1",
+        "listener-privacy-2"
+      ],
+      "nativeRunCards": [
+        "N07"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "F01",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N15"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "F02",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N15"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "F03",
+      "diagnosticCases": [
+        "companion-contract-1",
+        "companion-contract-2",
+        "contract-retreat-1",
+        "contract-retreat-2"
+      ],
+      "nativeRunCards": [
+        "N15"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "F04",
+      "diagnosticCases": [
+        "action-inventory-1",
+        "action-inventory-2",
+        "action-borrowing-1",
+        "action-borrowing-2",
+        "action-gift-receipt-1",
+        "action-gift-receipt-2"
+      ],
+      "nativeRunCards": [
+        "N09",
+        "N15"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "F05",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N15"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "F06",
+      "diagnosticCases": [
+        "action-unsupported-1",
+        "action-unsupported-2",
+        "combat-native-1",
+        "combat-native-2"
+      ],
+      "nativeRunCards": [
+        "N09",
+        "N15"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "P01",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N17"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "P02",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N17"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "P03",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N17"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "P04",
+      "diagnosticCases": [
+        "presentation-voice-1",
+        "presentation-voice-2"
+      ],
+      "nativeRunCards": [
+        "N17"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "E01",
+      "diagnosticCases": [
+        "crime-report-1",
+        "crime-report-2",
+        "death-continuity-1",
+        "death-continuity-2"
+      ],
+      "nativeRunCards": [
+        "N11",
+        "N16"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "E02",
+      "diagnosticCases": [
+        "action-price-1",
+        "action-price-2",
+        "role-keeper-1",
+        "role-keeper-2",
+        "noble-authority-1",
+        "noble-authority-2"
+      ],
+      "nativeRunCards": [
+        "N16"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "E03",
+      "diagnosticCases": [],
+      "nativeRunCards": [
+        "N14"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    },
+    {
+      "id": "E04",
+      "diagnosticCases": [
+        "presentation-voice-1",
+        "presentation-voice-2"
+      ],
+      "nativeRunCards": [
+        "N17",
+        "N18"
+      ],
+      "status": "prepared-not-executed",
+      "automatedNativeCoverage": "not-asserted"
+    }
+  ],
+  "historicalRequirements": [
+    {
+      "id": "SC-ACTION-ADAPTER-GATE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 136,
+      "historicalSourceRow": "| `SC-ACTION-ADAPTER-GATE` | `live_decision_exercised` | `access_lock_quest_capabilities`, `theft_service_quest_gate` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-CANCEL",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 137,
+      "historicalSourceRow": "| `SC-ACTION-CANCEL` | `live_decision_exercised` | `cancel_active_commitment`, `combat_actor_died_cancel` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-COMBAT-GATE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 138,
+      "historicalSourceRow": "| `SC-ACTION-COMBAT-GATE` | `live_decision_exercised` | `combat_confirmed_hostile`, `combat_friendly_fire_block`, `combat_player_neutral`, `combat_unknown_target_no_attack` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-EXPLORE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 139,
+      "historicalSourceRow": "| `SC-ACTION-EXPLORE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-GOODS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 140,
+      "historicalSourceRow": "| `SC-ACTION-GOODS` | `live_decision_exercised` | `gift_stack_exact`, `dependent_handover_after_purchase`, `budget_owned_funds` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-MOVE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 141,
+      "historicalSourceRow": "| `SC-ACTION-MOVE` | `live_decision_exercised` | `ordered_wait_follow_move`, `explicit_wait_duration`, `follow_explicit_duration` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-PEOPLE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 142,
+      "historicalSourceRow": "| `SC-ACTION-PEOPLE` | `live_decision_exercised` | `npc_to_npc.rumor_keeps_source_and_uncertainty` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-ROLLBACK",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 143,
+      "historicalSourceRow": "| `SC-ACTION-ROLLBACK` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTION-STEALTH-GATE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 144,
+      "historicalSourceRow": "| `SC-ACTION-STEALTH-GATE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTOR-PROFILE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 145,
+      "historicalSourceRow": "| `SC-ACTOR-PROFILE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTOR-QUEST",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 146,
+      "historicalSourceRow": "| `SC-ACTOR-QUEST` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTOR-ROLE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 147,
+      "historicalSourceRow": "| `SC-ACTOR-ROLE` | `live_decision_exercised` | `actor.static_jester_role_and_capability`, `actors.unknown_role_stays_unknown` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ACTOR-STATIC",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 148,
+      "historicalSourceRow": "| `SC-ACTOR-STATIC` | `live_decision_exercised` | `actor.static_jester_role_and_capability` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-AGENDA-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 149,
+      "historicalSourceRow": "| `SC-AGENDA-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-AGENDA-URGENCY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 150,
+      "historicalSourceRow": "| `SC-AGENDA-URGENCY` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ANIM-COVERAGE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 151,
+      "historicalSourceRow": "| `SC-ANIM-COVERAGE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-APPT-BOOK",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 152,
+      "historicalSourceRow": "| `SC-APPT-BOOK` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-APPT-CONFLICT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 153,
+      "historicalSourceRow": "| `SC-APPT-CONFLICT` | `live_decision_exercised` | `fixed_appointment_priority`, `replan_protect_appointment_sleep`, `routine.remaining_day_protect_appointment_and_home` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-APPT-NOSHOW",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 154,
+      "historicalSourceRow": "| `SC-APPT-NOSHOW` | `live_decision_exercised` | `meeting.no_show_only_with_witnessed_absence` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-BASE-REPLAY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 155,
+      "historicalSourceRow": "| `SC-BASE-REPLAY` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-CENSUS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 156,
+      "historicalSourceRow": "| `SC-CENSUS` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-CLOCK-MIGRATE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 157,
+      "historicalSourceRow": "| `SC-CLOCK-MIGRATE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-COMBAT-PERSIST",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 158,
+      "historicalSourceRow": "| `SC-COMBAT-PERSIST` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-DUNGEON-SWITCH",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 159,
+      "historicalSourceRow": "| `SC-DUNGEON-SWITCH` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-FOLLOW-DEPART",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 160,
+      "historicalSourceRow": "| `SC-FOLLOW-DEPART` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-FOLLOW-LATE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 161,
+      "historicalSourceRow": "| `SC-FOLLOW-LATE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-FRIEND-ACCRUAL",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 162,
+      "historicalSourceRow": "| `SC-FRIEND-ACCRUAL` | `live_decision_exercised` | `friendship.wait_replenishes_allowance_not_score` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-FRIEND-BOUNDARY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 163,
+      "historicalSourceRow": "| `SC-FRIEND-BOUNDARY` | `live_decision_exercised` | `friendship.reopen_does_not_farm_growth`, `friendship.wait_replenishes_allowance_not_score` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-FRIEND-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 164,
+      "historicalSourceRow": "| `SC-FRIEND-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-FULL-TURN",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 165,
+      "historicalSourceRow": "| `SC-FULL-TURN` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-GOAL-INTERRUPT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 166,
+      "historicalSourceRow": "| `SC-GOAL-INTERRUPT` | `live_decision_exercised` | `goals.interruption_replan_without_duplicate_effect`, `replan_protect_appointment_sleep` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-GOAL-MULTIDAY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 167,
+      "historicalSourceRow": "| `SC-GOAL-MULTIDAY` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-IDENTITY-OWNERSHIP",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 168,
+      "historicalSourceRow": "| `SC-IDENTITY-OWNERSHIP` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INIT-COOLDOWN",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 169,
+      "historicalSourceRow": "| `SC-INIT-COOLDOWN` | `live_decision_exercised` | `busy.dismissal_cooldown_is_not_permanent_hostility` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INIT-PROPOSE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 170,
+      "historicalSourceRow": "| `SC-INIT-PROPOSE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INN-ORIGIN",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 171,
+      "historicalSourceRow": "| `SC-INN-ORIGIN` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INN-SHAREDBED",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 172,
+      "historicalSourceRow": "| `SC-INN-SHAREDBED` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INN-STAY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 173,
+      "historicalSourceRow": "| `SC-INN-STAY` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INVENTORY-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 174,
+      "historicalSourceRow": "| `SC-INVENTORY-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INVENTORY-UID",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 175,
+      "historicalSourceRow": "| `SC-INVENTORY-UID` | `live_decision_exercised` | `gift_stack_exact`, `gift_quantity_not_loan`, `dependent_handover_after_purchase` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INVITE-ACCEPT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 176,
+      "historicalSourceRow": "| `SC-INVITE-ACCEPT` | `live_decision_exercised` | `relationship.familiarity_stranger_invitation`, `relationship.friendship_not_guaranteed_acceptance` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-INVITE-CANCEL",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 177,
+      "historicalSourceRow": "| `SC-INVITE-CANCEL` | `live_decision_exercised` | `effect.pending_offer_cancelled_before_execution`, `cancel_active_commitment` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-KEEPER-SERVICE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 178,
+      "historicalSourceRow": "| `SC-KEEPER-SERVICE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-KNOW-ACCESS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 179,
+      "historicalSourceRow": "| `SC-KNOW-ACCESS` | `live_decision_exercised` | `knowledge.unseen_container_change` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-KNOW-CLAIM",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 180,
+      "historicalSourceRow": "| `SC-KNOW-CLAIM` | `live_decision_exercised` | `knowledge.player_claim_not_npc_memory`, `npc_to_npc.rumor_keeps_source_and_uncertainty` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-KNOW-STALE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 181,
+      "historicalSourceRow": "| `SC-KNOW-STALE` | `live_decision_exercised` | `knowledge.unseen_container_change` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-LIFECYCLE-BRANCH",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 182,
+      "historicalSourceRow": "| `SC-LIFECYCLE-BRANCH` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-LIFECYCLE-FAIL",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 183,
+      "historicalSourceRow": "| `SC-LIFECYCLE-FAIL` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-LIFECYCLE-HAPPY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 184,
+      "historicalSourceRow": "| `SC-LIFECYCLE-HAPPY` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MARKET-COMMUTE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 185,
+      "historicalSourceRow": "| `SC-MARKET-COMMUTE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MARKET-DEMAND",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 186,
+      "historicalSourceRow": "| `SC-MARKET-DEMAND` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MARKET-HOUSING",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 187,
+      "historicalSourceRow": "| `SC-MARKET-HOUSING` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MARKET-POI",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 188,
+      "historicalSourceRow": "| `SC-MARKET-POI` | `live_decision_exercised` | `market.browse_not_purchase`, `market.stage_performance_real_interest_and_availability` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MARKET-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 189,
+      "historicalSourceRow": "| `SC-MARKET-RELOAD` | `live_decision_exercised` | `routine.time_skip_reconstruct_current_activity` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MEM-ATTRIBUTION",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 190,
+      "historicalSourceRow": "| `SC-MEM-ATTRIBUTION` | `live_decision_exercised` | `knowledge.player_claim_not_npc_memory`, `memory.branch_context.recall_only_visible_ancestry`, `npc_to_npc.rumor_keeps_source_and_uncertainty` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MEM-CONTRADICTION",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 191,
+      "historicalSourceRow": "| `SC-MEM-CONTRADICTION` | `live_decision_exercised` | `knowledge.player_claim_not_npc_memory` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MEM-LISTENER",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 192,
+      "historicalSourceRow": "| `SC-MEM-LISTENER` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MEM-PARAPHRASE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 193,
+      "historicalSourceRow": "| `SC-MEM-PARAPHRASE` | `live_decision_exercised` | `memory.long_term_paraphrase_attributed_promise` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MEM-RESTORE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 194,
+      "historicalSourceRow": "| `SC-MEM-RESTORE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MEM-SCALE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 195,
+      "historicalSourceRow": "| `SC-MEM-SCALE` | `live_decision_exercised` | `memory.large_history_relevant_recall_not_bulk_dump` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MIGRATION",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 196,
+      "historicalSourceRow": "| `SC-MIGRATION` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MOOD-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 197,
+      "historicalSourceRow": "| `SC-MOOD-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MOOD-TURNS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 198,
+      "historicalSourceRow": "| `SC-MOOD-TURNS` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MOOD-WEATHER",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 199,
+      "historicalSourceRow": "| `SC-MOOD-WEATHER` | `live_decision_exercised` | `mood.weather_only_npc_outdoors`, `mood.indoor_excludes_player_weather` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-MOVE-DOOR",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 200,
+      "historicalSourceRow": "| `SC-MOVE-DOOR` | `live_decision_exercised` | `ordered_wait_follow_move`, `follow_explicit_duration`, `move_to_ambiguous_destination` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-NEED-CHOICE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 201,
+      "historicalSourceRow": "| `SC-NEED-CHOICE` | `live_decision_exercised` | `seating.outdoor_good_weather_preference_capacity`, `market.stage_performance_real_interest_and_availability` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-NEED-CONTROL",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 202,
+      "historicalSourceRow": "| `SC-NEED-CONTROL` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-NEGOTIATE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 203,
+      "historicalSourceRow": "| `SC-NEGOTIATE` | `live_decision_exercised` | `relationship.familiarity_stranger_invitation`, `relationship.friendship_not_guaranteed_acceptance`, `threat.refusal_and_protected_person` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-NPC-NPC-EVENT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 204,
+      "historicalSourceRow": "| `SC-NPC-NPC-EVENT` | `live_decision_exercised` | `npc_to_npc.rumor_keeps_source_and_uncertainty` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-NPC-NPC-NOPOSE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 205,
+      "historicalSourceRow": "| `SC-NPC-NPC-NOPOSE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-OFFER-STALE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 206,
+      "historicalSourceRow": "| `SC-OFFER-STALE` | `live_decision_exercised` | `effect.pending_offer_cancelled_before_execution`, `scene_change_invalidates_stale_reply_binding` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PACK-BOOTSTRAP",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 207,
+      "historicalSourceRow": "| `SC-PACK-BOOTSTRAP` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PACK-DOCS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 208,
+      "historicalSourceRow": "| `SC-PACK-DOCS` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PACK-MODULES",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 209,
+      "historicalSourceRow": "| `SC-PACK-MODULES` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PERF-HARDWARE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 210,
+      "historicalSourceRow": "| `SC-PERF-HARDWARE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PERSONALITY-CONSISTENCY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 211,
+      "historicalSourceRow": "| `SC-PERSONALITY-CONSISTENCY` | `live_decision_exercised` | `personality.stable_preference_disclosure` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PERSONALITY-FACTS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 212,
+      "historicalSourceRow": "| `SC-PERSONALITY-FACTS` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PORTABLE-CLEAN",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 213,
+      "historicalSourceRow": "| `SC-PORTABLE-CLEAN` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PORTABLE-CORRUPT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 214,
+      "historicalSourceRow": "| `SC-PORTABLE-CORRUPT` | `live_decision_exercised` | `portable_memory_missing_dependency_stays_missing` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PORTABLE-INTERRUPT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 215,
+      "historicalSourceRow": "| `SC-PORTABLE-INTERRUPT` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-PROMOTION-HELDOUT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 216,
+      "historicalSourceRow": "| `SC-PROMOTION-HELDOUT` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-QUEST-BED",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 217,
+      "historicalSourceRow": "| `SC-QUEST-BED` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-QUEST-DISCLOSURE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 218,
+      "historicalSourceRow": "| `SC-QUEST-DISCLOSURE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-QUEST-MATRIX",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 219,
+      "historicalSourceRow": "| `SC-QUEST-MATRIX` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-QUEST-PACK",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 220,
+      "historicalSourceRow": "| `SC-QUEST-PACK` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-QUEST-PERSONA",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 221,
+      "historicalSourceRow": "| `SC-QUEST-PERSONA` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-QUEST-PRESERVE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 222,
+      "historicalSourceRow": "| `SC-QUEST-PRESERVE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-QUEST-SPOILER",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 223,
+      "historicalSourceRow": "| `SC-QUEST-SPOILER` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-READ-BUDGET",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 224,
+      "historicalSourceRow": "| `SC-READ-BUDGET` | `live_decision_exercised` | `tools.exhausted_budget_truthful_result` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-READ-INVALID",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 225,
+      "historicalSourceRow": "| `SC-READ-INVALID` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-READ-PAGE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 226,
+      "historicalSourceRow": "| `SC-READ-PAGE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-READ-VALID",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 227,
+      "historicalSourceRow": "| `SC-READ-VALID` | `live_decision_exercised` | `knowledge.unseen_container_change`, `budget_owned_funds` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-RECRUIT-GATE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 228,
+      "historicalSourceRow": "| `SC-RECRUIT-GATE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-RECRUIT-PAYMENT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 229,
+      "historicalSourceRow": "| `SC-RECRUIT-PAYMENT` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-REGRESSION-E01",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 230,
+      "historicalSourceRow": "| `SC-REGRESSION-E01` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-REGRESSION-E02",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 231,
+      "historicalSourceRow": "| `SC-REGRESSION-E02` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-REL-BOUNDS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 232,
+      "historicalSourceRow": "| `SC-REL-BOUNDS` | `live_decision_exercised` | `friendship.reopen_does_not_farm_growth`, `friendship.wait_replenishes_allowance_not_score` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-REL-DISTINCT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 233,
+      "historicalSourceRow": "| `SC-REL-DISTINCT` | `live_decision_exercised` | `threat.refusal_and_protected_person`, `busy.dismissal_cooldown_is_not_permanent_hostility` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-REL-SAVE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 234,
+      "historicalSourceRow": "| `SC-REL-SAVE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-ROUTINE-REPLAN",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 235,
+      "historicalSourceRow": "| `SC-ROUTINE-REPLAN` | `live_decision_exercised` | `routine.remaining_day_protect_appointment_and_home`, `replan_protect_appointment_sleep` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SEAT-ELEVATION",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 236,
+      "historicalSourceRow": "| `SC-SEAT-ELEVATION` | `live_decision_exercised` | `seating.elevated_terrace_requires_real_route` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SEAT-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 237,
+      "historicalSourceRow": "| `SC-SEAT-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SEAT-WEATHER",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 238,
+      "historicalSourceRow": "| `SC-SEAT-WEATHER` | `live_decision_exercised` | `seating.outdoor_good_weather_preference_capacity`, `seating.bad_weather_blocks_outdoor` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SHARED-COMPLETE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 239,
+      "historicalSourceRow": "| `SC-SHARED-COMPLETE` | `live_decision_exercised` | `shared_activity.completed_receipt_supports_greeting` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SHARED-CONTINUITY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 240,
+      "historicalSourceRow": "| `SC-SHARED-CONTINUITY` | `live_decision_exercised` | `meeting.active_shared_outing_continuation` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SHARED-FAIL",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 241,
+      "historicalSourceRow": "| `SC-SHARED-FAIL` | `live_decision_exercised` | `shared_activity.failed_reply_not_shared_experience` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SHARED-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 242,
+      "historicalSourceRow": "| `SC-SHARED-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SHARED-SEPARATION",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 243,
+      "historicalSourceRow": "| `SC-SHARED-SEPARATION` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SIM-BUDGET",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 244,
+      "historicalSourceRow": "| `SC-SIM-BUDGET` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SIM-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 245,
+      "historicalSourceRow": "| `SC-SIM-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SIM-TIMESKIP",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 246,
+      "historicalSourceRow": "| `SC-SIM-TIMESKIP` | `live_decision_exercised` | `routine.time_skip_reconstruct_current_activity` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SKILL-PROGRESSION",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 247,
+      "historicalSourceRow": "| `SC-SKILL-PROGRESSION` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SNAPSHOT-RELOAD",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 248,
+      "historicalSourceRow": "| `SC-SNAPSHOT-RELOAD` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SNAPSHOT-STALE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 249,
+      "historicalSourceRow": "| `SC-SNAPSHOT-STALE` | `live_decision_exercised` | `scene_change_invalidates_stale_reply_binding` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-SNAPSHOT-SWITCH",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 250,
+      "historicalSourceRow": "| `SC-SNAPSHOT-SWITCH` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-STAFF-ROLE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 251,
+      "historicalSourceRow": "| `SC-STAFF-ROLE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-STT-TOGGLE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 252,
+      "historicalSourceRow": "| `SC-STT-TOGGLE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-TENANT-ACCESS",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 253,
+      "historicalSourceRow": "| `SC-TENANT-ACCESS` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-TENANT-BED",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 254,
+      "historicalSourceRow": "| `SC-TENANT-BED` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-TRUTH-FAIL",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 255,
+      "historicalSourceRow": "| `SC-TRUTH-FAIL` | `live_decision_exercised` | `shared_activity.failed_reply_not_shared_experience`, `tools.exhausted_budget_truthful_result` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-TRUTH-IDEMPOTENT",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 256,
+      "historicalSourceRow": "| `SC-TRUTH-IDEMPOTENT` | `live_decision_exercised` | `goals.interruption_replan_without_duplicate_effect`, `task_persistence_reload` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-TRUTH-PHASES",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 257,
+      "historicalSourceRow": "| `SC-TRUTH-PHASES` | `live_decision_exercised` | `market.browse_not_purchase`, `effect.pending_offer_cancelled_before_execution`, `dependent_handover_after_purchase` | `partial_choice_fixture` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-VOICE-IDENTITY",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 258,
+      "historicalSourceRow": "| `SC-VOICE-IDENTITY` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-VOICE-LANG",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 259,
+      "historicalSourceRow": "| `SC-VOICE-LANG` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    },
+    {
+      "id": "SC-VOICE-TOGGLE",
+      "source": "docs/superpowers/specs/npc-capability-test-coverage.md",
+      "line": 260,
+      "historicalSourceRow": "| `SC-VOICE-TOGGLE` | `no_test_coverage` | \u2014 | `uncovered` |",
+      "status": "requirements-inventory; native predicate audit remains required"
+    }
+  ],
+  "boundary": "Complete ID inventory and prepared run cards, not a claim of complete test implementation or acceptance. Historical choice coverage never certifies native predicates."
+}

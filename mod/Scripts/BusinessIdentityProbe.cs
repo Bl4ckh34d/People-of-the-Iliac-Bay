@@ -6,14 +6,14 @@ using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class BusinessIdentityProbe
     {
         private const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
-        public static IEnumerator Run(LivingCitiesMod host,StreetPopulation streets,string character)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             var game=GameManager.Instance;game.SaveLoadManager.EnumerateSaves();
             int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"People - Shop entrance");
@@ -37,10 +37,10 @@ namespace LivingCities.DFU
             if(!owner) throw new InvalidOperationException("No general store.");
             TownSmokeHarness.EnterInterior(owner.transform,entry);yield return new WaitForSecondsRealtime(1);
             DaggerfallUI.Instance.PopToHUD();var room=game.PlayerEnterExit.Interior;
-            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",Private).GetValue(host);
-            var owns=typeof(LivingCitiesMod).GetMethod("IsConversationAtOwnedPlace",Private);
-            var business=typeof(LivingCitiesMod).GetMethod("VerifiedKeeperBusinessContext",Private);
-            var identity=typeof(LivingCitiesMod).GetField("conversationPersonId",Private);
+            var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",Private).GetValue(host);
+            var owns=typeof(PeopleOfTheIliacBayMod).GetMethod("IsConversationAtOwnedPlace",Private);
+            var business=typeof(PeopleOfTheIliacBayMod).GetMethod("VerifiedKeeperBusinessContext",Private);
+            var identity=typeof(PeopleOfTheIliacBayMod).GetField("conversationPersonId",Private);
             var talk=game.TalkManager;StaticNPC keeper=null;
             foreach(var npc in room.GetComponentsInChildren<StaticNPC>())
             {
@@ -49,6 +49,7 @@ namespace LivingCities.DFU
                     faction.sgroup==(int)FactionFile.SocialGroups.Merchants) {keeper=npc;break;}
             }
             if(!keeper) throw new InvalidOperationException("No native shop service NPC.");
+            yield return SpeakerSwitchRegression.Run(host, room.transform, keeper);
             var guestObject=new GameObject("Business identity test tenant");guestObject.transform.parent=room.transform;
             var guest=guestObject.AddComponent<StaticNPC>();var guestData=keeper.Data;
             guestData.hash+=100000;guestData.factionID=0;
@@ -83,7 +84,7 @@ namespace LivingCities.DFU
                 typeof(TalkManager).GetField("lastTargetStaticNPC",Private).SetValue(talk,keeper);
                 identity.SetValue(host,"npc:"+keeper.Data.mapID+":"+keeper.Data.buildingKey+":"+keeper.Data.hash);
                 args=new object[]{null};if(!(bool)owns.Invoke(host,args)) throw new InvalidOperationException("Real selling NPC lost keeper role.");
-                Debug.Log("LIVING_CITIES_BUSINESS_IDENTITY_PASS: tenant keeps home key but not business ownership; selling NPC is keeper.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BUSINESS_IDENTITY_PASS: tenant keeps home key but not business ownership; selling NPC is keeper.");
                 var mobileObject=UnityEngine.Object.Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject,room.transform);
                 try
                 {
@@ -91,22 +92,22 @@ namespace LivingCities.DFU
                     actor.Initialize(new Resident {Id="business-child-probe",FullName="Test Child",AgeGroup=ResidentAgeGroup.Child,AppearanceSeed=42},1,
                         game.StreamingWorld.GetCurrentCityNavigation());
                     typeof(TalkManager).GetField("lastTargetMobileNPC",Private).SetValue(talk,actor.Person);
-                    if((bool)typeof(LivingCitiesMod).GetMethod("ConversationPartnerIsChild",Private).Invoke(host,null))
+                    if((bool)typeof(PeopleOfTheIliacBayMod).GetMethod("ConversationPartnerIsChild",Private).Invoke(host,null))
                         throw new InvalidOperationException("Stale mobile child replaced active static adult.");
-                    typeof(LivingCitiesMod).GetField("conversationSessionOpen",Private).SetValue(host,false);
-                    typeof(LivingCitiesMod).GetMethod("BeginGroundedConversation",Private).Invoke(host,null);
+                    typeof(PeopleOfTheIliacBayMod).GetField("conversationSessionOpen",Private).SetValue(host,false);
+                    typeof(PeopleOfTheIliacBayMod).GetMethod("BeginGroundedConversation",Private).Invoke(host,null);
                     if((string)identity.GetValue(host)!="npc:"+keeper.Data.mapID+":"+keeper.Data.buildingKey+":"+keeper.Data.hash)
                         throw new InvalidOperationException("Static speaker inherited stale mobile identity.");
                     guestData.context=(StaticNPC.Context)999;
                     typeof(StaticNPC).GetField("npcData",Private).SetValue(guest,guestData);
                     typeof(TalkManager).GetField("lastTargetStaticNPC",Private).SetValue(talk,guest);
                     typeof(TalkManager).GetField("currentNPCType",Private).SetValue(talk,TalkManager.NPCType.Mobile);
-                    typeof(LivingCitiesMod).GetField("conversationSessionOpen",Private).SetValue(host,false);
-                    typeof(LivingCitiesMod).GetMethod("BeginGroundedConversation",Private).Invoke(host,null);
+                    typeof(PeopleOfTheIliacBayMod).GetField("conversationSessionOpen",Private).SetValue(host,false);
+                    typeof(PeopleOfTheIliacBayMod).GetMethod("BeginGroundedConversation",Private).Invoke(host,null);
                     if((string)identity.GetValue(host)!=actor.Resident.Id ||
-                        (string)typeof(LivingCitiesMod).GetMethod("PersistentMemoryIdentity",Private).Invoke(host,null)!=actor.Resident.Id)
+                        (string)typeof(PeopleOfTheIliacBayMod).GetMethod("PersistentMemoryIdentity",Private).Invoke(host,null)!=actor.Resident.Id)
                         throw new InvalidOperationException("Mobile speaker inherited stale static identity or memory.");
-                    Debug.Log("LIVING_CITIES_ACTIVE_SPEAKER_PASS: static adult ignores stale mobile child; mobile memory ignores stale static NPC.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ACTIVE_SPEAKER_PASS: static adult ignores stale mobile child; mobile memory ignores stale static NPC.");
                 }
                 finally {UnityEngine.Object.Destroy(mobileObject);}
             }
@@ -123,7 +124,7 @@ namespace LivingCities.DFU
                 inns++;
             }
             if(inns==0) throw new InvalidOperationException("No inn key exclusions tested.");
-            Debug.Log("LIVING_CITIES_NO_INN_KEYS_PASS: local inn doors excluded="+inns+"; permanent home key retained by core tests.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NO_INN_KEYS_PASS: local inn doors excluded="+inns+"; permanent home key retained by core tests.");
         }
     }
 }

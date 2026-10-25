@@ -8,10 +8,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Opt-in native acceptance for real, saved daily itineraries. This probe never
     // creates routes, changes world time, enters a building, or writes a save.
@@ -27,7 +27,7 @@ namespace LivingCities.DFU
             public double TravelSampleSeconds;
         }
 
-        public static IEnumerator Run(LivingCitiesMod adapter, StreetPopulation streets)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod adapter, StreetPopulation streets)
         {
             if (!adapter || !streets) throw new InvalidOperationException("Daily itinerary probe requires live town components.");
             var game = GameManager.Instance;
@@ -42,27 +42,49 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Daily itinerary probe could not exit preview interior for routine upgrade.");
             }
 
-            // A legacy town can report Ready while it keeps existing actors visible.
+            // A legacy town can report Ready before its itinerary upgrade commits.
+            // Entrance readiness plus the saved itinerary version are the relevant
+            // boundary here. Outdoor migration intentionally waits until residents
+            // return home; its coroutine may remain active for hours of game time.
             // Read the full world snapshot only every half-second while upgrade runs.
             float deadline = Time.realtimeSinceStartup + 240;
             BuildingDirectory directory = null;
             WorldState snapshot = null;
             SettlementPopulation population = null;
             TownRoutineState town = null;
+            float nextReadinessReport=0;
             while (Time.realtimeSinceStartup < deadline)
             {
-                if (streets.Ready && game.StreamingWorld.IsReady && !game.StreamingWorld.IsRepositioningPlayer)
+                if (streets.Ready && streets.EntranceSurveyReady && game.StreamingWorld.IsReady && !game.StreamingWorld.IsRepositioningPlayer)
                 {
                     directory = game.StreamingWorld.GetCurrentBuildingDirectory();
                     if (directory)
                     {
                         var current = adapter.GetSaveData() as WorldState;
                         var currentTown = current == null ? null : current.Routines.Find(item => item.SettlementId == directory.MapID);
-                        if (currentTown != null && currentTown.ItineraryVersion == 1)
+                        if (currentTown != null && currentTown.ItineraryVersion == 2 &&
+                            currentTown.Residents.Exists(r=>r.AdditionalOutings!=null && r.AdditionalOutings.Count>0))
                         {
+                            var currentPopulation=current.Settlements.Find(item=>item.SettlementId==directory.MapID);
+                            var readyGeometry=typeof(StreetPopulation).GetField("geometry",BindingFlags.Instance|BindingFlags.NonPublic)
+                                .GetValue(streets) as TownGeometry;
+                            HouseholdDayRequest familyRequest;HouseholdDayPlan familyPlan;
+                            if(!HasPublishedSample(current,currentTown,currentPopulation,
+                                ReadHour(streets,"wakeHour",6),ReadHour(streets,"sleepHour",22)) || readyGeometry==null ||
+                                !HouseholdDayPersistenceProbe.TryCreateRequest(current,directory,readyGeometry,
+                                    ReadHour(streets,"wakeHour",6)*60,ReadHour(streets,"sleepHour",22)*60,
+                                    DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),out familyRequest,out familyPlan))
+                            {
+                                if(Time.realtimeSinceStartup>=nextReadinessReport)
+                                {Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_READINESS_PENDING: multiOutingPublished=true; completeSampleHousehold=false");
+                                    nextReadinessReport=Time.realtimeSinceStartup+15;}
+                                yield return new WaitForSecondsRealtime(0.5f);continue;
+                            }
                             snapshot = current;
                             town = currentTown;
                             population = snapshot.Settlements.Find(item => item.SettlementId == directory.MapID);
+                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_READINESS: entrances=true; itineraryVersion=2; multiOutingPublished=true; outdoorMigrationComplete=" +
+                                streets.OutdoorRoutesPrepared.ToString().ToLowerInvariant() + ".");
                             break;
                         }
                     }
@@ -70,7 +92,8 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(0.5f);
             }
             if (directory == null || snapshot == null || town == null || population == null)
-                throw new InvalidOperationException("Daily itinerary probe timed out waiting for exterior town routine upgrade version 1.");
+                throw new InvalidOperationException("Daily itinerary probe timed out waiting for a real published multi-outing routine.");
+            yield return HouseholdDayRuntimeProbe.Run(adapter,streets,directory.MapID);
             var geometryField = typeof(StreetPopulation).GetField("geometry", BindingFlags.Instance | BindingFlags.NonPublic);
             var geometry = geometryField == null ? null : geometryField.GetValue(streets) as TownGeometry;
             if (geometry == null) throw new InvalidOperationException("Daily itinerary probe found no surveyed town geometry.");
@@ -133,6 +156,7 @@ namespace LivingCities.DFU
                         double startsAt, endsAt;
                         if (visit.BuildingKey != stop.BuildingKey || visit.EnterAt < stop.OpenMinute * 60d - 0.001 ||
                             visit.LeaveAt > stop.CloseMinute * 60d + 0.001 ||
+                            stop.Purpose == ResidentVisitPurpose.Social && visit.EnterAt < 16 * 3600 ||
                             visit.EnterAt < wakeHour * 3600d || visit.LeaveAt > sleepHour * 3600d ||
                             !schedule.ContainsVisitBuilding(stop.BuildingKey) ||
                             !schedule.TryVisitWindowForBuilding(0, stop.BuildingKey, out startsAt, out endsAt) ||
@@ -144,6 +168,7 @@ namespace LivingCities.DFU
                     // complete household, so GetState and lock checks use real plans.
                     double travelSample;
                     if (selected == null && uniqueStops.Count >= 2 && journey.EndsAt + 120 < sleepHour * 3600d &&
+                        routine.PersonalLaneVersion==OutdoorRoutineMigration.CurrentPersonalLaneVersion &&
                         TryTravelSample(routine, visits, out travelSample) &&
                         !tripIds.Contains(resident.Id) &&
                         CompleteHouseholdHasPlans(home, town, nativeIds, tripIds))
@@ -213,18 +238,66 @@ namespace LivingCities.DFU
             var restoredResident = FindResident(restoredPopulation, original.Id);
             string itineraryDifference = DescribeItineraryDifference(selected.Routine, restoredRoutine);
             string identityDifference = DescribeIdentityDifference(original, restoredResident);
-            if (restoredTown == null || restoredTown.ItineraryVersion != 1 || itineraryDifference != null || identityDifference != null)
+            if (restoredTown == null || restoredTown.ItineraryVersion != town.ItineraryVersion || itineraryDifference != null || identityDifference != null)
                 throw new InvalidOperationException("FullSerializer round-trip mismatch: townVersion=" +
                     (restoredTown == null ? "missing" : restoredTown.ItineraryVersion.ToString()) +
                     "; itinerary=" + (itineraryDifference ?? "pass") + "; identity=" + (identityDifference ?? "pass") +
                     "; jsonChars=" + json.Length + "; resident=" + original.Id + ".");
-            var restoredStore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+            var restoredStore = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
             restoredStore.Restore(decoded);
             var storeRoutine = restoredStore.GetRoutines(directory.MapID).Residents.Find(item => item.ResidentId == original.Id);
             if (!SameItinerary(selected.Routine, storeRoutine))
                 throw new InvalidOperationException("WorldStateStore validation changed native itinerary after FullSerializer round-trip.");
 
-            Debug.Log("LIVING_CITIES_DAILY_ITINERARY_PASS: map=" + directory.MapID + "; eligibleAdults=" + eligibleAdults +
+            int multiOutingAdults=0,laterVisits=0,laterSocialVisits=0;
+            // Compare complete persisted routines. The dialogue projection omits
+            // the redundant legacy route when a full itinerary exists.
+            var restoredRoutines=restoredStore.GetRoutines(directory.MapID);
+            foreach(var currentRoutine in town.Residents)
+            {
+                if(currentRoutine.AdditionalOutings==null || currentRoutine.AdditionalOutings.Count==0)continue;
+                var owner=FindResident(population,currentRoutine.ResidentId);
+                var copy=restoredRoutines.Residents.Find(item=>item.ResidentId==currentRoutine.ResidentId);
+                if(owner==null || copy==null || currentRoutine.PersonalLaneVersion!=OutdoorRoutineMigration.CurrentPersonalLaneVersion ||
+                    RoutineRecoveryIdentity.Fingerprint(currentRoutine,owner.HomeKey,wakeHour*60,sleepHour*60)!=
+                    RoutineRecoveryIdentity.Fingerprint(copy,owner.HomeKey,wakeHour*60,sleepHour*60))
+                    throw new InvalidOperationException("Native serializer changed a published multi-outing route or timing: "+currentRoutine.ResidentId+".");
+                multiOutingAdults++;
+                foreach(var outing in currentRoutine.AdditionalOutings)
+                {
+                    var journey=ResidentVisitJourney.Create(outing.DepartureSeconds,outing.Itinerary);
+                    foreach(var visit in journey.ScheduledVisits())
+                    {
+                        var stop=outing.Itinerary.Stops[visit.VisitIndex];TownGeometry.Entrance entrance;
+                        if(!geometry.Entrances.TryGetValue(stop.BuildingKey,out entrance) || stop.Route.Count<2 ||
+                            Math.Abs(stop.Route[stop.Route.Count-1].X-entrance.LocalDoor.x)>0.01 ||
+                            Math.Abs(stop.Route[stop.Route.Count-1].Z-entrance.LocalDoor.z)>0.01 ||
+                            visit.EnterAt<stop.OpenMinute*60d || visit.LeaveAt>stop.CloseMinute*60d ||
+                            stop.Purpose==ResidentVisitPurpose.Social && visit.EnterAt<16*3600)
+                            throw new InvalidOperationException("A later outing lacks its actual doorway or local service/daypart window.");
+                        laterVisits++;
+                        if(stop.Purpose==ResidentVisitPurpose.Social)laterSocialVisits++;
+                    }
+                }
+            }
+            if(multiOutingAdults==0 || laterVisits==0)throw new InvalidOperationException("No later native outing survived serialization.");
+            if(laterSocialVisits==0)throw new InvalidOperationException("No actual evening Inn visit was published.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_EXPANSION_NATIVE_PASS: publishedAdults="+multiOutingAdults+
+                "; laterVisits="+laterVisits+"; realDoorways=true; localSocialAfter16=true; initialSocialAfter16=true; nativeSerializer=true; physicalWalking=false; eveningInnVisits="+laterSocialVisits);
+            HouseholdDayPersistenceProbe.Verify(snapshot,directory,geometry,wakeHour*60,sleepHour*60,
+                DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+
+            int morningStarts=0,lateStarts=0;int[] hours={10,12,14,16},walking=new int[4];
+            foreach(var routine in town.Residents)if(routine.Itinerary!=null)
+            {if(routine.ItineraryDepartureSeconds<=10*3600)morningStarts++;if(routine.ItineraryDepartureSeconds>=12*3600)lateStarts++;}
+            foreach(var home in population.Households)foreach(var resident in home.Residents)
+                if(resident.IsAlive && resident.AgeGroup==ResidentAgeGroup.Adult && !resident.IsQuestProtected && !nativeIds.Contains(resident.Id))
+                    for(int i=0;i<hours.Length;i++)if(streets.GetState(resident.Id,dayStart+hours[i]*3600).Activity==Activity.Travel)walking[i]++;
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_TRAFFIC_SAMPLE: firstBy10="+morningStarts+"; firstAfter12="+lateStarts+
+                "; scheduledWalking10="+walking[0]+"; scheduledWalking12="+walking[1]+"; scheduledWalking14="+walking[2]+
+                "; scheduledWalking16="+walking[3]+"; nativeGetState=true; visibleBodies=false");
+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_ITINERARY_PASS: map=" + directory.MapID + "; eligibleAdults=" + eligibleAdults +
                 "; adultsWithItineraries=" + plannedAdults + "; multiStopAdults=" + multiStopAdults +
                 "; distinctServiceBuildings=" + serviceBuildings.Count + "; sampledVisits=" + sampledVisits +
                 "; sampleResident=" + original.Id + "; stops=" + selected.Visits.Count +
@@ -241,6 +314,29 @@ namespace LivingCities.DFU
                     !town.Residents.Exists(item => item != null && item.ResidentId == member.Id)) return false;
             }
             return true;
+        }
+
+        private static bool HasPublishedSample(WorldState state,TownRoutineState town,SettlementPopulation population,int wake,int sleep)
+        {
+            if(population==null)return false;
+            var native=new HashSet<string>();foreach(var person in state.NativePeople)native.Add(person.Id);
+            var trips=new HashSet<string>();foreach(var trip in state.ResidentTrips)trips.Add(trip.ResidentId);
+            foreach(var home in population.Households)
+            {
+                if(!CompleteHouseholdHasPlans(home,town,native,trips))continue;
+                foreach(var resident in home.Residents)
+                {
+                    if(!resident.IsAlive || resident.AgeGroup!=ResidentAgeGroup.Adult || resident.IsQuestProtected ||
+                        native.Contains(resident.Id) || trips.Contains(resident.Id))continue;
+                    var routine=town.Residents.Find(r=>r.ResidentId==resident.Id);
+                    if(routine==null || routine.PersonalLaneVersion!=OutdoorRoutineMigration.CurrentPersonalLaneVersion ||
+                        routine.Itinerary==null || routine.Itinerary.Stops.Count<2)continue;
+                    var journey=ResidentVisitJourney.Create(routine.ItineraryDepartureSeconds,routine.Itinerary);
+                    double sample;
+                    if(journey.EndsAt+120<sleep*3600d && TryTravelSample(routine,new List<ResidentVisitSnapshot>(journey.ScheduledVisits()),out sample))return true;
+                }
+            }
+            return false;
         }
 
         private static bool TryTravelSample(ResidentRoutine routine, List<ResidentVisitSnapshot> visits, out double seconds)
@@ -416,7 +512,7 @@ namespace LivingCities.DFU
             string compactedTownJson = SaveLoadManager.Serialize(typeof(TownRoutineState), diagnosticTown);
             StripItineraries(diagnosticTown);
             string compactedLegacyOnlyJson = SaveLoadManager.Serialize(typeof(TownRoutineState), diagnosticTown);
-            Debug.Log("LIVING_CITIES_DAILY_ITINERARY_SIZE: totalJsonChars=" + worldJson.Length +
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_ITINERARY_SIZE: totalJsonChars=" + worldJson.Length +
                 "; townRoutineJsonChars=" + townJson.Length + "; compactedTownJsonChars=" + compactedTownJson.Length +
                 "; legacyOnlyRoutineJsonChars=" + rawLegacyOnlyJson.Length +
                 "; compactedLegacyOnlyRoutineJsonChars=" + compactedLegacyOnlyJson.Length +

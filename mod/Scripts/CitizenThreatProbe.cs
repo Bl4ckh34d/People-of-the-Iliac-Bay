@@ -7,10 +7,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class CitizenThreatProbe
     {
@@ -20,9 +20,9 @@ namespace LivingCities.DFU
             CheckRetreatCorridor(game.PlayerMotor.transform.position+Vector3.up*100);
             yield return CheckKeeper();
             game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(1);
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
-            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",flags).GetValue(mod);
+            var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",flags).GetValue(mod);
             var plans=(IEnumerable)typeof(StreetPopulation).GetField("plans",flags).GetValue(streets);
             object selected=null; Resident resident=null; ResidentRoutine routine=null;
             foreach(var candidate in plans)
@@ -81,9 +81,9 @@ namespace LivingCities.DFU
                 if(actor && actor.gameObject.activeInHierarchy && Vector3.Distance(actor.transform.position,enemy.transform.position)<initialGap+0.5f)
                     throw new InvalidOperationException("Citizen failed to gain distance from the hostile blocking home: before="+before+
                         "; current="+actor.transform.position+"; enemy="+enemy.transform.position+"; initialGap="+initialGap);
-                Debug.Log("LIVING_CITIES_FLIGHT_SAFETY_PASS: hostile blocks home, innocent player on opposite side; citizen increases threat clearance.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FLIGHT_SAFETY_PASS: hostile blocks home, innocent player on opposite side; citizen increases threat clearance.");
                 var json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
-                var restored=new WorldStateStore(42,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
+                var restored=new WorldStateStore(42,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
                 if(restored.ActiveAlarm(resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()).ThreatId!=alarm.ThreatId)
                     throw new InvalidOperationException("Native serializer lost citizen threat ownership.");
                 // Controlled final approach exercises the real runtime arrival hook;
@@ -109,8 +109,8 @@ namespace LivingCities.DFU
                 DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(3600);
                 if(store.ShelterLocked(alarm.SettlementId,resident.HomeKey,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()))
                     throw new InvalidOperationException("Shelter remained sealed after one hour.");
-                Debug.Log("LIVING_CITIES_SHELTER_LOCK_PASS: runtime home arrival, native locked door, native JSON and one-hour expiry.");
-                Debug.Log("LIVING_CITIES_CITIZEN_THREAT_PASS: actual hostile sighting, physical flight/home refuge, no murder charge, native serialization; guards disabled; resident="+resident.Id);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHELTER_LOCK_PASS: runtime home arrival, native locked door, native JSON and one-hour expiry.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITIZEN_THREAT_PASS: actual hostile sighting, physical flight/home refuge, no murder charge, native serialization; guards disabled; resident="+resident.Id);
             }
             finally { field.SetValue(selected,original); guards.EnemyDefense=defense; if(enemy) UnityEngine.Object.Destroy(enemy); }
         }
@@ -132,7 +132,7 @@ namespace LivingCities.DFU
                 wall.SetActive(false);floor.transform.localScale=new Vector3(3,0.2f,12);Physics.SyncTransforms();
                 if(CivilianFlightSteering.TryDirectRetreat(origin,origin+Vector3.right*4,out end))
                     throw new InvalidOperationException("Retreat corridor crosses unsupported ground.");
-                Debug.Log("LIVING_CITIES_RETREAT_CORRIDOR_PASS: supported floor allowed; walls and drops rejected.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RETREAT_CORRIDOR_PASS: supported floor allowed; walls and drops rejected.");
             }
             finally
             {
@@ -143,8 +143,8 @@ namespace LivingCities.DFU
         private static IEnumerator CheckKeeper(bool welfare=false)
         {
             var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var guards=mod.GetComponent<GuardPopulation>();
-            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(mod);
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var guards=mod.GetComponent<GuardPopulation>();
+            var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(mod);
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
             clock.RaiseTime((float)((43200-clock.ToSeconds()%86400+86400)%86400));
             game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None; DaggerfallUI.Instance.PopToHUD();
@@ -184,7 +184,7 @@ namespace LivingCities.DFU
                     (npc.gameObject.activeInHierarchy && Vector3.Distance(before,npc.transform.position)<=0.5f))
                     throw new InvalidOperationException("Native keeper did not flee a visible hostile foe.");
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None) throw new InvalidOperationException("Keeper threat response accused player.");
-                Debug.Log("LIVING_CITIES_KEEPER_THREAT_PASS: native registered merchant sees hostile foe and physically flees without blaming player.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_THREAT_PASS: native registered merchant sees hostile foe and physically flees without blaming player.");
                 guards.EnemyDefense=true;
                 var messenger=alarm.People.Find(p=>p.ResidentId==keeper.Id);
                 deadline=Time.realtimeSinceStartup+10;
@@ -199,7 +199,7 @@ namespace LivingCities.DFU
                 }
                 if(defenseReport==null) throw new InvalidOperationException("Escaped keeper did not summon guards against indoor enemy.");
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None) throw new InvalidOperationException("Indoor enemy report blamed player.");
-                Debug.Log("LIVING_CITIES_INDOOR_DEFENSE_REPORT_PASS: escaped native keeper contacts guard and summons finite building response against enemy.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_DEFENSE_REPORT_PASS: escaped native keeper contacts guard and summons finite building response against enemy.");
                 var summoned=guards.Roster.Guards.Find(g=>g.Id==defenseReport.GuardIds[0]);
                 if(summoned.ArrivesAt<=clock.ToSeconds() || summoned.Interior!=null)
                     throw new InvalidOperationException("Indoor defender skipped physical exterior travel.");
@@ -249,7 +249,7 @@ namespace LivingCities.DFU
                         "; threat="+defenseReport.ThreatId+"; playerTarget="+(responder.GetComponent<EnemySenses>().Target==game.PlayerEntityBehaviour)+
                         "; crime="+game.PlayerEntity.CrimeCommitted+"; sight="+CivilianResponses.Sees(responder.transform.position,game.PlayerMotor.transform.position,20)+
                         "; hostile="+responder.GetComponent<EnemyMotor>().IsHostile);
-                Debug.Log("LIVING_CITIES_INDOOR_ASSAULT_PASS: native player assault transfers indoor defender to player crime response.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_ASSAULT_PASS: native player assault transfers indoor defender to player crime response.");
                 // Restore this disposable encounter before testing target-death stand-down.
                 DaggerfallUI.Instance.PopToHUD(); game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
                 responder.EndCombat(); defenseReport.ThreatId=originalThreat;
@@ -258,9 +258,9 @@ namespace LivingCities.DFU
                 if((summoned.Interior!=null && !summoned.Interior.Returning) || responder.CombatReady || responder.DefenseTarget ||
                     game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Dead indoor attacker did not end defense without blaming player.");
-                Debug.Log("LIVING_CITIES_INDOOR_ENEMY_DEATH_PASS: dead attacker ends indoor combat and starts return without a player crime.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_ENEMY_DEATH_PASS: dead attacker ends indoor combat and starts return without a player crime.");
                 guards.EnemyDefense=false;
-                Debug.Log("LIVING_CITIES_INDOOR_DEFENSE_ARRIVAL_PASS: finite guard travels, enters and damages reported hostile enemy without blaming player.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_DEFENSE_ARRIVAL_PASS: finite guard travels, enters and damages reported hostile enemy without blaming player.");
                 // The isolated combat/effect fixture needs its own living foe.
                 if(enemy) UnityEngine.Object.Destroy(enemy);
                 enemy=GameObjectHelper.CreateFoeGameObjects(enemyPosition,MobileTypes.Thief,1,MobileReactions.Passive)[0];
@@ -300,7 +300,7 @@ namespace LivingCities.DFU
                 var copy=GuardRoster.CopyValidated(roster);
                 if(copy.Guards[0].Interior.LastSeenSuspect==null || copy.Reports[0].ThreatId!="probe:enemy")
                     throw new InvalidOperationException("Indoor enemy observation did not persist.");
-                Debug.Log("LIVING_CITIES_INDOOR_DEFENDER_PASS: actual indoor native combat damages enemy, preserves interior target and leaves player innocent.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_DEFENDER_PASS: actual indoor native combat damages enemy, preserves interior target and leaves player innocent.");
                 actor.EndCombat();
                 var effects=actor.GetComponent<EntityEffectManager>();
                 effects.AssignBundle(new EntityEffectBundle(new EffectBundleSettings {
@@ -322,7 +322,7 @@ namespace LivingCities.DFU
                 if(effects.EffectCount!=1 ||
                     effects.GetInstancedBundlesSaveData()[0].liveEffects[0].roundsRemaining!=rounds)
                     throw new InvalidOperationException("Guard recreation lost or restarted continuous damage.");
-                Debug.Log("LIVING_CITIES_GUARD_EFFECT_RECREATE_PASS: player continuous damage, native serialization and body recreation preserve active effect and rounds.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_EFFECT_RECREATE_PASS: player continuous damage, native serialization and body recreation preserve active effect and rounds.");
                 actor.Capture(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
                 capture.Invoke(actor,null);
                 var savedEffects=roster.Guards[0].Effects;
@@ -345,7 +345,7 @@ namespace LivingCities.DFU
                 actor=GuardActor.CreateInterior(roster,id,room,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
                 if(actor.GetComponent<EntityEffectManager>().EffectCount!=0 || roster.Guards[0].Effects!=null)
                     throw new InvalidOperationException("Expired guard effect returned after body recreation.");
-                Debug.Log("LIVING_CITIES_GUARD_EFFECT_ELAPSED_PASS: unloaded duration catches up and expired effect stays removed.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_EFFECT_ELAPSED_PASS: unloaded duration catches up and expired effect stays removed.");
             }
             finally { if(actor) { actor.EndCombat(); UnityEngine.Object.Destroy(actor.gameObject); } }
         }

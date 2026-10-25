@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "acceptanceId": "native-framework-social-streaming-v1",
+  "fixture": {
+    "character": "PeopleOfTheIliacBayTest-9a5f197b",
+    "save": "People - Gothway Garden"
+  },
+  "requiredFrameworkMarkers": [
+    "PEOPLE_OF_THE_ILIAC_BAY_MOOD_LIVE_SOCIAL_COMPLETION_PASS",
+    "PEOPLE_OF_THE_ILIAC_BAY_MOOD_CONTROLLED_CALLBACK_PASS",
+    "PEOPLE_OF_THE_ILIAC_BAY_MOOD_DISK_ROLLBACK_PASS",
+    "PEOPLE_OF_THE_ILIAC_BAY_MOOD_BASELINE_RESTORED"
+  ],
+  "requiredStreamingMarker": "PEOPLE_OF_THE_ILIAC_BAY_SOCIAL_DIALOGUE_STREAM_PROBE_PASS",
+  "minimumSentenceCallbacks": 2,
+  "requiresFirstSentenceBeforeFinal": true,
+  "requiresCompleteStructuredResult": true,
+  "requiresCancelAfterFirstSentence": true,
+  "maximumCancelledTerminalCallbacks": 0,
+  "maximumCancelledCompletionCountDelta": 0,
+  "maximumCancelledMoodCommitCallbacks": 0,
+  "requiresUnchangedCancelledMoodSnapshot": true
+}

@@ -6,93 +6,154 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class HauntingFlightProbe
     {
-        private static double Now() { var t=DaggerfallUnity.Instance.WorldTime.Now; return (double)t.ToSeconds()+t.Second-Math.Floor(t.Second); }
-        private static void AdvanceTo(double when) { DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)Math.Max(0,when-Now())); }
-        private static double Length(List<GuardPoint3> route)
-        { double n=0; for(int i=1;i<route.Count;i++) { var a=route[i-1]; var b=route[i]; n+=Math.Sqrt(Math.Pow(a.X-b.X,2)+Math.Pow(a.Y-b.Y,2)+Math.Pow(a.Z-b.Z,2)); } return n; }
+        private static double Now()
+        {
+            var time=DaggerfallUnity.Instance.WorldTime.Now;
+            return (double)time.ToSeconds()+time.Second-Math.Floor(time.Second);
+        }
+
+        private static void AdvanceToNight()
+        {
+            double now=Now();
+            double night=Math.Floor(now/86400)*86400+19*3600;
+            if(night<now) night+=86400;
+            DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(night-now));
+        }
+
         public static IEnumerator Run(BuildingDirectory directory,TownGeometry geometry,List<RoutePoint> route,bool combat=false)
         {
             var game=GameManager.Instance;
-            AdvanceTo(Math.Floor(Now()/86400)*86400+19*3600+(Now()%86400>=19*3600 ? 86400 : 0));
-            game.PlayerEntity.GlobalVars.SetGlobalVar(0,false);
-            game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
-            game.PlayerMotor.transform.position=geometry.ScenePoint(route[0])+Vector3.up*2;
-            var root=new GameObject("Living Cities automatic refuge flight probe"); GameObject foe=null,opponent=null;
-            var controller=root.AddComponent<GuardPopulation>(); controller.enabled=false; controller.EnemyDefense=false;
+            bool oldCurse=game.PlayerEntity.GlobalVars.GetGlobalVar(0);
+            var oldCrime=game.PlayerEntity.CrimeCommitted;
+            Vector3 oldPlayerPosition=game.PlayerMotor.transform.position;
+            var root=new GameObject("People of the Iliac Bay haunting guard response probe");
+            GameObject foe=null,opponent=null;
+            var controller=root.AddComponent<GuardPopulation>();
+            controller.enabled=false;
+            controller.EnemyDefense=false;
             try
             {
-                var roster=GuardRoster.Create(directory.MapID,42,1,new[] { new SavedRoutePoint { X=route[0].X,Z=route[0].Z } });
-                var guard=roster.Guards[0]; var type=typeof(GuardPopulation);
+                AdvanceToNight();
+                game.PlayerEntity.GlobalVars.SetGlobalVar(0,false); // S0000977 LiftedCurse=false means the haunting remains active.
+                double now=Now();
+                if(!SettlementHaunting.StreetsDangerous(directory.MapID,false,now))
+                    throw new InvalidOperationException("Guard response probe requires the active haunting after 19:00.");
+                game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None;
+                game.PlayerMotor.transform.position=geometry.ScenePoint(route[0])+Vector3.up*2;
+
+                var roster=GuardRoster.Create(directory.MapID,42,1,new[] {
+                    new SavedRoutePoint { X=route[0].X,Z=route[0].Z }
+                });
+                var guard=roster.Guards[0];
+                var type=typeof(GuardPopulation);
                 type.GetProperty("Roster").GetSetMethod(true).Invoke(controller,new object[] { roster });
                 type.GetField("directory",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(controller,directory);
                 type.GetField("geometry",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(controller,geometry);
+                // This isolated post/engagement fixture owns no municipal gate posts.
+                // Keep unrelated gate staffing from reassigning its single test guard.
+                type.GetField("gateDutySurveyed",BindingFlags.Instance|BindingFlags.NonPublic).SetValue(controller,true);
+
                 GuardActor fighter=null;
+                DaggerfallEntityBehaviour expectedTarget=null;
                 if(combat)
                 {
-                    roster.Dispatch("probe-existing-defense",Now(),new Dictionary<string,List<SavedRoutePoint>> {
-                        { guard.Id,new List<SavedRoutePoint> { new SavedRoutePoint { X=route[0].X,Z=route[0].Z },
-                            new SavedRoutePoint { X=route[4].X,Z=route[4].Z } } }
+                    roster.Dispatch("probe-existing-defense",now,new Dictionary<string,List<SavedRoutePoint>> {
+                        { guard.Id,new List<SavedRoutePoint> {
+                            new SavedRoutePoint { X=route[0].X,Z=route[0].Z },
+                            new SavedRoutePoint { X=route[4].X,Z=route[4].Z }
+                        } }
                     },1,2.8,12);
-                    opponent=GameObjectHelper.CreateFoeGameObjects(geometry.ScenePoint(route[4])+Vector3.up,MobileTypes.Rat,1,MobileReactions.Hostile)[0];
-                    opponent.GetComponent<EnemyMotor>().enabled=false; opponent.GetComponent<EnemyAttack>().enabled=false; opponent.SetActive(true);
-                    fighter=GuardActor.Create(roster,guard.Id,directory.transform,geometry,Now());
-                    var views=(Dictionary<string,GuardActor>)type.GetField("actors",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(controller);
+                    // A current player assault keeps this fixture's existing engagement alive
+                    // through the ordinary controller's arrest-expiry branch.
+                    game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Assault;
+                    opponent=GameObjectHelper.CreateFoeGameObjects(geometry.ScenePoint(route[4])+Vector3.up,
+                        MobileTypes.Rat,1,MobileReactions.Hostile)[0];
+                    opponent.GetComponent<EnemyMotor>().enabled=false;
+                    opponent.GetComponent<EnemyAttack>().enabled=false;
+                    opponent.SetActive(true);
+                    fighter=GuardActor.Create(roster,guard.Id,directory.transform,geometry,now);
+                    var views=(Dictionary<string,GuardActor>)type.GetField("actors",BindingFlags.Instance|BindingFlags.NonPublic)
+                        .GetValue(controller);
                     views.Add(guard.Id,fighter);
                     yield return null;
-                    fighter.BeginDefenseCombat(opponent.GetComponent<DaggerfallEntityBehaviour>(),Now());
+                    expectedTarget=opponent.GetComponent<DaggerfallEntityBehaviour>();
+                    fighter.BeginDefenseCombat(expectedTarget,now);
                     float ready=Time.realtimeSinceStartup+5;
                     while(!fighter.CombatReady && Time.realtimeSinceStartup<ready) yield return null;
-                    if(!fighter.CombatReady || !fighter.GetComponent<EnemyAttack>().enabled || guard.Duty!=GuardDuty.Engaged)
-                        throw new InvalidOperationException("Native combat fixture failed to start: ready="+fighter.CombatReady+
+                    if(!fighter.CombatReady || fighter.DefenseTarget!=expectedTarget ||
+                        !fighter.GetComponent<EnemyMotor>().enabled || !fighter.GetComponent<EnemyAttack>().enabled ||
+                        fighter.GetComponent<EnemySenses>().Target!=expectedTarget || guard.Duty!=GuardDuty.Engaged)
+                        throw new InvalidOperationException("Native combat fixture failed to reach ready state: ready="+fighter.CombatReady+
                             "; attack="+fighter.GetComponent<EnemyAttack>().enabled+"; duty="+guard.Duty+
-                            "; active="+fighter.gameObject.activeInHierarchy+"; position="+fighter.transform.position+
-                            "; target="+(bool)fighter.DefenseTarget+"; health="+fighter.GetComponent<DaggerfallEntityBehaviour>().Entity.CurrentHealth);
+                            "; active="+fighter.gameObject.activeInHierarchy+"; target="+(fighter.DefenseTarget==expectedTarget));
                 }
-                foe=GameObjectHelper.CreateFoeGameObjects(geometry.ScenePoint(route[2])+Vector3.up,MobileTypes.Ghost,1,MobileReactions.Hostile)[0];
-                foe.GetComponent<EnemyMotor>().enabled=false; foe.GetComponent<EnemyAttack>().enabled=false; foe.SetActive(true);
-                yield return null; foe.GetComponent<EnemyMotor>().IsHostile=true; controller.enabled=true;
-                float deadline=Time.realtimeSinceStartup+10;
-                while(guard.Refuge==null && Time.realtimeSinceStartup<deadline) yield return null;
-                if(guard.Refuge==null) throw new InvalidOperationException("Automatic update did not start refuge flight.");
-                if(combat && (fighter.CombatReady || fighter.DefenseTarget || fighter.GetComponent<EnemyMotor>().enabled ||
-                    fighter.GetComponent<EnemyAttack>().enabled || fighter.GetComponent<EnemySenses>().Target))
-                    throw new InvalidOperationException("Refuge flight retained native combat controls or target.");
-                var journey=guard.Refuge;
-                double outside=Length(journey.Exterior)*journey.SecondsPerMetre, inside=Length(journey.Interior)*journey.SecondsPerMetre;
-                AdvanceTo(journey.StartsAt+outside/2); yield return new WaitForSecondsRealtime(0.2f);
-                if(controller.ActiveCount!=1) throw new InvalidOperationException("Automatic exterior refuge actor missing.");
-                AdvanceTo(journey.StartsAt+outside+inside/2); yield return new WaitForSecondsRealtime(0.2f);
-                if(controller.ActiveCount!=0) throw new InvalidOperationException("Refuge actor remained outside after doorway transition.");
-                DaggerfallStaticDoors owner=null; StaticDoor selected=default(StaticDoor);
-                foreach(var candidate in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
-                    if(!owner && candidate.Doors!=null) foreach(var door in candidate.Doors)
-                        if(door.buildingKey==journey.BuildingKey && door.doorType==DoorTypes.Building)
-                        { owner=candidate; selected=door; break; }
-                if(!owner) throw new InvalidOperationException("Automatic flight destination door missing.");
-                TownSmokeHarness.EnterInterior(owner.transform,selected); yield return new WaitForSecondsRealtime(0.5f);
-                AdvanceTo(journey.StartsAt+outside+inside+1); yield return new WaitForSecondsRealtime(0.2f);
-                if(controller.ActiveCount!=1 || journey.Evaluate(Now()).Phase!=RefugePhase.Sheltered)
-                    throw new InvalidOperationException("Automatic sheltered actor missing inside destination.");
-                UnityEngine.Object.Destroy(foe); foe=null;
-                game.PlayerEntity.GlobalVars.SetGlobalVar(0,true); yield return new WaitForSecondsRealtime(0.2f);
-                if(!journey.ReleasedAt.HasValue) throw new InvalidOperationException("Quest resolution did not release sheltered guard.");
-                AdvanceTo(journey.ReleasedAt.Value+inside+1); yield return new WaitForSecondsRealtime(0.2f);
-                if(controller.ActiveCount!=0) throw new InvalidOperationException("Departed guard remained visible inside refuge.");
-                game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(0.5f);
-                double returning=Length(journey.ReturnExterior ?? journey.Exterior)*journey.SecondsPerMetre;
-                AdvanceTo(journey.ReleasedAt.Value+inside+returning+1); yield return new WaitForSecondsRealtime(0.2f);
-                if(guard.Duty!=GuardDuty.Posted || guard.Refuge!=null || roster.Reports.Count!=(combat ? 1 : 0) || !guard.IsAlive)
-                    throw new InvalidOperationException("Automatic refuge return did not restore the living post guard.");
-                if(combat) Debug.Log("LIVING_CITIES_HAUNTING_COMBAT_PASS: native combat started, ghost flight disabled motor/attack/target, interior shelter and post return preserved report.");
-                Debug.Log("LIVING_CITIES_HAUNTING_FLIGHT_PASS: normal Update detection, exterior actor, doorway hiding, interior shelter, quest release and post return.");
+
+                // Exercise a Ghost on a healthy post guard and a Wraith while the guard
+                // already fights. Both threats remain ordinary hostile-world threats.
+                MobileTypes threatKind=combat ? MobileTypes.Wraith : MobileTypes.Ghost;
+                foe=GameObjectHelper.CreateFoeGameObjects(geometry.ScenePoint(route[2])+Vector3.up,
+                    threatKind,1,MobileReactions.Hostile)[0];
+                foe.GetComponent<EnemyMotor>().enabled=false;
+                foe.GetComponent<EnemyAttack>().enabled=false;
+                foe.SetActive(true);
+                yield return null;
+                foe.GetComponent<EnemyMotor>().IsHostile=true;
+                if(combat)
+                {
+                    controller.EnemyDefense=true;
+                    var wraith=foe.GetComponent<DaggerfallEntityBehaviour>();
+                    string threatId=controller.RegisterHostileThreat(wraith);
+                    var report=roster.Reports.Find(item=>item.Id==guard.IncidentId);
+                    if(threatId==null || report==null)
+                        throw new InvalidOperationException("Wraith threat did not enter the active-defense fixture.");
+                    report.ThreatId=threatId;
+                }
+                controller.enabled=true;
+
+                // Give the real population update and threat survey time to run.
+                float observeUntil=Time.realtimeSinceStartup+2;
+                while(Time.realtimeSinceStartup<observeUntil) yield return null;
+                if(guard.Refuge!=null)
+                    throw new InvalidOperationException("Haunting threat forced a guard into refuge: combat="+combat+"; foe="+threatKind);
+                if(!guard.IsAlive)
+                    throw new InvalidOperationException("Haunting threat killed the acceptance guard fixture.");
+
+                if(combat)
+                {
+                    var motor=fighter.GetComponent<EnemyMotor>();
+                    var attack=fighter.GetComponent<EnemyAttack>();
+                    var senses=fighter.GetComponent<EnemySenses>();
+                    if(guard.Duty!=GuardDuty.Engaged || !fighter.CombatReady || fighter.DefenseTarget!=expectedTarget ||
+                        !motor.enabled || !attack.enabled || senses.Target!=expectedTarget)
+                        throw new InvalidOperationException("Wraith observation replaced existing native combat controls or target: duty="+
+                            guard.Duty+"; ready="+fighter.CombatReady+"; motor="+motor.enabled+"; attack="+attack.enabled+
+                            "; defenseTarget="+(fighter.DefenseTarget==expectedTarget)+"; sensesTarget="+(senses.Target==expectedTarget));
+                    if(roster.Reports.Count!=1 || guard.IncidentId==null)
+                        throw new InvalidOperationException("Existing combat report changed during Wraith observation.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HAUNTING_COMBAT_PASS: active haunting Wraith left an existing native combat target and controls intact.");
+                }
+                else if(guard.Duty!=GuardDuty.Posted || guard.IncidentId!=null || roster.Reports.Count!=0)
+                    throw new InvalidOperationException("Ghost observation altered the healthy posted guard's assignment: duty="+
+                        guard.Duty+"; incident="+guard.IncidentId+"; reports="+roster.Reports.Count);
+
+                if(!combat)
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HAUNTING_FLIGHT_PASS: active haunting Ghost did not force a healthy posted guard into refuge.");
             }
-            finally { if(foe) UnityEngine.Object.Destroy(foe); if(opponent) UnityEngine.Object.Destroy(opponent); UnityEngine.Object.Destroy(root); }
+            finally
+            {
+                if(foe) UnityEngine.Object.Destroy(foe);
+                if(opponent) UnityEngine.Object.Destroy(opponent);
+                if(root) UnityEngine.Object.Destroy(root);
+                game.PlayerEntity.GlobalVars.SetGlobalVar(0,oldCurse);
+                game.PlayerEntity.CrimeCommitted=oldCrime;
+                game.PlayerMotor.transform.position=oldPlayerPosition;
+            }
             yield return null;
         }
     }

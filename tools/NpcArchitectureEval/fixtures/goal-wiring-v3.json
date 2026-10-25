@@ -1,0 +1,1059 @@
+{
+  "schemaVersion": 1,
+  "caseCount": 20,
+  "casesSha256": "80ae13c25e29b9976639169f87904b1a3928cb12bb12d04aa178ba068456d0c8",
+  "casesHashAlgorithm": "SHA-256 of UTF-8 compact JSON cases array with ensure_ascii=false",
+  "cases": [
+    {
+      "id": "v3_wait_pause",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Could you keep still for 28 seconds while I read this note?",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Wait",
+            "targetRef": "wait_here",
+            "seconds": 28,
+            "quantity": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_follow_until_corner",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Walk at my side for 75 seconds, please.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Follow",
+            "targetRef": "follow_player",
+            "seconds": 75,
+            "quantity": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_wait_then_follow",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Hold position for 40 seconds, then come after me for 25 seconds.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Wait",
+            "targetRef": "wait_here",
+            "seconds": 40,
+            "quantity": 1
+          },
+          {
+            "kind": "Follow",
+            "targetRef": "follow_player",
+            "seconds": 25,
+            "quantity": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_follow_then_wait",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Stay with me for ninety seconds; once we stop, wait there another 20 seconds.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Follow",
+            "targetRef": "follow_player",
+            "seconds": 90,
+            "quantity": 1
+          },
+          {
+            "kind": "Wait",
+            "targetRef": "wait_here",
+            "seconds": 20,
+            "quantity": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_wait_default_duration",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Please wait beside me.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Wait",
+            "targetRef": "wait_here",
+            "seconds": 300,
+            "quantity": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_purchase_deliver_lysa",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "buy_stock_42",
+            "kind": "Purchase",
+            "label": "Purchase one Iron Dagger (item 42) from the Copper Kettle stock chest for 9 gold",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:seller",
+              "SettlementId": 100,
+              "BuildingKey": 20,
+              "ContainerId": "7",
+              "ItemId": "42",
+              "Quantity": 1,
+              "QuotedGold": 9
+            }
+          },
+          {
+            "ref": "transfer_item_42_to_lysa",
+            "kind": "Transfer",
+            "label": "Transfer one item 42 to managed resident Lysa (NPC-to-counterparty)",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:recipient",
+              "ItemId": "42",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            }
+          }
+        ]
+      },
+      "playerText": "Buy one Iron Dagger from the Copper Kettle chest, then pass that very item to Lysa.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Purchase",
+            "targetRef": "buy_stock_42",
+            "seconds": 0,
+            "quantity": 1
+          },
+          {
+            "kind": "Transfer",
+            "targetRef": "transfer_item_42_to_lysa",
+            "seconds": 0,
+            "quantity": 1,
+            "itemSourceStep": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_purchase_ordered",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "buy_stock_42",
+            "kind": "Purchase",
+            "label": "Purchase one Iron Dagger (item 42) from the Copper Kettle stock chest for 9 gold",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:seller",
+              "SettlementId": 100,
+              "BuildingKey": 20,
+              "ContainerId": "7",
+              "ItemId": "42",
+              "Quantity": 1,
+              "QuotedGold": 9
+            }
+          },
+          {
+            "ref": "transfer_item_42_to_lysa",
+            "kind": "Transfer",
+            "label": "Transfer one item 42 to managed resident Lysa (NPC-to-counterparty)",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:recipient",
+              "ItemId": "42",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            }
+          }
+        ]
+      },
+      "playerText": "Please purchase the dagger in chest seven for nine coins and hand it to Lysa afterward.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Purchase",
+            "targetRef": "buy_stock_42",
+            "seconds": 0,
+            "quantity": 1
+          },
+          {
+            "kind": "Transfer",
+            "targetRef": "transfer_item_42_to_lysa",
+            "seconds": 0,
+            "quantity": 1,
+            "itemSourceStep": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_purchase_transfer_explicit",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "buy_stock_42",
+            "kind": "Purchase",
+            "label": "Purchase one Iron Dagger (item 42) from the Copper Kettle stock chest for 9 gold",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:seller",
+              "SettlementId": 100,
+              "BuildingKey": 20,
+              "ContainerId": "7",
+              "ItemId": "42",
+              "Quantity": 1,
+              "QuotedGold": 9
+            }
+          },
+          {
+            "ref": "transfer_item_42_to_lysa",
+            "kind": "Transfer",
+            "label": "Transfer one item 42 to managed resident Lysa (NPC-to-counterparty)",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:recipient",
+              "ItemId": "42",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            }
+          }
+        ]
+      },
+      "playerText": "Take one of the Copper Kettle stock daggers (item 42) for 9 gold, then give that acquired dagger to Lysa.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Purchase",
+            "targetRef": "buy_stock_42",
+            "seconds": 0,
+            "quantity": 1
+          },
+          {
+            "kind": "Transfer",
+            "targetRef": "transfer_item_42_to_lysa",
+            "seconds": 0,
+            "quantity": 1,
+            "itemSourceStep": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_offer_accept_exact",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [
+          {
+            "speaker": "NPC",
+            "text": "I could accompany you for four minutes, if you want."
+          }
+        ],
+        "pendingOffer": {
+          "id": "offer-follow-v3-a",
+          "kind": "Follow",
+          "targetRef": "follow_player",
+          "amount": 240,
+          "unit": "game_seconds"
+        },
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "All right, I would like you to join me.",
+      "expected": {
+        "route": "OFFER_RESPONSE",
+        "intent": "accept_offer",
+        "steps": [
+          {
+            "kind": "Follow",
+            "targetRef": "follow_player",
+            "seconds": 240,
+            "quantity": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    },
+    {
+      "id": "v3_cancel_active_wait",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [
+          {
+            "speaker": "NPC",
+            "text": "I will wait here for you."
+          }
+        ],
+        "pendingOffer": null,
+        "activeCommitment": {
+          "id": "task-wait-v3-a",
+          "kind": "Wait"
+        },
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "You can stop waiting for me now; I have what I need.",
+      "expected": {
+        "route": "COMMITMENT_UPDATE",
+        "intent": "cancel",
+        "steps": [],
+        "outcome": "cancel"
+      }
+    },
+    {
+      "id": "v3_quote_question",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "The notice on the door says, “Wait here for half a minute.” Why would it say that?",
+      "expected": {
+        "route": "SOCIAL",
+        "intent": "none",
+        "steps": [],
+        "outcome": "no_action"
+      }
+    },
+    {
+      "id": "v3_report_old_request",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [
+          {
+            "speaker": "Player",
+            "text": "Follow me for one minute."
+          },
+          {
+            "speaker": "NPC",
+            "text": "I can do that."
+          }
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Earlier this morning I asked you to follow me, but that was for the trip that already ended.",
+      "expected": {
+        "route": "SOCIAL",
+        "intent": "none",
+        "steps": [],
+        "outcome": "no_action"
+      }
+    },
+    {
+      "id": "v3_hypothetical_offer",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "If I were to ask you to walk with me later, would you agree?",
+      "expected": {
+        "route": "SOCIAL",
+        "intent": "none",
+        "steps": [],
+        "outcome": "no_action"
+      }
+    },
+    {
+      "id": "v3_negated_follow",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Do not come along with me; I need to go by myself.",
+      "expected": {
+        "route": "SOCIAL",
+        "intent": "none",
+        "steps": [],
+        "outcome": "no_action"
+      }
+    },
+    {
+      "id": "v3_own_intended_wait",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "I am going to pause here for a moment while you carry on.",
+      "expected": {
+        "route": "SOCIAL",
+        "intent": "none",
+        "steps": [],
+        "outcome": "no_action"
+      }
+    },
+    {
+      "id": "v3_social_greeting",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "It is good to see you again. How has the market been today?",
+      "expected": {
+        "route": "SOCIAL",
+        "intent": "none",
+        "steps": [],
+        "outcome": "no_action"
+      }
+    },
+    {
+      "id": "v3_assent_without_pending",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [
+          {
+            "speaker": "NPC",
+            "text": "Maybe we should walk together sometime."
+          }
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Yes, that sounds fine to me.",
+      "expected": {
+        "route": "SOCIAL",
+        "intent": "none",
+        "steps": [],
+        "outcome": "no_action"
+      }
+    },
+    {
+      "id": "v3_quantity_over_stock",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "buy_stock_42",
+            "kind": "Purchase",
+            "label": "Purchase one Iron Dagger (item 42) from the Copper Kettle stock chest for 9 gold",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:seller",
+              "SettlementId": 100,
+              "BuildingKey": 20,
+              "ContainerId": "7",
+              "ItemId": "42",
+              "Quantity": 1,
+              "QuotedGold": 9
+            }
+          },
+          {
+            "ref": "transfer_item_42_to_lysa",
+            "kind": "Transfer",
+            "label": "Transfer one item 42 to managed resident Lysa (NPC-to-counterparty)",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:recipient",
+              "ItemId": "42",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            }
+          }
+        ]
+      },
+      "playerText": "Buy two Iron Daggers from chest seven and give both to Lysa, if you can.",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "clarify",
+        "steps": [],
+        "outcome": "clarify"
+      }
+    },
+    {
+      "id": "v3_missing_stock_reference",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "buy_stock_42",
+            "kind": "Purchase",
+            "label": "Purchase one Iron Dagger (item 42) from the Copper Kettle stock chest for 9 gold",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:seller",
+              "SettlementId": 100,
+              "BuildingKey": 20,
+              "ContainerId": "7",
+              "ItemId": "42",
+              "Quantity": 1,
+              "QuotedGold": 9
+            }
+          },
+          {
+            "ref": "transfer_item_42_to_lysa",
+            "kind": "Transfer",
+            "label": "Transfer one item 42 to managed resident Lysa (NPC-to-counterparty)",
+            "maxQuantity": 1,
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:recipient",
+              "ItemId": "42",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            }
+          }
+        ]
+      },
+      "playerText": "Could you pick up a silver ring from whichever stall has one and bring it to Lysa?",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "clarify",
+        "steps": [],
+        "outcome": "clarify"
+      }
+    },
+    {
+      "id": "v3_duration_over_native_bound",
+      "provenance": "synthetic fresh held-out diagnostic wording; expected labels are offline gold, not model-visible data or gameplay evidence",
+      "snapshot": {
+        "actor": {
+          "name": "Pryner Deighton",
+          "role": "ManagedResident"
+        },
+        "clock": "11:42 AM, Turdas 12 Sun's Height 3E405",
+        "scene": "The Copper Kettle, Wayrest",
+        "activity": "Stationary",
+        "history": [],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait here",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Could you follow me for twelve minutes?",
+      "expected": {
+        "route": "ACTION_REQUEST",
+        "intent": "request",
+        "steps": [
+          {
+            "kind": "Follow",
+            "targetRef": "follow_player",
+            "seconds": 720,
+            "quantity": 1
+          }
+        ],
+        "outcome": "plan"
+      }
+    }
+  ]
+}

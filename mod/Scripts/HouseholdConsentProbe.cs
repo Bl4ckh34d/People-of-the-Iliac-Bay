@@ -10,10 +10,10 @@ using DaggerfallWorkshop.Game.Banking;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     /// <summary>Runs against one real Gothway household and its native private container.</summary>
     public static class HouseholdConsentProbe
@@ -21,7 +21,7 @@ namespace LivingCities.DFU
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
         private const BindingFlags PrivateStatic = BindingFlags.Static | BindingFlags.NonPublic;
 
-        public static IEnumerator Run(LivingCitiesMod adapter, StreetPopulation streets)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod adapter, StreetPopulation streets)
         {
             if (!adapter || !streets || !streets.Ready)
                 throw new InvalidOperationException("Household consent probe requires a ready town.");
@@ -30,7 +30,7 @@ namespace LivingCities.DFU
             var player = game.PlayerEntity;
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             int settlementId = game.PlayerGPS.CurrentLocation.MapTableData.MapId;
-            var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", PrivateInstance).GetValue(adapter);
+            var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", PrivateInstance).GetValue(adapter);
             var savedWorld = store.Snapshot();
             var town = savedWorld.Settlements.Find(s => s.SettlementId == settlementId);
             if (town == null) throw new InvalidOperationException("Consent probe has no current saved town.");
@@ -140,7 +140,7 @@ namespace LivingCities.DFU
 
                 var runtimeDecision = typeof(StreetPopulation).GetMethod("CanTakeHouseholdLoot", PrivateInstance);
                 if (runtimeDecision == null) throw new InvalidOperationException("Runtime household consent gate is unavailable.");
-                var theftHooks = Type.GetType("LivingCities.QuestHooks.NativeHouseholdLootConsentHooks, LivingCities.QuestHooks", true);
+                var theftHooks = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeHouseholdLootConsentHooks, PeopleOfTheIliacBay.QuestHooks", true);
                 var beforeTheft = theftHooks.GetMethod("BeforeTheft", PrivateStatic);
                 if (beforeTheft == null) throw new InvalidOperationException("Native theft prefix is unavailable.");
 
@@ -182,7 +182,7 @@ namespace LivingCities.DFU
                 if (!player.Items.Contains(transferItem) || loot.Items.Contains(transferItem) || player.CrimeCommitted != priorCrime)
                     throw new InvalidOperationException("+75 native transfer or close flagged Theft or failed to transfer the item.");
 
-                Debug.Log("LIVING_CITIES_HOUSEHOLD_CONSENT_PASS: resident=" + resident.Id + "; home=" + home.BuildingKey +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HOUSEHOLD_CONSENT_PASS: resident=" + resident.Id + "; home=" + home.BuildingKey +
                     "; +74 denied; +75 native transfer/close clean; visitor/shop/inn exclusions.");
                 player.Items.RemoveItem(transferItem);
                 RestoreLoot(loot, originalContents, oldStockedDate, oldHouseOwned, oldPlayerOwned);

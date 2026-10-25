@@ -1,22 +1,13 @@
 {
-  "date": "2026-10-15",
+  "date": "2026-10-18",
   "tool": "built-in image_gen",
-  "sourceReferences": 223,
-  "distinctSourceImages": 199,
-  "generatedDistinct": 191,
-  "mappedReferences": 215,
-  "missing": [
-    "flat-184-5",
-    "flat-184-6",
-    "flat-184-7",
-    "flat-184-8",
-    "flat-184-9",
-    "flat-184-10",
-    "flat-184-11",
-    "flat-184-12"
-  ],
-  "missingReason": "Built-in image generation rejected the original reference sheet (sexual input category). No output generated; no fallback identity assigned.",
-  "excluded": "Archive 199 editor markers and non-humanoid/monster Daedric flats in archive 175.",
+  "sourceReferences": 326,
+  "distinctSourceImages": 300,
+  "generatedDistinct": 300,
+  "mappedReferences": 326,
+  "missing": [],
+  "missingReason": null,
+  "excluded": "Archive 199 editor markers and non-humanoid/monster Daedric flats in archive 175. Animals, including cat-shaped Alfiq1306/0,1,2, are excluded by humanoid-only scope.",
   "corrections": {
     "batch02": {
       "prompt": "Edit only eyes in atlas image: TOP-LEFT sleeper (green hood) and BOTTOM ROW THIRD sleeper (red hood) currently have glowing yellow open eyes. They must be ASLEEP: replace both pairs with closed dark eyelids, no glow. Keep every other pixel-art identity, all 8 cells, blanket/pillow geometry, canvas dimensions and transparent background unchanged. Output complete 4-column 2-row atlas.",
@@ -31,6 +22,40 @@
     "Generated low-resolution-style images are larger than native originals; they have not been downsampled.",
     "Face similarity is visually reviewed but not pixel-identical; further user review is expected.",
     "Generating a sprite does not register an NPC, assign a bed, alter a quest, or grant a sleep schedule.",
-    "The batch-24 prompt incorrectly described mobile394 as a woman. DFU source confirms maleBreton variant 3; the bearded rendered head remains mapped as male."
-  ]
+    "The batch-24 prompt incorrectly described mobile394 as a woman. DFU source confirms maleBreton variant 3; the bearded rendered head remains mapped as male.",
+    "Provider selection and caching require native acceptance; adding assets does not add mod actor adoption, beds, schedules, or quest support.",
+    "DET10015/0\u20134humanoidscholarsareinstalledunderbillboards/,outsideearliertextures/-onlyscan.Their5sleepmappingsandbroaderDETcoveragearepending;326iscurrentmappedcoverage,notuniversalinstalledhumanoidcoverage."
+  ],
+  "previousCoverage": {
+    "date": "2026-10-15",
+    "sourceReferences": 223,
+    "distinctSourceImages": 199,
+    "generatedDistinct": 191,
+    "mappedReferences": 215,
+    "missing": [
+      "flat-184-5",
+      "flat-184-6",
+      "flat-184-7",
+      "flat-184-8",
+      "flat-184-9",
+      "flat-184-10",
+      "flat-184-11",
+      "flat-184-12"
+    ],
+    "missingReason": "Built-in image generation rejected the original reference sheet (sexual input category). No output generated; no fallback identity assigned."
+  },
+  "unresolvedSourceReferences": [
+    {
+      "provider": "daggerfall expanded textures",
+      "archives": "10011\u201310020 and related humanoid billboards/mobile assets",
+      "reason": "Broader installed-path scan found additional humanoid artwork outside textures/;fullclassificationpending.10015/0\u20134 scholarsarevisuallyverifiedsourceswithoutsleepmappings.Expansionpausedbyuserkeeperstandingpriority."
+    }
+  ],
+  "providerCoverage": {
+    "elves & beastfolk - replaces": 1,
+    "elves & beastfolk - resources": 40,
+    "lively cities": 6,
+    "rmb resource pack": 56
+  },
+  "newProvenance": "missing-coverage.json"
 }

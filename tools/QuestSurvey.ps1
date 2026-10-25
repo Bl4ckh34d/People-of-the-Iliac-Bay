@@ -9,37 +9,37 @@ $records = @(foreach ($file in Get-ChildItem -LiteralPath $QuestRoot -Filter '*.
     $inQbn = $false; $hasQuest = $false; $definitions = @(); $placements = @()
     for ($index = 0; $index -lt $lines.Length; $index++) {
         $line = $lines[$index].Trim()
-        if ($line -match '^quest\s*:') { $hasQuest = $true }
-        if ($line -match '^qbn\s*:') { $inQbn = $true; continue }
-        if ($line -match '^qrc\s*:') { $inQbn = $false; continue }
+        $colon = $line.IndexOf(':')
+        $section = if ($colon -ge 0) { $line.Substring(0,$colon).Trim().ToLowerInvariant() } else { '' }
+        if ($section -eq 'quest') { $hasQuest = $true }
+        if ($section -eq 'qbn') { $inQbn = $true; continue }
+        if ($section -eq 'qrc') { $inQbn = $false; continue }
         if (-not $inQbn -or $line.StartsWith('-')) { continue }
-        if ($line -match '^(Person|Place)\s+(\S+)\s+(.+)$') {
-            $kind = $Matches[1].ToLowerInvariant(); $symbol = $Matches[2]; $spec = $Matches[3]
+        $tokens = @($line.Split([char[]]@(' ',"`t"),[StringSplitOptions]::RemoveEmptyEntries))
+        if ($tokens.Count -ge 4 -and $tokens[0] -ieq 'place' -and $tokens[2] -ieq 'at') {
+            $placements += [pscustomobject]@{line=$index+1; source=$line}
+            continue
+        }
+        if ($tokens.Count -ge 3 -and $tokens[0] -iin @('Person','Place')) {
+            $kind = $tokens[0].ToLowerInvariant(); $symbol = $tokens[1]; $spec = $tokens[2..($tokens.Count-1)]
             $route = if ($kind -eq 'person') {
-                if ($spec -match '\bnamed\s+') { 'fixed-individual' }
-                elseif ($spec -match '\bgroup\s+Questor\b') { 'questor' }
-                elseif ($spec -match '\blocal\b') { 'generated-local-home' }
-                elseif ($spec -match '\bremote\b') { 'generated-remote-home' }
+                if ($spec -icontains 'named') { 'fixed-individual' }
+                elseif ((0..($spec.Count-2) | Where-Object { $_ -ge 0 -and $_+1 -lt $spec.Count -and $spec[$_] -ieq 'group' -and $spec[$_+1] -ieq 'Questor' } | Measure-Object).Count -gt 0) { 'questor' }
+                elseif ($spec -icontains 'local') { 'generated-local-home' }
+                elseif ($spec -icontains 'remote') { 'generated-remote-home' }
                 else { 'generated-unspecified-home' }
             } else {
-                if ($spec -match '^randompermanent\b') { 'random-fixed-site' }
-                elseif ($spec -match '^permanent\b') { 'fixed-site' }
-                elseif ($spec -match '^local\b') { 'local-site' }
-                elseif ($spec -match '^remote\b') { 'remote-site' }
+                if ($spec[0] -ieq 'randompermanent') { 'random-fixed-site' }
+                elseif ($spec[0] -ieq 'permanent') { 'fixed-site' }
+                elseif ($spec[0] -ieq 'local') { 'local-site' }
+                elseif ($spec[0] -ieq 'remote') { 'remote-site' }
                 else { 'unclassified-site' }
             }
             $definitions += [pscustomobject]@{line=$index+1; kind=$kind; symbol=$symbol; route=$route; source=$line}
         }
-        elseif ($line -match '^place\s+.*\s+at\s+') { $placements += [pscustomobject]@{line=$index+1; source=$line} }
     }
     if ($hasQuest) { [pscustomobject]@{file=$file.Name; definitions=$definitions; placementActions=$placements} }
 })
-# Action statements also begin with "place"; keep them out of resource definitions.
-foreach ($record in $records) {
-    $actions = @($record.definitions | Where-Object { $_.kind -eq 'place' -and $_.source -match '^place\s+.*\s+at\s+' })
-    $record.placementActions = @($record.placementActions) + @($actions | ForEach-Object { [pscustomobject]@{line=$_.line; source=$_.source} })
-    $record.definitions = @($record.definitions | Where-Object { $_ -notin $actions })
-}
 $report = [pscustomobject]@{schemaVersion=1; sourceRoot=(Resolve-Path $QuestRoot).Path; questCount=$records.Count;
     routes=@($records.definitions | Group-Object route | Sort-Object Name | ForEach-Object { [pscustomobject]@{route=$_.Name; count=$_.Count} }); quests=$records}
 New-Item -ItemType Directory -Path (Split-Path $OutputPath -Parent) -Force | Out-Null

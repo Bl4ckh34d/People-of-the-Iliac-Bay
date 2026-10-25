@@ -5,10 +5,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class DefenseSceneProbe
     {
@@ -63,8 +63,8 @@ namespace LivingCities.DFU
                 if(record==null || record.Death==null || record.Death.BuildingKey!=-1 ||
                     Math.Abs(record.Death.X-4)>.01 || Math.Abs(record.Death.Z-5)>.01 || record.Witnesses.Count!=0)
                     throw new InvalidOperationException("Exterior death inherited indoor player context or witnesses.");
-                Debug.Log("LIVING_CITIES_DEFENSE_SCENE_PASS: relocated target keeps its own interior coordinates and native corpse parent while player remains elsewhere.");
-                Debug.Log("LIVING_CITIES_DEFENSE_EXTERIOR_CONTEXT_PASS: inactive exterior owner supplies death coordinates without indoor witnesses.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_SCENE_PASS: relocated target keeps its own interior coordinates and native corpse parent while player remains elsewhere.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_EXTERIOR_CONTEXT_PASS: inactive exterior owner supplies death coordinates without indoor witnesses.");
             }
             finally
             {

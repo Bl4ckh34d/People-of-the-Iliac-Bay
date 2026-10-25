@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -12,6 +13,12 @@ namespace LivingCities.DFU
         private sealed class CachedOutdoorArrivalJourney
         {
             public ResidentRoutine Routine;
+            public HouseholdDayPlan Family;
+            public int Day;
+            public readonly List<CachedOutdoorArrivalChild> Children=new List<CachedOutdoorArrivalChild>();
+        }
+        private sealed class CachedOutdoorArrivalChild
+        {
             public ResidentDestination Itinerary;
             public double Departure;
             public ResidentVisitJourney Journey;
@@ -31,25 +38,43 @@ namespace LivingCities.DFU
         {
             if (plan == null || plan.Resident == null || !plan.Resident.IsAlive ||
                 current.Activity != Activity.Visit && current.Activity != Activity.Home ||
-                plan.Routine == null || plan.Routine.Itinerary == null) return false;
+                plan.Routine == null) return false;
 
-            ResidentVisitJourney journey;
-            if (!TryGetOutdoorArrivalJourney(plan, out journey)) return false;
+            var recovery=CurrentRoutineRecovery(plan,seconds);
+            if(recovery!=null)
+            {
+                RoutineRecoveryLeg arrived=null;
+                foreach(var leg in recovery.Legs)
+                    if(leg.BuildingKey==current.BuildingKey && seconds>=leg.ArriveAt &&
+                        (current.Activity==Activity.Home?leg.ReturnsHome:!leg.ReturnsHome)) arrived=leg;
+                if(arrived==null || arrived.Route.Count<2)return false;
+                var recoveryEndpoint=arrived.Route[arrived.Route.Count-1];
+                return ContinueOutdoorArrival(actor,new RoutePoint(recoveryEndpoint.X,recoveryEndpoint.Z),arrived.Route);
+            }
+
+            CachedOutdoorArrivalJourney cached;
+            if (!TryGetOutdoorArrivalJourneys(plan, out cached)) return false;
             IList<SavedRoutePoint> route;
+            double timeOfDay=seconds%86400d;
+            CachedOutdoorArrivalChild child=null;
             if (current.Activity == Activity.Visit)
             {
-                ResidentVisitSnapshot visit;
-                visit = journey.Evaluate(seconds % 86400d);
+                foreach(var candidate in cached.Children)
+                    if(timeOfDay>=candidate.Departure && timeOfDay<candidate.Journey.EndsAt)
+                    {child=candidate;break;}
+                if(child==null)return false;
+                var visit = child.Journey.Evaluate(timeOfDay);
                 if (visit.Phase != ResidentVisitPhase.Inside || visit.VisitIndex < 0 ||
-                    visit.VisitIndex >= plan.Routine.Itinerary.Stops.Count ||
+                    visit.VisitIndex >= child.Itinerary.Stops.Count ||
                     visit.BuildingKey != current.BuildingKey) return false;
-                route = plan.Routine.Itinerary.Stops[visit.VisitIndex].Route;
+                route = child.Itinerary.Stops[visit.VisitIndex].Route;
             }
             else
             {
-                double timeOfDay = seconds % 86400d;
-                if (timeOfDay < journey.EndsAt) return false;
-                route = plan.Routine.Itinerary.ExitRoute;
+                foreach(var candidate in cached.Children)
+                    if(timeOfDay>=candidate.Journey.EndsAt)child=candidate;
+                if(child==null)return false;
+                route = child.Itinerary.ExitRoute;
             }
             if (route == null || route.Count < 2) return false;
             var endpoint = route[route.Count - 1];
@@ -86,26 +111,28 @@ namespace LivingCities.DFU
             return retained;
         }
 
-        private bool TryGetOutdoorArrivalJourney(Plan plan, out ResidentVisitJourney journey)
+        private bool TryGetOutdoorArrivalJourneys(Plan plan, out CachedOutdoorArrivalJourney cached)
         {
-            journey = null;
             var routine = plan.Routine;
-            var itinerary = routine.Itinerary;
-            CachedOutdoorArrivalJourney cached;
+            double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();int day=(int)Math.Floor(now/86400d);
+            var family=RuntimeFamily(plan,now);var selected=family==null?null:family.Effective;
             if (outdoorArrivalJourneys.TryGetValue(plan.Resident.Id, out cached) &&
-                ReferenceEquals(cached.Routine, routine) && ReferenceEquals(cached.Itinerary, itinerary))
+                ReferenceEquals(cached.Routine, routine) && ReferenceEquals(cached.Family,selected) && cached.Day==day)return true;
+            cached=new CachedOutdoorArrivalJourney{Routine=routine,Family=selected,Day=day};
+            try
             {
-                if (Math.Abs(cached.Departure - routine.ItineraryDepartureSeconds) < 0.000001)
+                var outings=new List<ResidentDailyOuting>();
+                if(selected==null)outings=ResidentRoutineDay.CopyOutings(routine);
+                else foreach(var route in HouseholdDayPlanner.RoutesFor(selected,plan.Resident.Id,routine))outings.Add(route.Outing);
+                foreach(var outing in outings)
                 {
-                    journey = cached.Journey;
-                    return journey != null;
+                    cached.Children.Add(new CachedOutdoorArrivalChild{Itinerary=outing.Itinerary,
+                        Departure=outing.DepartureSeconds,Journey=ResidentVisitJourney.Create(outing.DepartureSeconds,outing.Itinerary)});
                 }
             }
-            try { journey = ResidentVisitJourney.Create(routine.ItineraryDepartureSeconds, itinerary); }
-            catch (ArgumentException) { return false; }
+            catch (ArgumentException) {cached=null;return false;}
             if (outdoorArrivalJourneys.Count >= 128) outdoorArrivalJourneys.Clear();
-            outdoorArrivalJourneys[plan.Resident.Id] = new CachedOutdoorArrivalJourney
-            { Routine = routine, Itinerary = itinerary, Departure = routine.ItineraryDepartureSeconds, Journey = journey };
+            outdoorArrivalJourneys[plan.Resident.Id] = cached;
             return true;
         }
 
@@ -134,7 +161,7 @@ namespace LivingCities.DFU
             // CrowdMotion advances along one collision-checked step of the surveyed route.
             var motion = actor.GetComponent<CrowdMotion>();
             if (motion) motion.ResumeFromPause();
-            actor.Place(stepTarget, stepTarget - current);
+            actor.Place(stepTarget, stepTarget - current, navigationDestination: doorTarget);
             return true;
         }
 

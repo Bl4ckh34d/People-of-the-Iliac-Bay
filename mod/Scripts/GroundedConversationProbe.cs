@@ -5,20 +5,20 @@ using System.Linq;
 using System.Reflection;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.UserInterface;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class GroundedConversationProbe
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
-        public static IEnumerator Run(LivingCitiesMod adapter, DaggerfallTalkWindow window, MethodInfo submit, ListBox transcript, string personId)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod adapter, DaggerfallTalkWindow window, MethodInfo submit, ListBox transcript, string personId)
         {
             var manager = GameManager.Instance.TalkManager;
-            var store = typeof(LivingCitiesMod).GetField("store", Private).GetValue(adapter) as WorldStateStore;
-            var lifeMethod = typeof(LivingCitiesMod).GetMethod("CurrentConversationLifeContext", Private);
+            var store = typeof(PeopleOfTheIliacBayMod).GetField("store", Private).GetValue(adapter) as WorldStateStore;
+            var lifeMethod = typeof(PeopleOfTheIliacBayMod).GetMethod("CurrentConversationLifeContext", Private);
             string life = lifeMethod == null ? string.Empty : lifeMethod.Invoke(adapter,
                 new object[] { manager.NameNPC, 0 }) as string;
             int settlement = GameManager.Instance.PlayerGPS.HasCurrentLocation ?
@@ -54,9 +54,9 @@ namespace LivingCities.DFU
             if (store.ConversationDisposition(personId) != offset - 12) throw new InvalidOperationException("Reported insult incorrectly changed disposition.");
             yield return Ask(adapter, window, submit, transcript, "You are an idiot", answer => { });
             if (store.ConversationDisposition(personId) != offset - 37) throw new InvalidOperationException("Repeated insult did not apply -25.");
-            var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore(store.Snapshot());
+            var restored = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore(store.Snapshot());
             if (restored.ConversationDisposition(personId) != offset - 37) throw new InvalidOperationException("Disposition not preserved by snapshot restore.");
-            var enabledField = typeof(LivingCitiesMod).GetField("conversationDispositionEnabled", Private);
+            var enabledField = typeof(PeopleOfTheIliacBayMod).GetField("conversationDispositionEnabled", Private);
             var reactionMethod = typeof(TalkManager).GetMethod("GetReactionToPlayer_0_1_2", Private);
             object[] reactionArgs = { TalkManager.QuestionType.LocalBuilding, (DaggerfallConnect.Arena2.FactionFile.SocialGroups)0 };
             int baseReaction;
@@ -147,14 +147,14 @@ namespace LivingCities.DFU
                 yield return Ask(adapter, window, submit, transcript, "You are beautiful. May I take you on a romantic date?", answer => { });
                 if(store.ConversationDisposition(personId) != beforeFlirt + (expected == "polite" ? 1 : -2))
                     throw new InvalidOperationException("Opposite-sex adult flirt disagreed with stable reception.");
-                string cue = (string)typeof(LivingCitiesMod).GetField("conversationResponseCue", Private).GetValue(adapter);
+                string cue = (string)typeof(PeopleOfTheIliacBayMod).GetField("conversationResponseCue", Private).GetValue(adapter);
                 if(!cue.Contains(expected == "polite" ? "flattered" : "unwelcome"))
                     throw new InvalidOperationException("Social reply omitted authoritative flirt reception.");
                 beforeFlirt = store.ConversationDisposition(personId);
                 yield return Ask(adapter, window, submit, transcript, "You did an excellent job", answer => { });
                 if(store.ConversationDisposition(personId) != beforeFlirt + 1)
                     throw new InvalidOperationException("Ordinary compliment did not improve disposition.");
-                Debug.Log("LIVING_CITIES_FLIRT_PASS: same-sex rejection; opposite-sex stable " + expected + "; compliment; response context.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FLIRT_PASS: same-sex rejection; opposite-sex stable " + expected + "; compliment; response context.");
             }
             finally { player.Gender = originalGender; }
             var childActor = manager.MobileNPC ? manager.MobileNPC.GetComponent<ResidentActor>() : null;
@@ -178,16 +178,16 @@ namespace LivingCities.DFU
                 if(DaggerfallUI.UIManager.TopWindow == window)
                     throw new InvalidOperationException("Reported approach left the game paused in dialogue.");
                 player.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder;
-                typeof(LivingCitiesMod).GetMethod("ReportChildDialogueOffense", Private).Invoke(adapter, null);
+                typeof(PeopleOfTheIliacBayMod).GetMethod("ReportChildDialogueOffense", Private).Invoke(adapter, null);
                 if(player.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Murder)
                     throw new InvalidOperationException("Child report replaced existing Murder charge.");
-                Debug.Log("LIVING_CITIES_CHILD_DIALOGUE_REPORT_PASS: refusal; Trespassing; finite physical dispatch; prior Murder retained; dialogue closed.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CHILD_DIALOGUE_REPORT_PASS: refusal; Trespassing; finite physical dispatch; prior Murder retained; dialogue closed.");
             }
             finally { childActor.Resident.AgeGroup = oldAge; player.CrimeCommitted = oldCrime; }
-            Debug.Log("LIVING_CITIES_GROUNDED_DIALOGUE_PASS: native topics; open social replies; map knowledge gate and discovery; insult/rude/quoted/repeated tone; disposition restore and native reaction hook.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GROUNDED_DIALOGUE_PASS: native topics; open social replies; map knowledge gate and discovery; insult/rude/quoted/repeated tone; disposition restore and native reaction hook.");
         }
 
-        private static IEnumerator Ask(LivingCitiesMod adapter, DaggerfallTalkWindow window, MethodInfo submit, ListBox transcript,
+        private static IEnumerator Ask(PeopleOfTheIliacBayMod adapter, DaggerfallTalkWindow window, MethodInfo submit, ListBox transcript,
             string question, Action<string> check)
         {
             int before = transcript.Count;
@@ -196,7 +196,7 @@ namespace LivingCities.DFU
             while (transcript.Count == before && Time.realtimeSinceStartup < deadline) yield return null;
             if (transcript.Count != before + 2) throw new InvalidOperationException("Grounded dialogue timed out: " + question);
             string answer = transcript.GetItem(before + 1).textLabel.Text;
-            Debug.Log("LIVING_CITIES_GROUNDED_REPLY: " + question + " => " + answer);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GROUNDED_REPLY: " + question + " => " + answer);
             check(answer);
         }
 

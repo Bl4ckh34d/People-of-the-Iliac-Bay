@@ -2,12 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     /// <summary>
     /// Native acceptance for the rendered local-patron loop. A real scheduled resident
@@ -38,12 +38,28 @@ namespace LivingCities.DFU
         private static object FindEligiblePlan(StreetPopulation streets, int innKey)
         {
             var plans = (IEnumerable)typeof(StreetPopulation).GetField("plans", InstancePrivate).GetValue(streets);
+            var store = (WorldStateStore)typeof(StreetPopulation).GetField("worldStore", InstancePrivate).GetValue(streets);
+            var familyOwns = typeof(StreetPopulation).GetMethod("RuntimeFamilyOwnsDay", InstancePrivate);
+            var journeys = (IDictionary)typeof(StreetPopulation).GetField("shopJourneys", InstancePrivate).GetValue(streets);
+            var departures = (IDictionary)typeof(StreetPopulation).GetField("shopDepartures", InstancePrivate).GetValue(streets);
+            double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             foreach (var plan in plans)
             {
                 var resident = (Resident)Field(plan, "Resident");
                 if (resident != null && resident.IsAlive && !resident.IsQuestProtected && resident.NativeIdentity == null &&
                     resident.AgeGroup != ResidentAgeGroup.Child && resident.HomeKey != innKey)
-                    return plan;
+                {
+                    // This is an ordinary patron fixture. Do not replace a
+                    // parent schedule owned by the real childcare coordinator.
+                    if ((bool)familyOwns.Invoke(streets, new object[] { plan, now })) continue;
+                    var state = ((DailySchedule)Field(plan, "Schedule")).EvaluateSeconds(now);
+                    if (state.Activity != Activity.Home && state.Activity != Activity.Sleep || streets.FindActor(resident.Id) ||
+                        journeys.Contains(resident.Id) || departures.Contains(resident.Id) || store.GetObservedVisit(resident.Id) != null) continue;
+                    var household = store.ReadNpcHouseholdKnowledge(resident.Id);
+                    bool parent = false;
+                    if (household != null) foreach (var child in household.Children) if (child.IsAlive) parent = true;
+                    if (!parent) return plan;
+                }
             }
             return null;
         }
@@ -61,7 +77,7 @@ namespace LivingCities.DFU
             if (departures.Contains(id)) departures.Remove(id);
         }
 
-        public static IEnumerator Run(LivingCitiesMod adapter, StreetPopulation streets, DaggerfallInterior room)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod adapter, StreetPopulation streets, DaggerfallInterior room)
         {
             if (!adapter || !streets || !room || !GameManager.Instance.IsPlayerInside ||
                 GameManager.Instance.PlayerEnterExit.Interior != room)
@@ -86,9 +102,12 @@ namespace LivingCities.DFU
             if (opens > 1400)
                 throw new InvalidOperationException("Inn movement fixture needs at least twenty-five waking minutes left in the current game day.");
             int closes = opens + 20;
+            float gameRate = DaggerfallUnity.Instance.WorldTime.TimeScale;
+            if (gameRate <= 0 || float.IsNaN(gameRate) || float.IsInfinity(gameRate))
+                throw new InvalidOperationException("Inn movement fixture requires an advancing native game clock.");
             var schedule = DailySchedule.DayVisit(resident.HomeKey, room.EntryDoor.buildingKey,
                 new[] { new RoutePoint(0, 0), new RoutePoint(1, 0) }, opens, closes, 15,
-                ResidentMovement.WalkSpeed, 12, resident.AppearanceSeed, Math.Max(0, opens - 2), 1439);
+                ResidentMovement.WalkSpeed, gameRate, 0u, Math.Max(0, opens - 2), 1439);
             double start = 0, end = 0;
             bool hasWindow = false;
             for (int candidate = opens; candidate < closes; candidate++)
@@ -98,12 +117,12 @@ namespace LivingCities.DFU
             end += dayBase;
             if (!hasWindow || end <= now || end - start < 60)
                 throw new InvalidOperationException("Inn movement fixture could not create a future visit window.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INN_SOCIAL_FIXTURE: resident="+resident.Id+"; now="+now+
+                "; start="+start+"; end="+end+"; timeScale="+gameRate+"; householdOwner=false; seededEarliestSlot=true");
 
-            scheduleField.SetValue(plan, schedule);
-            routine.DestinationKey = room.EntryDoor.buildingKey;
             // The synthetic visit must also exist in the authoritative routine
             // ledger: physical completion persists an observed visit against it.
-            var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", InstancePrivate).GetValue(adapter);
+            var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", InstancePrivate).GetValue(adapter);
             int settlementId = GameManager.Instance.StreamingWorld.GetCurrentBuildingDirectory().MapID;
             var originalRoutines = store.GetRoutines(settlementId) ?? new TownRoutineState { SettlementId = settlementId };
             var probeRoutines = store.GetRoutines(settlementId) ?? new TownRoutineState { SettlementId = settlementId };
@@ -114,13 +133,15 @@ namespace LivingCities.DFU
                 Route = new List<SavedRoutePoint> { new SavedRoutePoint { X = 0, Z = 0 }, new SavedRoutePoint { X = 1, Z = 0 } }
             });
             var originalObserved = store.GetObservedVisit(resident.Id);
-            store.RemoveObservedVisit(resident.Id);
-            store.SetRoutines(probeRoutines);
-            typeof(StreetPopulation).GetField("shopVisitDay", InstancePrivate).SetValue(streets, -1d);
-            ClearJourney(streets, resident.Id);
-
             try
             {
+                scheduleField.SetValue(plan, schedule);
+                routine.DestinationKey = room.EntryDoor.buildingKey;
+                store.RemoveObservedVisit(resident.Id);
+                store.SetRoutines(probeRoutines);
+                typeof(StreetPopulation).GetField("shopVisitDay", InstancePrivate).SetValue(streets, -1d);
+                ClearJourney(streets, resident.Id);
+
                 var deadline = Time.realtimeSinceStartup + 48f;
                 var journeys = (Dictionary<string, ShopVisitJourney>)typeof(StreetPopulation).GetField("shopJourneys", InstancePrivate).GetValue(streets);
                 ShopVisitJourney journey = null;
@@ -134,7 +155,9 @@ namespace LivingCities.DFU
                     yield return null;
                 }
                 if (journey == null || !actor)
-                    throw new InvalidOperationException("Scheduled inn patron did not produce a live runtime journey and actor within 48 seconds.");
+                    throw new InvalidOperationException("Scheduled inn patron did not produce a live runtime journey and actor within 48 seconds: resident="+
+                        resident.Id+"; journey="+(journey!=null)+"; actor="+(bool)actor+"; now="+
+                        DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()+"; start="+start+"; end="+end);
                 if (!journey.Purchases) throw new InvalidOperationException("Inn patron did not begin with the keeper counter stop.");
 
                 var occupancies = new List<ShopOccupancy>(journey.Occupancies());
@@ -152,7 +175,7 @@ namespace LivingCities.DFU
                 float lastDoorDistance = float.MaxValue;
                 ShopVisitPhase previousPhase = ShopVisitPhase.Walking;
                 double previousSeconds = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
-                deadline = Time.realtimeSinceStartup + 135f;
+                deadline = Time.realtimeSinceStartup + Math.Max(135f,(float)((end-previousSeconds)/gameRate)+60f);
                 while (previousSeconds < end && Time.realtimeSinceStartup < deadline)
                 {
                     yield return null;
@@ -230,7 +253,7 @@ namespace LivingCities.DFU
                         "; exitM=" + exitTravel + "; nearestDoorM=" + previousExitDistance + "; lastDoorM=" + lastDoorDistance +
                         "; maxFrameM=" + maximumStep);
 
-                Debug.Log("LIVING_CITIES_INN_SOCIAL_MOVEMENT_PASS: resident=" + resident.Id + "; building=" + room.EntryDoor.buildingKey +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INN_SOCIAL_MOVEMENT_PASS: resident=" + resident.Id + "; building=" + room.EntryDoor.buildingKey +
                     "; keeper reached; socialStops=" + reachedStops.Count + "; approachM=" + approachTravel +
                     "; betweenStopsM=" + postCounterTravel + "; exitM=" + exitTravel + "; maxFrameM=" + maximumStep +
                     "; rendered route observed frame by frame.");

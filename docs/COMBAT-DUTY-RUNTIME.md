@@ -1,0 +1,15 @@
+# Combat and duty runtime admission boundary
+
+`NpcCombatDutyRuntime` is a shared admission boundary for proposed `Fight`, `Defend`, `Patrol`, and `Guard` actions. A native owner must implement `INpcCombatDutyNativePort`. `TryStart` checks adapter availability, resolves current evidence for the exact actor and target, applies `NpcCombatDutyPolicy`, checks availability again, and asks the owner to start. It returns `StartedUnobserved`, never a success receipt. `TryObserve` accepts only a source-backed observation for the exact kind, actor, target, and native attempt ID; it returns a detached receipt.
+
+The port must read the current native actor, alive state, verified role, allegiance, target hostility or route/post, protected subject, consent, ability, duty priority, crime ownership, and quest ownership. Its `TryStart` must recheck mutable native facts inside the owner before changing native state. A `false` return must mean no action started. If native start succeeds but observation is missing, retain the attempt as pending; do not announce success or blindly retry.
+
+This boundary does **not** register an owner or initiate game actions by itself. Existing `GuardPopulation` and `GuardActor` own combat, defense, patrol, and posts. Connecting conversation or autonomous requests to those owners needs per-kind native evidence resolution, atomic owner-side checks, attempt tracking, and observed receipts. No physical execution or game acceptance is claimed by the regression tests.
+
+## Native guard integration assessment
+
+`GuardRoster.StartPatrol` admits a **pair** plan after checking both guards and their posts. `GuardNightPatrols` builds private surveyed templates and starts them automatically at night. The templates have no stable requested route ID; the roster keeps patrol as a separate assignment while both guards remain `GuardDuty.Posted`. Therefore a posted duty flag alone cannot prove that a requested patrol started. `Guard` has no separate start command for an arbitrary requested post; a posted guard already has an assigned saved post. Treating that state as a new action would fabricate execution.
+
+No existing request path supplies fresh explicit consent plus exact crime/quest ownership for a requested patrol or post. A native port must bind those sources, the pair/route or post identity, and current actor body before `TryStart`; it must recheck them within the owner. Receipt needs the exact persisted assignment or observed physical post position after start. Interruption, cancellation, and save/reload need an attempt identity that survives owner reconstruction. Until those contracts exist, no concrete `GuardPopulation` port is registered, and requests fail closed at adapter availability.
+
+CPU verification: `dotnet run --project tests/NpcCombatDutyRuntime.Regression/NpcCombatDutyRuntime.Regression.csproj -p:NuGetAudit=false --ignore-failed-sources`; `dotnet build tools/RuntimeCompile/RuntimeCompile.csproj -p:NuGetAudit=false --ignore-failed-sources --no-restore`.

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class RefugeGeometry
     {
@@ -21,7 +21,7 @@ namespace LivingCities.DFU
             List<WallQuarterBeds.SurveyedBed> beds=null)
         {
             if(!owner || door.doorType!=DoorTypes.Building) throw new ArgumentException("Missing refuge building door.");
-            var temporary=new GameObject("Living Cities isolated refuge geometry");
+            var temporary=new GameObject("People of the Iliac Bay isolated refuge geometry");
             // A model-only layout cannot register people or furniture
             // interactions. Move it above the world before querying colliders.
             var offset=Vector3.up*100;

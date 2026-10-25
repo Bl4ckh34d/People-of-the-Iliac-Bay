@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
-namespace LivingCities.DFU
+using PeopleOfTheIliacBay.Core;
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class UnloadedPopulation
     {

@@ -1,4 +1,6 @@
 param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent), [switch]$GuardProbe)
+. (Join-Path $PSScriptRoot 'LogProtocol.ps1')
+
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path $PSScriptRoot -Parent
 $player = Join-Path $DfuRoot 'Player/DaggerfallUnity.exe'
@@ -14,7 +16,7 @@ if (Test-Path -LiteralPath $log) {
 }
 $started = Get-Date
 $arguments = '-batchmode -nographics'
-if ($GuardProbe) { $arguments += ' -livingcities-guard-probe' }
+if ($GuardProbe) { $arguments += ' -peopleoftheiliacbay-guard-probe' }
 $owned = Start-Process -FilePath $player -WorkingDirectory $playerDir -ArgumentList $arguments -WindowStyle Hidden -PassThru
 try {
     $passed = $false
@@ -23,16 +25,16 @@ try {
         if ($owned.HasExited) { throw "Player exited early ($($owned.ExitCode))." }
         if ((Test-Path -LiteralPath $log) -and (Get-Item -LiteralPath $log).LastWriteTime -ge $started) {
             $body = Get-Content -LiteralPath $log -Raw
-            if ($body -match 'error CS\d+|Exception:|LIVING_CITIES_GUARD_PROBE_FAIL') { throw 'Player reported an exception or compile error; inspect preserved smoke log.' }
-            $ready = $body -match 'LIVING_CITIES_READY:' -and $body -match 'LIVING_CITIES_SETTINGS_LOADED:' -and $body -match 'Finished mod init: BasicRoads' -and $body -match 'GameManager ready'
-            if ($GuardProbe) { $ready = $ready -and $body -match 'LIVING_CITIES_GUARD_PROBE_PASS:' }
+            if ((Test-NativeLogFailure $body)) { throw 'Player reported an exception or compile error; inspect preserved smoke log.' }
+            $ready = ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_READY:',[StringComparison]::OrdinalIgnoreCase) -ge 0)) -and ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_SETTINGS_LOADED:',[StringComparison]::OrdinalIgnoreCase) -ge 0)) -and ((([string]$body).IndexOf('Finished mod init: BasicRoads',[StringComparison]::OrdinalIgnoreCase) -ge 0)) -and ((([string]$body).IndexOf('GameManager ready',[StringComparison]::OrdinalIgnoreCase) -ge 0))
+            if ($GuardProbe) { $ready = $ready -and ((([string]$body).IndexOf('PEOPLE_OF_THE_ILIAC_BAY_GUARD_PROBE_PASS:',[StringComparison]::OrdinalIgnoreCase) -ge 0)) }
             if ($ready -and $null -eq $readyAt) { $readyAt = Get-Date }
             if ($null -ne $readyAt -and ((Get-Date) - $readyAt).TotalSeconds -ge 2) { $passed = $true; break }
         }
         Start-Sleep -Milliseconds 500
     }
     if (-not $passed) { throw 'Startup markers missing after 55 seconds.' }
-    Write-Output 'PASS: Living Cities source compilation/init, Basic Roads init, GameManager ready. Gameplay not tested.'
+    Write-Output 'PASS: People of the Iliac Bay source compilation/init, Basic Roads init, GameManager ready. Gameplay not tested.'
     if ($GuardProbe) { Write-Output 'PASS: temporary guard interception probe; its patches removed.' }
 } finally {
     try {

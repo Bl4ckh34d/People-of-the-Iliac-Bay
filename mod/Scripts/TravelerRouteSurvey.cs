@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class TownGeometry
     {
@@ -42,7 +42,7 @@ namespace LivingCities.DFU
                     // Native navigation can disconnect the gate tile itself. Connect
                     // to the inner street; RouteBetween still sweeps the full crossing.
                     if(!FindEntranceCell(insideGround,out cell))
-                    { Debug.Log("LIVING_CITIES_GATE_APPROACH_UNREACHED: local="+local+"; bounds="+bounds); continue; }
+                    { Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_APPROACH_UNREACHED: local="+local+"; bounds="+bounds); continue; }
                     approaches.Add(new Entrance { Cell=cell,LocalDoor=origin.InverseTransformPoint(ground) });
                 }
                 approaches.Sort((a,b)=>Compare(a.LocalDoor,b.LocalDoor));

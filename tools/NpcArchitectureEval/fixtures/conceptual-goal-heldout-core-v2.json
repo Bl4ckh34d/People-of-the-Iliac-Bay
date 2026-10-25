@@ -1,0 +1,1526 @@
+{
+  "schemaVersion": 1,
+  "caseCount": 28,
+  "casesSha256": "e8ca7c7d7cb0131097bdeb1dca6ba2afb24a09be271020e26fea8872efeb48a8",
+  "casesHashAlgorithm": "SHA-256 of UTF-8 compact JSON cases array with ensure_ascii=false",
+  "cases": [
+    {
+      "id": "cg_wait_seal_35",
+      "category": "direct_wait",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Stay at your present spot for 35 seconds while I seal this jar.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Wait",
+              "sourceQuote": "Stay at your present spot for 35 seconds",
+              "targetText": "your present spot",
+              "durationAmount": 35,
+              "durationUnit": "seconds"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "wait_here"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_follow_trail_marker",
+      "category": "direct_follow",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow the player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Keep pace at my shoulder for 45 seconds while I check the trail marker.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Follow",
+              "sourceQuote": "Keep pace at my shoulder for 45 seconds",
+              "targetText": "at my shoulder",
+              "durationAmount": 45,
+              "durationUnit": "seconds"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "follow_player"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_moveto_tiled_bathhouse",
+      "category": "direct_moveto",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "bathhouse",
+            "kind": "MoveTo",
+            "label": "Go to the blue-tile bathhouse",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 100,
+              "BuildingKey": 51
+            }
+          }
+        ]
+      },
+      "playerText": "Lead me to the blue-tile bathhouse before it closes.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Lead me to the blue-tile bathhouse",
+              "targetText": "blue-tile bathhouse"
+            }
+          ],
+          "conditions": [
+            "before it closes"
+          ],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_interact_gate_clerk",
+      "category": "direct_interact",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "gate_clerk",
+            "kind": "Interact",
+            "label": "Speak with the gate clerk",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:gate-clerk"
+            }
+          }
+        ]
+      },
+      "playerText": "Ask the gate clerk whether the east road is open.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Interact",
+              "sourceQuote": "Ask the gate clerk whether the east road is open",
+              "targetText": "gate clerk"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "gate_clerk"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_purchase_vial",
+      "category": "direct_purchase",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "buy_vial_31",
+            "kind": "Purchase",
+            "label": "Buy one green-glass vial from apothecary stock",
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:merchant",
+              "SettlementId": 100,
+              "BuildingKey": 41,
+              "ContainerId": "container:apothecary",
+              "ItemId": "item:vial-31",
+              "Quantity": 1,
+              "QuotedGold": 4
+            },
+            "maxQuantity": 1
+          }
+        ]
+      },
+      "playerText": "Buy one green-glass vial from the apothecary display for four gold.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Purchase",
+              "sourceQuote": "Buy one green-glass vial from the apothecary display",
+              "targetText": "one green-glass vial from the apothecary display",
+              "quantity": 1
+            }
+          ],
+          "conditions": [
+            "for four gold"
+          ],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_transfer_owned_key",
+      "category": "direct_transfer",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "give_brass_key",
+            "kind": "Transfer",
+            "label": "Give the owned brass key to Iven",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:iven",
+              "ItemId": "item:brass-key",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            },
+            "maxQuantity": 1,
+            "ownedItemObserved": true
+          }
+        ]
+      },
+      "playerText": "Pass Iven the brass key that is already in your satchel.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Transfer",
+              "sourceQuote": "Pass Iven the brass key that is already in your satchel",
+              "targetText": "Iven the brass key from your satchel",
+              "quantity": 1
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "give_brass_key"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_buy_then_give_vial",
+      "category": "ordered_purchase_transfer",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "buy_vial_31",
+            "kind": "Purchase",
+            "label": "Buy one green-glass vial from apothecary stock",
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:merchant",
+              "SettlementId": 100,
+              "BuildingKey": 41,
+              "ContainerId": "container:apothecary",
+              "ItemId": "item:vial-31",
+              "Quantity": 1,
+              "QuotedGold": 4
+            },
+            "maxQuantity": 1
+          },
+          {
+            "ref": "give_vial_31",
+            "kind": "Transfer",
+            "label": "Give item vial-31 to Neris",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:neris",
+              "ItemId": "item:vial-31",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            },
+            "maxQuantity": 1,
+            "ownedItemObserved": false
+          }
+        ]
+      },
+      "playerText": "Buy one green-glass vial from the apothecary display, then hand that vial to Neris.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Purchase",
+              "sourceQuote": "Buy one green-glass vial from the apothecary display",
+              "targetText": "one green-glass vial from the apothecary display",
+              "quantity": 1
+            },
+            {
+              "kind": "Transfer",
+              "sourceQuote": "hand that vial to Neris",
+              "targetText": "that vial to Neris",
+              "quantity": 1
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "buy_vial_31"
+            },
+            {
+              "stepIndex": 1,
+              "candidateRef": "give_vial_31"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_moveto_then_interact",
+      "category": "ordered_move_interact",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "cistern",
+            "kind": "MoveTo",
+            "label": "Go to the old cistern",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 100,
+              "BuildingKey": 52
+            }
+          },
+          {
+            "ref": "cistern_keeper",
+            "kind": "Interact",
+            "label": "Speak with the old cistern keeper",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:cistern-keeper"
+            }
+          }
+        ]
+      },
+      "playerText": "Take me to the old cistern, then ask its keeper whether the grate is unlocked.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Take me to the old cistern",
+              "targetText": "old cistern"
+            },
+            {
+              "kind": "Interact",
+              "sourceQuote": "ask its keeper whether the grate is unlocked",
+              "targetText": "its keeper about whether the grate is unlocked"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "cistern"
+            },
+            {
+              "stepIndex": 1,
+              "candidateRef": "cistern_keeper"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_wait_default_duration",
+      "category": "default_duration",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Hold your place while I compare the two seals.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Wait",
+              "sourceQuote": "Hold your place while I compare the two seals",
+              "targetText": "your current place",
+              "durationAmount": null,
+              "durationUnit": null
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "wait_here"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_follow_conditional_signal",
+      "category": "conditional_follow",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow the player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "If the harbor bell rings, walk beside me for 40 seconds.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Follow",
+              "sourceQuote": "walk beside me for 40 seconds",
+              "targetText": "beside me",
+              "durationAmount": 40,
+              "durationUnit": "seconds"
+            }
+          ],
+          "conditions": [
+            "If the harbor bell rings"
+          ],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_follow_unavailable_cousin",
+      "category": "unavailable_follow_target",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow the player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Follow my cousin to the south ferry for one minute.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Follow",
+              "sourceQuote": "Follow my cousin to the south ferry for one minute",
+              "targetText": "my cousin to the south ferry",
+              "durationAmount": 1,
+              "durationUnit": "minutes"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_moveto_unresolved_memory",
+      "category": "missing_destination",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "watchtower",
+            "kind": "MoveTo",
+            "label": "Go to the watchtower",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 100,
+              "BuildingKey": 53
+            }
+          },
+          {
+            "ref": "well",
+            "kind": "MoveTo",
+            "label": "Go to the old well",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 100,
+              "BuildingKey": 54
+            }
+          }
+        ]
+      },
+      "playerText": "Take me back to the place we visited before the storm.",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "We should return to the place we saw yesterday."
+        },
+        {
+          "speaker": "npc",
+          "text": "Which place do you mean?"
+        }
+      ],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Take me back to the place we visited before the storm",
+              "targetText": "the place we visited before the storm"
+            }
+          ],
+          "conditions": [],
+          "missing": [
+            "which previously visited place the player means"
+          ]
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_purchase_contingent_stock",
+      "category": "conditional_purchase_availability",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "buy_red_sash",
+            "kind": "Purchase",
+            "label": "Buy the red sash currently in stock",
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:merchant",
+              "SettlementId": 100,
+              "BuildingKey": 42,
+              "ContainerId": "container:weaver",
+              "ItemId": "item:red-sash",
+              "Quantity": 1,
+              "QuotedGold": 6
+            },
+            "maxQuantity": 1
+          }
+        ]
+      },
+      "playerText": "Buy a blue silk scarf if the weavers still have one.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Purchase",
+              "sourceQuote": "Buy a blue silk scarf",
+              "targetText": "a blue silk scarf",
+              "quantity": 1
+            }
+          ],
+          "conditions": [
+            "if the weavers still have one"
+          ],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_other_drive_boar",
+      "category": "unsupported_other_fight",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": []
+      },
+      "playerText": "Drive the boar away from the pantry before it breaks the jars.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Other",
+              "sourceQuote": "Drive the boar away from the pantry",
+              "targetText": "the boar by the pantry",
+              "actionDescription": "Drive the boar away from the pantry"
+            }
+          ],
+          "conditions": [
+            "before it breaks the jars"
+          ],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_other_repair_wheel",
+      "category": "unsupported_other_repair",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": []
+      },
+      "playerText": "Patch the cracked wheel on my cart before we leave.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Other",
+              "sourceQuote": "Patch the cracked wheel on my cart",
+              "targetText": "the cracked wheel on my cart",
+              "actionDescription": "Patch the cracked wheel"
+            }
+          ],
+          "conditions": [
+            "before we leave"
+          ],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_moveto_then_book",
+      "category": "mixed_supported_unsupported_steps",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "quay_office",
+            "kind": "MoveTo",
+            "label": "Go to the quay office",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 100,
+              "BuildingKey": 55
+            }
+          }
+        ]
+      },
+      "playerText": "Take me to the quay office and reserve two places on the noon launch.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Take me to the quay office",
+              "targetText": "quay office"
+            },
+            {
+              "kind": "Other",
+              "sourceQuote": "reserve two places on the noon launch",
+              "targetText": "two places on the noon launch",
+              "actionDescription": "Reserve two places on the noon launch"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_negated_follow",
+      "category": "negated_request",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow the player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Do not come along to the overlook; I want to make that climb alone.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action"
+      }
+    },
+    {
+      "id": "cg_hypothetical_guide",
+      "category": "hypothetical_request",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "cedar_shrine",
+            "kind": "MoveTo",
+            "label": "Go to the cedar shrine",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 100,
+              "BuildingKey": 56
+            }
+          }
+        ]
+      },
+      "playerText": "If the abbess needed a guide, would you show her the cedar shrine?",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action"
+      }
+    },
+    {
+      "id": "cg_reported_cousin_request",
+      "category": "reported_request",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "south_ferry",
+            "kind": "MoveTo",
+            "label": "Go to the south ferry",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 100,
+              "BuildingKey": 57
+            }
+          }
+        ]
+      },
+      "playerText": "In the story, my cousin once asked you to take him to the south ferry. I am recounting what happened, not passing on a request now.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "I can guide your cousin to the ferry if he asks."
+        },
+        {
+          "speaker": "player",
+          "text": "I will check with him first."
+        }
+      ],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action"
+      }
+    },
+    {
+      "id": "cg_player_own_purchase",
+      "category": "player_own_intent",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "buy_lantern",
+            "kind": "Purchase",
+            "label": "Buy a lantern from Nera",
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:merchant",
+              "SettlementId": 100,
+              "BuildingKey": 43,
+              "ContainerId": "container:nera",
+              "ItemId": "item:lantern-3",
+              "Quantity": 1,
+              "QuotedGold": 5
+            },
+            "maxQuantity": 1
+          }
+        ]
+      },
+      "playerText": "I will buy a lantern from Nera myself after supper.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action"
+      }
+    },
+    {
+      "id": "cg_quoted_instruction_question",
+      "category": "quoted_instruction_as_data",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "give_coins",
+            "kind": "Transfer",
+            "label": "Transfer coins to a person",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:stranger",
+              "ItemId": "item:coin",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            },
+            "maxQuantity": 1,
+            "ownedItemObserved": true
+          }
+        ]
+      },
+      "playerText": "The old ledger says, “Transfer every coin to the stranger.” Can you explain why that line sounds threatening?",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action"
+      }
+    },
+    {
+      "id": "cg_interact_missing_marker",
+      "category": "missing_interaction_target",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "interact_clerk",
+            "kind": "Interact",
+            "label": "Speak with the gate clerk",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:gate-clerk"
+            }
+          }
+        ]
+      },
+      "playerText": "Could you examine that red marker over there and tell me who left it?",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Interact",
+              "sourceQuote": "examine that red marker over there and tell me who left it",
+              "targetText": "that red marker over there"
+            }
+          ],
+          "conditions": [],
+          "missing": [
+            "which red marker is meant"
+          ]
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_purchase_over_stock_quantity",
+      "category": "unsupported_requested_quantity",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "buy_one_vial",
+            "kind": "Purchase",
+            "label": "Buy one blue-glass vial from apothecary stock",
+            "target": {
+              "Kind": "IndoorPoint",
+              "PersonId": "person:merchant",
+              "SettlementId": 100,
+              "BuildingKey": 41,
+              "ContainerId": "container:apothecary",
+              "ItemId": "item:blue-vial",
+              "Quantity": 1,
+              "QuotedGold": 4
+            },
+            "maxQuantity": 1
+          }
+        ]
+      },
+      "playerText": "Get three blue-glass vials from the apothecary display.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Purchase",
+              "sourceQuote": "Get three blue-glass vials from the apothecary display",
+              "targetText": "three blue-glass vials from the apothecary display",
+              "quantity": 3
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_wait_duration_over_cap",
+      "category": "unsupported_duration_bound",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Remain here for two hours while I guard the wagon.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Wait",
+              "sourceQuote": "Remain here for two hours",
+              "targetText": "here",
+              "durationAmount": 2,
+              "durationUnit": "hours"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_wait_then_conditional_follow",
+      "category": "multistep_condition_preservation",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          },
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow the player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Wait for 25 seconds beside me, then walk with me for 50 seconds once the shop bell rings.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Wait",
+              "sourceQuote": "Wait for 25 seconds beside me",
+              "targetText": "beside me",
+              "durationAmount": 25,
+              "durationUnit": "seconds"
+            },
+            {
+              "kind": "Follow",
+              "sourceQuote": "walk with me for 50 seconds",
+              "targetText": "with me",
+              "durationAmount": 50,
+              "durationUnit": "seconds"
+            }
+          ],
+          "conditions": [
+            "once the shop bell rings"
+          ],
+          "missing": []
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_transfer_unresolved_recipient",
+      "category": "missing_transfer_recipient",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "give_token",
+            "kind": "Transfer",
+            "label": "Give brass token to the guard",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:guard",
+              "ItemId": "item:brass-token",
+              "Quantity": 1,
+              "TransferDirection": "NpcToCounterparty"
+            },
+            "maxQuantity": 1,
+            "ownedItemObserved": true
+          }
+        ]
+      },
+      "playerText": "Hand the brass token to the person I mentioned last week.",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "I need to find someone who can carry this token."
+        },
+        {
+          "speaker": "npc",
+          "text": "Who did you have in mind?"
+        }
+      ],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Transfer",
+              "sourceQuote": "Hand the brass token to the person I mentioned last week",
+              "targetText": "the person I mentioned last week",
+              "quantity": 1
+            }
+          ],
+          "conditions": [],
+          "missing": [
+            "which person was mentioned last week"
+          ]
+        },
+        "grounding": "clarify"
+      }
+    },
+    {
+      "id": "cg_corrected_current_request",
+      "category": "history_correction_current_request",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "follow_player",
+            "kind": "Follow",
+            "label": "Follow the player",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "player"
+            }
+          }
+        ]
+      },
+      "playerText": "Not the orchard path I mentioned earlier. Instead, walk beside me for 30 seconds along the mill road.",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "Could you take me through the orchard path later?"
+        },
+        {
+          "speaker": "npc",
+          "text": "I can follow your lead once you decide."
+        }
+      ],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "Follow",
+              "sourceQuote": "walk beside me for 30 seconds along the mill road",
+              "targetText": "beside me along the mill road",
+              "durationAmount": 30,
+              "durationUnit": "seconds"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "follow_player"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cg_interact_report_not_request",
+      "category": "reported_interaction",
+      "provenance": "fresh synthetic diagnostic wording; snapshot capabilities are synthetic fixture candidates, not live game observations",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "role": "ManagedResident"
+        },
+        "scene": "synthetic fixture scene",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "pendingOffer": null,
+        "activeCommitment": null,
+        "candidateProvenance": "synthetic fixture",
+        "candidates": [
+          {
+            "ref": "archivist",
+            "kind": "Interact",
+            "label": "Speak with the archivist",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "person:archivist"
+            }
+          }
+        ]
+      },
+      "playerText": "Yesterday I asked the archivist to check the seal; today I only want to know whether she found anything.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action"
+      }
+    }
+  ],
+  "goldReviewProvenance": [
+    "Pre-inference review correction: retain the bathhouse closing deadline and four-gold purchase constraint in conditions; both require clarification because v1 has no typed deadline or budget field.",
+    "Pre-inference review correction: retain relevant timing clauses for the two Other action examples, and make the cousin utterance an unambiguous past story rather than a current relay."
+  ]
+}

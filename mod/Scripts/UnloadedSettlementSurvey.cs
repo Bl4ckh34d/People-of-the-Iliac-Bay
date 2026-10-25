@@ -1,19 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Globalization;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Reads original block navigation and service metadata without constructing
     // Unity objects, changing player location or spawning native actors.
     public sealed class UnloadedSettlementSurvey : IWalkGrid
     {
+        private const int MaximumSlowDiagnosticsPerSurvey=12;
         public sealed class Result {public UnloadedSettlementSurvey Grid;}
         public sealed class RouteResult {public IReadOnlyList<RoutePoint> Points;}
         public sealed class Gate
@@ -351,19 +354,26 @@ namespace LivingCities.DFU
         {
             if(result==null) throw new ArgumentNullException(nameof(result));
             result.Grid=null;
+            int mapId=location.MapTableData.MapId;
+            int slowDiagnosticCount=0;
             int width=location.Exterior.ExteriorData.Width,height=location.Exterior.ExteriorData.Height;
             if(width<1 || width>8 || height<1 || height>8) throw new ArgumentException("Invalid settlement dimensions.");
-            var blocks=RMBLayout.GetLocationBuildingData(location);
+            var blockResult=new IncrementalLocationBlocks.Result();
+            yield return IncrementalLocationBlocks.ReadSteps(location,blockResult);
+            var blocks=blockResult.Blocks;
             if(blocks==null || blocks.Length!=width*height) throw new ArgumentException("Missing settlement blocks.");
+            long locationSetupStarted=RuntimeTiming.Start();
             var grid=new UnloadedSettlementSurvey(location.MapTableData.MapId,width,height);
             var mapPixel=MapsFile.LongitudeLatitudeToMapPixel(location.MapTableData.Longitude,location.MapTableData.Latitude);
             grid.MapPixelX=mapPixel.X; grid.MapPixelY=mapPixel.Y;
             var tileOrigin=TerrainHelper.GetLocationTerrainTileOrigin(location);
             grid.layoutOrigin=new Vector3(tileOrigin.X*RMBLayout.RMBTileSide,0,tileOrigin.Y*RMBLayout.RMBTileSide);
             int xmin=int.MaxValue,ymin=int.MaxValue,xmax=0,ymax=0;
+            slowDiagnosticCount=RecordSurveyTiming("location-grid-setup",mapId,-1,-1,-1,-1,-1,0,locationSetupStarted,slowDiagnosticCount);
             for(int by=0;by<height;by++) for(int bx=0;bx<width;bx++)
             {
                 var block=blocks[by*width+bx];
+                long groundBoundsStarted=RuntimeTiming.Start();
                 for(int ty=0;ty<RMBLayout.RMBTilesPerBlock;ty++) for(int tx=0;tx<RMBLayout.RMBTilesPerBlock;tx++)
                 {
                     if(block.RmbBlock.FldHeader.GroundData.GroundTiles[tx,RMBLayout.RMBTilesPerBlock-1-ty].TextureRecord>=56) continue;
@@ -372,7 +382,9 @@ namespace LivingCities.DFU
                     xmin=Math.Min(xmin,x); xmax=Math.Max(xmax,x);
                     ymin=Math.Min(ymin,y); ymax=Math.Max(ymax,y);
                 }
+                slowDiagnosticCount=RecordSurveyTiming("ground-bounds",mapId,bx,by,block.Index,-1,-1,0,groundBoundsStarted,slowDiagnosticCount);
                 var blockMatrix=Matrix4x4.Translate(grid.layoutOrigin+new Vector3(bx*RMBLayout.RMBSide,2*MeshReader.GlobalScale,by*RMBLayout.RMBSide));
+                long blockCostStarted=RuntimeTiming.Start();
                 for(int y=0;y<64;y++) for(int x=0;x<64;x++)
                 {
                     if(block.RmbBlock.FldHeader.AutoMapData[y*64+x]!=0) continue;
@@ -380,23 +392,34 @@ namespace LivingCities.DFU
                     int weight=TileWeight(tile);
                     grid.costs[bx*64+x,(height-1-by)*64+y]=(byte)(weight==0 ? 0 : 16-weight);
                 }
+                slowDiagnosticCount=RecordSurveyTiming("block-cost-grid",mapId,bx,by,block.Index,-1,-1,0,blockCostStarted,slowDiagnosticCount);
+                long buildingSummaryStarted=RuntimeTiming.Start();
                 var summaries=RMBLayout.GetBuildingData(block,bx,by);
                 if(summaries!=null) grid.buildings.AddRange(summaries);
+                slowDiagnosticCount=RecordSurveyTiming("building-summaries",mapId,bx,by,block.Index,-1,-1,0,buildingSummaryStarted,slowDiagnosticCount);
                 int record=0;
                 foreach(var sub in block.RmbBlock.SubRecords)
                 {
+                    long subrecordStarted=RuntimeTiming.Start();
                     var position=new Vector3(sub.XPos,0,BlocksFile.RMBDimension-sub.ZPos)*MeshReader.GlobalScale;
                     var rotation=Quaternion.Euler(0,-sub.YRotation/BlocksFile.RotationDivisor,0);
                     var parent=Matrix4x4.TRS(position,rotation,Vector3.one);
+                    int objectIndex=0;
                     foreach(var obj in sub.Exterior.Block3dObjectRecords)
                     {
                         ModelData model;
-                        if(!DaggerfallUnity.Instance.MeshReader.GetModelData(obj.ModelIdNum,out model)) continue;
+                        long modelReadStarted=RuntimeTiming.Start();
+                        bool modelFound=DaggerfallUnity.Instance.MeshReader.GetModelData(obj.ModelIdNum,out model);
+                        slowDiagnosticCount=RecordSurveyTiming("subrecord-model-read",mapId,bx,by,block.Index,record,objectIndex,obj.ModelIdNum,modelReadStarted,slowDiagnosticCount);
+                        if(!modelFound) { objectIndex++; continue; }
                         var local=new Vector3(obj.XPos,-obj.YPos,obj.ZPos)*MeshReader.GlobalScale;
                         var angles=new Vector3(-obj.XRotation/BlocksFile.RotationDivisor,-obj.YRotation/BlocksFile.RotationDivisor,-obj.ZRotation/BlocksFile.RotationDivisor);
                         var matrix=parent*Matrix4x4.TRS(local,Quaternion.Euler(angles),RMBLayout.GetModelScaleVector(obj));
+                        long modelInsertStarted=RuntimeTiming.Start();
                         grid.AddModel(obj.ModelIdNum,model,blockMatrix*matrix);
-                        if(model.Doors==null) continue;
+                        slowDiagnosticCount=RecordSurveyTiming("subrecord-model-clearance",mapId,bx,by,block.Index,record,objectIndex,obj.ModelIdNum,modelInsertStarted,slowDiagnosticCount);
+                        if(model.Doors==null) { objectIndex++; continue; }
+                        long doorEnumerationStarted=RuntimeTiming.Start();
                         foreach(var door in GameObjectHelper.GetStaticDoors(ref model,block.Index,record,matrix))
                             if(door.doorType==DoorTypes.Building)
                             {
@@ -408,27 +431,57 @@ namespace LivingCities.DFU
                                     Position=matrix.MultiplyPoint3x4(door.centre),
                                     Normal=matrix.MultiplyVector(door.normal).normalized });
                             }
+                        slowDiagnosticCount=RecordSurveyTiming("subrecord-static-doors",mapId,bx,by,block.Index,record,objectIndex,obj.ModelIdNum,doorEnumerationStarted,slowDiagnosticCount);
+                        objectIndex++;
                     }
+                    slowDiagnosticCount=RecordSurveyTiming("subrecord-total",mapId,bx,by,block.Index,record,objectIndex,0,subrecordStarted,slowDiagnosticCount);
                     record++;
                     // Model reads can be expensive on a cold cache. Never batch a city
                     // worth of model decoding into one frame.
                     yield return null;
                 }
+                int miscObjectIndex=0;
                 foreach(var obj in block.RmbBlock.Misc3dObjectRecords)
                 {
                     ModelData model;
-                    if(!DaggerfallUnity.Instance.MeshReader.GetModelData(obj.ModelIdNum,out model)) continue;
+                    long modelReadStarted=RuntimeTiming.Start();
+                    bool modelFound=DaggerfallUnity.Instance.MeshReader.GetModelData(obj.ModelIdNum,out model);
+                    slowDiagnosticCount=RecordSurveyTiming("misc-model-read",mapId,bx,by,block.Index,-1,miscObjectIndex,obj.ModelIdNum,modelReadStarted,slowDiagnosticCount);
+                    if(!modelFound) { miscObjectIndex++; continue; }
                     var local=new Vector3(obj.XPos,-obj.YPos-4,obj.ZPos+BlocksFile.RMBDimension)*MeshReader.GlobalScale;
                     var angles=new Vector3(-obj.XRotation/BlocksFile.RotationDivisor,-obj.YRotation/BlocksFile.RotationDivisor,-obj.ZRotation/BlocksFile.RotationDivisor);
+                    long modelInsertStarted=RuntimeTiming.Start();
                     grid.AddModel(obj.ModelIdNum,model,blockMatrix*Matrix4x4.TRS(local,Quaternion.Euler(angles),RMBLayout.GetModelScaleVector(obj)));
+                    slowDiagnosticCount=RecordSurveyTiming("misc-model-clearance",mapId,bx,by,block.Index,-1,miscObjectIndex,obj.ModelIdNum,modelInsertStarted,slowDiagnosticCount);
+                    miscObjectIndex++;
                     yield return null;
                 }
                 yield return null;
             }
+            long finalizeStarted=RuntimeTiming.Start();
             grid.buildings.Sort((a,b)=>a.buildingKey.CompareTo(b.buildingKey));
             int margin=location.MapTableData.LocationType==DFRegion.LocationTypes.TownCity ? 3 : 2;
             grid.LocationRect=Rect.MinMaxRect(xmin-margin,ymin-margin,xmax+margin,ymax+margin);
             result.Grid=grid;
+            slowDiagnosticCount=RecordSurveyTiming("finalize",mapId,-1,-1,-1,-1,-1,0,finalizeStarted,slowDiagnosticCount);
+        }
+
+        private static int RecordSurveyTiming(string phase,int mapId,int blockX,int blockY,int blockIndex,
+            int subrecord,int objectIndex,uint modelId,long started,int slowDiagnosticCount)
+        {
+            if(!RuntimeTiming.Enabled || started==0) return slowDiagnosticCount;
+            double elapsed=(Stopwatch.GetTimestamp()-started)*1000d/Stopwatch.Frequency;
+            RuntimeTiming.RecordDuration("unloaded-survey:"+phase,started);
+            if(elapsed<30 || slowDiagnosticCount>=MaximumSlowDiagnosticsPerSurvey) return slowDiagnosticCount;
+            slowDiagnosticCount++;
+            UnityEngine.Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_SURVEY_SLOW: phase="+phase+"; mapId="+mapId.ToString(CultureInfo.InvariantCulture)+
+                "; block="+blockX.ToString(CultureInfo.InvariantCulture)+","+blockY.ToString(CultureInfo.InvariantCulture)+
+                "; blockIndex="+blockIndex.ToString(CultureInfo.InvariantCulture)+
+                "; subrecord="+subrecord.ToString(CultureInfo.InvariantCulture)+
+                "; object="+objectIndex.ToString(CultureInfo.InvariantCulture)+
+                "; modelId="+modelId.ToString(CultureInfo.InvariantCulture)+
+                "; ms="+elapsed.ToString("F2",CultureInfo.InvariantCulture));
+            return slowDiagnosticCount;
         }
         private void AddModel(uint modelId,ModelData model,Matrix4x4 matrix)
         {

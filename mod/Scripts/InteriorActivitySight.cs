@@ -3,7 +3,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Static layout visibility for cached activity anchors. Passing pedestrians
     // must not permanently invalidate a shelf or counter approach.

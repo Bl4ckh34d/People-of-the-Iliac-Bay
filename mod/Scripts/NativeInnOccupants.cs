@@ -6,9 +6,9 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class NativeInnOccupants
     {

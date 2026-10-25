@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using LivingCities.Core;
-namespace LivingCities.DFU
+using PeopleOfTheIliacBay.Core;
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -11,14 +11,19 @@ namespace LivingCities.DFU
             var outward=new List<SavedRoutePoint>();
             bool found=false;
             if(routine.Itinerary!=null)
-                foreach(var stop in routine.Itinerary.Stops)
+                foreach(var itinerary in ResidentRoutineDay.Itineraries(routine))
                 {
-                    foreach(var point in stop.Route)
+                    outward.Clear();
+                    foreach(var stop in itinerary.Stops)
                     {
-                        if(outward.Count>0 && outward[outward.Count-1].X==point.X && outward[outward.Count-1].Z==point.Z) continue;
-                        outward.Add(new SavedRoutePoint {X=point.X,Z=point.Z});
+                        foreach(var point in stop.Route)
+                        {
+                            if(outward.Count>0 && outward[outward.Count-1].X==point.X && outward[outward.Count-1].Z==point.Z) continue;
+                            outward.Add(new SavedRoutePoint {X=point.X,Z=point.Z});
+                        }
+                        if(stop.BuildingKey==building) {found=true;break;}
                     }
-                    if(stop.BuildingKey==building) {found=true;break;}
+                    if(found)break;
                 }
             if(!found)
             {

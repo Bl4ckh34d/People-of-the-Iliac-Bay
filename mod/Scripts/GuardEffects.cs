@@ -3,9 +3,9 @@ using System.Reflection;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardActor
     {

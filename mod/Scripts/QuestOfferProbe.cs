@@ -11,10 +11,10 @@ using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class QuestOfferProbe
     {
@@ -39,12 +39,12 @@ namespace LivingCities.DFU
             StaticNPC questor = null;
             foreach (var npc in game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>(true))
             {
-                Debug.Log("LIVING_CITIES_GUILD_NPC: faction=" + npc.Data.factionID + "; active=" + npc.gameObject.activeInHierarchy + "; hour=" + DaggerfallUnity.Instance.WorldTime.Now.Hour);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUILD_NPC: faction=" + npc.Data.factionID + "; active=" + npc.gameObject.activeInHierarchy + "; hour=" + DaggerfallUnity.Instance.WorldTime.Now.Hour);
                 if (npc.gameObject.activeInHierarchy && npc.Data.factionID == (int)GuildNpcServices.FG_Quests) questor = npc;
             }
             Require(questor, "Actual Fighters Guild quest service NPC missing.");
             QuestMachine.Instance.LastNPCClicked = questor;
-            var offers = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().QuestOffers;
+            var offers = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>().QuestOffers;
             {
                 string before = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
                 offers.Prepare(quest, new[] { candidate });
@@ -66,7 +66,7 @@ namespace LivingCities.DFU
                 Require(QuestMachine.Instance.GetQuest(quest.UID) == quest && store.Snapshot().QuestBindings.Exists(b =>
                     b.QuestUid == quest.UID && b.ResidentId == candidate.ResidentId), "Native acceptance did not commit the staged resident binding.");
             }
-            Debug.Log("LIVING_CITIES_TOWN_QUEST_OFFER_PASS: actual guild OfferQuest and message-button handlers; refusal; dead-recipient rejection; acceptance and committed binding.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_QUEST_OFFER_PASS: actual guild OfferQuest and message-button handlers; refusal; dead-recipient rejection; acceptance and committed binding.");
             yield return Enter(candidate.HomeKey);
             // At night this resident's normal schedule is also home: expose duplicate representations.
             now.RaiseTime((86400 + 23 * 3600 - (int)(now.ToSeconds() % 86400)) % 86400);
@@ -88,7 +88,7 @@ namespace LivingCities.DFU
             quest.GetTask(new Symbol("_clicked_")).IsTriggered = false;
             click.Invoke(game.PlayerActivate, new object[] { target.GetComponent<StaticNPC>() }); quest.Update();
             Require(quest.GetTask(new Symbol("_clicked_")).IsTriggered, "Native recipient activation failed to reach quest task.");
-            Debug.Log("LIVING_CITIES_TOWN_QUEST_RECIPIENT_PASS: native placement and activation at bound household; name=" + candidate.PersonName);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_QUEST_RECIPIENT_PASS: native placement and activation at bound household; name=" + candidate.PersonName);
         }
 
         private static IEnumerator ShowAndClick(StaticNPC questor, Quest quest, DaggerfallMessageBox.MessageBoxButtons choice, QuestResidentBinding expected, bool expectStarted = false)

@@ -4,7 +4,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardActor
     {
@@ -27,6 +27,7 @@ namespace LivingCities.DFU
             if (!roster.TryGuardHalt(GuardId)) return;
             GetComponent<DaggerfallAudioSource>().PlayOneShot(SoundClips.Halt);
             HaltWarnings++;
+            if(populationOwner)populationOwner.HearGuardHalt(this,target);
             if (target == GameManager.Instance.PlayerEntityBehaviour)
             {
                 nextPursuitHalt = Time.time + 20f;
@@ -43,6 +44,7 @@ namespace LivingCities.DFU
             nextPursuitHalt = Time.time + 20f;
             GetComponent<DaggerfallAudioSource>().PlayOneShot(SoundClips.Halt);
             HaltWarnings++;
+            if(populationOwner)populationOwner.HearGuardHalt(this,player);
             PublishPlayerHalt(transform.position, player.transform.position, 20f);
         }
     }

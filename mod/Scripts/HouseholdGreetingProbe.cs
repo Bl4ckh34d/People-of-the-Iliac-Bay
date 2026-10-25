@@ -1,10 +1,10 @@
 using System;
 using System.Reflection;
 using DaggerfallWorkshop;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class HouseholdGreetingProbe
     {
@@ -12,7 +12,7 @@ namespace LivingCities.DFU
         {
             const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
             var town = (SettlementPopulation)typeof(StreetPopulation).GetField("population", flags).GetValue(streets);
-            var hooks = Type.GetType("LivingCities.QuestHooks.NativeHouseholdDoorHooks, LivingCities.QuestHooks", true);
+            var hooks = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeHouseholdDoorHooks, PeopleOfTheIliacBay.QuestHooks", true);
             var begin = hooks.GetMethod("BeforeDoor", BindingFlags.NonPublic | BindingFlags.Static);
             var end = hooks.GetMethod("AfterDoor", BindingFlags.NonPublic | BindingFlags.Static);
             foreach (var home in town.Households)
@@ -40,7 +40,7 @@ namespace LivingCities.DFU
                 finally { foreach (var resident in home.Residents) resident.IsAlive = true; }
                 if (streets.HouseholdGreeting(home.BuildingKey) != null)
                     throw new InvalidOperationException("Occupied-house greeting was not restored.");
-                Debug.Log("LIVING_CITIES_EMPTY_HOUSE_GREETING_PASS: dead household silent; native text scoped to entry; living occupants restored.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_EMPTY_HOUSE_GREETING_PASS: dead household silent; native text scoped to entry; living occupants restored.");
                 return;
             }
             throw new InvalidOperationException("No isolated occupied household available for greeting regression.");

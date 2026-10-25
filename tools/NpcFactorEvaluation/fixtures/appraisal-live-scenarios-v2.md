@@ -1,0 +1,7 @@
+# Appraisal live scenarios v2
+
+V2 preserves four seeded profiles, eight scenarios per profile, and reviewer labels from v1. The current personality generator saves exactly three selected traits per profile; `profileTraitCount` now records that current contract. V2 also fixes two causal mismatches: `injury-health-episode` and `status-onset` record `responsibleActorAttribution: Unknown` and omit `responsibleActorId`. Their generated Core requests therefore have no player relationship target. The native event can still support an appraisal of the observed mood effect, but it cannot blame or reward a named actor.
+
+`known-gift`, `confirmed-help`, and the validated `confirmed-no-show` appointment retain known player attribution in explicit scenario fields. Speech scenarios remain receipt-bound attributed speech and are constructed through the observed-speech factory. `reviewLabel` is human-only metadata; it is not copied into prompt bytes. Fixture identifiers are deterministic opaque IDs namespaced by the versioned fixture ID, so v2 request bindings cannot be confused with v1.
+
+All inputs remain synthetic, production-Core-generated requests. They do not prove runtime game observation or authorize a state commit. The changed trait contract changes prepared prompt bytes and the v3 manifest hash; prior prepared outputs must remain historical and must not be reused as current results. Prepare with `--fixture-version v2` and a fresh output path; omit the option only when intentionally using v1.

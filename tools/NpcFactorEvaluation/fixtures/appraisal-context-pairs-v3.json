@@ -1,0 +1,40 @@
+{
+  "fixtureId": "npc-experience-appraisal-context-pairs-v3",
+  "fixtureVersion": 3,
+  "baseFixtureId": "npc-experience-appraisal-live-scenarios-v2",
+  "provenance": "Synthetic matched Core requests. This file contains human-review metadata and hidden test values; none are inserted into prompts except the typed public metadata projection. These rows cannot commit world state.",
+  "pairs": [
+    {
+      "pairId": "health-need-intensity",
+      "contrast": "healthNeed",
+      "profileId": "npc:appraisal-commoner-steady",
+      "scenarioId": "native-injury-health-episode",
+      "arms": [
+        { "caseId": "context-health-high", "reviewLabel": "High known health need", "needIntensity": 75 },
+        { "caseId": "context-health-low", "reviewLabel": "Low known health need", "needIntensity": 20 }
+      ]
+    },
+    {
+      "pairId": "appointment-duty-presence",
+      "contrast": "appointmentDuty",
+      "profileId": "npc:appraisal-noble-wary",
+      "scenarioId": "native-confirmed-no-show",
+      "arms": [
+        { "caseId": "context-duty-present", "reviewLabel": "Active appointment duty supplied", "dutyPresent": true },
+        { "caseId": "context-duty-absent", "reviewLabel": "No duty fact supplied", "dutyPresent": false }
+      ]
+    },
+    {
+      "pairId": "public-topic-epistemic-state",
+      "contrast": "knowledgeEpistemicState",
+      "profileId": "npc:appraisal-commoner-warm",
+      "scenarioId": "native-status-onset-unknown-cause",
+      "publicTopicId": "topic-74d23d05",
+      "hiddenValue": "An unidentified status began after an event by the west quay.",
+      "arms": [
+        { "caseId": "context-topic-verified", "reviewLabel": "Public topic typed as verified", "epistemicKind": "VerifiedTruth", "evidenceOrigin": "NativeObservation" },
+        { "caseId": "context-topic-rumor", "reviewLabel": "Same public topic typed as rumor", "epistemicKind": "Rumor", "evidenceOrigin": "AttributedReport", "attributionId": "npc:reporter-17" }
+      ]
+    }
+  ]
+}

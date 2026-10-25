@@ -4,9 +4,9 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Banking;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     /// <summary>Exposes persisted vacant homes through DFU's native bank list.</summary>
     public sealed class BankHouseListings : IDisposable
@@ -24,7 +24,7 @@ namespace LivingCities.DFU
         public void Install()
         {
             if (hooks != null) return;
-            var type = Type.GetType("LivingCities.QuestHooks.NativeBankHouseHooks, LivingCities.QuestHooks", true);
+            var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeBankHouseHooks, PeopleOfTheIliacBay.QuestHooks", true);
             hooks = (IDisposable)Activator.CreateInstance(type, new object[] {
                 new Func<bool>(enabled),
                 new Func<BuildingDirectory, List<BuildingSummary>, List<BuildingSummary>>(ReconcileListings),
@@ -50,7 +50,7 @@ namespace LivingCities.DFU
             var reservations = store.HouseholdRecoveryReservations(directory.MapID);
 
             // DFU's vanilla bank can randomly list ordinary homes. Keep every
-            // Living Cities home off that list unless its saved outcome is active.
+            // People of the Iliac Bay home off that list unless its saved outcome is active.
             if (town != null)
                 result.RemoveAll(summary => town.Households.Exists(home => home.BuildingKey == summary.buildingKey) &&
                     !IsSafeListedBankSale(directory, reservations, summary.buildingKey, town, nativePeople));

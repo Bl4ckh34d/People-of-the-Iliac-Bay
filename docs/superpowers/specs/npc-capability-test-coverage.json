@@ -1,0 +1,2775 @@
+{
+  "schemaVersion": 1,
+  "documentId": "npc-capability-test-coverage-2026-10-20",
+  "scope": "Coverage specification and current audit crosswalk; model-choice decision exercise is distinct from acceptance by modelReplay, coreContract, simulation, or nativeOnly modes.",
+  "statusLegend": {
+    "fixture_present": "Candidate fixture mapped/present; this row has no verified live choice in the recorded run evidence. Not a pass.",
+    "live_decision_exercised": "At least one direct offered-choice fixture for this row ran; does not satisfy all acceptance predicates.",
+    "no_test_coverage": "No direct executed fixture mapping recorded."
+  },
+  "modeStatus": {
+    "liveModelChoice": "live_decision_exercised for the base72 and separate extension22 suites",
+    "modelReplay": "no_test_coverage; live choices are not pinned request/response replay",
+    "coreContract": "separate deterministic check; CoreBridge self-test passed, not a model-choice score or native effect",
+    "simulation": "no_test_coverage",
+    "nativeOnly": "no_test_coverage; no in-game native acceptance run"
+  },
+  "counts": {
+    "originalCapabilities": 86,
+    "exploratoryCapabilities": 1,
+    "totalCapabilityRows": 87,
+    "originalRequirements": 125,
+    "baseRoots": 72,
+    "extensionCases": 22,
+    "candidateMappedRequirementsInSourceAudit": 49,
+    "unmappedRequirementsInSourceAudit": 76,
+    "candidateMappedCapabilitiesInSourceAudit": 42,
+    "unmappedCapabilitiesInSourceAudit": 44,
+    "sourceAuditFindings": 7
+  },
+  "sourceRefs": [
+    "work/npc-capability-eval-20261020/coverage-matrix.json",
+    "work/npc-capability-eval-20261020/coverage-audit.json",
+    "work/npc-capability-eval-20261020/scenarios/coverage-gaps.json",
+    "work/npc-capability-eval-20261020/broad-run-v1/summary.json",
+    "work/npc-capability-eval-20261020/broad-flash-v1/summary.json",
+    "work/npc-capability-eval-20261020/gaps-run-v1/summary.json",
+    "work/npc-capability-eval-20261020/gaps-flash-v1/summary.json",
+    "work/npc-capability-eval-20261020/broad-run-v1/failure-review.md",
+    "work/npc-capability-eval-20261020/native-coverage.md",
+    "tools/NpcArchitectureEval/README.md",
+    "tools/NpcArchitectureEval/fixtures/social-world.json",
+    "tools/NpcArchitectureEval/fixtures/action-combat.json",
+    "tools/NpcArchitectureEval/fixtures/coverage-gaps.json",
+    "tools/NpcArchitectureEval/tests/test_adapters.py",
+    "tools/NpcArchitectureEval/tests/test_model_client.py",
+    "tools/NpcArchitectureEval/tests/test_scenario_validation.py",
+    "tools/NpcArchitectureEval/tests/test_visual_evaluation.py",
+    "work/architecture-probe-20261020/CoreBridge/contracts-review.md"
+  ],
+  "executionEvidence": [
+    {
+      "runId": "broad-run-v1",
+      "suite": "base72",
+      "adapter": "d3",
+      "plannedTurns": 190,
+      "attempts": 190,
+      "skipped": 0,
+      "technicalFailures": 0,
+      "counts": {
+        "allowed": 165,
+        "forbidden": 7,
+        "unexpected": 18,
+        "invalid": 0
+      },
+      "rawChoiceAccuracy": 0.868421052631579,
+      "weightedQuality": 0.8732718894009217
+    },
+    {
+      "runId": "broad-run-v1",
+      "suite": "base72",
+      "adapter": "qwen",
+      "plannedTurns": 190,
+      "attempts": 190,
+      "skipped": 0,
+      "technicalFailures": 0,
+      "counts": {
+        "allowed": 161,
+        "forbidden": 14,
+        "unexpected": 15,
+        "invalid": 0
+      },
+      "rawChoiceAccuracy": 0.8473684210526315,
+      "weightedQuality": 0.8525345622119815
+    },
+    {
+      "runId": "broad-flash-v1",
+      "suite": "base72",
+      "adapter": "d3",
+      "plannedTurns": 190,
+      "attempts": 190,
+      "skipped": 0,
+      "technicalFailures": 0,
+      "counts": {
+        "allowed": 175,
+        "forbidden": 9,
+        "unexpected": 6,
+        "invalid": 0
+      },
+      "rawChoiceAccuracy": 0.9210526315789473,
+      "weightedQuality": 0.9216589861751152
+    },
+    {
+      "runId": "gaps-run-v1",
+      "suite": "extension22",
+      "adapter": "d3",
+      "plannedTurns": 44,
+      "attempts": 44,
+      "skipped": 0,
+      "technicalFailures": 0,
+      "counts": {
+        "allowed": 40,
+        "forbidden": 4,
+        "unexpected": 0,
+        "invalid": 0
+      },
+      "rawChoiceAccuracy": 0.9090909090909091,
+      "weightedQuality": 0.8909090909090909
+    },
+    {
+      "runId": "gaps-run-v1",
+      "suite": "extension22",
+      "adapter": "qwen",
+      "plannedTurns": 44,
+      "attempts": 44,
+      "skipped": 0,
+      "technicalFailures": 0,
+      "counts": {
+        "allowed": 40,
+        "forbidden": 4,
+        "unexpected": 0,
+        "invalid": 0
+      },
+      "rawChoiceAccuracy": 0.9090909090909091,
+      "weightedQuality": 0.9
+    },
+    {
+      "runId": "gaps-flash-v1",
+      "suite": "extension22",
+      "adapter": "d3",
+      "plannedTurns": 44,
+      "attempts": 44,
+      "skipped": 0,
+      "technicalFailures": 0,
+      "counts": {
+        "allowed": 42,
+        "forbidden": 2,
+        "unexpected": 0,
+        "invalid": 0
+      },
+      "rawChoiceAccuracy": 0.9545454545454546,
+      "weightedQuality": 0.9454545454545454
+    }
+  ],
+  "executionCaveats": [
+    "The 190 base turns and 44 extension turns per full summary include paired order arms, not unique roots.",
+    "D3 native-choice and Qwen strict-JSON use different adapters; later order arms can diverge through actual choice histories.",
+    "Scores are descriptive offered-choice agreement on synthetic fixtures only; no feature/native acceptance inference."
+  ],
+  "sourceAuditFindings": [
+    {
+      "id": "SOCIAL-01",
+      "caseId": "relationship.familiarity_stranger_invitation",
+      "severity": "major",
+      "kind": "ambiguous_willingness_gold",
+      "status": "resolved_before_freeze",
+      "resolution": "Resolved before freeze: accept_and_commit added to root and first-turn allowed choices. Reason now treats low familiarity as a prior; second turn still permits only choices responsive to the narrower follow-up."
+    },
+    {
+      "id": "SOCIAL-02",
+      "caseId": "response.refusal_is_valid_outcome_not_model_failure",
+      "severity": "major",
+      "kind": "ambiguous_willingness_gold",
+      "status": "resolved_before_freeze",
+      "resolution": "Resolved before freeze: added accept_with_time_commitment as a responsible acceptance option and allowed it alongside refusal/alternative. Rationale says stated preferences inform but do not determine willingness."
+    },
+    {
+      "id": "SOCIAL-03",
+      "caseId": "effect.pending_offer_cancelled_before_execution",
+      "severity": "critical",
+      "kind": "unsupported_state_assertion",
+      "status": "resolved_before_freeze",
+      "resolution": "Resolved before freeze: replaced confirmation of completed cancellation with request_cancellation; rationale explicitly requires state confirmation before claiming a completed effect."
+    },
+    {
+      "id": "SOCIAL-04",
+      "caseId": "routine.remaining_day_protect_appointment_and_home",
+      "severity": "major",
+      "kind": "turn_expectation_conflict",
+      "status": "resolved_before_freeze",
+      "resolution": "Resolved before freeze: at day 14 20:15, removed keep_appointment_then_home from allowed choices and marked it forbidden; home/sleep planning remains protected."
+    },
+    {
+      "id": "SOCIAL-05",
+      "caseId": "meeting.no_show_only_with_witnessed_absence",
+      "severity": "minor",
+      "kind": "incomplete_meeting_binding",
+      "status": "resolved_before_freeze",
+      "resolution": "Resolved before freeze: added day-12 date, 08:00 start, east-gate location and 09:30 end to the meeting record/history so “yesterday” is bound."
+    },
+    {
+      "id": "SOCIAL-06",
+      "caseId": "friendship.wait_replenishes_allowance_not_score",
+      "severity": "minor",
+      "kind": "incomplete_progression_assertion",
+      "status": "resolved_before_freeze",
+      "resolution": "Resolved before freeze: removed numeric allowance, interval and elapsed-hour assertions. Fixture now states the qualitative no-award policy and explicitly does not score staged timing arithmetic."
+    },
+    {
+      "id": "SOCIAL-07",
+      "caseId": "actors.unknown_role_stays_unknown",
+      "severity": "minor",
+      "kind": "unsupported_referral_option",
+      "status": "resolved_before_freeze",
+      "resolution": "Resolved before freeze: changed verified-provider referral to a conditional suggestion to ask the guild service desk, without asserting a provider or cure."
+    }
+  ],
+  "gapFixtureMappings": [
+    {
+      "caseId": "gap21_sneak_skill_without_check",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ]
+    },
+    {
+      "caseId": "gap21_wall_blocks_sight",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ]
+    },
+    {
+      "caseId": "gap21_sound_has_no_identity",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ]
+    },
+    {
+      "caseId": "gap21_sleeping_hearing_no_wake_receipt",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-16"
+      ]
+    },
+    {
+      "caseId": "gap21_wake_without_identification",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ]
+    },
+    {
+      "caseId": "gap21_player_screenshot_is_not_npc_view",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ]
+    },
+    {
+      "caseId": "gap21_repeated_dialogue_is_not_repeated_check",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-02"
+      ]
+    },
+    {
+      "caseId": "gap21_fair_suspicion_feedback",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-18"
+      ]
+    },
+    {
+      "caseId": "gap_map_ambiguous_named_place",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-ACTION-EXPLORE"
+      ]
+    },
+    {
+      "caseId": "gap_map_stale_memory_needs_refresh",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-IMM-03"
+      ]
+    },
+    {
+      "caseId": "gap_weather_indoor_uses_npc_location",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-IMM-09"
+      ]
+    },
+    {
+      "caseId": "gap_weather_stale_outdoor_observation",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-OUTDOOR-SEATING"
+      ]
+    },
+    {
+      "caseId": "gap_portable_import_waits_for_receipt",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE",
+        "CAP-IMM-18"
+      ]
+    },
+    {
+      "caseId": "gap_portable_missing_ancestor_stays_missing",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE",
+        "CAP-IMM-05"
+      ]
+    },
+    {
+      "caseId": "gap_portable_hash_mismatch_rejects_claim",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE"
+      ]
+    },
+    {
+      "caseId": "gap_portable_interrupted_publish",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE"
+      ]
+    },
+    {
+      "caseId": "gap_portable_branch_ancestry_isolation",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-IMM-04",
+        "CAP-IMM-05"
+      ]
+    },
+    {
+      "caseId": "gap_elapsed_time_no_offscreen_purchase_receipt",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-12",
+        "CAP-IMM-18"
+      ]
+    },
+    {
+      "caseId": "gap_elapsed_time_reconstruct_current_schedule",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-12"
+      ]
+    },
+    {
+      "caseId": "gap_elapsed_event_budget_reports_partial_work",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-18"
+      ]
+    },
+    {
+      "caseId": "gap_elapsed_scene_reload_invalidates_old_result",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-02",
+        "CAP-IMM-18"
+      ]
+    },
+    {
+      "caseId": "gap_weather_and_map_route_unknown",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-ACTION-EXPLORE",
+        "CAP-H03"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "id": "CAP-IMM-01",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Paired diagnostics exist; complete semantic/native baseline open",
+      "acceptancePredicate": "Frozen turn retains request/config/hash, route, decision, display, latency and native result; score interpretation, arguments, willingness, effects and transport separately.",
+      "requiredScenarioIds": [
+        "SC-BASE-REPLAY",
+        "SC-FULL-TURN"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-IMM-02",
+      "family": "IMM-01–20",
+      "severity": "P0",
+      "implementationStatus": "Snapshot/binding exists; actor/scene/branch coverage incomplete",
+      "acceptancePredicate": "Routing, willingness, social and validation share revision-bound speaker/role/time/physical activity/commitment; stale actor, scene or save result has no write/effect.",
+      "requiredScenarioIds": [
+        "SC-SNAPSHOT-SWITCH",
+        "SC-SNAPSHOT-STALE",
+        "SC-SNAPSHOT-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "scene_change_invalidates_stale_reply_binding"
+      ],
+      "extensionCaseIds": [
+        "gap21_repeated_dialogue_is_not_repeated_check",
+        "gap_elapsed_scene_reload_invalidates_old_result"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-03",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Topic and own-inventory paths exist; complete live tool orchestration/readers incomplete",
+      "acceptancePredicate": "Valid reads return permitted current data; invalid IDs yield typed error; one bounded correction may recover; paging, limits, cancellation and unavailable outcomes stay truthful.",
+      "requiredScenarioIds": [
+        "SC-READ-VALID",
+        "SC-READ-INVALID",
+        "SC-READ-PAGE",
+        "SC-READ-BUDGET"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.unseen_container_change",
+        "budget_owned_funds",
+        "tools.exhausted_budget_truthful_result"
+      ],
+      "extensionCaseIds": [
+        "gap_map_stale_memory_needs_refresh"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-04",
+      "family": "IMM-01–20",
+      "severity": "P0",
+      "implementationStatus": "Known/unknown context exists; full provenance model planned",
+      "acceptancePredicate": "Separate world fact, own observation, attributed claim, inference and stale knowledge; unseen changes/distant events stay unknown without valid source; weather follows NPC location.",
+      "requiredScenarioIds": [
+        "SC-KNOW-CLAIM",
+        "SC-KNOW-STALE",
+        "SC-KNOW-ACCESS"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.player_claim_not_npc_memory",
+        "npc_to_npc.rumor_keeps_source_and_uncertainty",
+        "knowledge.unseen_container_change"
+      ],
+      "extensionCaseIds": [
+        "gap21_sneak_skill_without_check",
+        "gap21_wall_blocks_sight",
+        "gap21_sound_has_no_identity",
+        "gap21_wake_without_identification",
+        "gap21_player_screenshot_is_not_npc_view",
+        "gap_map_ambiguous_named_place",
+        "gap_map_stale_memory_needs_refresh",
+        "gap_weather_indoor_uses_npc_location",
+        "gap_weather_stale_outdoor_observation",
+        "gap_portable_branch_ancestry_isolation",
+        "gap_weather_and_map_route_unknown"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-05",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Attributed archive exists; evidence-linked semantic recall incomplete",
+      "acceptancePredicate": "Paraphrase/indirect follow-up recalls dated promise/correction with source, certainty and branch; claims/summaries never become verified fact.",
+      "requiredScenarioIds": [
+        "SC-MEM-PARAPHRASE",
+        "SC-MEM-CONTRADICTION",
+        "SC-MEM-ATTRIBUTION"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "memory.long_term_paraphrase_attributed_promise",
+        "knowledge.player_claim_not_npc_memory",
+        "memory.branch_context.recall_only_visible_ancestry",
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "extensionCaseIds": [
+        "gap_portable_missing_ancestor_stays_missing",
+        "gap_portable_branch_ancestry_isolation"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-06",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Archive/checkpoint exists; scale, compaction and workflow open",
+      "acceptancePredicate": "Configured multi-year/multi-NPC corpus has bounded load/recall/memory/save cost and retains salient evidence with exact ancestry.",
+      "requiredScenarioIds": [
+        "SC-MEM-SCALE",
+        "SC-MEM-RESTORE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "memory.large_history_relevant_recall_not_bulk_dump"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-07",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Failed-reply provenance fixed; activity anchors remain open",
+      "acceptancePredicate": "Genuine exchange/completed shared activity counts once and persists; unavailable/error reply counts zero; later greeting grounds in saved anchor.",
+      "requiredScenarioIds": [
+        "SC-SHARED-FAIL",
+        "SC-SHARED-COMPLETE",
+        "SC-SHARED-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "shared_activity.failed_reply_not_shared_experience",
+        "shared_activity.completed_receipt_supports_greeting"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-08",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Disposition/familiarity exist; dimensions not distinct",
+      "acceptancePredicate": "Trust, affection, fear, resentment and obligation produce bounded, sourced, distinguishable choices; native service/reputation remains consistent.",
+      "requiredScenarioIds": [
+        "SC-REL-DISTINCT",
+        "SC-REL-BOUNDS",
+        "SC-REL-SAVE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "threat.refusal_and_protected_person",
+        "busy.dismissal_cooldown_is_not_permanent_hostility",
+        "friendship.reopen_does_not_farm_growth",
+        "friendship.wait_replenishes_allowance_not_score"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-09",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Derived mood exists; persistent typed conversational update not accepted",
+      "acceptancePredicate": "Context-grounded mood delta applies once, affects next reply, decays toward personal baseline and survives reopen/reload; only NPC outdoor weather applies.",
+      "requiredScenarioIds": [
+        "SC-MOOD-TURNS",
+        "SC-MOOD-WEATHER",
+        "SC-MOOD-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "mood.weather_only_npc_outdoors",
+        "mood.indoor_excludes_player_weather"
+      ],
+      "extensionCaseIds": [
+        "gap_weather_indoor_uses_npc_location"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-10",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Legacy offset cap exists; continuous accrual stages planned",
+      "acceptancePredicate": "+5/conversation and shared credit cap +5; 24/30/36h accrual earns fractional credit; waiting only replenishes; reopen/reload cannot reset; max enforced.",
+      "requiredScenarioIds": [
+        "SC-FRIEND-ACCRUAL",
+        "SC-FRIEND-BOUNDARY",
+        "SC-FRIEND-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "friendship.wait_replenishes_allowance_not_score",
+        "friendship.reopen_does_not_farm_growth"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-11",
+      "family": "IMM-01–20",
+      "severity": "P2",
+      "implementationStatus": "Traits/authored profiles exist; consequential consistency incomplete",
+      "acceptancePredicate": "Same person behaves coherently across days/topics for disclosure, spending, destination and risk without trait recital or invented persistent biography.",
+      "requiredScenarioIds": [
+        "SC-PERSONALITY-CONSISTENCY",
+        "SC-PERSONALITY-FACTS"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "personality.stable_preference_disclosure"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-12",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Routine continuation exists; general multi-day goal ledger absent",
+      "acceptancePredicate": "Bounded goal with reason/progress/deadline/resources survives scenes/days; interruption/failure replans; duties, appointments and home/sleep protected.",
+      "requiredScenarioIds": [
+        "SC-GOAL-MULTIDAY",
+        "SC-GOAL-INTERRUPT"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "goals.interruption_replan_without_duplicate_effect",
+        "replan_protect_appointment_sleep"
+      ],
+      "extensionCaseIds": [
+        "gap_elapsed_time_no_offscreen_purchase_receipt",
+        "gap_elapsed_time_reconstruct_current_schedule"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-13",
+      "family": "IMM-01–20",
+      "severity": "P2",
+      "implementationStatus": "Money/inventory/danger/duties exist; general utility linkage incomplete",
+      "acceptancePredicate": "Controlled relevant need/resource change changes feasible choice or willingness for grounded reason; irrelevant control does not.",
+      "requiredScenarioIds": [
+        "SC-NEED-CHOICE",
+        "SC-NEED-CONTROL"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "seating.outdoor_good_weather_preference_capacity",
+        "market.stage_performance_real_interest_and_availability"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-14",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Offers/appointments/actions exist; goal-led initiative and negotiation incomplete",
+      "acceptancePredicate": "Eligible actor proposes recorded feasible goal; acceptance/refusal/alternative/cancel/failure updates once; consent, busy pause and cooldown prevent spam.",
+      "requiredScenarioIds": [
+        "SC-INIT-PROPOSE",
+        "SC-NEGOTIATE",
+        "SC-INIT-COOLDOWN"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "relationship.familiarity_stranger_invitation",
+        "relationship.friendship_not_guaranteed_acceptance",
+        "threat.refusal_and_protected_person",
+        "busy.dismissal_cooldown_is_not_permanent_hostility"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-15",
+      "family": "IMM-01–20",
+      "severity": "P2",
+      "implementationStatus": "Street-chat poses/deliveries exist; evidence/rumor effects planned",
+      "acceptancePredicate": "Bounded event records participants/topic/source/outcome and uncertain rumor; later recall truthful; facing pose alone creates no event.",
+      "requiredScenarioIds": [
+        "SC-NPC-NPC-EVENT",
+        "SC-NPC-NPC-NOPOSE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-16",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Analytic schedules/selective actors exist; event budget incomplete",
+      "acceptancePredicate": "Time skip reconstructs causally valid state without all-actor model calls or fake stock/effects; event budgets and cancellation measured.",
+      "requiredScenarioIds": [
+        "SC-SIM-TIMESKIP",
+        "SC-SIM-BUDGET",
+        "SC-SIM-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "routine.time_skip_reconstruct_current_activity"
+      ],
+      "extensionCaseIds": [
+        "gap21_sleeping_hearing_no_wake_receipt",
+        "gap_elapsed_time_no_offscreen_purchase_receipt",
+        "gap_elapsed_time_reconstruct_current_schedule",
+        "gap_elapsed_event_budget_reports_partial_work",
+        "gap_elapsed_scene_reload_invalidates_old_result"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-17",
+      "family": "IMM-01–20",
+      "severity": "P0",
+      "implementationStatus": "Mobile/static/quest distinctions exist; census/capability breadth incomplete",
+      "acceptancePredicate": "Per-role/stage registry exposes only verified actions; static staff report true role and cannot promise movement; authored service/identity/quest control persist.",
+      "requiredScenarioIds": [
+        "SC-ACTOR-ROLE",
+        "SC-ACTOR-STATIC",
+        "SC-ACTOR-QUEST"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "actor.static_jester_role_and_capability",
+        "actors.unknown_role_stays_unknown"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-18",
+      "family": "IMM-01–20",
+      "severity": "P0",
+      "implementationStatus": "Typed saved-state acknowledgments/receipts exist; broad social/outage/journal coverage open",
+      "acceptancePredicate": "Proposal/accept/attempt/success/failure are distinct; success needs matching durable receipt; failures do not pollute memory; material effects happen once.",
+      "requiredScenarioIds": [
+        "SC-TRUTH-PHASES",
+        "SC-TRUTH-FAIL",
+        "SC-TRUTH-IDEMPOTENT"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "market.browse_not_purchase",
+        "effect.pending_offer_cancelled_before_execution",
+        "dependent_handover_after_purchase",
+        "shared_activity.failed_reply_not_shared_experience",
+        "tools.exhausted_budget_truthful_result",
+        "goals.interruption_replan_without_duplicate_effect",
+        "task_persistence_reload"
+      ],
+      "extensionCaseIds": [
+        "gap21_fair_suspicion_feedback",
+        "gap_portable_import_waits_for_receipt",
+        "gap_elapsed_time_no_offscreen_purchase_receipt",
+        "gap_elapsed_event_budget_reports_partial_work",
+        "gap_elapsed_scene_reload_invalidates_old_result"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-IMM-19",
+      "family": "IMM-01–20",
+      "severity": "P0",
+      "implementationStatus": "Component probes exist; composite lifecycle remains planned",
+      "acceptancePredicate": "Observe stranger meeting, gradual relationship, commitment, interruption, completion/failure, recovery, separation, reload, days, branch rollback and later recall/initiation.",
+      "requiredScenarioIds": [
+        "SC-LIFECYCLE-HAPPY",
+        "SC-LIFECYCLE-FAIL",
+        "SC-LIFECYCLE-BRANCH"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-IMM-20",
+      "family": "IMM-01–20",
+      "severity": "P1",
+      "implementationStatus": "Archive CLI exists; ordinary player portable-save workflow incomplete",
+      "acceptancePredicate": "Clean-install transfer restores exact ancestry/pending records; missing/corrupt/divergent dependencies report; interrupted publication recovers atomically.",
+      "requiredScenarioIds": [
+        "SC-PORTABLE-CLEAN",
+        "SC-PORTABLE-CORRUPT",
+        "SC-PORTABLE-INTERRUPT"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "portable_memory_missing_dependency_stays_missing"
+      ],
+      "extensionCaseIds": [
+        "gap_portable_import_waits_for_receipt",
+        "gap_portable_missing_ancestor_stays_missing",
+        "gap_portable_hash_mismatch_rejects_claim",
+        "gap_portable_interrupted_publish",
+        "gap_portable_branch_ancestry_isolation"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-B01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Partial routes; breadth open",
+      "acceptancePredicate": "Movement/door continuity: observe physical approach/entry, correct identity and no teleport/clipping.",
+      "requiredScenarioIds": [
+        "SC-MOVE-DOOR"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "ordered_wait_follow_move",
+        "follow_explicit_duration",
+        "move_to_ambiguous_destination"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-B02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Partial",
+      "acceptancePredicate": "Destination context matches current route; planned destination never projected as current presence.",
+      "requiredScenarioIds": [
+        "SC-SNAPSHOT-STALE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "scene_change_invalidates_stale_reply_binding"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-B03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Narrow implementation reported",
+      "acceptancePredicate": "Old-save migration preserves safe 2× clock, appointments and schedule boundaries.",
+      "requiredScenarioIds": [
+        "SC-CLOCK-MIGRATE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-B04",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "Sliced work partial",
+      "acceptancePredicate": "Survey/background work has bounded callback cost, cancellation and measured p95/p99/max.",
+      "requiredScenarioIds": [
+        "SC-SIM-BUDGET"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-I01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned audit",
+      "acceptancePredicate": "Census records provider, identity, role, quest/service, appearance, home/work/bed/activity/ownership; separates decor.",
+      "requiredScenarioIds": [
+        "SC-CENSUS"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-I02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Partial foundations",
+      "acceptancePredicate": "Stable identity survives stream/reload; ownership re-evaluates at lifecycle boundaries; no Unity instance ID persistence.",
+      "requiredScenarioIds": [
+        "SC-IDENTITY-OWNERSHIP"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-I03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Partial migrations",
+      "acceptancePredicate": "Versioned adoption preserves identity, death, family, home, keys and possessions; capacity conflicts explicit.",
+      "requiredScenarioIds": [
+        "SC-MIGRATION"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Local market worker has home in stall settlement, retains service, adds no duplicate.",
+      "requiredScenarioIds": [
+        "SC-MARKET-HOUSING"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Worker physically commutes before opening/after closing with stable person/day variation.",
+      "requiredScenarioIds": [
+        "SC-MARKET-COMMUTE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "Planned; calendar/balance open",
+      "acceptancePredicate": "Market demand/capacity/weather/danger/calendar control visits and bounded close; dialogue reports real opening state.",
+      "requiredScenarioIds": [
+        "SC-MARKET-DEMAND"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [],
+      "extensionCaseIds": [
+        "gap_weather_and_map_route_unknown"
+      ],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H04",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Authored upstairs tenant classified unless quest/staff evidence; actual bed and household reserved.",
+      "requiredScenarioIds": [
+        "SC-TENANT-BED"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H05",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Keeper uses real available bed/home and walks/locks/unlocks correct public entrance while preserving service.",
+      "requiredScenarioIds": [
+        "SC-KEEPER-SERVICE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H06",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Tenant key opens only permitted residence; private/commercial areas protected; genuine corpse key persists once.",
+      "requiredScenarioIds": [
+        "SC-TENANT-ACCESS"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H07",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Current traveler replacement; full origin/kin deferred",
+      "acceptancePredicate": "Inn traveler has supported/abstract origin and evidenced visit reason/kin; surname alone is not kinship.",
+      "requiredScenarioIds": [
+        "SC-INN-ORIGIN"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H08",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Partial mobile travelers",
+      "acceptancePredicate": "Traveler visits locally, uses room, checks out and physically returns home; multi-day stay supported.",
+      "requiredScenarioIds": [
+        "SC-INN-STAY"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H09",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "Deferred",
+      "acceptancePredicate": "Explicit two-person shared-bed claims remain independent; third occupant is conflict; no inferred relationship.",
+      "requiredScenarioIds": [
+        "SC-INN-SHAREDBED"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-H10",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Institutional staff retain service/personality; reserve only real reachable beds; no new outside shift.",
+      "requiredScenarioIds": [
+        "SC-STAFF-ROLE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-A01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "Standing/sitting partial; running pilot pending",
+      "acceptancePredicate": "Actual provider supports correct walk/run/idle/sleep direction/identity for declared appearances.",
+      "requiredScenarioIds": [
+        "SC-ANIM-COVERAGE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-A02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "Deferred art proposal",
+      "acceptancePredicate": "Shared-bed render preserves independent faces, wake/death/hit selection, axis and scale.",
+      "requiredScenarioIds": [
+        "SC-INN-SHAREDBED"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-Q01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Partial; broad compatibility unverified",
+      "acceptancePredicate": "Native quest placement, identity, visibility, activation, timers, services and control remain authoritative.",
+      "requiredScenarioIds": [
+        "SC-QUEST-PRESERVE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-Q02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned projection",
+      "acceptancePredicate": "Named story profiles ground voice/obligation; mood affects delivery only, not motives/canon.",
+      "requiredScenarioIds": [
+        "SC-QUEST-PERSONA"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-Q03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Bed/movement allowed only by stage capability; returns actor to authored anchor.",
+      "requiredScenarioIds": [
+        "SC-QUEST-BED"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-Q04",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Speaker/stage projection filters observed, known and player-disclosable facts before ranking; invalidates stage cache.",
+      "requiredScenarioIds": [
+        "SC-QUEST-DISCLOSURE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-Q05",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Player guess/private sibling memory/cache/summary cannot reintroduce blocked spoiler; claims retain source.",
+      "requiredScenarioIds": [
+        "SC-QUEST-SPOILER"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-Q06",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Planned; cases documented",
+      "acceptancePredicate": "Representative vanilla quest roles/stages exercise allow/deny adapter matrix and save/load.",
+      "requiredScenarioIds": [
+        "SC-QUEST-MATRIX"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-Q07",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Deferred",
+      "acceptancePredicate": "Unreviewed Quest Pack actors stay native until versioned per-stage review.",
+      "requiredScenarioIds": [
+        "SC-QUEST-PACK"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-M01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Archive/journal partial",
+      "acceptancePredicate": "Dated memory binds stable NPC/save/time/place/participants/source/certainty/outcome to exact archive ancestry.",
+      "requiredScenarioIds": [
+        "SC-MEM-RESTORE",
+        "SC-MEM-ATTRIBUTION"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.player_claim_not_npc_memory",
+        "memory.branch_context.recall_only_visible_ancestry",
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-M02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Partial archive; semantic/continuity open",
+      "acceptancePredicate": "Relevant older evidence, recent exact turns and perceived shared activity/listener recover within bounded context.",
+      "requiredScenarioIds": [
+        "SC-MEM-PARAPHRASE",
+        "SC-SHARED-COMPLETE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "memory.long_term_paraphrase_attributed_promise",
+        "shared_activity.completed_receipt_supports_greeting"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-M03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Partial current context; planned complete filter",
+      "acceptancePredicate": "Filter actor/access/branch/time/stage before ranking; preserve claims and uncertainty.",
+      "requiredScenarioIds": [
+        "SC-KNOW-ACCESS",
+        "SC-QUEST-DISCLOSURE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.unseen_container_change"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-F01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Shelved",
+      "acceptancePredicate": "Invitation uses willingness/availability; acceptance reserves time and follows named venue; cancel/abandon/reload releases safely.",
+      "requiredScenarioIds": [
+        "SC-INVITE-ACCEPT",
+        "SC-INVITE-CANCEL"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "relationship.familiarity_stranger_invitation",
+        "relationship.friendship_not_guaranteed_acceptance",
+        "effect.pending_offer_cancelled_before_execution",
+        "cancel_active_commitment"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-F02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Profile foundation; native bind deferred",
+      "acceptancePredicate": "Seeded human stats/effects persist once; native damage/status/resources only; no stream reroll or claimed XP.",
+      "requiredScenarioIds": [
+        "SC-ACTOR-PROFILE",
+        "SC-COMBAT-PERSIST"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-F03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Shelved",
+      "acceptancePredicate": "Recruitment allows eligible nonquest actor only; consent/payment/refusal/leave and quest status remain authoritative.",
+      "requiredScenarioIds": [
+        "SC-RECRUIT-GATE",
+        "SC-RECRUIT-PAYMENT"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-F04",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Partial general inventory; companion scope excluded",
+      "acceptancePredicate": "Persistent UID/payload/gold/key ownership; capacity, transfer, save, death and stream avoid duplicates.",
+      "requiredScenarioIds": [
+        "SC-INVENTORY-UID",
+        "SC-INVENTORY-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "gift_stack_exact",
+        "gift_quantity_not_loan",
+        "dependent_handover_after_purchase"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-F05",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Verified native skill use gives bounded versioned saved XP; branch/retry/time-skip cannot farm.",
+      "requiredScenarioIds": [
+        "SC-SKILL-PROGRESSION"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-F06",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Limited task actions; broad adapters deferred",
+      "acceptancePredicate": "Only registered adapters are advertised; target/consent/resource/law/quest checks precede execution and truthful outcome.",
+      "requiredScenarioIds": [
+        "SC-ACTION-ADAPTER-GATE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "access_lock_quest_capabilities",
+        "theft_service_quest_gate"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-P01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Install guide accurately documents order, revisions, checksums, local endpoint, opt-out and recovery.",
+      "requiredScenarioIds": [
+        "SC-PACK-DOCS"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-P02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Optional pinned bootstrap recovers from interruption; Python not mandatory solely for downloads.",
+      "requiredScenarioIds": [
+        "SC-PACK-BOOTSTRAP"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-P03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Support claims/hardware limits follow measured full-game results for each listed device class.",
+      "requiredScenarioIds": [
+        "SC-PERF-HARDWARE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-P04",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Module/toggle combinations preserve identity/state; schedules work without LLM.",
+      "requiredScenarioIds": [
+        "SC-PACK-MODULES"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-E01",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Mixed, defer to domain docs",
+      "acceptancePredicate": "Crime/guard/haunting/household/visits/visual domain invariants survive NPC changes.",
+      "requiredScenarioIds": [
+        "SC-REGRESSION-E01"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-E02",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P1",
+      "implementationStatus": "Partial; broader matrix open",
+      "acceptancePredicate": "Paid services/prices/refusal/rank consequences use native rules and actual effects.",
+      "requiredScenarioIds": [
+        "SC-REGRESSION-E02"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-E03",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P0",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Disposition changes tone only; quest/topic/action/outcome remain native and stage authorized.",
+      "requiredScenarioIds": [
+        "SC-QUEST-DISCLOSURE",
+        "SC-QUEST-PERSONA"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-E04",
+      "family": "Detailed roadmap crosswalk",
+      "severity": "P2",
+      "implementationStatus": "English policy; voices future, appearance partial",
+      "acceptancePredicate": "Player text stays English; voice/appearance expansions preserve identity/provider coverage.",
+      "requiredScenarioIds": [
+        "SC-VOICE-LANG",
+        "SC-ANIM-COVERAGE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-APPOINTMENT",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Local-building adapter partial; other place adapters open",
+      "acceptancePredicate": "Typed dated booking separates proposal/willingness/availability/commit; observed attendance/outcome once, branch-safe.",
+      "requiredScenarioIds": [
+        "SC-APPT-BOOK",
+        "SC-APPT-CONFLICT",
+        "SC-APPT-NOSHOW"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "fixed_appointment_priority",
+        "replan_protect_appointment_sleep",
+        "routine.remaining_day_protect_appointment_and_home",
+        "meeting.no_show_only_with_witnessed_absence"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-SHARED-ACTIVITY",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Planned; reported regression open",
+      "acceptancePredicate": "Talk reopen/door crossing preserves ongoing participants/activity; reunion only after actual separation and reload.",
+      "requiredScenarioIds": [
+        "SC-SHARED-CONTINUITY",
+        "SC-SHARED-SEPARATION"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "meeting.active_shared_outing_continuation"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-FOLLOWER-DEPARTURE",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Follower proactively explains real duty/home/sleep and physically rejoins feasible schedule; reopen/skip/reload cannot reset.",
+      "requiredScenarioIds": [
+        "SC-FOLLOW-DEPART",
+        "SC-FOLLOW-LATE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-AGENDA-URGENCY",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Planned extension",
+      "acceptancePredicate": "Persisted bounded urgency ranks feasible errands, protects obligations/home/sleep, expires optional leisure, eases speed under cap.",
+      "requiredScenarioIds": [
+        "SC-AGENDA-URGENCY",
+        "SC-AGENDA-RELOAD"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-INVENTORY-QUERY",
+      "family": "Additional capability headings",
+      "severity": "P0",
+      "implementationStatus": "Own inventory partial; container knowledge open",
+      "acceptancePredicate": "Own inventory live/paged; foreign container last-observed with time/access; read does not grant disclosure or mutation.",
+      "requiredScenarioIds": [
+        "SC-READ-PAGE",
+        "SC-KNOW-STALE",
+        "SC-KNOW-ACCESS"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.unseen_container_change"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-OUTDOOR-SEATING",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Nearby action adapter exists; autonomous terrace unproven",
+      "acceptancePredicate": "Autonomous seat only in good weather/reachable geometry; elevated routes, reservations, release and weather change are observed without teleport.",
+      "requiredScenarioIds": [
+        "SC-SEAT-WEATHER",
+        "SC-SEAT-ELEVATION",
+        "SC-SEAT-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "seating.outdoor_good_weather_preference_capacity",
+        "seating.bad_weather_blocks_outdoor",
+        "seating.elevated_terrace_requires_real_route"
+      ],
+      "extensionCaseIds": [
+        "gap_weather_stale_outdoor_observation"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-MARKET-VISIT",
+      "family": "Additional capability headings",
+      "severity": "P2",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Visit discovered stalls/stage, move between POIs, reserve/facing points, distinguish browse/buy, reconstruct subactivity after skip/load.",
+      "requiredScenarioIds": [
+        "SC-MARKET-POI",
+        "SC-MARKET-RELOAD"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "market.browse_not_purchase",
+        "market.stage_performance_real_interest_and_availability",
+        "routine.time_skip_reconstruct_current_activity"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-STATIONARY-ROLE",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Deferred audit/decision",
+      "acceptancePredicate": "Verified role/activity/capabilities reach dialogue; unknown remains unknown; unsupported travel promise rejected; native service retained.",
+      "requiredScenarioIds": [
+        "SC-ACTOR-STATIC",
+        "SC-QUEST-PERSONA"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "actor.static_jester_role_and_capability"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-VOICE-TTS",
+      "family": "Additional capability headings",
+      "severity": "P2",
+      "implementationStatus": "Future; backend open",
+      "acceptancePredicate": "Stable per-NPC TTS voice persists; off toggle preserves typed dialogue.",
+      "requiredScenarioIds": [
+        "SC-VOICE-IDENTITY",
+        "SC-VOICE-TOGGLE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-VOICE-STT",
+      "family": "Additional capability headings",
+      "severity": "P2",
+      "implementationStatus": "Open decision, not implemented",
+      "acceptancePredicate": "Optional STT preserves transcript provenance; off/error path preserves typed input.",
+      "requiredScenarioIds": [
+        "SC-STT-TOGGLE",
+        "SC-VOICE-LANG"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-PORTABLE-SAVE",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "CLI foundation; workflow open",
+      "acceptancePredicate": "Player workflow exports ancestry/pending records, validates hashes, reports missing deps and atomically recovers interruption.",
+      "requiredScenarioIds": [
+        "SC-PORTABLE-CLEAN",
+        "SC-PORTABLE-CORRUPT",
+        "SC-PORTABLE-INTERRUPT"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "portable_memory_missing_dependency_stays_missing"
+      ],
+      "extensionCaseIds": [
+        "gap_portable_import_waits_for_receipt",
+        "gap_portable_missing_ancestor_stays_missing",
+        "gap_portable_hash_mismatch_rejects_claim",
+        "gap_portable_interrupted_publish"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-ACTION-MOVE",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Partial wait/move/follow; breadth planned",
+      "acceptancePredicate": "Follow/lead/escort/wait/regroup/travel/home/seat/leave early/meeting bind target, consent, schedule and observed route.",
+      "requiredScenarioIds": [
+        "SC-ACTION-MOVE",
+        "SC-ACTION-CANCEL"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "ordered_wait_follow_move",
+        "explicit_wait_duration",
+        "follow_explicit_duration",
+        "cancel_active_commitment",
+        "combat_actor_died_cancel"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-ACTION-GOODS",
+      "family": "Additional capability headings",
+      "severity": "P0",
+      "implementationStatus": "Purchase/transfer subset partial",
+      "acceptancePredicate": "Buy/sell/give/receive/exchange/carry/deliver/pay/equip/consume/use validate native UID/count/stock/funds/recipient; loans excluded.",
+      "requiredScenarioIds": [
+        "SC-ACTION-GOODS",
+        "SC-ACTION-ROLLBACK"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "gift_stack_exact",
+        "dependent_handover_after_purchase",
+        "budget_owned_funds"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-ACTION-PEOPLE",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Introduce/relay/ask/negotiate/invite/socialize/warn/summon/report resolve participant/consent/source and record actual event.",
+      "requiredScenarioIds": [
+        "SC-ACTION-PEOPLE",
+        "SC-NPC-NPC-EVENT"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-ACTION-STEALTH",
+      "family": "Additional capability headings",
+      "severity": "P0",
+      "implementationStatus": "Most adapters absent",
+      "acceptancePredicate": "Keys/doors/lockpick/bash/climb/scout/watch/distract/theft/break-in require registered native adapter, access, skill, crime and quest checks.",
+      "requiredScenarioIds": [
+        "SC-ACTION-STEALTH-GATE",
+        "SC-QUEST-PRESERVE"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-ACTION-EXPLORE",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Guide/search/investigate/retrieve/watch/meet/split/reunite bind known reachable target; no fabricated discovery.",
+      "requiredScenarioIds": [
+        "SC-ACTION-EXPLORE",
+        "SC-KNOW-STALE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.unseen_container_change"
+      ],
+      "extensionCaseIds": [
+        "gap_map_ambiguous_named_place",
+        "gap_weather_and_map_route_unknown"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-ACTION-COMBAT",
+      "family": "Additional capability headings",
+      "severity": "P0",
+      "implementationStatus": "Future; combat binding absent",
+      "acceptancePredicate": "Defend/attack/cover/heal/buff/share/retreat/flee/refuse require native stats, identified target/resources/safety/quest authority and observed result.",
+      "requiredScenarioIds": [
+        "SC-ACTION-COMBAT-GATE",
+        "SC-COMBAT-PERSIST"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "combat_confirmed_hostile",
+        "combat_friendly_fire_block",
+        "combat_player_neutral",
+        "combat_unknown_target_no_attack"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-ACTION-NEGOTIATE",
+      "family": "Additional capability headings",
+      "severity": "P0",
+      "implementationStatus": "Partial offers/acceptance/cancel",
+      "acceptancePredicate": "Proposal/assent/refusal/alternative/change/cancel/failure bind current offer revision; quoted/conditional/history text starts nothing.",
+      "requiredScenarioIds": [
+        "SC-NEGOTIATE",
+        "SC-OFFER-STALE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "relationship.familiarity_stranger_invitation",
+        "relationship.friendship_not_guaranteed_acceptance",
+        "threat.refusal_and_protected_person",
+        "effect.pending_offer_cancelled_before_execution",
+        "scene_change_invalidates_stale_reply_binding"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-DUNGEON-INTERACT",
+      "family": "Additional capability headings",
+      "severity": "P0",
+      "implementationStatus": "Planned 20 Oct",
+      "acceptancePredicate": "Resolve reachable switch/lever/button; native linked effect observed; repeat/reload cannot toggle twice.",
+      "requiredScenarioIds": [
+        "SC-DUNGEON-SWITCH",
+        "SC-ACTION-CANCEL"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "cancel_active_commitment",
+        "combat_actor_died_cancel"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-ROUTINE-REPLAN",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Explicit consent may revise schedule through typed commitment; quoted/hypothetical/negated text cannot; physical departure/effect once.",
+      "requiredScenarioIds": [
+        "SC-ROUTINE-REPLAN",
+        "SC-SNAPSHOT-STALE"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "routine.remaining_day_protect_appointment_and_home",
+        "replan_protect_appointment_sleep",
+        "scene_change_invalidates_stale_reply_binding"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-PROFILE-PROGRESSION",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Foundation scoped; native binding disabled",
+      "acceptancePredicate": "Seeded versioned profile and sparse XP; only verified native use awards bounded XP; serializer/branch/retry exact.",
+      "requiredScenarioIds": [
+        "SC-ACTOR-PROFILE",
+        "SC-SKILL-PROGRESSION"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-MEMORY-LISTENER",
+      "family": "Additional capability headings",
+      "severity": "P1",
+      "implementationStatus": "Planned",
+      "acceptancePredicate": "Same-room listener archives only supported perceived dialogue/event, never hidden script/private conversation.",
+      "requiredScenarioIds": [
+        "SC-MEM-LISTENER",
+        "SC-MEM-ATTRIBUTION"
+      ],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.player_claim_not_npc_memory",
+        "memory.branch_context.recall_only_visible_ancestry",
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "CAP-MODEL-PROMOTION",
+      "family": "Additional capability headings",
+      "severity": "P0",
+      "implementationStatus": "Diagnostics exist; promotion gate unmet",
+      "acceptancePredicate": "Frozen held-out >=200 (>=100 controls, >=100 positives), >=5 actor snapshots, >=3 contexts, both option orders; zero critical false actions, >=90% exact positive parse per order, >=95% order agreement; separate transport denominator.",
+      "requiredScenarioIds": [
+        "SC-PROMOTION-HELDOUT"
+      ],
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "extensionCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "CAP-IMM-21",
+      "family": "Perception, attention and evidence (exploratory)",
+      "severity": "P1",
+      "implementationStatus": "Exploratory decision-test candidate; not accepted or implemented.",
+      "acceptancePredicate": "Keep claims/actions within supplied skill-aware evidence; distinguish sound events from source identity; do not treat player screenshots as NPC perception; avoid identity claims or sleep interruption without evidence; communicate uncertainty fairly.",
+      "requiredScenarioIds": [],
+      "status": "live_decision_exercised",
+      "baseCaseIds": [],
+      "extensionCaseIds": [
+        "gap21_sneak_skill_without_check",
+        "gap21_wall_blocks_sight",
+        "gap21_sound_has_no_identity",
+        "gap21_sleeping_hearing_no_wake_receipt",
+        "gap21_wake_without_identification",
+        "gap21_player_screenshot_is_not_npc_view",
+        "gap21_repeated_dialogue_is_not_repeated_check",
+        "gap21_fair_suspicion_feedback"
+      ],
+      "auditMappingStatus": "exploratory_extension"
+    }
+  ],
+  "requirements": [
+    {
+      "id": "SC-ACTION-ADAPTER-GATE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "access_lock_quest_capabilities",
+        "theft_service_quest_gate"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-ACTION-CANCEL",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "cancel_active_commitment",
+        "combat_actor_died_cancel"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-ACTION-COMBAT-GATE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "combat_confirmed_hostile",
+        "combat_friendly_fire_block",
+        "combat_player_neutral",
+        "combat_unknown_target_no_attack"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-ACTION-EXPLORE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-ACTION-GOODS",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "gift_stack_exact",
+        "dependent_handover_after_purchase",
+        "budget_owned_funds"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-ACTION-MOVE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "ordered_wait_follow_move",
+        "explicit_wait_duration",
+        "follow_explicit_duration"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-ACTION-PEOPLE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-ACTION-ROLLBACK",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-ACTION-STEALTH-GATE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-ACTOR-PROFILE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-ACTOR-QUEST",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-ACTOR-ROLE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "actor.static_jester_role_and_capability",
+        "actors.unknown_role_stays_unknown"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-ACTOR-STATIC",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "actor.static_jester_role_and_capability"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-AGENDA-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-AGENDA-URGENCY",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-ANIM-COVERAGE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-APPT-BOOK",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-APPT-CONFLICT",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "fixed_appointment_priority",
+        "replan_protect_appointment_sleep",
+        "routine.remaining_day_protect_appointment_and_home"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-APPT-NOSHOW",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "meeting.no_show_only_with_witnessed_absence"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-BASE-REPLAY",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-CENSUS",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-CLOCK-MIGRATE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-COMBAT-PERSIST",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-DUNGEON-SWITCH",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-FOLLOW-DEPART",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-FOLLOW-LATE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-FRIEND-ACCRUAL",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "friendship.wait_replenishes_allowance_not_score"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-FRIEND-BOUNDARY",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "friendship.reopen_does_not_farm_growth",
+        "friendship.wait_replenishes_allowance_not_score"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-FRIEND-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-FULL-TURN",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-GOAL-INTERRUPT",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "goals.interruption_replan_without_duplicate_effect",
+        "replan_protect_appointment_sleep"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-GOAL-MULTIDAY",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-IDENTITY-OWNERSHIP",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-INIT-COOLDOWN",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "busy.dismissal_cooldown_is_not_permanent_hostility"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-INIT-PROPOSE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-INN-ORIGIN",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-INN-SHAREDBED",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-INN-STAY",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-INVENTORY-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-INVENTORY-UID",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "gift_stack_exact",
+        "gift_quantity_not_loan",
+        "dependent_handover_after_purchase"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-INVITE-ACCEPT",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "relationship.familiarity_stranger_invitation",
+        "relationship.friendship_not_guaranteed_acceptance"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-INVITE-CANCEL",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "effect.pending_offer_cancelled_before_execution",
+        "cancel_active_commitment"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-KEEPER-SERVICE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-KNOW-ACCESS",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.unseen_container_change"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-KNOW-CLAIM",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.player_claim_not_npc_memory",
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-KNOW-STALE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.unseen_container_change"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-LIFECYCLE-BRANCH",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-LIFECYCLE-FAIL",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-LIFECYCLE-HAPPY",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MARKET-COMMUTE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MARKET-DEMAND",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MARKET-HOUSING",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MARKET-POI",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "market.browse_not_purchase",
+        "market.stage_performance_real_interest_and_availability"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-MARKET-RELOAD",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "routine.time_skip_reconstruct_current_activity"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-MEM-ATTRIBUTION",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.player_claim_not_npc_memory",
+        "memory.branch_context.recall_only_visible_ancestry",
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-MEM-CONTRADICTION",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.player_claim_not_npc_memory"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-MEM-LISTENER",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MEM-PARAPHRASE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "memory.long_term_paraphrase_attributed_promise"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-MEM-RESTORE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MEM-SCALE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "memory.large_history_relevant_recall_not_bulk_dump"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-MIGRATION",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MOOD-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MOOD-TURNS",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-MOOD-WEATHER",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "mood.weather_only_npc_outdoors",
+        "mood.indoor_excludes_player_weather"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-MOVE-DOOR",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "ordered_wait_follow_move",
+        "follow_explicit_duration",
+        "move_to_ambiguous_destination"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-NEED-CHOICE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "seating.outdoor_good_weather_preference_capacity",
+        "market.stage_performance_real_interest_and_availability"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-NEED-CONTROL",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-NEGOTIATE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "relationship.familiarity_stranger_invitation",
+        "relationship.friendship_not_guaranteed_acceptance",
+        "threat.refusal_and_protected_person"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-NPC-NPC-EVENT",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "npc_to_npc.rumor_keeps_source_and_uncertainty"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-NPC-NPC-NOPOSE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-OFFER-STALE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "effect.pending_offer_cancelled_before_execution",
+        "scene_change_invalidates_stale_reply_binding"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-PACK-BOOTSTRAP",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-PACK-DOCS",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-PACK-MODULES",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-PERF-HARDWARE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-PERSONALITY-CONSISTENCY",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "personality.stable_preference_disclosure"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-PERSONALITY-FACTS",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-PORTABLE-CLEAN",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-PORTABLE-CORRUPT",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "portable_memory_missing_dependency_stays_missing"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-PORTABLE-INTERRUPT",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-PROMOTION-HELDOUT",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-QUEST-BED",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-QUEST-DISCLOSURE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-QUEST-MATRIX",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-QUEST-PACK",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-QUEST-PERSONA",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-QUEST-PRESERVE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-QUEST-SPOILER",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-READ-BUDGET",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "tools.exhausted_budget_truthful_result"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-READ-INVALID",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-READ-PAGE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-READ-VALID",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "knowledge.unseen_container_change",
+        "budget_owned_funds"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-RECRUIT-GATE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-RECRUIT-PAYMENT",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-REGRESSION-E01",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-REGRESSION-E02",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-REL-BOUNDS",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "friendship.reopen_does_not_farm_growth",
+        "friendship.wait_replenishes_allowance_not_score"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-REL-DISTINCT",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "threat.refusal_and_protected_person",
+        "busy.dismissal_cooldown_is_not_permanent_hostility"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-REL-SAVE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-ROUTINE-REPLAN",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "routine.remaining_day_protect_appointment_and_home",
+        "replan_protect_appointment_sleep"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SEAT-ELEVATION",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "seating.elevated_terrace_requires_real_route"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SEAT-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-SEAT-WEATHER",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "seating.outdoor_good_weather_preference_capacity",
+        "seating.bad_weather_blocks_outdoor"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SHARED-COMPLETE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "shared_activity.completed_receipt_supports_greeting"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SHARED-CONTINUITY",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "meeting.active_shared_outing_continuation"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SHARED-FAIL",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "shared_activity.failed_reply_not_shared_experience"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SHARED-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-SHARED-SEPARATION",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-SIM-BUDGET",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-SIM-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-SIM-TIMESKIP",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "routine.time_skip_reconstruct_current_activity"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SKILL-PROGRESSION",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-SNAPSHOT-RELOAD",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-SNAPSHOT-STALE",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "scene_change_invalidates_stale_reply_binding"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-SNAPSHOT-SWITCH",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-STAFF-ROLE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-STT-TOGGLE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-TENANT-ACCESS",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-TENANT-BED",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-TRUTH-FAIL",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "shared_activity.failed_reply_not_shared_experience",
+        "tools.exhausted_budget_truthful_result"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-TRUTH-IDEMPOTENT",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "goals.interruption_replan_without_duplicate_effect",
+        "task_persistence_reload"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-TRUTH-PHASES",
+      "status": "live_decision_exercised",
+      "baseCaseIds": [
+        "market.browse_not_purchase",
+        "effect.pending_offer_cancelled_before_execution",
+        "dependent_handover_after_purchase"
+      ],
+      "auditMappingStatus": "partial_choice_fixture"
+    },
+    {
+      "id": "SC-VOICE-IDENTITY",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-VOICE-LANG",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    },
+    {
+      "id": "SC-VOICE-TOGGLE",
+      "status": "no_test_coverage",
+      "baseCaseIds": [],
+      "auditMappingStatus": "uncovered"
+    }
+  ],
+  "offlineCannotProve": [
+    "Live model distribution/quality outside frozen requests or representativeness without sampling frame.",
+    "Unity/DFU binding, collision, quest behavior, actual serialization, physical attendance, UI/rendering and full-game performance without native fixture.",
+    "All mod, quest, actor, layout or hardware behavior from one narrow fixture."
+  ],
+  "nativeGaps": [
+    "Core structural acceptance does not prove live target resolution, reachability, native action effects, or receipt-confirmed completion.",
+    "Simulation coverage was not run.",
+    "Native-only gaps include actor/quest guards, pathing/access, real inventory and gold transactions, cancellation/reload, UI receipts, serialization, collision/animation, and performance.",
+    "Core Wait/Follow timing does not prove the outer Unity binder’s 10–900 second limit."
+  ]
+}

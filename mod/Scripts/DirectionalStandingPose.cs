@@ -2,7 +2,7 @@ using System;
 using System.Reflection;
 using DaggerfallWorkshop;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Native idle art has only a frontal record. Use a stationary frame of the
     // directional walking records, retaining native camera/orientation updates.
@@ -13,17 +13,26 @@ namespace LivingCities.DFU
         private static readonly FieldInfo Timer = typeof(MobilePersonBillboard).GetField("animTimer", Flags);
         private static readonly FieldInfo Frame = typeof(MobilePersonBillboard).GetField("currentFrame", Flags);
         private MobilePersonBillboard held;
+        private StandingPose visual;
         public bool Active { get { return held; } }
 
         public bool Set(MobilePersonAsset asset, bool standing)
         {
             var native = asset as MobilePersonBillboard;
+            if(visual&&(!standing||held!=native))visual.End();
             if (held && (!standing || held != native))
             {
                 held.IsIdle = false; // Restore native frame rate and animation timer.
                 held = null;
             }
             if (!standing || !native) return false;
+            var owner=native.GetComponentInParent<ResidentActor>();
+            var atlas=StandingArt.Current==null?null:StandingArt.Current.ForActor(owner);
+            if(atlas!=null)
+            {
+                if(!visual)visual=owner.GetComponent<StandingPose>()??owner.gameObject.AddComponent<StandingPose>();
+                visual.Begin(owner,atlas);
+            }
             if (held == native && !native.IsIdle) return true;
             if (Speed == null || Timer == null || Frame == null)
                 throw new MissingFieldException("DFU directional standing animation fields changed.");

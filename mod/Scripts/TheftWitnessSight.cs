@@ -1,5 +1,5 @@
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class TheftWitnessSight
     {

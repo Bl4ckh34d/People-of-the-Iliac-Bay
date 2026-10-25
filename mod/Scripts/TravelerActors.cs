@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -16,6 +16,7 @@ namespace LivingCities.DFU
             public TravelerJourney Journey;
             public TravelerAdmission JourneyAdmission;
             public ResidentRoutine Routine;
+            public Plan ActionPlan;
             public DaggerfallInterior RoomInterior;
             public BedAnchor Bed;
             public Vector3 LocalStanding;
@@ -62,32 +63,41 @@ namespace LivingCities.DFU
                     (plan.RoomFollower.Leaving && !plan.RoomFollower.Arrived || seconds>=plan.Journey.CheckOutAt &&
                     (!plan.RoomFollower.Arrived || !plan.RoomFollower.Leaving));
                 if(plan.Person.IsAlive && ((seconds>=plan.Journey.EntryAt && seconds<plan.Journey.ExitAt) ||
-                    Reaction(id,seconds)!=null || pendingArrival || pendingRoomExit)) continue;
-                if(oldActor) {oldActor.gameObject.SetActive(false); Destroy(oldActor.gameObject);}
+                    Reaction(id,seconds)!=null || pendingArrival || pendingRoomExit || TravelerActionOwnsVisit(id))) continue;
+                if(oldActor) {oldActor.CaptureState();oldActor.gameObject.SetActive(false); Destroy(oldActor.gameObject);}
                 actors.Remove(id); travelerPlans.Remove(id);
             }
-            foreach(var visit in travelerWindow)
+            var currentVisits=new List<TravelerVisit>(travelerWindow);
+            var required=new HashSet<string>();
+            foreach(var job in worldStore.PendingNpcActions())
+                if(TravelerActionRoutine.KeepsVisitAlive(true,job,false))required.Add(job.ResidentId);
+            foreach(var task in worldStore.PendingNpcTasks())
+                if(!NpcTaskContract.IsTerminal(task))required.Add(task.ResidentId);
+            foreach(var visit in worldStore.TravelerVisitsFor(population.SettlementId))
+                if(required.Contains(visit.PersonId) && !currentVisits.Exists(v=>v.PersonId==visit.PersonId))currentVisits.Add(visit);
+            foreach(var visit in currentVisits)
             {
                 TravelerPlan previous;
                 travelerPlans.TryGetValue(visit.PersonId,out previous);
                 if(previous!=null && previous.JourneyAdmission==visit.Admission && (previous.Visit.Id==visit.Id ||
                     seconds>=previous.Journey.EntryAt && seconds<previous.Journey.ExitAt)) continue;
                 var journey=worldStore.TravelerJourneyFor(visit.Id);
-                if(seconds<journey.EntryAt || seconds>=journey.ExitAt) continue;
+                if((seconds<journey.EntryAt || seconds>=journey.ExitAt) && !TravelerActionOwnsVisit(visit.PersonId)) continue;
                 var person=worldStore.Traveler(visit.PersonId);
                 if(!person.IsAlive) continue;
-                var routine=new ResidentRoutine { ResidentId=person.Id };
+                var routine=new ResidentRoutine { ResidentId=person.Id,DestinationKey=visit.TavernKey };
                 foreach(var point in visit.Route) routine.Route.Add(new SavedRoutePoint { X=point.X,Z=point.Z });
                 if(previous!=null)
                 {
                     ResidentActor priorActor;
                     if(actors.TryGetValue(person.Id,out priorActor) && priorActor)
-                    { priorActor.gameObject.SetActive(false); Destroy(priorActor.gameObject); }
+                    { priorActor.CaptureState();priorActor.gameObject.SetActive(false); Destroy(priorActor.gameObject); }
                     actors.Remove(person.Id);
                 }
+                var resident=new Resident { Id=person.Id,FullName=person.Name,Race=person.Race,Sex=person.Sex,
+                    AppearanceSeed=person.AppearanceSeed,AgeGroup=ResidentAgeGroup.Adult,HomeKey=-1,IsAlive=person.IsAlive };
                 travelerPlans[person.Id]=new TravelerPlan { Person=person,Visit=visit,Journey=journey,JourneyAdmission=visit.Admission,Routine=routine,
-                    Resident=new Resident { Id=person.Id,FullName=person.Name,Race=person.Race,Sex=person.Sex,
-                        AppearanceSeed=person.AppearanceSeed,AgeGroup=ResidentAgeGroup.Adult,HomeKey=-1,IsAlive=person.IsAlive } };
+                    Resident=resident,ActionPlan=new Plan {Resident=resident,Routine=routine} };
             }
         }
         private ActivitySnapshot TravelerState(TravelerPlan plan,double seconds)
@@ -102,6 +112,7 @@ namespace LivingCities.DFU
         }
         private void UpdateTravelerActors(double seconds)
         {
+            EnsureInnTravelerDemand(seconds);
             RefreshTravelerPlans(seconds);
             foreach(var plan in travelerPlans.Values)
             {
@@ -111,6 +122,9 @@ namespace LivingCities.DFU
                 if(state.Phase==TravelerPhase.Arriving && actor && directory && actor.transform.parent==directory.transform)
                     plan.ObservedOutdoorArrival=true;
                 var reaction=Reaction(plan.Person.Id,seconds);
+                ObserveTravelerSleep(plan,actor,state,reaction,seconds);
+                PrepareTravelerRoutineReturn(plan,seconds);
+                if(ApplyNpcActionOverlay(plan.ActionPlan,ref actor,seconds,reaction) || TravelerActionOwnsVisit(plan.Person.Id))continue;
                 if(PlaceTravelerInside(plan,actor,state,reaction,seconds)) continue;
                 bool route=state.Phase==TravelerPhase.Arriving || state.Phase==TravelerPhase.Leaving ||
                     plan.Visit.Admission!=TravelerAdmission.Admitted && state.Phase!=TravelerPhase.NotArrived && state.Phase!=TravelerPhase.Departed;
@@ -126,17 +140,17 @@ namespace LivingCities.DFU
                     (ground-GameManager.Instance.PlayerMotor.transform.position).sqrMagnitude<=(actor?165*165:140*140);
                 if(!visible)
                 {
-                    if(actor) {actor.gameObject.SetActive(false); Destroy(actor.gameObject);}
+                    if(actor) {actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);}
                     actors.Remove(plan.Person.Id); continue;
                 }
                 if(!actor)
                 {
                     if(actors.Count>=80) continue;
                     var body=Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject,directory.transform);
-                    body.name="Living Cities "+plan.Person.Id;
+                    body.name="People of the Iliac Bay "+plan.Person.Id;
                     actor=body.AddComponent<ResidentActor>();
                     string id=plan.Person.Id;
-                    actor.Initialize(plan.Resident,0,navigation,()=>worldStore.KillTraveler(id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()));
+                    actor.Initialize(plan.Resident,0,navigation,()=>worldStore.KillTraveler(id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()),worldStore);
                     actor.SetRunningPilotAtlas(runningPilotAtlas);
                     actors.Add(id,actor);
                 }
@@ -150,7 +164,11 @@ namespace LivingCities.DFU
                     var next=plan.Journey.Evaluate(seconds+0.1);
                     Vector3 direction=continuingArrival ? ground-(actor.transform.position-Vector3.up) :
                         geometry.ScenePoint(next.Position)-ground;
-                    actor.Place(ground,direction);
+                    RoutePoint endpoint;
+                    Vector3? navigationDestination=plan.Journey.TryTravelEndpoint(
+                        continuingArrival?TravelerPhase.Arriving:state.Phase,out endpoint)
+                        ? (Vector3?)geometry.ScenePoint(endpoint):null;
+                    actor.Place(ground,direction,navigationDestination:navigationDestination);
                 }
             }
         }
@@ -252,9 +270,9 @@ namespace LivingCities.DFU
                                 plan.RoomFollower=new InteriorRoomFollower(route,secondsPerMetre);
                                 plan.RoomSecondsPerMetre=secondsPerMetre;
                             }
-                            catch(ArgumentException) {Debug.LogWarning("LIVING_CITIES_TRAVELER_ROOM_ROUTE_MISSING: "+plan.Visit.Id);}
+                            catch(ArgumentException) {Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_ROOM_ROUTE_MISSING: "+plan.Visit.Id);}
                         }
-                        else Debug.LogWarning("LIVING_CITIES_TRAVELER_ROOM_ROUTE_MISSING: "+plan.Visit.Id);
+                        else Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_ROOM_ROUTE_MISSING: "+plan.Visit.Id);
                     }
                 }
                 if(plan.Bed==null || !plan.HasStanding) return false;
@@ -264,10 +282,10 @@ namespace LivingCities.DFU
             {
                 if(actors.Count>=80) return true;
                 var body=Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject,interior.transform);
-                body.name="Living Cities "+plan.Person.Id;
+                body.name="People of the Iliac Bay "+plan.Person.Id;
                 actor=body.AddComponent<ResidentActor>();
                 string id=plan.Person.Id;
-                actor.Initialize(plan.Resident,0,navigation,()=>worldStore.KillTraveler(id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()));
+                actor.Initialize(plan.Resident,0,navigation,()=>worldStore.KillTraveler(id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()),worldStore);
                 actor.SetRunningPilotAtlas(runningPilotAtlas);
                 actors.Add(id,actor); body.SetActive(true);
                 if(indoorGeometry.EntryGround.HasValue)
@@ -375,7 +393,7 @@ namespace LivingCities.DFU
                 }
                 var art=SleepEnabled && state.Phase==TravelerPhase.Sleeping && sleepingArt!=null ? sleepingArt.ForResident(plan.Resident) : null;
                 if(art!=null) actor.Sleep(interior.transform,plan.Bed,art);
-                else actor.Place(interior.transform.TransformPoint(plan.LocalStanding),interior.transform.TransformDirection(plan.Bed.LocalHeadDirection),true);
+                else actor.Place(interior.transform.TransformPoint(plan.LocalStanding),interior.transform.TransformDirection(plan.Bed.LocalHeadDirection),true,freeStanding:true);
             }
             return true;
         }

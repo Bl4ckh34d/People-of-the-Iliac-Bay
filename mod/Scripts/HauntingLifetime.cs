@@ -6,7 +6,7 @@ using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class HauntingActivation : MonoBehaviour
     {

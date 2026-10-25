@@ -8,17 +8,17 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GuardActorProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var snapshot = (WorldState)adapter.GetSaveData();
             List<SavedRoutePoint> route = null;
             foreach (var town in snapshot.Routines)
@@ -28,7 +28,7 @@ namespace LivingCities.DFU
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             var geometry = new TownGeometry(directory, game.StreamingWorld.GetCurrentCityNavigation(), false);
             var roster = GuardRoster.Create(directory.MapID, 42, 1, new[] { route[0] });
-            var type = typeof(LivingCitiesMod).Assembly.GetType("LivingCities.DFU.GuardActor");
+            var type = typeof(PeopleOfTheIliacBayMod).Assembly.GetType("PeopleOfTheIliacBay.DFU.GuardActor");
             if (type == null) throw new InvalidOperationException("Physical guard actor is missing.");
             var create = type.GetMethod("Create", BindingFlags.Public | BindingFlags.Static);
             var place = type.GetMethod("Place");
@@ -86,7 +86,7 @@ namespace LivingCities.DFU
                 }
                 if (frames.Count < 2) throw new InvalidOperationException("Guard walking sprite did not animate across rendered frames.");
                 if (torchFrames.Count < 2) throw new InvalidOperationException("Carried torch flame did not animate across rendered frames.");
-                Debug.Log("LIVING_CITIES_GUARD_QUIET_PASS: peaceful moving guard stayed silent beyond maximum native attraction delay.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_QUIET_PASS: peaceful moving guard stayed silent beyond maximum native attraction delay.");
                 if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None)
                     throw new InvalidOperationException("Guard lifecycle test requires a crime-free fixture.");
                 var vanilla = GameObjectHelper.CreateFoeGameObjects(start, MobileTypes.Knight_CityWatch)[0];
@@ -103,8 +103,8 @@ namespace LivingCities.DFU
                 var restored = GuardRoster.CopyValidated((GuardRoster)SaveLoadManager.Deserialize(typeof(GuardRoster), json));
                 if (create.Invoke(null, new object[] { restored, restored.Guards[0].Id, directory.transform, geometry, middle }) != null)
                     throw new InvalidOperationException("Dead guard materialized after reload.");
-                Debug.Log("LIVING_CITIES_TOWN_GUARD_ACTOR_PASS: native body, timed route, walking animation, native death and no resurrection.");
-                Debug.Log("LIVING_CITIES_GUARD_TORCH_PASS: classic carried flame, point light, no shadows, budget/disable controls and death cleanup.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_GUARD_ACTOR_PASS: native body, timed route, walking animation, native death and no resurrection.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_TORCH_PASS: classic carried flame, point light, no shadows, budget/disable controls and death cleanup.");
             }
             finally { if (actor) UnityEngine.Object.Destroy(actor.gameObject); }
         }

@@ -10,17 +10,17 @@ using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class DefenseLedgerProbe
     {
         public static IEnumerator Run()
         {
-            var game=GameManager.Instance; var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
-            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(mod);
+            var game=GameManager.Instance; var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
+            var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(mod);
             var guards=mod.GetComponent<GuardPopulation>(); bool defense=guards.EnemyDefense; guards.EnemyDefense=false;
             GameObject body=null;
             string savedVictim=null; ulong savedCorpse=0,savedItem=0;
@@ -78,13 +78,13 @@ namespace LivingCities.DFU
                         yield return VerifyImmediateLoot(target.CorpseLootContainer,possession);
                     }
                     var saved=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
-                    var restored=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),saved));
+                    var restored=new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),saved));
                     if(restored.GetDefenseCombatant(id).Death.LootEntitled!=hostile)
                         throw new InvalidOperationException("Native defense entitlement did not roundtrip.");
                     UnityEngine.Object.Destroy(body); body=null;
                 }
                 yield return VerifySavedLoot(mod,savedVictim,savedCorpse,savedItem);
-                Debug.Log("LIVING_CITIES_NATIVE_DEFENSE_LEDGER_PASS: native sourced damage and lethal weapons, hostile/passive/ally provenance, real corpse binding, prior crime and native JSON.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_DEFENSE_LEDGER_PASS: native sourced damage and lethal weapons, hostile/passive/ally provenance, real corpse binding, prior crime and native JSON.");
             }
             finally { if(body) UnityEngine.Object.Destroy(body); guards.EnemyDefense=defense; game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None; }
         }
@@ -111,7 +111,7 @@ namespace LivingCities.DFU
                 if(!record.Death.WelfareExpired) throw new InvalidOperationException("Returning renewed welfare opportunity.");
             }
             finally { game.PlayerMotor.transform.position=original; }
-            Debug.Log("LIVING_CITIES_DEFENSE_PRESENCE_PASS: local departure expires courtesy permanently without revoking loot.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_PRESENCE_PASS: local departure expires courtesy permanently without revoking loot.");
         }
         private static void VerifyObserverIsolation(DefenseCombatAdapter adapter)
         {
@@ -124,7 +124,7 @@ namespace LivingCities.DFU
                     .Invoke(adapter,new object[] { null,EventArgs.Empty });
             }
             finally { field.SetValue(adapter,original); }
-            Debug.Log("LIVING_CITIES_DEFENSE_OBSERVER_ISOLATION_PASS: failed death observer does not escape native event.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_OBSERVER_ISOLATION_PASS: failed death observer does not escape native event.");
         }
         private static IEnumerator VerifyImmediateLoot(DaggerfallLoot loot,DaggerfallUnityItem item)
         {
@@ -142,14 +142,14 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Immediate native corpse loot failed or changed existing crime.");
             }
             finally { DaggerfallUI.Instance.PopToHUD(); game.PlayerEntity.Items.RemoveItem(item); }
-            Debug.Log("LIVING_CITIES_DEFENSE_LOOT_PASS: victim inventory reaches actual corpse and native inventory pickup before guards arrive preserves prior crime.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_LOOT_PASS: victim inventory reaches actual corpse and native inventory pickup before guards arrive preserves prior crime.");
         }
-        private static IEnumerator VerifySavedLoot(LivingCitiesMod mod,string victim,ulong corpseId,ulong itemId)
+        private static IEnumerator VerifySavedLoot(PeopleOfTheIliacBayMod mod,string victim,ulong corpseId,ulong itemId)
         {
             var game=GameManager.Instance;
-            if(!game.PlayerEntity.Name.StartsWith("LivingCitiesTest-",StringComparison.Ordinal))
+            if(!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
                 throw new InvalidOperationException("Defense save probe requires dedicated test character.");
-            const string name="Living Cities - lawful defense loot";
+            const string name="People of the Iliac Bay - lawful defense loot";
             bool saved=false,loaded=false;
             SaveLoadManager.OnSaveEventHandler onSave=ignored=>saved=true;
             SaveLoadManager.OnLoadEventHandler onLoad=ignored=>loaded=true;
@@ -168,7 +168,7 @@ namespace LivingCities.DFU
                 while((!loaded || game.SaveLoadManager.LoadInProgress) && Time.realtimeSinceStartup<deadline) yield return null;
                 if(!loaded || game.SaveLoadManager.LoadInProgress) throw new InvalidOperationException("Defense loot reload timed out.");
                 yield return new WaitForSecondsRealtime(2);
-                var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(mod);
+                var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(mod);
                 var record=store.GetDefenseCombatant(victim);
                 var corpse=Array.Find(UnityEngine.Object.FindObjectsOfType<DaggerfallLoot>(),loot=>loot.LoadID==corpseId);
                 if(record==null || record.Death==null || !record.Death.LootEntitled || record.Death.CorpseId!="loot:"+corpseId || !corpse)
@@ -177,7 +177,7 @@ namespace LivingCities.DFU
                 if(item==null || game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft)
                     throw new InvalidOperationException("Actual slot reload lost corpse inventory or prior crime.");
                 yield return VerifyImmediateLoot(corpse,item);
-                Debug.Log("LIVING_CITIES_DEFENSE_SAVE_LOOT_PASS: actual game slot reload retains bound corpse, entitlement, inventory and prior crime; native pickup succeeds.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_SAVE_LOOT_PASS: actual game slot reload retains bound corpse, entitlement, inventory and prior crime; native pickup succeeds.");
             }
             finally { SaveLoadManager.OnSave-=onSave; SaveLoadManager.OnLoad-=onLoad; }
         }
@@ -211,7 +211,7 @@ namespace LivingCities.DFU
                 }
             }
             finally { if(body) UnityEngine.Object.Destroy(body); }
-            Debug.Log("LIVING_CITIES_DEFENSE_DISINTEGRATE_PASS: hostile/passive player casts and unsourced death retain distinct attribution.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_DISINTEGRATE_PASS: hostile/passive player casts and unsourced death retain distinct attribution.");
         }
         private static IEnumerator VerifyActivatedAttacker(WorldStateStore store)
         {
@@ -250,7 +250,7 @@ namespace LivingCities.DFU
                 }
             }
             finally { if(body) UnityEngine.Object.Destroy(body); }
-            Debug.Log("LIVING_CITIES_DEFENSE_ACTIVATION_PASS: native melee and sourced attacks establish aggression; player-provoked retaliation stays unlawful.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_ACTIVATION_PASS: native melee and sourced attacks establish aggression; player-provoked retaliation stays unlawful.");
         }
         private static void VerifyInvisibleWitnesses(DefenseCombatAdapter adapter,WorldStateStore store)
         {
@@ -284,8 +284,8 @@ namespace LivingCities.DFU
                 npc.transform.SetParent(originalParent,true); if(otherRoom) UnityEngine.Object.Destroy(otherRoom);
                 game.PlayerMotor.transform.position=oldPosition; game.PlayerEntity.MagicalConcealmentFlags=oldFlags;
             }
-            Debug.Log("LIVING_CITIES_DEFENSE_INVISIBLE_WITNESS_PASS: visible control observed; invisible player not identified.");
-            Debug.Log("LIVING_CITIES_DEFENSE_WITNESS_SCENE_PASS: overlapping coordinates do not make observers in another interior witnesses.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_INVISIBLE_WITNESS_PASS: visible control observed; invisible player not identified.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_WITNESS_SCENE_PASS: overlapping coordinates do not make observers in another interior witnesses.");
         }
     }
 }

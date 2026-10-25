@@ -5,16 +5,16 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class TavernRestProbe
     {
         public static void Run(DaggerfallInterior interior,int town)
         {
-            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var game=GameManager.Instance;
+            var host=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var game=GameManager.Instance;
             var before=(WorldState)host.GetSaveData(); var receipts=new List<RoomRental_v1>(game.PlayerEntity.RentedRooms);
             var position=game.PlayerMotor.transform.position;
             int building=interior.EntryDoor.buildingKey; string scene=DaggerfallInterior.GetSceneName(town,building);
@@ -23,7 +23,7 @@ namespace LivingCities.DFU
             {
                 Dictionary<int,string> markers; var rooms=TavernRoomSurvey.Read(interior,out markers);
                 foreach(var room in rooms) room.NonRentable=!new HashSet<string>(markers.Values).Contains(room.Id);
-                var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host);
+                var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host);
                 store.RegisterLodging(town,building,rooms);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
                 store.TryBookLodging(town,building,"rest-guest","guest",town+1,false,1,now,now+86400,markers[0]);
@@ -49,7 +49,7 @@ namespace LivingCities.DFU
                 receipt.allocatedBedIndex=999;
                 if(CanRest(false)) throw new InvalidOperationException("Invalid paid marker silently fell back to another bed.");
                 DaggerfallUI.Instance.PopToHUD();
-                Debug.Log("LIVING_CITIES_TAVERN_REST_PASS: building="+building+"; conflicting-target/rest-here/invalid-marker rejected; own allocated room/different-storey allowed.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_REST_PASS: building="+building+"; conflicting-target/rest-here/invalid-marker rejected; own allocated room/different-storey allowed.");
             }
             finally
             {

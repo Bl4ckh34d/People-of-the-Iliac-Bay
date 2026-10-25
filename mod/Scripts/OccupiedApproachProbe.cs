@@ -6,14 +6,14 @@ using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class OccupiedApproachProbe
     {
         private static double Now() {var n=DaggerfallUnity.Instance.WorldTime.Now;return (double)n.ToSeconds()+n.Second-Math.Floor(n.Second);}
-        public static IEnumerator Run(LivingCitiesMod host,StreetPopulation streets,string character)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             var game=GameManager.Instance;game.SaveLoadManager.EnumerateSaves();
             int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"People - Shop entrance");
@@ -64,7 +64,7 @@ namespace LivingCities.DFU
                 var saved=physical.Capture(actor,room,geometry,Now(),game.PlayerGPS.CurrentLocation.MapTableData.MapId);
                 if(saved==null) throw new InvalidOperationException("Relocated browse position could not be captured.");
                 ObservedVisit.Copy(saved);
-                Debug.Log("LIVING_CITIES_FREE_BROWSE_PASS: occupied shelf slot avoided; same-shelf alternative reached; connected capture verified.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FREE_BROWSE_PASS: occupied shelf slot avoided; same-shelf alternative reached; connected capture verified.");
                 Vector3 before=first.transform.position;Quaternion facing=first.transform.rotation;
                 Vector3 target=destination+(before-Vector3.up-destination).normalized*0.2f;
                 for(int frame=0;frame<90;frame++)
@@ -81,7 +81,7 @@ namespace LivingCities.DFU
                 while(Time.realtimeSinceStartup<resumeUntil)
                 {actor.GetComponent<CrowdMotion>().ResumeFromPause();actor.Place(target,Vector3.forward,waitAtOccupiedTarget:true);yield return null;}
                 if(Vector3.Distance(before,first.transform.position)<0.1f) throw new InvalidOperationException("Patron failed to resume after blocker left.");
-                Debug.Log("LIVING_CITIES_OCCUPIED_APPROACH_PASS: stationary idle/facing for 90 frames; resumes after blocker leaves.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_OCCUPIED_APPROACH_PASS: stationary idle/facing for 90 frames; resumes after blocker leaves.");
             }
             finally
             {

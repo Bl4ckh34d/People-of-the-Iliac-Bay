@@ -1,0 +1,10 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><TreatWarningsAsErrors>true</TreatWarningsAsErrors></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+    <Reference Include="../../../Player/DaggerfallUnity_Data/Managed/Assembly-CSharp.dll" />
+    <Reference Include="../../../Player/DaggerfallUnity_Data/Managed/Assembly-CSharp-firstpass.dll" />
+    <Reference Include="../../../Player/DaggerfallUnity_Data/Managed/UnityEngine*.dll" />
+    <Compile Include="../../mod/Scripts/NativeInnCalendar.cs" Condition="Exists('../../mod/Scripts/NativeInnCalendar.cs')" Link="NativeInnCalendar.cs" />
+  </ItemGroup>
+</Project>

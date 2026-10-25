@@ -3,9 +3,9 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Banking;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -13,7 +13,7 @@ namespace LivingCities.DFU
         public bool HouseholdLocksEnabled { get; set; } = true;
         private void InstallHouseholdDoorHook()
         {
-            var type = Type.GetType("LivingCities.QuestHooks.NativeHouseholdDoorHooks, LivingCities.QuestHooks", true);
+            var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeHouseholdDoorHooks, PeopleOfTheIliacBay.QuestHooks", true);
             householdDoorHook = (IDisposable)Activator.CreateInstance(type,
                 new object[] { new Func<BuildingSummary, bool?>(HouseholdDoorAccess),
                     new Func<int, string>(HouseholdGreeting) });
@@ -93,6 +93,7 @@ namespace LivingCities.DFU
                 game.PlayerGPS.CurrentLocation.MapTableData.MapId != population.SettlementId) return null;
             var home = population.Households.Find(h => h.BuildingKey == buildingKey);
             if (home == null) return null;
+            if(home.Residents.Exists(r=>pendingHouseholdInitialization.Contains(r.Id)))return null;
             // Quest-owned actors have an independent placement contract. Do not infer
             // their presence from the generated schedule until that placement is known.
             foreach (var resident in home.Residents)

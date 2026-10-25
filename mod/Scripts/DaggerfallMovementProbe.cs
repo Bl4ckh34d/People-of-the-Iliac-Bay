@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class DaggerfallMovementProbe
     {
-        public static IEnumerator Run(LivingCitiesMod mod,StreetPopulation streets)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod mod,StreetPopulation streets)
         {
             var game=GameManager.Instance; var clock=DaggerfallUnity.Instance.WorldTime.Now;
             var town=((WorldState)mod.GetSaveData()).Settlements.Find(t=>t.SettlementId==1291010263);
@@ -52,7 +52,7 @@ namespace LivingCities.DFU
             if(moved<0.5 || moved>15 || streets.ActiveCount>80)
                 throw new InvalidOperationException("Unexpected city movement distance or actor cap: "+moved);
             frames.Sort();
-            Debug.Log("LIVING_CITIES_CITY_MOVEMENT_PASS: resident="+id+"; moved="+moved+"; active="+streets.ActiveCount+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITY_MOVEMENT_PASS: resident="+id+"; moved="+moved+"; active="+streets.ActiveCount+
                 "; frames="+frames.Count+"; medianMs="+frames[frames.Count/2]+"; p95Ms="+frames[(int)((frames.Count-1)*0.95)]);
         }
     }

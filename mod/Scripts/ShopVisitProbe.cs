@@ -5,9 +5,9 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class ShopVisitProbe
     {
@@ -127,9 +127,9 @@ namespace LivingCities.DFU
         private static IEnumerator RunForeignVisit()
         {
             var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>();
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var streets=mod.GetComponent<StreetPopulation>();
             var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
-            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore((WorldState)mod.GetSaveData());
+            var store=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); store.Restore((WorldState)mod.GetSaveData());
             var person=store.GetOrCreate(100,new[]{30},1).Households[0].Residents[0];
             var clock=DaggerfallUnity.Instance.WorldTime.Now; double now=clock.ToSeconds();
             var trip=ResidentTrip.Create(person.Id,100,directory.MapID,now-100,3600,100,
@@ -158,7 +158,7 @@ namespace LivingCities.DFU
             while(actor && Vector3.Distance(actor.transform.position-Vector3.up,target)>0.6f && Time.realtimeSinceStartup<deadline) yield return null;
             if(!actor || Vector3.Distance(actor.transform.position-Vector3.up,target)>0.6f)
                 throw new InvalidOperationException("Foreign shopper did not follow browsing journey.");
-            Debug.Log("LIVING_CITIES_FOREIGN_SHOP_PASS: original foreign resident uses surveyed shop browsing within visit window.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FOREIGN_SHOP_PASS: original foreign resident uses surveyed shop browsing within visit window.");
 
             // A destination visitor must finish the same physical doorway route as a
             // local shopper when its trip window ends. The old destination path removed
@@ -199,7 +199,7 @@ namespace LivingCities.DFU
             foreach(var duplicate in UnityEngine.Object.FindObjectsOfType<ResidentActor>())
                 if(duplicate && duplicate.Resident!=null && duplicate.Resident.Id==person.Id)
                     throw new InvalidOperationException("Foreign shopper left a duplicate body after physical departure.");
-            Debug.Log("LIVING_CITIES_FOREIGN_SHOP_DEPARTURE_PASS: actual interior position continued to doorway without teleport or duplicate; resident="+person.Id+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FOREIGN_SHOP_DEPARTURE_PASS: actual interior position continued to doorway without teleport or duplicate; resident="+person.Id+
                 "; startDistance="+departureStartDistance+"; maxFrameStep="+maximumStep+"; frames="+departureFrames);
 
             // Continue the corpse-report test with a second foreign resident after the
@@ -216,7 +216,7 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Second foreign resident has no real shop browsing journey for corpse-report fixture.");
             person=witness;
             actor=streets.FindActor(person.Id);
-            var crimeStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); crimeStore.Restore((WorldState)mod.GetSaveData());
+            var crimeStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); crimeStore.Restore((WorldState)mod.GetSaveData());
             var localTown=crimeStore.GetOrCreate(directory.MapID,new[]{30},1); Resident victim=null;
             foreach(var household in localTown.Households)
                 foreach(var resident in household.Residents)
@@ -242,7 +242,7 @@ namespace LivingCities.DFU
             }
             if(observer==null || !observer.CorpseObserver || observer.Escape==null || observer.Reaction!=CivilianReaction.Flee)
                 throw new InvalidOperationException("Foreign shopper ignored corpse or failed to prepare guard-report escape.");
-            Debug.Log("LIVING_CITIES_FOREIGN_CORPSE_PASS: visitor stops shopping, discovers corpse and prepares physical reporting route.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FOREIGN_CORPSE_PASS: visitor stops shopping, discovers corpse and prepares physical reporting route.");
             string reportId="inn-alarm:"+alarm.Id;
             var guards=mod.GetComponent<GuardPopulation>();
             if(guards.Roster.Reports.Exists(r=>r.Id==reportId && r.GuardIds.Count>0))
@@ -261,7 +261,7 @@ namespace LivingCities.DFU
             var finalObserver=finalAlarm.People.Find(p=>p.ResidentId==person.Id);
             if(finalObserver==null || finalObserver.BuildingKey!=-1 || finalObserver.DirectWitness || finalAlarm.People.Exists(p=>p.ResidentId!=person.Id))
                 throw new InvalidOperationException("Foreign report lacks isolated neutral exterior witness evidence.");
-            Debug.Log("LIVING_CITIES_FOREIGN_REPORT_PASS: sole foreign witness exits and physically informs guards while player remains indoors.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FOREIGN_REPORT_PASS: sole foreign witness exits and physically informs guards while player remains indoors.");
             deadline=Time.realtimeSinceStartup+45;
             while(!guards.OccupiesCrimeScene(room.EntryDoor.buildingKey,clock.ToSeconds()) && Time.realtimeSinceStartup<deadline)
             {
@@ -270,7 +270,7 @@ namespace LivingCities.DFU
             }
             if(!guards.OccupiesCrimeScene(room.EntryDoor.buildingKey,clock.ToSeconds()))
                 throw new InvalidOperationException("Responding guards never occupied shopper crime scene.");
-            var arrivalStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); arrivalStore.Restore((WorldState)mod.GetSaveData());
+            var arrivalStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); arrivalStore.Restore((WorldState)mod.GetSaveData());
             var newcomer=arrivalStore.GetOrCreate(101,new[]{30},1).Households[0].Residents[0];
             var arrival=ResidentTrip.Create(newcomer.Id,101,directory.MapID,clock.ToSeconds(),3600,100,
                 new[]{new RoutePoint(207,212),new RoutePoint(207,213)});
@@ -298,14 +298,14 @@ namespace LivingCities.DFU
             double exitAt=ResidentServiceExit.Copy(cancellation).ExitAt;
             clock.RaiseTime((float)Math.Max(0,exitAt+1-clock.ToSeconds())); yield return new WaitForSecondsRealtime(1);
             if(streets.FindActor(newcomer.Id)) throw new InvalidOperationException("Guarded-shop visitor remained in interior after exit.");
-            Debug.Log("LIVING_CITIES_FOREIGN_GUARDED_EXIT_PASS: new visitor automatically leaves occupied scene without another report.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FOREIGN_GUARDED_EXIT_PASS: new visitor automatically leaves occupied scene without another report.");
         }
         private static IEnumerator RunVisit(bool purchase)
         {
             var game=GameManager.Instance; var room=game.PlayerEnterExit.Interior;
             if(!room) throw new InvalidOperationException("Shop fixture is not inside.");
             int buildingKey=room.EntryDoor.buildingKey;
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>();
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var streets=mod.GetComponent<StreetPopulation>();
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
             var baselineJson=SaveLoadManager.Serialize(typeof(WorldState),mod.GetSaveData());
             var baseline=(WorldState)SaveLoadManager.Deserialize(typeof(WorldState),baselineJson);
@@ -346,11 +346,11 @@ namespace LivingCities.DFU
                 if(settlement.Households.Exists(h=>h.Residents.Exists(r=>r.Id==residentId)))
                 { settlementId=settlement.SettlementId; break; }
             if(settlementId<0) throw new InvalidOperationException("Shop fixture resident has no saved settlement.");
-            var liveStore=typeof(LivingCitiesMod).GetField("store",flags).GetValue(mod) as WorldStateStore;
+            var liveStore=typeof(PeopleOfTheIliacBayMod).GetField("store",flags).GetValue(mod) as WorldStateStore;
             if(liveStore==null) throw new InvalidOperationException("Shop fixture has no persistent world store.");
             double walkSeconds=60;
             double startOffset=(opens+1)*60d;
-            var options=typeof(LivingCitiesMod).GetField("options",flags).GetValue(mod);
+            var options=typeof(PeopleOfTheIliacBayMod).GetField("options",flags).GetValue(mod);
             int wakeMinute=(int)options.GetType().GetField("WakeHour").GetValue(options)*60;
             int sleepMinute=(int)options.GetType().GetField("SleepHour").GetValue(options)*60;
             if(startOffset-walkSeconds<wakeMinute*60d || startOffset+24*60d+walkSeconds>sleepMinute*60d)
@@ -462,7 +462,7 @@ namespace LivingCities.DFU
                             throw new InvalidOperationException("Shop checkpoint reload did not resume saved route at current bounded time: phase="+
                                 resumed.Phase+"; expected="+resumedExpected.Phase+"; positionError="+reloadError.ToString("F3")+" m.");
                         previous=actor.transform.position; lastPosition=previous; previousPhase=resumed.Phase;
-                        Debug.Log("LIVING_CITIES_SHOP_CHECKPOINT_PASS: serialized remaining route restored same resident and position; resident="+
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_CHECKPOINT_PASS: serialized remaining route restored same resident and position; resident="+
                             person.Id+"; phase="+resumed.Phase+"; clockAdvance="+advanced.ToString("F2")+
                             "; positionError="+reloadError.ToString("F3")+" m; remainingLegs="+observed.Legs.Count);
 
@@ -521,7 +521,7 @@ namespace LivingCities.DFU
                         if(!streets.TryShopActivity(person.Id,out reentered) || reentered.Phase!=expected.Phase)
                             throw new InvalidOperationException("Shop checkpoint activity phase changed across native scene reentry.");
                         previousPhase=reentered.Phase;
-                        Debug.Log("LIVING_CITIES_SHOP_SCENE_RESUME_PASS: same resident resumed saved route after native exit/reentry; resident="+
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_SCENE_RESUME_PASS: same resident resumed saved route after native exit/reentry; resident="+
                             person.Id+"; phase="+reentered.Phase+"; positionError="+reentryError.ToString("F3")+" m.");
                     }
                     Vector3 current=actor.transform.position;
@@ -557,7 +557,7 @@ namespace LivingCities.DFU
                             count++; facingFrames[targetKey]=count;
                             if(count>=60 && stableFacing.Add(targetKey))
                             {
-                                Debug.Log("LIVING_CITIES_SHOP_FACING_PASS: "+state.Phase+"; stable direction and stationary directional frame over 60 rendered frames.");
+                                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_FACING_PASS: "+state.Phase+"; stable direction and stationary directional frame over 60 rendered frames.");
                                 if(state.Phase==ShopVisitPhase.Browsing && !talked)
                                 {
                                     talked=true;
@@ -571,7 +571,7 @@ namespace LivingCities.DFU
                                     yield return null; yield return new WaitForEndOfFrame();
                                     if(native.IsIdle || Vector3.Dot(actor.transform.forward,facing.normalized)<0.99f)
                                         throw new InvalidOperationException("Closing conversation did not restore shelf-facing.");
-                                    Debug.Log("LIVING_CITIES_SHOP_TALK_FACING_PASS");
+                                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_TALK_FACING_PASS");
                                 }
                             }
                         }
@@ -608,14 +608,14 @@ namespace LivingCities.DFU
                 foreach(var duplicate in UnityEngine.Object.FindObjectsOfType<ResidentActor>())
                     if(duplicate && duplicate.Resident!=null && duplicate.Resident.Id==person.Id)
                         throw new InvalidOperationException("Shop visitor left a duplicate body after physical departure.");
-                Debug.Log("LIVING_CITIES_SHOP_DEPARTURE_PASS: continuous physical traversal reached doorway without teleport or duplicate; resident="+person.Id+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_DEPARTURE_PASS: continuous physical traversal reached doorway without teleport or duplicate; resident="+person.Id+
                     "; startDistance="+departureStartDistance+"; maxFrameStep="+maximumStep+"; doorwayDistance="+lastDoorDistance);
-                Debug.Log("LIVING_CITIES_SHOP_VISIT_PASS: actual physical phases and targets; resident="+person.Id+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_VISIT_PASS: actual physical phases and targets; resident="+person.Id+
                     "; purchase="+purchase+"; shelfStops="+browsingStops.Count+"; counterSeconds="+counterDuration.ToString("F2"));
             }
             finally
             {
-                var savedStore=typeof(LivingCitiesMod).GetField("store",flags).GetValue(mod) as WorldStateStore;
+                var savedStore=typeof(PeopleOfTheIliacBayMod).GetField("store",flags).GetValue(mod) as WorldStateStore;
                 if(savedStore!=null) savedStore.RemoveObservedVisit(person.Id);
                 // Restore durable source before stale Plan references are discarded.
                 mod.RestoreSaveData(baseline);

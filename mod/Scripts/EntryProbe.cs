@@ -5,15 +5,15 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Controlled observers, but actual native building transitions and saved ledger.
     internal static class EntryProbe
     {
-        internal static IEnumerator Run(LivingCitiesMod adapter, StreetPopulation streets, int key)
+        internal static IEnumerator Run(PeopleOfTheIliacBayMod adapter, StreetPopulation streets, int key)
         {
             var game = GameManager.Instance;
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
@@ -36,7 +36,7 @@ namespace LivingCities.DFU
             foreach (var guard in UnityEngine.Object.FindObjectsOfType<GuardActor>()) hidden.Add(guard.gameObject);
             if (!witness) throw new InvalidOperationException("Entry probe has no awake street witness.");
             var crime = game.PlayerEntity.CrimeCommitted;
-            var guardOption = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.NonPublic | BindingFlags.Instance);
+            var guardOption = typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.NonPublic | BindingFlags.Instance);
             bool oldGuardOption = (bool)guardOption.GetValue(adapter);
             guardOption.SetValue(adapter, false);
             adapter.GetComponent<GuardPopulation>().Clear();
@@ -81,8 +81,8 @@ namespace LivingCities.DFU
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(0.6f);
                 var guards = adapter.GetComponent<GuardPopulation>();
-                var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
-                var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
+                var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
+                var population = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
                 guardOption.SetValue(adapter, true);
                 guards.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), population, store);
                 float deadline = Time.realtimeSinceStartup + 30;
@@ -132,7 +132,7 @@ namespace LivingCities.DFU
                 game.PlayerEntity.CrimeCommitted = crime;
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(0.6f);
-                Debug.Log("LIVING_CITIES_ENTRY_MESSENGER_PASS: surveyed route, delayed off-screen notification and finite dispatch while indoors.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTRY_MESSENGER_PASS: surveyed route, delayed off-screen notification and finite dispatch while indoors.");
                 foreach (var priorCrime in new[] { PlayerEntity.Crimes.None, PlayerEntity.Crimes.Murder })
                 {
                     DaggerfallUnity.Instance.WorldTime.Now.RaiseTime(2);
@@ -174,8 +174,8 @@ namespace LivingCities.DFU
                     game.PlayerEnterExit.TransitionExterior();
                     yield return new WaitForSecondsRealtime(0.6f);
                 }
-                Debug.Log("LIVING_CITIES_ENTRY_GUARD_PASS: direct guard witness dispatches only informed guard; Trespassing and prior Murder preserved.");
-                Debug.Log("LIVING_CITIES_ENTRY_PASS: native witnessed/unseen transitions, cancellation, civilian-only evidence without instant accusation.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTRY_GUARD_PASS: direct guard witness dispatches only informed guard; Trespassing and prior Murder preserved.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTRY_PASS: native witnessed/unseen transitions, cancellation, civilian-only evidence without instant accusation.");
             }
             finally
             {

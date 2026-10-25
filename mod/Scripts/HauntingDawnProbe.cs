@@ -6,7 +6,7 @@ using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Utility;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class HauntingDawnProbe
     {
@@ -45,7 +45,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(1);
                 var owner=ghost.GetComponent<QuestResourceBehaviour>();
                 if(!owner || owner.QuestUID!=quest.UID) throw new InvalidOperationException("Ghost lacks genuine quest ownership.");
-                Debug.Log("LIVING_CITIES_DAWN_NIGHT: native quest ghost active="+ghost.activeInHierarchy);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAWN_NIGHT: native quest ghost active="+ghost.activeInHierarchy);
                 TimeOfDay(5*3600+60);
                 yield return new WaitForSecondsRealtime(3);
                 if(!control || !control.activeInHierarchy) throw new InvalidOperationException("Unrelated ghost incorrectly removed at dawn.");
@@ -77,7 +77,7 @@ namespace LivingCities.DFU
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(.5f);
                 if(!control || !control.activeInHierarchy) throw new InvalidOperationException("Unrelated exterior ghost lost across inn visit.");
-                Debug.Log("LIVING_CITIES_HAUNTING_INN_DAWN_PASS: inactive exterior wraith expires; control returns.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HAUNTING_INN_DAWN_PASS: inactive exterior wraith expires; control returns.");
                 TimeOfDay(4*3600+59*60);
                 ghost=GameObjectHelper.CreateFoeGameObjects(position,MobileTypes.Ghost,1,MobileReactions.Hostile,resource)[0];
                 TimeOfDay(5*3600+60);
@@ -87,8 +87,8 @@ namespace LivingCities.DFU
                 ghost.SetActive(true);
                 if(ghost.activeInHierarchy) throw new InvalidOperationException("Late native placement activated an expired haunting enemy.");
                 yield return null;
-                Debug.Log("LIVING_CITIES_HAUNTING_PENDING_PASS: delayed native placement stays valid until activation and cannot attack.");
-                Debug.Log("LIVING_CITIES_HAUNTING_DAWN_PASS: quest ghost expires; unrelated ghost remains.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HAUNTING_PENDING_PASS: delayed native placement stays valid until activation and cannot attack.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HAUNTING_DAWN_PASS: quest ghost expires; unrelated ghost remains.");
             }
             finally
             {

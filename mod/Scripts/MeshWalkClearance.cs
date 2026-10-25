@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Classic model surfaces only. No Unity objects, colliders or physics-scene
     // changes. Terrain and replacement-prefab collision need separate adapters.

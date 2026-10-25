@@ -4,7 +4,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class RosyInteriorCompatibility : MonoBehaviour
     {
@@ -13,7 +13,7 @@ namespace LivingCities.DFU
         [Invoke(StateManager.StateTypes.Start, 12)]
         public static void Init(InitParams initParams)
         {
-            var host = FindObjectOfType<LivingCitiesMod>();
+            var host = FindObjectOfType<PeopleOfTheIliacBayMod>();
             if (!host) return;
             var component = host.gameObject.AddComponent<RosyInteriorCompatibility>();
             component.hooks = (IDisposable)Activator.CreateInstance(HookType());
@@ -21,7 +21,7 @@ namespace LivingCities.DFU
 
         private static Type HookType()
         {
-            return Type.GetType("LivingCities.QuestHooks.RosyInteriorCompatibilityHooks, LivingCities.QuestHooks", true);
+            return Type.GetType("PeopleOfTheIliacBay.QuestHooks.RosyInteriorCompatibilityHooks, PeopleOfTheIliacBay.QuestHooks", true);
         }
 
         public static IEnumerator VerifyTransitionLifetime()
@@ -35,7 +35,7 @@ namespace LivingCities.DFU
             int cancelled = (int)type.GetProperty("Cancelled").GetValue(null, null);
             if (completed == 0 || cancelled == 0)
                 throw new InvalidOperationException("Rosy interior regression needs both normal correction and stale-exit cancellation.");
-            Debug.Log("LIVING_CITIES_ROSY_INTERIOR_LIFETIME_PASS: normal=" + completed + "; staleCancelled=" + cancelled);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROSY_INTERIOR_LIFETIME_PASS: normal=" + completed + "; staleCancelled=" + cancelled);
         }
 
         private void OnDestroy() { hooks?.Dispose(); hooks = null; }

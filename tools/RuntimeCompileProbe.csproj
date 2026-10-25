@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>7.3</LangVersion>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <HostManaged>$(MSBuildThisFileDirectory)..\..\..\Player\DaggerfallUnity_Data\Managed\</HostManaged>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)obj\Probe\</BaseIntermediateOutputPath>
+    <OutputPath>$(MSBuildThisFileDirectory)bin\Probe\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../mod/Scripts/*.cs" />
+    <Compile Include="../../src/PeopleOfTheIliacBay.Core/*.cs" />
+    <Reference Include="$(HostManaged)UnityEngine*.dll" />
+    <Reference Include="$(HostManaged)Assembly-CSharp.dll" />
+    <Reference Include="$(HostManaged)Assembly-CSharp-firstpass.dll" />
+    <Reference Include="$(HostManaged)FullSerializer - Unity.dll" />
+  </ItemGroup>
+</Project>

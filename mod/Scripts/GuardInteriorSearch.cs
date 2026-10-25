@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardActor
     {
@@ -25,7 +25,7 @@ namespace LivingCities.DFU
                 var from=room.transform.InverseTransformPoint(transform.position-Vector3.up*groundOffset);
                 var to=new Vector3((float)destination.X,(float)destination.Y-1,(float)destination.Z);
                 indoorSearchRoute=geometry.RouteBetween(from,to); indoorSearchIndex=1;
-                Debug.Log("LIVING_CITIES_GUARD_INDOOR_SEARCH: "+GuardId+"; points="+indoorSearchRoute.Count+"; from="+from+"; to="+to);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_INDOOR_SEARCH: "+GuardId+"; points="+indoorSearchRoute.Count+"; from="+from+"; to="+to);
             }
             if(indoorSearchRoute.Count<2 || indoorSearchIndex>=indoorSearchRoute.Count) return;
             var point=indoorSearchRoute[indoorSearchIndex];

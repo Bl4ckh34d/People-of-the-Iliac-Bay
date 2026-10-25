@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -65,7 +65,7 @@ namespace LivingCities.DFU
                         if(roomRoute.Count>=2) plan.RoomFollower=new InteriorRoomFollower(roomRoute,rate);
                         if(exitRoute.Count>=2) plan.ExitFollower=new InteriorRoomFollower(exitRoute,rate);
                     }
-                    catch(ArgumentException) {Debug.LogWarning("LIVING_CITIES_RESIDENT_ROOM_ROUTE_MISSING: "+id);}
+                    catch(ArgumentException) {Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_ROOM_ROUTE_MISSING: "+id);}
                     var reception=worldStore.ResidentInnReceptionAt(id,seconds);
                     if(reception!=null && plan.RoomFollower!=null && exitRoute.Count>=2)
                     {
@@ -105,7 +105,7 @@ namespace LivingCities.DFU
                         catch(ArgumentException)
                         {
                             plan.ReceptionRouteUnavailable=true;
-                            Debug.LogWarning("LIVING_CITIES_RESIDENT_RECEPTION_ROOM_ROUTE_MISSING: "+id);
+                            Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_RECEPTION_ROOM_ROUTE_MISSING: "+id);
                         }
                     }
                 }
@@ -158,7 +158,7 @@ namespace LivingCities.DFU
             }
             var art=SleepEnabled && ResidentInnSleeping(id,seconds) && sleepingArt!=null ? sleepingArt.ForResident(actor.Resident) : null;
             if(art!=null) actor.Sleep(interior.transform,plan.Bed,art);
-            else actor.Place(interior.transform.TransformPoint(plan.Standing),interior.transform.TransformDirection(plan.Bed.LocalHeadDirection),true);
+            else actor.Place(interior.transform.TransformPoint(plan.Standing),interior.transform.TransformDirection(plan.Bed.LocalHeadDirection),true,freeStanding:true);
             return true;
         }
         private bool ResidentInnExitPending(ResidentActor actor,double seconds)

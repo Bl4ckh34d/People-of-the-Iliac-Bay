@@ -2,10 +2,10 @@ using System;
 using System.Collections.Generic;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -23,6 +23,8 @@ namespace LivingCities.DFU
                 bool onSite = sameTown && !game.PlayerEnterExit.IsPlayerInside && directory &&
                     (CorpsePoint(alarm) - game.PlayerMotor.transform.position).sqrMagnitude <= OutdoorSceneRadius * OutdoorSceneRadius;
                 worldStore.ObserveOutdoorCorpse(alarm.Id, onSite, now);
+                var guards=GetComponent<GuardPopulation>();
+                if(guards)guards.RequestCorpseDepartureInvestigation(alarm,now);
             }
         }
         private Vector3 CorpsePoint(CivilianIncident alarm)
@@ -52,24 +54,18 @@ namespace LivingCities.DFU
                         bool seenPlayer = onSite && !game.PlayerEntity.IsInvisible &&
                             CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20);
                         worldStore.NoticeOutdoorCorpse(alarm.Id, actor.Resident.Id, false, now, seenPlayer);
-                        if (guards) guards.ReportOutdoorCorpse(alarm, actor.transform.position, null);
+                        // Discovery queues a physical report; no remote delivery.
                     }
                     if (guards) guards.ObserveOutdoorCorpse(alarm, point, onSite);
                 }
-                // A known witness can report a remembered discovery after cleanup.
+                // Civilian reports stay in the witness ledger until physical contact.
                 var seen = alarm.Corpse.Discovery;
-                if (outside && seen != null && guards)
-                {
-                    if (seen.Guard) guards.ReportRememberedCorpse(alarm, seen.ObserverId);
-                    else
-                    {
-                        var actor = FindActor(seen.ObserverId);
-                        if (actor && actor.Resident.IsAlive && actor.gameObject.activeInHierarchy)
-                            guards.ReportOutdoorCorpse(alarm, actor.transform.position, null);
-                    }
-                }
+                if (outside && seen != null && seen.Guard && guards)
+                    guards.ReportRememberedCorpse(alarm, seen.ObserverId);
                 worldStore.ObserveOutdoorCorpse(alarm.Id, onSite, now);
+                if(guards)guards.RequestCorpseDepartureInvestigation(alarm,now);
             }
+            UpdateDefenseCorpseScenes(now,outside);
         }
         // Called only after a future inventory adapter confirms an actual item transfer.
         // Merely activating or examining the placeholder body is harmless.

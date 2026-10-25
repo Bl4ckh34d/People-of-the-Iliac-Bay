@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "prototypeOnly": true,
+  "reviewStatus": "prototype-integration-authorized; visual-art-review-pending",
+  "personId": "s:206728581:h:131074:r:0",
+  "personNameEvidence": "Gwen Cienne",
+  "portraitArchive": "TFAC00I0.RCI",
+  "portraitFaceIndex": 76,
+  "nativePortraitSize": [
+    64,
+    64
+  ],
+  "sourcePortraitPath": "work/breeze-tts-20261021/gwen-portrait-candidates/tfac00i0-rci-076.png",
+  "sourcePortraitSha256": "732830dbc9a0f5d46622b8b74db022f97b141cea462c81fcd0604b1a206590ae",
+  "generatedAtlases": [
+    {
+      "name": "thinking-gaze",
+      "path": "art/portraits/prototype-gwen/gwen-thinking-gaze-atlas-v1.png",
+      "sha256": "1d80f79863d2b459f75c21e46b3116838fef811371de270f98bd034e4d200e3a",
+      "sizePixels": [
+        1254,
+        1254
+      ],
+      "grid": [
+        3,
+        3
+      ],
+      "intendedTileOrderTopToBottomLeftToRight": [
+        "center",
+        "up",
+        "up-right",
+        "left",
+        "down-left",
+        "down",
+        "down-right",
+        "up-left",
+        "right"
+      ],
+      "cellSizePixels": [
+        418,
+        418
+      ],
+      "featureRectNativePixels": {
+        "x": 16,
+        "y": 22,
+        "width": 32,
+        "height": 7
+      },
+      "reviewNote": "Runtime samples only pupil rectangle over selected eye tile. Verify each directional tile in composite preview; generated face outside mask is discarded."
+    },
+    {
+      "name": "emotion-eyes-and-blinks",
+      "path": "art/portraits/prototype-gwen/gwen-emotion-eyes-blink-atlas-v1.png",
+      "sha256": "40a6f8973e36da71ae8aef49ca95e3fb5b7653fa7ef23b377eadc4a45b410df6",
+      "sizePixels": [
+        1254,
+        1254
+      ],
+      "grid": [
+        4,
+        4
+      ],
+      "intendedTileOrderTopToBottomLeftToRight": [
+        "neutral",
+        "happy",
+        "sad",
+        "angry",
+        "fear",
+        "skeptical",
+        "disgusted",
+        "warm",
+        "neutral-blink",
+        "happy-blink",
+        "sad-blink",
+        "angry-blink",
+        "fear-blink",
+        "skeptical-blink",
+        "disgusted-blink",
+        "warm-blink"
+      ],
+      "cellSizePixels": [
+        313.5,
+        313.5
+      ],
+      "featureRectNativePixels": {
+        "x": 10,
+        "y": 17,
+        "width": 45,
+        "height": 17
+      },
+      "reviewNote": "Grid uses normalized UV sampling for 313.5-pixel cells. Runtime copies only eye-and-brow rectangle; generated pixels outside mask are discarded."
+    },
+    {
+      "name": "idle-closed-mouth-emotions",
+      "path": "art/portraits/prototype-gwen/gwen-idle-mouth-atlas-v1.png",
+      "sha256": "a43a00d287f59c269e9340160cd72cc26a4608126cdec7b7b81ec63d597adff1",
+      "sizePixels": [
+        1254,
+        1254
+      ],
+      "grid": [
+        3,
+        3
+      ],
+      "intendedTileOrderTopToBottomLeftToRight": [
+        "neutral",
+        "happy",
+        "sad",
+        "angry-pressed",
+        "angry-clenched-teeth",
+        "disgusted",
+        "fear-parted",
+        "tired-relaxed",
+        "smirk"
+      ],
+      "cellSizePixels": [
+        418,
+        418
+      ],
+      "featureRectNativePixels": {
+        "x": 18,
+        "y": 35,
+        "width": 28,
+        "height": 20
+      },
+      "reviewNote": "Prototype copies only mouth rectangle. Inspect lower-lip bounds and palette seams during in-game review."
+    }
+  ],
+  "compositionContract": "Prototype integration authorized. Preserve native 64x64 face as source of truth. Runtime composites only the eye-and-brow, pupil, and mouth masks from selected tiles; generated pixels outside each exact crop are discarded. Keep speech visemes and expression layers independent.",
+  "artGenerationNote": "Sheets are full-face generated references, but runtime uses cropped feature patches only. Visual art quality remains pending user feedback; identity claim is limited to captured face-index-76 fixture."
+}

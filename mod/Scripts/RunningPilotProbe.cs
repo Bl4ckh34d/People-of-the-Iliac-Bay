@@ -8,10 +8,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Explicit actual-player fixture for the rejected Archive 385 running draft.
     // It owns one disposable actor and never changes a saved resident's wardrobe.
@@ -21,7 +21,7 @@ namespace LivingCities.DFU
         {
             var game = GameManager.Instance;
             var mod = ModManager.Instance.GetModFromGUID("e527783b-394c-4f43-b5f4-0cabd3d05dd4");
-            if (!game || mod == null) throw new System.InvalidOperationException("Running pilot requires loaded Living Cities mod.");
+            if (!game || mod == null) throw new System.InvalidOperationException("Running pilot requires loaded People of the Iliac Bay mod.");
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             var navigation = game.StreamingWorld.GetCurrentCityNavigation();
             if (!directory || !navigation) throw new System.InvalidOperationException("Running pilot requires loaded exterior city.");
@@ -33,7 +33,7 @@ namespace LivingCities.DFU
             try
             {
                 body = UnityEngine.Object.Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject, directory.transform);
-                body.name = "Disposable Living Cities Archive 385 running pilot fixture";
+                body.name = "Disposable People of the Iliac Bay Archive 385 running pilot fixture";
                 Vector3 from, to;
                 if (!FindClearLane(directory, navigation, out from, out to))
                     throw new System.InvalidOperationException("No clear street lane for running pilot fixture.");
@@ -92,10 +92,10 @@ namespace LivingCities.DFU
                         throw new System.InvalidOperationException("Camera orbit repeated a running-pilot orientation.");
                     frames.Add(pose.Frame);
                     string screenshot = Path.Combine(screenshotRoot,
-                        "LivingCities-running-pilot-" + screenshotId + "-angle-" + pose.Orientation + ".png");
+                        "PeopleOfTheIliacBay-running-pilot-" + screenshotId + "-angle-" + pose.Orientation + ".png");
                     screenshots.Add(screenshot);
                     ScreenCapture.CaptureScreenshot(screenshot);
-                    Debug.Log("LIVING_CITIES_RUNNING_PILOT_ANGLE: orientation=" + pose.Orientation + "; frame=" + pose.Frame);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RUNNING_PILOT_ANGLE: orientation=" + pose.Orientation + "; frame=" + pose.Frame);
                 }
                 if (orientations.Count != 8)
                     throw new System.InvalidOperationException("Running pilot did not cover all eight native orientations.");
@@ -146,7 +146,7 @@ namespace LivingCities.DFU
                 if (resident.IsAlive || body.activeInHierarchy || pose.Active || !nativeRenderer.enabled)
                     throw new System.InvalidOperationException("Death did not stop preview and restore native renderer.");
 
-                Debug.Log("LIVING_CITIES_RUNNING_PILOT_PASS: archive=385; orientations=" + orientations.Count +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RUNNING_PILOT_PASS: archive=385; orientations=" + orientations.Count +
                     "; frames=" + frames.Count + "; restored=conversation,standing,sleep,death; screenshots=" + screenshotRoot);
             }
             finally

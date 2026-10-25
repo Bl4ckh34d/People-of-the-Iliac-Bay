@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GateGuardProbe
     {
@@ -131,8 +131,8 @@ namespace LivingCities.DFU
         private static void VerifyQuota(GuardPopulation guards, int gates)
         {
             const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
-            var host = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
-            var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", flags).GetValue(host);
+            var host = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
+            var population = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", flags).GetValue(host);
             int residents = 0;
             foreach (var home in population.Households) residents += home.Residents.Count;
             int ordinary = GuardRoster.TargetCount(SettlementClassification.FromLocationType(
@@ -148,7 +148,7 @@ namespace LivingCities.DFU
             if (restored.Target != target || restored.Guards.Count != roster.Guards.Count ||
                 restored.IncreaseTarget(target, new List<SavedRoutePoint>()) != 0)
                 throw new InvalidOperationException("Native guard quota restore grew the roster.");
-            Debug.Log("LIVING_CITIES_GUARD_QUOTA_PASS: residents=" + residents + "; ordinary=" + townGuards +
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_QUOTA_PASS: residents=" + residents + "; ordinary=" + townGuards +
                 "; gateGuards=" + gateGuards + "; target=" + target + "; native restore remains idempotent.");
         }
         public static IEnumerator Run(GuardPopulation guards)
@@ -207,7 +207,7 @@ namespace LivingCities.DFU
                 var cancelledSteps=geometry.SurveyGuardPostSteps(GuardRoster.MaximumTarget,cancelledPosts);
                 cancelledSteps.MoveNext(); (cancelledSteps as IDisposable)?.Dispose();
                 if(cancelledPosts.Posts!=null) throw new InvalidOperationException("Cancelled guard survey published partial posts.");
-                Debug.Log("LIVING_CITIES_GUARD_SETUP_SLICES_PASS: posts="+expectedPosts.Count+"; entrances="+expectedEntrances.Entrances.Count+"; slices="+preparationSlices+"; cancellation leaves no partial posts.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_SETUP_SLICES_PASS: posts="+expectedPosts.Count+"; entrances="+expectedEntrances.Entrances.Count+"; slices="+preparationSlices+"; cancellation leaves no partial posts.");
                 var sites=geometry.SurveyGateGuardPosts();
                 VerifySites(geometry,gates,sites);
                 float assignmentDeadline=Time.realtimeSinceStartup+180;
@@ -228,10 +228,10 @@ namespace LivingCities.DFU
                     if(Time.realtimeSinceStartup>=assignmentDiagnostic)
                     {
                         assignmentDiagnostic=Time.realtimeSinceStartup+30;
-                        Debug.Log("LIVING_CITIES_GATE_WAIT: now="+Now()+"; paused="+GameManager.IsGamePaused+
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_WAIT: now="+Now()+"; paused="+GameManager.IsGamePaused+
                             "; window="+(DaggerfallUI.UIManager.TopWindow==null?"none":DaggerfallUI.UIManager.TopWindow.GetType().Name));
                         foreach(var state in Snapshots(guards))
-                            Debug.Log("LIVING_CITIES_GATE_WAIT_GUARD: "+state.GuardId+"; duty="+state.Duty+"; arrives="+state.ArrivesAt+
+                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_WAIT_GUARD: "+state.GuardId+"; duty="+state.Duty+"; arrives="+state.ArrivesAt+
                                 "; at="+At(state.Position,state.Target)+"; open="+state.GateOpen+"; patrol="+guards.Roster.IsOnPatrol(state.GuardId));
                     }
                     yield return new WaitForSecondsRealtime(0.5f);
@@ -259,9 +259,9 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Rendered gate guard does not match stationed position/facing: "+state.GuardId);
                 }
                 yield return new WaitForEndOfFrame();
-                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"LivingCities-gate-posts.png"));
-                Debug.Log("LIVING_CITIES_GATE_GUARD_VIEW_PASS: four actual gate actors match assigned posts and facing.");
-                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-livingcities-guard-quota-only")>=0) yield break;
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"PeopleOfTheIliacBay-gate-posts.png"));
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_GUARD_VIEW_PASS: four actual gate actors match assigned posts and facing.");
+                if(Array.IndexOf(Environment.GetCommandLineArgs(), "-peopleoftheiliacbay-guard-quota-only")>=0) yield break;
 
                 // Keep this day's armed recalls. Advancing to next noon would correctly
                 // complete them offscreen and skip the movement interval under test.
@@ -285,7 +285,7 @@ namespace LivingCities.DFU
                     shortestReturn=Math.Min(shortestReturn,travel); longestReturn=Math.Max(longestReturn,travel);
                 }
                 double startAt=dusk-longestReturn-120;
-                Debug.Log("LIVING_CITIES_GATE_ROUTE_SLICES_PASS: all native gate return paths match synchronous geometry; cancellation publishes nothing.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_ROUTE_SLICES_PASS: all native gate return paths match synchronous geometry; cancellation publishes nothing.");
                 if(startAt<=Now()) throw new InvalidOperationException("Gate return routes leave no daytime window for a pre-close test.");
                 DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(startAt-Now()));
                 float closeDeadline=Time.realtimeSinceStartup+(float)((longestReturn+180)/DaggerfallUnity.Instance.WorldTime.TimeScale+20);
@@ -325,7 +325,7 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Exterior sentry failed to finish inside before native gate closure: "+state.GuardId+".");
                 if(Now()>=dusk || DaggerfallUnity.Instance.WorldTime.Now.IsNight)
                     throw new InvalidOperationException("Gate return completed at or after native dusk.");
-                Debug.Log("LIVING_CITIES_GATE_GUARD_PASS: gates="+gates.Length+"; four finite guards per gate; inner/outer signs and facing; " +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_GUARD_PASS: gates="+gates.Length+"; four finite guards per gate; inner/outer signs and facing; " +
                     "patrol exclusion; outer guards physically returned before 18:00; maxRouteGameSeconds="+longestReturn+
                     "; minRouteGameSeconds="+shortestReturn+".");
 
@@ -365,7 +365,7 @@ namespace LivingCities.DFU
                         guard.Refuge.Evaluate(Now()).Phase!=RefugePhase.Sheltered || !At(guard.Post,pair.Value) || guard.PostRecall!=null)
                         throw new InvalidOperationException("Guard missed gate recall while player stayed indoors: "+pair.Key);
                 }
-                Debug.Log("LIVING_CITIES_GATE_INDOOR_RECALL_PASS: eight persisted recalls completed across dusk inside a native inn.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_INDOOR_RECALL_PASS: eight persisted recalls completed across dusk inside a native inn.");
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(1);
                 var wallGuard=guards.Roster.Guards.Find(g=>g.Refuge!=null && g.Refuge.WallDuty);
@@ -404,13 +404,13 @@ namespace LivingCities.DFU
                 // newly aimed camera before capturing; otherwise a quad can be edge-on.
                 yield return new WaitForSecondsRealtime(0.2f);
                 yield return new WaitForEndOfFrame();
-                Debug.Log("LIVING_CITIES_WALL_VIEW: camera="+Camera.main.transform.position.ToString("F3")+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WALL_VIEW: camera="+Camera.main.transform.position.ToString("F3")+
                     "; guard="+wallActor.transform.position.ToString("F3")+
                     "; viewport="+Camera.main.WorldToViewportPoint(wallActor.transform.position).ToString("F3"));
                 foreach(var renderer in wallActor.GetComponentsInChildren<Renderer>())
-                    Debug.Log("LIVING_CITIES_WALL_RENDERER: "+renderer.name+"; enabled="+renderer.enabled+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WALL_RENDERER: "+renderer.name+"; enabled="+renderer.enabled+
                         "; active="+renderer.gameObject.activeInHierarchy+"; center="+renderer.bounds.center.ToString("F3"));
-                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"LivingCities-wall-duty.png"));
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"PeopleOfTheIliacBay-wall-duty.png"));
                 // CaptureScreenshot writes at the next rendered frame. Advancing
                 // to dawn immediately removes the actor before that frame exists.
                 yield return new WaitForSecondsRealtime(0.5f);
@@ -422,7 +422,7 @@ namespace LivingCities.DFU
                     if(guard.Refuge!=null || guard.Duty!=GuardDuty.Posted || !At(guard.Post,pair.Value))
                         throw new InvalidOperationException("Off-duty guard did not finish morning return.");
                 }
-                Debug.Log("LIVING_CITIES_WALL_DUTY_PASS: eight unique wall shifts; indoor time advance, visible patrol and morning return.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WALL_DUTY_PASS: eight unique wall shifts; indoor time advance, visible patrol and morning return.");
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(1);
             }
@@ -457,9 +457,9 @@ namespace LivingCities.DFU
             finally { (canceled as IDisposable)?.Dispose(); }
             yield return null;
             foreach(var room in UnityEngine.Object.FindObjectsOfType<DaggerfallInterior>())
-                if(room.name=="Living Cities isolated refuge geometry")
+                if(room.name=="People of the Iliac Bay isolated refuge geometry")
                     throw new InvalidOperationException("Canceled wall survey leaked model colliders.");
-            Debug.Log("LIVING_CITIES_WALL_SLICES_PASS: routes="+actual.Count+"; slices="+slices+"; cancellation disposed model.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WALL_SLICES_PASS: routes="+actual.Count+"; slices="+slices+"; cancellation disposed model.");
         }
     }
 }

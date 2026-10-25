@@ -5,10 +5,10 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
@@ -96,7 +96,7 @@ namespace LivingCities.DFU
                         {
                             Roster.TakeRefuge(guard.Id, plan, started);
                             guard.Refuge.Release(guard.DayRestUntil);
-                            Debug.Log("LIVING_CITIES_GUARD_DAY_REST: " + guard.Id + "; building=" + entrance.BuildingKey);
+                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DAY_REST: " + guard.Id + "; building=" + entrance.BuildingKey);
                             yield break;
                         }
                         catch (ArgumentException) { /* Another guard can claim this bed during a yielded survey. */ }

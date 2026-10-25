@@ -1,5 +1,9 @@
 # Development and architecture entry points
 
+## Common NPC framework — approved 21 October 2026
+
+Use the [motivation specification](superpowers/specs/2026-10-21-npc-motivation-relationships-and-contracts.md), [delivery plan](superpowers/plans/2026-10-21-npc-motivation-and-contract-delivery.md) and [integration inventory](2026-10-21-framework-integration-map.md) before adding feature-specific decision flags/prompts. Preserve Qwen interpretation, bounded D3 choice and authoritative native validation/execution. Establish relationship/evidence state and a shared immutable projection before adding consumers. Do not reinterpret disposition as trust or an action receipt as a wage transaction. Each slice has explicit regression gates in the inventory.
+
 Player setup: [Installation](INSTALLATION.md). Delivery priorities: [Roadmap](ROADMAP.md). Test evidence: [Testing](TESTING.md).
 
 ## Bedroom flat replacement and shop households — 17 October 2026
@@ -42,17 +46,17 @@ The recorded shelf flicker was a physically unreachable waypoint: another body s
 
 Browsing additionally checks actual occupants rather than relying solely on planned reservation times. It can select a reachable free position within 1.2 m of the same visible shelf/activity target, checking at most 64 surveyed candidates and at most once per real second per active visit. A short reservation prevents simultaneous selection. Captured physical visits retain the alternate endpoint and reconnect subsequent legs, preserving their actual movement after reload. This addresses the observed occupied-goal case, not every possible interior route stall.
 
-## Stable personal walking pace — 17 October 2026
+## Stable personal walking pace — updated 24 October 2026
 
-Mobile citizens now derive walking speed from their persisted appearance seed through a separate deterministic hash: 1.3 m/s ±15%, rounded to four decimals (1.105–1.495 m/s). Scene changes, day changes and reloads do not reroll it. Existing fleeing already had stable 3.25–4.55 m/s variation and retains its original formula and values.
+Mobile citizens now derive walking speed from their persisted appearance seed through a separate deterministic hash: 4.2–6.4 km/h (1.1667–1.7778 m/s), rounded to four decimals. Scene changes, day changes and reloads do not reroll it. Existing fleeing retains its original formula and 3.25–4.55 m/s values.
 
-The personal pace feeds daily itinerary and fallback travel durations, rendered indoor movement, shop browsing/capture, inn/room/service routes, newly planned resident road travel and new generated traveler visits. Shared path geometry caches retain baseline durations; each citizen's itinerary copies those durations at their own pace. Legacy local 12× and fixed-speed 2× itineraries convert on restore, while already-personalized durations remain unchanged. Calendar time remains 2×. Previously documented migration limits for already-booked inter-settlement journeys still apply. Guard formation schedules retain their coordinated pace.
+The personal pace feeds daily itinerary and fallback travel durations, rendered indoor movement, shop browsing/capture, inn/room/service routes, newly planned resident road travel and new generated traveler visits. Shared path geometry caches retain baseline durations; each citizen's itinerary copies those durations at their own pace. Legacy local 12× and fixed-speed 2× itineraries convert on restore. Saved personal route version 2 routines rebuild at the current pace; current-version routes stay unchanged. Calendar time remains 2×. Previously documented migration limits for already-booked inter-settlement journeys still apply. Guard formation schedules retain their coordinated pace.
 
 ## Physical movement and the 2× clock — 17 October 2026
 
 The reported resident slowdown came from cached daily itinerary durations still encoded at 12×. A native Daggerfall save contained a 58.47 m leg lasting 539.76 game seconds: 1.3 m/s at 12×, but only 0.217 m/s after loading with the 2× clock. Restore now detects those legacy rates from route geometry and repairs walking, return and gate durations. It also repairs affected caches already resaved as schema 22/23, while preserving dwell durations and leaving already-correct legs unchanged.
 
-The fallback `DailySchedule.DayVisit` had a separate quantization problem: rounding a short commute to whole game minutes changed its physical speed when the clock slowed. Calendar selection still reserves whole-minute slots, but actual travel now uses the exact route length, physical speed and clock conversion. Walking remains 1.3 m/s; existing per-person fleeing speeds remain unchanged. Normal gameplay time remains 2×; Unity animation time is unchanged.
+The fallback `DailySchedule.DayVisit` had a separate quantization problem: rounding a short commute to whole game minutes changed its physical speed when the clock slowed. Calendar selection still reserves whole-minute slots, but actual travel now uses the exact route length, personal physical speed and clock conversion. The 1.3 m/s baseline constant remains for fleeing; normal walking uses each resident's seeded 4.2–6.4 km/h pace. Normal gameplay time remains 2×; Unity animation time is unchanged.
 
 Tests first reproduced both failures. The owned-player movement probe loads the actual old Daggerfall fixture, validates saved daily leg speeds, and measures a rendered native resident walking and running over real seconds. This bounded correction does not rewrite older inter-settlement trips with paid room bookings or linked admission histories. Those require an atomic trip/booking/observed-visit migration; changing only their rates would invalidate saved references. New travel plans already use the current clock.
 
@@ -88,7 +92,7 @@ The current Windows scripts expect this sibling layout by default:
 
 ```text
 DFU/
-  LivingCities/       # this repository; retain this folder name for current scripts
+  PeopleOfTheIliacBay/ # this repository; the checkout directory name is configurable
   daggerfall-unity/   # separate DFU 1.1.1 source checkout
   Player/            # separately installed DFU player and portable app data
   GameFiles/         # user's game data
@@ -99,7 +103,7 @@ DFU/
 Clone with an explicit folder name if setting up a new machine:
 
 ```sh
-git clone https://github.com/Bl4ckh34d/People-of-the-Iliac-Bay.git LivingCities
+git clone https://github.com/Bl4ckh34d/People-of-the-Iliac-Bay.git PeopleOfTheIliacBay
 ```
 
 Core tests require only the .NET 8 SDK and restored NuGet packages. The .NET Framework runtime/hook projects additionally require assemblies from the sibling player. `tools/Deploy.ps1` expects `work/Harmony/net472/0Harmony.dll` and the built hook assembly. This baseline does not yet provide a complete clean-machine dependency bootstrap. A fresh clone alone cannot package the Unity mod.

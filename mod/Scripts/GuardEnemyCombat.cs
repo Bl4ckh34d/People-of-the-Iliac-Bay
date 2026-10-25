@@ -1,10 +1,10 @@
 using System.Collections;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardActor
     {
@@ -15,11 +15,29 @@ namespace LivingCities.DFU
         public void BeginDefenseCombat(DaggerfallEntityBehaviour target, double now)
         {
             if (!target || CombatReady || combatStart != null) return;
+            if (!EnsureNativeTargetController(target)) return;
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (guard.Duty != GuardDuty.Engaged) roster.Engage(GuardId,now);
             DefenseTarget = target;
             CaptureDefense(now);
             combatStart = StartCoroutine(StartDefenseCombat());
+        }
+        private static bool EnsureNativeTargetController(DaggerfallEntityBehaviour target)
+        {
+            if (!target) return false;
+            var controller = target.GetComponent<CharacterController>();
+            if (controller) return true;
+            var capsule = target.GetComponent<CapsuleCollider>();
+            if (!NativeNpcCombatRoleDecision.CanSupplyNativeTargetController(false, capsule != null)) return false;
+            // CrowdMotion owns this resident's actual movement/collision. Native
+            // guard AI only reads the target controller's geometry, so preserve
+            // capsule ownership with a disabled matching controller.
+            controller = target.gameObject.AddComponent<CharacterController>();
+            controller.center = capsule.center;
+            controller.radius = capsule.radius;
+            controller.height = capsule.height;
+            controller.enabled = false;
+            return true;
         }
         private IEnumerator StartDefenseCombat()
         {
@@ -47,6 +65,7 @@ namespace LivingCities.DFU
         }
         private void LateUpdate()
         {
+            if(CombatReady && !GameManager.IsGamePaused) TickGuardArchery();
             if (!DefenseTarget || !CombatReady || GameManager.IsGamePaused) return;
             var motor = GetComponent<EnemyMotor>(); var senses = GetComponent<EnemySenses>();
             // A real player assault takes priority; the controller transfers back to native arrest.
@@ -60,7 +79,7 @@ namespace LivingCities.DFU
             var guard = roster.Guards.Find(g => g.Id == GuardId);
             if (guard.Duty != GuardDuty.Engaged) return;
             var local = transform.parent.InverseTransformPoint(transform.position);
-            bool sees = DefenseTarget && DefenseTarget.Entity.CurrentHealth > 0 &&
+            bool sees = DefenseTarget && DefenseTarget.Entity.CurrentHealth > 0 && !DefenseTarget.Entity.IsInvisible &&
                 CivilianResponses.Sees(transform.position,DefenseTarget.transform.position,20);
             var seen = sees ? transform.parent.InverseTransformPoint(DefenseTarget.transform.position) : Vector3.zero;
             if (IsInterior)

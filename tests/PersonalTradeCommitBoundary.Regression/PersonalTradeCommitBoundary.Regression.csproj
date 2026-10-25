@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../mod/Scripts/PersonalTradeCommitBoundary.cs" Link="PersonalTradeCommitBoundary.cs" />
+    <Compile Include="../../mod/Scripts/PersonalCommerceCatalogRequest.cs" Link="PersonalCommerceCatalogRequest.cs" />
+  </ItemGroup>
+</Project>

@@ -5,27 +5,27 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GuardControllerProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
-            var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
+            var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             var population = store.Snapshot().Settlements.Find(t => t.SettlementId == directory.MapID);
-            var type = typeof(LivingCitiesMod).Assembly.GetType("LivingCities.DFU.GuardPopulation");
+            var type = typeof(PeopleOfTheIliacBayMod).Assembly.GetType("PeopleOfTheIliacBay.DFU.GuardPopulation");
             if (type == null) throw new InvalidOperationException("Finite guard controller is missing.");
             var controller = adapter.GetComponent<GuardPopulation>();
             controller.NightPatrols = false;
             bool priorDefense = controller.EnemyDefense;
             controller.EnemyDefense = false;
-            var enabledField = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+            var enabledField = typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool originallyEnabled = (bool)enabledField.GetValue(adapter);
             enabledField.SetValue(adapter, true);
             bool saved = false, loaded = false;
@@ -92,7 +92,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(0.4f);
                 foreach (var guardView in UnityEngine.Object.FindObjectsOfType<GuardActor>())
                     if (guardView.GetComponentInChildren<Light>()) throw new InvalidOperationException("Daytime guard retained a torch.");
-                Debug.Log("LIVING_CITIES_GUARD_TORCH_CONTROLLER_PASS: real night/day, nearest light cap, zero budget and toggle.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_TORCH_CONTROLLER_PASS: real night/day, nearest light cap, zero budget and toggle.");
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = true;
                 game.PlayerEntity.SpawnCityGuards(true);
@@ -152,15 +152,15 @@ namespace LivingCities.DFU
                     if (DaggerfallUI.UIManager.TopWindow is DaggerfallWorkshop.Game.UserInterfaceWindows.DaggerfallMessageBox)
                         throw new InvalidOperationException("Joining guard repeated refused surrender. shown="+game.PlayerEntity.HaveShownSurrenderToGuardsDialogue+"; arrested="+game.PlayerEntity.Arrested);
                 }
-                Debug.Log("LIVING_CITIES_SURRENDER_REFUSAL_PASS: native offer retained pursuit; No persisted across frames and additional guard attacks.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SURRENDER_REFUSAL_PASS: native offer retained pursuit; No persisted across frames and additional guard attacks.");
                 entity.SetHealth(Math.Max(1, entity.MaxHealth / 2), true); controller.Capture();
                 string woundedId = fighter.GuardId;
                 double health = roster.Guards.Find(g => g.Id == woundedId).HealthFraction;
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - guard response");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, "People of the Iliac Bay - guard response");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Guard response save timed out.");
-                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - guard response");
+                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "People of the Iliac Bay - guard response");
                 game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || controller.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -194,7 +194,7 @@ namespace LivingCities.DFU
                 while (!assaulted.CombatReady && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!assaulted.CombatReady || posted.Duty != GuardDuty.Engaged)
                     throw new InvalidOperationException("Attacked posted guard did not defend himself.");
-                Debug.Log("LIVING_CITIES_TOWN_GUARD_CONTROLLER_PASS: fixed roster, bounded native reports, physical views, native combat, wounded real save/load, search expiry and posted self-defense; save=" + key);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_GUARD_CONTROLLER_PASS: fixed roster, bounded native reports, physical views, native combat, wounded real save/load, search expiry and posted self-defense; save=" + key);
             }
             finally
             {
@@ -240,7 +240,7 @@ namespace LivingCities.DFU
                 if(game.PlayerEntity.HaveShownSurrenderToGuardsDialogue!=refusalBefore)
                     throw new InvalidOperationException("Reacquisition unexpectedly changed native surrender state.");
             }
-            Debug.Log("LIVING_CITIES_PURSUIT_REACQUIRE_PASS: visible wanted player reacquired after expiry and after completed return; native surrender state preserved.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PURSUIT_REACQUIRE_PASS: visible wanted player reacquired after expiry and after completed return; native surrender state preserved.");
         }
 
         private static IEnumerator VerifyNearbyRecruitment(GuardPopulation controller,GuardActor caller,
@@ -301,7 +301,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Recruited guard lost native hostility or reset refused surrender: ready="+
                         candidate.CombatReady+"; hostile="+candidate.GetComponent<EnemyMotor>().IsHostile+
                         "; refused="+game.PlayerEntity.HaveShownSurrenderToGuardsDialogue);
-                Debug.Log("LIVING_CITIES_PURSUIT_RECRUIT_PASS: nearby available native guard joins with shared knowledge/deadline, fixed identities and retained refusal.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PURSUIT_RECRUIT_PASS: nearby available native guard joins with shared knowledge/deadline, fixed identities and retained refusal.");
             }
             finally { game.PlayerMotor.transform.position=beforePlayer; }
         }

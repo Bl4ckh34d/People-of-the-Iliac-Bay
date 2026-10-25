@@ -7,10 +7,10 @@ using DaggerfallConnect.Arena2;
 using DaggerfallConnect.Utility;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Disposable test-session survey; city save checks use only the dedicated test character.
     public static class DaggerfallRefugeProbe
@@ -57,14 +57,14 @@ namespace LivingCities.DFU
                     if (route.Count < 2) continue;
                     connected++; reached = true;
                     if (!representatives.ContainsKey(building.ModelID)) representatives.Add(building.ModelID, entrance.BuildingKey);
-                    Debug.Log("LIVING_CITIES_REFUGE_ROUTE: key=" + entrance.BuildingKey + "; model=" + building.ModelID +
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REFUGE_ROUTE: key=" + entrance.BuildingKey + "; model=" + building.ModelID +
                         "; from=" + other.BuildingKey + "; points=" + route.Count + "; door=" + entrance.LocalDoor);
                     break;
                 }
-                if (!reached) Debug.Log("LIVING_CITIES_REFUGE_UNREACHED: key=" + entrance.BuildingKey + "; model=" + building.ModelID);
+                if (!reached) Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REFUGE_UNREACHED: key=" + entrance.BuildingKey + "; model=" + building.ModelID);
                 yield return null;
             }
-            Debug.Log("LIVING_CITIES_REFUGE_SURVEY: groundEntrances=" + candidates + "; connected=" + connected +
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REFUGE_SURVEY: groundEntrances=" + candidates + "; connected=" + connected +
                 "; rejectedDoors=" + geometry.RejectedDoors);
             if (connected == 0) throw new InvalidOperationException("No reachable Daggerfall wall entrance found.");
             yield return HauntingThreatProbe.Run(directory,geometry);
@@ -105,11 +105,11 @@ namespace LivingCities.DFU
                             "; nearest="+nearestAnchor.ToString("F5")+"; gap="+Mathf.Sqrt(nearest)+"; entry="+inside.EntryGround+"; overlaps="+overlaps);
                     }
                 }
-                Debug.Log("LIVING_CITIES_REFUGE_UNLOADED_PASS: model="+representative.Key+"; routes="+surveyed.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REFUGE_UNLOADED_PASS: model="+representative.Key+"; routes="+surveyed.Count);
                 int reachable = 0;
                 foreach (var anchor in inside.LocalAnchors)
                     if (inside.RouteToExit(interior.transform.TransformPoint(anchor)).Count >= 2) reachable++;
-                Debug.Log("LIVING_CITIES_REFUGE_INTERIOR: model=" + representative.Key + "; key=" + representative.Value +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REFUGE_INTERIOR: model=" + representative.Key + "; key=" + representative.Value +
                     "; anchors=" + inside.LocalAnchors.Count + "; reachable=" + reachable);
                 if (!inside.EntryGround.HasValue || reachable == 0)
                     throw new InvalidOperationException("Wall interior has no checked refuge floor: " + representative.Key);
@@ -131,7 +131,7 @@ namespace LivingCities.DFU
                 if ((actor.transform.position-beforeExit).sqrMagnitude<0.0001f)
                     throw new InvalidOperationException("Released refuge actor did not move.");
                 UnityEngine.Object.Destroy(actor.gameObject);
-                var controllerObject=new GameObject("Living Cities refuge controller probe");
+                var controllerObject=new GameObject("People of the Iliac Bay refuge controller probe");
                 var controller=controllerObject.AddComponent<GuardPopulation>(); controller.enabled=false;
                 try
                 {
@@ -145,13 +145,13 @@ namespace LivingCities.DFU
                     if(controller.ActiveCount!=0) throw new InvalidOperationException("Controller retained a refuge guard after it left the interior.");
                 }
                 finally { UnityEngine.Object.Destroy(controllerObject); }
-                Debug.Log("LIVING_CITIES_REFUGE_ACTOR_PASS: model="+representative.Key+"; saved shelter placement and exit movement.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REFUGE_ACTOR_PASS: model="+representative.Key+"; saved shelter placement and exit movement.");
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(1);
             }
             yield return DaggerfallPopulationProbe.Run();
             yield return RegionalIdentityProbe.Run();
-            Debug.Log("LIVING_CITIES_TOWN_TEST_PASS: Daggerfall wall routes, refuge actors and city population; models=" + representatives.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_TEST_PASS: Daggerfall wall routes, refuge actors and city population; models=" + representatives.Count);
         }
     }
 }

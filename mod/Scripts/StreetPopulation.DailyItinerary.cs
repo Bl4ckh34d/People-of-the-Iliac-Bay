@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -92,7 +92,7 @@ namespace LivingCities.DFU
         }
 
         private List<AdultDailyItineraryOption> SelectDailyItineraryOptions(List<BuildingSummary> buildings,
-            Resident resident, int homeKey)
+            Resident resident, int homeKey,int maximumCandidates=0)
         {
             var ranked = new List<AdultDailyItineraryOption>();
             foreach (var building in buildings)
@@ -101,9 +101,9 @@ namespace LivingCities.DFU
                 ResidentVisitPurpose purpose;
                 if (!TryGetDailyPurpose(building.BuildingType, out purpose)) continue;
                 int type = (int)building.BuildingType;
-                int opens = Math.Max(9 * 60, PlayerActivate.openHours[type] * 60);
-                int closes = Math.Min(18 * 60, PlayerActivate.closeHours[type] * 60);
-                if (opens >= closes) continue;
+                DailyServiceWindow serviceWindow;
+                if(!DailyServiceHours.TryFromNativeHours(PlayerActivate.openHours[type],PlayerActivate.closeHours[type],out serviceWindow))continue;
+                int opens=serviceWindow.OpenMinute,closes=serviceWindow.CloseMinute;
                 double minimumDwell, maximumDwell;
                 if (purpose == ResidentVisitPurpose.Shop) { minimumDwell = 20 * 60; maximumDwell = 50 * 60; }
                 else if (purpose == ResidentVisitPurpose.Social) { minimumDwell = 45 * 60; maximumDwell = 120 * 60; }
@@ -116,6 +116,7 @@ namespace LivingCities.DFU
             uint variety = DailyCandidateRank(resident.AppearanceSeed, homeKey, homeKey, ResidentVisitPurpose.Shop);
             if (variety % 32 == 0) limit = 6;
             else if (variety % 5 == 0) limit = 5;
+            if(maximumCandidates>0)limit=Math.Min(24,maximumCandidates);
             if (ranked.Count <= limit) return SortDailyOptions(ranked, resident.AppearanceSeed, homeKey);
 
             // Reserve one candidate per available service class before filling
@@ -230,7 +231,8 @@ namespace LivingCities.DFU
                 if (route.Points.Count >= 2 && length > 0)
                 {
                     route.WalkSeconds = length * DaggerfallUnity.Instance.WorldTime.TimeScale / ResidentMovement.WalkSpeed;
-                    route.Points = SavedRouteSimplifier.Simplify(route.Points);
+                    // Keep exact doorway controls and the subdivisions used by
+                    // the sliced corridor survey. Curves are already compact.
                 }
                 else route.Points.Clear();
                 CacheDailyRoute(new DailyRouteKey { From = from, To = to }, route);
@@ -243,9 +245,11 @@ namespace LivingCities.DFU
         {
             bool changed = SimplifySavedRoute(routine.Route);
             if (routine.Itinerary == null) return changed;
-            foreach (var stop in routine.Itinerary.Stops)
-                changed |= SimplifySavedRoute(stop.Route);
-            changed |= SimplifySavedRoute(routine.Itinerary.ExitRoute);
+            foreach(var itinerary in ResidentRoutineDay.Itineraries(routine))
+            {
+                foreach (var stop in itinerary.Stops)changed |= SimplifySavedRoute(stop.Route);
+                changed |= SimplifySavedRoute(itinerary.ExitRoute);
+            }
             return changed;
         }
 
@@ -268,11 +272,40 @@ namespace LivingCities.DFU
             return Math.Min(Math.Max(departure, earliest), latest);
         }
 
+        private double DailyReturnDeadline(int sleep)
+        {
+            double deadline=sleep*3600d-1;
+            if(population.SettlementId==1291010263 && worldStore.RestrictHauntingRoutines(population.SettlementId,
+                GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0),DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()))
+                deadline=Math.Min(deadline,18*3600+45*60);
+            return deadline;
+        }
+
+        private ResidentRoutine RefreshDailyServiceHours(ResidentRoutine source)
+        {
+            try {return DailyServiceHours.Refresh(source,key=>
+            {
+                BuildingSummary summary;
+                if(!directory || !directory.GetBuildingSummary(key,out summary))return null;
+                ResidentVisitPurpose purpose;
+                if(!TryGetDailyPurpose(summary.BuildingType,out purpose))return null;
+                int type=(int)summary.BuildingType;DailyServiceWindow window;
+                return DailyServiceHours.TryFromNativeHours(PlayerActivate.openHours[type],PlayerActivate.closeHours[type],out window)?window:null;
+            });}
+            catch(ArgumentException error)
+            {
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DAILY_HOURS_DEFERRED: resident="+source.ResidentId+"; "+error.Message);
+                return null;
+            }
+        }
+
         private static void KeepFirstStopAsLegacyRoute(ResidentRoutine routine, ResidentDestination itinerary)
         {
             if (routine == null || itinerary == null || itinerary.Stops == null || itinerary.Stops.Count == 0) return;
             var first = itinerary.Stops[0];
             routine.DestinationKey = first.BuildingKey;
+            routine.RouteGeometryVersion=OutdoorRoutineMigration.CenterlineVersion;
+            routine.PersonalLaneVersion=0;
             routine.OpenMinute = first.OpenMinute;
             routine.CloseMinute = first.CloseMinute;
             routine.Route = new List<SavedRoutePoint>();

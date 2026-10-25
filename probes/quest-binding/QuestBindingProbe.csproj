@@ -9,6 +9,6 @@
     <Reference Include="Assembly-CSharp"><HintPath>$(HostManaged)Assembly-CSharp.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine"><HintPath>$(HostManaged)UnityEngine.dll</HintPath><Private>false</Private></Reference>
     <Reference Include="UnityEngine.CoreModule"><HintPath>$(HostManaged)UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
-    <Reference Include="0Harmony"><HintPath>$(DfuRoot)LivingCities\work\Harmony\net472\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(MSBuildThisFileDirectory)..\..\work\Harmony\net472\0Harmony.dll</HintPath><Private>false</Private></Reference>
   </ItemGroup>
 </Project>

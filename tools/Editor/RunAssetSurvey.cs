@@ -14,7 +14,7 @@ public static class RunAssetSurvey
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         string arena = Path.Combine(root, "GameFiles/arena2");
-        string output = Path.Combine(root, "LivingCities/art/run/pilot-385/source");
+        string output = PeopleOfTheIliacBayPaths.Repository("art/run/pilot-385/source");
         Directory.CreateDirectory(output);
         var source = new TextureFile(Path.Combine(arena, "TEXTURE.385"), FileUsage.UseMemory, true);
         var reader = new TextureReader(arena);
@@ -33,6 +33,6 @@ public static class RunAssetSurvey
             }
         }
         File.WriteAllLines(Path.Combine(output, "records.csv"), rows);
-        Debug.Log("LIVING_CITIES_RUN_SOURCE_PASS: archive=385; records=6");
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RUN_SOURCE_PASS: archive=385; records=6");
     }
 }

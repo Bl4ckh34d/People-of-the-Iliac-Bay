@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Lazy main-thread import. Call only after mods are ready; no per-frame polling.
     public sealed class BasicRoadsNetwork

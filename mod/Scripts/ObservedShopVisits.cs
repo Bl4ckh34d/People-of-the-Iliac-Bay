@@ -1,10 +1,10 @@
 using System;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -12,13 +12,17 @@ namespace LivingCities.DFU
         {
             if(GameManager.Instance.SaveLoadManager.LoadInProgress) return;
             CaptureObservedVisits();
+            YieldHouseholds(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
         }
         public void CaptureObservedVisits()
+        { CaptureObservedVisits(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()); }
+        private void CaptureObservedVisits(double now)
         {
             if(!interior || indoorGeometry==null || worldStore==null || population==null) return;
-            double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            CaptureHouseholdInns(now);
             foreach(var pair in physicalShopVisits)
             {
+                if(pair.Value.HouseholdDayId!=null)continue;
                 var actor=FindActor(pair.Key);
                 if(!actor || !actor.Resident.IsAlive || Reaction(pair.Key,now)!=null) continue;
                 var saved=pair.Value.Capture(actor,interior,indoorGeometry,now,population.SettlementId);
@@ -31,6 +35,10 @@ namespace LivingCities.DFU
             var saved=worldStore.GetObservedVisit(actor.Resident.Id);
             if(saved==null || saved.SettlementId!=population.SettlementId || saved.BuildingKey!=interior.EntryDoor.buildingKey ||
                 now<saved.ObservedAt || now>=saved.EndsAt) return false;
+            return RestoreShopCheckpoint(actor,saved,now,out physical);
+        }
+        private bool RestoreShopCheckpoint(ResidentActor actor,ObservedVisit saved,double now,out PhysicalShopVisit physical)
+        {
             var state=saved.Evaluate(now);
             var ground=interior.transform.TransformPoint(new Vector3((float)state.Position.X,(float)state.Position.Y,(float)state.Position.Z));
             var motion=actor.GetComponent<CrowdMotion>();
@@ -55,6 +63,7 @@ namespace LivingCities.DFU
             if(!worldStore.TryObservedVisitMetadata(plan.Resident.Id,out town,out building,out observed,out end,out planned,out resume) ||
                 town!=population.SettlementId || now<observed) return schedule.EvaluateSeconds(now);
             if(now<end) return new ActivitySnapshot(Activity.Visit,building,new RoutePoint(),0);
+            if(CurrentRoutineRecovery(plan,now)!=null) return schedule.EvaluateSeconds(now);
             double shift=end-planned;
             return schedule.EvaluateSeconds(now<resume+shift ? now-shift : now);
         }

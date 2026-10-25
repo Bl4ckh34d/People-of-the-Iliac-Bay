@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Builds a complete original-resident day visit before the caller commits it.
     // Overnight proposals require lodging planning and are deliberately not shortened.

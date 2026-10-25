@@ -207,13 +207,20 @@
     },
     {
       "Name": "Dialogue",
-      "Description": "Local free-text conversation with native topic knowledge, validated map requests and personal disposition. Type in the bottom field and press Enter. Uses only 127.0.0.1:8080/completion.",
+      "Description": "Local free-text conversation with native topic knowledge, validated map requests and personal disposition. Type in the word-wrapped editor in the classic Talk window. Requires the local dialogue service at 127.0.0.1:8080/completion.",
       "IsAdvanced": false,
       "Keys": [
         {
           "Value": true,
           "Name": "EnableFreeText",
-          "Description": "Enable bottom text field for talkable NPCs. Requires a compatible local llama.cpp server at 127.0.0.1:8080/completion.",
+          "Description": "Enable the word-wrapped text editor for talkable NPCs. Requires a compatible local llama.cpp server at 127.0.0.1:8080/completion.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": false,
+          "Name": "EnableDecisionPlanner",
+          "Description": "Optional additional decision server. Leave disabled for Gemma + Breeze. Restart the game after changing this setting.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
@@ -225,9 +232,37 @@
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
         {
+          "Value": false,
+          "Name": "EnableNpcVoice",
+          "Description": "Enable optional local NPC speech. Does not require local dialogue or D3. Uses the user-owned breeze-tts.json bridgeRoot and loopback serverEndpoint under the persistent-data PeopleOfTheIliacBay folder.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
+          "Name": "EnableAnimatedPortraits",
+          "Description": "Animate available NPC portraits with emotional expressions, blinking and occasional sideways glances. Validated speech cues animate the mouth during voice playback. Unsupported portraits retain their original image.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": false,
+          "Name": "EnableSocialSentenceStreaming",
+          "Description": "Legacy streaming only: speak validated sentence segments while an eligible social LLM reply is arriving. Requires EnableNpcVoice, the local streaming TTS coordinator, and the -peopleoftheiliacbay-allow-legacy-speech-streaming launch flag. This setting alone keeps finalized prepared playback enabled.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
           "Value": true,
           "Name": "ConversationDisposition",
-          "Description": "Free-text tone changes this NPC's personal disposition. Insult -8, rude -2, polite +1. Repeated lines do not stack on the same day; goodwill is limited to +3 per day.",
+          "Description": "Enable native disposition changes from eligible conversation tone outcomes. Insults reduce disposition by 10 the first time and 25 on later insults; rude tone reduces it by 2. Distinct polite lines earn gradual goodwill, capped at 5 per encounter; repeated lines do not count again. Credit accrues on nominal 24/30/36-hour stages with a stable person-specific 85–115% rate factor and a 36-hour actual-interval cap.",
+          "$version": "v1",
+          "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
+        },
+        {
+          "Value": true,
+          "Name": "DispositionCommerce",
+          "Description": "Apply personal disposition prices and service refusal to supported native merchant trades, repairs, identification, tavern food and rooms, and paid guild services. Requires ConversationDisposition. Disable to retain native prices and eligibility rules while keeping conversation reactions and saved relationships.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
@@ -239,9 +274,9 @@
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.ToggleKey"
         },
         {
-          "Min": 100, "Max": 10000, "Value": 1500,
+          "Min": 100, "Max": 300000, "Value": 120000,
           "Name": "TimeoutMilliseconds",
-          "Description": "Maximum local-model wait in milliseconds. Failure or timeout shows a safe non-factual fallback.",
+          "Description": "Maximum wait for each local-model HTTP stage in milliseconds. CPU inference can need much longer than the GPU default; failure or timeout shows a safe non-factual fallback.",
           "$version": "v1",
           "$type": "DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings.SliderIntKey"
         }

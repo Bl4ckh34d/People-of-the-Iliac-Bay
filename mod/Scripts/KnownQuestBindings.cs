@@ -7,9 +7,9 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Initial explicit role rule. Extend only after reviewing story semantics and native delivery paths.
     public static class KnownQuestBindings

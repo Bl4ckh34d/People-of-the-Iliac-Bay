@@ -5,16 +5,16 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class TavernPaymentProbe
     {
         public static void Run(DaggerfallInterior interior,int town)
         {
-            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var host=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var player=GameManager.Instance.PlayerEntity;
             var before=(WorldState)host.GetSaveData(); int gold=player.GoldPieces;
             var receipts=new List<RoomRental_v1>(player.RentedRooms);
@@ -65,7 +65,7 @@ namespace LivingCities.DFU
                 Confirm(1,0,true);
                 if(player.GetRentedRoom(town,building)==null || player.GoldPieces!=4990)
                     throw new InvalidOperationException("Available free room was not granted without charge.");
-                Debug.Log("LIVING_CITIES_RENTAL_PAYMENT_PASS: building="+building+"; full/free-full/declined/insufficient=no-charge; sole-vacancy/extension=exact-price; conflicting-extension=no-charge; free-vacancy=granted.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RENTAL_PAYMENT_PASS: building="+building+"; full/free-full/declined/insufficient=no-charge; sole-vacancy/extension=exact-price; conflicting-extension=no-charge; free-vacancy=granted.");
             }
             finally
             {
@@ -74,8 +74,8 @@ namespace LivingCities.DFU
                 host.RestoreSaveData(before); DaggerfallUI.Instance.PopToHUD();
             }
         }
-        private static WorldStateStore Store(LivingCitiesMod host)
-        { return (WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host); }
+        private static WorldStateStore Store(PeopleOfTheIliacBayMod host)
+        { return (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host); }
         private static void Confirm(int days,int price,bool free=false,bool accept=true)
         {
             var type=typeof(DaggerfallTavernWindow); var flags=BindingFlags.Instance|BindingFlags.NonPublic;

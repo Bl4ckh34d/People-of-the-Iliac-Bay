@@ -4,7 +4,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Explicit opt-in art pilot for archive 385 only. The caller owns fleeing state.
     // Native animation keeps updating invisibly, so stopping restores walk/idle.

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Text;
-using System.Text.RegularExpressions;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
@@ -14,10 +13,10 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     /// <summary>Live acceptance probe for displayed and charged native inn-room prices.</summary>
     public static class DispositionPricingProbe
@@ -26,8 +25,8 @@ namespace LivingCities.DFU
 
         public static IEnumerator Run()
         {
-            var host = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
-            if (!host) throw new InvalidOperationException("Living Cities mod is unavailable.");
+            var host = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
+            if (!host) throw new InvalidOperationException("People of the Iliac Bay mod is unavailable.");
             var game = GameManager.Instance;
             if (game == null || !game.IsReady || !game.PlayerGPS.HasCurrentLocation)
                 throw new InvalidOperationException("Probe requires a ready player inside a town.");
@@ -133,9 +132,8 @@ namespace LivingCities.DFU
                     int quoted = (int)typeof(DaggerfallTavernWindow).GetField("tradePrice", InstancePrivate).GetValue(window);
                     var messageBox = DaggerfallUI.UIManager.TopWindow as DaggerfallMessageBox;
                     string renderedText = messageBox == null ? "" : RenderedMessageText(messageBox);
-                    string displayedNumber = "(?<![0-9])" + Regex.Escape(expectedPrice.ToString(CultureInfo.InvariantCulture)) + "(?![0-9])";
                     if (quoted != expectedPrice || window.GetMacroDataSource().Amount() != expectedPrice.ToString(CultureInfo.InvariantCulture) ||
-                        !Regex.IsMatch(renderedText, displayedNumber))
+                        !NativeProbeText.ContainsNumber(renderedText, expectedPrice))
                         throw new InvalidOperationException("Inn quote did not render the exact adjusted amount. tradePrice=" + quoted +
                             "; amountMacro=" + window.GetMacroDataSource().Amount() + "; rendered=" + renderedText);
 
@@ -159,7 +157,7 @@ namespace LivingCities.DFU
                             "; renderedQuote=" + renderedText);
                     }
 
-                    Debug.Log("LIVING_CITIES_DISPOSITION_ROOM_PRICE_CASE_PASS: keeper=" + personId +
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DISPOSITION_ROOM_PRICE_CASE_PASS: keeper=" + personId +
                         "; disposition=" + freshDisposition + "; native=" + nativePrice +
                         "; quoted=" + quoted + "; charged=" + charged + ".");
                     DaggerfallUI.Instance.PopToHUD();
@@ -198,12 +196,12 @@ namespace LivingCities.DFU
                             freshDisposition + "; charge=" + refusedCharge + "; receipt=" + (deniedReceipt != null) +
                             "; topWindow=" + (DaggerfallUI.UIManager.TopWindow == null ? "none" : DaggerfallUI.UIManager.TopWindow.GetType().Name) +
                             "; rendered=" + denialText);
-                    Debug.Log("LIVING_CITIES_DISPOSITION_ROOM_REFUSAL_PASS: disposition=" + freshDisposition +
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DISPOSITION_ROOM_REFUSAL_PASS: disposition=" + freshDisposition +
                         "; charge=0; receipt=none; refusalText=visible.");
                     DaggerfallUI.Instance.PopToHUD();
                 }
 
-                Debug.Log("LIVING_CITIES_DISPOSITION_ROOM_PRICE_PASS: quote and payment match at -49, 0, and 100; paid room refused at -50 and -100.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DISPOSITION_ROOM_PRICE_PASS: quote and payment match at -49, 0, and 100; paid room refused at -50 and -100.");
             }
             finally
             {
@@ -299,9 +297,9 @@ namespace LivingCities.DFU
                 keeper.Data.mapID, keeper.Data.buildingKey, keeper.Data.hash);
         }
 
-        private static WorldStateStore GetStore(LivingCitiesMod host)
+        private static WorldStateStore GetStore(PeopleOfTheIliacBayMod host)
         {
-            return (WorldStateStore)typeof(LivingCitiesMod).GetField("store", InstancePrivate).GetValue(host);
+            return (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", InstancePrivate).GetValue(host);
         }
 
         private static string RenderedMessageText(DaggerfallMessageBox messageBox)

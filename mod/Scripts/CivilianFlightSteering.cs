@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Actor-owned cache disappears with its view; authoritative position stays in AlarmPerson.
     public sealed class CivilianFlightSteering : MonoBehaviour

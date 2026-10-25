@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+    <Compile Include="../../mod/Scripts/LocalDecisionWire.cs" Link="LocalDecisionWire.cs" />
+    <Compile Include="../../mod/Scripts/LocalSpeechActWire.cs" Link="LocalSpeechActWire.cs" />
+    <Compile Include="../../mod/Scripts/LocalDecisionWillingness.cs" Link="LocalDecisionWillingness.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="fixtures/paired-scenarios-v1.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/paired-scenarios-v2.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/appraisal-acceptance-v1.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/appraisal-acceptance-v2.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/appraisal-matrix-v1.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/appraisal-live-scenarios-v1.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/appraisal-live-scenarios-v2.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/appraisal-context-pairs-v3.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/appraisal-live-scenarios-v3.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/multi-turn-interactions-v1.json" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="fixtures/multi-turn-interactions-v2.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
+

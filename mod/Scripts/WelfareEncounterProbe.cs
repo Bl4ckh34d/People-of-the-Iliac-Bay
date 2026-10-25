@@ -5,10 +5,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class WelfareEncounterProbe
     {
@@ -53,15 +53,15 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Welfare save fixture did not reach a moving approach before dialogue.");
                 string guardId=guard.Id; int settlement=record.SettlementId;
                 yield return ReloadApproach(guards);
-                var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
-                store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",flags).GetValue(mod);
+                var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
+                store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",flags).GetValue(mod);
                 record=store.GetDefenseCombatant(threat);
                 guard=store.GetGuards(settlement).Guards.Find(g=>g.Id==guardId);
                 actor=Array.Find(UnityEngine.Object.FindObjectsOfType<GuardActor>(),g=>g.GuardId==guardId);
                 if(!actor || record==null || record.Death.WelfareConsumed || record.Death.WelfareExpired ||
                     game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft)
                     throw new InvalidOperationException("Actual welfare slot reload lost responder, opportunity or prior crime.");
-                Debug.Log("LIVING_CITIES_WELFARE_SLOT_PASS: real save/load preserves approaching responder, welfare opportunity and prior Theft.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WELFARE_SLOT_PASS: real save/load preserves approaching responder, welfare opportunity and prior Theft.");
                 DaggerfallMessageBox window=null; float deadline=Time.realtimeSinceStartup+22;
                 while(Time.realtimeSinceStartup<deadline && window==null)
                 { window=field.GetValue(guards) as DaggerfallMessageBox; yield return null; }
@@ -75,7 +75,7 @@ namespace LivingCities.DFU
                 while(Time.realtimeSinceStartup<deadline && !game.PlayerEntity.HaveShownSurrenderToGuardsDialogue) yield return null;
                 if(!game.PlayerEntity.HaveShownSurrenderToGuardsDialogue || !(DaggerfallUI.UIManager.TopWindow is DaggerfallMessageBox))
                     throw new InvalidOperationException("Native surrender did not follow completed welfare for prior crime.");
-                Debug.Log("LIVING_CITIES_WELFARE_CHAIN_PASS: keeper report, finite guard travel/combat, witnessed native player kill, welfare before native surrender and prior Theft retained.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WELFARE_CHAIN_PASS: keeper report, finite guard travel/combat, witnessed native player kill, welfare before native surrender and prior Theft retained.");
             }
             finally
             {
@@ -88,7 +88,7 @@ namespace LivingCities.DFU
         private static IEnumerator ReloadApproach(GuardPopulation guards)
         {
             var game=GameManager.Instance;
-            if(!game.PlayerEntity.Name.StartsWith("LivingCitiesTest-",StringComparison.Ordinal))
+            if(!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
                 throw new InvalidOperationException("Welfare reload requires the dedicated test character.");
             bool saved=false,loaded=false;
             SaveLoadManager.OnSaveEventHandler onSave=ignored=>saved=true;
@@ -96,7 +96,7 @@ namespace LivingCities.DFU
             SaveLoadManager.OnSave+=onSave; SaveLoadManager.OnLoad+=onLoad;
             try
             {
-                const string name="Living Cities - Welfare approach";
+                const string name="People of the Iliac Bay - Welfare approach";
                 game.SaveLoadManager.Save(game.PlayerEntity.Name,name);
                 float deadline=Time.realtimeSinceStartup+30;
                 while(!saved && Time.realtimeSinceStartup<deadline) yield return null;

@@ -1,0 +1,20 @@
+{
+  "host": "127.0.0.1",
+  "port": 8094,
+  "backend": "cuda",
+  "device": 0,
+  "lazy_load": false,
+  "max_loaded_models": 1,
+  "idle_unload_ms": 0,
+  "ui": false,
+  "ui_management": false,
+  "models": [
+    {
+      "id": "breeze",
+      "family": "breeze_tts",
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/local-tts/models/Breeze-TTS-2-GGUF/breeze-tts-2-q4_0.gguf",
+      "task": "tts",
+      "mode": "streaming"
+    }
+  ]
+}

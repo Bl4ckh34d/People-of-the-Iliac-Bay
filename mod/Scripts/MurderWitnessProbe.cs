@@ -6,16 +6,16 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class MurderWitnessProbe
     {
         private const BindingFlags PrivateInstance = BindingFlags.Instance | BindingFlags.NonPublic;
 
-        public static IEnumerator Run(LivingCitiesMod adapter, StreetPopulation streets)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod adapter, StreetPopulation streets)
         {
             yield return null;
             if (!adapter || !streets) throw new InvalidOperationException("Murder witness probe needs live adapters.");
@@ -24,8 +24,8 @@ namespace LivingCities.DFU
             if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None)
                 throw new InvalidOperationException("Murder witness probe needs no current player crime.");
 
-            var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", PrivateInstance).GetValue(adapter);
-            var liveStore = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", PrivateInstance).GetValue(adapter);
+            var population = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", PrivateInstance).GetValue(adapter);
+            var liveStore = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", PrivateInstance).GetValue(adapter);
             if (population == null || liveStore == null) throw new InvalidOperationException("Murder witness probe needs loaded town state.");
 
             var planResidents = LivePlanResidents(streets);
@@ -66,7 +66,7 @@ namespace LivingCities.DFU
             double incidentStart = now - 1200;
 
             // Every phase runs on a deep validated copy. Live resident state stays untouched.
-            var isolated = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+            var isolated = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
             isolated.Restore(liveStore.Snapshot());
             var isolatedTown = isolated.GetOrCreate(settlementId, new int[0]);
             Resident isolatedWitness = null;
@@ -125,7 +125,7 @@ namespace LivingCities.DFU
 
                 string json = SaveLoadManager.Serialize(typeof(WorldState), isolated.Snapshot());
                 var saved = (WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json);
-                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+                var restored = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 restored.Restore(saved);
                 var restoredIncident = restored.Snapshot().AlarmIncidents.Find(item => item.Id == incident.Id);
                 if (restoredIncident == null || !restoredIncident.PlayerAttributed || !restoredIncident.AccusationIssued ||
@@ -146,7 +146,7 @@ namespace LivingCities.DFU
                     restored.HoldsPartnerGrudge(isolatedWitness, now))
                     throw new InvalidOperationException("Resolved accused murder kept ordinary witness fear.");
 
-                Debug.Log("LIVING_CITIES_MURDER_WITNESS_PASS: expired player-attributed witness remains alarmed before report, accusation and native restore; fear clears only after accused crime resolves; witness=" + witness.Id);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_MURDER_WITNESS_PASS: expired player-attributed witness remains alarmed before report, accusation and native restore; fear clears only after accused crime resolves; witness=" + witness.Id);
             }
             finally
             {

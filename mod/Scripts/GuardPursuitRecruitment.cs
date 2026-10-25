@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
@@ -27,7 +27,7 @@ namespace LivingCities.DFU
                     {guard.Id,route} },1,2.8,DaggerfallUnity.Instance.WorldTime.TimeScale).Count==0) return false;
             }
             actor.BeginCombat(now);
-            Debug.Log("LIVING_CITIES_PURSUIT_REACQUIRED: guard="+guard.Id);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PURSUIT_REACQUIRED: guard="+guard.Id);
             return true;
         }
         private void RecruitNearbyPursuitGuards(double now)
@@ -43,7 +43,8 @@ namespace LivingCities.DFU
             foreach(var caller in callers)
             {
                 var source=Roster.Guards.Find(g=>g.Id==caller.GuardId);
-                if(source==null || source.LastSeenSuspect==null) continue;
+                if(source==null || source.LastSeenSuspect==null ||
+                    Roster.Reports.Exists(report=>report.Id==source.IncidentId && report.HasCorpseInquiryWindow)) continue;
                 foreach(var candidate in actors.Values)
                 {
                     if(!candidate || !candidate.gameObject.activeInHierarchy || candidate.CombatReady || candidate.DefenseTarget) continue;
@@ -59,7 +60,7 @@ namespace LivingCities.DFU
                     candidate.BeginCombat(now,source.LastSeenSuspect);
                     // Passing the alarm along must not renew stale knowledge.
                     sent[0].SearchUntil=Math.Min(sent[0].SearchUntil,source.SearchUntil);
-                    Debug.Log("LIVING_CITIES_PURSUIT_RECRUIT: caller="+caller.GuardId+"; guard="+candidate.GuardId+"; metres="+distance);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PURSUIT_RECRUIT: caller="+caller.GuardId+"; guard="+candidate.GuardId+"; metres="+distance);
                 }
             }
         }

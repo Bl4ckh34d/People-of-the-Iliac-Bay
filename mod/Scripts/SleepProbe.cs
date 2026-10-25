@@ -6,10 +6,10 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class SleepProbe
     {
@@ -21,10 +21,10 @@ namespace LivingCities.DFU
         private static IEnumerator RunAppearance(ResidentSex sex)
         {
             string suffix = sex == ResidentSex.Male ? "" : " - female";
-            string previewName = "Living Cities - sleeping preview" + suffix;
-            string deathName = "Living Cities - sleeping death" + suffix;
+            string previewName = "People of the Iliac Bay - sleeping preview" + suffix;
+            string deathName = "People of the Iliac Bay - sleeping death" + suffix;
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = UnityEngine.Object.FindObjectOfType<StreetPopulation>();
             streets.SleepEnabled = true;
             if (game.PlayerEnterExit.IsPlayerInside) game.PlayerEnterExit.TransitionExterior();
@@ -73,7 +73,7 @@ namespace LivingCities.DFU
             AimCamera(actor.transform.position);
             yield return null;
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-waking" + suffix + ".png"));
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "PeopleOfTheIliacBay-waking" + suffix + ".png"));
             SetHour(23); yield return null;
             if (!actor.IsSleeping) throw new InvalidOperationException("Next bedtime did not restore pose.");
             streets.SleepEnabled = false; yield return null;
@@ -127,7 +127,7 @@ namespace LivingCities.DFU
                 if (!loaded || !streets.FindActor(selected.Id) || !streets.FindActor(selected.Id).IsSleeping)
                     throw new InvalidOperationException("Could not restore living preview after death check.");
                 actor=streets.FindActor(selected.Id); Vector3 bedOrigin=actor.transform.position;
-                var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(adapter);
+                var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(adapter);
                 var wakeWorld=store.Snapshot();
                 var live=wakeWorld.Settlements.Find(t=>t.SettlementId==town.SettlementId);
                 Resident soundVictim=null;
@@ -152,10 +152,10 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Generated escape starts on the bed instead of beside it: "+sex);
                 if (Vector3.Distance(ground,bedOrigin)>3 || ground.y>bedOrigin.y-0.1f || ground.y<bedOrigin.y-1.6f)
                     throw new InvalidOperationException("Generated sleeper escape did not start at bedside floor: " + sex);
-                Debug.Log("LIVING_CITIES_GENERATED_BED_WAKE_PASS: sex="+sex+"; controlled noise; automatic bedside floor/escape; original identity retained.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GENERATED_BED_WAKE_PASS: sex="+sex+"; controlled noise; automatic bedside floor/escape; original identity retained.");
                 double reportAt=response.Escape.ReportAt;
                 saved=false;
-                string wakingName="Living Cities - waking escape"+suffix;
+                string wakingName="People of the Iliac Bay - waking escape"+suffix;
                 game.SaveLoadManager.Save(game.PlayerEntity.Name,wakingName);
                 deadline=Time.realtimeSinceStartup+30;
                 while (!saved && Time.realtimeSinceStartup<deadline) yield return null;
@@ -165,17 +165,17 @@ namespace LivingCities.DFU
                 DaggerfallUI.Instance.PopToHUD(); deadline=Time.realtimeSinceStartup+45;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup<deadline) yield return null;
                 yield return new WaitForSecondsRealtime(0.25f);
-                store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(adapter);
+                store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(adapter);
                 alarm=store.ActiveAlarm(selected.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
                 response=alarm==null ? null : alarm.People.Find(p=>p.ResidentId==selected.Id);
                 actor=streets.FindActor(selected.Id);
                 if (!loaded || response==null || !response.Awakened || response.Escape==null || Math.Abs(response.Escape.ReportAt-reportAt)>0.001 ||
                     (response.BuildingKey==selected.HomeKey && (!actor || actor.IsSleeping || actor.Person.NameNPC!=name)))
                     throw new InvalidOperationException("Generated waking/escape identity or timing lost after reload: "+sex);
-                Debug.Log("LIVING_CITIES_GENERATED_BED_WAKE_RELOAD_PASS: sex="+sex+"; actual reload preserves awake identity and original automatic journey.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GENERATED_BED_WAKE_RELOAD_PASS: sex="+sex+"; actual reload preserves awake identity and original automatic journey.");
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
-            Debug.Log("LIVING_CITIES_TOWN_SLEEP_PASS: sex=" + sex + "; resident=" + selected.Id + "; name=" + name +
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_SLEEP_PASS: sex=" + sex + "; resident=" + selected.Id + "; name=" + name +
                 "; building=" + selected.HomeKey + "; bedtime, midnight, waking, toggle, raycast target, death and actual save/load");
         }
         private static IEnumerator FrameSleeper(ResidentActor actor)
@@ -202,7 +202,7 @@ namespace LivingCities.DFU
                 if (nearestFloor == float.MaxValue) continue;
                 RaycastHit obstruction;
                 if (Physics.Linecast(desired, target, out obstruction, ~0, QueryTriggerInteraction.Ignore))
-                { Debug.Log("LIVING_CITIES_SLEEP_CAMERA_BLOCKED: desired=" + desired + "; target=" + target + "; hit=" + obstruction.collider.name); continue; }
+                { Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SLEEP_CAMERA_BLOCKED: desired=" + desired + "; target=" + target + "; hit=" + obstruction.collider.name); continue; }
                 game.PlayerMotor.CancelMovement = true;
                 game.PlayerMotor.transform.position = floor + Vector3.up;
                 yield return new WaitForSecondsRealtime(0.2f);
@@ -210,7 +210,7 @@ namespace LivingCities.DFU
                 yield return null;
                 yield return new WaitForEndOfFrame();
                 Vector3 view = Camera.main.WorldToViewportPoint(target);
-                Debug.Log("LIVING_CITIES_SLEEP_CAMERA: desired=" + desired + "; actual=" + Camera.main.transform.position +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SLEEP_CAMERA: desired=" + desired + "; actual=" + Camera.main.transform.position +
                     "; viewport=" + view + "; pitch=" + game.PlayerMouseLook.Pitch + "; rotation=" + Camera.main.transform.eulerAngles);
                 if (view.z <= 0 || Mathf.Abs(view.x - 0.5f) > 0.05f || Mathf.Abs(view.y - 0.5f) > 0.05f ||
                     Physics.Linecast(Camera.main.transform.position, target, ~0, QueryTriggerInteraction.Ignore)) continue;
@@ -233,7 +233,7 @@ namespace LivingCities.DFU
                     (hasRotation && Quaternion.Angle(fixedRotation, blanket.rotation) > 0.01f))
                     throw new InvalidOperationException("Sleeper rotates away from mattress as player moves.");
                 fixedRotation = blanket.rotation; hasRotation = true;
-                Debug.Log("LIVING_CITIES_SLEEP_FOOTPRINT: sex=" + actor.Resident.Sex + "; view=" + index +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SLEEP_FOOTPRINT: sex=" + actor.Resident.Sex + "; view=" + index +
                     "; scale=" + blanket.localScale + "; centerOffset=" + (blanket.position - actor.transform.position));
                 foreach (var vertex in blanket.GetComponent<MeshFilter>().sharedMesh.vertices)
                 {
@@ -249,7 +249,7 @@ namespace LivingCities.DFU
                 if (Mathf.Abs(Vector3.Dot(direction, actor.transform.right)) > 0.99f)
                 { sidePosition = game.PlayerMotor.transform.position; found = true; }
                 ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,
-                    "LivingCities-sleeping" + suffix + "-position-" + direction + "-" + distance + ".png"));
+                    "PeopleOfTheIliacBay-sleeping" + suffix + "-position-" + direction + "-" + distance + ".png"));
                 yield return null;
             }
             if (!found || !hasRotation) throw new InvalidOperationException("Sleeping fixture needs a visible bedside position.");
@@ -258,8 +258,8 @@ namespace LivingCities.DFU
             yield return new WaitForSecondsRealtime(0.5f);
             AimCamera(target);
             yield return null; yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-sleeping" + suffix + ".png"));
-            Debug.Log("LIVING_CITIES_TOWN_SLEEP_VIEW: view=" + actor.GetComponent<SleepingPose>().ViewIndex +
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "PeopleOfTheIliacBay-sleeping" + suffix + ".png"));
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_SLEEP_VIEW: view=" + actor.GetComponent<SleepingPose>().ViewIndex +
                 "; distinctViews=" + observedViews.Count + "; camera=" + Camera.main.transform.position + "; sleeper=" + actor.transform.position);
             yield return new WaitForEndOfFrame();
         }

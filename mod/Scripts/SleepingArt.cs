@@ -1,33 +1,66 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
-using LivingCities.Core;
+using DaggerfallWorkshop.Utility.AssetInjection;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class SleepingArt : IDisposable
     {
         public sealed class Atlas { public Texture2D Texture; public Rect[] Views; }
         private readonly Mod mod;
-        private readonly Dictionary<int, Atlas> atlases = new Dictionary<int, Atlas>();
+        private readonly Dictionary<SleepArtCatalog.Entry, Atlas> atlases = new Dictionary<SleepArtCatalog.Entry, Atlas>();
         private readonly Dictionary<string, Texture2D> textures = new Dictionary<string, Texture2D>();
         private readonly Dictionary<string, Rect[]> footprints = new Dictionary<string, Rect[]>();
+        // DFU fixes enabled mods and load order for the running game. Resolve each
+        // source once for this art owner's lifetime, including unsupported sources.
+        private readonly Dictionary<long, SleepArtCatalog.Entry> resolvedEntries = new Dictionary<long, SleepArtCatalog.Entry>();
         public SleepingArt(Mod mod) { this.mod = mod; }
         public Atlas ForNative(NativePerson person)
         {
-            return person==null?null:LoadEntry(SleepArtCatalog.Find(person.TextureArchive,person.TextureRecord));
+            return person==null?null:LoadEntry(Resolve(person.TextureArchive,person.TextureRecord));
         }
         public Atlas ForResident(Resident resident)
         {
-            return LoadEntry(SleepArtCatalog.ForResident(resident));
+            if (resident == null) return null;
+            if (resident.NativeIdentity != null) return ForNative(resident.NativeIdentity);
+            var original = SleepArtCatalog.ForResident(resident);
+            return original == null ? null : LoadEntry(Resolve(original.Archive, original.Record));
+        }
+        private SleepArtCatalog.Entry Resolve(int archive, int record)
+        {
+            long key = ((long)archive << 32) | (uint)record;
+            SleepArtCatalog.Entry entry;
+            if (resolvedEntries.TryGetValue(key, out entry)) return entry;
+            entry = SleepArtCatalog.Find(archive, record, SourceProvider(archive, record));
+            resolvedEntries.Add(key, entry);
+            return entry;
+        }
+        // Match native texture import precedence: loose files first, then enabled mods
+        // in reverse load order. Unknown replacement art has no substitute face.
+        public static string SourceProvider(int archive, int record)
+        {
+            if (!DaggerfallUnity.Settings.AssetInjection) return "";
+            string name = archive + "_" + record + "-0.png";
+            if (File.Exists(Path.Combine(TextureReplacement.TexturesPath, name))) return "unsupported-loose-file";
+            if (ModManager.Instance == null) return "";
+            foreach (var source in ModManager.Instance.EnumerateModsReverse())
+            {
+                if (!source.Enabled || !source.HasAsset(name)) continue;
+                // HasAsset can also contain a same-named non-texture asset.
+                if (source.GetAsset<Texture2D>(name, false) != null) return source.ModInfo.GUID;
+            }
+            return "";
         }
         private Atlas LoadEntry(SleepArtCatalog.Entry entry)
         {
             if(entry==null) return null;
-            int key=entry.Archive*1000+entry.Record;
             Atlas atlas;
-            if (atlases.TryGetValue(key, out atlas)) return atlas;
+            if (atlases.TryGetValue(entry, out atlas)) return atlas;
             Texture2D texture;
             if(!textures.TryGetValue(entry.File,out texture))
             {
@@ -51,7 +84,7 @@ namespace LivingCities.DFU
             var footprint=bounds[entry.Cell<0?0:entry.Cell];
             if(footprint.width==0) throw new InvalidOperationException("Sleeping atlas cell is empty: "+entry.Cell);
             atlas=new Atlas {Texture=texture,Views=new[]{footprint}};
-            atlases.Add(key,atlas);
+            atlases.Add(entry,atlas);
             return atlas;
         }
         public static Rect GridFootprint(Texture2D texture,int cell)
@@ -122,6 +155,7 @@ namespace LivingCities.DFU
             textures.Clear();
             footprints.Clear();
             atlases.Clear();
+            resolvedEntries.Clear();
         }
     }
 }

@@ -6,8 +6,8 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
-namespace LivingCities.DFU
+using PeopleOfTheIliacBay.Core;
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class RegionalIdentityAdapter
     {

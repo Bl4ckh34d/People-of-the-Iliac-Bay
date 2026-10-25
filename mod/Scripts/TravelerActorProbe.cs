@@ -5,21 +5,21 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class TravelerActorProbe
     {
         public static IEnumerator Run(BuildingDirectory directory,TownGeometry geometry,int inn,TownGeometry.TravelerAccess access)
         {
             var game=GameManager.Instance;
-            var adapter=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets=adapter.GetComponent<StreetPopulation>();
             float deadline=Time.realtimeSinceStartup+90;
             while(!streets.Ready && Time.realtimeSinceStartup<deadline) yield return null;
             if(!streets.Ready) throw new InvalidOperationException("Traveler actor settlement not ready: "+adapter.TestStatus());
-            var field=typeof(LivingCitiesMod).GetField("store",BindingFlags.NonPublic|BindingFlags.Instance);
+            var field=typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.NonPublic|BindingFlags.Instance);
             var store=(WorldStateStore)field.GetValue(adapter);
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
             var proposal=TravelerIdentityAdapter.Create(42,directory.MapID,inn,(int)(clock.ToSeconds()/86400d),777,access);
@@ -144,11 +144,11 @@ namespace LivingCities.DFU
             try
             {
                 string character=game.PlayerEntity.Name;
-                game.SaveLoadManager.Save(character,"Living Cities - traveler death");
+                game.SaveLoadManager.Save(character,"People of the Iliac Bay - traveler death");
                 deadline=Time.realtimeSinceStartup+30;
                 while(!saved && Time.realtimeSinceStartup<deadline) yield return null;
                 if(!saved) throw new InvalidOperationException("Traveler death save timed out.");
-                int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"Living Cities - traveler death");
+                int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"People of the Iliac Bay - traveler death");
                 game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
                 deadline=Time.realtimeSinceStartup+90;
                 while((!loaded || !streets.Ready) && Time.realtimeSinceStartup<deadline) yield return null;
@@ -157,12 +157,12 @@ namespace LivingCities.DFU
                 store=(WorldStateStore)field.GetValue(adapter);
                 if(store.Traveler(proposal.Person.Id).IsAlive || streets.FindActor(proposal.Person.Id) || streets.CorpseCount==0)
                     throw new InvalidOperationException("Traveler revived or corpse vanished on actual save reload.");
-                Debug.Log("LIVING_CITIES_TRAVELER_ACTOR_PASS: Daggerfall arrival movement/name/reload, later visit, native weapon death, corpse and real save/load.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_ACTOR_PASS: Daggerfall arrival movement/name/reload, later visit, native weapon death, corpse and real save/load.");
                 yield return RefusedGuest(streets,adapter,field,inn,access);
             }
             finally { SaveLoadManager.OnSave-=onSave; SaveLoadManager.OnLoad-=onLoad; }
         }
-        private static IEnumerator RefusedGuest(StreetPopulation streets,LivingCitiesMod adapter,FieldInfo field,int inn,TownGeometry.TravelerAccess access)
+        private static IEnumerator RefusedGuest(StreetPopulation streets,PeopleOfTheIliacBayMod adapter,FieldInfo field,int inn,TownGeometry.TravelerAccess access)
         {
             var game=GameManager.Instance;
             var store=(WorldStateStore)field.GetValue(adapter);
@@ -195,13 +195,13 @@ namespace LivingCities.DFU
             var before=actor.transform.position;
             yield return new WaitForSecondsRealtime(1);
             if(Vector3.Distance(before,actor.transform.position)<0.1f) throw new InvalidOperationException("Refused guest is not walking away.");
-            yield return SaveArrival(game.PlayerEntity.Name,streets,"Living Cities - traveler refused");
+            yield return SaveArrival(game.PlayerEntity.Name,streets,"People of the Iliac Bay - traveler refused");
             store=(WorldStateStore)field.GetValue(adapter);
             if(!streets.FindActor(proposal.Person.Id) || store.TravelerVisitsFor(proposal.Visit.SettlementId).Find(v=>v.Id==proposal.Visit.Id).Admission!=TravelerAdmission.Refused)
                 throw new InvalidOperationException("Refused guest departure lost on reload.");
-            Debug.Log("LIVING_CITIES_TRAVELER_REFUSAL_PASS: full inn, no bed, named walking departure and disk reload.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_REFUSAL_PASS: full inn, no bed, named walking departure and disk reload.");
         }
-        private static IEnumerator GuestRoom(string visit,string person,string name,int inn,StreetPopulation streets,LivingCitiesMod adapter,FieldInfo field)
+        private static IEnumerator GuestRoom(string visit,string person,string name,int inn,StreetPopulation streets,PeopleOfTheIliacBayMod adapter,FieldInfo field)
         {
             var game=GameManager.Instance;
             var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
@@ -244,7 +244,7 @@ namespace LivingCities.DFU
             }
             if(!arrived || totalMovement<0.1f)
                 throw new InvalidOperationException("Paid traveler did not physically reach assigned room bed-side floor.");
-            Debug.Log("LIVING_CITIES_TRAVELER_ROOM_ARRIVAL_PASS: guest moved by rendered frames to assigned bed-side floor.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_ROOM_ARRIVAL_PASS: guest moved by rendered frames to assigned bed-side floor.");
             clock.RaiseTime((float)(Math.Floor(clock.ToSeconds()/86400d)*86400+86340-clock.ToSeconds()));
             yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
             yield return new WaitForSecondsRealtime(1);
@@ -258,7 +258,7 @@ namespace LivingCities.DFU
             yield return null;
             SleepProbe.AimCamera(actor.transform.position);
             yield return new WaitForEndOfFrame();
-            yield return SaveArrival(game.PlayerEntity.Name,streets,"Living Cities - traveler sleeping");
+            yield return SaveArrival(game.PlayerEntity.Name,streets,"People of the Iliac Bay - traveler sleeping");
             actor=streets.FindActor(person);
             if(!actor || !actor.IsSleeping || actor.Person.NameNPC!=name)
                 throw new InvalidOperationException("Sleeping guest identity or pose lost on reload.");
@@ -289,9 +289,9 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Guest does not walk toward exit before checkout.");
             game.PlayerEnterExit.TransitionExterior();
             yield return new WaitForSecondsRealtime(2);
-            Debug.Log("LIVING_CITIES_TRAVELER_INN_PASS: named paid guest, assigned bed, sleeping reload and morning wake.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_INN_PASS: named paid guest, assigned bed, sleeping reload and morning wake.");
         }
-        private static IEnumerator SaveArrival(string character,StreetPopulation streets,string saveName="Living Cities - traveler arrival")
+        private static IEnumerator SaveArrival(string character,StreetPopulation streets,string saveName="People of the Iliac Bay - traveler arrival")
         {
             var game=GameManager.Instance;
             bool saved=false,loaded=false;

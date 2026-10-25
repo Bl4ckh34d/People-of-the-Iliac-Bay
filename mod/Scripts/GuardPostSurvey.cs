@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class TownGeometry
     {
@@ -20,6 +20,7 @@ namespace LivingCities.DFU
         private readonly List<GateFacingSite> gateFacingSites=new List<GateFacingSite>();
         private readonly List<SavedRoutePoint[]> gateCrossings=new List<SavedRoutePoint[]>();
         private readonly Dictionary<SavedRoutePoint,Vector3> postFacings=new Dictionary<SavedRoutePoint,Vector3>();
+        public int PublicPostsAcrossStreetWidth {get;private set;}
         public sealed class GuardPostResult {public List<SavedRoutePoint> Posts;}
         public List<SavedRoutePoint> SurveyGuardPosts(int maximum)
         {
@@ -49,28 +50,52 @@ namespace LivingCities.DFU
                 foreach(var gate in gates)
                 { var gap=scene-gate.transform.position; gap.y=0; gateDistance=Mathf.Min(gateDistance,gap.sqrMagnitude); }
                 bool gateSite=gateDistance>=36 && gateDistance<=400 && navigation.GetNavGridWeightLocal(x,z)==15;
-                if(!gateSite && !GuardPostSites.IsJunction(x,z,navigation.GetNavGridWeightLocal,8)) continue;
+                if(!gateSite && !GuardPostSites.IsJunction(x,z,navigation.GetNavGridWeightLocal,8) &&
+                    !GuardPostSites.IsBroadStreet(x,z,navigation.GetNavGridWeightLocal,4,2)) continue;
                 float doorDistance=float.PositiveInfinity;
                 foreach(var door in doors) { var gap=scene-door; gap.y=0; doorDistance=Mathf.Min(doorDistance,gap.sqrMagnitude); }
                 if(doorDistance<25) continue;
                 var local=origin.InverseTransformPoint(scene);
-                // Prefer gate approaches and the edges of paved public spaces.
+                // Rank public spaces and broad streets. The final point is
+                // distributed inside its physically verified paved cross-section.
                 candidates.Add(new PostSite { Point=new SavedRoutePoint { X=local.x,Z=local.z },
                     Rank=(gateSite ? -10000 : 0)+doorDistance });
             }
             candidates.Sort((a,b)=>{ int n=a.Rank.CompareTo(b.Rank); if(n!=0) return n;
                 n=a.Point.X.CompareTo(b.Point.X); return n!=0 ? n : a.Point.Z.CompareTo(b.Point.Z); });
             var posts=new List<SavedRoutePoint>();
+            PublicPostsAcrossStreetWidth=0;
             foreach(var site in candidates)
             {
-                if(++work%8==0) yield return null;
+                yield return null;
+                if(posts.Exists(p=>Math.Pow(p.X-site.Point.X,2)+Math.Pow(p.Z-site.Point.Z,2)<36)) continue;
+                var original=site.Point;
+                var sceneOriginal=ScenePoint(new RoutePoint(original.X,original.Z));
+                var grid=navigation.WorldToNavGridPosition(navigation.SceneToWorldPosition(sceneOriginal));
+                int alongX=0,alongZ=0;
+                for(int step=-8;step<=8;step++)
+                {
+                    int wx=navigation.GetNavGridWeightLocal(grid.X+step,grid.Y);
+                    int wz=navigation.GetNavGridWeightLocal(grid.X,grid.Y+step);
+                    if(wx==15 || wx==4) alongX++;if(wz==15 || wz==4) alongZ++;
+                }
+                var normal=alongX>=alongZ ? new RoutePoint(0,1) : new RoutePoint(1,0);
+                var originPoint=new RoutePoint(original.X,original.Z);
+                var width=SurveyStreetCrossSection(originPoint,normal);
+                uint seed;unchecked {seed=(uint)((int)original.X*73856093 ^ (int)original.Z*19349663 ^ directory.MapID);}
+                double lateral=width.Center-width.Right+CorridorLaneRoutes.Percentile(seed)*(width.Left+width.Right);
+                var shifted=new SavedRoutePoint {X=original.X+normal.X*lateral,Z=original.Z+normal.Z*lateral};
+                if(LaneSegmentClear(originPoint,new RoutePoint(shifted.X,shifted.Z))) site.Point=shifted;
                 if(posts.Exists(p=>Math.Pow(p.X-site.Point.X,2)+Math.Pow(p.Z-site.Point.Z,2)<36)) continue;
                 var ground=ScenePoint(new RoutePoint(site.Point.X,site.Point.Z)); bool blocked=false;
                 foreach(var collider in Physics.OverlapCapsule(ground+Vector3.up*0.7f,ground+Vector3.up*1.7f,
                     0.4f,~0,QueryTriggerInteraction.Ignore))
                     if(IsStaticBlocker(collider)) { blocked=true; break; }
                 if(blocked || RouteBetweenPoints(site.Point,site.Point).Count<2) continue;
-                posts.Add(site.Point); if(posts.Count>=maximum) break;
+                posts.Add(site.Point);
+                if(width.Left+width.Right>=3 && Math.Pow(site.Point.X-original.X,2)+Math.Pow(site.Point.Z-original.Z,2)>=0.25)
+                    PublicPostsAcrossStreetWidth++;
+                if(posts.Count>=maximum) break;
             }
             result.Posts=posts;
         }
@@ -123,7 +148,7 @@ namespace LivingCities.DFU
                 yield return null;
                 var gate=gates[index]; var mesh=gate.GetComponent<MeshFilter>();
                 if(!mesh || !mesh.sharedMesh)
-                { Debug.LogWarning("LIVING_CITIES_GATE_SURVEY_GATE: gate="+index+" name="+gate.name+" missing MeshFilter/sharedMesh"); continue; }
+                { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: gate="+index+" name="+gate.name+" missing MeshFilter/sharedMesh"); continue; }
                 var bounds=mesh.sharedMesh.bounds;
                 bool normalAlongX=bounds.size.x<bounds.size.z;
                 var localNormal=normalAlongX ? Vector3.right : Vector3.forward;
@@ -136,12 +161,12 @@ namespace LivingCities.DFU
                 if(nativeFrame) apertureCenter.x=-3.1875f;
                 var middle=gate.transform.TransformPoint(apertureCenter);
                 if(worldNormal.sqrMagnitude<0.0001f)
-                { Debug.LogWarning("LIVING_CITIES_GATE_SURVEY_GATE: gate="+index+" degenerate wall normal; localNormal="+localNormal+" transform="+gate.transform.rotation); continue; }
+                { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: gate="+index+" degenerate wall normal; localNormal="+localNormal+" transform="+gate.transform.rotation); continue; }
                 if(Vector3.Dot(worldNormal,center-middle)<0) worldNormal=-worldNormal;
                 worldNormal.Normalize();
                 var worldAxis=gate.transform.TransformDirection(localAxis); worldAxis.y=0;
                 if(worldAxis.sqrMagnitude<0.0001f)
-                { Debug.LogWarning("LIVING_CITIES_GATE_SURVEY_GATE: gate="+index+" degenerate aperture axis; localAxis="+localAxis+" transform="+gate.transform.rotation); continue; }
+                { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: gate="+index+" degenerate aperture axis; localAxis="+localAxis+" transform="+gate.transform.rotation); continue; }
                 worldAxis.Normalize();
                 var localCenter=origin.InverseTransformPoint(middle);
                 var localCity=origin.InverseTransformDirection(worldNormal); localCity.y=0;
@@ -155,7 +180,7 @@ namespace LivingCities.DFU
                 var outer=origin.InverseTransformPoint(middle-worldNormal*(halfDepth+2));
                 crossings.Add(new[] { new SavedRoutePoint { X=inner.x,Z=inner.z },
                     new SavedRoutePoint { X=outer.x,Z=outer.z } });
-                Debug.Log("LIVING_CITIES_GATE_SURVEY_GATE: index="+index+" name="+gate.name+" gates="+gates.Length+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: index="+index+" name="+gate.name+" gates="+gates.Length+
                     " nav="+Width+"x"+Height+" terrain="+(terrain ? terrain.name : "none")+
                     " boundsCenter="+bounds.center+" boundsSize="+bounds.size+
                     " scale="+gate.transform.lossyScale+" position="+gate.transform.position+
@@ -167,8 +192,8 @@ namespace LivingCities.DFU
                 try { plan=GateGuardPosts.Build(localCenter.x,localCenter.z,localCity.x,localCity.z,
                     localAxisDirection.x,localAxisDirection.z,halfDepth,halfOpening,1.5,1.25); }
                 catch(ArgumentException ex)
-                { Debug.LogWarning("LIVING_CITIES_GATE_SURVEY_GATE: index="+index+" plan rejected: "+ex.Message); continue; }
-                Debug.Log("LIVING_CITIES_GATE_SURVEY_PLAN: gate="+index+" insideFacing="+plan.InsideFacing+
+                { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_GATE: index="+index+" plan rejected: "+ex.Message); continue; }
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_PLAN: gate="+index+" insideFacing="+plan.InsideFacing+
                     " outsideFacing="+plan.OutsideFacing+" desired="+DescribeGatePoint("IL",plan.InsideLeft)+";"+
                     DescribeGatePoint("IR",plan.InsideRight)+";"+DescribeGatePoint("RL",plan.InsideReturnLeft)+";"+
                     DescribeGatePoint("RR",plan.InsideReturnRight)+";"+DescribeGatePoint("OL",plan.OutsideLeft)+";"+
@@ -263,7 +288,7 @@ namespace LivingCities.DFU
         private void LogGateStationFailure(int gate,string station,SavedRoutePoint desired,
             List<SavedRoutePoint> occupied,string diagnostic)
         {
-            Debug.LogWarning("LIVING_CITIES_GATE_SURVEY_STATION_FAIL: gate="+gate+" station="+station+
+            Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_GATE_SURVEY_STATION_FAIL: gate="+gate+" station="+station+
                 " desired="+DescribeGatePoint("",desired)+" occupied="+occupied.Count+" "+diagnostic);
         }
         private bool TryResolveGatePost(SavedRoutePoint desired,List<SavedRoutePoint> occupied,

@@ -1,0 +1,165 @@
+{
+  "schemaVersion": 2,
+  "fixtureId": "npc-experience-appraisal-acceptance-v2",
+  "extendsFixtureId": "npc-experience-appraisal-acceptance-v1",
+  "provenance": "New synthetic acceptance inputs for currently exposed Core parser and pure relationship-ledger contracts. No model inference. Cross-store acceptance remains a consumer integration concern unless a current authoritative store API verifies pending receipt ownership and commits all affected state.",
+  "contractReferences": {
+    "parser": "NpcExperienceAppraisalContract.TryParseResponse",
+    "relationshipReducer": "NpcRelationshipLedger.TryApplyAppraisal",
+    "affinityReducer": "ConversationAffinityEventPolicy.TryCreate",
+    "storeConsumerDeclarations": [
+      "WorldStateStore.TryCaptureNpcExperienceAppraisal",
+      "WorldStateStore.TryCommitNpcExperienceAppraisal"
+    ],
+    "storeConsumerStatus": "The names are declared in NpcExperienceCommit.cs, but both current method bodies are intentional stubs that return false.",
+    "scopeLimit": "The relationship reducer returns a detached candidate. It does not by itself commit mood, affinity, relationship ledger, and pending inbox consumption atomically."
+  },
+  "cases": [
+    {
+      "id": "appraisal-v2.gift-known-and-unknown-ledger-acceptance",
+      "family": "native money outcome",
+      "arms": [
+        {
+          "id": "known-giver",
+          "input": {
+            "origin": "NativeOutcome",
+            "eventKind": "MoneyReceived",
+            "responsibleActorAttribution": "Known",
+            "responsibleActorId": "player",
+            "observerId": "npc:observer",
+            "subjectPersonId": "npc:observer",
+            "receiptId": "receipt:gift-known-v2",
+            "episodeId": "episode:gift-v2",
+            "outcomeId": "outcome:gift-known-v2"
+          },
+          "knowledge": "NPC knows the native receipt came from the player.",
+          "expectedInvariants": [
+            "A parser-produced appraisal can apply a bounded affinity change to the player-directed row when all captured revisions match.",
+            "MoneyReceived cannot create positive reliability trust.",
+            "A gift may be welcome, awkward, excessive, or unwanted according to known need and stable personality; do not assign one universal meaning."
+          ]
+        },
+        {
+          "id": "unknown-giver",
+          "input": {
+            "origin": "NativeOutcome",
+            "eventKind": "MoneyReceived",
+            "responsibleActorAttribution": "Unknown",
+            "responsibleActorId": null,
+            "observerId": "npc:observer",
+            "subjectPersonId": "npc:observer",
+            "receiptId": "receipt:gift-unknown-v2",
+            "episodeId": "episode:gift-v2",
+            "outcomeId": "outcome:gift-unknown-v2"
+          },
+          "knowledge": "NPC observes receipt but has no known giver.",
+          "expectedInvariants": [
+            "Do not direct affinity, trust, resentment, or fear toward the player without a known actor binding.",
+            "A directed ledger update cannot be accepted for an unknown target."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "appraisal-v2.actual-rescue-vs-claim-and-replay",
+      "family": "native outcome versus attributed claim",
+      "arms": [
+        {
+          "id": "native-rescue",
+          "input": { "origin": "NativeOutcome", "eventKind": "CombatHelp", "responsibleActorAttribution": "Known", "responsibleActorId": "player", "outcomeId": "outcome:rescue-v2" },
+          "expectedInvariants": [
+            "Trust appraisal can be parser-eligible for confirmed CombatHelp when the target and revisions match.",
+            "The same observer-scoped canonical outcome can enter the relationship ledger only once."
+          ]
+        },
+        {
+          "id": "unverified-claim",
+          "input": { "origin": "AttributedSpeech", "claimedEventKind": "CombatHelp", "attributedSpeakerId": "player", "claimedResponsibleActorId": "player", "nativeOutcomeId": null },
+          "expectedInvariants": [
+            "Attributed speech is not converted into a confirmed rescue.",
+            "The parser rejects trust change on attributed speech; the claim cannot be replayed as native outcome evidence."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "appraisal-v2.direct-vs-quoted-threat",
+      "family": "receipt-bound observed speech",
+      "commonUtterance": "I will kill your sister.",
+      "arms": [
+        {
+          "id": "direct-threat",
+          "observerKnowledge": "The player addresses the NPC and directly threatens the NPC's natively known family member.",
+          "speechActForManualReview": "DirectThreat",
+          "target": "npc:family-member",
+          "expectedInvariants": [
+            "Only the direct, observer-known threat may qualify for the direct-threat severe bounds, which remain provisional policy limits rather than target deltas.",
+            "A parser-produced, receipt-bound proposal can be passed through the relationship reducer only if the captured relationship revision matches."
+          ]
+        },
+        {
+          "id": "quoted-report",
+          "observerKnowledge": "The player reports a line another character said in a play; the same episode's prior observed turn identifies it as quotation.",
+          "speechActForManualReview": "QuotedOrReportedSpeech",
+          "target": null,
+          "expectedInvariants": [
+            "Do not apply direct-threat severe consequences to quoted or reported words solely because the words match.",
+            "Current parser validates bounds and bindings, not the truth of semantic classification; this distinction needs human review until a calibrated consumer exists."
+          ]
+        }
+      ],
+      "eventFactoryLimit": "Current attributed-speech factory requires a claimed world-event kind. Do not mislabel a threat as Injury or StatusOnset to make the fixture executable; a speech-only event representation is a future adapter."
+    },
+    {
+      "id": "appraisal-v2.severe-affinity-loss-independent-of-positive-cap",
+      "family": "asymmetric affinity policy",
+      "capturedState": { "positiveAffinityCredit": 0, "relationshipTarget": "player", "targetKnown": true },
+      "evidence": "Receipt-bound direct threat to the NPC's known family member.",
+      "expectedInvariants": [
+        "Positive affinity is limited by currently available positive credit.",
+        "A severe negative proposal is checked against its separate speech bounds and must remain eligible when positive credit is zero; it is not capped at zero or by a positive-growth limit.",
+        "Use current Core policy constants as limits; fixture prescribes no relationship delta.",
+        "Do not implement this semantic case by inventing a world outcome for the speech."
+      ]
+    },
+    {
+      "id": "appraisal-v2.emotional-stability-response-contrast",
+      "family": "personality-conditioned response to insult",
+      "commonObservedUtterance": "You're a fool.",
+      "contrastFactor": "NpcPersonalityProfile.EmotionalStability",
+      "arms": [
+        {
+          "id": "resilient",
+          "stablePersonality": { "emotionalStability": "resilient", "manner": "dry-humored" },
+          "expectedInvariants": [
+            "The same insult may be shrugged off or answered with dry humor if that fits the full context; resilience does not guarantee a joke or immunity to offense.",
+            "Do not assume the utterance is harmless merely because the NPC is resilient."
+          ]
+        },
+        {
+          "id": "sensitive",
+          "stablePersonality": { "emotionalStability": "sensitive", "manner": "dry-humored" },
+          "expectedInvariants": [
+            "Sensitivity can make offense or lingering upset more plausible, but does not force a fixed mood or relationship delta.",
+            "Do not invent insecurity as a persisted trait or treat sensitivity as proof that the NPC will react dramatically."
+          ]
+        }
+      ],
+      "unsupportedTraits": ["humor", "thin-skinned", "insecurity"],
+      "adapterBoundary": "The contrast changes only the existing EmotionalStability value; Manner stays the same. Humor may appear as contextual wording, not as a fabricated personality field. Appraisal remains bounded and observer-evidence-bound."
+    },
+    {
+      "id": "appraisal-v2.branch-replay-stale-atomicity",
+      "family": "relationship-ledger reduction and store boundary",
+      "attempts": [
+        { "id": "current-branch-first-acceptance", "expected": "pure relationship reducer returns one detached candidate when branch, event, appraisal and ledger revisions bind" },
+        { "id": "same-event-replay", "expected": "relationship ledger rejects duplicate observer-scoped deduplication key without mutating source ledger" },
+        { "id": "wrong-branch", "expected": "relationship ledger reducer rejects branch mismatch" },
+        { "id": "stale-ledger-or-relationship-revision", "expected": "reducer rejects expected revision mismatch; source rows and outcome history remain unchanged" },
+        { "id": "cross-store-commit", "expected": "only an authoritative store consumer that validates active branch and pending receipt/request may claim atomic mood+affinity+relationship+inbox commit" }
+      ],
+      "currentSupport": "NpcRelationshipLedger.TryApplyAppraisal covers detached relationship candidate validation, branch equality, revisions and replay rejection. WorldStateStore.TryCaptureNpcExperienceAppraisal and TryCommitNpcExperienceAppraisal are declared but currently return false as intentional stubs; do not treat them as a working transaction.",
+      "futureAdapter": "When the native store transaction consumes an inbox receipt, extend these inputs to assert no partial mood, ConversationAttitude, relationship-ledger, or inbox mutation on every rejection path."
+    }
+  ]
+}

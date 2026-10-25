@@ -5,9 +5,9 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Banking;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -15,14 +15,14 @@ namespace LivingCities.DFU
 
         private void InstallHouseholdLootConsentHook()
         {
-            var host = GetComponent<LivingCitiesMod>();
+            var host = GetComponent<PeopleOfTheIliacBayMod>();
             if (!host) return;
-            var hookType = Type.GetType("LivingCities.QuestHooks.NativeHouseholdLootConsentHooks, LivingCities.QuestHooks", true);
+            var hookType = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeHouseholdLootConsentHooks, PeopleOfTheIliacBay.QuestHooks", true);
             householdLootConsentHook = (IDisposable)Activator.CreateInstance(hookType,
                 new object[] { new Func<DaggerfallInventoryWindow, bool>(window => CanTakeHouseholdLoot(host, window)) });
         }
 
-        private bool CanTakeHouseholdLoot(LivingCitiesMod host, DaggerfallInventoryWindow window)
+        private bool CanTakeHouseholdLoot(PeopleOfTheIliacBayMod host, DaggerfallInventoryWindow window)
         {
             var game = GameManager.Instance;
             if (!host || window == null || !Ready || population == null || worldStore == null || directory == null ||

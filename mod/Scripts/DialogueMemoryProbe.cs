@@ -5,17 +5,17 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterface;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class DialogueMemoryProbe
     {
         private const BindingFlags Flags=BindingFlags.Instance|BindingFlags.NonPublic;
-        public static IEnumerator Run(LivingCitiesMod host,DaggerfallTalkWindow talk,MobilePersonNPC person)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod host,DaggerfallTalkWindow talk,MobilePersonNPC person)
         {
-            var type=typeof(LivingCitiesMod);
+            var type=typeof(PeopleOfTheIliacBayMod);
             var store=(WorldStateStore)type.GetField("store",Flags).GetValue(host);
             string id=(string)type.GetField("conversationPersonId",Flags).GetValue(host);
             var append=type.GetMethod("AppendDialoguePair",Flags);
@@ -43,7 +43,7 @@ namespace LivingCities.DFU
             var reopened=DaggerfallUI.UIManager.TopWindow as DaggerfallTalkWindow;
             if(reopened==null) throw new InvalidOperationException("Memory probe could not reopen conversation.");
             string fresh=(string)read.Invoke(null,new object[]{reopened});
-            if(fresh.Contains("Mirabelle")) throw new InvalidOperationException("Memory test retained the old visible transcript.");
+            if(!fresh.Contains("Mirabelle")) throw new InvalidOperationException("Memory test did not restore the saved visible transcript.");
             type.GetMethod("SubmitFreeText",Flags).Invoke(host,new object[]{reopened,"What was my sister's name, from our earlier conversation?"});
             var busy=type.GetField("conversationBusy",Flags);
             float deadline=Time.realtimeSinceStartup+45f;
@@ -51,7 +51,7 @@ namespace LivingCities.DFU
             string result=(string)read.Invoke(null,new object[]{reopened});
             if((bool)busy.GetValue(host) || !result.Contains("Mirabelle"))
                 throw new InvalidOperationException("Live model did not recall saved memory in reopened conversation: "+result);
-            Debug.Log("LIVING_CITIES_DIALOGUE_MEMORY_PASS: production/native exchanges; real close/reopen; native serializer restore; distinct NPC isolation; live model recalled Mirabelle with empty prior transcript.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_MEMORY_PASS: production/native exchanges; real close/reopen with saved transcript; native serializer restore; distinct NPC isolation; live model recalled Mirabelle.");
         }
     }
 }

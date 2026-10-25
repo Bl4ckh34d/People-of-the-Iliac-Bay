@@ -1,0 +1,1224 @@
+{
+  "schemaVersion": 1,
+  "factualContext": "Synthetic interpretation fixture with invented place names, not a claim about actual Daggerfall geography. No candidates, consent or action outcomes are supplied. Extract language without assuming feasibility.",
+  "design": "Held out from prompt development. Six authored lexical/number families, each at 3/4/5 steps, plus 12 non-request controls. Correlated prefixes are not independent scenario roots. No tuning on this suite.",
+  "cases": [
+    {
+      "id": "held-1-3",
+      "text": "Walk to the Bronze Helm, then wait there for forty-five seconds, then go to the Silver Cup.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Bronze Helm",
+              "Bronze Helm"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 45,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Silver Cup",
+              "Silver Cup"
+            ],
+            "duration": null,
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-1-4",
+      "text": "Walk to the Bronze Helm, then wait there for forty-five seconds, then go to the Silver Cup, then stay there for 3 minutes.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo",
+          "Wait"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Bronze Helm",
+              "Bronze Helm"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 45,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Silver Cup",
+              "Silver Cup"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 3,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-1-5",
+      "text": "Walk to the Bronze Helm, then wait there for forty-five seconds, then go to the Silver Cup, then stay there for 3 minutes, then follow me for fifteen minutes.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo",
+          "Wait",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Bronze Helm",
+              "Bronze Helm"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 45,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Silver Cup",
+              "Silver Cup"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 3,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "Follow",
+            "targets": [
+              "",
+              "me"
+            ],
+            "duration": {
+              "amount": 15,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-2-3",
+      "text": "Please wait here for ninety seconds; next, head to the Quiet Anvil; next, buy four pears.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Purchase"
+        ],
+        "steps": [
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 90,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Quiet Anvil",
+              "Quiet Anvil"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Purchase",
+            "targets": [
+              "pears",
+              "four pears"
+            ],
+            "duration": null,
+            "quantity": 4
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-2-4",
+      "text": "Please wait here for ninety seconds; next, head to the Quiet Anvil; next, buy four pears; next, give me one pear.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Purchase",
+          "Transfer"
+        ],
+        "steps": [
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 90,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Quiet Anvil",
+              "Quiet Anvil"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Purchase",
+            "targets": [
+              "pears",
+              "four pears"
+            ],
+            "duration": null,
+            "quantity": 4
+          },
+          {
+            "kind": "Transfer",
+            "targets": [
+              "pear",
+              "one pear",
+              "me",
+              "me one pear"
+            ],
+            "duration": null,
+            "quantity": 1
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-2-5",
+      "text": "Please wait here for ninety seconds; next, head to the Quiet Anvil; next, buy four pears; next, give me one pear; next, follow me.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Purchase",
+          "Transfer",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 90,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Quiet Anvil",
+              "Quiet Anvil"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Purchase",
+            "targets": [
+              "pears",
+              "four pears"
+            ],
+            "duration": null,
+            "quantity": 4
+          },
+          {
+            "kind": "Transfer",
+            "targets": [
+              "pear",
+              "one pear",
+              "me",
+              "me one pear"
+            ],
+            "duration": null,
+            "quantity": 1
+          },
+          {
+            "kind": "Follow",
+            "targets": [
+              "",
+              "me"
+            ],
+            "duration": null,
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-3-3",
+      "text": "Go to Ralen, then wait there for half a minute, then come to the Broken Wheel.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "Ralen"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 0.5,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Broken Wheel",
+              "Broken Wheel"
+            ],
+            "duration": null,
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-3-4",
+      "text": "Go to Ralen, then wait there for half a minute, then come to the Broken Wheel, then wait there for a quarter of an hour.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo",
+          "Wait"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "Ralen"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 0.5,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Broken Wheel",
+              "Broken Wheel"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 0.25,
+              "unit": "GameHours"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-3-5",
+      "text": "Go to Ralen, then wait there for half a minute, then come to the Broken Wheel, then wait there for a quarter of an hour, then follow me for two hours.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo",
+          "Wait",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "Ralen"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 0.5,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Broken Wheel",
+              "Broken Wheel"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 0.25,
+              "unit": "GameHours"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "Follow",
+            "targets": [
+              "",
+              "me"
+            ],
+            "duration": {
+              "amount": 2,
+              "unit": "GameHours"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-4-3",
+      "text": "Please buy 2 loaves; next, give me one loaf; next, wait here for 12 seconds.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Purchase",
+          "Transfer",
+          "Wait"
+        ],
+        "steps": [
+          {
+            "kind": "Purchase",
+            "targets": [
+              "loaves",
+              "2 loaves"
+            ],
+            "duration": null,
+            "quantity": 2
+          },
+          {
+            "kind": "Transfer",
+            "targets": [
+              "loaf",
+              "one loaf",
+              "me",
+              "me one loaf"
+            ],
+            "duration": null,
+            "quantity": 1
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 12,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-4-4",
+      "text": "Please buy 2 loaves; next, give me one loaf; next, wait here for 12 seconds; next, go to the Copper Lantern.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Purchase",
+          "Transfer",
+          "Wait",
+          "MoveTo"
+        ],
+        "steps": [
+          {
+            "kind": "Purchase",
+            "targets": [
+              "loaves",
+              "2 loaves"
+            ],
+            "duration": null,
+            "quantity": 2
+          },
+          {
+            "kind": "Transfer",
+            "targets": [
+              "loaf",
+              "one loaf",
+              "me",
+              "me one loaf"
+            ],
+            "duration": null,
+            "quantity": 1
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 12,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Copper Lantern",
+              "Copper Lantern"
+            ],
+            "duration": null,
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-4-5",
+      "text": "Please buy 2 loaves; next, give me one loaf; next, wait here for 12 seconds; next, go to the Copper Lantern; next, follow me for 4 minutes.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Purchase",
+          "Transfer",
+          "Wait",
+          "MoveTo",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "kind": "Purchase",
+            "targets": [
+              "loaves",
+              "2 loaves"
+            ],
+            "duration": null,
+            "quantity": 2
+          },
+          {
+            "kind": "Transfer",
+            "targets": [
+              "loaf",
+              "one loaf",
+              "me",
+              "me one loaf"
+            ],
+            "duration": null,
+            "quantity": 1
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 12,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Copper Lantern",
+              "Copper Lantern"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Follow",
+            "targets": [
+              "",
+              "me"
+            ],
+            "duration": {
+              "amount": 4,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-5-3",
+      "text": "Wait here for seven minutes, then walk to the Red Tower, then wait there for sixteen seconds.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Wait"
+        ],
+        "steps": [
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 7,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Red Tower",
+              "Red Tower"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 16,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-5-4",
+      "text": "Wait here for seven minutes, then walk to the Red Tower, then wait there for sixteen seconds, then walk to the West Gate.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Wait",
+          "MoveTo"
+        ],
+        "steps": [
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 7,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Red Tower",
+              "Red Tower"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 16,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the West Gate",
+              "West Gate"
+            ],
+            "duration": null,
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-5-5",
+      "text": "Wait here for seven minutes, then walk to the Red Tower, then wait there for sixteen seconds, then walk to the West Gate, then follow me for half an hour.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Wait",
+          "MoveTo",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 7,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Red Tower",
+              "Red Tower"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 16,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the West Gate",
+              "West Gate"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Follow",
+            "targets": [
+              "",
+              "me"
+            ],
+            "duration": {
+              "amount": 0.5,
+              "unit": "GameHours"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-6-3",
+      "text": "Go to the Old Smithy; next, wait there for twenty-one seconds; next, buy five apples.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "Purchase"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Old Smithy",
+              "Old Smithy"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 21,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "Purchase",
+            "targets": [
+              "apples",
+              "five apples"
+            ],
+            "duration": null,
+            "quantity": 5
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-6-4",
+      "text": "Go to the Old Smithy; next, wait there for twenty-one seconds; next, buy five apples; next, give me three apples.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "Purchase",
+          "Transfer"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Old Smithy",
+              "Old Smithy"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 21,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "Purchase",
+            "targets": [
+              "apples",
+              "five apples"
+            ],
+            "duration": null,
+            "quantity": 5
+          },
+          {
+            "kind": "Transfer",
+            "targets": [
+              "apples",
+              "three apples",
+              "me",
+              "me three apples"
+            ],
+            "duration": null,
+            "quantity": 3
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "held-6-5",
+      "text": "Go to the Old Smithy; next, wait there for twenty-one seconds; next, buy five apples; next, give me three apples; next, follow me for 6 minutes.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "Purchase",
+          "Transfer",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "kind": "MoveTo",
+            "targets": [
+              "the Old Smithy",
+              "Old Smithy"
+            ],
+            "duration": null,
+            "quantity": null
+          },
+          {
+            "kind": "Wait",
+            "targets": [
+              "",
+              "there"
+            ],
+            "duration": {
+              "amount": 21,
+              "unit": "GameSeconds"
+            },
+            "quantity": null
+          },
+          {
+            "kind": "Purchase",
+            "targets": [
+              "apples",
+              "five apples"
+            ],
+            "duration": null,
+            "quantity": 5
+          },
+          {
+            "kind": "Transfer",
+            "targets": [
+              "apples",
+              "three apples",
+              "me",
+              "me three apples"
+            ],
+            "duration": null,
+            "quantity": 3
+          },
+          {
+            "kind": "Follow",
+            "targets": [
+              "",
+              "me"
+            ],
+            "duration": {
+              "amount": 6,
+              "unit": "GameMinutes"
+            },
+            "quantity": null
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-1",
+      "text": "Yesterday Ralen said, \"Go to the Bronze Helm, wait forty-five seconds, then follow me.\" Why would he say that?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-2",
+      "text": "If someone asked you to buy four pears, give me one and follow me, would that be reasonable? This is hypothetical.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-3",
+      "text": "Do not buy pears, do not wait here, and do not follow me. I am describing what I do not want.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-4",
+      "text": "I will go to the Silver Cup, wait three minutes, then follow Ralen. I am telling you my own plan.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-5",
+      "text": "In my play, the guard says, \"Wait here, buy two loaves, and give me one.\" Does that sound natural?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-6",
+      "text": "Are you generally capable of walking, waiting, and carrying things? I am not asking you to do them now.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-7",
+      "text": "Last week you waited ninety seconds, visited the market, and came back. How did you feel?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-8",
+      "text": "The phrase \"follow me for two hours\" contains a duration. What does the phrase mean?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-9",
+      "text": "I dreamed that you walked to the gate, bought apples, and followed me. It was only a dream.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-10",
+      "text": "I am not asking you to go anywhere. I waited for seven minutes yesterday and wanted to tell you that.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-11",
+      "text": "Do you have children? Are you married? How many people live at home?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "control-12",
+      "text": "The inn is down by a river, right? I only want directions, not for you to walk there.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    }
+  ]
+}

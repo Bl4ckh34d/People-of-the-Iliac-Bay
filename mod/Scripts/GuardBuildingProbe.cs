@@ -7,18 +7,18 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.MagicAndEffects;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GuardBuildingProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
-            var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
+            var flag = typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool enabled = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true);
             var controller = adapter.GetComponent<GuardPopulation>();
             float rosterDeadline=Time.realtimeSinceStartup+60;
@@ -32,7 +32,7 @@ namespace LivingCities.DFU
                 if(posted.IsAlive && posted.Duty==GuardDuty.Posted && !controller.Roster.IsOnPatrol(posted.Id) &&
                     !postSites.Exists(p=>Math.Abs(p.X-posted.Post.X)<0.05 && Math.Abs(p.Z-posted.Post.Z)<0.05))
                     throw new InvalidOperationException("Idle saved guard retained a doorway post: "+posted.Id);
-            Debug.Log("LIVING_CITIES_PUBLIC_POSTS_PASS: available="+postSites.Count+"; roster="+controller.Roster.Guards.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PUBLIC_POSTS_PASS: available="+postSites.Count+"; roster="+controller.Roster.Guards.Count);
             bool saved = false, loaded = false;
             GuardBuildingApproach withheld = null;
             GuardRoster withheldRoster = null;
@@ -89,11 +89,11 @@ namespace LivingCities.DFU
                 if (pending == null || !pending.AwaitingApproach || pending.GuardIds.Count != 0)
                     throw new InvalidOperationException("New crime failed to create a fresh pending alarm.");
                 string pendingId = pending.Id;
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - pending shop alarm");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, "People of the Iliac Bay - pending shop alarm");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Pending alarm save timed out.");
-                int pendingKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - pending shop alarm");
+                int pendingKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "People of the Iliac Bay - pending shop alarm");
                 game.SaveLoadManager.Load(pendingKey); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || controller.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -109,7 +109,7 @@ namespace LivingCities.DFU
                 withheld = null;
                 yield return new WaitForSecondsRealtime(1.2f);
                 saved = false; loaded = false;
-                Debug.Log("LIVING_CITIES_PENDING_GUARD_PASS: repeated native alarm, no instant responders, cleared-crime cancellation, real pending save/reload, automatic surveyed-route retry.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PENDING_GUARD_PASS: repeated native alarm, no instant responders, cleared-crime cancellation, real pending save/reload, automatic surveyed-route retry.");
                 var roster = controller.Roster;
                 GuardReport report = roster.Reports.Find(r => r.BuildingKey == approach.BuildingKey);
                 if (report == null || report.GuardIds.Count < 1 || report.GuardIds.Count > 4)
@@ -153,11 +153,11 @@ namespace LivingCities.DFU
                 },game.PlayerEntityBehaviour),AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
                 entity.SetHealth(Math.Max(1, entity.MaxHealth / 2), true); controller.Capture();
                 double health = first.HealthFraction;
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - shop guards");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, "People of the Iliac Bay - shop guards");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Shop guard save timed out.");
-                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - shop guards");
+                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "People of the Iliac Bay - shop guards");
                 game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || controller.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -172,7 +172,7 @@ namespace LivingCities.DFU
                 if(!actor || actor.GetComponent<EntityEffectManager>().EffectCount!=1 ||
                     actor.GetComponent<EntityEffectManager>().GetInstancedBundlesSaveData()[0].liveEffects[0].key!="ContinuousDamage-Fatigue")
                     throw new InvalidOperationException("Actual game reload lost guard spell effect.");
-                Debug.Log("LIVING_CITIES_GUARD_EFFECT_LOAD_PASS: native game save/load restores player spell on wounded indoor guard.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_EFFECT_LOAD_PASS: native game save/load restores player spell on wounded indoor guard.");
                 first = controller.Roster.Guards.Find(g => g.Id == id);
                 if (first.Interior == null || first.Interior.BuildingKey != approach.BuildingKey ||
                     Math.Abs(first.HealthFraction - health) > 0.02)
@@ -189,7 +189,7 @@ namespace LivingCities.DFU
                 yield return null; yield return null;
                 if (first.Interior != null || first.Duty != GuardDuty.Posted)
                     throw new InvalidOperationException("Guard failed to leave the interior and return to its post.");
-                Debug.Log("LIVING_CITIES_TOWN_GUARD_BUILDING_PASS: native indoor alarm, finite delayed arrival, doorway entry, wounded interior save/load and return; save=" + key);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_GUARD_BUILDING_PASS: native indoor alarm, finite delayed arrival, doorway entry, wounded interior save/load and return; save=" + key);
                 // Reuse this real shop to exercise the player's reported escape.
                 roster=controller.Roster;
                 now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
@@ -243,10 +243,10 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Guard lost or restarted player spell crossing the actual shop door; bundles="+transferredEffects.Length+
                         "; key="+(transferredEffects.Length==0 ? "none" : transferredEffects[0].liveEffects[0].key)+
                         "; rounds="+(transferredEffects.Length==0 ? -1 : transferredEffects[0].liveEffects[0].roundsRemaining));
-                Debug.Log("LIVING_CITIES_GUARD_DOOR_EFFECT_PASS: player spell remains on same pursuing guard across native building exit.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_EFFECT_PASS: player spell remains on same pursuing guard across native building exit.");
                 var outsideGeometry=new TownGeometry(game.StreamingWorld.GetCurrentBuildingDirectory(),game.StreamingWorld.GetCurrentCityNavigation(),false);
                 var chaseRoute=outsideGeometry.RouteBetweenPoints(first.EngagementPosition,first.Post);
-                LivingCities.Core.SavedRoutePoint chasePoint=null;
+                PeopleOfTheIliacBay.Core.SavedRoutePoint chasePoint=null;
                 foreach(var point in chaseRoute)
                     if(Math.Pow(point.X-first.EngagementPosition.X,2)+Math.Pow(point.Z-first.EngagementPosition.Z,2)>=36)
                     { chasePoint=point; break; }
@@ -258,7 +258,7 @@ namespace LivingCities.DFU
                 if(Vector3.Distance(beforeChase,actor.transform.position)<0.5f)
                     throw new InvalidOperationException("Exterior pursuer targets player but does not physically move.");
                 if(Math.Abs(first.HealthFraction-health)>0.02) throw new InvalidOperationException("Doorway pursuit healed the guard.");
-                Debug.Log("LIVING_CITIES_GUARD_DOOR_PURSUIT_PASS: same wounded guard follows player through shop door and physically pursues outside.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_PURSUIT_PASS: same wounded guard follows player through shop door and physically pursues outside.");
             }
             finally
             {

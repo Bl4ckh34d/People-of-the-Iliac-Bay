@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
@@ -78,7 +78,7 @@ namespace LivingCities.DFU
                     Roster.MovePost(guard.Id,route,Now(),1.3,DaggerfallUnity.Instance.WorldTime.TimeScale);
                     approachSurvey=StartCoroutine(SurveyApproaches(GameManagerNavigation()));
                     patrolSurvey=StartCoroutine(SurveyPatrols());
-                    Debug.Log("LIVING_CITIES_GUARD_POST_MOVE: "+guard.Id);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_POST_MOVE: "+guard.Id);
                     break;
                 }
             }

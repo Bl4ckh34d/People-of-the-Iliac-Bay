@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallConnect.Utility;
@@ -10,7 +10,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class TavernSurveyProbe
     {
@@ -30,7 +30,7 @@ namespace LivingCities.DFU
             foreach(var stay in old.InnStays) {stay.SettlementId=null;stay.VisitId=null;}
             foreach(var reception in old.InnReceptions) {reception.SettlementId=null;reception.VisitId=null;}
             foreach(var exit in old.ServiceExits) {exit.SettlementId=null;exit.VisitId=null;}
-            var migrated=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());migrated.Restore(legacy);
+            var migrated=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());migrated.Restore(legacy);
             var copy=migrated.Snapshot().ResidentTrips.Find(t=>t.ResidentId==resident);
             if(copy.InnStays.Exists(s=>s.SettlementId!=town) || copy.InnReceptions.Exists(r=>r.SettlementId!=town) ||
                 copy.ServiceExits.Exists(e=>e.SettlementId!=town) || copy.InnStays[0].BookingId!=trip.InnStays[0].BookingId)
@@ -41,15 +41,15 @@ namespace LivingCities.DFU
                 if(copy.InnReceptions[i].VisitId!=trip.InnReceptions[i].VisitId) throw new InvalidOperationException("Legacy reception inferred wrong visit ID.");
             for(int i=0;i<trip.ServiceExits.Count;i++)
                 if(copy.ServiceExits[i].VisitId!=trip.ServiceExits[i].VisitId) throw new InvalidOperationException("Legacy exit inferred wrong visit ID.");
-            Debug.Log("LIVING_CITIES_VISIT_SETTLEMENT_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; native fields and legacy inference.");
-            Debug.Log("LIVING_CITIES_VISIT_ID_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; stable IDs and legacy inference.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_VISIT_SETTLEMENT_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; native fields and legacy inference.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_VISIT_ID_SAVE_PASS: settlement="+town+"; exits="+copy.ServiceExits.Count+"; stable IDs and legacy inference.");
         }
         private static void VerifyRemoteClaims(BuildingDirectory directory,StaticDoor entry,TavernRoomSurvey.Result inventory)
         {
-            var local=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); local.GetOrCreate(directory.MapID,new int[0]);
+            var local=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); local.GetOrCreate(directory.MapID,new int[0]);
             local.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
             NativeInnOccupants.Claim(local,directory,entry,inventory.Rooms,inventory.Occupants,100);
-            var remote=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); remote.GetOrCreate(directory.MapID,new int[0]);
+            var remote=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); remote.GetOrCreate(directory.MapID,new int[0]);
             remote.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
             uint seed=DFRandom.Seed;
             NativeInnOccupants.Claim(remote,directory.MapID,directory.LocationData,entry,inventory.Rooms,inventory.Occupants,100);
@@ -66,21 +66,21 @@ namespace LivingCities.DFU
             var foreign=directory.LocationData; foreign.LocationIndex++;
             for(int r=0;r<MapsFile.RegionRaces.Length;r++)
                 if(MapsFile.RegionRaces[r]!=MapsFile.RegionRaces[foreign.RegionIndex]) {foreign.RegionIndex=r;break;}
-            var alternate=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); alternate.GetOrCreate(directory.MapID,new int[0]);
+            var alternate=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); alternate.GetOrCreate(directory.MapID,new int[0]);
             alternate.RegisterLodging(directory.MapID,entry.buildingKey,inventory.Rooms);
             NativeInnOccupants.Claim(alternate,directory.MapID,foreign,entry,inventory.Rooms,inventory.Occupants,100);
             foreach(var person in alternate.NativePeopleFor(directory.MapID))
                 if(person.FactionId==0 && person.Race!=MapsFile.RegionRaces[foreign.RegionIndex]+1)
                     throw new InvalidOperationException("Remote occupant inherited player region.");
             if(DFRandom.Seed!=seed) throw new InvalidOperationException("Foreign claims changed global random state.");
-            Debug.Log("LIVING_CITIES_REMOTE_CLAIMS_PASS: building="+entry.buildingKey+"; people="+a.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_CLAIMS_PASS: building="+entry.buildingKey+"; people="+a.Count);
         }
         private static void VerifyRemoteReceipt(BuildingDirectory directory,StaticDoor entry,TavernRoomSurvey.Result inventory)
         {
             int marker=-1; string room=null;
             foreach(var pair in inventory.Markers) {marker=pair.Key;room=pair.Value;break;}
             if(marker<0) throw new InvalidOperationException("No rental marker for receipt fixture.");
-            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.GetOrCreate(directory.MapID,new int[0]);
+            var store=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); store.GetOrCreate(directory.MapID,new int[0]);
             var receipt=new RoomRental_v1 {mapID=directory.MapID,buildingKey=entry.buildingKey,allocatedBedIndex=marker,expiryTime=1000};
             NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,100);
             NativeTavernRentals.RegisterInventory(store,directory.MapID,directory.LocationData,entry,inventory,receipt,200);
@@ -92,17 +92,17 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Permanent occupant displaced paid player room.");
             if(store.TryBookLodging(directory.MapID,entry.buildingKey,"conflicting-remote-guest","visitor",777,false,1,200,500,room))
                 throw new InvalidOperationException("Remote guest double-booked player room.");
-            var invalid=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); invalid.GetOrCreate(directory.MapID,new int[0]);
+            var invalid=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); invalid.GetOrCreate(directory.MapID,new int[0]);
             receipt.allocatedBedIndex=int.MaxValue; bool rejected=false;
             try {NativeTavernRentals.RegisterInventory(invalid,directory.MapID,directory.LocationData,entry,inventory,receipt,100);}
             catch(InvalidOperationException) {rejected=true;}
             if(!rejected || invalid.Snapshot().Lodgings.Count!=0 || invalid.NativePeopleFor(directory.MapID).Count!=0)
                 throw new InvalidOperationException("Invalid receipt partially registered destination.");
-            Debug.Log("LIVING_CITIES_REMOTE_RECEIPT_PASS: building="+entry.buildingKey);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_RECEIPT_PASS: building="+entry.buildingKey);
         }
         private static void VerifyLocalPatronFlow(DaggerfallInterior room,InteriorGeometry geometry,WorldState saved,int town,double now)
         {
-            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore(saved);
+            var store=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); store.Restore(saved);
             var people=store.NativePeopleFor(town);
             Func<StaticNPC,bool> isLivingKeeper=npc=>
             {
@@ -135,7 +135,7 @@ namespace LivingCities.DFU
             {
                 if(visits.Create("inn-probe-no-living",3,now+10,now+7210)!=null || visits.TavernKeeper)
                     throw new InvalidOperationException("Tavern without living keeper created local patron visit.");
-                Debug.Log("LIVING_CITIES_TAVERN_PATRON_PASS: building="+room.EntryDoor.buildingKey+"; no living keeper; no local fallback.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_PATRON_PASS: building="+room.EntryDoor.buildingKey+"; no living keeper; no local fallback.");
                 return;
             }
             double start=now+10,end=now+7210;
@@ -166,7 +166,7 @@ namespace LivingCities.DFU
                 journey.Evaluate(stops[stops.Count-1].End+0.1).Phase!=ShopVisitPhase.Leaving ||
                 journey.Evaluate(end).Phase!=ShopVisitPhase.Complete)
                 throw new InvalidOperationException("Tavern local patron did not browse then leave through entrance route.");
-            Debug.Log("LIVING_CITIES_TAVERN_PATRON_PASS: building="+room.EntryDoor.buildingKey+"; keeper="+expected.Data.hash+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_PATRON_PASS: building="+room.EntryDoor.buildingKey+"; keeper="+expected.Data.hash+
                 "; keeper-first, common-room stops="+browsing+", exit route, missing/dead keeper fallback rejected.");
         }
         public static IEnumerator Run()
@@ -200,7 +200,7 @@ namespace LivingCities.DFU
                     var end=route.Points[route.Points.Count-1]; var target=streetGeometry.Entrances[tavern.buildingKey].LocalDoor;
                     if(Math.Abs(end.X-target.x)>.01 || Math.Abs(end.Z-target.z)>.01) throw new InvalidOperationException("Traveler route misses inn entrance.");
                 }
-                Debug.Log("LIVING_CITIES_TRAVELER_ROUTE_PASS: building="+tavern.buildingKey+"; routes="+travelerRoutes.Count+"; walled="+walled);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVELER_ROUTE_PASS: building="+tavern.buildingKey+"; routes="+travelerRoutes.Count+"; walled="+walled);
                 var playerPosition=game.PlayerMotor.transform.position;
                 int people=UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length;
                 Dictionary<int,string> unloadedMarkers;
@@ -236,17 +236,17 @@ namespace LivingCities.DFU
                     var second=TavernRoomSurvey.ReadRemoteSteps(remoteDoor,directory.LocationData.Climate.ClimateType,secondResult,()=>valid);
                     try
                     {
-                        while(first.MoveNext() && !GameObject.Find("Living Cities remote inn owner")) yield return null;
-                        if(!GameObject.Find("Living Cities remote inn owner")) throw new InvalidOperationException("Remote cancellation fixture never started.");
+                        while(first.MoveNext() && !GameObject.Find("People of the Iliac Bay remote inn owner")) yield return null;
+                        if(!GameObject.Find("People of the Iliac Bay remote inn owner")) throw new InvalidOperationException("Remote cancellation fixture never started.");
                         if(!second.MoveNext() || secondResult.Rooms!=null) throw new InvalidOperationException("Concurrent survey bypassed queue.");
                         valid=false;
                         if(first.MoveNext() || second.MoveNext() || interrupted.Rooms!=null || secondResult.Rooms!=null ||
-                            GameObject.Find("Living Cities remote inn owner")) throw new InvalidOperationException("Cancelled remote survey retained geometry or results.");
+                            GameObject.Find("People of the Iliac Bay remote inn owner")) throw new InvalidOperationException("Cancelled remote survey retained geometry or results.");
                     }
                     finally {(first as IDisposable)?.Dispose();(second as IDisposable)?.Dispose();}
-                    Debug.Log("LIVING_CITIES_REMOTE_CANCEL_PASS: active and queued surveys cleaned up.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_CANCEL_PASS: active and queued surveys cleaned up.");
                 }
-                Debug.Log("LIVING_CITIES_REMOTE_INN_PASS: building="+tavern.buildingKey);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_INN_PASS: building="+tavern.buildingKey);
                 var sliced=new TavernRoomSurvey.Result();
                 var operation=TavernRoomSurvey.ReadUnloadedSteps(owner.transform,entry,sliced);
                 int slices=0;
@@ -261,7 +261,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Sliced survey changed rental marker.");
                 foreach(var occupant in unloadedOccupants) if(sliced.Occupants[occupant.Key]!=occupant.Value)
                     throw new InvalidOperationException("Sliced survey changed native bed ownership.");
-                Debug.Log("LIVING_CITIES_SLICED_TAVERN_PASS: building="+tavern.buildingKey+"; slices="+slices);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SLICED_TAVERN_PASS: building="+tavern.buildingKey+"; slices="+slices);
                 if(game.IsPlayerInside || game.PlayerMotor.transform.position!=playerPosition ||
                     UnityEngine.Object.FindObjectsOfType<StaticNPC>().Length!=people)
                     throw new InvalidOperationException("Unloaded tavern survey changed player scene or spawned people.");
@@ -284,22 +284,22 @@ namespace LivingCities.DFU
                         "controller="+(liveStreets!=null)+"; enabled="+(liveStreets && liveStreets.isActiveAndEnabled)+
                         "; streetsReady="+(liveStreets && liveStreets.Ready)+"; bound="+
                         (liveStreets ? Convert.ToString(boundInterior.GetValue(liveStreets)) : "absent")+"; "+
-                        UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().TestStatus());
+                        UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>().TestStatus());
                 var beds=BedGeometry.Read(room); totalBeds+=beds.Count;
                 var rest=room.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Rest);
                 for(int index=0;index<rest.Length;index++)
-                    Debug.Log("LIVING_CITIES_TAVERN_REST: building="+tavern.buildingKey+"; index="+index+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_REST: building="+tavern.buildingKey+"; index="+index+
                         "; position="+room.transform.InverseTransformPoint(rest[index]).ToString("F3"));
                 var navigation=new InteriorGeometry(room); int reachable=0;
                 StaticNPC surveyedKeeper=null;
                 foreach(var npc in room.GetComponentsInChildren<StaticNPC>())
                     if(npc.Data.hash==remote.KeeperHash.Value) {surveyedKeeper=npc;break;}
                 if(!surveyedKeeper || !navigation.EntryGround.HasValue) throw new InvalidOperationException("Remote keeper not found in loaded inn.");
-                var currentState=(WorldState)UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().GetSaveData();
+                var currentState=(WorldState)UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>().GetSaveData();
                 VerifyLocalPatronFlow(room,navigation,currentState,directory.MapID,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
                 if(!socialMovementChecked)
                 {
-                    var adapter=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+                    var adapter=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
                     yield return InnSocialMovementProbe.Run(adapter,adapter.GetComponent<StreetPopulation>(),room);
                     socialMovementChecked=true;
                 }
@@ -316,14 +316,14 @@ namespace LivingCities.DFU
                         room.transform.TransformPoint(new Vector3((float)b.X,(float)b.Y+1,(float)b.Z))))
                         throw new InvalidOperationException("Remote reception route crosses loaded inn geometry.");
                 }
-                Debug.Log("LIVING_CITIES_REMOTE_RECEPTION_PASS: building="+tavern.buildingKey+"; keeper="+remote.KeeperHash+"; points="+remote.ReceptionRoute.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REMOTE_RECEPTION_PASS: building="+tavern.buildingKey+"; keeper="+remote.KeeperHash+"; points="+remote.ReceptionRoute.Count);
                 var bedIds=new HashSet<int>();
                 foreach(var bed in beds)
                 {
                     if(!bedIds.Add(bed.RecordIndex)) throw new InvalidOperationException("Duplicate tavern bed identity.");
                     Vector3 ground; bool access=navigation.StandBesideBed(bed,out ground);
                     bool route=access && navigation.RouteToExit(ground).Count>=2; if(route) reachable++;
-                    Debug.Log("LIVING_CITIES_TAVERN_BED: building="+tavern.buildingKey+"; bed="+bed.RecordIndex+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_BED: building="+tavern.buildingKey+"; bed="+bed.RecordIndex+
                         "; position="+bed.LocalCenter.ToString("F3")+"; accessible="+route);
                 }
                 var doors=room.GetComponentsInChildren<DaggerfallActionDoor>();
@@ -340,7 +340,7 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Loaded/unloaded native bed assignment differs.");
                     if(!Array.Exists(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==occupant.Key))
                         throw new InvalidOperationException("Assigned inn occupant does not exist in native layout.");
-                    Debug.Log("LIVING_CITIES_INN_OCCUPANT_SURVEY: building="+tavern.buildingKey+"; hash="+occupant.Key+"; bed="+occupant.Value);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INN_OCCUPANT_SURVEY: building="+tavern.buildingKey+"; hash="+occupant.Key+"; bed="+occupant.Value);
                 }
                 if(unloadedRooms.Count!=loadedRooms.Count || unloadedMarkers.Count!=loadedMarkers.Count)
                     throw new InvalidOperationException("Unloaded tavern room or marker count differs from actual interior.");
@@ -353,10 +353,10 @@ namespace LivingCities.DFU
                 foreach(var marker in loadedMarkers)
                     if(!unloadedMarkers.ContainsKey(marker.Key) || unloadedMarkers[marker.Key]!=marker.Value)
                         throw new InvalidOperationException("Unloaded tavern marker allocation differs from actual interior.");
-                Debug.Log("LIVING_CITIES_UNLOADED_TAVERN_PASS: building="+tavern.buildingKey+"; rooms/markers match loaded interior; player scene and native people unchanged.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_TAVERN_PASS: building="+tavern.buildingKey+"; rooms/markers match loaded interior; player scene and native people unchanged.");
                 yield return VerifyUnrentedInventory(room,directory.MapID);
                 yield return new WaitForSecondsRealtime(2);
-                var live=(WorldState)UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().GetSaveData();
+                var live=(WorldState)UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>().GetSaveData();
                 var ledger=live.Lodgings.Find(t=>t.SettlementId==directory.MapID && t.BuildingKey==tavern.buildingKey);
                 foreach(var occupant in loadedOccupants)
                 {
@@ -380,7 +380,7 @@ namespace LivingCities.DFU
                             SleepArtCatalog.Find(person.TextureArchive,person.TextureRecord)==null)
                         {
                             missingSleepArt++;
-                            Debug.LogWarning("LIVING_CITIES_INN_SLEEP_ART_MISSING: "+person.Id+"; texture=184:"+person.TextureRecord);
+                            Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_INN_SLEEP_ART_MISSING: "+person.Id+"; texture=184:"+person.TextureRecord);
                             continue;
                         }
                         var npc=Array.Find(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==person.NativeHash);
@@ -400,7 +400,7 @@ namespace LivingCities.DFU
                         var pose=npc.GetComponent<SleepingPose>();
                         if(pose && pose.Active) throw new InvalidOperationException("Native inn occupant remains asleep at midday.");
                     }
-                    Debug.Log("LIVING_CITIES_INN_NATIVE_SLEEP_PASS: building="+tavern.buildingKey+"; occupants="+ledger.Occupants.Count);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INN_NATIVE_SLEEP_PASS: building="+tavern.buildingKey+"; occupants="+ledger.Occupants.Count);
                 }
                 yield return VerifyNativeRental(room,directory.MapID);
                 TavernPaymentProbe.Run(room,directory.MapID);
@@ -408,26 +408,26 @@ namespace LivingCities.DFU
                 yield return VerifyBookedResident(room,directory.MapID);
                 yield return VerifyRefusedResident(room,directory.MapID);
                 foreach(var door in doors)
-                    Debug.Log("LIVING_CITIES_TAVERN_DOOR: building="+tavern.buildingKey+"; id="+door.LoadID+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_DOOR: building="+tavern.buildingKey+"; id="+door.LoadID+
                         "; position="+room.transform.InverseTransformPoint(door.transform.position).ToString("F3")+
                         "; closedRotation="+door.ClosedRotation.eulerAngles.ToString("F3"));
                 foreach(var npc in room.GetComponentsInChildren<StaticNPC>())
-                    Debug.Log("LIVING_CITIES_TAVERN_NPC: building="+tavern.buildingKey+"; hash="+npc.Data.hash+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_NPC: building="+tavern.buildingKey+"; hash="+npc.Data.hash+
                         "; faction="+npc.Data.factionID+"; position="+room.transform.InverseTransformPoint(npc.transform.position).ToString("F3"));
-                Debug.Log("LIVING_CITIES_TAVERN_SURVEY: building="+tavern.buildingKey+"; beds="+beds.Count+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_SURVEY: building="+tavern.buildingKey+"; beds="+beds.Count+
                     "; reachableBeds="+reachable+"; actionDoors="+doors.Length);
                 game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(1);
             }
             if(totalOccupants==0 || totalSleepVerified==0) throw new InvalidOperationException("Inn occupant fixture did not exercise bedroom occupants with sleeping art.");
-            Debug.Log("LIVING_CITIES_TAVERN_SURVEY_PASS: taverns="+taverns.Count+"; beds="+totalBeds+"; assignedOccupants="+totalOccupants+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_SURVEY_PASS: taverns="+taverns.Count+"; beds="+totalBeds+"; assignedOccupants="+totalOccupants+
                 "; sleepingVerified="+totalSleepVerified+"; missingSleepArt="+missingSleepArt+"; native interior census complete.");
         }
         private static IEnumerator VerifyBookedResident(DaggerfallInterior room,int town)
         {
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>();
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var streets=mod.GetComponent<StreetPopulation>();
             var baseline=(WorldState)mod.GetSaveData(); var clock=DaggerfallUnity.Instance.WorldTime.Now;
             clock.RaiseTime((float)(86400-clock.ToSeconds()%86400));
-            double now=clock.ToSeconds(); var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore(baseline);
+            double now=clock.ToSeconds(); var store=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); store.Restore(baseline);
             var person=store.GetOrCreate(102,new[]{30},1).Households[0].Residents[0];
             if(SleepArtCatalog.ForResident(person)==null) throw new InvalidOperationException("Resident inn fixture lacks sleeping art.");
             var trip=ResidentTrip.Create(person.Id,102,town,now-100,3600,100,
@@ -467,7 +467,7 @@ namespace LivingCities.DFU
                 while((!streets.FindActor(person.Id) || !streets.FindActor(person.Id).IsSleeping) && Time.realtimeSinceStartup<deadline) yield return null;
                 var actor=streets.FindActor(person.Id);
                 if(!actor || !actor.IsSleeping) throw new InvalidOperationException("Admitted resident did not sleep in booked inn bed.");
-                var evidence=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); evidence.Restore((WorldState)mod.GetSaveData());
+                var evidence=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); evidence.Restore((WorldState)mod.GetSaveData());
                 string bedId=evidence.ResidentInnBed(person.Id,clock.ToSeconds());
                 var bed=BedGeometry.Read(room).Find(b=>"bed:"+b.RecordIndex==bedId);
                 if(bed==null || Vector3.Distance(actor.transform.position,room.transform.TransformPoint(bed.LocalCenter)+Vector3.up*0.18f)>0.05f)
@@ -510,18 +510,18 @@ namespace LivingCities.DFU
                 evidence.Restore((WorldState)mod.GetSaveData());
                 if(streets.FindActor(person.Id) || evidence.ResidentInnBed(person.Id,clock.ToSeconds())!=null)
                     throw new InvalidOperationException("Final checkout retained guest or room claim.");
-                Debug.Log("LIVING_CITIES_RESIDENT_ROOM_HOLD_PASS: building="+room.EntryDoor.buildingKey+"; excursion, serialized return, second night and checkout.");
-                Debug.Log("LIVING_CITIES_RESIDENT_INN_ROOM_PASS: building="+room.EntryDoor.buildingKey+"; booked bed, sleep restore, daytime waking and physical checkout.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_ROOM_HOLD_PASS: building="+room.EntryDoor.buildingKey+"; excursion, serialized return, second night and checkout.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_INN_ROOM_PASS: building="+room.EntryDoor.buildingKey+"; booked bed, sleep restore, daytime waking and physical checkout.");
             }
             finally {mod.RestoreSaveData(baseline);}
         }
         private static IEnumerator VerifyRefusedResident(DaggerfallInterior room,int town)
         {
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets=mod.GetComponent<StreetPopulation>();
             var baseline=(WorldState)mod.GetSaveData();
             var clock=DaggerfallUnity.Instance.WorldTime.Now; double now=clock.ToSeconds();
-            var store=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); store.Restore(baseline);
+            var store=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); store.Restore(baseline);
             var person=store.GetOrCreate(100,new[]{30},1).Households[0].Residents[0];
             int key=room.EntryDoor.buildingKey;
             // Fill every remaining rentable room in this disposable test population.
@@ -565,17 +565,17 @@ namespace LivingCities.DFU
                 clock.RaiseTime((float)Math.Max(0,ends+1-clock.ToSeconds()));
                 yield return new WaitForSecondsRealtime(1);
                 if(streets.FindActor(person.Id)) throw new InvalidOperationException("Refused resident remained inside after exit.");
-                var restored=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore(persisted);
+                var restored=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore(persisted);
                 if(restored.IsResidentAway(person.Id,returning.HomeAt+1))
                     throw new InvalidOperationException("Refused resident did not return home after serialized exit.");
-                Debug.Log("LIVING_CITIES_RESIDENT_INN_REFUSAL_PASS: building="+key+"; native admission, physical exit, cancelled appointments and serialized return home.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_INN_REFUSAL_PASS: building="+key+"; native admission, physical exit, cancelled appointments and serialized return home.");
             }
             finally {mod.RestoreSaveData(baseline);}
         }
         private static IEnumerator VerifyExteriorInventory(BuildingDirectory directory,int expected,int paidBuilding)
         {
             var game=GameManager.Instance; var player=game.PlayerEntity;
-            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var host=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var priorLodgings=((WorldState)host.GetSaveData()).Lodgings;
             var receipts=new List<DaggerfallWorkshop.Game.Serialization.RoomRental_v1>(player.RentedRooms);
             int gold=player.GetGoldAmount(); var position=game.PlayerMotor.transform.position;
@@ -587,20 +587,25 @@ namespace LivingCities.DFU
                     name="Exterior inventory probe",mapID=directory.MapID,buildingKey=paidBuilding,allocatedBedIndex=0,expiryTime=expiry });
                 var clean=(WorldState)host.GetSaveData(); clean.Lodgings.RemoveAll(t=>t.SettlementId==directory.MapID);
                 host.RestoreSaveData(clean);
-                List<TavernLodging> found=null; float deadline=Time.realtimeSinceStartup+30;
+                // Every native Inn now also surveys its counter and public
+                // tables. Budget per building and avoid copying the entire
+                // save every render frame while the worker is progressing.
+                List<TavernLodging> found=null;float deadline=Time.realtimeSinceStartup+Math.Max(30,expected*15);
                 while(Time.realtimeSinceStartup<deadline)
                 {
                     found=((WorldState)host.GetSaveData()).Lodgings.FindAll(t=>t.SettlementId==directory.MapID);
                     if(found.Count==expected && found.Exists(t=>t.BuildingKey==paidBuilding && t.Bookings.Count==1)) break;
-                    yield return null;
+                    yield return new WaitForSecondsRealtime(0.1f);
                 }
                 if(found==null || found.Count!=expected || game.IsPlayerInside || game.PlayerMotor.transform.position!=position || player.GetGoldAmount()!=gold)
-                    throw new InvalidOperationException("Exterior tavern inventory missing or survey moved/charged player.");
+                    throw new InvalidOperationException("Exterior tavern inventory missing or survey moved/charged player: inns="+
+                        (found==null?0:found.Count)+"/"+expected+"; playerDelta="+Vector3.Distance(game.PlayerMotor.transform.position,position)+
+                        "; gold="+gold+"/"+player.GetGoldAmount()+"; "+ExteriorSurveyState(host));
                 foreach(var inn in found)
                     if(inn.Rooms.Count==0 || (inn.BuildingKey==paidBuilding ?
                         inn.Bookings.Count!=1 || !inn.Bookings[0].Player || inn.Bookings[0].EndsAt!=expiry : inn.Bookings.Count!=0))
                         throw new InvalidOperationException("Exterior inventory lost paid room or invented reservations.");
-                Debug.Log("LIVING_CITIES_EXTERIOR_INVENTORY_PASS: inns="+found.Count+"; paid room imported; no entry, movement or charge.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_EXTERIOR_INVENTORY_PASS: inns="+found.Count+"; paid room imported; no entry, movement or charge.");
             }
             finally
             {
@@ -608,10 +613,19 @@ namespace LivingCities.DFU
                 var restored=(WorldState)host.GetSaveData(); restored.Lodgings=priorLodgings; host.RestoreSaveData(restored);
             }
         }
+        private static string ExteriorSurveyState(PeopleOfTheIliacBayMod host)
+        {
+            var flags=System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic;
+            var rental=typeof(PeopleOfTheIliacBayMod).GetField("nativeRentals",flags).GetValue(host);
+            var type=typeof(NativeTavernRentals);var operation=type.GetField("surveyOperation",flags).GetValue(rental);
+            object state=operation==null?null:operation.GetType().GetField("<>1__state",flags)?.GetValue(operation);
+            return "surveyKey="+type.GetField("surveyKey",flags).GetValue(rental)+"; active="+(operation!=null)+"; iteratorState="+state+
+                "; sharedSurveyActive="+typeof(TavernRoomSurvey).GetField("remoteSurveyActive",System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic).GetValue(null);
+        }
         private static IEnumerator VerifyUnrentedInventory(DaggerfallInterior interior,int town)
         {
             var player=GameManager.Instance.PlayerEntity;
-            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var host=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var priorLodgings=((WorldState)host.GetSaveData()).Lodgings;
             var receipts=new List<DaggerfallWorkshop.Game.Serialization.RoomRental_v1>(player.RentedRooms);
             int building=interior.EntryDoor.buildingKey,gold=player.GetGoldAmount();
@@ -632,7 +646,7 @@ namespace LivingCities.DFU
                 if(lodging==null || lodging.Rooms.FindAll(r=>!r.NonRentable).Count!=new HashSet<string>(mapping.Values).Count || lodging.Bookings.Count!=0 ||
                     player.GetGoldAmount()!=gold || player.GetRentedRoom(town,building)!=null)
                     throw new InvalidOperationException("Unrented tavern did not register guest inventory without payment or bookings.");
-                Debug.Log("LIVING_CITIES_UNRENTED_INVENTORY_PASS: building="+building+"; guestRooms="+lodging.Rooms.Count+"; no receipt, booking or charge.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNRENTED_INVENTORY_PASS: building="+building+"; guestRooms="+lodging.Rooms.Count+"; no receipt, booking or charge.");
             }
             finally
             {
@@ -643,11 +657,11 @@ namespace LivingCities.DFU
         private static IEnumerator VerifyNativeRental(DaggerfallInterior interior,int town)
         {
             var player=GameManager.Instance.PlayerEntity;
-            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var host=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var priorLodgings=((WorldState)host.GetSaveData()).Lodgings;
             var prior=new List<DaggerfallWorkshop.Game.Serialization.RoomRental_v1>(player.RentedRooms);
             var receipt=new DaggerfallWorkshop.Game.Serialization.RoomRental_v1 {
-                name="Living Cities rental probe",mapID=town,buildingKey=interior.EntryDoor.buildingKey,
+                name="People of the Iliac Bay rental probe",mapID=town,buildingKey=interior.EntryDoor.buildingKey,
                 allocatedBedIndex=1,expiryTime=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()+86400 };
             int gold=player.GetGoldAmount(); ulong expiry=receipt.expiryTime;
             try
@@ -677,7 +691,7 @@ namespace LivingCities.DFU
                 if(lodging.Bookings.Count!=1 || lodging.Bookings[0].Id!=booking.Id || lodging.Bookings[0].StartsAt!=booking.StartsAt ||
                     lodging.Bookings[0].EndsAt!=receipt.expiryTime || player.GetGoldAmount()!=gold)
                     throw new InvalidOperationException("Native rental extension duplicated or charged booking.");
-                Debug.Log("LIVING_CITIES_NATIVE_RENTAL_PASS: building="+receipt.buildingKey+"; room="+booking.RoomId+"; paid marker preserved, repeat/extension no charge.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_RENTAL_PASS: building="+receipt.buildingKey+"; room="+booking.RoomId+"; paid marker preserved, repeat/extension no charge.");
             }
             finally
             {
@@ -712,9 +726,9 @@ namespace LivingCities.DFU
                 {
                     if(!closedMarkers.ContainsKey(index) || !openMarkers.ContainsKey(index) || closedMarkers[index]!=openMarkers[index] ||
                         !closed.Exists(r=>r.Id==closedMarkers[index])) throw new InvalidOperationException("Rental marker mapping changed with open doors.");
-                    Debug.Log("LIVING_CITIES_TAVERN_MARKER_PASS: building="+interior.EntryDoor.buildingKey+"; marker="+index+"; room="+closedMarkers[index]);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_MARKER_PASS: building="+interior.EntryDoor.buildingKey+"; marker="+index+"; room="+closedMarkers[index]);
                 }
-                Debug.Log("LIVING_CITIES_TAVERN_ROOMS_PASS: building="+interior.EntryDoor.buildingKey+"; "+signature(closed)+"; open/closed identical.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_ROOMS_PASS: building="+interior.EntryDoor.buildingKey+"; "+signature(closed)+"; open/closed identical.");
             }
             finally { for(int i=0;i<doors.Length;i++) doors[i].SetOpen(original[i],true,true); Physics.SyncTransforms(); }
         }

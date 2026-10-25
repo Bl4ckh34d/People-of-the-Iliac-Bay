@@ -1,10 +1,11 @@
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Utility;
 using UnityEngine;
 using System.Globalization;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Resolve the victim's owning scene, never the player's current room.
     internal sealed class DefenseScene
@@ -21,6 +22,22 @@ namespace LivingCities.DFU
             if(!target || Ancestor<DaggerfallDungeon>(target.transform)) return null;
             var room=Ancestor<DaggerfallInterior>(target.transform);
             var directory=room ? Ancestor<BuildingDirectory>(room.DoorOwner) : Ancestor<BuildingDirectory>(target.transform);
+            // Native loose enemies can be parented to StreamingTarget instead of the town.
+            // Resolve them by their actual position inside the loaded location, never by player proximity alone.
+            if(!room&&!directory&&target.GetComponent<DaggerfallEnemy>())
+            {
+                var game=GameManager.Instance;
+                var enemy=target.GetComponent<DaggerfallEnemy>();
+                var loaded=game.StreamingWorld.GetCurrentBuildingDirectory();
+                var location=loaded?loaded.GetComponent<DaggerfallLocation>():null;
+                if(enemy.LoadID!=0&&location&&!game.IsPlayerInside&&game.StreamingTarget&&
+                    target.transform.IsChildOf(game.StreamingTarget.transform))
+                {
+                    var point=loaded.transform.InverseTransformPoint(target.transform.position);
+                    if(point.x>=0&&point.z>=0&&point.x<location.Summary.BlockWidth*RMBLayout.RMBSide&&
+                        point.z<location.Summary.BlockHeight*RMBLayout.RMBSide)directory=loaded;
+                }
+            }
             int town=directory ? directory.MapID : 0;
             // Restored interiors can lack the exterior door owner. DFU's canonical
             // scene key retains both map and building identity independently of player state.

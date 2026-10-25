@@ -12,7 +12,7 @@ public static class StandingIdleSurvey20261016
     public static void Run()
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
-        string output = Path.Combine(root, "LivingCities/art/standing/source");
+        string output = PeopleOfTheIliacBayPaths.Repository("art/standing/source");
         string idleOutput = Path.Combine(output, "native-idle");
         Directory.CreateDirectory(output);
         Directory.CreateDirectory(idleOutput);
@@ -47,6 +47,6 @@ public static class StandingIdleSurvey20261016
             }
         }
         File.WriteAllLines(Path.Combine(output, "native-idle.csv"), idleManifest);
-        Debug.Log("LIVING_CITIES_STANDING_SOURCE_PASS: 24 archives; 5 walking directions; native idle record 5 extracted");
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STANDING_SOURCE_PASS: 24 archives; 5 walking directions; native idle record 5 extracted");
     }
 }

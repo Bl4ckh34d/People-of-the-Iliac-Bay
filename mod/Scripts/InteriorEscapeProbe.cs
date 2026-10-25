@@ -4,19 +4,19 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class InteriorEscapeProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = adapter.GetComponent<StreetPopulation>(); var guards = adapter.GetComponent<GuardPopulation>();
-            var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+            var flag = typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool previous = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true); streets.ReactionsEnabled = true;
             bool savedEvent = false, loadedEvent = false;
             SaveLoadManager.OnSaveEventHandler onSave = ignored => savedEvent = true;
@@ -27,7 +27,7 @@ namespace LivingCities.DFU
                 game.PlayerEntity.GodMode = true;
                 var clock = DaggerfallUnity.Instance.WorldTime.Now;
                 clock.RaiseTime((86400 + 20*3600 - (int)(clock.ToSeconds()%86400))%86400);
-                var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var population = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
                 int building = -1; float deadline = Time.realtimeSinceStartup + 60;
                 while (building < 0 && Time.realtimeSinceStartup < deadline)
@@ -104,7 +104,7 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Unavailable escape graph invented an immediate guard report.");
                 }
                 finally { graphField.SetValue(streets, actualGraph); }
-                var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var alarm = store.ActiveAlarm(id, clock.ToSeconds());
                 var person = alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
                 if (person == null || !person.DirectWitness)
@@ -132,7 +132,7 @@ namespace LivingCities.DFU
                 if (person.Escape.Speed != fleeSpeed || fleeSpeed < ResidentMovement.WalkSpeed * 2.5 ||
                     fleeSpeed > ResidentMovement.WalkSpeed * 3.5)
                     throw new InvalidOperationException("Runtime flight did not use the resident's stable randomized speed.");
-                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+                var restored = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 var saved = restored.ActiveAlarm(id, clock.ToSeconds()).People.Find(p => p.ResidentId == id);
                 if(person.EscapeAdvancedAt<=0 || Math.Abs(saved.EscapeAdvancedAt-person.EscapeAdvancedAt)>0.001)
                     throw new InvalidOperationException("Native serialization lost witness simulation time.");
@@ -144,18 +144,18 @@ namespace LivingCities.DFU
                         "; saved=" + (saved.Escape == null ? "null" : saved.Escape.Speed.ToString("R")) +
                         "; timingDelta=" + (saved.Escape == null ? 0 : saved.Escape.ReportAt - person.Escape.ReportAt));
                 double reportAt = person.Escape.ReportAt;
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - escaping witness");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, "People of the Iliac Bay - escaping witness");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!savedEvent && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!savedEvent) throw new InvalidOperationException("Escape save timed out.");
-                int saveKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - escaping witness");
+                int saveKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "People of the Iliac Bay - escaping witness");
                 game.SaveLoadManager.Load(saveKey); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loadedEvent || !streets.Ready || guards.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!loadedEvent || !streets.Ready || guards.Roster == null) throw new InvalidOperationException("Escape reload timed out.");
                 yield return null;
                 clock = DaggerfallUnity.Instance.WorldTime.Now;
-                store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 alarm = store.ActiveAlarm(id, clock.ToSeconds()); person = alarm == null ? null : alarm.People.Find(p => p.ResidentId == id);
                 if (person == null || person.Escape == null || Math.Abs(person.Escape.ReportAt - reportAt) > 0.001 || person.Escape.Speed != fleeSpeed)
                     throw new InvalidOperationException("Real reload reset witness journey.");
@@ -182,7 +182,7 @@ namespace LivingCities.DFU
                 var report = guards.Roster.Reports.Find(r => r.Id == "civilian:" + alarm.Id);
                 if (report == null || report.BuildingKey != building || report.GuardIds.Count < 1 || report.GuardIds.Count > 4)
                     throw new InvalidOperationException("Escaped witness failed to report original crime building.");
-                Debug.Log("LIVING_CITIES_TOWN_INTERIOR_ESCAPE_PASS: physical doorway route, delayed report, exterior identity/movement, finite building response and real save/load; building=" + building + "; save=" + saveKey);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_INTERIOR_ESCAPE_PASS: physical doorway route, delayed report, exterior identity/movement, finite building response and real save/load; building=" + building + "; save=" + saveKey);
             }
             finally
             {
@@ -241,7 +241,7 @@ namespace LivingCities.DFU
                 direction=-direction;
             }
             if(movingPhases==0) throw new InvalidOperationException("Moving attacker fixture offered no retreat in either phase.");
-            Debug.Log("LIVING_CITIES_WITNESS_MOVING_ATTACKER_PASS: live escape retains clearance when attacker switches sides; reachable retreat moves.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WITNESS_MOVING_ATTACKER_PASS: live escape retains clearance when attacker switches sides; reachable retreat moves.");
         }
     }
 }

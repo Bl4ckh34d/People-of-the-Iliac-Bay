@@ -2,8 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DaggerfallConnect;
-using LivingCities.Core;
-namespace LivingCities.DFU
+using PeopleOfTheIliacBay.Core;
+namespace PeopleOfTheIliacBay.DFU
 {
     // Produces model-clear local geometry only. No household, booking or trip mutation.
     public static class ResidentRoadInnSurvey

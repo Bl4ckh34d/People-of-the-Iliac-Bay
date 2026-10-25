@@ -1,0 +1,557 @@
+{
+  "schemaVersion": 1,
+  "cards": [
+    {
+      "id": "N01",
+      "roadmap": [
+        "IMM-01",
+        "IMM-02",
+        "IMM-18"
+      ],
+      "title": "Exact full-turn capture and stale callbacks",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Owned disposable save; managed resident, static keeper, traveler, unknown actor and authored quest actor; record bundle/source/model identities.",
+      "actions": [
+        "Submit a social question and an action request through the real window.",
+        "Close/reopen, change speaker/scene, cancel, save and reload while stages are pending.",
+        "Replay a late/duplicate stage callback."
+      ],
+      "assertions": [
+        "Exact original input, snapshot IDs and all stage calls retained.",
+        "No stale text, mood, task or inventory commit; English unavailable outcome.",
+        "Current activity differs correctly from planned destination."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/SemanticConversationProbe.cs",
+        "tests/PeopleOfTheIliacBay.Tests/NpcDecisionFreshnessTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N02",
+      "roadmap": [
+        "IMM-03",
+        "IMM-04"
+      ],
+      "title": "Read tools and epistemic isolation",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Own inventory, observed own chest, private foreign chest and browsed/unbrowsed location topics; known actor/branch IDs.",
+      "actions": [
+        "Read with correct, malformed, stale and unbrowsed IDs.",
+        "Page beyond the limit; cancel a read; mutate chest unseen then re-query.",
+        "Exhaust call budget and exercise one correctable argument error."
+      ],
+      "assertions": [
+        "No private/unobserved truth leaks or read side effects.",
+        "Unknown/stale versus current facts explicit; no guessed successful lookup.",
+        "No unbounded reads or stale result reuse."
+      ],
+      "existingSourceAnchors": [
+        "tests/NpcKnowledgeTool.Regression/NpcKnowledgeToolRegressionRunner.cs",
+        "tests/NpcKnowledgeStore.Regression/NpcKnowledgeStoreRegressionRunner.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N03",
+      "roadmap": [
+        "IMM-05",
+        "IMM-06",
+        "IMM-20",
+        "M01",
+        "M02"
+      ],
+      "title": "Long-term recall and portable archive",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Two NPCs with same display name, two player characters, divergent same-date saves; seeded dated facts, corrections, claims and important commitments.",
+      "actions": [
+        "Query direct and indirect paraphrases at 1/7/14/35/90 game days with 0/50/500/5000 distractors.",
+        "Restart the process, load old and divergent saves, export/import to a clean fixture install.",
+        "Remove/corrupt one owned archive dependency and interrupt export."
+      ],
+      "assertions": [
+        "Measure evidence recall@budget separately from answer support, owner attribution and temporal correctness.",
+        "No foreign NPC/character/branch disclosure; missing dependency is explicit.",
+        "Record load/index/retrieval p50/p95/p99, archive bytes, resident RAM and frame stalls."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/SharedMemoryArchiveProbe.cs",
+        "mod/Scripts/SharedMemoryRecallModelProbe.cs",
+        "tests/PeopleOfTheIliacBay.Tests/SharedMemoryArchiveTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N04",
+      "roadmap": [
+        "IMM-05",
+        "IMM-06",
+        "IMM-16",
+        "M02"
+      ],
+      "title": "Compaction and background preemption",
+      "implementation": "planned",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Future compactor required; immutable raw journal with a retracted accusation, renamed mount, completed/failed promise and referenced old-save branches.",
+      "actions": [
+        "Test just before/at/after the one-calendar-month eligibility boundary.",
+        "Generate bounded summary, then interrupt with foreground dialogue and change source revision.",
+        "Crash/reload before publication; corrupt summary; export old branch; attempt collection."
+      ],
+      "assertions": [
+        "No partial/stale summary published; citations, uncertainty and supersession retained.",
+        "No referenced raw chunk deleted or relationship/task state rewritten.",
+        "Measure actual bytes saved, salient recall loss and foreground latency; no second heavyweight model."
+      ],
+      "existingSourceAnchors": [
+        "src/PeopleOfTheIliacBay.Core/ConversationMemoryCompactionEligibility.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N05",
+      "roadmap": [
+        "IMM-07",
+        "IMM-08",
+        "IMM-09",
+        "IMM-10",
+        "IMM-11"
+      ],
+      "title": "Relationship, mood and personality contrasts",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Same event paired across contrasting stable traits; angry friend/cheerful stranger, reliable disliked person/liked unreliable person, unknown versus known trust.",
+      "actions": [
+        "Submit neutral, supportive, insulting, direct threatening, quoted and hypothetical turns.",
+        "Reopen/repeat one receipt versus independently repeat abusive speech.",
+        "Advance fractional 24/30/36-hour credit windows and reload each checkpoint."
+      ],
+      "assertions": [
+        "Fear, trust, affinity, resentment and mood remain distinct and bounded.",
+        "One event applies once; negative severity not capped by positive friendship allowance.",
+        "Waiting/reopening gives no free friendship; stable traits do not reroll; no history fabrication."
+      ],
+      "existingSourceAnchors": [
+        "tests/PeopleOfTheIliacBay.Tests/NpcExperienceCrossFactorTests.cs",
+        "tests/PeopleOfTheIliacBay.Tests/NpcRelationshipTrustPolicyTests.cs",
+        "tests/PeopleOfTheIliacBay.Tests/NpcSocialFamiliarityTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N06",
+      "roadmap": [
+        "IMM-12",
+        "IMM-13",
+        "IMM-14",
+        "IMM-16"
+      ],
+      "title": "Goals, duties, urgency and initiative",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Required appointment/home deadline plus optional leisure and deferred errands; no active paid expedition.",
+      "actions": [
+        "Interrupt routine with a feasible accepted errand; delay it; fail it; advance a day.",
+        "Compare resource shortage, danger and late return against a relaxed day.",
+        "Decline initiative repeatedly; test cooldown; reload while returning home."
+      ],
+      "assertions": [
+        "Required duties protected; infeasible optional visit skipped individually.",
+        "Urgency age persists; no duplicate goals, teleportation, deadline reset or per-frame LLM call.",
+        "Proposals require consent; grounded departure and failure explanation; measure capped walking acceleration."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/RoutineRecoveryPhysicalProbe.cs",
+        "mod/Scripts/RoutineRecoveryReloadProbe.cs",
+        "tests/NpcMotivationContext.Tests/Program.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N07",
+      "roadmap": [
+        "IMM-15",
+        "IMM-04",
+        "M03"
+      ],
+      "title": "Listeners and NPC-to-NPC information",
+      "implementation": "planned",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Two nearby NPCs, one behind a wall, one absent; actual audibility event available; same rumor repeated through two intermediaries.",
+      "actions": [
+        "Speak publicly, then privately; trigger bounded NPC exchange.",
+        "Ask each NPC what they heard and who said it.",
+        "Reload and repeat rumor without new independent evidence."
+      ],
+      "assertions": [
+        "Only perceived content retained; original source and uncertainty survive hops.",
+        "Pose/facing alone does not create a conversation or relationship event.",
+        "Repeated rumor is not multiple independent witnesses."
+      ],
+      "existingSourceAnchors": [
+        "tests/PeopleOfTheIliacBay.Tests/NpcExperienceObserverPagingTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N08",
+      "roadmap": [
+        "IMM-17",
+        "I01",
+        "I02",
+        "I03",
+        "H01",
+        "H04",
+        "H10"
+      ],
+      "title": "Actor census, role and service preservation",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Vanilla/mod market, castle, guild, temple, shop and inn; active quest actors; provider load order recorded.",
+      "actions": [
+        "Survey/re-enter/reload twice and compare stable identity ownership.",
+        "Ask performer/keeper/visitor roles and offer unsupported movement.",
+        "Exercise native service and activation before/after conversation."
+      ],
+      "assertions": [
+        "No duplicate identity, random replacement of authored persona or false mobile itinerary.",
+        "Services, native activation and quest ownership unchanged.",
+        "Record housing/bed claim and explicit adoption/exclusion; unseen global census not personal knowledge."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/NpcIdentityIntegrationProbe.cs",
+        "mod/Scripts/StationaryNpcProbe.cs",
+        "tests/StaticNpcRoleProjection.Regression/RoleProjectionRegressionRunner.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N09",
+      "roadmap": [
+        "IMM-18",
+        "F04",
+        "F06"
+      ],
+      "title": "One-to-five-step physical tasks",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Owned fixture with real source/destination IDs, stock UID/quantity, funds, route and recipient; record initial conservation totals.",
+      "actions": [
+        "Run exact 1/2/3/4/5-step language plans with at most two repairs.",
+        "Inject missing quantity/duration, ambiguous references, unavailable item and blocked later route.",
+        "Cancel/reload before purchase, after purchase and before handover; replay callbacks."
+      ],
+      "assertions": [
+        "Entire interpretation correct before task acceptance; unsupported/ambiguous plans execute zero steps.",
+        "Each dispatched step has fresh feasibility/consent; partial later failure preserves completed effects.",
+        "Exact order, units, source spans, target/item dependency and wallet/stock conservation; no fabricated completion."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/NativeNpcShopPurchaseProbe.cs",
+        "mod/Scripts/NativeMoveToWaitProbe.cs",
+        "mod/Scripts/NpcActionDiskProbe.cs",
+        "tests/PeopleOfTheIliacBay.Tests/NpcTaskDependencyAcceptanceTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N10",
+      "roadmap": [
+        "IMM-19",
+        "IMM-07",
+        "IMM-08",
+        "IMM-05"
+      ],
+      "title": "Thirty-five-day lifecycle",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Meet one unknown managed adult on day 1; owned save branches A/B; deterministic relationship/event instrumentation.",
+      "actions": [
+        "Days 1\u20137: varied genuine conversations and one corrected player fact; earn capped familiarity.",
+        "Book a meeting, share a completed purchase/handover, then separately miss or cancel an obligation with observed outcome.",
+        "Separate for 35 game days, restart/load, ask paraphrased recall; load branch before the activity and ask again."
+      ],
+      "assertions": [
+        "Stable person/voice/family, correct current relationship and chronology.",
+        "No invented shared experience, replayed penalty or future-branch recall.",
+        "Model-generated dialogue, actual receipts, retrieved evidence and native state all captured together."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/SharedMemoryRecallModelProbe.cs",
+        "mod/Scripts/NpcFrameworkPersistenceProbe.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N11",
+      "roadmap": [
+        "IMM-21",
+        "IMM-04",
+        "E01"
+      ],
+      "title": "Perception and stealth",
+      "implementation": "planned",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Controlled NPC-eye viewpoint, light, distance, wall/door, sleeping state and player Sneak skill; native random seed/check count captured.",
+      "actions": [
+        "Compare near/far, lit/dark, unobstructed/occluded and awake/asleep pairs.",
+        "Repeat dialogue without a new perceptual event.",
+        "Compare native observations with optional NPC-eye image input, never player-camera omniscience."
+      ],
+      "assertions": [
+        "Suspicion, detection, identity and crime evidence separate.",
+        "Skill/distance monotonicity and repeated-check bias measured.",
+        "No model overrides native skill/quest checks; bounded CPU/GPU budget."
+      ],
+      "existingSourceAnchors": [
+        "tools/NpcArchitectureEval/run_visual_evaluation.py"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N12",
+      "roadmap": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "IMM-16"
+      ],
+      "title": "Clock, navigation and performance",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Preserved crowded town fixture; exact layout, settings and graphics; record cold and warm state.",
+      "actions": [
+        "Measure normal 2x clock and pause/rest/travel transitions.",
+        "Trace home/shop/inn/home with actual doors, queues, blocked path, terrace and reload.",
+        "Profile geometry survey/cache, guard work and frame p50/p95/p99/max."
+      ],
+      "assertions": [
+        "No clipping, teleport, oscillation, duplicate actors or destination/current-position confusion.",
+        "Different residents reuse static route geometry without losing collision validation.",
+        "No relaxed frame gate to hide ReadSteps stalls; cold/warm load costs reported separately."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/OutdoorNavigationProbe.cs",
+        "mod/Scripts/PhysicalDailyRoutineProbe.cs",
+        "mod/Scripts/PerformanceProbe.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N13",
+      "roadmap": [
+        "H01",
+        "H02",
+        "H03",
+        "H04",
+        "H05",
+        "H06",
+        "H07",
+        "H08",
+        "H09",
+        "H10",
+        "A01",
+        "A02"
+      ],
+      "title": "Housing, travelers, market and animation",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Keeper household, authored tenants, full-capacity settlement, travelers and shared-bed backlog fixtures; actual appearance providers retained.",
+      "actions": [
+        "Compare reservations/keys and household counts through departure, death and reload.",
+        "Trace traveler checkout/home origin and keeper/tenant after-hours access.",
+        "Exercise market browsing, weather seating, standing/walking/sleeping transitions and one shared-bed occupant leaving."
+      ],
+      "assertions": [
+        "No silently evicted/regenerated families, false death or created beds.",
+        "Housing membership distinct from current occupancy; real keys/claims and correct appearance.",
+        "Planned shared-bed/outdoor-seating features remain unsupported until real adapter/art acceptance."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/VisitorOriginProbe.cs",
+        "mod/Scripts/SleepCoverageProbe.cs",
+        "mod/Scripts/StandingPoseProbe.cs",
+        "tests/PeopleOfTheIliacBay.Tests/HouseholdAccessTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N14",
+      "roadmap": [
+        "Q01",
+        "Q02",
+        "Q03",
+        "Q04",
+        "Q05",
+        "Q06",
+        "Q07",
+        "E03"
+      ],
+      "title": "Quest stage and spoiler boundaries",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Versioned quest-role-stage records and owned acceptance saves; one ordinary giver/recipient first; Quest Pack mobility remains deferred.",
+      "actions": [
+        "Ask direct and indirect hidden-plot questions before/after native reveal.",
+        "Run accept/progress/reward/failure, timed placement, hide/transform/kill and native service.",
+        "Rollback before reveal; query old rumor/guess; compare another speaker."
+      ],
+      "assertions": [
+        "Native quest identity, timers, rewards and stage semantics preserved.",
+        "Permitted facts only reach model and retrieval; pretraining knowledge cannot bypass reveal gate.",
+        "General safety not inferred from one quest or same-building mobility."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/QuestIdentityProbe.cs",
+        "mod/Scripts/QuestOfferProbe.cs",
+        "tests/NpcDisclosurePolicy.Regression/NpcDisclosurePolicyRegressionRunner.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N15",
+      "roadmap": [
+        "F01",
+        "F02",
+        "F03",
+        "F04",
+        "F05",
+        "F06",
+        "IMM-12",
+        "IMM-18"
+      ],
+      "title": "Paid companions, native skills and progression",
+      "implementation": "planned",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Future supported contract and combat adapters required; current tests are contract foundations, not a playable companion.",
+      "actions": [
+        "Exercise prepaid 24-game-hour block, renewal/insufficient funds, dismissal, danger, death and home unreachable.",
+        "Compare moderate dislike, agreed risk, suicidal command, tactical retreat and actual resignation.",
+        "Use real equipment/ammo/magicka/skill checks and observed damage/healing; reload and replay settlement."
+      ],
+      "assertions": [
+        "Earned wages and unearned escrow settle once; no invented refunds or obedience.",
+        "No skill XP for language claims; identity/resources persist without resurrection.",
+        "Native combat AI handles combat cadence; no per-attack heavy model call."
+      ],
+      "existingSourceAnchors": [
+        "tests/NpcServiceContract.Tests/FocusedTestRunner.cs",
+        "tests/PeopleOfTheIliacBay.Tests/NpcActorProgressTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N16",
+      "roadmap": [
+        "E01",
+        "E02",
+        "IMM-08",
+        "IMM-18"
+      ],
+      "title": "Crime, nobles, mortality and services",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Actual noble authority/guards, observed crime versus report, merchant services and deceased resident with estate/keys.",
+      "actions": [
+        "Contrast criticism/joke/insult/direct threat and hearsay accusation.",
+        "Exercise supported removal order, service refusal and real quest-access consequence.",
+        "Loot/reopen corpse, recover household, reload and inspect keys/ownership."
+      ],
+      "assertions": [
+        "No invented conviction, remote witness, guard or death.",
+        "Noble refusal may persist without fabricating native quest failure/completion.",
+        "Conserve inventory/keys and native service/pricing; refusal is not automatically crime."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/TheftTransferProbe.cs",
+        "mod/Scripts/WelfareEncounterProbe.cs",
+        "tests/PeopleOfTheIliacBay.Tests/HouseholdRecoveryTests.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N17",
+      "roadmap": [
+        "E04",
+        "P01",
+        "P02",
+        "P03",
+        "P04",
+        "IMM-01",
+        "IMM-16"
+      ],
+      "title": "Optional modules, devices and resource budget",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "GPU released; RTX 4070 SUPER 12282 MiB, 64 GiB RAM; resident Breeze, exact candidate weights and loaded DFU graphics settings recorded.",
+      "actions": [
+        "Test native-only, TTS-only, LLM only, LLM+D3 with/without TTS, and STT dependency combinations when implemented.",
+        "Measure cold load, 4k/8k context, successive full turns, long TTS and cancellations; compare D3 absent/present and CPU/GPU placements.",
+        "Simulate unavailable service, partial download, invalid hash, CPU-only install and orderly toggle/restart."
+      ],
+      "assertions": [
+        "No mandatory model/CUDA download for base mod; typed input survives speech failure.",
+        "Record peak VRAM/RAM, full-turn p50/p95, time to first text/audio, frame p99/max and OOM.",
+        "Default requires measured game headroom; file size or standalone residency is not proof of fit."
+      ],
+      "existingSourceAnchors": [
+        "tools/StartLocalDialogue.ps1",
+        "tests/BreezeTtsTrial.Protocol.Tests/Program.cs",
+        "mod/Scripts/PerformanceProbe.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    },
+    {
+      "id": "N18",
+      "roadmap": [
+        "E04",
+        "A01",
+        "A02",
+        "IMM-01",
+        "IMM-09"
+      ],
+      "title": "Voice and portrait presentation",
+      "implementation": "partial",
+      "preparedAs": "native-run-card-only",
+      "executionStatus": "not-run",
+      "setup": "Existing portrait agent owns assets; read-only acceptance of stable identity and supplied animation/voice outputs.",
+      "actions": [
+        "Speak short/long utterances with pauses, quotes and names; interrupt and switch speakers.",
+        "Change mood/reopen/reload and compare voice identity, expressed demeanor and mouth closure.",
+        "Disable TTS and inject partial/failed audio chunks."
+      ],
+      "assertions": [
+        "Only displayed intended English text spoken; no reasoning/control tokens.",
+        "No wrong speaker, stale audio, clipping or mouth animation during silence.",
+        "Portrait does not reveal hidden trust/intent; text-only fallback works."
+      ],
+      "existingSourceAnchors": [
+        "mod/Scripts/SplitPortraitRuntimeProbe.cs",
+        "mod/Scripts/SpeechRevealPresentationProbe.cs",
+        "mod/Scripts/NativeTopicTtsProbe.cs"
+      ],
+      "boundary": "Source anchors are seams to extend or invoke after fixture review; they do not prove this entire card is automated or passing."
+    }
+  ]
+}

@@ -7,10 +7,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class NativeKeeperResponseProbe
     {
@@ -30,10 +30,10 @@ namespace LivingCities.DFU
         {
             yield return VerifyDoorPermissions();
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = adapter.GetComponent<StreetPopulation>();
             var guards = adapter.GetComponent<GuardPopulation>();
-            var storeField = typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic);
+            var storeField = typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic);
             var store = (WorldStateStore)storeField.GetValue(adapter);
             var world = store.Snapshot(); var keeper = world.NativePeople.Find(p => p.Id == keeperId);
             var town = world.Settlements.Find(t => t.SettlementId == keeper.SettlementId);
@@ -44,7 +44,7 @@ namespace LivingCities.DFU
             {
                 DaggerfallConnect.Arena2.FactionFile.FactionData faction;
                 bool found=game.PlayerEntity.FactionData.GetFactionData(original.Data.factionID,out faction);
-                Debug.Log("LIVING_CITIES_SHOP_NATIVE: flat="+original.Data.billboardArchiveIndex+"/"+original.Data.billboardRecordIndex+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_NATIVE: flat="+original.Data.billboardArchiveIndex+"/"+original.Data.billboardRecordIndex+
                     "; name="+original.DisplayName+"; faction="+original.Data.factionID+"; group="+(found?faction.sgroup:-1)+
                     "; registered="+world.NativePeople.Exists(p=>p.NativeHash==original.Data.hash && p.WorkKey==original.Data.buildingKey));
             }
@@ -80,7 +80,7 @@ namespace LivingCities.DFU
                 if (graph.EntryGround.HasValue) game.PlayerMotor.transform.position = graph.EntryGround.Value + Vector3.up;
                 game.PlayerMouseLook.SetHorizontalFacing(initial - game.PlayerMotor.transform.position);
                 yield return new WaitForEndOfFrame();
-                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-keeper-route.png"));
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "PeopleOfTheIliacBay-keeper-route.png"));
                 yield return new WaitForSecondsRealtime(0.5f);
                 foreach (var hit in Physics.RaycastAll(initial + Vector3.up * 2, Vector3.down, 10, ~0, QueryTriggerInteraction.Ignore))
                     floors += hit.collider.name + "@" + room.transform.InverseTransformPoint(hit.point) + ";";
@@ -109,11 +109,11 @@ namespace LivingCities.DFU
             SaveLoadManager.OnSave += onSave; SaveLoadManager.OnLoad += onLoad;
             try
             {
-                game.SaveLoadManager.Save(character, "Living Cities - keeper response");
+                game.SaveLoadManager.Save(character, "People of the Iliac Bay - keeper response");
                 float deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Keeper response save timed out.");
-                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - keeper response");
+                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "People of the Iliac Bay - keeper response");
                 game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -145,7 +145,7 @@ namespace LivingCities.DFU
                 yield return null;
                 if (DaggerfallUI.UIManager.TopWindow == ui) throw new InvalidOperationException("Recovered keeper did not open native service.");
                 DaggerfallUI.Instance.PopToHUD();
-                var current = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var current = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var ledger = store.Snapshot().AlarmIncidents;
                 Resident hitResident = null; uint surname = 0;
                 foreach (var home in current.Households)
@@ -174,10 +174,10 @@ namespace LivingCities.DFU
                             "; blocked="+streets.KeeperServiceBlocked(npc)+"; victimVisible="+CivilianResponses.Sees(npc.transform.position,visitor.transform.position,20)+
                             "; playerVisible="+CivilianResponses.Sees(npc.transform.position,game.PlayerMotor.transform.position,20)+
                             "; invisible="+game.PlayerEntity.IsInvisible+"; time="+DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
-                    Debug.Log("LIVING_CITIES_KEEPER_WEAPON_PASS: native WeaponDamage killing captures keeper sight; controlled visitor placement.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_WEAPON_PASS: native WeaponDamage killing captures keeper sight; controlled visitor placement.");
                 }
                 finally { actorMap.Remove(hitResident.Id); UnityEngine.Object.Destroy(visitorObject); }
-                Debug.Log("LIVING_CITIES_KEEPER_RESPONSE_PASS: sight, service suppression, physical exit, real reload, delayed finite report and recovery; save=" + slot);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_RESPONSE_PASS: sight, service suppression, physical exit, real reload, delayed finite report and recovery; save=" + slot);
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
             yield return VerifyKeeperDeath(character, keeperId);
@@ -187,7 +187,7 @@ namespace LivingCities.DFU
         private static IEnumerator VerifyOrdinaryShopDeath(string character)
         {
             var game=GameManager.Instance;
-            var adapter=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets=adapter.GetComponent<StreetPopulation>();
             bool loaded=false,saved=false;
             SaveLoadManager.OnLoadEventHandler onLoad=ignored=>loaded=true;
@@ -195,7 +195,7 @@ namespace LivingCities.DFU
             SaveLoadManager.OnLoad+=onLoad; SaveLoadManager.OnSave+=onSave;
             try
             {
-                int fixture=game.SaveLoadManager.FindSaveFolderByNames(character,"Living Cities - shopkeeper identity");
+                int fixture=game.SaveLoadManager.FindSaveFolderByNames(character,"People of the Iliac Bay - shopkeeper identity");
                 game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
                 float deadline=Time.realtimeSinceStartup+60;
                 while((!loaded || !streets.Ready) && Time.realtimeSinceStartup<deadline) yield return null;
@@ -214,11 +214,11 @@ namespace LivingCities.DFU
                 if(world.NativePeople.Find(p=>p.Id==id).IsAlive || npc.gameObject.activeSelf ||
                     !world.AlarmIncidents.Exists(a=>a.VictimId==id && a.Corpse!=null))
                     throw new InvalidOperationException("Factionless shop NPC survived native weapon hit or lost corpse.");
-                game.SaveLoadManager.Save(character,"Living Cities - ordinary shop NPC death");
+                game.SaveLoadManager.Save(character,"People of the Iliac Bay - ordinary shop NPC death");
                 deadline=Time.realtimeSinceStartup+30;
                 while(!saved && Time.realtimeSinceStartup<deadline) yield return null;
                 if(!saved) throw new InvalidOperationException("Ordinary shop NPC death save timed out.");
-                int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"Living Cities - ordinary shop NPC death");
+                int slot=game.SaveLoadManager.FindSaveFolderByNames(character,"People of the Iliac Bay - ordinary shop NPC death");
                 loaded=false; game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
                 deadline=Time.realtimeSinceStartup+60;
                 while((!loaded || !streets.Ready) && Time.realtimeSinceStartup<deadline) yield return null;
@@ -229,13 +229,13 @@ namespace LivingCities.DFU
                 npc=Array.Find(game.PlayerEnterExit.Interior.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==person.NativeHash);
                 if(person.IsAlive || !npc || npc.gameObject.activeSelf || streets.CorpseCount<1)
                     throw new InvalidOperationException("Ordinary shop NPC revived or lost corpse after real reload.");
-                Debug.Log("LIVING_CITIES_ORDINARY_SHOP_DEATH_PASS: flat184/2 native weapon hit, corpse, persisted death and no keeper bed allocation.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ORDINARY_SHOP_DEATH_PASS: flat184/2 native weapon hit, corpse, persisted death and no keeper bed allocation.");
             }
             finally { SaveLoadManager.OnLoad-=onLoad; SaveLoadManager.OnSave-=onSave; }
         }
         private static IEnumerator VerifyKeeperSleep(string character, string keeperId)
         {
-            var game = GameManager.Instance; var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var game = GameManager.Instance; var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = adapter.GetComponent<StreetPopulation>();
             bool loaded = false, saved = false;
             SaveLoadManager.OnLoadEventHandler onLoad = ignored => loaded = true;
@@ -244,7 +244,7 @@ namespace LivingCities.DFU
             SaveLoadManager.OnSave += onSave;
             try
             {
-                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - shopkeeper identity");
+                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "People of the Iliac Bay - shopkeeper identity");
                 game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
                 float deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -267,11 +267,11 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Native keeper sleep uses wrong physical bed.");
                 var ui = DaggerfallUI.UIManager.TopWindow; game.TalkManager.TalkToStaticNPC(npc);
                 if (DaggerfallUI.UIManager.TopWindow != ui) throw new InvalidOperationException("Sleeping native keeper opened dialogue.");
-                game.SaveLoadManager.Save(character, "Living Cities - keeper sleeping");
+                game.SaveLoadManager.Save(character, "People of the Iliac Bay - keeper sleeping");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Keeper sleeping save timed out.");
-                int sleepSlot = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - keeper sleeping");
+                int sleepSlot = game.SaveLoadManager.FindSaveFolderByNames(character, "People of the Iliac Bay - keeper sleeping");
                 loaded = false; game.SaveLoadManager.Load(sleepSlot); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -306,7 +306,7 @@ namespace LivingCities.DFU
                 }
                 if (!visible) throw new InvalidOperationException("Native sleeping keeper has no unobstructed camera view beside bed.");
                 if (streets.HasTheftWitness() != false) throw new InvalidOperationException("Sleeping native keeper witnessed theft while all occupants slept.");
-                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "LivingCities-native-keeper-sleep.png"));
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath, "PeopleOfTheIliacBay-native-keeper-sleep.png"));
                 yield return new WaitForSecondsRealtime(0.3f);
                 clock = DaggerfallUnity.Instance.WorldTime.Now;
                 clock.RaiseTime((float)((34200 - clock.ToSeconds() % 86400 + 86400) % 86400));
@@ -333,30 +333,30 @@ namespace LivingCities.DFU
                     if (!guards.OwnsSettlement || death.Scene == null || death.Scene.PlayerLeft || guards.Roster.Reports.Count != priorReports ||
                         game.PlayerEntity.CrimeCommitted != priorCrime)
                         throw new InvalidOperationException("Uncached sleeping keeper death lost concealment or finite ownership.");
-                    Debug.Log("LIVING_CITIES_UNCACHED_KEEPER_PASS: sleeping native keeper retains concealed workplace death and finite ownership.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNCACHED_KEEPER_PASS: sleeping native keeper retains concealed workplace death and finite ownership.");
                 }
                 finally
                 {
                     if (missing != null) guards.Roster.BuildingApproaches.Add(missing);
                 }
-                Debug.Log("LIVING_CITIES_KEEPER_SLEEP_PASS: native identity, assigned bed, blocked service, real reload, collider/wake restoration and bed-position death; save=" + sleepSlot);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_SLEEP_PASS: native identity, assigned bed, blocked service, real reload, collider/wake restoration and bed-position death; save=" + sleepSlot);
             }
             finally { SaveLoadManager.OnLoad -= onLoad; SaveLoadManager.OnSave -= onSave; }
         }
         private static IEnumerator VerifyKeeperDeath(string character, string keeperId)
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = adapter.GetComponent<StreetPopulation>();
             var guards = adapter.GetComponent<GuardPopulation>();
-            var field = typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic);
+            var field = typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic);
             bool loaded = false, saved = false;
             SaveLoadManager.OnLoadEventHandler onLoad = ignored => loaded = true;
             SaveLoadManager.OnSaveEventHandler onSave = ignored => saved = true;
             SaveLoadManager.OnLoad += onLoad; SaveLoadManager.OnSave += onSave;
             try
             {
-                int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - shopkeeper identity");
+                int fixture = game.SaveLoadManager.FindSaveFolderByNames(character, "People of the Iliac Bay - shopkeeper identity");
                 game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
                 float deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -366,7 +366,7 @@ namespace LivingCities.DFU
                 var keeper = store.NativePeopleFor(game.PlayerGPS.CurrentLocation.MapTableData.MapId).Find(p => p.Id == keeperId);
                 var room = game.PlayerEnterExit.Interior;
                 var npc = Array.Find(room.GetComponentsInChildren<StaticNPC>(true), n => n.Data.hash == keeper.NativeHash);
-                var town = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var town = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var home = town.Households.Find(h => h.HeadId == keeperId);
                 var partner = streets.FindActor(home.Residents.Find(r => r.Id != keeperId).Id);
                 if (!npc || !partner) throw new InvalidOperationException("Keeper death fixture lacks keeper or partner.");
@@ -385,11 +385,11 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Dead keeper permits service or creates instant guard notification.");
                 yield return new WaitForSecondsRealtime(0.5f);
                 if (streets.CorpseCount < 1) throw new InvalidOperationException("Native keeper corpse has no physical view.");
-                game.SaveLoadManager.Save(character, "Living Cities - keeper death");
+                game.SaveLoadManager.Save(character, "People of the Iliac Bay - keeper death");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Keeper death save timed out.");
-                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "Living Cities - keeper death");
+                int slot = game.SaveLoadManager.FindSaveFolderByNames(character, "People of the Iliac Bay - keeper death");
                 loaded = false; game.SaveLoadManager.Load(slot); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -403,11 +403,11 @@ namespace LivingCities.DFU
                 var ui = DaggerfallUI.UIManager.TopWindow; game.TalkManager.TalkToStaticNPC(npc);
                 if (DaggerfallUI.UIManager.TopWindow != ui) throw new InvalidOperationException("Dead native keeper opened dialogue after reload.");
                 yield return VerifyVisitorAfterKeeperDeath(adapter, streets, game.PlayerEnterExit.Interior, keeper);
-                Debug.Log("LIVING_CITIES_KEEPER_DEATH_PASS: native weapon hit; household identity; family witness; no instant guards; corpse; blocked service; real reload; save=" + slot);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_DEATH_PASS: native weapon hit; household identity; family witness; no instant guards; corpse; blocked service; real reload; save=" + slot);
             }
             finally { SaveLoadManager.OnLoad -= onLoad; SaveLoadManager.OnSave -= onSave; }
         }
-        private static IEnumerator VerifyVisitorAfterKeeperDeath(LivingCitiesMod adapter, StreetPopulation streets,
+        private static IEnumerator VerifyVisitorAfterKeeperDeath(PeopleOfTheIliacBayMod adapter, StreetPopulation streets,
             DaggerfallInterior room, NativePerson keeper)
         {
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
@@ -496,7 +496,7 @@ namespace LivingCities.DFU
                 if(neutral==null || !neutral.Investigation || GameManager.Instance.PlayerEntity.CrimeCommitted!=priorCrime)
                     throw new InvalidOperationException("Corpse observer contact failed neutral dispatch or changed player crime.");
                 if(neutral.HasArrival) throw new InvalidOperationException("Corpse observer report teleported guards into shop.");
-                Debug.Log("LIVING_CITIES_CORPSE_VISITOR_CONTACT_PASS: unloaded street route reaches posted guard; neutral physical-contact dispatch; no instant arrival or new Murder charge.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CORPSE_VISITOR_CONTACT_PASS: unloaded street route reaches posted guard; neutral physical-contact dispatch; no instant arrival or new Murder charge.");
                 var player=GameManager.Instance.PlayerEntity;
                 var concealment=player.MagicalConcealmentFlags;
                 try
@@ -519,15 +519,15 @@ namespace LivingCities.DFU
                         yield return null;
                     }
                     if(!inspected || !cleared) throw new InvalidOperationException("Neutral guard failed physical approach and five-second corpse cleanup.");
-                    Debug.Log("LIVING_CITIES_NEUTRAL_INSPECTION_PASS: visitor report guard entered shop, approached body, inspected and cleared corpse.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NEUTRAL_INSPECTION_PASS: visitor report guard entered shop, approached body, inspected and cleared corpse.");
                     yield return VerifyGuardedArrival(adapter,streets,room,visitor.Id);
                 }
                 finally { player.CrimeCommitted=priorCrime; player.MagicalConcealmentFlags=concealment; }
-                Debug.Log("LIVING_CITIES_KEEPER_VISITOR_PASS: scheduled visitor discovered corpse, fled and exited instead of browsing/haggling; keeper stays dead; neutral posted-guard route; visitor="+visitor.Id);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_VISITOR_PASS: scheduled visitor discovered corpse, fled and exited instead of browsing/haggling; keeper stays dead; neutral posted-guard route; visitor="+visitor.Id);
             }
             finally { scheduleField.SetValue(selected,originalSchedule); routine.DestinationKey=originalDestination; }
         }
-        private static IEnumerator VerifyGuardedArrival(LivingCitiesMod adapter,StreetPopulation streets,DaggerfallInterior room,string excluded)
+        private static IEnumerator VerifyGuardedArrival(PeopleOfTheIliacBayMod adapter,StreetPopulation streets,DaggerfallInterior room,string excluded)
         {
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
             object chosen=null; Resident resident=null;
@@ -550,7 +550,7 @@ namespace LivingCities.DFU
             try
             {
                 DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((long)(minute*60-now%86400+1));
-                var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",flags).GetValue(adapter);
+                var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",flags).GetValue(adapter);
                 VisitDeparture departure=null; float deadline=Time.realtimeSinceStartup+10;
                 while(Time.realtimeSinceStartup<deadline)
                 {
@@ -563,10 +563,10 @@ namespace LivingCities.DFU
                 while(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()<departure.Motion.ExitAt && Time.realtimeSinceStartup<deadline) yield return null;
                 yield return null; yield return null;
                 if(streets.FindActor(resident.Id)) throw new InvalidOperationException("Rejected visitor stayed inside guarded shop.");
-                var restored=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore(store.Snapshot());
+                var restored=new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore(store.Snapshot());
                 if(restored.VisitDepartureFor(resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds())==null)
                     throw new InvalidOperationException("Rejected visitor departure did not survive snapshot restore.");
-                Debug.Log("LIVING_CITIES_GUARDED_VISITOR_PASS: cleared guarded shop rejects arrival; visitor exits; cancellation survives restore.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARDED_VISITOR_PASS: cleared guarded shop rejects arrival; visitor exits; cancellation survives restore.");
             }
             finally { scheduleField.SetValue(chosen,previous); routine.DestinationKey=destination; }
         }
@@ -577,7 +577,7 @@ namespace LivingCities.DFU
                 if(npc.Data.hash==keeper.NativeHash && npc.Data.buildingKey==keeper.WorkKey) count++;
             return count;
         }
-        private static void AssertKeeperStillDead(LivingCitiesMod adapter,DaggerfallInterior room,NativePerson keeper,
+        private static void AssertKeeperStillDead(PeopleOfTheIliacBayMod adapter,DaggerfallInterior room,NativePerson keeper,
             int nativeCount,int serviceCount,string stage)
         {
             var world=(WorldState)adapter.GetSaveData();
@@ -618,7 +618,7 @@ namespace LivingCities.DFU
                 UnityEngine.Object.DestroyImmediate(action);
                 InteriorGeometry.OpenOrdinaryDoors(origin, origin + Vector3.forward * 2);
                 if (!body.isTrigger) throw new InvalidOperationException("Civilian did not open ordinary unlocked door.");
-                Debug.Log("LIVING_CITIES_CIVILIAN_DOORS_PASS: wall, lock and script barriers retained; ordinary unlocked door opens.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CIVILIAN_DOORS_PASS: wall, lock and script barriers retained; ordinary unlocked door opens.");
             }
             finally { UnityEngine.Object.Destroy(wall); UnityEngine.Object.Destroy(doorObject); }
         }

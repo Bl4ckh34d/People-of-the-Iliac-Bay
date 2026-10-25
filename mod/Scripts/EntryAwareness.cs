@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -85,7 +85,7 @@ namespace LivingCities.DFU
                 game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Trespassing;
             var guards = GetComponent<GuardPopulation>();
             if (guards) guards.ReportEntry(report);
-            Debug.Log("LIVING_CITIES_ENTRY_WITNESSED: " + report.Id + "; citizens=" + report.CitizenWitnesses.Count + "; guards=" + report.InformedGuards.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTRY_WITNESSED: " + report.Id + "; citizens=" + report.CitizenWitnesses.Count + "; guards=" + report.InformedGuards.Count);
         }
         private void UpdateEntryReports(double now)
         {
@@ -102,7 +102,7 @@ namespace LivingCities.DFU
                 var player = GameManager.Instance.PlayerEntity;
                 if (player.CrimeCommitted == PlayerEntity.Crimes.None) player.CrimeCommitted = PlayerEntity.Crimes.Trespassing;
                 if (guards) guards.ReportEntry(report);
-                Debug.Log("LIVING_CITIES_ENTRY_DELIVERED: " + report.Id);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTRY_DELIVERED: " + report.Id);
             }
             foreach (var report in reports)
             {
@@ -116,6 +116,10 @@ namespace LivingCities.DFU
             AlarmPerson departure; bool home;
             if(worldStore!=null && worldStore.TryVisitDeparturePosition(id,now,out departure,out home))
             {
+                AppointmentDepartureContinuation continuation;
+                if(worldStore.TryGetAppointmentDepartureContinuation(id,now,out continuation) &&
+                    now>=continuation.ResumeRoutineAt && AppointmentRecoveryMatches(id,continuation,now))
+                    return scheduled;
                 if(home && scheduled.Activity==Activity.Sleep && scheduled.BuildingKey==departure.BuildingKey) return scheduled;
                 return new ActivitySnapshot(home ? Activity.Home : departure.BuildingKey<0 ? Activity.Travel : Activity.Visit,
                     departure.BuildingKey,new RoutePoint(departure.X,departure.Z),0);
@@ -124,6 +128,18 @@ namespace LivingCities.DFU
             if (!entryJourneys.TryGetValue(id, out messenger) || now < messenger.StartedAt || messenger.Cancelled || messenger.Delivered) return scheduled;
             var point = messenger.Position(now);
             return new ActivitySnapshot(Activity.Travel, -1, new RoutePoint(point.X, point.Z), 0);
+        }
+
+        private bool AppointmentRecoveryMatches(string residentId,AppointmentDepartureContinuation departure,double now)
+        {
+            if(string.IsNullOrWhiteSpace(departure.AppointmentId) || departure.ResumeRoutineAt<=0 ||
+                worldStore==null || population==null)return false;
+            var plan=plans.Find(item=>item.Resident.Id==residentId);
+            if(plan==null || !plan.Resident.IsAlive || plan.Resident.IsQuestProtected)return false;
+            var recovery=CurrentRoutineRecovery(plan,now);
+            return recovery!=null && recovery.ResidentId==residentId && recovery.SettlementId==population.SettlementId &&
+                recovery.CreatedAt==departure.StartedAt && recovery.DepartAt==departure.ResumeRoutineAt &&
+                recovery.OriginBuildingKey==departure.SourceBuildingKey && recovery.OriginOutside;
         }
     }
 

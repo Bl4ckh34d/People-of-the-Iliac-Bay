@@ -3,11 +3,11 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Banking;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
-    public sealed partial class LivingCitiesMod
+    public sealed partial class PeopleOfTheIliacBayMod
     {
         private List<HomeProfile> recoveryHomes = new List<HomeProfile>();
         private int recoveryScanIndex;

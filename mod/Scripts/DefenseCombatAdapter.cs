@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using DaggerfallWorkshop.Game.Formulas;
+using DaggerfallWorkshop.Game.Items;
+using DaggerfallWorkshop.Game.MagicAndEffects;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
-    // Records native combat facts only. Crime policy, inventory and quest death logic remain native.
+    // Binds native combat to resident bodies and records its facts. Crime policy remains native.
     public sealed class DefenseCombatAdapter : MonoBehaviour
     {
         private Func<WorldStateStore> getStore;
@@ -18,9 +21,12 @@ namespace LivingCities.DFU
         public void Install(Func<WorldStateStore> store,Func<bool> enabled)
         {
             getStore=store; available=enabled;
-            var type=Type.GetType("LivingCities.QuestHooks.NativeDefenseHooks, LivingCities.QuestHooks",true);
+            var type=Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeDefenseHooks, PeopleOfTheIliacBay.QuestHooks",true);
             hooks=(IDisposable)Activator.CreateInstance(type,new object[] {
-                new Func<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour,Action<Exception>>(BeginDamage) });
+                new Func<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour,Action<Exception>>(BeginDamage),
+                new Func<EnemyAttack,DaggerfallUnityItem,Vector3,bool,int?>(AttackCivilian),
+                new Func<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour,Action<Exception>>(BeginHealing),
+                new Func<DaggerfallEntityBehaviour,DaggerfallEntityBehaviour,string,Action<Exception>>(BeginHostileMagic) });
             EnemyDeath.OnEnemyDeath+=EnemyDied;
             PlayerEnterExit.OnPreTransition+=LeaveDefenseScene;
         }
@@ -49,15 +55,135 @@ namespace LivingCities.DFU
         }
         private static string Identity(DaggerfallEntityBehaviour target)
         {
-            if(!target || !(target.Entity is EnemyEntity) || target.GetComponent<GuardActor>() || target.GetComponent<ResidentActor>() || target.GetComponent<StaticNPC>()) return null;
+            if(!target || target.GetComponent<GuardActor>() || target.GetComponent<StaticNPC>()) return null;
+            var resident=target.GetComponent<ResidentActor>();
+            if(resident!=null && resident.Resident!=null && resident.Resident.IsAlive && target.Entity is CivilianEntity)
+                return resident.Resident.Id;
+            if(!(target.Entity is EnemyEntity)) return null;
             var enemy=(EnemyEntity)target.Entity; var native=target.GetComponent<DaggerfallEnemy>();
             if(enemy.MobileEnemy.ID==(int)MobileTypes.Knight_CityWatch || !native || native.LoadID==0) return null;
             return "native:"+native.LoadID.ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
+        private int? AttackCivilian(EnemyAttack attack,DaggerfallUnityItem weapon,Vector3 direction,bool bowAttack)
+        {
+            var senses=attack.GetComponent<EnemySenses>();var target=senses?senses.Target:null;
+            var resident=target?target.GetComponent<ResidentActor>():null;
+            if(!resident || !(target.Entity is CivilianEntity))return null;
+            var source=attack.GetComponent<DaggerfallEntityBehaviour>();
+            if(!source || !(source.Entity is EnemyEntity) || !resident.Resident.IsAlive || target.Entity.CurrentHealth<=0)return 0;
+            // EnemyAttack casts all non-player targets to EnemyEntity. Use the same
+            // native formula with the actual civilian instead of inventing combat stats.
+            int damage=FormulaHelper.CalculateAttackDamage(source.Entity,target.Entity,false,0,weapon);
+            // Match EnemyAttack.ApplyDamageToNonPlayer: a successful physical
+            // hit ends normal concealment before strikes payloads and observation.
+            if(source.Entity.IsMagicallyConcealedNormalPower && damage>0)
+                EntityEffectManager.BreakNormalPowerConcealmentEffects(source);
+            if(weapon!=null && weapon.IsEnchanted)
+            {
+                var effects=source.GetComponent<EntityEffectManager>();
+                if(effects)damage=effects.DoItemEnchantmentPayloads(EnchantmentPayloadFlags.Strikes,weapon,
+                    source.Entity.Items,target,damage);
+            }
+            var sounds=damage>0?target.GetComponent<EnemySounds>():source.GetComponent<EnemySounds>();
+            if(damage>0)
+            {
+                if(sounds)sounds.PlayHitSound(weapon);
+                target.DamageHealthFromSource(source,damage,true,target.transform.position);
+            }
+            else if(sounds)sounds.PlayMissSound(weapon);
+            return damage;
+        }
+        private Action<Exception> BeginHealing(DaggerfallEntityBehaviour target,DaggerfallEntityBehaviour source)
+        {
+            if(!CanObservePresence() || !target || source!=GameManager.Instance.PlayerEntityBehaviour)return null;
+            var vitals=target.GetComponent<NativeNpcVitalsBinding>();
+            return vitals?vitals.BeginObservedPlayerHealing(getStore(),source):null;
+        }
+        private Action<Exception> BeginHostileMagic(DaggerfallEntityBehaviour target,DaggerfallEntityBehaviour source,string effectKey)
+        {
+            // Hook validates hostile native effect entry. Do not infer policy from its effect key.
+            if(available==null||!available()||!target||target.Entity==null||target.Entity.CurrentHealth<=0||
+                !source||source.Entity==null||source.Entity.CurrentHealth<=0||source.Entity.Team==MobileTeams.PlayerAlly||
+                source==GameManager.Instance.PlayerEntityBehaviour)return null;
+            var victim=target.GetComponent<ResidentActor>();
+            bool protectedTarget=victim!=null||target.GetComponent<GuardActor>()||target.GetComponent<StaticNPC>()||
+                target==GameManager.Instance.PlayerEntityBehaviour;
+            if(!protectedTarget)return null;
+            string id=Identity(source);if(id==null)return null;
+            var scene=DefenseScene.For(source);var victimScene=DefenseScene.For(target);
+            bool playerVictim=target==GameManager.Instance.PlayerEntityBehaviour;
+            if(scene==null || (playerVictim?!scene.PlayerPresent:
+                victimScene==null || scene.SettlementId!=victimScene.SettlementId || scene.Root!=victimScene.Root) ||
+                !CivilianResponses.Sees(source.transform.position,target.transform.position,20))return null;
+            var store=getStore();double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            var existing=store.GetDefenseCombatant(id);
+            if(existing!=null&&(existing.SettlementId!=scene.SettlementId||existing.Death!=null))return null;
+            bool managed=source.GetComponent<ResidentActor>()!=null&&source.Entity is CivilianEntity;
+            var record=store.RegisterDefenseCombatant(id,scene.SettlementId,managed?CombatOrigin.Civilian:CombatOrigin.HostileAttacker,now);
+            return error=>{
+                if(error!=null||getStore()!=store||record.Death!=null)return;
+                var guards=GetComponent<GuardPopulation>();
+                if(guards!=null)guards.ObserveBodyHostileMagic(target,source);
+                if(!managed)store.RecordDefenseUnprovokedAttack(id,now);
+            };
+        }
+
         private Action<Exception> BeginDamage(DaggerfallEntityBehaviour target,DaggerfallEntityBehaviour source)
+        {
+            // A physical attack is no longer a word-against-word complaint, even if native Assault was already set.
+            if(getStore!=null && target && source==GameManager.Instance.PlayerEntityBehaviour &&
+                (target.GetComponent<ResidentActor>() || target.GetComponent<GuardActor>() || target.GetComponent<StaticNPC>()))
+                getStore().ClearNpcVerbalCharge();
+            var aggression=BeginAttackOnCivilian(target,source);
+            var damage=BeginDamageCore(target,source);
+            if(aggression==null)return damage;
+            return error=>{aggression(error);if(damage!=null)damage(error);};
+        }
+        private Action<Exception> BeginAttackOnCivilian(DaggerfallEntityBehaviour target,DaggerfallEntityBehaviour source)
+        {
+            if(available==null||!available()||!target||target.Entity==null||target.Entity.CurrentHealth<=0||
+                !source||source.Entity==null||source.Entity.Team==MobileTeams.PlayerAlly||target==GameManager.Instance.PlayerEntityBehaviour)return null;
+            string id=Identity(source);if(id==null)return null;
+            bool civilian=target.GetComponent<ResidentActor>()||target.GetComponent<GuardActor>()||target.GetComponent<StaticNPC>();
+            var targetMotor=target.GetComponent<EnemyMotor>();
+            if(!civilian && (!(target.Entity is EnemyEntity)||!targetMotor||targetMotor.IsHostile))return null;
+            var scene=DefenseScene.For(source);var victimScene=DefenseScene.For(target);
+            if(scene==null||victimScene==null||scene.SettlementId!=victimScene.SettlementId||scene.Root!=victimScene.Root)return null;
+            var store=getStore();double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            var existing=store.GetDefenseCombatant(id);
+            if(existing!=null&&(existing.SettlementId!=scene.SettlementId||existing.Death!=null))return null;
+            var motor=source.GetComponent<EnemyMotor>();
+            var sourceResident=source.GetComponent<ResidentActor>();
+            var origin=sourceResident!=null && source.Entity is CivilianEntity ? CombatOrigin.Civilian :
+                motor&&motor.IsHostile ? CombatOrigin.HostileAttacker : CombatOrigin.PassiveEnemy;
+            var record=store.RegisterDefenseCombatant(id,scene.SettlementId,origin,now);
+            int health=target.Entity.CurrentHealth;
+            return error=>{
+                if(error!=null||getStore()!=store||!target||target.Entity.CurrentHealth>=health||record.Death!=null) return;
+                var guards=GetComponent<GuardPopulation>();
+                if(civilian&&guards!=null)guards.ObserveBodyAssault(target,source);
+                if(origin!=CombatOrigin.Civilian)store.RecordDefenseUnprovokedAttack(id,now);
+            };
+        }
+        private Action<Exception> BeginDamageCore(DaggerfallEntityBehaviour target,DaggerfallEntityBehaviour source)
         {
             if(available==null || !available() || !target || target.Entity.CurrentHealth<=0) return null;
             if(target==GameManager.Instance.PlayerEntityBehaviour) return BeginAttackOnPlayer(source);
+            var attackedResident=target.GetComponent<ResidentActor>();
+            // GuardActor has no hostile identity and cannot be an NPC murder
+            // source. Do not create a civilian murder record which the hostile
+            // registry will then reject. Lawful-force crowd response requires
+            // its own non-crime contract; generic threat records force Flee.
+            if(attackedResident && source && source.GetComponent<GuardActor>())
+            {
+                var streets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();
+                return streets?streets.BeginLawfulGuardResidentAttack(attackedResident,source):null;
+            }
+            if(attackedResident && source && source!=GameManager.Instance.PlayerEntityBehaviour && IsCorpseMurderSource(source))
+            {
+                var streets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();
+                return streets?streets.BeginEnemyResidentAttack(attackedResident,source):null;
+            }
             string id=Identity(target); if(id==null) return null;
             var scene=DefenseScene.For(target); if(scene==null) return null;
             var game=GameManager.Instance; var store=getStore(); int town=scene.SettlementId;
@@ -88,19 +214,35 @@ namespace LivingCities.DFU
         private Action<Exception> BeginAttackOnPlayer(DaggerfallEntityBehaviour source)
         {
             string id=Identity(source); if(id==null || source.Entity.CurrentHealth<=0) return null;
-            var motor=source.GetComponent<EnemyMotor>(); if(!motor || !motor.IsHostile) return null;
-            var scene=DefenseScene.For(source); if(scene==null || !scene.PlayerPresent) return null;
+            var motor=source.GetComponent<EnemyMotor>(); var resident=source.GetComponent<ResidentActor>();
+            bool managed=resident!=null && source.Entity is CivilianEntity;
+            if(!managed && !(source.Entity is EnemyEntity)) return null;
+            var scene=DefenseScene.For(source);
+            // The player is not parented to the town/interior hierarchy. Its
+            // presence comes from the exact loaded scene, as in guard perception.
+            if(scene==null || !scene.PlayerPresent) return null;
             var store=getStore(); int town=scene.SettlementId;
             var existing=store.GetDefenseCombatant(id);
             if(existing!=null && (existing.SettlementId!=town || existing.Death!=null)) return null;
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             // A native hit is evidence of aggression; merely becoming hostile is not.
             // The store refuses to pardon previously recorded player provocation.
-            store.RegisterDefenseCombatant(id,town,CombatOrigin.HostileAttacker,now);
+            var record=store.RegisterDefenseCombatant(id,town,managed?CombatOrigin.Civilian:CombatOrigin.HostileAttacker,now);
+            int health=GameManager.Instance.PlayerEntity.CurrentHealth;
             return error=> {
-                if(error==null && getStore()==store && store.GetDefenseCombatant(id).Death==null)
-                    store.RecordDefenseUnprovokedAttack(id,now);
+                if(error!=null||getStore()!=store||GameManager.Instance.PlayerEntity.CurrentHealth>=health||record.Death!=null)return;
+                var guards=GetComponent<GuardPopulation>();
+                if(guards!=null)guards.ObservePlayerAssault(source);
+                if(!managed)store.RecordDefenseUnprovokedAttack(id,now);
             };
+        }
+        private static bool IsCorpseMurderSource(DaggerfallEntityBehaviour source)
+        {
+            if(source==null || source.Entity==null)return false;
+            if(source.Entity is EnemyEntity)return true;
+            var resident=source.GetComponent<ResidentActor>();
+            return resident!=null && resident.Resident!=null && resident.Resident.IsAlive &&
+                !resident.Resident.IsQuestProtected && source.Entity is CivilianEntity;
         }
         private List<DefenseWitness> Witnesses(WorldStateStore store,int town,Vector3 target)
         {
@@ -167,7 +309,7 @@ namespace LivingCities.DFU
         private void EnemyDied(object sender,EventArgs args)
         {
             try { ObserveDeath(sender); }
-            catch(Exception error) { Debug.LogWarning("LIVING_CITIES_DEFENSE_OBSERVATION_FAILED: "+error.Message); }
+            catch(Exception error) { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_OBSERVATION_FAILED: "+error.Message); }
         }
         private void ObserveDeath(object sender)
         {

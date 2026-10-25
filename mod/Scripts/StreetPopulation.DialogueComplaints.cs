@@ -1,50 +1,85 @@
 using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
         public bool HasDialogueComplaint(string personId)
-        { return worldStore != null && worldStore.GetDialogueComplaint(personId) != null; }
+        {
+            if(worldStore==null)return false;
+            worldStore.TryRetireUnsupportedDialogueComplaint(personId,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            return worldStore.GetDialogueComplaint(personId)!=null;
+        }
 
         public bool StartDialogueComplaint(ResidentActor actor, string personId)
+        { return StartDialogueComplaint(actor, personId, null); }
+
+        public bool StartDialogueComplaint(ResidentActor actor, string personId, string receiptId)
         {
-            if (!Ready || !directory || !actor || actor.Resident == null || !actor.Resident.IsAlive ||
-                string.IsNullOrEmpty(personId) || actor.Resident.Id != personId ||
-                GameManager.Instance.PlayerEnterExit.IsPlayerInside || geometry == null || worldStore == null)
+            if (!actor || actor.Resident == null || !actor.Resident.IsAlive ||
+                string.IsNullOrEmpty(personId) || actor.Resident.Id != personId || worldStore == null ||
+                string.IsNullOrWhiteSpace(receiptId))
                 return false;
+            double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            if (receiptId != null)
+            {
+                worldStore.TryAbandonExpiredNpcConversationBoundaryReport(personId,now);
+                var boundary = worldStore.ReadNpcConversationBoundary(personId, now);
+                if (boundary == null || boundary.ReceiptId != receiptId ||
+                    boundary.SpeechKind!=NpcExperienceSpeechActKind.DirectThreat ||
+                    boundary.Action != ConversationSpeechBoundaryAction.EndAndReport ||
+                    (boundary.ReportStatus != NpcConversationBoundaryReportStatus.Pending &&
+                     boundary.ReportStatus != NpcConversationBoundaryReportStatus.Started)) return false;
+            }
+            var current = worldStore.GetDialogueComplaint(personId);
+            if (current != null && receiptId != null)
+                return current.SourceReceiptId == receiptId;
+            if (!Ready || !directory || GameManager.Instance.PlayerEnterExit.IsPlayerInside ||
+                geometry == null) return false;
             var guardPopulation = GetComponent<GuardPopulation>();
             Vector3 origin = actor.transform.position - Vector3.up;
             string guardId;
             Vector3 guardPosition;
             List<SavedRoutePoint> route;
-            if (!guardPopulation || !guardPopulation.TryFindNearestComplaintGuard(origin, out guardId, out guardPosition, out route))
-                return false;
             Vector3 local = directory.transform.InverseTransformPoint(origin);
+            if (!guardPopulation || !guardPopulation.TryFindNearestComplaintGuard(origin, out guardId,
+                    out guardPosition, out route))
+            {
+                if (receiptId == null) return false;
+                guardId = null;
+                route = new List<SavedRoutePoint> {
+                    new SavedRoutePoint { X = local.x, Z = local.z },
+                    new SavedRoutePoint { X = local.x, Z = local.z } };
+            }
             Vector3 crime = directory.transform.InverseTransformPoint(GameManager.Instance.PlayerMotor.transform.position);
-            double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
-            worldStore.SetDialogueComplaint(new DialogueComplaintRecord {
-                PersonId = personId, SettlementId = population.SettlementId, StartedAt = now,
+            if (receiptId != null && !worldStore.TryMarkNpcConversationBoundaryReport(personId,
+                    receiptId, NpcConversationBoundaryReportStatus.Started)) return false;
+            var complaint = new DialogueComplaintRecord {
+                PersonId = personId, SourceReceiptId = receiptId, SettlementId = population.SettlementId, StartedAt = now,
                 LastUpdatedAt = now, ExpiresAt = now + 1080, X = local.x, Y = local.y, Z = local.z,
                 CrimeX = crime.x, CrimeY = crime.y, CrimeZ = crime.z,
                 GuardId = guardId, NextWaypoint = 1, Route = route
-            });
+            };
+            if (receiptId == null) worldStore.SetDialogueComplaint(complaint);
+            else if (!worldStore.TryStartReceiptDialogueComplaint(complaint)) return false;
             actor.SetConversationFacing(false);
-            Debug.Log("LIVING_CITIES_DIALOGUE_COMPLAINT_STARTED: resident=" + personId + "; guard=" + guardId);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_COMPLAINT_STARTED: resident=" + personId + "; guard=" + guardId);
             return true;
         }
 
-        private bool PlaceDialogueComplaint(ResidentActor actor)
+        private bool PlaceDialogueComplaint(ResidentActor actor,double now)
         {
             if (!actor || actor.Resident == null || !directory || geometry == null || worldStore == null) return false;
+            worldStore.TryRetireUnsupportedDialogueComplaint(actor.Resident.Id,now);
             var complaint = worldStore.GetDialogueComplaint(actor.Resident.Id);
             if (complaint == null) return false;
-            if (!actor.Resident.IsAlive || DaggerfallUnity.Instance.WorldTime.Now.ToSeconds() >= complaint.ExpiresAt)
+            if (!actor.Resident.IsAlive || now >= complaint.ExpiresAt)
             {
+                if (!AbandonDialogueComplaint(complaint)) return true;
                 worldStore.RemoveDialogueComplaint(complaint.PersonId);
                 actor.Place(actor.transform.position - Vector3.up, actor.transform.forward, true);
                 return true;
@@ -79,7 +114,6 @@ namespace LivingCities.DFU
                 }
             }
 
-            double now = DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             float elapsed = Mathf.Clamp((float)((now - complaint.LastUpdatedAt) / DaggerfallUnity.Instance.WorldTime.TimeScale), 0, 0.25f);
             complaint.LastUpdatedAt = now;
             while (complaint.NextWaypoint < complaint.Route.Count)
@@ -119,11 +153,17 @@ namespace LivingCities.DFU
             if (guards.TryGetComplaintGuardPosition(complaint.GuardId, out currentGuard) &&
                 Vector3.Distance(position, currentGuard) <= 2.25f)
             {
-                worldStore.RemoveDialogueComplaint(complaint.PersonId);
-                guards.ReportDialogueComplaintAt(directory.transform.TransformPoint(new Vector3((float)complaint.CrimeX,
-                    (float)complaint.CrimeY, (float)complaint.CrimeZ)));
-                Debug.Log("LIVING_CITIES_DIALOGUE_COMPLAINT_ARRIVED: resident=" + complaint.PersonId +
-                    "; guard=" + complaint.GuardId);
+                Vector3 incident = directory.transform.TransformPoint(new Vector3((float)complaint.CrimeX,
+                    (float)complaint.CrimeY, (float)complaint.CrimeZ));
+                bool dispatched = complaint.SourceReceiptId == null ?
+                    guards.TryReportLegacyDialogueComplaintAt(incident) :
+                    guards.TryReportConversationBoundaryAt(complaint.SourceReceiptId, complaint.PersonId, incident);
+                if (dispatched)
+                {
+                    worldStore.RemoveDialogueComplaint(complaint.PersonId);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_COMPLAINT_ARRIVED: resident=" + complaint.PersonId +
+                        "; guard=" + complaint.GuardId);
+                }
             }
             return true;
         }
@@ -144,9 +184,14 @@ namespace LivingCities.DFU
             foreach (var complaint in worldStore.DialogueComplaints())
             {
                 if (complaint.SettlementId != population.SettlementId) continue;
-                if (now >= complaint.ExpiresAt || worldStore.ResolveResident(complaint.SettlementId, complaint.PersonId) == null ||
+                if(worldStore.TryRetireUnsupportedDialogueComplaint(complaint.PersonId,now))continue;
+                if (now >= complaint.ExpiresAt ||
+                    worldStore.ResolveResident(complaint.SettlementId, complaint.PersonId) == null ||
                     !worldStore.ResolveResident(complaint.SettlementId, complaint.PersonId).IsAlive)
-                { worldStore.RemoveDialogueComplaint(complaint.PersonId); continue; }
+                {
+                    if (AbandonDialogueComplaint(complaint)) worldStore.RemoveDialogueComplaint(complaint.PersonId);
+                    continue;
+                }
                 var resident = worldStore.ResolveResident(complaint.SettlementId, complaint.PersonId);
                 Vector3 position = directory.transform.TransformPoint(new Vector3((float)complaint.X, (float)complaint.Y, (float)complaint.Z));
                 Vector3 guardPosition;
@@ -184,14 +229,33 @@ namespace LivingCities.DFU
                 complaint.X = local.x; complaint.Y = local.y; complaint.Z = local.z;
                 if (Vector3.Distance(position, guardPosition) <= 2.25f)
                 {
-                    worldStore.RemoveDialogueComplaint(complaint.PersonId);
-                    guards.ReportDialogueComplaintAt(directory.transform.TransformPoint(new Vector3((float)complaint.CrimeX,
-                        (float)complaint.CrimeY, (float)complaint.CrimeZ)));
-                    Debug.Log("LIVING_CITIES_DIALOGUE_COMPLAINT_ARRIVED: resident=" + complaint.PersonId +
-                        "; guard=" + complaint.GuardId + "; offscreen=true");
+                    Vector3 incident = directory.transform.TransformPoint(new Vector3((float)complaint.CrimeX,
+                        (float)complaint.CrimeY, (float)complaint.CrimeZ));
+                    bool dispatched = complaint.SourceReceiptId == null ?
+                        guards.TryReportLegacyDialogueComplaintAt(incident) :
+                        guards.TryReportConversationBoundaryAt(complaint.SourceReceiptId, complaint.PersonId, incident);
+                    if (dispatched)
+                    {
+                        worldStore.RemoveDialogueComplaint(complaint.PersonId);
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_COMPLAINT_ARRIVED: resident=" + complaint.PersonId +
+                            "; guard=" + complaint.GuardId + "; offscreen=true");
+                    }
+                    else worldStore.SetDialogueComplaint(complaint);
                 }
                 else worldStore.SetDialogueComplaint(complaint);
             }
+        }
+
+        private bool AbandonDialogueComplaint(DialogueComplaintRecord complaint)
+        {
+            if (complaint.SourceReceiptId == null) return true;
+            var boundary = worldStore.ReadNpcConversationBoundary(complaint.PersonId,
+                DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            if (boundary == null || boundary.ReceiptId != complaint.SourceReceiptId ||
+                boundary.ReportStatus == NpcConversationBoundaryReportStatus.Delivered ||
+                boundary.ReportStatus == NpcConversationBoundaryReportStatus.Abandoned) return true;
+            return worldStore.TryMarkNpcConversationBoundaryReport(complaint.PersonId,
+                complaint.SourceReceiptId, NpcConversationBoundaryReportStatus.Abandoned);
         }
     }
 }

@@ -4,10 +4,10 @@ using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class DaggerfallTravelerProbe
     {
@@ -45,7 +45,7 @@ namespace LivingCities.DFU
             foreach(var inn in inns)
             {
                 var routes=geometry.SurveyTravelerRoutes(inn.buildingKey);
-                Debug.Log("LIVING_CITIES_CITY_TRAVELER_ROUTE: inn="+inn.buildingKey+"; routes="+routes.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITY_TRAVELER_ROUTE: inn="+inn.buildingKey+"; routes="+routes.Count);
                 if(routes.Count>0)
                 {
                     connected++; selected=routes[0]; selectedInn=inn.buildingKey;
@@ -57,13 +57,13 @@ namespace LivingCities.DFU
                         proposal.Person.Id!=repeated.Person.Id || proposal.Person.Name!=repeated.Person.Name ||
                         proposal.Visit.DesiredArrival!=repeated.Visit.DesiredArrival || DFRandom.Seed!=random)
                         throw new InvalidOperationException("Traveler identity is local, unstable or changes native random state.");
-                    var state=new WorldStateStore(42,LivingCitiesMod.ConversationArchiveRoot()); state.GetOrCreate(directory.MapID,new int[0]);
+                    var state=new WorldStateStore(42,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); state.GetOrCreate(directory.MapID,new int[0]);
                     state.RegisterTraveler(proposal.Person); state.RegisterTravelerVisit(proposal.Visit);
-                    var copy=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+                    var copy=new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                     copy.Restore((WorldState)DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Deserialize(typeof(WorldState),
                         DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Serialize(typeof(WorldState),state.Snapshot())));
                     if(copy.Snapshot().Travelers[0].Name!=proposal.Person.Name) throw new InvalidOperationException("Generated traveler identity lost on reload.");
-                    Debug.Log("LIVING_CITIES_CITY_TRAVELER_IDENTITY_PASS: inn="+inn.buildingKey+"; origin="+proposal.Person.HomeSettlement+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITY_TRAVELER_IDENTITY_PASS: inn="+inn.buildingKey+"; origin="+proposal.Person.HomeSettlement+
                         "; nights="+proposal.Visit.Nights+"; stable native name and visit serialize.");
                 }
                 foreach(var route in routes) if(!route.Walled) throw new InvalidOperationException("Daggerfall incorrectly classified as unwalled.");
@@ -84,11 +84,11 @@ namespace LivingCities.DFU
             clock.RaiseTime((float)((21600-clock.ToSeconds()%86400+86400)%86400)); yield return null; yield return null;
             if(geometry.SurveyTravelerRoutes(selectedInn).Count==0)
                 throw new InvalidOperationException("Traveler route did not recover when gates reopened at dawn.");
-            Debug.Log("LIVING_CITIES_CITY_TRAVELER_PASS: gates="+gates.Length+"; connectedInns="+connected+"/"+inns.Count+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITY_TRAVELER_PASS: gates="+gates.Length+"; connectedInns="+connected+"/"+inns.Count+
                 "; all inn daytime routes and night rejection, dawn recovery and next-opening schedule verified.");
             // The fixture advances world time through night and dawn. Native timed
             // events can leave a modal window open and pause the game, which prevents
-            // LivingCitiesMod from preparing the settlement needed by the actor probe.
+            // PeopleOfTheIliacBayMod from preparing the settlement needed by the actor probe.
             DaggerfallUI.Instance.PopToHUD();
             game.PauseGame(false);
             yield return TravelerActorProbe.Run(directory,geometry,selectedInn,selected);

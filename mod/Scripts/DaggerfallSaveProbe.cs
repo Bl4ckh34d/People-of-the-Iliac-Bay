@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class DaggerfallSaveProbe
     {
-        public static IEnumerator Run(LivingCitiesMod mod,StreetPopulation streets,GuardPopulation guards)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod mod,StreetPopulation streets,GuardPopulation guards)
         {
             var game=GameManager.Instance;
-            if(!game.PlayerEntity.Name.StartsWith("LivingCitiesTest-",StringComparison.Ordinal))
+            if(!game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal))
                 throw new InvalidOperationException("City save probe requires the dedicated test character.");
             var before=(WorldState)mod.GetSaveData();
             var town=before.Settlements.Find(t=>t.SettlementId==1291010263);
@@ -31,7 +31,7 @@ namespace LivingCities.DFU
             SaveLoadManager.OnSave+=onSave; SaveLoadManager.OnLoad+=onLoad;
             try
             {
-                const string name="Living Cities - Daggerfall city preview";
+                const string name="People of the Iliac Bay - Daggerfall city preview";
                 game.SaveLoadManager.Save(game.PlayerEntity.Name,name);
                 float deadline=Time.realtimeSinceStartup+30;
                 while(!saved && Time.realtimeSinceStartup<deadline) yield return null;
@@ -57,7 +57,7 @@ namespace LivingCities.DFU
                         Math.Abs(actual.Position.X-expected.Position.X)>0.0001 || Math.Abs(actual.Position.Z-expected.Position.Z)>0.0001)
                         throw new InvalidOperationException("City schedule changed after reload: "+pair.Key);
                 }
-                Debug.Log("LIVING_CITIES_CITY_SAVE_PASS: residents="+states.Count+"; guards="+guardIds.Count+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITY_SAVE_PASS: residents="+states.Count+"; guards="+guardIds.Count+
                     "; identities, routes, sampled activities and daily curfew preserved; save="+game.SaveLoadManager.GetSaveFolder(key));
             }
             finally { SaveLoadManager.OnSave-=onSave; SaveLoadManager.OnLoad-=onLoad; }

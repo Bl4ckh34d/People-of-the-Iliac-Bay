@@ -1,9 +1,9 @@
 using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -40,7 +40,7 @@ namespace LivingCities.DFU
                 bool visiting=worldStore.TryDestinationResidentState(resident.Id,population.SettlementId,seconds,out state);
                 var reaction=Reaction(resident.Id,seconds);
                 if(reaction!=null || !resident.IsAlive)
-                {worldStore.RemoveObservedVisit(resident.Id);physicalShopVisits.Remove(resident.Id);}
+                {worldStore.RemoveObservedVisit(resident.Id);RemovePhysicalShopVisit(resident.Id);}
                 bool reacting=reaction!=null && reaction.HasPosition;
                 int building=reacting ? reaction.BuildingKey : state.BuildingKey;
                 bool inside=interior && building==interior.EntryDoor.buildingKey;
@@ -72,9 +72,11 @@ namespace LivingCities.DFU
                 if(!actor)
                 {
                     if(actors.Count>=80) continue;
+                    NativeNpcStartingBelongingsSceneProbe.BeforeNaturalSpawn(this,resident,worldStore);
                     var body=Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject,inside ? interior.transform : directory.transform);
-                    body.name="Living Cities visitor "+resident.Id;
-                    actor=body.AddComponent<ResidentActor>(); actor.Initialize(resident,0,navigation);
+                    body.name="People of the Iliac Bay visitor "+resident.Id;
+                    actor=body.AddComponent<ResidentActor>(); actor.Initialize(resident,0,navigation,inventoryStore:worldStore);
+                    NativeNpcStartingBelongingsSceneProbe.AfterNaturalInitialize(actor,worldStore);
                     actor.SetRunningPilotAtlas(runningPilotAtlas); actors.Add(resident.Id,actor);
                     actor.transform.position=ground+Vector3.up;
                     if(inside && !reacting && visiting && indoorGeometry!=null && indoorGeometry.EntryGround.HasValue)
@@ -117,7 +119,7 @@ namespace LivingCities.DFU
                     var visit=worldStore.ResidentTripAt(resident.Id,seconds);
                     if(visit.VisitPhase==ResidentVisitPhase.ExitingService)
                     {
-                        physicalShopVisits.Remove(resident.Id);
+                        RemovePhysicalShopVisit(resident.Id);
                         worldStore.RemoveObservedVisit(resident.Id);
                         var point=interior.transform.TransformPoint(new Vector3((float)visit.Position.X,(float)visit.InteriorY,(float)visit.Position.Z));
                         var following=worldStore.ResidentTripAt(resident.Id,seconds+0.1);
@@ -166,7 +168,7 @@ namespace LivingCities.DFU
                             var route=indoorGeometry.RouteToExit(actor.transform.position-Vector3.up);
                             if(route.Count<2)
                             {
-                                Debug.LogWarning("LIVING_CITIES_TAVERN_VISITOR_EXIT_ROUTE_MISSING: "+resident.Id+
+                                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_VISITOR_EXIT_ROUTE_MISSING: "+resident.Id+
                                     "; building="+visit.BuildingKey);
                                 continue;
                             }
@@ -180,7 +182,7 @@ namespace LivingCities.DFU
                             }
                             catch(System.ArgumentException)
                             {
-                                Debug.LogWarning("LIVING_CITIES_TAVERN_VISITOR_EXIT_REJECTED: "+resident.Id+
+                                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_VISITOR_EXIT_REJECTED: "+resident.Id+
                                     "; building="+visit.BuildingKey);
                                 continue;
                             }
@@ -189,7 +191,9 @@ namespace LivingCities.DFU
                 }
                 Vector3 direction=outside && worldStore.TryDestinationResidentState(resident.Id,population.SettlementId,seconds+0.1,out next) && next.BuildingKey==-1 ?
                     geometry.ScenePoint(next.Position)-ground : Vector3.zero;
-                actor.Place(ground,direction,inside);
+                Vector3? destination=!reacting && outside && state.TravelDestination.HasValue ?
+                    (Vector3?)geometry.ScenePoint(state.TravelDestination.Value) : null;
+                actor.Place(ground,direction,inside,freeStanding:inside,navigationDestination:destination);
             }
         }
         private bool CanContinueDestinationDeparture(ResidentActor actor,double seconds)
@@ -211,8 +215,9 @@ namespace LivingCities.DFU
         }
         private void RemoveDestinationActor(string id)
         {
+            RemovePhysicalShopVisit(id);
             var actor=FindActor(id);
-            if(actor) { actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
+            if(actor) { actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
             actors.Remove(id); indoorSlots.Remove(id);
             residentRooms.Remove(id);
             residentReceptions.Remove(id);

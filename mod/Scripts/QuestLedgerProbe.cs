@@ -5,28 +5,28 @@ using System.Reflection;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Opt-in fixture exercising the offer adapter with a synthetic quest.
     public static class QuestLedgerProbe
     {
-        private const string SaveName = "Living Cities - quest binding ledger";
+        private const string SaveName = "People of the Iliac Bay - quest binding ledger";
         public static IEnumerator Run(string questJson, IDictionary<int, string[]> homes)
         {
             var game = GameManager.Instance;
-            Require(game.PlayerEntity.Name.StartsWith("LivingCitiesTest-", StringComparison.Ordinal), "Disposable character required.");
+            Require(game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal), "Disposable character required.");
             Require(!string.IsNullOrEmpty(questJson), "Parser probe did not return its bound quest.");
             var quest = new Quest();
             quest.RestoreSaveData((Quest.QuestSaveData_v1)SaveLoadManager.Deserialize(typeof(Quest.QuestSaveData_v1), questJson));
             var person = quest.GetPerson(new Symbol("_recipient_"));
             var site = person.GetHomePlace().SiteDetails;
             string[] expected = homes[site.buildingKey];
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             // Access the actual store only from the opt-in harness, without a test-only runtime API.
-            var field = typeof(LivingCitiesMod).GetField("store", BindingFlags.NonPublic | BindingFlags.Instance);
+            var field = typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.NonPublic | BindingFlags.Instance);
             var store = (WorldStateStore)field.GetValue(adapter);
             var candidate = new QuestResidentBinding { QuestUid = quest.UID, QuestName = quest.QuestName,
                 PersonSymbol = "_recipient_", SettlementId = site.mapId, HomeKey = site.buildingKey,
@@ -36,6 +36,8 @@ namespace LivingCities.DFU
             var rejectedOffer = store.PrepareQuestBindings(new[] { candidate });
             Require(before == SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData()), "Unaccepted offer changed saved state.");
             yield return QuestOfferProbe.Run(store, quest, candidate);
+            if (Environment.GetEnvironmentVariable("POTIB_QUEST_PERSON_LOCATION_PROBE") == "1")
+                yield return QuestPersonLocationProbe.Run(quest);
             Require(QuestMachine.Instance.GetQuest(quest.UID) == quest, "Native startup failed.");
             ulong uid = quest.UID;
             bool saved = false, loaded = false;
@@ -87,7 +89,7 @@ namespace LivingCities.DFU
                 restored.EndQuest();
                 yield return new WaitForSecondsRealtime(2);
                 Require(streets.FindActor(binding.ResidentId), "Finished quest did not return the resident to household simulation.");
-                Debug.Log("LIVING_CITIES_TOWN_QUEST_LEDGER_PASS: native quest startup; mod sidecar and quest reconstructed; uid=" + uid +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_QUEST_LEDGER_PASS: native quest startup; mod sidecar and quest reconstructed; uid=" + uid +
                     "; resident=" + binding.ResidentId + "; name=" + binding.PersonName + "; schema=" + state.Version +
                     "; save=" + game.SaveLoadManager.GetSaveFolder(key));
             }

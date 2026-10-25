@@ -4,10 +4,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
@@ -92,7 +92,7 @@ namespace LivingCities.DFU
                 if(result.PotionGranted) game.PlayerEntity.Items.AddItem(ItemBuilder.CreatePotion(4975678));
                 // Resume existing native surrender handling after courtesy, never erase crime.
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None) report.ThreatId=null;
-                Debug.Log("LIVING_CITIES_GUARD_WELFARE: "+guard.Id+"; potion="+result.PotionGranted);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_WELFARE: "+guard.Id+"; potion="+result.PotionGranted);
             });
             welfareWindow.Show();
             return true;

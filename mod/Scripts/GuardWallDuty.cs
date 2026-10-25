@@ -4,10 +4,10 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
@@ -136,7 +136,7 @@ namespace LivingCities.DFU
             plan.ReturnExterior=prepared.Outside.ConvertAll(p=>new GuardPoint3 {X=p.X,Z=p.Z});plan.ReturnExterior.Reverse();
             plan.Release((Math.Floor(recall.DepartsAt/86400)+1)*86400+DaggerfallDateTime.DawnHour*3600);
             Roster.ScheduleWallDuty(guard.Id,plan);
-            Debug.Log("LIVING_CITIES_WALL_SHIFT: "+guard.Id+"; building="+prepared.BuildingKey);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WALL_SHIFT: "+guard.Id+"; building="+prepared.BuildingKey);
         }
     }
 }

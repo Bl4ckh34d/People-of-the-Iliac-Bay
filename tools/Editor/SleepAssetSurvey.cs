@@ -18,7 +18,7 @@ public static class SleepAssetSurvey
     {
         string root = Path.GetFullPath(Path.Combine(Application.dataPath, "../.."));
         string arena = Path.Combine(root, "GameFiles/arena2");
-        string output = Path.Combine(root, "LivingCities/work/sleep-source");
+        string output = PeopleOfTheIliacBayPaths.Repository("work/sleep-source");
         Directory.CreateDirectory(output);
         var flats = new FlatsFile(Path.Combine(arena, FlatsFile.Filename), FileUsage.UseMemory, true);
         var textures = new TextureReader(arena);
@@ -51,7 +51,7 @@ public static class SleepAssetSurvey
             File.WriteAllText(Path.Combine(output, "bed-" + id + ".json"), JsonUtility.ToJson(new Geometry {
                 model = id, vertices = data.Vertices, normals = data.Normals, triangles = data.Indices }, true));
         }
-        Debug.Log("LIVING_CITIES_SLEEP_SURVEY_PASS: flatReferences=" + flats.FlatsDict.Count + "; mobileReferences=" + mobile.Length + "; beds=3");
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SLEEP_SURVEY_PASS: flatReferences=" + flats.FlatsDict.Count + "; mobileReferences=" + mobile.Length + "; beds=3");
     }
     private static Texture2D ReadTexture(TextureReader reader, int archive, int record)
     {

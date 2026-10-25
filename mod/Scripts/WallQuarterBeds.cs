@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class QuarterBed : MonoBehaviour
     {
@@ -26,7 +26,7 @@ namespace LivingCities.DFU
         public static List<SurveyedBed> Survey(Transform owner,StaticDoor door)
         {
             var result=new List<SurveyedBed>();
-            var temporary=new GameObject("Living Cities isolated wall quarters");
+            var temporary=new GameObject("People of the Iliac Bay isolated wall quarters");
             var offset=Vector3.up*100; var shifted=door; shifted.ownerPosition+=offset;
             try
             {
@@ -70,7 +70,7 @@ namespace LivingCities.DFU
                 var position=floor-rotation*new Vector3(full.center.x,full.min.y,full.center.z);
                 if(!ClearFootprint(interior,full,position,rotation,navigation.EntryGround.Value)) continue;
                 var prop=GameObjectHelper.CreateDaggerfallMeshGameObject(41000,interior.transform);
-                prop.name="Living Cities wall-quarter bed "+existing.Count;
+                prop.name="People of the Iliac Bay wall-quarter bed "+existing.Count;
                 prop.transform.localPosition=position; prop.transform.localRotation=rotation;
                 Physics.SyncTransforms();
                 var anchor=new BedAnchor { RecordIndex=1000000+existing.Count,ModelId=41000,

@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup><Compile Include="../PeopleOfTheIliacBay.Tests/HistoricalNpcExperienceFixture.cs" Link="HistoricalNpcExperienceFixture.cs" /></ItemGroup>
+</Project>

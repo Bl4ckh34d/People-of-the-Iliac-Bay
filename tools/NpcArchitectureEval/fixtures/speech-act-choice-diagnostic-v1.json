@@ -1,0 +1,1332 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "npc-speech-act-choice-diagnostic-v1",
+  "provenance": "Offline choice-only diagnostic. The first 12 cases project exact stable-trait, mood, affinity, directed-relationship, event, utterance, and history fields from the current prepared production-Core v2 speech rows (69b9fc70a8f26c998ada698847bd373c44ce4101af55743544cbeb1aecf73c86). Six held-out contrasts reuse the steady-commoner profile. This reframes only the response task as a six-way speech-act choice; it is not the production appraisal request and does not exercise Core appraisal parsing or commit.",
+  "limitations": [
+    "Synthetic/offline classification only; no appraisal deltas, Core parser gate, native effects, live dialogue, or state changes.",
+    "The six held-out contrasts use one profile and one deterministic phrasing each; not a representative language benchmark.",
+    "Choice labels are evaluator categories mapped to Core speech-act enums; quoted/reported and joking/ambiguous enum pairs are intentionally grouped to stay within the existing 3–6 offered-choice contract.",
+    "The current 12-row subset has empty conversationContext and therefore empty history. Held-outs also use empty history; context clarification is stated explicitly in the utterance."
+  ],
+  "scoring": {
+    "method": "Existing case-level offered-choice scoring with one gold category or explicit acceptable alternative(s).",
+    "reporting": "Inspect each response and option-order pair. Summary accuracy is descriptive only; no pass threshold.",
+    "goldLocation": "Expected choices are used only by the evaluator after calls; model adapters receive only the input whitelist."
+  },
+  "cases": [
+    {
+      "id": "core-exact:npc:appraisal-commoner-steady/observed-direct-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"fixture-v2:utterance:d343438a14f7c10af35597d5\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:505e8386e07e7f460a1905ca|45:fixture-v2:utterance:d343438a14f7c10af35597d5|observed|29:npc:appraisal-commoner-steady|29:npc:appraisal-commoner-steady|6:player\",observedGameTime=1624,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "I will burn down your home tonight if you speak to the guards.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "DirectThreat"
+        ],
+        "forbiddenChoices": [
+          "QuotedOrReportedThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-commoner-steady/observed-quoted-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"fixture-v2:utterance:6034f0f8d2642fbc681c9a8c\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:6ba39b3c5213990e9ffc53a3|45:fixture-v2:utterance:6034f0f8d2642fbc681c9a8c|observed|29:npc:appraisal-commoner-steady|29:npc:appraisal-commoner-steady|6:player\",observedGameTime=1625,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "The bandit said, ‘I will burn down your home tonight if you speak to the guards.’",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "QuotedOrReportedThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-commoner-steady/observed-hypothetical-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"fixture-v2:utterance:6b0a81e8325c4abc1350a9ca\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:dbf670511f0ae62ac4906b3c|45:fixture-v2:utterance:6b0a81e8325c4abc1350a9ca|observed|29:npc:appraisal-commoner-steady|29:npc:appraisal-commoner-steady|6:player\",observedGameTime=1626,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "Imagine a tale where someone threatens you. What would change if the line were, ‘I will burn down your home tonight’?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "HypotheticalThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-commoner-warm/observed-direct-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-warm",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience brisk; curiosity self-absorbed; privacy open; manner earnest; outlook pessimistic; emotional stability sensitive; ambition driven; integrity honest; courage reckless; dutifulness self-directed; vocabulary colorful; eloquence articulate; status attitude condescending; humor mischievous; self esteem insecure; sensitivity thick-skinned."
+          },
+          "mood": "22/100; moodRevision=8",
+          "affinity": "45/100; affinityRevision=5; positiveAffinityCap=4",
+          "relationship": "target=\"player\",trustKnown=false,trust=unknown,confidence=0,evidenceCount=0,resentment=2,interpersonalFear=0; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-warm\",subject=\"npc:appraisal-commoner-warm\",canonicalId=\"fixture-v2:utterance:8091d0268f8211398916b61b\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:bee463f39658f85cae82e84a|45:fixture-v2:utterance:8091d0268f8211398916b61b|observed|27:npc:appraisal-commoner-warm|27:npc:appraisal-commoner-warm|6:player\",observedGameTime=1624,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "I will burn down your home tonight if you speak to the guards.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "DirectThreat"
+        ],
+        "forbiddenChoices": [
+          "QuotedOrReportedThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-commoner-warm/observed-quoted-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-warm",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience brisk; curiosity self-absorbed; privacy open; manner earnest; outlook pessimistic; emotional stability sensitive; ambition driven; integrity honest; courage reckless; dutifulness self-directed; vocabulary colorful; eloquence articulate; status attitude condescending; humor mischievous; self esteem insecure; sensitivity thick-skinned."
+          },
+          "mood": "22/100; moodRevision=8",
+          "affinity": "45/100; affinityRevision=5; positiveAffinityCap=4",
+          "relationship": "target=\"player\",trustKnown=false,trust=unknown,confidence=0,evidenceCount=0,resentment=2,interpersonalFear=0; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-warm\",subject=\"npc:appraisal-commoner-warm\",canonicalId=\"fixture-v2:utterance:29698d53efd0ed0206641e80\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:df605a3a0762b7c396e310d6|45:fixture-v2:utterance:29698d53efd0ed0206641e80|observed|27:npc:appraisal-commoner-warm|27:npc:appraisal-commoner-warm|6:player\",observedGameTime=1625,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "The bandit said, ‘I will burn down your home tonight if you speak to the guards.’",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "QuotedOrReportedThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-commoner-warm/observed-hypothetical-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-warm",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience brisk; curiosity self-absorbed; privacy open; manner earnest; outlook pessimistic; emotional stability sensitive; ambition driven; integrity honest; courage reckless; dutifulness self-directed; vocabulary colorful; eloquence articulate; status attitude condescending; humor mischievous; self esteem insecure; sensitivity thick-skinned."
+          },
+          "mood": "22/100; moodRevision=8",
+          "affinity": "45/100; affinityRevision=5; positiveAffinityCap=4",
+          "relationship": "target=\"player\",trustKnown=false,trust=unknown,confidence=0,evidenceCount=0,resentment=2,interpersonalFear=0; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-warm\",subject=\"npc:appraisal-commoner-warm\",canonicalId=\"fixture-v2:utterance:34f72a96227cbe2603ca214b\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:0ab279dd9a36e807a21b0997|45:fixture-v2:utterance:34f72a96227cbe2603ca214b|observed|27:npc:appraisal-commoner-warm|27:npc:appraisal-commoner-warm|6:player\",observedGameTime=1626,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "Imagine a tale where someone threatens you. What would change if the line were, ‘I will burn down your home tonight’?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "HypotheticalThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-noble-wary/observed-direct-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-noble-wary",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity observant; privacy open; manner earnest; outlook cynical; emotional stability even-tempered; ambition content; integrity manipulative; courage bold; dutifulness obliging; vocabulary precise; eloquence plain; status attitude egalitarian; humor wry; self esteem confident; sensitivity highly sensitive."
+          },
+          "mood": "-68/100; moodRevision=5",
+          "affinity": "-25/100; affinityRevision=9; positiveAffinityCap=0",
+          "relationship": "target=\"player\",trustKnown=true,trust=20,confidence=10,evidenceCount=1,resentment=70,interpersonalFear=75; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-noble-wary\",subject=\"npc:appraisal-noble-wary\",canonicalId=\"fixture-v2:utterance:0037f4fe09b9e8c65e49a206\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:ec992db97fce7859d1deab66|45:fixture-v2:utterance:0037f4fe09b9e8c65e49a206|observed|24:npc:appraisal-noble-wary|24:npc:appraisal-noble-wary|6:player\",observedGameTime=1624,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "I will burn down your home tonight if you speak to the guards.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "DirectThreat"
+        ],
+        "forbiddenChoices": [
+          "QuotedOrReportedThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-noble-wary/observed-quoted-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-noble-wary",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity observant; privacy open; manner earnest; outlook cynical; emotional stability even-tempered; ambition content; integrity manipulative; courage bold; dutifulness obliging; vocabulary precise; eloquence plain; status attitude egalitarian; humor wry; self esteem confident; sensitivity highly sensitive."
+          },
+          "mood": "-68/100; moodRevision=5",
+          "affinity": "-25/100; affinityRevision=9; positiveAffinityCap=0",
+          "relationship": "target=\"player\",trustKnown=true,trust=20,confidence=10,evidenceCount=1,resentment=70,interpersonalFear=75; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-noble-wary\",subject=\"npc:appraisal-noble-wary\",canonicalId=\"fixture-v2:utterance:f727168151d8be34dc56cf98\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:5b4c1a25a803fb8afd43caa4|45:fixture-v2:utterance:f727168151d8be34dc56cf98|observed|24:npc:appraisal-noble-wary|24:npc:appraisal-noble-wary|6:player\",observedGameTime=1625,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "The bandit said, ‘I will burn down your home tonight if you speak to the guards.’",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "QuotedOrReportedThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-noble-wary/observed-hypothetical-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-noble-wary",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity observant; privacy open; manner earnest; outlook cynical; emotional stability even-tempered; ambition content; integrity manipulative; courage bold; dutifulness obliging; vocabulary precise; eloquence plain; status attitude egalitarian; humor wry; self esteem confident; sensitivity highly sensitive."
+          },
+          "mood": "-68/100; moodRevision=5",
+          "affinity": "-25/100; affinityRevision=9; positiveAffinityCap=0",
+          "relationship": "target=\"player\",trustKnown=true,trust=20,confidence=10,evidenceCount=1,resentment=70,interpersonalFear=75; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-noble-wary\",subject=\"npc:appraisal-noble-wary\",canonicalId=\"fixture-v2:utterance:c4a34de9bf526beea1b0b1b7\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:7fa89943a23e0d8bfb3c80b4|45:fixture-v2:utterance:c4a34de9bf526beea1b0b1b7|observed|24:npc:appraisal-noble-wary|24:npc:appraisal-noble-wary|6:player\",observedGameTime=1626,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "Imagine a tale where someone threatens you. What would change if the line were, ‘I will burn down your home tonight’?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "HypotheticalThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-noble-confident/observed-direct-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-noble-confident",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience brisk; curiosity inquisitive; privacy selective; manner courteous; outlook optimistic; emotional stability even-tempered; ambition status-seeking; integrity sly; courage reckless; dutifulness obliging; vocabulary colorful; eloquence articulate; status attitude egalitarian; humor mischievous; self esteem grounded; sensitivity thick-skinned."
+          },
+          "mood": "55/100; moodRevision=2",
+          "affinity": "5/100; affinityRevision=3; positiveAffinityCap=1",
+          "relationship": "target=\"player\",trustKnown=true,trust=80,confidence=80,evidenceCount=8,resentment=1,interpersonalFear=5; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-noble-confident\",subject=\"npc:appraisal-noble-confident\",canonicalId=\"fixture-v2:utterance:ac2d56a5b24b34b0830bad29\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:15d402e86cba8017ece6fcea|45:fixture-v2:utterance:ac2d56a5b24b34b0830bad29|observed|29:npc:appraisal-noble-confident|29:npc:appraisal-noble-confident|6:player\",observedGameTime=1624,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "I will burn down your home tonight if you speak to the guards.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "DirectThreat"
+        ],
+        "forbiddenChoices": [
+          "QuotedOrReportedThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-noble-confident/observed-quoted-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-noble-confident",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience brisk; curiosity inquisitive; privacy selective; manner courteous; outlook optimistic; emotional stability even-tempered; ambition status-seeking; integrity sly; courage reckless; dutifulness obliging; vocabulary colorful; eloquence articulate; status attitude egalitarian; humor mischievous; self esteem grounded; sensitivity thick-skinned."
+          },
+          "mood": "55/100; moodRevision=2",
+          "affinity": "5/100; affinityRevision=3; positiveAffinityCap=1",
+          "relationship": "target=\"player\",trustKnown=true,trust=80,confidence=80,evidenceCount=8,resentment=1,interpersonalFear=5; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-noble-confident\",subject=\"npc:appraisal-noble-confident\",canonicalId=\"fixture-v2:utterance:1fb54f5ced090d07f07f14b2\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:0f5e7390929955486136e94c|45:fixture-v2:utterance:1fb54f5ced090d07f07f14b2|observed|29:npc:appraisal-noble-confident|29:npc:appraisal-noble-confident|6:player\",observedGameTime=1625,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "The bandit said, ‘I will burn down your home tonight if you speak to the guards.’",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "QuotedOrReportedThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "core-exact:npc:appraisal-noble-confident/observed-hypothetical-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "exact_projection_from_current_core_prepared_request",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-noble-confident",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience brisk; curiosity inquisitive; privacy selective; manner courteous; outlook optimistic; emotional stability even-tempered; ambition status-seeking; integrity sly; courage reckless; dutifulness obliging; vocabulary colorful; eloquence articulate; status attitude egalitarian; humor mischievous; self esteem grounded; sensitivity thick-skinned."
+          },
+          "mood": "55/100; moodRevision=2",
+          "affinity": "5/100; affinityRevision=3; positiveAffinityCap=1",
+          "relationship": "target=\"player\",trustKnown=true,trust=80,confidence=80,evidenceCount=8,resentment=1,interpersonalFear=5; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "{origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-noble-confident\",subject=\"npc:appraisal-noble-confident\",canonicalId=\"fixture-v2:utterance:e029b49d21e024ca5fe95dd5\",deduplicationKey=\"npc-experience-speech-v1|43:fixture-v2:episode:f19e50badff76eae14a69804|45:fixture-v2:utterance:e029b49d21e024ca5fe95dd5|observed|29:npc:appraisal-noble-confident|29:npc:appraisal-noble-confident|6:player\",observedGameTime=1626,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Synthetic speech classification only; no appraisal, relationship update, or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "Imagine a tale where someone threatens you. What would change if the line were, ‘I will burn down your home tonight’?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "HypotheticalThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "heldout-direct-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "authored_heldout_contrast",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "event={origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"speech-choice-v1:utterance:576a2dda756272a5f29878ca\",deduplicationKey=\"speech-choice-v1:576a2dda756272a5f29878ca\",observedGameTime=1627,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Authored held-out synthetic speech classification only; no appraisal or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "I will set your home ablaze tonight if you tell the guards.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "DirectThreat"
+        ],
+        "forbiddenChoices": [
+          "QuotedOrReportedThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "heldout-explicit-report-quote",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "authored_heldout_contrast",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "event={origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"speech-choice-v1:utterance:b099360490d2ddb8ccc1e4a1\",deduplicationKey=\"speech-choice-v1:b099360490d2ddb8ccc1e4a1\",observedGameTime=1627,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Authored held-out synthetic speech classification only; no appraisal or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "A traveler told me, “I will burn your home tonight if you speak to the guards.” I did not hear it myself.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "QuotedOrReportedThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "heldout-hypothetical",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "authored_heldout_contrast",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "event={origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"speech-choice-v1:utterance:5a36b84be9345daa2d9a7fc7\",deduplicationKey=\"speech-choice-v1:5a36b84be9345daa2d9a7fc7\",observedGameTime=1627,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Authored held-out synthetic speech classification only; no appraisal or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "Suppose a character in a story said, “I will burn your home tonight.” Would that be a threat?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "HypotheticalThreat"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "heldout-joke-clarification",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "authored_heldout_contrast",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "event={origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"speech-choice-v1:utterance:b814056b515ed1f5bb521aa1\",deduplicationKey=\"speech-choice-v1:b814056b515ed1f5bb521aa1\",observedGameTime=1627,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Authored held-out synthetic speech classification only; no appraisal or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "I was joking about burning your home; I meant the villain’s line in our tale, not a threat to you.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "JokingOrAmbiguousThreat",
+          "HypotheticalThreat",
+          "Other"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "DirectInsult"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "heldout-negated-threat",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "authored_heldout_contrast",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "event={origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"speech-choice-v1:utterance:c465237e90b4dce4b4d6422c\",deduplicationKey=\"speech-choice-v1:c465237e90b4dce4b4d6422c\",observedGameTime=1627,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Authored held-out synthetic speech classification only; no appraisal or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "I will not burn your home, and I am not threatening you.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "Other"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "DirectInsult"
+        ],
+        "severity": "major"
+      }
+    },
+    {
+      "id": "heldout-direct-insult",
+      "capabilityIds": [
+        "speech_act.classification",
+        "speech_act.attribution"
+      ],
+      "provenance": "authored_heldout_contrast",
+      "input": {
+        "npc": {
+          "id": "npc:appraisal-commoner-steady",
+          "role": "speech-act classification subject",
+          "personality": {
+            "stableTraits": "Stable personality traits: warmth reserved; patience easily wearied; curiosity practical; privacy selective; manner plainspoken; outlook pessimistic; emotional stability even-tempered; ambition content; integrity deceitful; courage bold; dutifulness independent; vocabulary colorful; eloquence direct; status attitude condescending; humor solemn; self esteem insecure; sensitivity highly sensitive."
+          },
+          "mood": "-35/100; moodRevision=3",
+          "affinity": "20/100; affinityRevision=4; positiveAffinityCap=2",
+          "relationship": "target=\"player\",trustKnown=true,trust=55,confidence=20,evidenceCount=2,resentment=12,interpersonalFear=8; relationshipRevision=1"
+        },
+        "world": {
+          "observedEvent": "event={origin=AttributedSpeech,kind=ObservedSpeech,observer=\"npc:appraisal-commoner-steady\",subject=\"npc:appraisal-commoner-steady\",canonicalId=\"speech-choice-v1:utterance:f74e5780c9131454827a848e\",deduplicationKey=\"speech-choice-v1:f74e5780c9131454827a848e\",observedGameTime=1627,responsibleActorAttribution=Unknown,responsibleActor=unknown,attributedSpeaker=\"player\",claimedResponsibleActor=\"\",observedWait=false}",
+          "capturedGameTime": "2300",
+          "commitments": "",
+          "eligibleConsequences": "",
+          "knownSpeakerRankId": "\"unknown\"",
+          "knownFamilyIds": "",
+          "sourceHistory": "",
+          "scope": "Authored held-out synthetic speech classification only; no appraisal or world effect.",
+          "classificationTask": "Choose the best speech-act label for the player’s current utterance using only the supplied utterance and context. Options are labels, not actions. Do not infer consequences or apply effects."
+        },
+        "history": [],
+        "playerText": "You are a foolish and miserable host.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "DirectThreat",
+            "description": "The speaker directly threatens the NPC or someone the NPC is known to protect. Core enum: DirectThreat."
+          },
+          {
+            "id": "QuotedOrReportedThreat",
+            "description": "The speaker quotes or reports a threat as another person’s words, rather than threatening the NPC. Core enum: QuotedThreat or ReportedThreat."
+          },
+          {
+            "id": "HypotheticalThreat",
+            "description": "Threat language appears only inside a fictional or counterfactual scenario, not as the speaker’s real-world intent. A real-world threat remains DirectThreat even when it depends on a condition, such as “If you tell the guards, I will burn your home.” Core enum: HypotheticalThreat."
+          },
+          {
+            "id": "JokingOrAmbiguousThreat",
+            "description": "Threat-like wording is joking or genuinely ambiguous, with no clear direct threat. Core enum: JokingThreat or AmbiguousThreat."
+          },
+          {
+            "id": "DirectInsult",
+            "description": "The speaker directly insults someone, but does not threaten them. Core enum: DirectInsult."
+          },
+          {
+            "id": "Other",
+            "description": "None of these speech-act classes applies, including a clear negation or factual clarification. Core enum: Other."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "DirectInsult"
+        ],
+        "forbiddenChoices": [
+          "DirectThreat",
+          "QuotedOrReportedThreat",
+          "HypotheticalThreat",
+          "JokingOrAmbiguousThreat",
+          "Other"
+        ],
+        "severity": "major"
+      }
+    }
+  ]
+}

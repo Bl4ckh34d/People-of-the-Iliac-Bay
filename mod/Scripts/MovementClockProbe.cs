@@ -4,16 +4,16 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class MovementClockProbe
     {
         private static double Now()
         {var now=DaggerfallUnity.Instance.WorldTime.Now;return (double)now.ToSeconds()+now.Second-Math.Floor(now.Second);}
-        public static IEnumerator Run(LivingCitiesMod host,StreetPopulation streets,string character)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
         {
             var saves=GameManager.Instance.SaveLoadManager;
             saves.EnumerateSaves(); int slot=saves.FindSaveFolderByNames(character,"People - Daggerfall day");
@@ -28,7 +28,7 @@ namespace LivingCities.DFU
                 if(!loaded || !streets.Ready) throw new InvalidOperationException("Movement fixture did not load.");
             }
             finally {SaveLoadManager.OnLoad-=handler;}
-            var store=(WorldStateStore)typeof(LivingCitiesMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host);
+            var store=(WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",BindingFlags.Instance|BindingFlags.NonPublic).GetValue(host);
             var snapshot=store.Snapshot();
             var people=new System.Collections.Generic.Dictionary<string,Resident>();
             foreach(var town in snapshot.Settlements) foreach(var home in town.Households)
@@ -71,11 +71,11 @@ namespace LivingCities.DFU
                     double measured=body.transform.position.x/real,clock=(Now()-gameStart)/real;
                     if(Math.Abs(measured-speed)>speed*0.1 || Math.Abs(clock-2)>0.1)
                         throw new InvalidOperationException("Physical speed/clock mismatch: expected="+speed+"; measured="+measured+"; clock="+clock);
-                    Debug.Log("LIVING_CITIES_MOVEMENT_SPEED: expected="+speed+"; measured="+measured+"; clock="+clock);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_MOVEMENT_SPEED: expected="+speed+"; measured="+measured+"; clock="+clock);
                 }
             }
             finally {if(body) UnityEngine.Object.Destroy(body);if(floor) UnityEngine.Object.Destroy(floor);}
-            Debug.Log("LIVING_CITIES_MOVEMENT_CLOCK_PASS: saved legs="+checkedLegs+"; native actor walking/running at real speed; world clock=2x.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_MOVEMENT_CLOCK_PASS: saved legs="+checkedLegs+"; native actor walking/running at real speed; world clock=2x.");
         }
     }
 }

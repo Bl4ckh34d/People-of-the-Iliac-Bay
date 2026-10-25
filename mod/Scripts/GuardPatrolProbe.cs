@@ -6,10 +6,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GuardPatrolProbe
     {
@@ -19,8 +19,8 @@ namespace LivingCities.DFU
             var controller = UnityEngine.Object.FindObjectOfType<GuardPopulation>();
             var enabled = typeof(GuardPopulation).GetField("NightPatrols");
             if (enabled == null) throw new InvalidOperationException("Playable paired night patrols are missing.");
-            var adapter = controller.GetComponent<LivingCitiesMod>();
-            typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance|BindingFlags.NonPublic).SetValue(adapter,true);
+            var adapter = controller.GetComponent<PeopleOfTheIliacBayMod>();
+            typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance|BindingFlags.NonPublic).SetValue(adapter,true);
             enabled.SetValue(controller, true); controller.MaximumPatrolPairs = 2;
             game.PlayerEntity.GodMode = true; game.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.None;
             var clock = DaggerfallUnity.Instance.WorldTime.Now;
@@ -64,7 +64,7 @@ namespace LivingCities.DFU
             var witnessCopy=GuardRoster.CopyValidated(controller.Roster).PlanWitnessRoute(witnessBuilding,ExactNow(),witnessPoint);
             if(witnessCopy==null || witnessCopy.GuardId!=witnessPlan.GuardId)
                 throw new InvalidOperationException("Saved patrol routing changed the witness target.");
-            Debug.Log("LIVING_CITIES_PATROL_WITNESS_ROUTE_PASS: native surveyed patrol selected from nearby street point; restore retains target; route metres="+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PATROL_WITNESS_ROUTE_PASS: native surveyed patrol selected from nearby street point; restore retains target; route metres="+
                 witnessPlan.Length+"; query milliseconds="+routingWatch.Elapsed.TotalMilliseconds);
             bool visible=false; game.PlayerMotor.CancelMovement=true;
             foreach(var direction in new[] { Vector3.forward,Vector3.back,Vector3.right,Vector3.left })
@@ -79,18 +79,18 @@ namespace LivingCities.DFU
             }
             if(!visible) throw new InvalidOperationException("No unobstructed camera view of both patrolling guards.");
             yield return new WaitForEndOfFrame();
-            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"LivingCities-night-patrol.png"));
+            ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"PeopleOfTheIliacBay-night-patrol.png"));
             bool saved=false,loaded=false;
             SaveLoadManager.OnSaveEventHandler onSave=ignored=>saved=true;
             SaveLoadManager.OnLoadEventHandler onLoad=ignored=>loaded=true;
             SaveLoadManager.OnSave+=onSave; SaveLoadManager.OnLoad+=onLoad;
             try
             {
-                game.SaveLoadManager.Save(game.PlayerEntity.Name,"Living Cities - night patrol");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name,"People of the Iliac Bay - night patrol");
                 deadline=Time.realtimeSinceStartup+30;
                 while(!saved&&Time.realtimeSinceStartup<deadline) yield return null;
                 if(!saved) throw new InvalidOperationException("Patrol save timed out.");
-                int key=game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name,"Living Cities - night patrol");
+                int key=game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name,"People of the Iliac Bay - night patrol");
                 game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
                 deadline=Time.realtimeSinceStartup+50;
                 while((!loaded||controller.Roster==null||!Find(leader))&&Time.realtimeSinceStartup<deadline) yield return null;
@@ -122,7 +122,7 @@ namespace LivingCities.DFU
                     Vector2.Distance(new Vector2((float)point.X,(float)point.Z),new Vector2((float)guard.ResponseOrigin.X,(float)guard.ResponseOrigin.Z))>0.25f)
                     throw new InvalidOperationException("Crime response did not use the actual returning patrol position.");
                 if(controller.Roster.Guards.Count!=15) throw new InvalidOperationException("Patrol or alarm changed the fifteen-guard allocation.");
-                Debug.Log("LIVING_CITIES_GUARD_PATROL_PASS: surveyed pair, spacing, both walking animations, torch, real phase reload, toggle return and crime from actual position; save="+key);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_PATROL_PASS: surveyed pair, spacing, both walking animations, torch, real phase reload, toggle return and crime from actual position; save="+key);
             }
             finally { SaveLoadManager.OnSave-=onSave; SaveLoadManager.OnLoad-=onLoad; game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.None; }
         }

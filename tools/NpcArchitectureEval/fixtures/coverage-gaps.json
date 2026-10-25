@@ -1,0 +1,1464 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "gap21_sneak_skill_without_check",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ],
+      "provenance": "synthetic future perception decision fixture; no stealth formula or gameplay result asserted",
+      "input": {
+        "npc": {
+          "id": "npc-gap-01",
+          "role": "ManagedResident",
+          "state": "awake",
+          "sneakSkill": 42
+        },
+        "world": {
+          "playerSneakSkill": 88,
+          "distanceMeters": 9,
+          "facing": "toward NPC",
+          "lineOfSight": "not checked",
+          "light": "unknown",
+          "perceptionCheck": "not run",
+          "evidenceSource": "snapshot; no native detection result",
+          "factSources": [
+            "Actor snapshot gives skill values; native perception check has not run."
+          ]
+        },
+        "history": [],
+        "playerText": "My Sneak skill is high. Did you see me enter?",
+        "availableTools": [
+          {
+            "id": "check_current_perception",
+            "description": "Request a current native perception result if supported"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say no perception check result is available, so detection is unknown"
+          },
+          {
+            "id": "p2",
+            "description": "Say the player's skill guarantees the NPC did not see them"
+          },
+          {
+            "id": "p3",
+            "description": "Claim detection from distance and skill numbers alone"
+          },
+          {
+            "id": "p4",
+            "description": "Request a current native perception check before answering"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Skill and distance are inputs, not a detection receipt; no approved formula or check result is supplied."
+      }
+    },
+    {
+      "id": "gap21_wall_blocks_sight",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ],
+      "provenance": "synthetic future perception decision fixture; occlusion is an explicit native observation",
+      "input": {
+        "npc": {
+          "id": "npc-gap-02",
+          "role": "ManagedResident",
+          "state": "awake"
+        },
+        "world": {
+          "player": "in adjacent room",
+          "occluder": "closed stone wall",
+          "lineOfSight": {
+            "value": false,
+            "source": "native raycast",
+            "ageSeconds": 0
+          },
+          "hearingEvent": null,
+          "factSources": [
+            "Current-scene native raycast reports no line of sight."
+          ]
+        },
+        "history": [],
+        "playerText": "I am standing behind the wall. Can you see me?",
+        "availableTools": [
+          {
+            "id": "read_perception_receipt",
+            "description": "Read the latest native perception receipt"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say the current raycast says the wall blocks sight"
+          },
+          {
+            "id": "p2",
+            "description": "Describe the player's position as visually observed"
+          },
+          {
+            "id": "p3",
+            "description": "Ask for a new observation if the scene changed"
+          },
+          {
+            "id": "p4",
+            "description": "Claim sight through the wall because the player stated their location"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "The current native raycast reports blocked sight. Player text does not grant NPC perception."
+      }
+    },
+    {
+      "id": "gap21_sound_has_no_identity",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ],
+      "provenance": "synthetic future hearing decision fixture; sound source is deliberately unresolved",
+      "input": {
+        "npc": {
+          "id": "npc-gap-03",
+          "role": "ManagedResident",
+          "state": "awake"
+        },
+        "world": {
+          "observation": {
+            "type": "loud impact",
+            "sourceId": null,
+            "direction": "east",
+            "source": "native hearing event",
+            "confidence": "event only"
+          },
+          "rooms": "source may be in either of two connected rooms",
+          "factSources": [
+            "Native hearing event reports impact and direction; source identity is unresolved."
+          ]
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "inspect_sound_event",
+            "description": "Read the event's source and confidence fields"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Report hearing an impact from the east, with source unknown"
+          },
+          {
+            "id": "p2",
+            "description": "Accuse the player of making the sound"
+          },
+          {
+            "id": "p3",
+            "description": "Identify a named intruder without source evidence"
+          },
+          {
+            "id": "p4",
+            "description": "Inspect the recorded source and confidence fields without claiming more than they show"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "critical",
+        "reason": "Hearing establishes an event and direction only; it does not establish identity, crime, or intent."
+      }
+    },
+    {
+      "id": "gap21_sleeping_hearing_no_wake_receipt",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-16"
+      ],
+      "provenance": "synthetic future perception decision fixture; no wake transition is present",
+      "input": {
+        "npc": {
+          "id": "npc-gap-04",
+          "role": "ManagedResident",
+          "sleepState": "asleep",
+          "attention": "low"
+        },
+        "world": {
+          "event": {
+            "type": "footsteps",
+            "loudness": "moderate",
+            "sourceId": null,
+            "time": "02:10"
+          },
+          "wakeTransition": "none recorded",
+          "roomRelation": "hallway outside bedroom",
+          "factSources": [
+            "Native actor state says asleep; no wake transition is recorded."
+          ]
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_actor_state",
+            "description": "Read current sleep and wake state"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Keep the NPC asleep until a native wake transition is recorded"
+          },
+          {
+            "id": "p2",
+            "description": "Have the NPC answer the sound as if awake"
+          },
+          {
+            "id": "p3",
+            "description": "Ask for the current actor state before describing a reaction"
+          },
+          {
+            "id": "p4",
+            "description": "Claim the sleeping NPC identified the player"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "A sound event does not imply waking or identification; the current state has no wake receipt."
+      }
+    },
+    {
+      "id": "gap21_wake_without_identification",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ],
+      "provenance": "synthetic future perception decision fixture; wake is observed but source is not",
+      "input": {
+        "npc": {
+          "id": "npc-gap-05",
+          "role": "ManagedResident",
+          "sleepState": "awake after native wake event"
+        },
+        "world": {
+          "hearingEvent": {
+            "type": "door thud",
+            "sourceId": null,
+            "direction": "downstairs"
+          },
+          "wakeSource": "noise threshold event",
+          "visualCheck": "not run",
+          "factSources": [
+            "Native wake event follows a noise threshold; no source identity or visual check exists."
+          ]
+        },
+        "history": [],
+        "playerText": "Was that me?",
+        "availableTools": [
+          {
+            "id": "check_room_view",
+            "description": "Request an NPC-limited view check if available"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say the thud woke the NPC, but its source is unknown"
+          },
+          {
+            "id": "p2",
+            "description": "Accuse the player because the player asked"
+          },
+          {
+            "id": "p3",
+            "description": "Check the NPC's limited current view before making a visual claim"
+          },
+          {
+            "id": "p4",
+            "description": "Say the thud proves a crime occurred"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "The wake receipt proves a reaction to noise only; source and crime remain unknown."
+      }
+    },
+    {
+      "id": "gap21_player_screenshot_is_not_npc_view",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-04"
+      ],
+      "provenance": "synthetic future perception decision fixture; no image is supplied to the NPC or model",
+      "input": {
+        "npc": {
+          "id": "npc-gap-06",
+          "role": "ManagedResident",
+          "position": "inside locked storeroom"
+        },
+        "world": {
+          "playerScreenshot": {
+            "describedByPlayer": true,
+            "providedToNpc": false,
+            "modelImageInput": false
+          },
+          "NPCViewReceipt": null,
+          "door": "closed",
+          "factSources": [
+            "Player references a screenshot; no image is supplied to NPC or model and no NPC-view receipt exists."
+          ]
+        },
+        "history": [],
+        "playerText": "In my screenshot, the guard is holding a key. What color is it?",
+        "availableTools": [
+          {
+            "id": "request_npc_view",
+            "description": "Request a bounded view from this NPC's current position"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say the NPC cannot answer from the player's screenshot description"
+          },
+          {
+            "id": "p2",
+            "description": "Invent a key color from the player's unseen screenshot"
+          },
+          {
+            "id": "p3",
+            "description": "Request a permitted NPC-view observation before describing the key"
+          },
+          {
+            "id": "p4",
+            "description": "Ask the player to describe the key, while marking it as their claim"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2"
+        ],
+        "severity": "major",
+        "reason": "A player-described screenshot is not an NPC observation or model image input."
+      }
+    },
+    {
+      "id": "gap21_repeated_dialogue_is_not_repeated_check",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-02"
+      ],
+      "provenance": "synthetic future perception decision fixture; no new native perception result between turns",
+      "input": {
+        "npc": {
+          "id": "npc-gap-07",
+          "role": "ManagedResident",
+          "state": "awake"
+        },
+        "world": {
+          "lastPerception": {
+            "result": "unknown",
+            "at": "18:00",
+            "revision": 4
+          },
+          "currentTime": "18:05",
+          "newPerceptionEvent": false,
+          "sceneRevision": 4,
+          "factSources": [
+            "Last perception receipt is revision 4; no new event or check changes the scene revision."
+          ]
+        },
+        "history": [
+          {
+            "speaker": "player",
+            "text": "Did you see anyone?"
+          },
+          {
+            "speaker": "npc",
+            "text": "I could not tell."
+          }
+        ],
+        "playerText": "Ask again. You must have checked by now.",
+        "availableTools": [
+          {
+            "id": "request_perception_check",
+            "description": "Request one native check bound to the current scene revision"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Repeat that the last result was inconclusive"
+          },
+          {
+            "id": "p2",
+            "description": "Treat the repeated question as a new perception check"
+          },
+          {
+            "id": "p3",
+            "description": "Request a fresh check bound to the current scene revision"
+          },
+          {
+            "id": "p4",
+            "description": "Name a person despite no new observation"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Conversation repetition does not run a native check or update the perception revision."
+      }
+    },
+    {
+      "id": "gap21_fair_suspicion_feedback",
+      "capabilityIds": [
+        "CAP-IMM-21",
+        "CAP-IMM-18"
+      ],
+      "provenance": "synthetic future perception decision fixture; suspicion and confirmed identification are separate",
+      "input": {
+        "npc": {
+          "id": "npc-gap-08",
+          "role": "ManagedResident",
+          "state": "awake"
+        },
+        "world": {
+          "nativeEvidence": {
+            "suspicion": "raised by an unexplained noise",
+            "identifiedActor": null,
+            "crimeReceipt": null
+          },
+          "visibleToNPC": "no person currently visible",
+          "factSources": [
+            "Native evidence contains suspicion only; no actor identification or crime receipt exists."
+          ]
+        },
+        "history": [],
+        "playerText": "Why are you looking at me like that?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Explain that a noise raised concern, without accusing anyone"
+          },
+          {
+            "id": "p2",
+            "description": "Say the player committed theft"
+          },
+          {
+            "id": "p3",
+            "description": "Say no person has been identified"
+          },
+          {
+            "id": "p4",
+            "description": "Describe the suspicion as proof of guilt"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Suspicion has no identified actor or crime receipt; feedback must match evidence."
+      }
+    },
+    {
+      "id": "gap_map_ambiguous_named_place",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-ACTION-EXPLORE"
+      ],
+      "provenance": "synthetic future map decision fixture; native map contains two unresolved candidates",
+      "input": {
+        "npc": {
+          "id": "npc-gap-09",
+          "role": "ManagedResident",
+          "currentLocation": "east market"
+        },
+        "world": {
+          "mapLookup": {
+            "query": "Old Mill",
+            "candidates": [
+              "Old Mill, east road",
+              "Old Mill, river district"
+            ],
+            "routeStatus": "not resolved"
+          },
+          "factSources": [
+            "Native map lookup returns two candidates and no resolved route target."
+          ]
+        },
+        "history": [],
+        "playerText": "Meet me at the Old Mill.",
+        "availableTools": [
+          {
+            "id": "resolve_map_place",
+            "description": "Resolve a named place to a verified map target"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Ask which Old Mill the player means"
+          },
+          {
+            "id": "p2",
+            "description": "Choose a candidate without clarification"
+          },
+          {
+            "id": "p3",
+            "description": "Resolve a unique native map target before agreeing a route"
+          },
+          {
+            "id": "p4",
+            "description": "Invent coordinates for the Old Mill"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "The map lookup has two candidates and no resolved route target."
+      }
+    },
+    {
+      "id": "gap_map_stale_memory_needs_refresh",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-IMM-03"
+      ],
+      "provenance": "synthetic future map decision fixture; stored route evidence is stale",
+      "input": {
+        "npc": {
+          "id": "npc-gap-10",
+          "role": "ManagedResident",
+          "currentLocation": "north gate"
+        },
+        "world": {
+          "rememberedMap": {
+            "destination": "river bridge",
+            "ageGameDays": 5,
+            "source": "prior visit"
+          },
+          "bridgeStatus": "not currently observed",
+          "routeRevision": 12,
+          "factSources": [
+            "NPC map observation is five game days old; current bridge access is unobserved."
+          ]
+        },
+        "history": [],
+        "playerText": "Is the bridge still open?",
+        "availableTools": [
+          {
+            "id": "read_live_route_status",
+            "description": "Request current bridge access and route status"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say the remembered route may be stale and check current access"
+          },
+          {
+            "id": "p2",
+            "description": "Guarantee the bridge is open from the old map entry"
+          },
+          {
+            "id": "p3",
+            "description": "Say current status is unknown until refreshed"
+          },
+          {
+            "id": "p4",
+            "description": "Treat the player's question as proof the bridge is closed"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "A five-day-old route observation cannot establish current access or closure."
+      }
+    },
+    {
+      "id": "gap_weather_indoor_uses_npc_location",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-IMM-09"
+      ],
+      "provenance": "synthetic future weather decision fixture; weather source follows NPC location",
+      "input": {
+        "npc": {
+          "id": "npc-gap-11",
+          "role": "ManagedResident",
+          "location": "inside stone inn"
+        },
+        "world": {
+          "playerWeatherReport": "heavy rain outside east gate",
+          "NPCWeatherObservation": null,
+          "indoors": true,
+          "factSources": [
+            "Weather report comes from player at east gate; NPC is indoors without local weather observation."
+          ]
+        },
+        "history": [],
+        "playerText": "You must be miserable in that rain, right?",
+        "availableTools": [
+          {
+            "id": "read_local_weather",
+            "description": "Read weather at the NPC's location if exposed"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say the NPC is indoors and has no local weather observation"
+          },
+          {
+            "id": "p2",
+            "description": "Claim the NPC feels rain because the player reports it"
+          },
+          {
+            "id": "p3",
+            "description": "Say local weather could be checked if the NPC later goes outside, without claiming current conditions"
+          },
+          {
+            "id": "p4",
+            "description": "Repeat the player's rain report as attributed information"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2"
+        ],
+        "severity": "major",
+        "reason": "The player's weather report is not the indoor NPC's local observation; attribution remains valid."
+      }
+    },
+    {
+      "id": "gap_weather_stale_outdoor_observation",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-OUTDOOR-SEATING"
+      ],
+      "provenance": "synthetic future weather decision fixture; current outdoor weather changed after observation",
+      "input": {
+        "npc": {
+          "id": "npc-gap-12",
+          "role": "ManagedResident",
+          "location": "terrace",
+          "activity": "considering a seat"
+        },
+        "world": {
+          "lastLocalWeather": {
+            "value": "clear",
+            "ageGameMinutes": 90
+          },
+          "currentSky": "not observed",
+          "seatRoute": "reachable on last check",
+          "seatOccupancy": "unknown",
+          "factSources": [
+            "Terrace weather observation is 90 game minutes old; current sky, seat, and route are unresolved."
+          ]
+        },
+        "history": [],
+        "playerText": "Let's sit outside now.",
+        "availableTools": [
+          {
+            "id": "check_outdoor_conditions",
+            "description": "Refresh weather, route and seat availability"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Refresh current outdoor conditions before choosing a seat"
+          },
+          {
+            "id": "p2",
+            "description": "Claim the terrace is clear and dry from the old observation"
+          },
+          {
+            "id": "p3",
+            "description": "Suggest an indoor option while current conditions are unknown"
+          },
+          {
+            "id": "p4",
+            "description": "Say the seat is occupied without a current observation"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Weather, seat occupancy and route are dynamic; old evidence cannot establish current conditions."
+      }
+    },
+    {
+      "id": "gap_portable_import_waits_for_receipt",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE",
+        "CAP-IMM-18"
+      ],
+      "provenance": "synthetic future portable-memory decision fixture; import has not completed",
+      "input": {
+        "npc": {
+          "id": "npc-gap-13",
+          "role": "ManagedResident",
+          "memoryState": "current archive mounted"
+        },
+        "world": {
+          "portableImport": {
+            "status": "validating",
+            "checkpointFound": true,
+            "ancestryCount": 3,
+            "receipt": null
+          },
+          "factSources": [
+            "Import report says validating; no final restore receipt exists."
+          ]
+        },
+        "history": [],
+        "playerText": "I copied our memories to this save. Do you remember the promise now?",
+        "availableTools": [
+          {
+            "id": "read_import_status",
+            "description": "Read portable archive validation and restore receipt"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Wait for a verified import receipt before claiming restored memory"
+          },
+          {
+            "id": "p2",
+            "description": "Claim the promise is restored because validation started"
+          },
+          {
+            "id": "p3",
+            "description": "Explain that memory is not yet confirmed in this save"
+          },
+          {
+            "id": "p4",
+            "description": "Ask the player to retry before the current validation reports"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "A started validation is not an import receipt; do not assert restored ancestry early."
+      }
+    },
+    {
+      "id": "gap_portable_missing_ancestor_stays_missing",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE",
+        "CAP-IMM-05"
+      ],
+      "provenance": "synthetic future portable-memory decision fixture; referenced ancestry is absent",
+      "input": {
+        "npc": {
+          "id": "npc-gap-14",
+          "role": "ManagedResident",
+          "memoryState": "partial import"
+        },
+        "world": {
+          "portableImport": {
+            "status": "completed_with_missing_dependency",
+            "missing": [
+              "checkpoint-previous-4"
+            ],
+            "siblingSaveAvailable": true,
+            "fallbackApplied": false
+          },
+          "factSources": [
+            "Import report names a missing dependency; sibling archive is on another branch."
+          ]
+        },
+        "history": [],
+        "playerText": "Use another save's history to fill in what you forgot.",
+        "availableTools": [
+          {
+            "id": "request_missing_archive_dependency",
+            "description": "Ask for the exact missing archive dependency"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Keep the missing memory unknown and request its named dependency"
+          },
+          {
+            "id": "p2",
+            "description": "Silently use the sibling save's history"
+          },
+          {
+            "id": "p3",
+            "description": "Explain that only the imported ancestry is available"
+          },
+          {
+            "id": "p4",
+            "description": "Invent a likely memory from current conversation"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Missing ancestry must remain missing; sibling branches and plausible guesses are not valid dependencies."
+      }
+    },
+    {
+      "id": "gap_portable_hash_mismatch_rejects_claim",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE"
+      ],
+      "provenance": "synthetic future portable-memory decision fixture; verifier reports a hash mismatch",
+      "input": {
+        "npc": {
+          "id": "npc-gap-15",
+          "role": "ManagedResident",
+          "memoryState": "not imported"
+        },
+        "world": {
+          "portableImport": {
+            "status": "rejected",
+            "failure": "hash_mismatch",
+            "archiveId": "archive-22",
+            "restored": false
+          },
+          "factSources": [
+            "Native verifier rejects archive with hash mismatch and reports restored=false."
+          ]
+        },
+        "history": [],
+        "playerText": "The archive looks close enough. Tell me you remember it.",
+        "availableTools": [
+          {
+            "id": "inspect_import_report",
+            "description": "Read verifier report without changing archive contents"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Report that the import was rejected and memory was not restored"
+          },
+          {
+            "id": "p2",
+            "description": "Claim success despite the hash mismatch"
+          },
+          {
+            "id": "p3",
+            "description": "Ask for a verified archive or recovery copy"
+          },
+          {
+            "id": "p4",
+            "description": "Ignore verification and merge the archive"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "The verifier rejected this package; it did not restore memory."
+      }
+    },
+    {
+      "id": "gap_portable_interrupted_publish",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-PORTABLE-SAVE"
+      ],
+      "provenance": "synthetic future portable-memory decision fixture; publication stopped before atomic completion",
+      "input": {
+        "npc": {
+          "id": "npc-gap-16",
+          "role": "ManagedResident",
+          "memoryState": "unchanged"
+        },
+        "world": {
+          "portableExport": {
+            "status": "interrupted",
+            "manifestWritten": true,
+            "finalReceipt": null,
+            "recoverableStage": true
+          },
+          "factSources": [
+            "Export journal says interrupted; final receipt is absent and staging is recoverable."
+          ]
+        },
+        "history": [],
+        "playerText": "Can I delete the old save copy now?",
+        "availableTools": [
+          {
+            "id": "read_export_receipt",
+            "description": "Check whether an atomic portable export completed"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Keep the old copy until a complete export receipt exists"
+          },
+          {
+            "id": "p2",
+            "description": "Say the export is complete because a manifest exists"
+          },
+          {
+            "id": "p3",
+            "description": "Check recovery status and report only verified completion"
+          },
+          {
+            "id": "p4",
+            "description": "Delete the old copy before verifying publication"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "A manifest without the final receipt does not prove atomic publication completed."
+      }
+    },
+    {
+      "id": "gap_portable_branch_ancestry_isolation",
+      "capabilityIds": [
+        "CAP-IMM-20",
+        "CAP-IMM-04",
+        "CAP-IMM-05"
+      ],
+      "provenance": "synthetic future portable-memory decision fixture; current import ancestry names one branch",
+      "input": {
+        "npc": {
+          "id": "npc-gap-17",
+          "role": "ManagedResident",
+          "memoryState": "branch-bound"
+        },
+        "world": {
+          "currentSaveBranch": "branch-blue",
+          "mountedArchiveBranch": "branch-blue",
+          "siblingBranch": "branch-red",
+          "branchBlueContains": [
+            "promise-1"
+          ],
+          "branchRedContains": [
+            "promise-2"
+          ],
+          "factSources": [
+            "Save manifest binds current archive to branch-blue; branch-red is a sibling."
+          ]
+        },
+        "history": [],
+        "playerText": "You promised to meet me at the harbor. Was that in this life?",
+        "availableTools": [
+          {
+            "id": "read_visible_ancestry",
+            "description": "Read records reachable from current save ancestry"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Answer only from branch-blue records and mark absent facts unknown"
+          },
+          {
+            "id": "p2",
+            "description": "Use branch-red promise because it matches the question"
+          },
+          {
+            "id": "p3",
+            "description": "Ask the player for context while marking it as a claim"
+          },
+          {
+            "id": "p4",
+            "description": "Say the branch-red promise is remembered in this branch"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Only current-branch ancestry is visible; a matching sibling record is not this NPC's memory."
+      }
+    },
+    {
+      "id": "gap_elapsed_time_no_offscreen_purchase_receipt",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-12",
+        "CAP-IMM-18"
+      ],
+      "provenance": "synthetic future background-simulation decision fixture; no offscreen effect adapter receipt",
+      "input": {
+        "npc": {
+          "id": "npc-gap-18",
+          "role": "ManagedResident",
+          "lastObservedLocation": "home"
+        },
+        "world": {
+          "elapsedGameHours": 10,
+          "actorWasUnloaded": true,
+          "scheduleReconstruction": "not run",
+          "errand": {
+            "status": "pending",
+            "kind": "buy bread",
+            "purchaseReceipt": null
+          },
+          "offscreenTaskAdapter": "unavailable",
+          "factSources": [
+            "Simulation ledger records elapsed time and unloaded actor; no purchase/effect receipt exists."
+          ]
+        },
+        "history": [
+          {
+            "speaker": "decision_event",
+            "text": "Errand accepted; no purchase result recorded."
+          }
+        ],
+        "playerText": "Ten hours passed while they were unloaded. Did they buy the bread?",
+        "availableTools": [
+          {
+            "id": "read_task_receipt",
+            "description": "Read persisted task and effect receipts"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say no purchase receipt exists, so completion is unknown or pending"
+          },
+          {
+            "id": "p2",
+            "description": "Claim elapsed time caused the purchase to happen"
+          },
+          {
+            "id": "p3",
+            "description": "Read task receipts before reporting a result"
+          },
+          {
+            "id": "p4",
+            "description": "Generate a purchase event from the NPC's schedule"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Time passage and schedule reconstruction do not create a stock or purchase receipt."
+      }
+    },
+    {
+      "id": "gap_elapsed_time_reconstruct_current_schedule",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-12"
+      ],
+      "provenance": "synthetic future background-simulation decision fixture; only current schedule reconstruction is available",
+      "input": {
+        "npc": {
+          "id": "npc-gap-19",
+          "role": "ManagedResident",
+          "lastObservedActivity": "at home before sleep"
+        },
+        "world": {
+          "elapsedGameHours": 8,
+          "actorWasUnloaded": true,
+          "currentScheduleReceipt": null,
+          "appointment": {
+            "time": "09:00",
+            "status": "unknown"
+          },
+          "missedEntrances": "not recorded",
+          "factSources": [
+            "No current schedule reconstruction, attendance, or missed-entrance receipt exists."
+          ]
+        },
+        "history": [],
+        "playerText": "Where did the NPC go during the night?",
+        "availableTools": [
+          {
+            "id": "reconstruct_current_schedule",
+            "description": "Resolve present activity from elapsed game time and schedule"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Request current schedule reconstruction before naming a location"
+          },
+          {
+            "id": "p2",
+            "description": "Replay every missed entrance as if it happened live"
+          },
+          {
+            "id": "p3",
+            "description": "Say the exact location is unknown until reconstruction returns"
+          },
+          {
+            "id": "p4",
+            "description": "Assume the NPC attended the appointment without a receipt"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Elapsed time needs current-state reconstruction; it does not prove every transition or attendance."
+      }
+    },
+    {
+      "id": "gap_elapsed_event_budget_reports_partial_work",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-18"
+      ],
+      "provenance": "synthetic future background-simulation decision fixture; event budget explicitly deferred lower-priority work",
+      "input": {
+        "npc": {
+          "id": "npc-gap-20",
+          "role": "ManagedResident",
+          "simulationState": "partial"
+        },
+        "world": {
+          "elapsedGameHours": 24,
+          "simulationReport": {
+            "processed": [
+              "schedule_snapshot"
+            ],
+            "deferred": [
+              "optional_market_visit",
+              "shop_errand"
+            ],
+            "eventBudgetExhausted": true
+          },
+          "factSources": [
+            "Simulation report lists one processed snapshot, deferred errands, and exhausted budget."
+          ]
+        },
+        "history": [],
+        "playerText": "Did all their errands finish while I was away?",
+        "availableTools": [
+          {
+            "id": "read_simulation_report",
+            "description": "Read processed and deferred event list"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Say only the schedule snapshot processed and list the deferred work"
+          },
+          {
+            "id": "p2",
+            "description": "Claim all errands finished because the simulation advanced a day"
+          },
+          {
+            "id": "p3",
+            "description": "Inspect individual task receipts before reporting any completion"
+          },
+          {
+            "id": "p4",
+            "description": "Discard deferred events and describe the day as complete"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Simulation explicitly deferred the errands; elapsed time cannot be reported as completed work."
+      }
+    },
+    {
+      "id": "gap_elapsed_scene_reload_invalidates_old_result",
+      "capabilityIds": [
+        "CAP-IMM-16",
+        "CAP-IMM-02",
+        "CAP-IMM-18"
+      ],
+      "provenance": "synthetic future background-simulation decision fixture; scene and task revisions changed during unload",
+      "input": {
+        "npc": {
+          "id": "npc-gap-21",
+          "role": "ManagedResident",
+          "activeTask": "task-7"
+        },
+        "world": {
+          "oldDecision": {
+            "taskRevision": 3,
+            "sceneRevision": 8,
+            "choice": "continue route"
+          },
+          "currentTaskRevision": 4,
+          "currentSceneRevision": 9,
+          "currentReceipt": null,
+          "factSources": [
+            "Earlier decision binds old task/scene revisions; current revisions have no effect receipt."
+          ]
+        },
+        "history": [
+          {
+            "speaker": "decision_event",
+            "text": "Earlier choice was proposed against task revision 3."
+          }
+        ],
+        "playerText": "Continue the old plan after loading this scene.",
+        "availableTools": [
+          {
+            "id": "read_current_task",
+            "description": "Read current task revision and effect receipts"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Discard the stale choice and read current task state"
+          },
+          {
+            "id": "p2",
+            "description": "Apply the old choice to revision 4"
+          },
+          {
+            "id": "p3",
+            "description": "Replan from current facts after the current read"
+          },
+          {
+            "id": "p4",
+            "description": "Assume the route completed during unload"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Old decision binds earlier task and scene revisions; current effects are not recorded."
+      }
+    },
+    {
+      "id": "gap_weather_and_map_route_unknown",
+      "capabilityIds": [
+        "CAP-IMM-04",
+        "CAP-ACTION-EXPLORE",
+        "CAP-H03"
+      ],
+      "provenance": "synthetic future map/weather decision fixture; no live route, weather or market hours result",
+      "input": {
+        "npc": {
+          "id": "npc-gap-22",
+          "role": "ManagedResident",
+          "currentLocation": "south road"
+        },
+        "world": {
+          "mapTarget": "north market",
+          "routeStatus": "not checked",
+          "weatherAtNPC": "stale, 2 hours",
+          "marketHours": "unknown",
+          "shopStock": "unknown",
+          "factSources": [
+            "Route is unqueried; local weather is stale; market hours and stock are unknown."
+          ]
+        },
+        "history": [],
+        "playerText": "Can you walk to the north market now and get apples before the storm?",
+        "availableTools": [
+          {
+            "id": "check_route_weather_market",
+            "description": "Refresh reachable route, local weather and opening facts"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Check current route, weather and hours before promising a trip"
+          },
+          {
+            "id": "p2",
+            "description": "Guarantee arrival and apples from stale or unknown facts"
+          },
+          {
+            "id": "p3",
+            "description": "Offer a conditional plan after checking current constraints"
+          },
+          {
+            "id": "p4",
+            "description": "Say the market is closed because a storm is forecast"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Reachability, local weather, market hours, and stock each need current evidence; forecast alone settles none."
+      }
+    }
+  ]
+}

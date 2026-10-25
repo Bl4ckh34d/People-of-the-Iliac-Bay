@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
@@ -96,22 +96,20 @@ namespace LivingCities.DFU
                     {
                         var plan = PatrolPairPlan.Create(leader.Id, partner.Id, leaderJoin, followerJoin, circuit, 0, 86400, 1.3, DaggerfallUnity.Instance.WorldTime.TimeScale, 2);
                         patrolTemplates.Add(plan); used.Add(leader.Id); used.Add(partner.Id); found = true;
-                        Debug.Log("LIVING_CITIES_PATROL_SURVEY: pair=" + leader.Id + "/" + partner.Id + "; length=" + RouteLength(circuit));
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PATROL_SURVEY: pair=" + leader.Id + "/" + partner.Id + "; length=" + RouteLength(circuit));
                     }
                     catch (ArgumentException) { /* Reject crossed circuits or unsafe formation geometry. */ }
                 }
             }
             patrolSurvey = null;
-            Debug.Log("LIVING_CITIES_PATROL_SURVEY_DONE: pairs=" + patrolTemplates.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PATROL_SURVEY_DONE: pairs=" + patrolTemplates.Count);
         }
         private void UpdateNightPatrols(double now)
         {
-            // Read the live save's quest flag on each policy tick. Never retain a
-            // resolved curse across loading a different character or older save.
-            bool haunted = SettlementHaunting.StreetsDangerous(Roster.SettlementId,
-                GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0), now);
+            // A haunting does not cancel guard duty. Hostile apparitions use
+            // ordinary defense and the same injury/role retreat policy as other foes.
             bool night = NightPatrols && MaximumPatrolPairs > 0 &&
-                DaggerfallUnity.Instance.WorldTime.Now.IsNight && !haunted;
+                DaggerfallUnity.Instance.WorldTime.Now.IsNight;
             if (!night)
             {
                 double dusk = Math.Floor(now / 86400) * 86400 + DaggerfallDateTime.DuskHour * 3600;
@@ -150,7 +148,7 @@ namespace LivingCities.DFU
                 {
                     var plan = PatrolPairPlan.Create(a.Id,b.Id,template.LeaderJoin,template.FollowerJoin,template.Circuit,now,dawn,1.3,DaggerfallUnity.Instance.WorldTime.TimeScale,2);
                     Roster.StartPatrol(plan,now);
-                    Debug.Log("LIVING_CITIES_PATROL_START: " + a.Id + "/" + b.Id);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PATROL_START: " + a.Id + "/" + b.Id);
                 }
                 catch (ArgumentException) { /* Not enough night left to join, or a member has not returned. */ }
             }

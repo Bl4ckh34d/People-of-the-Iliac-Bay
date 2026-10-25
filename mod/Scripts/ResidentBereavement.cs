@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
-namespace LivingCities.DFU
+using PeopleOfTheIliacBay.Core;
+namespace PeopleOfTheIliacBay.DFU
 {
-    public sealed partial class LivingCitiesMod
+    public sealed partial class PeopleOfTheIliacBayMod
     {
         private readonly Dictionary<string,int> bereavementGreetings=new Dictionary<string,int>();
         internal void ProbeBereavementGreeting(string residentId)
@@ -14,7 +14,7 @@ namespace LivingCities.DFU
             var original=store;
             try
             {
-                var isolated=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());isolated.Restore(store.Snapshot());store=isolated;
+                var isolated=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());isolated.Restore(store.Snapshot());store=isolated;
                 Resident person=null,partner=null;int settlement=0;
                 foreach(var town in store.Snapshot().Settlements)
                     foreach(var home in town.Households)
@@ -39,7 +39,7 @@ namespace LivingCities.DFU
                 ShowBereavementGreeting(person);
                 if(DaggerfallUI.UIManager.TopWindow!=DaggerfallUI.Instance.TalkWindow)
                     throw new InvalidOperationException("Mourning greeting repeated on the same day.");
-                UnityEngine.Debug.Log("LIVING_CITIES_BEREAVEMENT_PASS: native death restore, mourning overlay, normal topics retained, no same-day repeat.");
+                UnityEngine.Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BEREAVEMENT_PASS: native death restore, mourning overlay, normal topics retained, no same-day repeat.");
             }
             finally {store=original;bereavementGreetings.Remove(residentId);}
         }

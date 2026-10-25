@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-no-audio-generated",
+  "purpose": "Controlled first-pass listening comparison across the ten playable TES races and two adult gender presentations.",
+  "contentNotice": "Fictional voice-design directions for a local listening trial. All samples share the same Southern English accent to isolate timbre; race-linked timbre cues are artistic test choices, not claims about Elder Scrolls canon or real-world racial voice traits.",
+  "fixedText": "Good day, traveller. The road ahead is long, but you are welcome to rest here for a while.",
+  "trialControls": {
+    "language": "English",
+    "emotion": "neutral",
+    "deliveryMode": "normal",
+    "guidance_scale": 4,
+    "sameTextForEverySample": true,
+    "seedPolicy": "Fixed, distinct integer seed per race and gender presentation; do not reroll failed or weak samples.",
+    "accent": "Southern English (identical across all samples; accent is not varied by race).",
+    "isolationGoal": "Compare race-associated timbre cues while holding text, emotion, delivery, and accent constant."
+  },
+  "samples": [
+    {
+      "sampleId": "race-breton-female",
+      "race": "Breton",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71001,
+      "voiceDesignInstruction": "Adult woman with a clear, composed mid-register voice and light, even resonance. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-breton-male",
+      "race": "Breton",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71002,
+      "voiceDesignInstruction": "Adult man with a clear, composed mid-register voice and light, even resonance. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-imperial-female",
+      "race": "Imperial",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71003,
+      "voiceDesignInstruction": "Adult woman with a balanced mid-register voice, smooth resonance and crisp articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-imperial-male",
+      "race": "Imperial",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71004,
+      "voiceDesignInstruction": "Adult man with a balanced mid-register voice, smooth resonance and crisp articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-nord-female",
+      "race": "Nord",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71005,
+      "voiceDesignInstruction": "Adult woman with a weathered, steady mid-low voice and firm resonance. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-nord-male",
+      "race": "Nord",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71006,
+      "voiceDesignInstruction": "Adult man with a weathered, steady mid-low voice and firm resonance. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-redguard-female",
+      "race": "Redguard",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71007,
+      "voiceDesignInstruction": "Adult woman with a rich, dark, lower-register voice and deep resonance; keep it clearly feminine. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-redguard-male",
+      "race": "Redguard",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71008,
+      "voiceDesignInstruction": "Adult man with a rich, dark, lower-register voice and deep resonance. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-dunmer-female",
+      "race": "Dunmer",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71009,
+      "voiceDesignInstruction": "Adult woman with a reserved, smoky mid-register voice and precise articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-dunmer-male",
+      "race": "Dunmer",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71010,
+      "voiceDesignInstruction": "Adult man with a reserved, smoky mid-register voice and precise articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-altmer-female",
+      "race": "Altmer",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71011,
+      "voiceDesignInstruction": "Adult woman with a cultivated, clear mid-high voice and precise articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-altmer-male",
+      "race": "Altmer",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71012,
+      "voiceDesignInstruction": "Adult man with a cultivated, clear mid-high voice and precise articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-bosmer-female",
+      "race": "Bosmer",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71013,
+      "voiceDesignInstruction": "Adult woman with a light, nimble mid-high voice and quick, clear articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-bosmer-male",
+      "race": "Bosmer",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71014,
+      "voiceDesignInstruction": "Adult man with a light, nimble mid-high voice and quick, clear articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-orc-female",
+      "race": "Orc",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71015,
+      "voiceDesignInstruction": "Adult woman with a low, rough, powerful voice and a firm, gritty texture; retain a clearly feminine voice. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-orc-male",
+      "race": "Orc",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71016,
+      "voiceDesignInstruction": "Adult man with a low, rough, powerful voice and a firm, gritty texture. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-khajiit-female",
+      "race": "Khajiit",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71017,
+      "voiceDesignInstruction": "Adult woman with a smoky, husky mid-register voice and a very slight purring resonance. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-khajiit-male",
+      "race": "Khajiit",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71018,
+      "voiceDesignInstruction": "Adult man with a smoky, husky mid-register voice and a very slight purring resonance. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    },
+    {
+      "sampleId": "race-argonian-female",
+      "race": "Argonian",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71019,
+      "voiceDesignInstruction": "Adult woman with a restrained, raspy, croaky mid-low voice and crisp articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly feminine."
+    },
+    {
+      "sampleId": "race-argonian-male",
+      "race": "Argonian",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71020,
+      "voiceDesignInstruction": "Adult man with a restrained, raspy, croaky mid-low voice and crisp articulation. Use the same Southern English accent as every other sample. Keep the delivery natural and neutral; make the voice clearly masculine."
+    }
+  ]
+}

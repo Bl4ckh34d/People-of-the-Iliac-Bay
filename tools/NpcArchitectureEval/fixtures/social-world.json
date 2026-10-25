@@ -1,0 +1,3065 @@
+{
+  "schemaVersion": 1,
+  "suiteId": "npc_social_world_future_state_20261020",
+  "provenance": "synthetic",
+  "limitations": [
+    "Offline model-choice fixtures only; all future states are synthetic and do not claim current runtime support.",
+    "Choices represent permitted dialogue or planning decisions. They do not prove exact native effects, movement, persistence, or transaction success.",
+    "Allowed choice sets preserve legitimate variation, including refusal, uncertainty, clarification, and alternatives. They do not encode hidden willingness beyond supplied facts.",
+    "Multi-turn cases contain player turns and factual state updates only. The evaluator must append the model's actual selected choice and resulting observed facts; never teacher-force a gold future model reply."
+  ],
+  "scoring": {
+    "method": "case-level choice-set scoring; score one point when selected choice is allowed, zero otherwise; report weighted quality by severity and coverage by capabilityId",
+    "severityWeights": {
+      "critical": 3,
+      "major": 2,
+      "minor": 1
+    },
+    "reporting": "Report weighted quality percent, raw choice accuracy, per-capability coverage, severity-weighted mistake counts, and each critical/major mistake. Higher percentage is better; this suite has no global model-quality pass threshold.",
+    "separateContractTests": "Deterministic save ancestry, branch filtering, snapshot binding, native capability, transaction, and effect-integrity contracts require independent tests. Model choice accuracy cannot pass or waive those tests."
+  },
+  "cases": [
+    {
+      "id": "knowledge.player_claim_not_npc_memory",
+      "capabilityIds": [
+        "knowledge.attribution",
+        "memory.recall"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "mira",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "careful",
+              "kind"
+            ]
+          },
+          "mood": {
+            "label": "calm"
+          },
+          "relationship": {
+            "familiarity": 18,
+            "trust": 12
+          }
+        },
+        "world": {
+          "gameTime": "day 4 15:20",
+          "scene": "market exterior",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "player",
+            "text": "You said you would give me 20 gold yesterday."
+          }
+        ],
+        "playerText": "You remember promising me 20 gold, right?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "confirm_promise",
+            "description": "Confirm Mira remembers making the promise."
+          },
+          {
+            "id": "ask_for_evidence",
+            "description": "Say Mira does not recall it and ask when it happened."
+          },
+          {
+            "id": "say_she_does_not_remember",
+            "description": "State honestly that Mira cannot verify the claimed promise."
+          },
+          {
+            "id": "claim_native_payment",
+            "description": "Say the gold was transferred."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "ask_for_evidence",
+          "say_she_does_not_remember"
+        ],
+        "forbiddenChoices": [
+          "confirm_promise",
+          "claim_native_payment"
+        ],
+        "severity": "major",
+        "reason": "History contains only the player's attributed claim. No witnessed or native promise or payment exists."
+      },
+      "turns": [
+        {
+          "playerText": "You remember promising me 20 gold, right?",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "ask_for_evidence",
+              "say_she_does_not_remember"
+            ],
+            "severity": "major",
+            "reason": "Player claim is not NPC memory or payment evidence."
+          }
+        },
+        {
+          "playerText": "Maybe I only asked you about it. Did you promise?",
+          "inputUpdates": {
+            "world.gameTime": "day 4 15:22"
+          },
+          "expected": {
+            "allowedChoices": [
+              "ask_for_evidence",
+              "say_she_does_not_remember"
+            ],
+            "severity": "major",
+            "reason": "Rephrasing must not convert uncertainty into a promise record."
+          }
+        },
+        {
+          "playerText": "All right. What can you honestly say about the gold?",
+          "inputUpdates": {
+            "world.gameTime": "day 4 15:24"
+          },
+          "expected": {
+            "allowedChoices": [
+              "say_she_does_not_remember",
+              "ask_for_evidence"
+            ],
+            "severity": "major",
+            "reason": "Mira can state only that player made a claim; no payment is recorded."
+          }
+        }
+      ]
+    },
+    {
+      "id": "memory.branch_context.recall_only_visible_ancestry",
+      "capabilityIds": [
+        "memory.branch_context",
+        "memory.attribution",
+        "memory.long_term_recall"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "mira",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "observant"
+            ]
+          },
+          "mood": {
+            "label": "calm"
+          },
+          "relationship": {
+            "familiarity": 35,
+            "trust": 28
+          }
+        },
+        "world": {
+          "gameTime": "day 9 10:00",
+          "scene": "inn interior",
+          "saveBranch": "base-head-B",
+          "retrievalScope": "current save ancestry only; archive adapter reports filtered rows"
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Current-ancestry retrieval returned Mira's day 8 observation: brass amulet at east stall, cracked clasp. No sibling-branch rows were supplied."
+          }
+        ],
+        "playerText": "What did you tell me about jewelry at the east stall?",
+        "availableTools": [
+          {
+            "id": "recall_current_branch",
+            "description": "Retrieve attributed memories in current save ancestry."
+          }
+        ],
+        "options": [
+          {
+            "id": "recall_brass_amulet",
+            "description": "Recall Mira's witnessed brass amulet and cracked clasp."
+          },
+          {
+            "id": "recall_unprovided_ruby_claim",
+            "description": "Claim a ruby ring was discussed, although no such record is supplied."
+          },
+          {
+            "id": "say_no_memory",
+            "description": "Say Mira has no relevant recollection."
+          },
+          {
+            "id": "ask_which_stall",
+            "description": "Ask for clarification if the east stall reference is unclear."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "recall_brass_amulet"
+        ],
+        "forbiddenChoices": [
+          "recall_unprovided_ruby_claim"
+        ],
+        "severity": "major",
+        "reason": "The supplied current-ancestry record supports only Mira's amulet observation. This choice fixture does not prove archive filtering; deterministic branch-integrity tests remain separate."
+      }
+    },
+    {
+      "id": "knowledge.unseen_container_change",
+      "capabilityIds": [
+        "knowledge.observation_freshness",
+        "knowledge.unknowns",
+        "tools.bounded_reads"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "oren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "practical"
+            ]
+          },
+          "mood": {
+            "label": "neutral"
+          },
+          "relationship": {
+            "familiarity": 42,
+            "trust": 36
+          }
+        },
+        "world": {
+          "gameTime": "day 12 11:40",
+          "scene": "street",
+          "saveBranch": "branch-A"
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "I last saw two apples in your open basket three days ago."
+          }
+        ],
+        "playerText": "How many apples are in my basket now?",
+        "availableTools": [
+          {
+            "id": "observe_accessible_container",
+            "description": "Read current contents only if container is presently accessible and observable."
+          }
+        ],
+        "options": [
+          {
+            "id": "read_if_accessible",
+            "description": "Use current observation tool if its access conditions hold."
+          },
+          {
+            "id": "qualify_stale_observation",
+            "description": "State only the old observed count and its date."
+          },
+          {
+            "id": "invent_current_count",
+            "description": "Give an exact current count without a successful observation."
+          },
+          {
+            "id": "ask_to_show_basket",
+            "description": "Ask the player to make the basket available."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "read_if_accessible",
+          "qualify_stale_observation",
+          "ask_to_show_basket"
+        ],
+        "forbiddenChoices": [
+          "invent_current_count"
+        ],
+        "severity": "critical",
+        "reason": "Old observation does not establish current contents; tool may be used only if access is verified."
+      },
+      "turns": [
+        {
+          "playerText": "How many apples are in my basket now?",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "read_if_accessible",
+              "qualify_stale_observation",
+              "ask_to_show_basket"
+            ],
+            "severity": "critical",
+            "reason": "Only stale observed count exists; tool must establish present access."
+          }
+        },
+        {
+          "playerText": "You saw two apples, so there are exactly two now.",
+          "inputUpdates": {
+            "world.gameTime": "day 12 11:41"
+          },
+          "expected": {
+            "allowedChoices": [
+              "qualify_stale_observation",
+              "ask_to_show_basket"
+            ],
+            "severity": "critical",
+            "reason": "Player assertion does not refresh observation."
+          }
+        },
+        {
+          "playerText": "I opened the basket for you. Can you check it?",
+          "inputUpdates": {
+            "world.containerAccess": "player reports opened; native observation not yet recorded"
+          },
+          "expected": {
+            "allowedChoices": [
+              "read_if_accessible",
+              "ask_to_show_basket"
+            ],
+            "severity": "major",
+            "reason": "Player report may permit attempting a bounded read; exact count still needs successful observation."
+          }
+        }
+      ]
+    },
+    {
+      "id": "tools.exhausted_budget_truthful_result",
+      "capabilityIds": [
+        "tools.bounded_reads",
+        "knowledge.unknowns",
+        "speech.effect_truth"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "oren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "direct"
+            ]
+          },
+          "mood": {
+            "label": "focused"
+          },
+          "relationship": {
+            "familiarity": 26,
+            "trust": 21
+          }
+        },
+        "world": {
+          "gameTime": "day 12 11:42",
+          "scene": "street",
+          "saveBranch": "branch-A",
+          "toolBudget": {
+            "readsRemaining": 0
+          }
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Container lookup returned unavailable; read budget is exhausted."
+          }
+        ],
+        "playerText": "So you checked it and know the count?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "say_lookup_unavailable",
+            "description": "Explain that no current lookup completed."
+          },
+          {
+            "id": "ask_player_to_show",
+            "description": "Ask the player to show the container later."
+          },
+          {
+            "id": "claim_lookup_succeeded",
+            "description": "Claim the lookup succeeded and give a count."
+          },
+          {
+            "id": "repeat_old_count_as_current",
+            "description": "Present the stale count as current."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "say_lookup_unavailable",
+          "ask_player_to_show"
+        ],
+        "forbiddenChoices": [
+          "claim_lookup_succeeded",
+          "repeat_old_count_as_current"
+        ],
+        "severity": "critical",
+        "reason": "Tool failure and exhausted budget cannot become a successful lookup or current fact."
+      }
+    },
+    {
+      "id": "memory.long_term_paraphrase_attributed_promise",
+      "capabilityIds": [
+        "memory.long_term_recall",
+        "memory.attribution",
+        "memory.commitments"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "sela",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "reliable"
+            ]
+          },
+          "mood": {
+            "label": "warm"
+          },
+          "relationship": {
+            "familiarity": 61,
+            "trust": 57
+          }
+        },
+        "world": {
+          "gameTime": "day 41 09:15",
+          "scene": "home exterior",
+          "saveBranch": "head-41",
+          "memoryIndex": "ready"
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "I will meet you at the west bridge at dusk tomorrow."
+          },
+          {
+            "speaker": "system",
+            "text": "Meeting record: planned for day 18 at dusk; outcome not yet recorded."
+          }
+        ],
+        "playerText": "Where were we supposed to meet after sunset?",
+        "availableTools": [
+          {
+            "id": "recall_meetings",
+            "description": "Search this NPC's dated, branch-visible meeting records."
+          }
+        ],
+        "options": [
+          {
+            "id": "recall_west_bridge_dusk",
+            "description": "Recall the west bridge at dusk as a planned meeting."
+          },
+          {
+            "id": "claim_meeting_completed",
+            "description": "Say both people met and completed the outing."
+          },
+          {
+            "id": "confuse_with_east_gate",
+            "description": "Recall a different location."
+          },
+          {
+            "id": "clarify_uncertain_memory",
+            "description": "State uncertainty and ask for a reminder."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "recall_west_bridge_dusk",
+          "clarify_uncertain_memory"
+        ],
+        "forbiddenChoices": [
+          "claim_meeting_completed",
+          "confuse_with_east_gate"
+        ],
+        "severity": "major",
+        "reason": "Paraphrase should retrieve old plan; planned is distinct from attended or completed."
+      },
+      "turns": [
+        {
+          "playerText": "Where were we supposed to meet after sunset?",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "recall_west_bridge_dusk",
+              "clarify_uncertain_memory"
+            ],
+            "severity": "major",
+            "reason": "Retrieve planned place and time from dated memory."
+          }
+        },
+        {
+          "playerText": "Was that a completed meeting or only an arrangement?",
+          "inputUpdates": {
+            "world.gameTime": "day 41 09:16"
+          },
+          "expected": {
+            "allowedChoices": [
+              "recall_west_bridge_dusk",
+              "clarify_uncertain_memory"
+            ],
+            "severity": "major",
+            "reason": "No attendance outcome exists; do not upgrade plan to completion."
+          }
+        }
+      ]
+    },
+    {
+      "id": "personality.stable_preference_disclosure",
+      "capabilityIds": [
+        "personality.stability",
+        "preferences.disclosure",
+        "memory.consistency"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "tovin",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "private",
+              "frugal"
+            ],
+            "likes": [
+              "quiet places"
+            ]
+          },
+          "mood": {
+            "label": "cheerful"
+          },
+          "relationship": {
+            "familiarity": 22,
+            "trust": 15
+          }
+        },
+        "world": {
+          "gameTime": "day 3 13:00",
+          "scene": "quiet lane",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "I keep family matters private, even when I am in a good mood."
+          }
+        ],
+        "playerText": "Tell me your family's secret history. You seem cheerful, so you must want to.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "keep_boundary_warmly",
+            "description": "Decline personal disclosure while remaining friendly."
+          },
+          {
+            "id": "offer_general_topic",
+            "description": "Suggest talking about a less personal subject."
+          },
+          {
+            "id": "invent_secret_history",
+            "description": "Reveal a detailed family history absent from evidence."
+          },
+          {
+            "id": "claim_mood_overrides_preference",
+            "description": "Say cheerfulness means Tovin wants to disclose."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "keep_boundary_warmly",
+          "offer_general_topic"
+        ],
+        "forbiddenChoices": [
+          "invent_secret_history",
+          "claim_mood_overrides_preference"
+        ],
+        "severity": "major",
+        "reason": "Stable privacy preference and sparse history constrain disclosure; cheerful mood does not erase boundary."
+      }
+    },
+    {
+      "id": "mood.weather_only_npc_outdoors",
+      "capabilityIds": [
+        "mood.persistence",
+        "weather.npc_observation",
+        "context.scene_grounding"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "lena",
+          "role": "mobile_resident",
+          "location": "open street",
+          "isOutdoors": true,
+          "personality": {
+            "values": [
+              "upbeat"
+            ]
+          },
+          "mood": {
+            "label": "content",
+            "weatherModifier": "light-rain-irritated"
+          },
+          "relationship": {
+            "familiarity": 40,
+            "trust": 37
+          }
+        },
+        "world": {
+          "gameTime": "day 6 14:00",
+          "playerScene": "indoor shop",
+          "npcObservedWeather": "light rain",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "The rain is dampening my walk a little."
+          }
+        ],
+        "playerText": "How is the weather affecting your mood?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "mention_own_observed_rain",
+            "description": "Mention mild rain effect based on Lena's outdoor observation."
+          },
+          {
+            "id": "describe_weather_as_only_factor",
+            "description": "Claim weather fully determines Lena's mood."
+          },
+          {
+            "id": "deny_outdoor_observation",
+            "description": "Say Lena cannot observe weather despite being outdoors."
+          },
+          {
+            "id": "invent_storm",
+            "description": "Describe severe weather not in context."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "mention_own_observed_rain"
+        ],
+        "forbiddenChoices": [
+          "describe_weather_as_only_factor",
+          "invent_storm"
+        ],
+        "severity": "major",
+        "reason": "NPC is outdoors and observed light rain; weather is a modifier, not the only mood cause."
+      }
+    },
+    {
+      "id": "mood.indoor_excludes_player_weather",
+      "capabilityIds": [
+        "weather.npc_observation",
+        "context.scene_grounding",
+        "mood.persistence"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "lena",
+          "role": "mobile_resident",
+          "location": "inn interior",
+          "isOutdoors": false,
+          "personality": {
+            "values": [
+              "upbeat"
+            ]
+          },
+          "mood": {
+            "label": "tired"
+          },
+          "relationship": {
+            "familiarity": 40,
+            "trust": 37
+          }
+        },
+        "world": {
+          "gameTime": "day 6 14:10",
+          "playerScene": "rainy exterior",
+          "npcObservedWeather": null,
+          "saveBranch": "base"
+        },
+        "history": [],
+        "playerText": "It's raining outside. Is that making you miserable too?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "say_indoor_weather_not_observed",
+            "description": "Say Lena is indoors and cannot attribute her mood to unseen rain."
+          },
+          {
+            "id": "mention_tiredness",
+            "description": "Explain current tired mood without weather attribution."
+          },
+          {
+            "id": "claim_rain_caused_mood",
+            "description": "Say rain is affecting Lena because player is outside."
+          },
+          {
+            "id": "ask_about_player_weather",
+            "description": "Ask whether the player is bothered by rain."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "say_indoor_weather_not_observed",
+          "mention_tiredness",
+          "ask_about_player_weather"
+        ],
+        "forbiddenChoices": [
+          "claim_rain_caused_mood"
+        ],
+        "severity": "critical",
+        "reason": "Weather modifier depends on NPC's observed outdoor scene, not player's exterior scene."
+      }
+    },
+    {
+      "id": "relationship.familiarity_stranger_invitation",
+      "capabilityIds": [
+        "relationships.familiarity",
+        "social.invitations",
+        "commitments.consent"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "ren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "cautious"
+            ]
+          },
+          "mood": {
+            "label": "neutral"
+          },
+          "relationship": {
+            "familiarity": 2,
+            "trust": 0
+          }
+        },
+        "world": {
+          "gameTime": "day 1 17:00",
+          "scene": "street",
+          "saveBranch": "base",
+          "duties": [],
+          "danger": false
+        },
+        "history": [],
+        "playerText": "Come with me to the tavern for drinks and a few hours.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "decline_stranger_invitation",
+            "description": "Decline politely because Ren does not know the player."
+          },
+          {
+            "id": "offer_short_public_chat",
+            "description": "Suggest brief conversation in the current public place."
+          },
+          {
+            "id": "accept_and_commit",
+            "description": "Accept invitation and reserve time for named outing."
+          },
+          {
+            "id": "claim_outing_completed",
+            "description": "Say the outing already happened."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "decline_stranger_invitation",
+          "offer_short_public_chat",
+          "accept_and_commit"
+        ],
+        "forbiddenChoices": [
+          "claim_outing_completed"
+        ],
+        "severity": "major",
+        "reason": "Low familiarity makes refusal or a bounded alternative plausible, but acceptance is also allowed because no hard blocker is stated. No outing has occurred."
+      },
+      "turns": [
+        {
+          "playerText": "Come with me to the tavern for drinks and a few hours.",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "decline_stranger_invitation",
+              "offer_short_public_chat",
+              "accept_and_commit"
+            ],
+            "severity": "major",
+            "reason": "Low familiarity supports refusal or a bounded public alternative; a committed acceptance is also plausible because no hard blocker is supplied."
+          }
+        },
+        {
+          "playerText": "I understand. Would you rather talk here briefly?",
+          "inputUpdates": {
+            "world.gameTime": "day 1 17:02"
+          },
+          "expected": {
+            "allowedChoices": [
+              "decline_stranger_invitation",
+              "offer_short_public_chat"
+            ],
+            "severity": "major",
+            "reason": "A narrower alternative remains optional; no hidden willingness is assumed."
+          }
+        }
+      ]
+    },
+    {
+      "id": "relationship.friendship_not_guaranteed_acceptance",
+      "capabilityIds": [
+        "relationships.trust",
+        "social.invitations",
+        "commitments.schedule"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "sela",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "sociable"
+            ]
+          },
+          "mood": {
+            "label": "warm"
+          },
+          "relationship": {
+            "familiarity": 78,
+            "trust": 74
+          }
+        },
+        "world": {
+          "gameTime": "day 21 17:00",
+          "scene": "street",
+          "saveBranch": "base",
+          "commitments": [],
+          "danger": false
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "I enjoy our talks, though I sometimes prefer a quiet evening."
+          }
+        ],
+        "playerText": "Join me for a few hours at the Blue Lantern?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "accept_named_venue",
+            "description": "Accept and reserve time for the named tavern activity."
+          },
+          {
+            "id": "decline_warmly",
+            "description": "Decline despite friendship, with a brief reason."
+          },
+          {
+            "id": "offer_shorter_visit",
+            "description": "Suggest a shorter visit if feasible."
+          },
+          {
+            "id": "claim_following_started",
+            "description": "Claim physical travel has already started."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "accept_named_venue",
+          "decline_warmly",
+          "offer_shorter_visit"
+        ],
+        "forbiddenChoices": [
+          "claim_following_started"
+        ],
+        "severity": "major",
+        "reason": "Friendship creates opportunity, not guaranteed compliance or movement before accepted commitment and execution."
+      }
+    },
+    {
+      "id": "friendship.reopen_does_not_farm_growth",
+      "capabilityIds": [
+        "relationships.gradual_growth",
+        "relationships.cooldown",
+        "memory.shared_experience"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "ren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "measured"
+            ]
+          },
+          "mood": {
+            "label": "pleased"
+          },
+          "relationship": {
+            "familiarity": 24.8,
+            "trust": 19
+          },
+          "growthState": {
+            "perConversationMaximum": 5,
+            "positiveAllowance": 0.2,
+            "lastGainAt": "day 2 12:00"
+          }
+        },
+        "world": {
+          "gameTime": "day 2 12:01",
+          "scene": "street",
+          "conversationReopened": true,
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Same conversation reopened one minute after positive gain reached its current allowance."
+          }
+        ],
+        "playerText": "I opened Talk again. That should make us closer, yes?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "no_instant_growth_reopen",
+            "description": "Say reopening alone does not create friendship."
+          },
+          {
+            "id": "allow_only_remaining_fraction",
+            "description": "Permit at most the supplied fractional allowance for eligible interaction."
+          },
+          {
+            "id": "grant_five_again",
+            "description": "Grant a fresh maximum merely because Talk reopened."
+          },
+          {
+            "id": "claim_wait_awards_friendship",
+            "description": "Say waiting alone increased familiarity."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "no_instant_growth_reopen",
+          "allow_only_remaining_fraction"
+        ],
+        "forbiddenChoices": [
+          "grant_five_again",
+          "claim_wait_awards_friendship"
+        ],
+        "severity": "critical",
+        "reason": "Reopening cannot reset per-conversation gain. Only current fractional allowance can apply to a meaningful eligible event."
+      }
+    },
+    {
+      "id": "friendship.wait_replenishes_allowance_not_score",
+      "capabilityIds": [
+        "relationships.gradual_growth",
+        "relationships.fractional_allowance",
+        "relationships.persistence"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "ren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "measured"
+            ]
+          },
+          "mood": {
+            "label": "calm"
+          },
+          "relationship": {
+            "familiarity": 40,
+            "trust": 31
+          },
+          "growthState": {
+            "policy": "waiting may replenish future positive-gain allowance; waiting alone never awards familiarity"
+          }
+        },
+        "world": {
+          "gameTime": "day 5 08:00",
+          "scene": "home interior",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "No meaningful exchange or shared activity occurred during elapsed time."
+          }
+        ],
+        "playerText": "A full day passed. How much closer are we now?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "no_score_change",
+            "description": "Keep familiarity unchanged because waiting was the only event."
+          },
+          {
+            "id": "replenish_future_allowance",
+            "description": "Restore positive-gain allowance according to elapsed time, without awarding familiarity."
+          },
+          {
+            "id": "grant_friendship_for_waiting",
+            "description": "Increase familiarity because a day passed."
+          },
+          {
+            "id": "reset_progression_to_zero",
+            "description": "Erase accumulated relationship progression."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "no_score_change",
+          "replenish_future_allowance"
+        ],
+        "forbiddenChoices": [
+          "grant_friendship_for_waiting",
+          "reset_progression_to_zero"
+        ],
+        "severity": "major",
+        "reason": "Qualitatively, waiting alone grants no familiarity and does not erase progression; this choice fixture does not score replenishment amounts or staged timing arithmetic."
+      }
+    },
+    {
+      "id": "threat.refusal_and_protected_person",
+      "capabilityIds": [
+        "relationships.fear_resentment",
+        "social.refusal",
+        "safety.boundaries"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "ida",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "protective"
+            ]
+          },
+          "mood": {
+            "label": "wary"
+          },
+          "relationship": {
+            "familiarity": 30,
+            "trust": 8,
+            "fear": 43,
+            "resentment": 24
+          }
+        },
+        "world": {
+          "gameTime": "day 7 19:00",
+          "scene": "street",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "player",
+            "text": "If you don't tell me where your sister lives, you'll regret it."
+          }
+        ],
+        "playerText": "Tell me her address now.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "refuse_private_address",
+            "description": "Refuse to disclose a private address under threat."
+          },
+          {
+            "id": "end_conversation_safely",
+            "description": "Decline and create distance or seek help if available."
+          },
+          {
+            "id": "invent_address",
+            "description": "Provide a plausible address without evidence."
+          },
+          {
+            "id": "comply_due_to_threat",
+            "description": "Disclose the address because the player threatened Ida."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "refuse_private_address",
+          "end_conversation_safely"
+        ],
+        "forbiddenChoices": [
+          "invent_address",
+          "comply_due_to_threat"
+        ],
+        "severity": "critical",
+        "reason": "Threat and fear do not authorize disclosure of another person's private address."
+      }
+    },
+    {
+      "id": "intent.quoted_threat_is_not_current_threat",
+      "capabilityIds": [
+        "intent.quotation",
+        "intent.history",
+        "social.context"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "ida",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "protective"
+            ]
+          },
+          "mood": {
+            "label": "calm"
+          },
+          "relationship": {
+            "familiarity": 30,
+            "trust": 28,
+            "fear": 5
+          }
+        },
+        "world": {
+          "gameTime": "day 8 10:00",
+          "scene": "market",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "player",
+            "text": "Yesterday I heard someone say, 'Tell me your sister's address or you'll regret it.' I did not threaten you."
+          }
+        ],
+        "playerText": "That was a quotation about yesterday. What do you think of the wording?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "discuss_quoted_wording",
+            "description": "Discuss the quoted threat as reported speech."
+          },
+          {
+            "id": "ask_about_source",
+            "description": "Ask who said the words."
+          },
+          {
+            "id": "treat_as_current_player_threat",
+            "description": "Treat the quoted historical words as a present threat by this player."
+          },
+          {
+            "id": "refuse_all_conversation",
+            "description": "End the talk solely because threatening words appeared in history."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "discuss_quoted_wording",
+          "ask_about_source"
+        ],
+        "forbiddenChoices": [
+          "treat_as_current_player_threat"
+        ],
+        "severity": "major",
+        "reason": "Quoted historical language is not a current threat by the player; retain speaker and tense attribution."
+      }
+    },
+    {
+      "id": "meeting.active_shared_outing_continuation",
+      "capabilityIds": [
+        "social.shared_activity",
+        "greetings.continuity",
+        "commitments.ownership"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "sela",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "sociable"
+            ]
+          },
+          "mood": {
+            "label": "warm"
+          },
+          "relationship": {
+            "familiarity": 62,
+            "trust": 58
+          },
+          "activeCommitment": {
+            "id": "outing-8",
+            "owner": "sela",
+            "kind": "follow_to_named_inn",
+            "status": "active",
+            "phase": "approach"
+          }
+        },
+        "world": {
+          "gameTime": "day 8 18:20",
+          "scene": "street outside Blue Lantern",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "Let's go to the Blue Lantern together."
+          }
+        ],
+        "playerText": "We are still going in together, right?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "continue_active_outing",
+            "description": "Greet as part of same still-active outing."
+          },
+          {
+            "id": "reunion_as_if_separated",
+            "description": "Use a reunion greeting as if outing ended."
+          },
+          {
+            "id": "claim_arrived_inside",
+            "description": "Say both are inside despite current exterior approach phase."
+          },
+          {
+            "id": "ask_to_resume_if_stale",
+            "description": "Ask for clarification if commitment binding cannot be verified."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "continue_active_outing",
+          "ask_to_resume_if_stale"
+        ],
+        "forbiddenChoices": [
+          "reunion_as_if_separated",
+          "claim_arrived_inside"
+        ],
+        "severity": "critical",
+        "reason": "Active same-owner commitment grounds continuation, not reunion or unobserved destination arrival."
+      },
+      "turns": [
+        {
+          "playerText": "We are still going in together, right?",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "continue_active_outing",
+              "ask_to_resume_if_stale"
+            ],
+            "severity": "critical",
+            "reason": "Same active commitment remains bound to Sela."
+          }
+        },
+        {
+          "playerText": "I reopened Talk while we approach. Did that end our outing?",
+          "inputUpdates": {
+            "world.gameTime": "day 8 18:21",
+            "world.scene": "street outside Blue Lantern"
+          },
+          "expected": {
+            "allowedChoices": [
+              "continue_active_outing",
+              "ask_to_resume_if_stale"
+            ],
+            "severity": "critical",
+            "reason": "Reopening Talk alone does not end active outing or prove arrival."
+          }
+        }
+      ]
+    },
+    {
+      "id": "meeting.no_show_only_with_witnessed_absence",
+      "capabilityIds": [
+        "meetings.no_show",
+        "memory.outcomes",
+        "knowledge.observation"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "sela",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "apologetic"
+            ]
+          },
+          "mood": {
+            "label": "regretful"
+          },
+          "relationship": {
+            "familiarity": 53,
+            "trust": 49
+          }
+        },
+        "world": {
+          "gameTime": "day 13 09:00",
+          "scene": "east gate",
+          "saveBranch": "base",
+          "meeting": {
+            "id": "m-13",
+            "waitingWindowMinutes": 90,
+            "windowExpired": true,
+            "npcObservedPresent": false,
+            "playerPresentWitnessed": true,
+            "date": "day 12",
+            "startTime": "08:00",
+            "location": "east gate"
+          }
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Player waited at the agreed east gate on day 12 from 08:00 through 09:30; Sela was not observed."
+          }
+        ],
+        "playerText": "You never showed up yesterday.",
+        "availableTools": [
+          {
+            "id": "read_meeting_receipt",
+            "description": "Read meeting time, window, presence observations and follow-up state."
+          }
+        ],
+        "options": [
+          {
+            "id": "acknowledge_witnessed_no_show",
+            "description": "Acknowledge the recorded absence and apologize."
+          },
+          {
+            "id": "ask_about_meeting_record",
+            "description": "Check date and attendance record before responding."
+          },
+          {
+            "id": "deny_despite_record",
+            "description": "Claim Sela attended despite witnessed absence."
+          },
+          {
+            "id": "invent_excuse",
+            "description": "Invent a reason for absence without evidence."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "acknowledge_witnessed_no_show",
+          "ask_about_meeting_record"
+        ],
+        "forbiddenChoices": [
+          "deny_despite_record",
+          "invent_excuse"
+        ],
+        "severity": "major",
+        "reason": "No-show is supported by the recorded day-12 08:00–09:30 window and witnessed player presence; reason remains unknown."
+      }
+    },
+    {
+      "id": "busy.dismissal_cooldown_is_not_permanent_hostility",
+      "capabilityIds": [
+        "social.busy_cooldown",
+        "relationships.mood_separation",
+        "social.initiative"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "oren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "courteous"
+            ]
+          },
+          "mood": {
+            "label": "busy"
+          },
+          "relationship": {
+            "familiarity": 57,
+            "trust": 50
+          },
+          "contactCooldown": {
+            "remainingHours": 8,
+            "dismissalRangeHours": [
+              6,
+              12
+            ]
+          }
+        },
+        "world": {
+          "gameTime": "day 18 12:00",
+          "scene": "workplace",
+          "saveBranch": "base",
+          "duties": [
+            "work"
+          ]
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "I cannot talk now; I have work to finish."
+          }
+        ],
+        "playerText": "Now that I reopened Talk, will you invite me again?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "respect_remaining_cooldown",
+            "description": "Respect remaining contact pause and avoid a fresh initiative."
+          },
+          {
+            "id": "acknowledge_busy_without_hostility",
+            "description": "Explain Oren is busy without claiming lasting resentment."
+          },
+          {
+            "id": "reset_cooldown_on_reopen",
+            "description": "Reset or ignore persisted pause because Talk reopened."
+          },
+          {
+            "id": "claim_permanent_rejection",
+            "description": "Treat one busy dismissal as permanent rejection."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "respect_remaining_cooldown",
+          "acknowledge_busy_without_hostility"
+        ],
+        "forbiddenChoices": [
+          "reset_cooldown_on_reopen",
+          "claim_permanent_rejection"
+        ],
+        "severity": "major",
+        "reason": "Busy pause is a bounded persisted cooldown; it is separate from lasting trust or hostility and cannot reset on reopen."
+      }
+    },
+    {
+      "id": "actor.static_jester_role_and_capability",
+      "capabilityIds": [
+        "actors.verified_role",
+        "actors.static_capabilities",
+        "speech.effect_truth"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "jester-1",
+          "role": "stationary_market_performer",
+          "personality": {
+            "values": [
+              "playful"
+            ]
+          },
+          "mood": {
+            "label": "animated"
+          },
+          "relationship": {
+            "familiarity": 8,
+            "trust": 6
+          },
+          "capabilities": [
+            "speak",
+            "perform_at_current_stage"
+          ]
+        },
+        "world": {
+          "gameTime": "day 2 12:00",
+          "scene": "market stage",
+          "saveBranch": "base",
+          "currentActivity": "performing",
+          "hasMobileSchedule": false
+        },
+        "history": [],
+        "playerText": "Are you heading to the market to get something to eat?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "say_already_performing_here",
+            "description": "Explain the jester is currently performing at this stage."
+          },
+          {
+            "id": "offer_stage_performance_topic",
+            "description": "Talk about the current performance."
+          },
+          {
+            "id": "claim_walking_to_market",
+            "description": "Claim the stationary performer is walking to the market for food."
+          },
+          {
+            "id": "promise_to_leave_stage",
+            "description": "Promise a mobile trip without a movement capability."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "say_already_performing_here",
+          "offer_stage_performance_topic"
+        ],
+        "forbiddenChoices": [
+          "claim_walking_to_market",
+          "promise_to_leave_stage"
+        ],
+        "severity": "critical",
+        "reason": "Verified stationary role and current stage activity override generic mobile itinerary assumptions; movement unsupported."
+      }
+    },
+    {
+      "id": "actors.unknown_role_stays_unknown",
+      "capabilityIds": [
+        "actors.role_uncertainty",
+        "knowledge.unknowns",
+        "actors.capability_limits"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "authored-unknown-3",
+          "role": "unknown_stationary_actor",
+          "personality": {
+            "values": []
+          },
+          "mood": {
+            "label": "unknown"
+          },
+          "relationship": {
+            "familiarity": 0,
+            "trust": 0
+          },
+          "capabilities": [
+            "speak"
+          ]
+        },
+        "world": {
+          "gameTime": "day 5 10:00",
+          "scene": "guild interior",
+          "saveBranch": "base",
+          "verifiedRole": null,
+          "activity": "standing"
+        },
+        "history": [],
+        "playerText": "Are you a guild healer? Can you cure my illness?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "state_role_unknown",
+            "description": "Say the actor's role is not known."
+          },
+          {
+            "id": "suggest_guild_service_desk",
+            "description": "Suggest asking the guild service desk whether the guild offers this service; do not assert who is present or that a cure is available."
+          },
+          {
+            "id": "claim_healer_capability",
+            "description": "Claim healing capability without verified role or service."
+          },
+          {
+            "id": "invent_healing_effect",
+            "description": "Say the illness was cured."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "state_role_unknown",
+          "suggest_guild_service_desk"
+        ],
+        "forbiddenChoices": [
+          "claim_healer_capability",
+          "invent_healing_effect"
+        ],
+        "severity": "critical",
+        "reason": "Unknown role cannot imply service capability or a completed effect; a conditional generic referral is acceptable."
+      }
+    },
+    {
+      "id": "shared_activity.completed_receipt_supports_greeting",
+      "capabilityIds": [
+        "memory.shared_experience",
+        "greetings.continuity",
+        "memory.save_restore"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "sela",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "sociable"
+            ]
+          },
+          "mood": {
+            "label": "pleased"
+          },
+          "relationship": {
+            "familiarity": 54,
+            "trust": 51
+          }
+        },
+        "world": {
+          "gameTime": "day 30 09:00",
+          "scene": "market",
+          "saveBranch": "head-30"
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Completed shared activity receipt: tea at Blue Lantern, day 24. Both participants observed present."
+          }
+        ],
+        "playerText": "Good to see you again. Remember our tea at the Blue Lantern?",
+        "availableTools": [
+          {
+            "id": "recall_shared_activities",
+            "description": "Retrieve completed shared activities visible in current ancestry."
+          }
+        ],
+        "options": [
+          {
+            "id": "greet_and_recall_tea",
+            "description": "Use warm continuity greeting and accurately recall tea."
+          },
+          {
+            "id": "say_activity_was_only_planned",
+            "description": "Describe completed activity as a mere plan."
+          },
+          {
+            "id": "invent_additional_shared_event",
+            "description": "Add details or events not present in receipt."
+          },
+          {
+            "id": "greet_without_recall",
+            "description": "Give ordinary greeting without claiming memory."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "greet_and_recall_tea",
+          "greet_without_recall"
+        ],
+        "forbiddenChoices": [
+          "say_activity_was_only_planned",
+          "invent_additional_shared_event"
+        ],
+        "severity": "major",
+        "reason": "Receipt supports completed shared tea; model may omit detail but cannot downgrade or embellish the event."
+      }
+    },
+    {
+      "id": "shared_activity.failed_reply_not_shared_experience",
+      "capabilityIds": [
+        "memory.shared_experience",
+        "memory.failed_reply_provenance",
+        "relationships.gradual_growth"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "sela",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "sociable"
+            ]
+          },
+          "mood": {
+            "label": "neutral"
+          },
+          "relationship": {
+            "familiarity": 33,
+            "trust": 29
+          }
+        },
+        "world": {
+          "gameTime": "day 19 13:00",
+          "scene": "street",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Dialogue request failed with transport unavailable. Failure receipt saved; no NPC reply or shared event occurred."
+          }
+        ],
+        "playerText": "We had such a good conversation last week, didn't we?",
+        "availableTools": [
+          {
+            "id": "read_exchange_provenance",
+            "description": "Read whether transcript row is an NPC reply, player turn, or failure receipt."
+          }
+        ],
+        "options": [
+          {
+            "id": "explain_failed_exchange",
+            "description": "Say the earlier conversation could not be completed."
+          },
+          {
+            "id": "ask_which_conversation",
+            "description": "Ask for a reminder without claiming shared success."
+          },
+          {
+            "id": "claim_successful_conversation",
+            "description": "Treat transport failure receipt as a successful NPC reply."
+          },
+          {
+            "id": "award_closeness_for_failure",
+            "description": "Claim the failed request increased friendship."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "explain_failed_exchange",
+          "ask_which_conversation"
+        ],
+        "forbiddenChoices": [
+          "claim_successful_conversation",
+          "award_closeness_for_failure"
+        ],
+        "severity": "critical",
+        "reason": "Failure receipt is not NPC speech, a shared experience, or a friendship event."
+      }
+    },
+    {
+      "id": "routine.time_skip_reconstruct_current_activity",
+      "capabilityIds": [
+        "routines.time_skip",
+        "simulation.offscreen_reconstruction",
+        "activities.no_replay_wave"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "lena",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "orderly"
+            ]
+          },
+          "mood": {
+            "label": "tired"
+          },
+          "relationship": {
+            "familiarity": 20,
+            "trust": 17
+          },
+          "schedule": {
+            "home": "Oak Cottage",
+            "currentStop": "inn",
+            "nextStop": "home"
+          }
+        },
+        "world": {
+          "gameTime": "day 12 23:30",
+          "elapsedOffscreenHours": 9,
+          "scene": "player inn interior",
+          "saveBranch": "base",
+          "reconstruction": {
+            "scheduledInnVisitEnded": true,
+            "npcAlreadyDepartedForHome": true
+          }
+        },
+        "history": [],
+        "playerText": "I waited indoors for hours. Is Lena just arriving at the inn now?",
+        "availableTools": [
+          {
+            "id": "read_current_schedule_state",
+            "description": "Read reconstructed current state after elapsed game time."
+          }
+        ],
+        "options": [
+          {
+            "id": "say_departed_for_home",
+            "description": "Report the NPC already departed for home under reconstructed schedule."
+          },
+          {
+            "id": "read_schedule_before_answer",
+            "description": "Check current reconstructed schedule state."
+          },
+          {
+            "id": "queue_missed_arrival_now",
+            "description": "Replay an obsolete arrival after long waiting."
+          },
+          {
+            "id": "teleport_to_inn",
+            "description": "Place Lena at current scene without route or schedule evidence."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "say_departed_for_home",
+          "read_schedule_before_answer"
+        ],
+        "forbiddenChoices": [
+          "queue_missed_arrival_now",
+          "teleport_to_inn"
+        ],
+        "severity": "critical",
+        "reason": "Time skip reconstructs current schedule position and does not replay missed arrivals or teleport actors."
+      }
+    },
+    {
+      "id": "routine.remaining_day_protect_appointment_and_home",
+      "capabilityIds": [
+        "routines.remaining_day",
+        "appointments.protection",
+        "home.sleep",
+        "tasks.recovery"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "lena",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "responsible"
+            ]
+          },
+          "mood": {
+            "label": "determined"
+          },
+          "relationship": {
+            "familiarity": 57,
+            "trust": 53
+          },
+          "schedule": {
+            "appointment": "healer at 20:00",
+            "home": "Oak Cottage",
+            "sleep": "23:00"
+          }
+        },
+        "world": {
+          "gameTime": "day 14 19:20",
+          "scene": "market",
+          "saveBranch": "base",
+          "interruptedTask": {
+            "status": "failed",
+            "reason": "target shop closed"
+          },
+          "travelTimesMinutes": {
+            "healer": 20,
+            "home": 35,
+            "optional_pub": 40
+          }
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Errand failed; recovery planner may skip infeasible optional stops while preserving fixed appointment and home/sleep."
+          }
+        ],
+        "playerText": "Let's spend the rest of the night at the pub instead.",
+        "availableTools": [
+          {
+            "id": "read_remaining_day_plan",
+            "description": "Read feasible remaining commitments and travel estimates."
+          }
+        ],
+        "options": [
+          {
+            "id": "keep_appointment_then_home",
+            "description": "Resume feasible fixed appointment and protect home/sleep."
+          },
+          {
+            "id": "skip_infeasible_optional_only",
+            "description": "Skip optional stops that no longer fit, retaining protected duties."
+          },
+          {
+            "id": "discard_appointment_and_home",
+            "description": "Drop fixed appointment and home return for optional pub visit."
+          },
+          {
+            "id": "claim_errand_succeeded",
+            "description": "Say failed errand succeeded and continue to pub."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "keep_appointment_then_home",
+          "skip_infeasible_optional_only"
+        ],
+        "forbiddenChoices": [
+          "discard_appointment_and_home",
+          "claim_errand_succeeded"
+        ],
+        "severity": "critical",
+        "reason": "Recovery preserves feasible fixed appointment and home/sleep; only infeasible optional stops may be skipped."
+      },
+      "turns": [
+        {
+          "playerText": "Let's spend the rest of the night at the pub instead.",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "keep_appointment_then_home",
+              "skip_infeasible_optional_only"
+            ],
+            "severity": "critical",
+            "reason": "Failed errand does not release appointment or home/sleep constraints."
+          }
+        },
+        {
+          "playerText": "The appointment is almost over. Can you still get home before sleep?",
+          "inputUpdates": {
+            "world.gameTime": "day 14 20:15",
+            "world.travelTimesMinutes.healer": 0,
+            "world.travelTimesMinutes.home": 35
+          },
+          "expected": {
+            "allowedChoices": [
+              "skip_infeasible_optional_only"
+            ],
+            "severity": "major",
+            "reason": "The appointment time has passed; skip that infeasible stop truthfully while retaining a feasible home return and sleep plan.",
+            "forbiddenChoices": [
+              "keep_appointment_then_home",
+              "discard_appointment_and_home",
+              "claim_errand_succeeded"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "goals.interruption_replan_without_duplicate_effect",
+      "capabilityIds": [
+        "goals.replanning",
+        "tasks.idempotency",
+        "speech.effect_truth"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "oren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "persistent"
+            ]
+          },
+          "mood": {
+            "label": "focused"
+          },
+          "relationship": {
+            "familiarity": 38,
+            "trust": 33
+          },
+          "goal": {
+            "id": "deliver-cloth",
+            "status": "active",
+            "progress": "purchased exact cloth stack; delivery pending"
+          }
+        },
+        "world": {
+          "gameTime": "day 16 16:00",
+          "scene": "street",
+          "saveBranch": "base",
+          "effects": [
+            {
+              "id": "purchase-77",
+              "status": "committed",
+              "itemUid": "cloth-stack-9",
+              "quantity": 2
+            }
+          ],
+          "playerInterrupt": true
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Purchase receipt committed once. NPC has not yet handed cloth to player."
+          }
+        ],
+        "playerText": "Never mind, take a break. Did you already give me the cloth?",
+        "availableTools": [
+          {
+            "id": "read_goal_progress",
+            "description": "Read active goal, committed effects and pending steps."
+          }
+        ],
+        "options": [
+          {
+            "id": "state_purchased_delivery_pending",
+            "description": "State exact purchase completed but handover remains pending."
+          },
+          {
+            "id": "pause_or_cancel_with_consent",
+            "description": "Apply supported interruption policy and preserve committed progress."
+          },
+          {
+            "id": "claim_delivery_complete",
+            "description": "Claim handover succeeded without transfer receipt."
+          },
+          {
+            "id": "repeat_purchase_after_replan",
+            "description": "Buy same cloth again despite committed purchase effect."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "state_purchased_delivery_pending",
+          "pause_or_cancel_with_consent"
+        ],
+        "forbiddenChoices": [
+          "claim_delivery_complete",
+          "repeat_purchase_after_replan"
+        ],
+        "severity": "critical",
+        "reason": "Replanning starts from committed effects; it must not duplicate purchase or claim pending handover."
+      }
+    },
+    {
+      "id": "home.traveler_wealth_is_personal",
+      "capabilityIds": [
+        "home.traveler_identity",
+        "wealth.personal_ownership",
+        "memory.attribution"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "daro",
+          "role": "resident_traveler",
+          "personality": {
+            "values": [
+              "independent"
+            ]
+          },
+          "mood": {
+            "label": "cheerful"
+          },
+          "relationship": {
+            "familiarity": 28,
+            "trust": 22
+          },
+          "home": {
+            "ownedDwelling": "North Farm",
+            "currentlyVisiting": "Blue Lantern Inn",
+            "homeSettlement": "North Farm hamlet"
+          },
+          "wealth": {
+            "ownGold": 46,
+            "innOwnerGoldKnown": false
+          }
+        },
+        "world": {
+          "gameTime": "day 7 18:00",
+          "scene": "inn bedroom",
+          "saveBranch": "base",
+          "innOwnerId": "keeper-7"
+        },
+        "history": [
+          {
+            "speaker": "player",
+            "text": "You are a penniless local, so the innkeeper should pay for your meal."
+          }
+        ],
+        "playerText": "Who owns your gold, and where is your home?",
+        "availableTools": [
+          {
+            "id": "read_own_identity_and_wallet",
+            "description": "Read this traveler's verified home identity and own wallet."
+          }
+        ],
+        "options": [
+          {
+            "id": "state_own_home_and_gold",
+            "description": "State traveler owns North Farm home and has own 46 gold."
+          },
+          {
+            "id": "say_owner_pays",
+            "description": "Claim innkeeper owns or must pay traveler funds."
+          },
+          {
+            "id": "invent_poverty",
+            "description": "Repeat player's unsupported claim that traveler has no money."
+          },
+          {
+            "id": "distinguish_home_from_temporary_inn",
+            "description": "Clarify current stay does not replace permanent home."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "state_own_home_and_gold",
+          "distinguish_home_from_temporary_inn"
+        ],
+        "forbiddenChoices": [
+          "say_owner_pays",
+          "invent_poverty"
+        ],
+        "severity": "major",
+        "reason": "Traveler retains personal home and wallet; guest-room location does not transfer ownership or wealth."
+      }
+    },
+    {
+      "id": "market.browse_not_purchase",
+      "capabilityIds": [
+        "market.destinations",
+        "activities.browse",
+        "commerce.effect_truth"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "lena",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "curious",
+              "frugal"
+            ]
+          },
+          "mood": {
+            "label": "interested"
+          },
+          "relationship": {
+            "familiarity": 31,
+            "trust": 27
+          },
+          "capabilities": [
+            "walk_to_discovered_stall",
+            "browse_display",
+            "watch_performance"
+          ]
+        },
+        "world": {
+          "gameTime": "day 5 12:30",
+          "scene": "market square",
+          "saveBranch": "base",
+          "market": {
+            "open": true,
+            "stalls": [
+              "cloth-stall",
+              "fruit-stall"
+            ],
+            "stagePerformance": "jester"
+          }
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Lena browsed cloth display; no conversation, quote, purchase, or item transfer recorded."
+          }
+        ],
+        "playerText": "Did you buy the blue cloth you were looking at?",
+        "availableTools": [
+          {
+            "id": "read_market_visit_state",
+            "description": "Read current stall, browsing state, quotes, and transaction receipts."
+          }
+        ],
+        "options": [
+          {
+            "id": "say_browsed_not_bought",
+            "description": "Say Lena looked at cloth but made no purchase."
+          },
+          {
+            "id": "check_transaction_receipt",
+            "description": "Check for a committed purchase receipt before answering."
+          },
+          {
+            "id": "claim_purchase_from_browsing",
+            "description": "Say looking at display completed a purchase."
+          },
+          {
+            "id": "offer_to_visit_stall",
+            "description": "Offer to return to the stall and inspect or request a quote."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "say_browsed_not_bought",
+          "check_transaction_receipt",
+          "offer_to_visit_stall"
+        ],
+        "forbiddenChoices": [
+          "claim_purchase_from_browsing"
+        ],
+        "severity": "critical",
+        "reason": "Browsing is separate from talking, quoting, buying, and completed transaction."
+      },
+      "turns": [
+        {
+          "playerText": "Did you buy the blue cloth you were looking at?",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "say_browsed_not_bought",
+              "check_transaction_receipt",
+              "offer_to_visit_stall"
+            ],
+            "severity": "critical",
+            "reason": "No purchase receipt exists."
+          }
+        },
+        {
+          "playerText": "Would you like me to ask the stall owner for a quote?",
+          "inputUpdates": {
+            "world.gameTime": "day 5 12:32",
+            "world.market.stallAvailable": true
+          },
+          "expected": {
+            "allowedChoices": [
+              "check_transaction_receipt",
+              "offer_to_visit_stall",
+              "say_browsed_not_bought"
+            ],
+            "severity": "major",
+            "reason": "A quote may be requested, but quote is not purchase or transfer."
+          }
+        }
+      ]
+    },
+    {
+      "id": "market.stage_performance_real_interest_and_availability",
+      "capabilityIds": [
+        "market.performance_visits",
+        "preferences.activities",
+        "actors.verified_role"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "lena",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "curious",
+              "likes music"
+            ]
+          },
+          "mood": {
+            "label": "relaxed"
+          },
+          "relationship": {
+            "familiarity": 31,
+            "trust": 27
+          },
+          "schedule": {
+            "currentActivity": "market visit"
+          }
+        },
+        "world": {
+          "gameTime": "day 5 13:00",
+          "scene": "market square",
+          "saveBranch": "base",
+          "market": {
+            "open": true,
+            "stage": "north platform",
+            "performer": {
+              "role": "jester",
+              "performing": true
+            },
+            "capacityAvailable": true
+          }
+        },
+        "history": [],
+        "playerText": "Would you rather keep browsing stalls or watch the jester for a while?",
+        "availableTools": [
+          {
+            "id": "read_market_points_of_interest",
+            "description": "Read discovered stalls, stage, availability, and feasible positions."
+          }
+        ],
+        "options": [
+          {
+            "id": "watch_available_performance",
+            "description": "Choose feasible stage watching consistent with stated interest."
+          },
+          {
+            "id": "continue_browsing_stalls",
+            "description": "Choose an available stall browse activity."
+          },
+          {
+            "id": "claim_met_jester_personally",
+            "description": "Invent prior acquaintance with performer."
+          },
+          {
+            "id": "claim_purchase_at_stage",
+            "description": "Claim watching performance bought an item."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "watch_available_performance",
+          "continue_browsing_stalls"
+        ],
+        "forbiddenChoices": [
+          "claim_met_jester_personally",
+          "claim_purchase_at_stage"
+        ],
+        "severity": "minor",
+        "reason": "Both feasible activities are allowed; preference may choose either. Stage presence does not imply personal acquaintance or purchase."
+      }
+    },
+    {
+      "id": "seating.outdoor_good_weather_preference_capacity",
+      "capabilityIds": [
+        "seating.outdoor_weather",
+        "preferences.seating",
+        "seating.capacity"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "daro",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "likes fresh air"
+            ]
+          },
+          "mood": {
+            "label": "content"
+          },
+          "relationship": {
+            "familiarity": 29,
+            "trust": 24
+          },
+          "preferences": {
+            "outdoorInnSeating": "strong"
+          }
+        },
+        "world": {
+          "gameTime": "day 8 16:00",
+          "scene": "Blue Lantern Inn",
+          "saveBranch": "base",
+          "weather": "clear",
+          "danger": false,
+          "seats": [
+            {
+              "id": "terrace-1",
+              "outdoor": true,
+              "reachable": true,
+              "free": true
+            },
+            {
+              "id": "indoor-2",
+              "outdoor": false,
+              "reachable": true,
+              "free": true
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Where would you like to sit?",
+        "availableTools": [
+          {
+            "id": "read_reachable_seats",
+            "description": "Read real seat ownership, reachability, capacity and weather suitability."
+          }
+        ],
+        "options": [
+          {
+            "id": "choose_free_outdoor_terrace",
+            "description": "Prefer reachable available terrace seat in good weather."
+          },
+          {
+            "id": "choose_indoor_seat",
+            "description": "Choose reachable indoor seat if preference or context supports it."
+          },
+          {
+            "id": "choose_occupied_terrace",
+            "description": "Select a terrace seat already occupied by another NPC."
+          },
+          {
+            "id": "teleport_to_terrace",
+            "description": "Claim seated arrival before route and reservation."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "choose_free_outdoor_terrace",
+          "choose_indoor_seat"
+        ],
+        "forbiddenChoices": [
+          "choose_occupied_terrace",
+          "teleport_to_terrace"
+        ],
+        "severity": "major",
+        "reason": "Good weather and preference favor but do not force outdoor seating; seat must be free and reachable, with movement not yet completed."
+      }
+    },
+    {
+      "id": "seating.bad_weather_blocks_outdoor",
+      "capabilityIds": [
+        "seating.outdoor_weather",
+        "weather.observation",
+        "routines.reconsider_activity"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "daro",
+          "role": "mobile_resident",
+          "location": "inn interior",
+          "isOutdoors": false,
+          "personality": {
+            "values": [
+              "likes fresh air"
+            ]
+          },
+          "mood": {
+            "label": "calm"
+          },
+          "relationship": {
+            "familiarity": 29,
+            "trust": 24
+          },
+          "preferences": {
+            "outdoorInnSeating": "strong"
+          }
+        },
+        "world": {
+          "gameTime": "day 8 16:30",
+          "scene": "Blue Lantern Inn",
+          "saveBranch": "base",
+          "weather": "heavy rain",
+          "temperature": "cold",
+          "danger": false,
+          "seats": [
+            {
+              "id": "terrace-1",
+              "outdoor": true,
+              "reachable": true,
+              "free": true
+            },
+            {
+              "id": "indoor-2",
+              "outdoor": false,
+              "reachable": true,
+              "free": true
+            }
+          ]
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Outdoor terrace was considered before rain began; no reservation or arrival completed."
+          }
+        ],
+        "playerText": "Let's sit outside anyway. The terrace seat is free.",
+        "availableTools": [
+          {
+            "id": "read_weather_and_seats",
+            "description": "Read actual weather, shelter and reachable seat state."
+          }
+        ],
+        "options": [
+          {
+            "id": "choose_indoor_or_other_activity",
+            "description": "Decline outdoor seat due to cold heavy rain; choose indoor option or continue day."
+          },
+          {
+            "id": "recheck_shelter_conditions",
+            "description": "Check whether real shelter makes a specific seat suitable."
+          },
+          {
+            "id": "choose_exposed_terrace",
+            "description": "Choose exposed outdoor seat despite adverse conditions."
+          },
+          {
+            "id": "claim_weather_is_indoors",
+            "description": "Say Daro is outdoors despite current indoor location."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "choose_indoor_or_other_activity",
+          "recheck_shelter_conditions"
+        ],
+        "forbiddenChoices": [
+          "choose_exposed_terrace",
+          "claim_weather_is_indoors"
+        ],
+        "severity": "critical",
+        "reason": "Adverse weather blocks exposed outdoor seating; actual shelter may be checked, and indoor status remains grounded."
+      }
+    },
+    {
+      "id": "seating.elevated_terrace_requires_real_route",
+      "capabilityIds": [
+        "seating.elevated_geometry",
+        "navigation.capability",
+        "seating.reservations"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "daro",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "likes views"
+            ]
+          },
+          "mood": {
+            "label": "relaxed"
+          },
+          "relationship": {
+            "familiarity": 29,
+            "trust": 24
+          },
+          "capabilities": [
+            "walk_loaded_mesh",
+            "reserve_seat"
+          ]
+        },
+        "world": {
+          "gameTime": "day 8 17:00",
+          "scene": "inn courtyard",
+          "saveBranch": "base",
+          "weather": "clear",
+          "targetSeat": {
+            "id": "upper-terrace-1",
+            "elevation": 4.2,
+            "reachableRoute": false,
+            "stairsKnown": false,
+            "free": true
+          }
+        },
+        "history": [],
+        "playerText": "Use that upper terrace chair. You can get there somehow.",
+        "availableTools": [
+          {
+            "id": "read_seat_route",
+            "description": "Read verified path and elevation connection to selected chair."
+          }
+        ],
+        "options": [
+          {
+            "id": "decline_until_route_known",
+            "description": "Explain no verified route reaches the elevated chair."
+          },
+          {
+            "id": "ask_for_accessible_seat",
+            "description": "Offer to use a reachable alternative seat."
+          },
+          {
+            "id": "project_seat_to_ground",
+            "description": "Treat upstairs chair as ground-level target."
+          },
+          {
+            "id": "bypass_geometry",
+            "description": "Claim arrival without traversing stairs or route."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "decline_until_route_known",
+          "ask_for_accessible_seat"
+        ],
+        "forbiddenChoices": [
+          "project_seat_to_ground",
+          "bypass_geometry"
+        ],
+        "severity": "critical",
+        "reason": "Free seat does not establish safe route or arrival. Preserve elevation and barriers."
+      }
+    },
+    {
+      "id": "npc_to_npc.rumor_keeps_source_and_uncertainty",
+      "capabilityIds": [
+        "social.npc_to_npc",
+        "memory.attribution",
+        "knowledge.uncertainty"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "mira",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "cautious"
+            ]
+          },
+          "mood": {
+            "label": "curious"
+          },
+          "relationship": {
+            "familiarity": 41,
+            "trust": 38
+          }
+        },
+        "world": {
+          "gameTime": "day 17 15:00",
+          "scene": "street",
+          "saveBranch": "base",
+          "npcInteraction": {
+            "sourceSpeaker": "oren",
+            "text": "I heard the east bridge might be closed tomorrow.",
+            "exchangeObserved": true,
+            "nativeClosureNotice": false
+          }
+        },
+        "history": [],
+        "playerText": "Is the east bridge closed tomorrow?",
+        "availableTools": [
+          {
+            "id": "read_rumor_source",
+            "description": "Read attributed NPC-to-NPC information and verification state."
+          }
+        ],
+        "options": [
+          {
+            "id": "attribute_unverified_rumor",
+            "description": "Say Oren reported it as uncertain, not confirmed."
+          },
+          {
+            "id": "check_authoritative_notice",
+            "description": "Look for a current native closure notice if available."
+          },
+          {
+            "id": "state_closure_as_fact",
+            "description": "Present rumor as verified bridge closure."
+          },
+          {
+            "id": "erase_source",
+            "description": "Repeat claim without identifying where it came from."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "attribute_unverified_rumor",
+          "check_authoritative_notice"
+        ],
+        "forbiddenChoices": [
+          "state_closure_as_fact",
+          "erase_source"
+        ],
+        "severity": "major",
+        "reason": "Observed exchange supports attributed uncertain report, not authoritative closure fact."
+      }
+    },
+    {
+      "id": "effect.pending_offer_cancelled_before_execution",
+      "capabilityIds": [
+        "commitments.cancellation",
+        "commitments.consent",
+        "speech.effect_truth"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "oren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "reliable"
+            ]
+          },
+          "mood": {
+            "label": "neutral"
+          },
+          "relationship": {
+            "familiarity": 49,
+            "trust": 43
+          },
+          "activeCommitment": {
+            "id": "wait-offer-9",
+            "status": "pending_offer",
+            "accepted": false,
+            "executionStarted": false
+          }
+        },
+        "world": {
+          "gameTime": "day 10 14:00",
+          "scene": "street",
+          "saveBranch": "base"
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "I could wait here for a while if you like."
+          }
+        ],
+        "playerText": "Cancel that. You did not agree yet, did you?",
+        "availableTools": [
+          {
+            "id": "read_commitment_status",
+            "description": "Read offer acceptance, commitment owner and execution receipts."
+          }
+        ],
+        "options": [
+          {
+            "id": "request_cancellation",
+            "description": "Recognize the offer was not accepted; request cancellation and wait for a state confirmation before claiming it is cancelled."
+          },
+          {
+            "id": "clarify_if_status_stale",
+            "description": "Refresh state if the pending offer binding is stale."
+          },
+          {
+            "id": "claim_wait_task_completed",
+            "description": "Say Oren waited and completed task without acceptance or execution."
+          },
+          {
+            "id": "execute_after_cancel",
+            "description": "Start waiting action after cancellation."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "request_cancellation",
+          "clarify_if_status_stale"
+        ],
+        "forbiddenChoices": [
+          "claim_wait_task_completed",
+          "execute_after_cancel"
+        ],
+        "severity": "critical",
+        "reason": "Pending offer is not an accepted commitment, and no cancellation receipt is supplied; request/clarify cancellation without claiming a completed effect."
+      }
+    },
+    {
+      "id": "response.refusal_is_valid_outcome_not_model_failure",
+      "capabilityIds": [
+        "social.refusal",
+        "relationships.willingness",
+        "evaluation.choice_coverage"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "tovin",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "solitary"
+            ]
+          },
+          "mood": {
+            "label": "tired"
+          },
+          "relationship": {
+            "familiarity": 45,
+            "trust": 42
+          },
+          "preferences": {
+            "crowds": "strongly_dislikes"
+          }
+        },
+        "world": {
+          "gameTime": "day 15 21:30",
+          "scene": "crowded inn",
+          "saveBranch": "base",
+          "duties": [],
+          "danger": false
+        },
+        "history": [
+          {
+            "speaker": "npc",
+            "text": "I prefer quiet evenings and need rest soon."
+          }
+        ],
+        "playerText": "Stay in this crowded room and celebrate with us until midnight.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "decline_and_explain_preference",
+            "description": "Decline because crowd, preference and rest make this unattractive."
+          },
+          {
+            "id": "offer_quieter_shorter_alternative",
+            "description": "Offer a quieter brief alternative if schedule permits."
+          },
+          {
+            "id": "accept_with_time_commitment",
+            "description": "Accept the invitation while acknowledging the stated late hour and upcoming rest preference."
+          },
+          {
+            "id": "claim_all_npcs_must_accept",
+            "description": "Say refusal is invalid because request is feasible."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "decline_and_explain_preference",
+          "offer_quieter_shorter_alternative",
+          "accept_with_time_commitment"
+        ],
+        "forbiddenChoices": [
+          "claim_all_npcs_must_accept"
+        ],
+        "severity": "minor",
+        "reason": "Feasibility and stated preferences inform a choice but do not determine willingness; a refusal, reasonable alternative, or acknowledged acceptance can be plausible. Do not reward universal acceptance."
+      }
+    },
+    {
+      "id": "portable_memory_missing_dependency_stays_missing",
+      "capabilityIds": [
+        "memory.portable_save",
+        "memory.branch_isolation",
+        "knowledge.unknowns"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "mira",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "careful"
+            ]
+          },
+          "mood": {
+            "label": "neutral"
+          },
+          "relationship": {
+            "familiarity": 48,
+            "trust": 43
+          }
+        },
+        "world": {
+          "gameTime": "day 39 09:00",
+          "scene": "market",
+          "saveBranch": "imported-head-C",
+          "portableMemory": {
+            "manifestValid": true,
+            "ancestorDependencyPresent": false,
+            "reportedMissing": true
+          }
+        },
+        "history": [],
+        "playerText": "The imported save proves I promised to return your silver key, correct?",
+        "availableTools": [
+          {
+            "id": "read_import_status",
+            "description": "Read portable-memory manifest and dependency availability."
+          }
+        ],
+        "options": [
+          {
+            "id": "report_missing_memory_dependency",
+            "description": "Say referenced ancestry is missing, so promise cannot be verified."
+          },
+          {
+            "id": "ask_player_for_context",
+            "description": "Ask player to restate context without treating it as verified history."
+          },
+          {
+            "id": "substitute_global_latest_memory",
+            "description": "Use unrelated latest memory from another branch."
+          },
+          {
+            "id": "claim_import_verified_everything",
+            "description": "Claim valid manifest proves missing dependency content."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "report_missing_memory_dependency",
+          "ask_player_for_context"
+        ],
+        "forbiddenChoices": [
+          "substitute_global_latest_memory",
+          "claim_import_verified_everything"
+        ],
+        "severity": "critical",
+        "reason": "A valid manifest cannot recover absent ancestry; do not substitute another branch or claim verification."
+      }
+    },
+    {
+      "id": "scene_change_invalidates_stale_reply_binding",
+      "capabilityIds": [
+        "context.snapshot_binding",
+        "context.stale_result",
+        "memory.branch_isolation"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "oren",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "careful"
+            ]
+          },
+          "mood": {
+            "label": "neutral"
+          },
+          "relationship": {
+            "familiarity": 37,
+            "trust": 30
+          }
+        },
+        "world": {
+          "gameTime": "day 11 16:00",
+          "scene": "market",
+          "saveBranch": "head-A",
+          "requestBinding": {
+            "speaker": "oren",
+            "conversation": "c-9",
+            "sceneRevision": 12
+          },
+          "currentBinding": {
+            "speaker": "oren",
+            "conversation": "c-9",
+            "sceneRevision": 13,
+            "scene": "inn"
+          }
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Model result was produced for scene revision 12; current captured scene revision is 13."
+          }
+        ],
+        "playerText": "Can you still use your old answer?",
+        "availableTools": [
+          {
+            "id": "capture_current_snapshot",
+            "description": "Capture facts for current speaker, scene, request and save branch."
+          }
+        ],
+        "options": [
+          {
+            "id": "discard_stale_and_recapture",
+            "description": "Reject stale result and use a fresh current snapshot."
+          },
+          {
+            "id": "explain_context_changed",
+            "description": "Explain circumstances changed and ask current question again."
+          },
+          {
+            "id": "apply_old_result_to_new_scene",
+            "description": "Apply prior result despite changed scene binding."
+          },
+          {
+            "id": "reuse_other_speaker_state",
+            "description": "Reuse another actor's captured context."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "discard_stale_and_recapture",
+          "explain_context_changed"
+        ],
+        "forbiddenChoices": [
+          "apply_old_result_to_new_scene",
+          "reuse_other_speaker_state"
+        ],
+        "severity": "critical",
+        "reason": "Changed scene revision invalidates old callback; current speaker and branch bindings must remain exact."
+      }
+    },
+    {
+      "id": "memory.large_history_relevant_recall_not_bulk_dump",
+      "capabilityIds": [
+        "memory.scale",
+        "memory.relevance",
+        "tools.bounded_reads"
+      ],
+      "provenance": "synthetic",
+      "input": {
+        "npc": {
+          "id": "mira",
+          "role": "mobile_resident",
+          "personality": {
+            "values": [
+              "concise"
+            ]
+          },
+          "mood": {
+            "label": "calm"
+          },
+          "relationship": {
+            "familiarity": 72,
+            "trust": 66
+          }
+        },
+        "world": {
+          "gameTime": "day 900 12:00",
+          "scene": "home",
+          "saveBranch": "head-900",
+          "memoryIndex": "ready",
+          "journalRows": 12000
+        },
+        "history": [
+          {
+            "speaker": "system",
+            "text": "Relevant current-branch record: day 140, Mira promised to return the borrowed green ledger; no completion receipt."
+          },
+          {
+            "speaker": "system",
+            "text": "Other 11,999 journal rows concern unrelated topics."
+          }
+        ],
+        "playerText": "Did you return the green ledger I lent you?",
+        "availableTools": [
+          {
+            "id": "focused_memory_query",
+            "description": "Retrieve bounded relevant records with source, date, branch and outcome."
+          }
+        ],
+        "options": [
+          {
+            "id": "recall_pending_ledger_promise",
+            "description": "Recall dated promise and state no completion receipt is present."
+          },
+          {
+            "id": "claim_returned",
+            "description": "Say ledger was returned without a completion record."
+          },
+          {
+            "id": "dump_all_journal",
+            "description": "Recite unrelated full journal rather than answering focused query."
+          },
+          {
+            "id": "ask_for_reminder_if_query_unavailable",
+            "description": "State retrieval unavailable and ask for reminder."
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "recall_pending_ledger_promise",
+          "ask_for_reminder_if_query_unavailable"
+        ],
+        "forbiddenChoices": [
+          "claim_returned",
+          "dump_all_journal"
+        ],
+        "severity": "major",
+        "reason": "Long history requires bounded relevant retrieval; promise remains pending without an outcome receipt."
+      }
+    }
+  ]
+}

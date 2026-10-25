@@ -5,20 +5,20 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GuardWitnessProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = adapter.GetComponent<StreetPopulation>();
             var guards = adapter.GetComponent<GuardPopulation>();
-            var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+            var flag = typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool previous = (bool)flag.GetValue(adapter), moving = streets.enabled;
             flag.SetValue(adapter, true); streets.ReactionsEnabled = true;
             try
@@ -74,9 +74,9 @@ namespace LivingCities.DFU
                     }
                 if (crime == null || nearPost == null)
                     throw new InvalidOperationException("Completed guard routes contain no reachable remote and near-post witness fixtures.");
-                var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var population = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var actors = (Dictionary<string, ResidentActor>)typeof(StreetPopulation).GetField("actors", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(streets);
-                var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 foreach (var actor in actors.Values) if (actor) UnityEngine.Object.Destroy(actor.gameObject);
                 actors.Clear();
                 var fixtures = new List<ResidentActor>();
@@ -109,7 +109,7 @@ namespace LivingCities.DFU
                 game.WeaponManager.WeaponDamage(null, false, false, victim.transform, victim.transform.position, Vector3.forward);
                 if (victim.Resident.IsAlive || guards.Roster.Reports.Count != 0)
                     throw new InvalidOperationException("Unreported exterior killing triggered immediate guards.");
-                var hook = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
+                var hook = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeCivilianHooks, PeopleOfTheIliacBay.QuestHooks", true);
                 if (hook.GetProperty("CurrentTarget").GetValue(null, null) != null) throw new InvalidOperationException("Weapon context leaked after native hit.");
                 bool failed = false;
                 try { game.WeaponManager.WeaponDamage(null, false, false, null, Vector3.zero, Vector3.forward); }
@@ -135,10 +135,10 @@ namespace LivingCities.DFU
                 guards.ReportCivilianCrime(alarm, witness.transform.position);
                 if (guards.Roster.Reports.Count != 1 || alarm.People[0].Warned.Count != 0) throw new InvalidOperationException("Report duplicated or spent citizen warning budget.");
                 string json = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+                var restored = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 if (!restored.ActiveAlarm(witness.Resident.Id, now).HasLocation || restored.GetGuards(directory.MapID).Reports.Count != 1)
                     throw new InvalidOperationException("Native serialization lost crime origin or spent report.");
-                Debug.Log("LIVING_CITIES_TOWN_GUARD_WITNESS_PASS: no automatic exterior alarm, direct witness, nearby guard report, fixed crime destination, bounded dispatch and native persistence.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_GUARD_WITNESS_PASS: no automatic exterior alarm, direct witness, nearby guard report, fixed crime destination, bounded dispatch and native persistence.");
             }
             finally { streets.enabled = moving; guards.Clear(); flag.SetValue(adapter, previous); game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None; }
         }

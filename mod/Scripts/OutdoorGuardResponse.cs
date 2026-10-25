@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class GuardPopulation
     {
@@ -24,6 +24,10 @@ namespace LivingCities.DFU
                     CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20);
                 worldStore.NoticeOutdoorCorpse(alarm.Id, pair.Key, true, Now(), sawPlayer);
                 ReportOutdoorCorpse(alarm, actor.transform.position, pair.Key);
+                var local=directory.transform.InverseTransformPoint(actor.transform.position-Vector3.up);
+                if((actor.transform.position-body).sqrMagnitude<=10)
+                    worldStore.ClearOutdoorCorpse(alarm.Id,pair.Key,local.x,local.z,Now());
+                LearnCorpseSuspect(alarm,pair.Key,Now());
             }
         }
         public void ReportRememberedCorpse(CivilianIncident alarm, string guardId)
@@ -48,35 +52,25 @@ namespace LivingCities.DFU
             }
             return routes;
         }
-        public void ReportOutdoorCorpse(CivilianIncident alarm, Vector3 reporter, string observerGuard)
+        public bool ReportOutdoorCorpse(CivilianIncident alarm, Vector3 reporter, string observerGuard)
         {
             if (!OwnsExterior || alarm == null || alarm.SettlementId != directory.MapID || alarm.Corpse == null ||
-                alarm.Corpse.Discovery == null) return;
+                alarm.Corpse.Discovery == null) return false;
             string id = "outdoor:" + alarm.Id;
-            if (Roster.Reports.Exists(r => r.Id == id && r.GuardIds.Count > 0)) return;
+            if (Roster.Reports.Exists(r => r.Id == id && r.GuardIds.Count > 0)) return true;
             double now = Now(); Roster.Advance(now);
             var body = alarm.Corpse;
             var target = new SavedRoutePoint { X = body.HasPosition ? body.X : alarm.X, Z = body.HasPosition ? body.Z : alarm.Z };
             var routes = NearbyResponseRoutes(reporter, observerGuard, target);
-            if (routes.Count == 0) return;
-            List<SavedRoutePoint> patrol = null;
-            foreach (var offset in new[] { new Vector2(12, 0), new Vector2(-12, 0), new Vector2(0, 12), new Vector2(0, -12) })
-            {
-                var candidate = geometry.RouteBetweenPoints(target, new SavedRoutePoint { X = target.X + offset.x, Z = target.Z + offset.y });
-                double length = 0;
-                for (int i = 1; i < candidate.Count; i++)
-                { double x = candidate[i].X-candidate[i-1].X, z = candidate[i].Z-candidate[i-1].Z; length += Math.Sqrt(x*x+z*z); }
-                if (candidate.Count < 2 || length < 2 || length > 400) continue;
-                patrol = candidate;
-                for (int i = candidate.Count - 2; i >= 0; i--) patrol.Add(new SavedRoutePoint { X = candidate[i].X, Z = candidate[i].Z });
-                break;
-            }
-            if (patrol == null) return;
+            if (routes.Count == 0) return false;
+            var patrol = CorpseSearchPatrol(alarm,target);
+            if (patrol == null) return false;
             var sent = Roster.DispatchOutdoorInvestigation(id, now, routes, patrol, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
-            if (sent.Count == 0) return;
+            if (sent.Count == 0) return false;
             // Body discovery alone is not evidence of murder. Known witnessed crimes
             // retain their normal crime state through the separate witness pipeline.
-            Debug.Log("LIVING_CITIES_OUTDOOR_DISPATCH: " + id + "; responders=" + sent.Count + "; suspect=" + body.Discovery.PlayerPresent);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_OUTDOOR_DISPATCH: " + id + "; responders=" + sent.Count + "; suspect=" + body.Discovery.PlayerPresent);
+            return true;
         }
         public void CorpseInteractionObservers(List<Vector3> observers)
         {

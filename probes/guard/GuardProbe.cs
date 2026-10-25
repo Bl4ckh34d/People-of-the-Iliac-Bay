@@ -7,19 +7,19 @@ using DaggerfallWorkshop.Game.Utility.ModSupport;
 using HarmonyLib;
 using UnityEngine;
 
-namespace LivingCities.Probes
+namespace PeopleOfTheIliacBay.Probes
 {
-    // Temporary feasibility test only. Never included in the Living Cities release.
+    // Temporary feasibility test only. Never included in the People of the Iliac Bay release.
     public sealed class GuardProbe : MonoBehaviour
     {
         private static int batchCalls, singleCalls;
         private static GameObject sentinel;
-        private const string Owner = "local.livingcities.guard-feasibility-probe";
+        private const string Owner = "local.peopleoftheiliacbay.guard-feasibility-probe";
         [Invoke(StateManager.StateTypes.Start, 100)]
         public static void Init(InitParams p)
         {
             p.Mod.IsReady = true;
-            if (!Environment.GetCommandLineArgs().Contains("-livingcities-guard-probe")) return;
+            if (!Environment.GetCommandLineArgs().Contains("-peopleoftheiliacbay-guard-probe")) return;
             DontDestroyOnLoad(new GameObject("Guard interception probe", typeof(GuardProbe)));
         }
         private IEnumerator Start()
@@ -45,9 +45,9 @@ namespace LivingCities.Probes
                 var singleInfo = Harmony.GetPatchInfo(single);
                 if ((batchInfo != null && batchInfo.Owners.Contains(Owner)) || (singleInfo != null && singleInfo.Owners.Contains(Owner)))
                     throw new InvalidOperationException("Probe patches were not removed.");
-                Debug.Log("LIVING_CITIES_GUARD_PROBE_PASS: batch immediate/deferred and single-return interception; patches removed. No roster or gameplay claim.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_PROBE_PASS: batch immediate/deferred and single-return interception; patches removed. No roster or gameplay claim.");
             }
-            catch (Exception ex) { Debug.LogError("LIVING_CITIES_GUARD_PROBE_FAIL: " + ex); }
+            catch (Exception ex) { Debug.LogError("PEOPLE_OF_THE_ILIAC_BAY_GUARD_PROBE_FAIL: " + ex); }
             finally
             {
                 harmony.UnpatchAll(Owner);

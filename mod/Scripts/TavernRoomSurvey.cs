@@ -6,10 +6,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Room identity comes from original bed records, not current door animation or actor positions.
     public static class TavernRoomSurvey
@@ -22,6 +22,9 @@ namespace LivingCities.DFU
             public Dictionary<int,string> BedroomOccupants;
             public int? KeeperHash;
             public List<GuardPoint3> ReceptionRoute;
+            // Geometry draft only. RegisterInventory binds native identity,
+            // destination region, menu and hours before sealing/publishing.
+            public NpcInnServiceCatalog ServiceCatalog;
         }
         private sealed class DoorBoundary
         {
@@ -46,6 +49,17 @@ namespace LivingCities.DFU
             out Dictionary<int,string> bedrooms)
         {
             var markers=interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Rest);
+            var barriers=ReadDoorBoundaries(interior);
+            return Partition(interior,markers,barriers,out markerRooms,out occupants,out bedrooms);
+        }
+        // Door animation must not turn a private room into a public activity area.
+        public static Func<Vector3,Vector3,bool> PublicAreaBoundary(DaggerfallInterior interior)
+        {
+            var barriers=ReadDoorBoundaries(interior);
+            return (from,to)=>!barriers.Exists(door=>door.Blocks(from,to));
+        }
+        private static List<DoorBoundary> ReadDoorBoundaries(DaggerfallInterior interior)
+        {
             var barriers=new List<DoorBoundary>();
             foreach(var door in interior.GetComponentsInChildren<DaggerfallActionDoor>())
             {
@@ -64,7 +78,7 @@ namespace LivingCities.DFU
                     barriers.Add(new DoorBoundary { Inverse=matrix.inverse,Bounds=bounds });
                 }
             }
-            return Partition(interior,markers,barriers,out markerRooms,out occupants,out bedrooms);
+            return barriers;
         }
         // Model-only layout plus passive record data: no NPC, quest or save registration.
         public static List<LodgingRoom> ReadUnloaded(Transform owner,StaticDoor door,out Dictionary<int,string> markerRooms)
@@ -81,16 +95,40 @@ namespace LivingCities.DFU
         {
             return ReadUnloadedSteps(owner,door,result,ClimateSwaps.FromAPIClimateBase(GameManager.Instance.PlayerGPS.ClimateSettings.ClimateType));
         }
+        public static System.Collections.IEnumerator ReadServiceSteps(Transform owner,StaticDoor door,
+            DFLocation.ClimateBaseType climate,Result result,Func<bool> stillValid)
+        {
+            if(!owner || result==null || stillValid==null)throw new ArgumentException("Missing unloaded Inn service source.");
+            result.Rooms=null;result.Markers=null;result.Occupants=null;result.BedroomOccupants=null;
+            result.KeeperHash=null;result.ReceptionRoute=null;result.ServiceCatalog=null;
+            while(stillValid() && (remoteSurveyActive || !BackgroundWork.TryStart()))yield return null;
+            if(!stillValid())yield break;
+            remoteSurveyActive=true;System.Collections.IEnumerator operation=null;
+            try
+            {
+                var pending=new Result();
+                operation=ReadUnloadedSteps(owner,door,pending,ClimateSwaps.FromAPIClimateBase(climate),null,true,true);
+                while(owner && stillValid() && operation.MoveNext())yield return null;
+                if(owner && stillValid() && pending.Rooms!=null)CopyResult(pending,result);
+            }
+            finally{try{(operation as IDisposable)?.Dispose();}finally{remoteSurveyActive=false;}}
+        }
+        private static void CopyResult(Result source,Result target)
+        {
+            target.Rooms=source.Rooms;target.Markers=source.Markers;target.Occupants=source.Occupants;
+            target.BedroomOccupants=source.BedroomOccupants;target.KeeperHash=source.KeeperHash;
+            target.ReceptionRoute=source.ReceptionRoute;target.ServiceCatalog=source.ServiceCatalog;
+        }
         // Original records supply the entrance; no loaded settlement owner is needed.
         // Publish atomically and dispose hidden geometry on cancellation or failure.
         public static System.Collections.IEnumerator ReadRemoteSteps(UnloadedSettlementSurvey.Entrance entrance,
             DFLocation.ClimateBaseType climate,Result result,Func<bool> stillValid)
         {
             if(entrance==null || result==null || stillValid==null) throw new ArgumentNullException();
-            result.Rooms=null; result.Markers=null; result.Occupants=null;result.KeeperHash=null;result.ReceptionRoute=null;
+            result.Rooms=null; result.Markers=null; result.Occupants=null;result.KeeperHash=null;result.ReceptionRoute=null;result.ServiceCatalog=null;
             while(stillValid() && (remoteSurveyActive || !BackgroundWork.TryStart())) yield return null;
             if(!stillValid()) yield break;
-            var owner=new GameObject("Living Cities remote inn owner");
+            var owner=new GameObject("People of the Iliac Bay remote inn owner");
             remoteSurveyActive=true;
             System.Collections.IEnumerator operation=null;
             try
@@ -98,11 +136,10 @@ namespace LivingCities.DFU
                 var door=entrance.NativeDoor; door.ownerPosition=new Vector3(0,1000,0);
                 owner.transform.position=door.ownerPosition;
                 var pending=new Result();
-                operation=ReadUnloadedSteps(owner.transform,door,pending,ClimateSwaps.FromAPIClimateBase(climate),entrance.SourceBlock,true);
+                operation=ReadUnloadedSteps(owner.transform,door,pending,ClimateSwaps.FromAPIClimateBase(climate),entrance.SourceBlock,true,true);
                 while(stillValid() && operation.MoveNext()) yield return null;
                 if(stillValid() && pending.Rooms!=null)
-                {result.Rooms=pending.Rooms;result.Markers=pending.Markers;result.Occupants=pending.Occupants;result.BedroomOccupants=pending.BedroomOccupants;
-                    result.KeeperHash=pending.KeeperHash;result.ReceptionRoute=pending.ReceptionRoute;}
+                    CopyResult(pending,result);
             }
             finally
             {
@@ -130,11 +167,12 @@ namespace LivingCities.DFU
             if(models==null) throw new MissingMethodException(type.FullName,"AddModels");
             models.Invoke(interior,new object[]{new PlayerGPS.DiscoveredBuilding {buildingType=DFLocation.BuildingTypes.AllValid},true});
         }
-        private static System.Collections.IEnumerator ReadUnloadedSteps(Transform owner,StaticDoor door,Result result,ClimateBases climate,DFBlock? sourceBlock=null,bool reception=false)
+        private static System.Collections.IEnumerator ReadUnloadedSteps(Transform owner,StaticDoor door,Result result,ClimateBases climate,DFBlock? sourceBlock=null,bool reception=false,bool service=false)
         {
             if(!owner || door.doorType!=DoorTypes.Building) throw new ArgumentException("Missing tavern entrance.");
-            var temporary=new GameObject("Living Cities isolated tavern survey");
+            var temporary=new GameObject("People of the Iliac Bay isolated tavern survey");
             var dfu=DaggerfallUnity.Instance;
+            System.Collections.IEnumerator operation=null;
             try
             {
                 var shifted=door; shifted.ownerPosition+=Vector3.up*100;
@@ -144,7 +182,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Tavern model survey failed.");
                 temporary.transform.position=door.ownerPosition+(Vector3)door.buildingMatrix.GetColumn(3)+Vector3.up*100;
                 temporary.transform.rotation=GameObjectHelper.QuaternionFromMatrix(door.buildingMatrix);
-                var block=dfu.ContentReader.BlockFileReader.GetBlock(door.blockIndex);
+                var block=sourceBlock??dfu.ContentReader.BlockFileReader.GetBlock(door.blockIndex);
                 var records=block.RmbBlock.SubRecords[door.recordIndex].Interior;
                 var barriers=new List<DoorBoundary>();
                 foreach(var record in records.BlockDoorRecords)
@@ -170,17 +208,23 @@ namespace LivingCities.DFU
                 }
                 foreach(var renderer in temporary.GetComponentsInChildren<Renderer>()) renderer.enabled=false;
                 Physics.SyncTransforms();
-                var operation=PartitionSteps(interior,markers.ToArray(),barriers,result);
+                FurnitureSeatCatalog.ForSurvey(interior,block);
+                operation=PartitionSteps(interior,markers.ToArray(),barriers,result,block);
                 while(operation.MoveNext()) yield return null;
                 if(reception)
                 {
-                    operation=ReadReceptionSteps(interior,block,result);
+                    operation=ReadReceptionSteps(interior,block,result,barriers,climate,service);
                     while(operation.MoveNext()) yield return null;
                 }
             }
-            finally { temporary.SetActive(false); UnityEngine.Object.Destroy(temporary); Physics.SyncTransforms(); }
+            finally
+            {
+                try{(operation as IDisposable)?.Dispose();}
+                finally{temporary.SetActive(false);UnityEngine.Object.Destroy(temporary);Physics.SyncTransforms();}
+            }
         }
-        private static System.Collections.IEnumerator ReadReceptionSteps(DaggerfallInterior interior,DFBlock block,Result result)
+        private static System.Collections.IEnumerator ReadReceptionSteps(DaggerfallInterior interior,DFBlock block,Result result,
+            List<DoorBoundary> barriers,ClimateBases climate,bool service)
         {
             // Passive records identify the keeper without spawning a native NPC.
             var geometry=new InteriorGeometry(interior,deferSurvey:true);
@@ -191,6 +235,7 @@ namespace LivingCities.DFU
                 FactionFile.FactionData faction;
                 if(!GameManager.Instance.PlayerEntity.FactionData.GetFactionData(person.FactionID,out faction) ||
                     faction.sgroup!=(int)FactionFile.SocialGroups.Merchants) continue;
+                if(service && !NativeBusinessServices.OffersKeeperService(person.FactionID,DFLocation.BuildingTypes.Tavern))continue;
                 var target=new Vector3(person.XPos,-person.YPos,person.ZPos)*MeshReader.GlobalScale;
                 Vector3? counter=null;float distance=16;
                 foreach(var anchor in geometry.LocalAnchors)
@@ -202,7 +247,18 @@ namespace LivingCities.DFU
                 var route=geometry.RouteBetween(interior.transform.InverseTransformPoint(geometry.EntryGround.Value),counter.Value);
                 if(route.Count<2) continue;
                 result.KeeperHash=StaticNPC.GetPositionHash(person.XPos,person.YPos,person.ZPos);
-                result.ReceptionRoute=route;yield break;
+                result.ReceptionRoute=route;
+                if(service && NativeBusinessServices.OffersKeeperService(person.FactionID,DFLocation.BuildingTypes.Tavern))
+                {
+                    var seating=interior.GetComponent<FurnitureSeatCatalog>();
+                    var activities=new ShopVisitGeometry(interior,geometry,target,seating,(a,b)=>!barriers.Exists(door=>door.Blocks(a,b)),block);
+                    var draft=new NpcInnServiceCatalog{BuildingKey=interior.EntryDoor.buildingKey,BlockIndex=interior.EntryDoor.blockIndex,
+                        RecordIndex=interior.EntryDoor.recordIndex,Climate=(int)climate,KeeperHash=result.KeeperHash.Value};
+                    var capture=activities.CaptureInnServiceGeometry(draft,()=>interior && interior.gameObject.activeInHierarchy);
+                    try{while(capture.MoveNext())yield return null;}finally{(capture as IDisposable)?.Dispose();}
+                    if(draft.Pairs.Count>0)result.ServiceCatalog=draft;
+                }
+                yield break;
             }
         }
         private static List<LodgingRoom> Partition(DaggerfallInterior interior,Vector3[] markers,List<DoorBoundary> barriers,
@@ -214,14 +270,14 @@ namespace LivingCities.DFU
             markerRooms=result.Markers; occupants=result.Occupants;bedrooms=result.BedroomOccupants; return result.Rooms;
         }
         private static System.Collections.IEnumerator PartitionSteps(DaggerfallInterior interior,Vector3[] markers,
-            List<DoorBoundary> barriers,Result output)
+            List<DoorBoundary> barriers,Result output,DFBlock? sourceBlock=null)
         {
             var markerRooms=new Dictionary<int,string>();
             var occupants=new Dictionary<int,string>();
             var bedrooms=new Dictionary<int,string>();
             var nativePoints=new SortedDictionary<int,Vector3>();
             var entry=interior.EntryDoor;
-            var block=DaggerfallUnity.Instance.ContentReader.BlockFileReader.GetBlock(entry.blockIndex);
+            var block=sourceBlock??DaggerfallUnity.Instance.ContentReader.BlockFileReader.GetBlock(entry.blockIndex);
             foreach(var person in block.RmbBlock.SubRecords[entry.recordIndex].Interior.BlockPeopleRecords)
                 nativePoints.Add(StaticNPC.GetPositionHash(person.XPos,person.YPos,person.ZPos),
                     interior.transform.TransformPoint(new Vector3(person.XPos,-person.YPos,person.ZPos)*MeshReader.GlobalScale));
@@ -230,7 +286,7 @@ namespace LivingCities.DFU
                     !npc.GetComponent<QuestResourceBehaviour>() && !nativePoints.ContainsKey(npc.Data.hash))
                     nativePoints.Add(npc.Data.hash,npc.transform.position);
             Func<Vector3,Vector3,bool> allowed=(a,b)=>!barriers.Exists(d=>d.Blocks(a,b));
-            var beds=BedGeometry.Read(interior); beds.Sort((a,b)=>a.RecordIndex.CompareTo(b.RecordIndex));
+            var beds=BedGeometry.Read(interior,block); beds.Sort((a,b)=>a.RecordIndex.CompareTo(b.RecordIndex));
             var general=new InteriorGeometry(interior,sampleFloorOnly:true);
             var points=new Dictionary<int,Vector3>();
             foreach(var bed in beds)
@@ -265,7 +321,7 @@ namespace LivingCities.DFU
                         if(occupants.ContainsKey(person.Key)) throw new InvalidOperationException("Native occupant belongs to multiple bedrooms.");
                         if(bedIndex>=room.Beds.Count)
                         {
-                            Debug.LogWarning("LIVING_CITIES_INN_OCCUPANT_NO_BED: building="+entry.buildingKey+"; room="+room.Id+"; hash="+person.Key);
+                            Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_INN_OCCUPANT_NO_BED: building="+entry.buildingKey+"; room="+room.Id+"; hash="+person.Key);
                             continue;
                         }
                         occupants.Add(person.Key,room.Beds[bedIndex++]);

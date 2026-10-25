@@ -1,0 +1,10 @@
+{
+  "suitePath": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\tools\\ConversationBoundaryEvaluation\\fixtures\\conversation-boundary-v1.json",
+  "suiteSha256": "e4390210138e26b462ba56b0e082f56e50f81bf0b5894dffb4227bba26889233",
+  "caseCount": 30,
+  "endpoint": "http://127.0.0.1:8088/completion",
+  "startedUtc": "2026-10-23T21:18:42.9931697+00:00",
+  "coreAssemblySha256": "20b49bc4529c083844a0c5c958b972d7d08dbc9e3dcb52b785cca872f383c291",
+  "evaluatorAssemblySha256": "cdb254c549c1e25aae6fddecce86421d7e6a06a5a64ee5cabf4f12caf2635e46",
+  "note": "One pass; no retries; production Core request/policy and linked mod wire/template. Server must be a separate CPU-only gemma-4-E4B instance."
+}

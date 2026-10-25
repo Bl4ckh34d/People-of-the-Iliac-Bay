@@ -2,9 +2,9 @@ using System;
 using System.Collections;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class VisitorOriginProbe
     {
@@ -33,7 +33,7 @@ namespace LivingCities.DFU
                 foreach(var person in population.Households[0].Residents)
                     if(string.IsNullOrEmpty(person.FullName) || person.Race<0) throw new InvalidOperationException("Origin identity unavailable.");
             }
-            Debug.Log("LIVING_CITIES_VISITOR_ORIGINS_PASS: sites="+catalog.Sites.Count+"; sliced metadata; nearby/distant/foreign native references; source identities; no scene change.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_VISITOR_ORIGINS_PASS: sites="+catalog.Sites.Count+"; sliced metadata; nearby/distant/foreign native references; source identities; no scene change.");
         }
     }
 }

@@ -1,21 +1,23 @@
 using System;
 using System.Collections.Generic;
 using DaggerfallWorkshop;
-using LivingCities.Core;
+using DaggerfallWorkshop.Game;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Advances room travel only when rendered body reaches each surveyed point.
     public sealed class InteriorRoomFollower
     {
         private List<GuardPoint3> route;
-        private int next,trackedWaypoint=-1;
-        private float lastTargetDistance;
+        private int next,trackedWaypoint=-1,retreatWaypoint=-1,preciseWaypoint=-1;
+        private float lastTargetDistance,lastNativeDistanceWalked;
         private float stalledAt,nextDetourAt;
         private double nextStallReport;
         private bool detourProbeLogged;
         private readonly float arrivalRadius;
+        private readonly SelectedSeatAccess seatAccess;
 
         public bool Arrived { get; private set; }
         public bool Leaving { get; private set; }
@@ -28,12 +30,13 @@ namespace LivingCities.DFU
             return remaining;
         }
 
-        public InteriorRoomFollower(IList<GuardPoint3> points,double secondsPerMetre,float arrivalRadius=0.15f)
+        public InteriorRoomFollower(IList<GuardPoint3> points,double secondsPerMetre,float arrivalRadius=0.15f,SelectedSeatAccess seatAccess=null)
         {
             if(points==null || points.Count<2 || double.IsNaN(secondsPerMetre) ||
                 double.IsInfinity(secondsPerMetre) || secondsPerMetre<=0 || float.IsNaN(arrivalRadius) || arrivalRadius<0.05f || arrivalRadius>0.65f)
                 throw new ArgumentException("Invalid physical room route.");
             this.arrivalRadius=arrivalRadius;
+            this.seatAccess=seatAccess;
 
             route=new List<GuardPoint3>(points.Count);
             double length=0;
@@ -61,8 +64,10 @@ namespace LivingCities.DFU
         public void RestoreAtDestination()
         {
             Arrived=true;
+            retreatWaypoint=-1;
             next=route.Count-1;
             trackedWaypoint=-1;
+            preciseWaypoint=-1;
             stalledAt=0;
         }
 
@@ -76,9 +81,11 @@ namespace LivingCities.DFU
         public void BeginExitFromCurrentPosition()
         {
             next=1;
+            retreatWaypoint=-1;
             Arrived=false;
             Leaving=true;
             trackedWaypoint=-1;
+            preciseWaypoint=-1;
             stalledAt=0;
             nextDetourAt=0;
         }
@@ -105,17 +112,23 @@ namespace LivingCities.DFU
                 }
                 next=route.Count-1;
             }
+            if(retreatWaypoint>=0 && next>retreatWaypoint)retreatWaypoint=-1;
             Vector3 currentWaypoint=WorldPoint(interior,route[next]);
             float targetDistance=Vector3.Distance(actor.transform.position,currentWaypoint+Vector3.up);
+            var native=actor.GetComponent<NativeResidentNavigation>();
             if(trackedWaypoint!=next)
             {
                 trackedWaypoint=next;
+                preciseWaypoint=-1;
                 lastTargetDistance=targetDistance;
+                lastNativeDistanceWalked=native?native.DistanceWalked:0;
                 stalledAt=(float)unscaledTime;
             }
-            else if(lastTargetDistance-targetDistance>=0.12f)
+            else if(lastTargetDistance-targetDistance>=0.12f ||
+                native && native.Active && native.DistanceWalked-lastNativeDistanceWalked>=0.12f)
             {
                 lastTargetDistance=targetDistance;
+                lastNativeDistanceWalked=native?native.DistanceWalked:0;
                 stalledAt=0;
             }
             else if(stalledAt<=0) stalledAt=(float)unscaledTime;
@@ -129,21 +142,40 @@ namespace LivingCities.DFU
                 foreach(var hit in Physics.OverlapCapsule(currentWaypoint+Vector3.up*(0.51f+CrowdMotion.BodyRadius),
                     currentWaypoint+Vector3.up*1.65f,CrowdMotion.BodyRadius,~0,QueryTriggerInteraction.Ignore))
                     if(hit && !hit.transform.IsChildOf(actor.transform)) blockers+=hit.name+" ";
-                Debug.LogWarning("LIVING_CITIES_ROOM_ROUTE_STALL: resident="+actor.Resident.Id+"; next="+next+"/"+route.Count+
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_ROOM_ROUTE_STALL: resident="+actor.Resident.Id+"; next="+next+"/"+route.Count+
                     "; body="+actual.ToString("F3")+"; target="+currentWaypoint.ToString("F3")+"; distance="+targetDistance+
                     "; neighbours="+people+"; targetColliders="+blockers+"; remaining="+remaining);
             }
-            if(targetDistance>=0.15f && stalledAt>0 && unscaledTime-stalledAt>=0.8 && unscaledTime>=nextDetourAt)
+            if(targetDistance>=0.15f && stalledAt>0 && unscaledTime-stalledAt>=0.8 && unscaledTime>=nextDetourAt && !(seatAccess!=null&&next==route.Count-1))
                 TryDetour(actual,actor,interior,geometry,unscaledTime);
 
             var point=WorldPoint(interior,route[next]);
             var after=WorldPoint(interior,route[Math.Min(next+1,route.Count-1)]);
             InteriorGeometry.OpenOrdinaryDoors(actual,point);
-            Vector3 direction=after-point;
+            Vector3 direction=next==retreatWaypoint ? point-actual : after-point;
             if(direction.sqrMagnitude<0.0001f) direction=point-actual;
             var motion=actor.GetComponent<CrowdMotion>();
             if(motion) motion.ResumeFromPause();
-            actor.Place(point,direction,waitAtOccupiedTarget:true);
+            // Transit waypoints are guidance, not reserved activity places.
+            // Waiting for an occupied intermediate point freezes the actor even
+            // metres away instead of allowing normal crowd avoidance/replanning.
+            // A reserved chair can legitimately be nearer than the street
+            // comfort radius to another chair. Keep hard body separation and
+            // exact furniture permission, without circling its seated neighbour.
+            bool selectedSeatEndpoint=seatAccess!=null&&next==route.Count-1;
+            if(selectedSeatEndpoint || Vector3.Distance(actor.transform.position,point+Vector3.up)<=0.55f)
+                preciseWaypoint=next;
+            // Native pathing reaches the surveyed point's neighbourhood. The
+            // existing physical follower completes its last precise step and
+            // owns every reserved seat approach.
+            var world=NativeNavigationWorld.Current;
+            bool useNative=preciseWaypoint!=next && world && world.Ready &&
+                GameManager.Instance.PlayerGPS.HasCurrentLocation &&
+                world.Scene=="interior-"+GameManager.Instance.PlayerGPS.CurrentLocation.MapTableData.MapId+"-"+
+                    interior.EntryDoor.buildingKey;
+            actor.Place(point,direction,waitAtOccupiedTarget:next==route.Count-1,seatAccess:selectedSeatEndpoint?seatAccess:null,
+                comfortWalking:!selectedSeatEndpoint,navigationDestination:useNative?point:(Vector3?)null,
+                preferNative:useNative);
             return Arrived;
         }
 
@@ -172,14 +204,36 @@ namespace LivingCities.DFU
             var crowd=StreetPopulation.ShopDepartureNeighbours(actual,actor);
             int rejoinIndex;
             var detour=geometry.FindLocalDetour(actual,crowd,CrowdMotion.Separation,rejoin,out rejoinIndex,160,finalWaypoint?0.01f:0.65f);
-            if(detour.Count<2 && !detourProbeLogged && Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-tavern-survey-probe")>=0)
+            if(detour.Count<2 && !detourProbeLogged &&
+                (Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-tavern-survey-probe")>=0 ||
+                 Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-physical-daily-routine")>=0))
             {
                 detourProbeLogged=true;
                 int expandedIndex;
                 var expanded=geometry.FindLocalDetour(actual,crowd,CrowdMotion.Separation,rejoin,out expandedIndex,2000,finalWaypoint?0.01f:0.65f);
-                Debug.Log("LIVING_CITIES_DETOUR_BUDGET_PROBE: bounded="+detour.Count+"; expanded="+expanded.Count+"; goal="+expandedIndex);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DETOUR_BUDGET_PROBE: bounded="+detour.Count+"; expanded="+expanded.Count+"; goal="+expandedIndex);
             }
-            if(detour.Count<2 || rejoinIndex<0 || rejoinIndex>=rejoin.Count) return;
+            if(detour.Count<2 || rejoinIndex<0 || rejoinIndex>=rejoin.Count)
+            {
+                // A crowd can pin the body where forward/side steering has no
+                // clear step. Finish a short retreat before retrying the same
+                // route, rather than alternating backward/forward each frame.
+                if(next==retreatWaypoint)return;
+                var motion=actor.GetComponent<CrowdMotion>();
+                var away=actual-WorldPoint(interior,route[next]);away.y=0;
+                if(!motion || away.sqrMagnitude<0.0001f)return;
+                away.Normalize();
+                var target=interior.transform.InverseTransformPoint(actual+away*0.65f);
+                foreach(var local in geometry.NearbyApproachPoints(target,0.35f,0.3f,12))
+                {
+                    var point=interior.transform.TransformPoint(local);
+                    if(Vector3.Dot(point-actual,away)<0.35f || !motion.CanTraverseTo(point))continue;
+                    route.Insert(next,new GuardPoint3 {X=local.x,Y=local.y,Z=local.z});
+                    retreatWaypoint=next;trackedWaypoint=-1;preciseWaypoint=-1;stalledAt=(float)now;
+                    return;
+                }
+                return;
+            }
             if(finalWaypoint)
             {
                 var intended=WorldPoint(interior,route[route.Count-1]);
@@ -188,8 +242,10 @@ namespace LivingCities.DFU
             }
             else for(int i=rejoinIndex+1;i<rejoin.Count;i++) detour.Add(rejoin[i]);
             route=detour;
+            retreatWaypoint=-1;
             next=1;
             trackedWaypoint=-1;
+            preciseWaypoint=-1;
             stalledAt=(float)now;
         }
 

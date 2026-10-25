@@ -5,10 +5,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Physical roster controller for the supported town and surveyed buildings.
     public sealed partial class GuardPopulation : MonoBehaviour
@@ -146,7 +146,7 @@ namespace LivingCities.DFU
             finally {RuntimeTiming.End("guard-initial-patrol",patrolStart);}
             foreach (var guard in Roster.Guards)
                 if (guard.IsAlive && guard.IncidentId != null) { reportId = guard.IncidentId; break; }
-            var type = Type.GetType("LivingCities.QuestHooks.NativeGuardHooks, LivingCities.QuestHooks", true);
+            var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeGuardHooks, PeopleOfTheIliacBay.QuestHooks", true);
             hooks = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool>(OwnsTown),
                 new Action<bool>(immediate => ReportNative(immediate)), new Func<Vector3, Vector3, GameObject>(ResolveNative) });
             // Existing transient municipal reinforcements predate roster ownership.
@@ -154,12 +154,16 @@ namespace LivingCities.DFU
             foreach (var body in UnityEngine.Object.FindObjectsOfType<DaggerfallEnemy>())
             {
                 var entity = body.GetComponent<DaggerfallEntityBehaviour>().Entity as EnemyEntity;
-                if (!body.QuestSpawn && !body.GetComponent<GuardActor>() && entity != null &&
+                if (!body.QuestSpawn && !body.GetComponent<GuardActor>() && entity != null && entity.Team != MobileTeams.PlayerAlly &&
                     entity.MobileEnemy.ID == (int)MobileTypes.Knight_CityWatch) Destroy(body.gameObject);
             }
             foreach (var spawner in UnityEngine.Object.FindObjectsOfType<FoeSpawner>())
-                if (spawner.FoeType == MobileTypes.Knight_CityWatch) Destroy(spawner.gameObject);
-            Debug.Log("LIVING_CITIES_GARRISON_READY: " + town.MapID + "; guards=" + Roster.Guards.Count);
+                if (spawner.FoeType == MobileTypes.Knight_CityWatch && !spawner.AlliedToPlayer) Destroy(spawner.gameObject);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GARRISON_READY: " + town.MapID + "; guards=" + Roster.Guards.Count);
+            lastVisibilityScene = null;
+            LogGuardVisibility("setup", GameManager.Instance);
+            lastVisibilityScene = GuardVisibilitySceneKey(GameManager.Instance, directory);
+            ScheduleSettledGuardVisibility("setup");
         }
         private static double Now()
         {
@@ -188,10 +192,14 @@ namespace LivingCities.DFU
                             if(GameManager.IsGamePaused || game.PlayerEnterExit.IsPlayerInside || !town.gameObject.activeInHierarchy ||
                                 game.StreamingWorld.GetCurrentBuildingDirectory()!=town)
                             { yield return null; continue; }
-                            bool more; long started=RuntimeTiming.Start();
-                            try { more=operation.MoveNext(); }
+                            bool complete; long started=RuntimeTiming.Start();
+                            var budget=System.Diagnostics.Stopwatch.StartNew();
+                            try { complete=BoundedWorkSlice.Advance(operation,()=>budget.Elapsed.TotalMilliseconds,
+                                ()=>directory==town && town && ReferenceEquals(Roster,roster) &&
+                                    !GameManager.IsGamePaused && !game.PlayerEnterExit.IsPlayerInside && town.gameObject.activeInHierarchy &&
+                                    game.StreamingWorld.GetCurrentBuildingDirectory()==town,512,2); }
                             finally { RuntimeTiming.End("guard-deferred-survey-slice",started); }
-                            if(!more) break;
+                            if(complete) break;
                             yield return null;
                         }
                     }
@@ -219,10 +227,13 @@ namespace LivingCities.DFU
                         var game=GameManager.Instance;
                         if(GameManager.IsGamePaused || game.PlayerEnterExit.IsPlayerInside || !town.gameObject.activeInHierarchy ||
                             game.StreamingWorld.GetCurrentBuildingDirectory()!=town) {yield return null; continue;}
-                        bool more; long started=RuntimeTiming.Start();
-                        try {more=operation.MoveNext();}
+                        bool complete; long started=RuntimeTiming.Start();
+                        var budget=System.Diagnostics.Stopwatch.StartNew();
+                        try {complete=BoundedWorkSlice.Advance(operation,()=>budget.Elapsed.TotalMilliseconds,
+                            ()=>setupDirectory==town && town && !GameManager.IsGamePaused && !game.PlayerEnterExit.IsPlayerInside &&
+                                town.gameObject.activeInHierarchy && game.StreamingWorld.GetCurrentBuildingDirectory()==town,512,2);}
                         finally {RuntimeTiming.End("guard-setup-survey-slice",started);}
-                        if(!more) break;
+                        if(complete) break;
                         yield return null;
                     }
                 }
@@ -317,7 +328,7 @@ namespace LivingCities.DFU
                     }
                     yield return null;
                 }
-            Debug.Log("LIVING_CITIES_GUARD_APPROACHES_READY: buildings=" + Roster.BuildingApproaches.Count + "; added=" + completed);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_APPROACHES_READY: buildings=" + Roster.BuildingApproaches.Count + "; added=" + completed);
             approachSurvey = null;
         }
         private SavedRoutePoint Local(Vector3 position)
@@ -326,7 +337,7 @@ namespace LivingCities.DFU
         {
             if (!OwnsTown()) return;
             {
-                var hook = Type.GetType("LivingCities.QuestHooks.NativeCivilianHooks, LivingCities.QuestHooks", true);
+                var hook = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeCivilianHooks, PeopleOfTheIliacBay.QuestHooks", true);
                 var hitTarget = hook.GetProperty("CurrentTarget").GetValue(null, null) as Transform;
                 var resident = hitTarget ? hitTarget.GetComponent<ResidentActor>() : null;
                 var streets = GetComponent<StreetPopulation>();
@@ -370,7 +381,7 @@ namespace LivingCities.DFU
                 if (!Roster.BuildingApproaches.Exists(a => a.BuildingKey == building.Value))
                     Roster.QueueBuildingReport(reportId, building.Value);
                 var responders = Roster.DispatchBuilding(reportId, building.Value, now, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
-                Debug.Log("LIVING_CITIES_GUARD_BUILDING_DISPATCH: building=" + building + "; responders=" + responders.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_BUILDING_DISPATCH: building=" + building + "; responders=" + responders.Count);
                 return;
             }
             var target = Local(rememberedOutdoorPosition ?? GameManager.Instance.PlayerMotor.transform.position);
@@ -383,7 +394,7 @@ namespace LivingCities.DFU
                 if (route.Count >= 2) routes.Add(guard.Id, route);
             }
             var sent = Roster.Dispatch(reportId, now, routes, Mathf.Clamp(MaximumResponders, 1, 8), 2.8, DaggerfallUnity.Instance.WorldTime.TimeScale);
-            Debug.Log("LIVING_CITIES_GUARD_DISPATCH: " + reportId + "; responders=" + sent.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DISPATCH: " + reportId + "; responders=" + sent.Count);
         }
         public void ReportWitnessedInteriorLoot()
         {
@@ -436,6 +447,7 @@ namespace LivingCities.DFU
         private readonly Dictionary<string,double> nextWitnessRoute=new Dictionary<string,double>();
         public void PrepareWitnessAdvance(CivilianIncident alarm,AlarmPerson person,double now)
         {
+            if(person.Escape.ShelterBuildingKey>=0)return;
             double previous=person.EscapeAdvancedAt;
             if(previous==0 || previous>now) previous=now;
             if(!OwnsTown() || alarm.SettlementId!=directory.MapID || now<person.Escape.ExitAt) return;
@@ -471,7 +483,7 @@ namespace LivingCities.DFU
             var threat=WitnessThreat(alarm);
             foreach(var person in alarm.People)
             {
-                if(person.Escape==null || now<person.Escape.ExitAt || !CivilianAlarms.PersonActive(alarm,person,now) ||
+                if(person.Escape==null || person.Escape.ShelterBuildingKey>=0 || now<person.Escape.ExitAt || !CivilianAlarms.PersonActive(alarm,person,now) ||
                     person.Reaction!=CivilianReaction.Flee || !streets.IsLivingResident(person.ResidentId)) continue;
                 double next;
                 if(nextWitnessRoute.TryGetValue(person.ResidentId,out next) && now<next) continue;
@@ -493,12 +505,13 @@ namespace LivingCities.DFU
             var informed=new HashSet<string>();
             foreach (var person in alarm.People)
             {
+                if(person.Escape!=null&&person.Escape.ShelterBuildingKey>=0)continue;
                 if(!CivilianAlarms.PersonActive(alarm,person,now)) continue;
                 if (!person.DirectWitness && person.HeardViolence && person.Escape != null && now>=person.Escape.ExitAt &&
                     alarm.Scene != null && worldStore.ReportHeardViolence(alarm.Id, person.ResidentId, now))
                 {
                     UpdateInvestigations(now);
-                    Debug.Log("LIVING_CITIES_GUARD_HEARING_REPORT: " + alarm.Id + "; neutral physical contact");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_HEARING_REPORT: " + alarm.Id + "; neutral physical contact");
                 }
                 if ((!person.DirectWitness && !person.InnAlarm && !person.CorpseObserver) || person.Reaction != CivilianReaction.Flee || person.Escape == null ||
                     now<person.Escape.ExitAt || !streets.IsLivingResident(person.ResidentId)) continue;
@@ -528,7 +541,7 @@ namespace LivingCities.DFU
                     GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Assault;
                 WitnessReportNotice(alarm);
             }
-            Debug.Log("LIVING_CITIES_GUARD_ESCAPE_REPORT: " + id + "; building=" + alarm.BuildingKey + "; responders=" + sent.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_ESCAPE_REPORT: " + id + "; building=" + alarm.BuildingKey + "; responders=" + sent.Count);
         }
         private GameObject ResolveNative(Vector3 position, Vector3 direction)
         {
@@ -551,12 +564,14 @@ namespace LivingCities.DFU
         }
         public void ReportCivilianCrime(CivilianIncident incident, Vector3 reportFrom)
         {
+            if(incident!=null && incident.KillerThreatId!=null) {ReportOutdoorMurderWitness(incident,reportFrom);return;}
             if(incident!=null && incident.ThreatId!=null) { ReportHostileThreat(incident,reportFrom,Now()); return; }
             if (!OwnsTown() || GameManager.Instance.PlayerEnterExit.IsPlayerInside || incident == null ||
                 !incident.HasLocation || incident.BuildingKey != -1 || incident.SettlementId != directory.MapID) return;
             double now = Now();
             if (incident.Corpse == null || now < incident.StartedAt || incident.CrimeResolved ||
                 (now >= incident.ExpiresAt && !incident.PlayerAttributed)) return;
+            if(ReportOutdoorMurderWitness(incident,reportFrom))return;
             string id = "civilian:" + incident.Id;
             var reported = Roster.Reports.Find(r => r.Id == id);
             if (reported != null && reported.GuardIds.Count > 0) return;
@@ -569,6 +584,10 @@ namespace LivingCities.DFU
                 var current = Roster.Position(guard.Id, now);
                 var standing = geometry.ScenePoint(new RoutePoint(current.X, current.Z)) + Vector3.up;
                 if (!CivilianResponses.Sees(reportFrom, standing, 20)) continue;
+                // Mobile witness reports use their physical contact path above.
+                // This fallback is the guard observing the attack itself.
+                if (GameManager.Instance.PlayerEntity.IsInvisible || !CivilianResponses.Sees(standing,
+                    GameManager.Instance.PlayerMotor.transform.position, 20)) continue;
                 var route = geometry.RouteBetweenPoints(current, target);
                 if (route.Count >= 2) routes.Add(guard.Id, route);
             }
@@ -579,7 +598,7 @@ namespace LivingCities.DFU
             GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Murder;
             if (incident.PlayerAttributed) worldStore.MarkMurderAccusationIssued(incident.Id);
             WitnessReportNotice(incident);
-            Debug.Log("LIVING_CITIES_GUARD_WITNESS_REPORT: " + id + "; responders=" + sent.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_WITNESS_REPORT: " + id + "; responders=" + sent.Count);
         }
         private void WitnessReportNotice(CivilianIncident incident)
         {
@@ -587,7 +606,7 @@ namespace LivingCities.DFU
             if(incident.ThreatId!=null || !streets ||
                 !incident.People.Exists(p=>p.DirectWitness && streets.IsLivingResident(p.ResidentId))) return;
             DaggerfallUI.AddHUDText("A witness has reported your crime to the guards.");
-            Debug.Log("LIVING_CITIES_WITNESS_REPORT_NOTICE: "+incident.Id);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WITNESS_REPORT_NOTICE: "+incident.Id);
         }
         private GuardActor View(GuardRecord guard, double now)
         {
@@ -603,6 +622,8 @@ namespace LivingCities.DFU
                 actor = indoors ? GuardActor.CreateInterior(Roster, guard.Id, interior.transform, now) :
                     GuardActor.Create(Roster, guard.Id, directory.transform, geometry, now);
                 actors[guard.Id] = actor;
+                actor.AttachPopulation(this);
+                BindCityWatchCombatRole(actor);
             }
             return actor;
         }
@@ -642,7 +663,7 @@ namespace LivingCities.DFU
                         !actor.GetComponent<EnemyMotor>().IsHostile || guard==null || !guard.IsAlive ||
                         guard.Interior==null || guard.Interior.Returning) continue;
                     actor.Capture(now); Roster.PursueOutside(guard.Id,now); actor.EndCombat();
-                    Debug.Log("LIVING_CITIES_GUARD_DOOR_PURSUIT: "+guard.Id+"; exitAt="+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_PURSUIT: "+guard.Id+"; exitAt="+
                         (guard.Interior==null ? now : guard.Interior.ExitAt));
                 }
             UpdateInvestigations(now);
@@ -658,11 +679,14 @@ namespace LivingCities.DFU
             AdvanceSceneWarnings();
             if (worldStore != null && !GameManager.IsGamePaused && Time.unscaledTime >= nextInvestigation)
             { nextInvestigation = Time.unscaledTime + 1; UpdateInvestigations(Now()); }
+            var game = GameManager.Instance;
+            LogGuardVisibilityOnSceneChange(game);
+            TickSettledGuardVisibility(game);
             if (!OwnsTown()) { HideViews(); return; }
             if (GameManager.IsGamePaused) return;
-            var game = GameManager.Instance; double now = Now();
+            double now = Now();
             var loaded = game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.Interior : null;
-            if (interior != loaded)
+            if (!ReferenceEquals(interior, loaded))
             {
                 ClearViews(); interior = loaded;
                 interiorNavigation = interior ? new InteriorGeometry(interior) : null;
@@ -691,6 +715,7 @@ namespace LivingCities.DFU
             bool routeTick = Time.unscaledTime >= nextRoutes;
             if (routeTick) nextRoutes = Time.unscaledTime + 1;
             if (routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) RetryNativeReports(now);
+            if (routeTick) RetryConversationBoundaryReports(now);
             if (awaitingSight && routeTick && game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None) ReportNative(false);
             if (interior) { if(routeTick) RefreshInteriorThreats(); UpdateInterior(now); return; }
             UpdatePostMigration();
@@ -729,6 +754,8 @@ namespace LivingCities.DFU
                     if (defense != null) defense.ThreatId = null;
                     actor.BeginCombat(now);
                 }
+                if(UpdateNativeCorpseCleanup(guard,actor,now))continue;
+                if(UpdateCorpseSuspectSearch(guard,actor,now,routeTick))continue;
                 if (UpdateEnemyDefense(guard,actor,now,routeTick)) continue;
                 if (guard.Duty == GuardDuty.Engaged)
                 {
@@ -747,7 +774,9 @@ namespace LivingCities.DFU
                 else
                 {
                     actor.Place(now);
+                    if(UpdateDepartureCorpseInquiry(guard,actor,now))continue;
                     if(TryResumeKnownPursuit(guard,actor,now)) continue;
+                    if(TryResumeKnownMurderer(guard,actor,now,routeTick)) continue;
                     if ((guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching) &&
                         game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.None && !game.PlayerEntity.IsInvisible &&
                         CivilianResponses.Sees(actor.transform.position, game.PlayerMotor.transform.position, 20)) actor.BeginCombat(now);
@@ -758,7 +787,8 @@ namespace LivingCities.DFU
         private void LateUpdate()
         {
             if(OwnsTown() && !GameManager.IsGamePaused && Time.unscaledTime>=nextPursuitRecruitment)
-            { nextPursuitRecruitment=Time.unscaledTime+0.5f; RecruitNearbyPursuitGuards(Now()); }
+            { nextPursuitRecruitment=Time.unscaledTime+0.5f; RecruitNearbyCorpseSearchGuards(Now());
+                RecruitNearbyPursuitGuards(Now()); SurveyStaticWitnessStatements(Now()); }
             if (OwnsTown() && !GameManager.IsGamePaused && Time.unscaledTime >= nextTorchUpdate)
             { nextTorchUpdate = Time.unscaledTime + 0.25f; UpdateTorches(); }
         }
@@ -826,7 +856,7 @@ namespace LivingCities.DFU
                 if(report!=null && report.OccupiesScene && Roster.InteriorPursuitExpired(guard.Id,now))
                 {
                     actor.EndCombat(); Roster.FinishInteriorPursuit(guard.Id,now);
-                    Debug.Log("LIVING_CITIES_SCENE_PURSUIT_EXPIRED: "+guard.Id+"; accusation retained");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SCENE_PURSUIT_EXPIRED: "+guard.Id+"; accusation retained");
                 }
                 if (report != null && report.OccupiesScene) UpdateCrimeSceneInterior(guard, report, actor, now);
                 if (report != null && report.OccupiesScene && game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None &&
@@ -852,6 +882,13 @@ namespace LivingCities.DFU
         { foreach (var pair in actors) if (pair.Value && pair.Value.gameObject.activeSelf) { pair.Value.Capture(Now()); pair.Value.EndCombat(); pair.Value.gameObject.SetActive(false); } }
         public void Clear()
         {
+            var game=GameManager.Instance;
+            if(worldStore!=null && directory && game!=null && !game.SaveLoadManager.LoadInProgress)
+            {
+                var streets=GetComponent<StreetPopulation>();
+                if(streets)streets.CaptureCorpseDeparture();
+            }
+            nextDepartureCorpseRequest.Clear();nextCorpseInquiry.Clear();
             CancelPostMigration();
             if(setupSurvey!=null) {StopCoroutine(setupSurvey); setupSurvey=null;}
             setupDirectory=null; setupGeometry=null; setupEntrances=null; setupPosts=null;
@@ -864,10 +901,13 @@ namespace LivingCities.DFU
             refugeInteriors.Clear(); wallBedRoutes.Clear(); refugeGeometry=null;
             if (hooks != null) { hooks.Dispose(); hooks = null; }
             ClearViews(); interior = null; entryGround = null;
+            cityWatchRetreatRetryAt.Clear();
             foreach (var pair in nativeGuards) if (pair.Key) pair.Key.SetActive(pair.Value);
             failedWelfareApproaches.Clear();
             nextWelfareRelay.Clear();
             nativeGuards.Clear(); worldStore = null; directory = null; geometry = null; Roster = null; reportId = null; awaitingSight = false;
+            lastVisibilityScene = null;
+            visibilityDiagnosticReason = null; visibilityDiagnosticAt = 0;
         }
         private void OnDestroy() { Clear(); }
     }

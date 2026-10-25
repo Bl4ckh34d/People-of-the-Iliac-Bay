@@ -4,12 +4,12 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
-    public sealed class RoadTravelActors : MonoBehaviour
+    public sealed partial class RoadTravelActors : MonoBehaviour
     {
         private Func<WorldStateStore> source;
         private Func<bool> enabledForWorld;
@@ -57,8 +57,17 @@ namespace LivingCities.DFU
         }
         public void Clear()
         {
-            foreach(var actor in actors.Values) if(actor) {actor.gameObject.SetActive(false); Destroy(actor.gameObject);}
+            ClearRoadActors(); ClearPaidCompanions();
+        }
+        private void ClearRoadActors()
+        {
+            foreach(var actor in actors.Values) if(actor) {actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);}
             actors.Clear(); nextScan=0;
+        }
+        public void CaptureNpcInventories()
+        {
+            foreach(var actor in actors.Values) if(actor) actor.CaptureState();
+            CapturePaidCompanionStates();
         }
         private void OnDestroy() { Clear(); }
         public static bool Ground(RoutePoint position,out Vector3 ground,out Transform terrainParent)
@@ -86,13 +95,17 @@ namespace LivingCities.DFU
         }
         private void Update()
         {
-            if(source==null || !enabledForWorld() || GameManager.Instance.IsPlayerInside)
-            { if(actors.Count>0) Clear(); return; }
+            if(source==null || !enabledForWorld())
+            { if(actors.Count>0 || HasPaidCompanions) Clear(); return; }
             var store=source();
             if(!ReferenceEquals(current,store)) { Clear(); current=store; }
-            if(GameManager.IsGamePaused || GameManager.Instance.StreamingWorld.IsInit) return;
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
             double now=(double)clock.ToSeconds()+clock.Second-Math.Floor(clock.Second);
+            if(GameManager.IsGamePaused) return;
+            if(GameManager.Instance.StreamingWorld.IsInit)
+            { CapturePaidForUnobservedReload(store,now); return; }
+            if(GameManager.Instance.IsPlayerInside)
+            { if(actors.Count>0) ClearRoadActors(); return; }
             Vector3 player=GameManager.Instance.PlayerMotor.transform.position;
             if(Time.unscaledTime>=nextScan)
             {
@@ -110,9 +123,9 @@ namespace LivingCities.DFU
                         continue;
                     }
                     var body=Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject,parent);
-                    body.name="Living Cities road "+resident.Id;
+                    body.name="People of the Iliac Bay road "+resident.Id;
                     var actor=body.AddComponent<ResidentActor>();
-                    actor.Initialize(resident,0,navigation);
+                    actor.Initialize(resident,0,navigation,inventoryStore:store);
                     actor.Place(ground,Vector3.forward);
                     actors.Add(resident.Id,actor);
                 }
@@ -134,10 +147,11 @@ namespace LivingCities.DFU
             }
             foreach(string id in remove)
             {
-                var actor=actors[id]; if(actor) {actor.gameObject.SetActive(false); Destroy(actor.gameObject);}
+                var actor=actors[id]; if(actor) {actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject);}
                 actors.Remove(id);
             }
             foreach(string id in transferred) actors.Remove(id);
+            UpdatePaidCompanions(store,now);
         }
     }
 }

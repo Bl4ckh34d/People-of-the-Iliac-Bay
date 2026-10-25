@@ -6,7 +6,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class WallQuarterProbe
     {
@@ -45,19 +45,19 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Wall bed is not physical visible furniture.");
                 }
                 models.Add(building.ModelID);
-                Debug.Log("LIVING_CITIES_QUARTER_BEDS: model="+building.ModelID+"; building="+door.buildingKey+"; beds="+beds.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_QUARTER_BEDS: model="+building.ModelID+"; building="+door.buildingKey+"; beds="+beds.Count);
                 var route=beds[0].EntranceRoute;
                 var end=route[route.Count-1];
                 game.PlayerMotor.transform.position=interior.transform.TransformPoint(new Vector3((float)end.X,(float)end.Y,(float)end.Z))+Vector3.up;
                 SleepProbe.AimCamera(interior.transform.TransformPoint(beds[0].Anchor.LocalCenter));
                 yield return new WaitForEndOfFrame();
-                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"LivingCities-quarter-"+building.ModelID+".png"));
+                ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(Application.persistentDataPath,"PeopleOfTheIliacBay-quarter-"+building.ModelID+".png"));
                 yield return null;
                 game.PlayerEnterExit.TransitionExterior();
                 yield return new WaitForSecondsRealtime(0.5f);
             }
             if(models.Count<3) throw new InvalidOperationException("Wall quarter test missed native layout models.");
-            Debug.Log("LIVING_CITIES_QUARTER_BEDS_PASS: native wall models="+models.Count+"; visible physical beds, repeated furnishing and bedside access.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_QUARTER_BEDS_PASS: native wall models="+models.Count+"; visible physical beds, repeated furnishing and bedside access.");
         }
     }
 }

@@ -4,10 +4,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // A physical view of one saved guard. The owning controller supplies time and
     // scene geometry; visibility never creates a new identity or revives a death.
@@ -27,7 +27,7 @@ namespace LivingCities.DFU
         {
             if (visible && !torchBody)
             {
-                torchBody = new GameObject("Living Cities carried torch");
+                torchBody = new GameObject("People of the Iliac Bay carried torch");
                 torchBody.transform.SetParent(transform, false);
                 torchBody.transform.localPosition = new Vector3(0.38f, 0.3f, 0.15f);
                 var flame = GameObjectHelper.CreateDaggerfallBillboardGameObject(210, 17, torchBody.transform);
@@ -81,7 +81,7 @@ namespace LivingCities.DFU
             {
                 UnityEngine.Random.InitState(unchecked((int)guard.AppearanceSeed));
                 body = GameObjectHelper.CreateFoeGameObjects(ground + Vector3.up, MobileTypes.Knight_CityWatch, 1, MobileReactions.Passive)[0];
-                body.name = "Living Cities guard " + id;
+                body.name = "People of the Iliac Bay guard " + id;
                 body.transform.SetParent(parent, true);
                 // Prevent native persistence from restoring an extra copy of a guard.
                 // SerializableEnemy registers in Start, after this inactive setup.
@@ -95,6 +95,7 @@ namespace LivingCities.DFU
                 actor.IsInterior = indoors; actor.buildingKey = refugeIndoors ? (int?)guard.Refuge.BuildingKey : indoors ? (int?)guard.Interior.BuildingKey : null;
                 actor.mobile = body.GetComponentInChildren<MobileUnit>();
                 actor.entity = body.GetComponent<DaggerfallEntityBehaviour>().Entity;
+                actor.InitializeArchery();
                 actor.entity.SetHealth(Math.Max(1, (int)Math.Ceiling(actor.entity.MaxHealth * guard.HealthFraction)), true);
                 actor.entity.OnDeath += actor.Died;
                 var controller = body.GetComponent<CharacterController>();
@@ -254,7 +255,7 @@ namespace LivingCities.DFU
                 guard.EngagementPosition = new SavedRoutePoint { X = local.x, Z = local.z };
             }
             roster.Kill(GuardId, displayedAt);
-            Debug.Log("LIVING_CITIES_GUARD_DEATH: " + GuardId);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DEATH: " + GuardId);
         }
 
         private void OnDestroy()

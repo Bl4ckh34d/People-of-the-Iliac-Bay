@@ -6,7 +6,7 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Utility;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class BedAnchor
     {
@@ -64,11 +64,14 @@ namespace LivingCities.DFU
         }
 
         public static List<BedAnchor> Read(DaggerfallInterior interior)
+        {return Read(interior,DaggerfallUnity.Instance.ContentReader.BlockFileReader.GetBlock(interior.EntryDoor.blockIndex));}
+        internal static List<BedAnchor> Read(DaggerfallInterior interior,DFBlock block)
         {
             var result = new List<BedAnchor>();
             var dfu = DaggerfallUnity.Instance;
             var door = interior.EntryDoor;
-            var block = dfu.ContentReader.BlockFileReader.GetBlock(door.blockIndex);
+            if(block.Index!=door.blockIndex || block.Type!=DFBlock.BlockTypes.Rmb || block.RmbBlock.SubRecords==null ||
+                door.recordIndex<0 || door.recordIndex>=block.RmbBlock.SubRecords.Length)throw new ArgumentException("Bed source does not match native interior.");
             var records = block.RmbBlock.SubRecords[door.recordIndex].Interior.Block3dObjectRecords;
             for (int i = 0; i < records.Length; i++)
             {

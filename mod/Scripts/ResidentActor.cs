@@ -6,25 +6,40 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class ResidentActor : MonoBehaviour
     {
+        private const float MaxFacingTurnRateDegreesPerSecond = 1080f;
         public Resident Resident { get; private set; }
         public double WalkingSpeed { get { return ResidentMovement.WalkSpeedFor(Resident.AppearanceSeed); } }
         public MobilePersonNPC Person { get; private set; }
         private DaggerfallEntity entity;
+        private WorldStateStore stateStore;
+        private object stateWriteEpoch;
         private SleepingPose sleeping;
+        private SittingPose sitting;
+        public bool IsSeated {get{return sitting&&sitting.Active;}}
+        private void EndSitting(){if(sitting)sitting.End();SeatBodyCollision.Set(this,false);}
         private CrowdMotion crowd;
         private readonly DirectionalStandingPose standingPose = new DirectionalStandingPose();
         private Texture2D runningPilotAtlas;
         private RunningPilotPose runningPilot;
         private bool conversing;
+        private bool watchingNearbyPlayer;
+        private float nextAttentionCheck;
+        private bool nearbyPlayerVisible;
         public bool IsConversing { get { return conversing; } }
         public void ResumeFromSocialPause() { if(crowd) crowd.ResumeFromPause(); }
+        internal void HoldPhysicalPosition()
+        {
+            if(!gameObject.activeInHierarchy || conversing || IsSleeping || IsSeated || !Person || !Person.Asset)return;
+            ResumeFromSocialPause();SetRunningPreview(false);
+            if(!standingPose.Set(Person.Asset,true) && !Person.Asset.IsIdle)Person.Asset.IsIdle=true;
+        }
         private static readonly MethodInfo RefreshOrientation = typeof(MobilePersonBillboard).GetMethod("UpdateOrientation", BindingFlags.Instance | BindingFlags.NonPublic);
         public bool IsStandingStill { get { return standingPose.Active || (Person && Person.Asset && Person.Asset.IsIdle); } }
         private Action death;
@@ -33,16 +48,19 @@ namespace LivingCities.DFU
         public bool IsSleeping { get { return sleeping && sleeping.Active; } }
         public void Sleep(Transform interior, BedAnchor bed, SleepingArt.Atlas atlas)
         {
+            EndSitting();
             SetRunningPreview(false);
             standingPose.Set(Person.Asset, false);
             if(crowd) crowd.ResetPlacement();
             if (!sleeping) sleeping = gameObject.AddComponent<SleepingPose>();
             sleeping.Begin(this, interior, bed, atlas);
         }
-        public void Initialize(Resident resident, uint surnameSeed, CityNavigation navigation,Action onDeath=null)
+        public void Initialize(Resident resident, uint surnameSeed, CityNavigation navigation,Action onDeath=null,WorldStateStore inventoryStore=null)
         {
             death=onDeath;
             Resident = resident;
+            stateStore=inventoryStore;
+            stateWriteEpoch=inventoryStore==null?null:inventoryStore.CaptureNpcVitalsWriteEpoch();
             crowd=GetComponent<CrowdMotion>(); if(!crowd) crowd=gameObject.AddComponent<CrowdMotion>(); crowd.Configure(1,WalkingSpeed);
             Person = GetComponent<MobilePersonNPC>();
             var motor = GetComponent<MobilePersonMotor>();
@@ -90,18 +108,73 @@ namespace LivingCities.DFU
             var capsule=GetComponent<CapsuleCollider>();
             if(capsule) capsule.radius=CrowdMotion.BodyRadius;
             entity = GetComponent<DaggerfallEntityBehaviour>().Entity;
+            if(inventoryStore!=null && !resident.IsQuestProtected)
+                gameObject.AddComponent<NativeNpcInventoryOwner>().Bind(entity,inventoryStore,resident);
+            NativeNpcVitalsBinding.BindTo(gameObject,entity,inventoryStore,resident);
+            NativeNpcPoisonOnsetBinding.BindTo(gameObject,inventoryStore,resident);
             entity.OnDeath += Died;
+        }
+        // Called only after the native hostile-threat witness has passed its sight checks.
+        // A restored world invalidates this actor's write authority even if its person ID survives.
+        internal bool TryObserveAcuteThreatFear(WorldStateStore expectedStore, string sourceId,
+            NpcFearSeverity severity, double now)
+        {
+            if (stateStore == null || !ReferenceEquals(stateStore, expectedStore) ||
+                !stateStore.IsNpcVitalsWriteEpochCurrent(stateWriteEpoch) ||
+                Resident == null || !Resident.IsAlive || IsSleeping ||
+                !isActiveAndEnabled || !gameObject.activeInHierarchy ||
+                double.IsNaN(now) || double.IsInfinity(now) || now < 0 ||
+                string.IsNullOrWhiteSpace(sourceId) || sourceId.Length > 512 ||
+                !Enum.IsDefined(typeof(NpcFearSeverity), severity)) return false;
+            for (int i = 0; i < sourceId.Length; i++) if (char.IsControl(sourceId[i])) return false;
+            Resident current = stateStore.ResolveResident(Resident.Id);
+            if (current == null || !current.IsAlive) return false;
+            // Check the clock before creating any previously unseen profile.
+            try { stateStore.ReadNpcAcuteFear(Resident.Id, now); }
+            catch (ArgumentOutOfRangeException) { return false; }
+            NpcSocialBackground background;
+            bool randomEligible = PeopleOfTheIliacBayMod.RefreshSavedRandomPersonalityEligibility(
+                stateStore, Resident.Id, out background);
+            if (!randomEligible)
+            {
+                int factionId;
+                // Authored identity suppresses random traits, not emotion. A known
+                // Individual uses the Core default fear policy until authored traits exist.
+                // Unresolved faction data still defers the observation.
+                if (!stateStore.TryReadNpcPersonalityFaction(Resident.Id, out factionId) ||
+                    !PeopleOfTheIliacBayMod.IsAuthoredNativeIndividual(factionId)) return false;
+            }
+            if (randomEligible && stateStore.ReadNpcPersonality(Resident.Id) == null)
+            {
+                stateStore.GetOrCreateNpcPersonality(current.Id, current.AppearanceSeed, background);
+            }
+            return stateStore.TryObserveNpcAcuteFear(Resident.Id, sourceId, severity, now);
+        }
+        public void CaptureInventory()
+        {
+            if(stateStore!=null && !stateStore.IsNpcVitalsWriteEpochCurrent(stateWriteEpoch))return;
+            var owner=GetComponent<NativeNpcInventoryOwner>();
+            if(owner) owner.Capture();
+        }
+        public void CaptureState()
+        {
+            if(stateStore!=null && !stateStore.IsNpcVitalsWriteEpochCurrent(stateWriteEpoch))return;
+            CaptureInventory();
+            var vitals=GetComponent<NativeNpcVitalsBinding>();
+            if(vitals)vitals.Capture();
         }
         private void Died(DaggerfallEntity ignored)
         {
+            EndSitting();
+            CaptureInventory();
             SetRunningPreview(false);
             if(death!=null) death();
             if (Resident != null) { Resident.IsAlive = false; if (Resident.NativeIdentity != null) Resident.NativeIdentity.IsAlive = false; }
-            Debug.Log("LIVING_CITIES_RESIDENT_DEATH: " + Resident.Id);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_DEATH: " + Resident.Id);
             gameObject.SetActive(false);
         }
-        private void OnDisable() { SetRunningPreview(false); }
-        private void OnDestroy() { SetRunningPreview(false); if (entity != null) entity.OnDeath -= Died; }
+        private void OnDisable() { EndSitting();SetRunningPreview(false);if(Person)standingPose.Set(Person.Asset,false); }
+        private void OnDestroy() { EndSitting();SetRunningPreview(false); if (entity != null) entity.OnDeath -= Died; }
         public void SetRunningPilotAtlas(Texture2D atlas)
         {
             if (runningPilotAtlas == atlas) return;
@@ -146,6 +219,7 @@ namespace LivingCities.DFU
         }
         private void FaceConversation()
         {
+            EndSitting();
             standingPose.Set(Person.Asset, false);
             var camera = GameManager.Instance.MainCamera;
             if (camera)
@@ -165,15 +239,32 @@ namespace LivingCities.DFU
                 }
             }
         }
-        public void Place(Vector3 ground, Vector3 direction, bool standing = false, bool fleeing = false,bool waitAtOccupiedTarget=false)
+        public void Place(Vector3 ground, Vector3 direction, bool standing = false, bool fleeing = false,bool waitAtOccupiedTarget=false,SelectedSeatAccess seatAccess=null,bool freeStanding=false,bool comfortWalking=true,Func<Vector3,bool> placementAllowed=null,Vector3? navigationDestination=null,bool preferNative=true)
         {
+            bool seatTarget=seatAccess!=null&&seatAccess.Valid&&standing&&(ground-seatAccess.Slot.Ground).sqrMagnitude<0.0001f;
+            if(!seatTarget)EndSitting();
+            if(seatAccess!=null && seatAccess.Valid && seatAccess.Permits(transform.position-Vector3.up,ground))SeatBodyCollision.Set(this,true);
             if (!fleeing || standing || conversing) SetRunningPreview(false);
-            if (conversing) { FaceConversation(); return; }
+            if (conversing) { var stopped=GetComponent<NativeResidentNavigation>();if(stopped)stopped.Pause();FaceConversation(); return; }
             if (sleeping) sleeping.Wake();
+            var previousFacing=transform.rotation;
             var before=transform.position;
             Vector3 actual;
-            if(crowd && !crowd.Place(ground,out actual,!standing,waitAtOccupiedTarget)) { gameObject.SetActive(false); return; }
-            if(!crowd) transform.position=ground+Vector3.up;
+            bool nativeMoved=false;
+            var native=GetComponent<NativeResidentNavigation>();
+            if(preferNative && !fleeing && seatAccess==null && NativeNavigationWorld.Current && NativeNavigationWorld.Current.Ready)
+            {
+                if(!native)native=gameObject.AddComponent<NativeResidentNavigation>();
+                nativeMoved=native.TryMove(navigationDestination.HasValue && crowd && crowd.HasPlacement?
+                    transform.position-Vector3.up:ground,
+                    navigationDestination??ground,WalkingSpeed,placementAllowed);
+            }
+            else if(native)native.Pause();
+            if(!nativeMoved)
+            {
+                if(crowd && !crowd.Place(ground,out actual,comfortWalking&&!standing,waitAtOccupiedTarget,seatAccess,placementAllowed)) { gameObject.SetActive(false); return; }
+                if(!crowd) transform.position=ground+Vector3.up;
+            }
             if(!gameObject.activeSelf) gameObject.SetActive(true);
             var moved=transform.position-before;
             bool atActivity = standing && (moved.sqrMagnitude<0.000001f ||
@@ -183,15 +274,62 @@ namespace LivingCities.DFU
             // locomotion still follows actual displacement.
             if(!atActivity && moved.sqrMagnitude>0.000001f && moved.sqrMagnitude<1) direction=moved;
             direction.y = 0;
-            if (direction.sqrMagnitude > 0.00001f && (standing || moved.sqrMagnitude>0.000001f)) transform.rotation = Quaternion.LookRotation(direction);
+            if (direction.sqrMagnitude > 0.00001f && (standing || moved.sqrMagnitude>0.000001f))
+            {
+                var desired=Quaternion.LookRotation(direction);
+                bool turnWhileWalking=!atActivity && !GameManager.IsGamePaused && moved.sqrMagnitude>0.000001f;
+                double heading=WalkingHeading.StepDegrees(transform.eulerAngles.y,desired.eulerAngles.y,8,MaxFacingTurnRateDegreesPerSecond,
+                    Time.unscaledDeltaTime,turnWhileWalking);
+                transform.rotation=Quaternion.Euler(0,(float)heading,0);
+            }
             bool idle = GameManager.IsGamePaused || moved.sqrMagnitude<0.000001f ||
                 atActivity;
+            if(freeStanding&&idle&&!seatTarget&&!fleeing)
+            {
+                transform.rotation=previousFacing;
+                WatchNearbyPlayer();
+            }
+            else {watchingNearbyPlayer=false;nearbyPlayerVisible=false;nextAttentionCheck=0;}
             // DFU's setter restarts the animation even when the value is unchanged.
-            // Native idle has only front-facing art. A stopped walker still has
-            // a world heading; preserve it with a held directional walk frame.
+            // A stopped walker retains its world heading. Optional native-scale
+            // standing art supplies all bearings; unknown assets keep the fallback.
             if (!standingPose.Set(Person.Asset, atActivity || idle) && Person.Asset.IsIdle != idle)
                 Person.Asset.IsIdle = idle;
             SetRunningPreview(fleeing && !standing && !atActivity);
+            if(seatTarget&&Vector3.Distance(transform.position-Vector3.up,seatAccess.Slot.Ground)<0.10f)
+            {
+                transform.rotation=Quaternion.LookRotation(seatAccess.Slot.Facing);
+                var art=SittingArt.Current==null?null:SittingArt.Current.ForActor(this);
+                if(art!=null)
+                {
+                    standingPose.Set(Person.Asset,false);
+                    if(!sitting)sitting=gameObject.AddComponent<SittingPose>();
+                    if(!sitting.Begin(this,seatAccess,art))EndSitting();
+                }
+                else EndSitting();
+            }
+            else EndSitting();
+            // An approach is not yet a seated pose. Ending the visual pose must
+            // not re-enable the body during the reserved final movement step.
+            if(seatAccess!=null && seatAccess.Valid && seatAccess.Permits(transform.position-Vector3.up,ground))SeatBodyCollision.Set(this,true);
+        }
+        private void WatchNearbyPlayer()
+        {
+            if(GameManager.IsGamePaused)return;
+            var game=GameManager.Instance;var camera=game.MainCamera;if(!camera)return;
+            var delta=camera.transform.position-transform.position;delta.y=0;
+            float range=watchingNearbyPlayer?3f:2.5f;
+            if(delta.sqrMagnitude>range*range||delta.sqrMagnitude<0.0001f||game.PlayerEntity.IsMagicallyConcealed)
+            {watchingNearbyPlayer=false;nearbyPlayerVisible=false;return;}
+            // At most four short visibility checks per second, only for nearby
+            // idle residents. Active activities never enter this path.
+            if(Time.unscaledTime>=nextAttentionCheck)
+            {
+                nextAttentionCheck=Time.unscaledTime+0.25f;
+                nearbyPlayerVisible=InteriorActivitySight.Visible(transform.position+Vector3.up*0.5f,camera.transform.position,game.PlayerMotor.transform);
+            }
+            watchingNearbyPlayer=nearbyPlayerVisible;
+            if(watchingNearbyPlayer)transform.rotation=Quaternion.RotateTowards(transform.rotation,Quaternion.LookRotation(delta),MaxFacingTurnRateDegreesPerSecond*Time.unscaledDeltaTime);
         }
     }
 }

@@ -4,21 +4,21 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class OutdoorSceneProbe
     {
-        public static IEnumerator Run(LivingCitiesMod adapter, StreetPopulation streets, GuardPopulation guards)
+        public static IEnumerator Run(PeopleOfTheIliacBayMod adapter, StreetPopulation streets, GuardPopulation guards)
         {
             var game = GameManager.Instance;
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             var geometry = new TownGeometry(directory, game.StreamingWorld.GetCurrentCityNavigation(), false);
-            var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
-            var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
-            typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(adapter, true);
+            var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
+            var population = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(adapter);
+            typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.NonPublic | BindingFlags.Instance).SetValue(adapter, true);
             streets.ReactionsEnabled = true; game.PlayerEntity.GodMode = true;
             guards.SetTown(directory, game.StreamingWorld.GetCurrentCityNavigation(), population, store);
             if (guards.Roster == null) throw new InvalidOperationException("No roster for outdoor probe.");
@@ -57,12 +57,12 @@ namespace LivingCities.DFU
             if (Math.Abs(a.X-b.X) + Math.Abs(a.Z-b.Z) < 0.1 || report.SearchRoute == null)
                 throw new InvalidOperationException("Investigator did not patrol the area.");
             string json = DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-            var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+            var restored = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
             restored.Restore((WorldState)DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Deserialize(typeof(WorldState), json));
             if (!restored.OutdoorCorpses(population.SettlementId)[0].Corpse.Cleared)
                 throw new InvalidOperationException("Outdoor cleanup lost on native save round trip.");
             var saved = restored.GetGuards(population.SettlementId);
-            Debug.Log("LIVING_CITIES_PATROL_ROUNDTRIP: before=" + responder.SearchUntil.ToString("R") + "; after=" + saved.Guards.Find(g => g.Id == responder.Id).SearchUntil.ToString("R"));
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PATROL_ROUNDTRIP: before=" + responder.SearchUntil.ToString("R") + "; after=" + saved.Guards.Find(g => g.Id == responder.Id).SearchUntil.ToString("R"));
             // Native JSON rounds large absolute timestamps by a few microseconds.
             if (Math.Abs(saved.Guards.Find(g => g.Id == responder.Id).SearchUntil - responder.SearchUntil) > 0.001)
                 throw new InvalidOperationException("Patrol deadline changed on reload.");
@@ -89,7 +89,7 @@ namespace LivingCities.DFU
             game.PlayerEntity.Items.TransferAll(loot.Items);
             if (!game.PlayerEntity.Items.Contains(takenKey) || store.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count != 0)
                 throw new InvalidOperationException("Native take-all did not persist the corpse key claim.");
-            var keyReload = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); keyReload.Restore(store.Snapshot());
+            var keyReload = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); keyReload.Restore(store.Snapshot());
             if (keyReload.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count != 0)
                 throw new InvalidOperationException("Corpse key returned after world reload.");
             // Returning a taken key is a player deposit, not a replenished claim.
@@ -102,7 +102,7 @@ namespace LivingCities.DFU
                 if (pile.ContainerType==LootContainerTypes.DroppedLoot && pile.Items.Contains(takenKey)) depositPreserved=true;
             if (!depositPreserved || store.GetAvailableCorpsePropertyKeyClaims(examined.Id).Count!=0)
                 throw new InvalidOperationException("Returned corpse key was lost or recreated as an unclaimed key.");
-            Debug.Log("LIVING_CITIES_CORPSE_KEY_INVENTORY_PASS: native window, owner key, take-all, persistent depletion, deposit preserved, body retained.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CORPSE_KEY_INVENTORY_PASS: native window, owner key, take-all, persistent depletion, deposit preserved, body retained.");
             var guardView = UnityEngine.Object.FindObjectOfType<GuardActor>();
             if (!guardView) throw new InvalidOperationException("No physical investigator view.");
             var activation = game.PlayerObject.GetComponent<PlayerActivate>();
@@ -110,7 +110,7 @@ namespace LivingCities.DFU
                 new object[] { new RaycastHit { distance = 1 }, guardView.GetComponent<DaggerfallEntityBehaviour>() });
             if (DaggerfallUI.UIManager.TopWindow is DaggerfallWorkshop.Game.UserInterface.DaggerfallTalkWindow)
                 throw new InvalidOperationException("Investigator opened conversation.");
-            Debug.Log("LIVING_CITIES_OUTDOOR_SCENE_PASS: physical sight, absent-player cleanup, finite patrol, later innocent arrival and native persistence.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_OUTDOOR_SCENE_PASS: physical sight, absent-player cleanup, finite patrol, later innocent arrival and native persistence.");
         }
     }
 }

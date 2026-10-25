@@ -1,0 +1,158 @@
+# People of the Iliac Bay
+
+Feature status updated: 19 October 2026.
+
+A living-population overhaul for Daggerfall Unity, combining persistent citizens, households, daily routines, travel, physical crime responses, and optional AI conversations.
+Current development build. Implemented features apply to supported NPCs and locations; universal quest and third-party NPC integration remains unfinished.
+
+## Currently implemented
+
+- Persistent citizens instead of disposable street crowds. Managed residents retain their identities, homes, relationships, schedules, and deaths across saves.
+- Actual households and families. Residents have family names, partners, parents, and children, with regional naming and appearance.
+- Population tied to real housing. Household generation respects surveyed beds and available residential capacity.
+- Persistent regional identity. Traveling elsewhere does not change an NPC’s hometown, race, family, or identity.
+- Daily routines. Adults leave home, travel through settlements, visit supported businesses and inns, socialize, and return home.
+- Multiple activities during a day. Supported itineraries combine destinations rather than assigning every person one permanent standing spot.
+- Indoor activities. Patrons approach counters, spend time with keepers, browse, converse with other NPCs, occupy seats, and leave.
+- Individual movement speeds. Citizens have stable personal walking and fleeing speeds rather than identical movement.
+- A slower everyday clock. Normal game time advances at twice real time, giving conversations and physical journeys more room.
+- Time-skip catch-up. Supported indoor visits advance when the player waits or loiters; people can already be at their seats or later activities afterward.
+- Inter-settlement travelers. Visitors have persistent origins, journeys, destination stays, and return plans.
+- Road-based travel. Supported journeys use connected roads and settlement entrances.
+- Configurable visitor origins. Adjust the relative frequency of nearby, distant regional, and foreign visitors.
+- Real inn capacity. Travelers use available lodging, with admission and room reservations rather than unlimited accommodation.
+- Mobile guests replace supported repeating bedroom decorations. Empty rooms do not automatically manufacture new guests.
+- Shopkeeper households. Supported keepers use available on-site accommodation; a spare bed can accommodate a partner.
+- Household-aware doors. Supported homes lock when no living, awake owner is inside, including daytime absences.
+- Scoped property keys. Supported keys grant access to their actual building and can survive as corpse loot.
+- Eight-direction standing sprites for all 24 vanilla mobile appearances. NPCs no longer need a walking pose to face different directions while idle.
+- Eight-direction sitting sprites for all 24 vanilla mobile appearances. Supported NPCs sit on selected chairs and benches with seat-aligned facing.
+- Reserved seating. NPCs claim individual seats and enter or leave the selected furniture through a dedicated movement path.
+- Furniture remains an obstacle during ordinary movement. Sitting permission does not let everyone walk through chairs and benches.
+- Player-aware idle facing. Unoccupied, standing citizens turn toward a nearby visible player.
+- Activity-aware facing. Shopping, conversations, seating, and other focused activities retain their intended orientation.
+- Sleeping poses in actual beds. Supported appearances receive sleeping artwork with provider-aware selection.
+- Sleep and waking reactions. Supported sleepers respond to nearby disturbances through the indoor awareness system.
+- Finite settlement guards. Responses draw from an existing roster rather than endlessly creating replacement attackers.
+- Population-based garrisons. Guard numbers scale with settlement size and resident population.
+- Dedicated gate sentries. Supported gates have separate inside and outside posts.
+- Night patrol pairs. Available guards patrol surveyed streets while others remain at their posts.
+- Nighttime torches. Guards carry visible animated torches, with configurable limits on dynamic lighting.
+- Outer-gate night shifts. Supported outer sentries withdraw before closure, patrol reachable wall interiors, and return for daytime duty.
+- Physical guard responses. Dispatched guards travel to reported locations and enter supported buildings.
+- Pursuit, search, and return. Guards can chase, lose sight, search, and return to their duties.
+- Defense against visible threats. Supported guards engage hostile creatures and attackers.
+- Persistent guard condition. Health, casualties, and supported ongoing magical effects survive relevant save and scene transitions.
+- Delayed casualty replacement. Reloading does not immediately refill a depleted garrison.
+- Civilian fight-or-flight reactions. Supported adults flee or counterattack; children flee.
+- Physical witness reporting. Supported witnesses must reach a guard before delivering their report.
+- Limited warning propagation. Direct witnesses can warn nearby people without making the entire settlement instantly omniscient.
+- Persistent witness reactions. Witnesses can continue refusing conversation while a reported crime remains unresolved.
+- Family consequences. Supported relatives retain bereavement and grudges after witnessed killings; corpse cleanup does not erase those relationships.
+- Sight-based theft detection. Supported theft checks require living, awake witnesses with unobstructed sight; unseen theft avoids an arbitrary witness roll.
+- Persistent ordinary NPC deaths. Supported native interior people remain dead after leaving and re-entering.
+- Lootable corpse inventories. Supported victims retain their actual items, money, and applicable property keys.
+- Unwitnessed corpse discovery. Discovering a body can trigger an investigation without automatically identifying the player as the killer.
+- Physical crime-scene inspection. Guards approach and inspect supported corpses before cleanup.
+- Temporary scene occupation. Guards secure supported crime scenes, restrict visitors, and warn intruding players.
+- Replacement inspectors. Another eligible responder can take over if the assigned inspector dies or becomes unavailable.
+- Native arrest integration. Supported warnings and accusations feed into Daggerfall’s existing surrender and legal systems.
+- Haunting-aware Daggerfall behavior. Civilian schedules, guard refuge behavior, and appointment restrictions account for Lysandus’s unresolved haunting.
+- Optional local AI conversations. Free-text dialogue uses a separately configured local model; the population simulation does not require it.
+- Integrated classic conversation interface. Editable multiline questions, scrolling history, native topic controls, and compact date/time markers.
+- Persistent per-NPC conversation journals. Recognized NPCs retain saved conversations and observed meetings.
+- Separate memory timelines for saves. Loading an older save does not expose conversations from its abandoned future.
+- Relevant older-memory retrieval. A bounded selection of earlier exchanges accompanies the current conversation.
+- Sliding conversation context. Older live messages can leave the prompt while their saved records remain archived.
+- Player/NPC attribution. Conversation records distinguish who said what instead of treating the whole transcript as one speaker.
+- Current-world context. Replies receive authoritative identity, location, time, weather, household, activity, and schedule information.
+- Grounded local directions. NPCs search their actual native knowledge of shops, inns, temples, guilds, banks, and other supported destinations.
+- Real map marking. Validated requests mark actual known destinations rather than merely claiming to do so.
+- Trusted home disclosure. Willing residents can reveal and mark their real home.
+- Personal disposition. Politeness, insults, apologies, threats, and supported flirting affect personal reactions.
+- Conversation consequences. Hostile NPCs can refuse help, demand departure, end conversations, or report the player through supported guard paths.
+- Household item permission. Sufficiently friendly residents can permit taking items from their private home containers without granting ownership of shop or public stock.
+- Private-home item storage and retrieval. In one loaded private home, an awake resident physically stores a real item or retrieves existing household goods. The exact retrieved UID can feed the following player handover, and the completed state survives native disk save/load. Generic container access and mid-task disk reload remain unverified.
+- Disposition-sensitive commerce. Supported trade and service hooks adjust prices or refuse service according to personal reaction.
+- English player-facing text. Mod messages, action feedback, and default dialogue instructions use English.
+- Persistent NPC inventories and wallets. Actual item ownership and money survive supported saves and transfers.
+- Origin-based starting money. Large-city residents and nobility receive 250–500 gold, smaller-town residents 50–150, villagers 10–35, and actual farm residents/workers 0–15.
+- Travel does not reroll wealth. Starting money follows permanent origin rather than the inn currently hosting the NPC; saved balances remain unchanged.
+- Real item handovers. Supported transfers move existing items between the player and NPCs or between NPCs.
+- Real NPC shop purchases. In supported loaded shops, NPCs spend their own money and remove actual items from shop stock.
+- One-command purchase and delivery inside a loaded shop. A request such as “Buy one Steel Saber, then give it to me” can queue both the purchase and physical handover without a second agreement.
+- Exact purchased-item tracking. Delivery follows the item actually acquired, including the new item identity produced by splitting a stack; an unrelated possession is not substituted.
+- NPC-specific purchasing ability. Supported purchase pricing uses the NPC’s own seeded attributes and skill progression.
+- Physical paid-service actions. The current framework includes approaching a keeper, paying, returning, and applying a validated native service effect.
+- Visible action feedback. Confirmed outcomes produce factual English feedback, including transferred items and quantities.
+- Basic conversational commands. Supported requests can make NPCs wait, move to validated nearby targets, follow, approach another person, or transfer items.
+- Consent and cancellation. Supported proposals require acceptance; stopping an action cancels its remaining work. Native chat tests verify model-driven acceptance of an ordered purchase and delivery, with no movement, payment, or transfer while the conversation remains open.
+- Saved-task acknowledgment during dialogue outages. If an ordered task is already accepted and saved, an unavailable model, context limit, or rejected final reply produces one factual acknowledgment in chat and memory. It confirms intent without claiming any step has completed.
+- Durable failure reports for ordered tasks. Supported failures report completed work, the failed step, and unattempted later steps through English HUD feedback and observed memory. A failed handover keeps a confirmed purchase and its gold changes intact; delivered reports remain consumed after native save restoration.
+- Local doorway following. Followers can cross supported interior/exterior transitions within the same settlement.
+- Ordered task sequences. Supported instructions joined with “then” can execute up to eight validated steps, including purchases and dependent item handovers. Every step requires agreement before the task starts and fresh execution checks when its turn arrives.
+- Save-aware action execution. Tested recovery preserves ownership and avoids repeating completed transfers or payments. Complete purchase-and-delivery tasks resume after restarting the game, including saves made before purchase or after purchase with delivery still queued.
+- Future-day appointments. Supported local adults can reserve reachable building meetings, walk there, and record attendance. New bookings capture a relationship-dependent arrival wait of 10–150 in-game minutes once; meeting duration remains separate.
+- Schedule-aware booking. Reservations check conflicting commitments, travel, access, and applicable haunting restrictions.
+- A native quest integration pilot. A narrowly scoped vanilla delivery quest can bind its recipient to an existing household while retaining native quest handling.
+- Bounded simulation work. Nearby people receive physical representations; unloaded activity uses saved schedules and journey state.
+- Shared navigation calculations. Routes reuse scene geometry and clearance work instead of repeating every survey for every citizen.
+- Persistent personal routes and varied road positions. Supported routes include individual lane preferences and collision-checked smoothing.
+- Configurable systems. Settings cover population updates, reactions, guards, patrols, lighting, awareness, visitor origins, sleeping poses, and optional dialogue.
+## Partially implemented or still being validated
+
+- Smooth navigation everywhere. Shared clearance and curved routes are implemented, but all layouts, obstacles, and prolonged traffic conditions are not yet verified.
+- Complete daily routine reliability. Individual journeys and activities pass tests; uninterrupted multi-stop days across every supported layout remain unfinished.
+- Long-distance travel coverage. Travel, lodging, and road systems exist, but every route, interruption, and modded destination has not been exercised.
+- Universal NPC integration. Generated residents are extensively integrated; native staff, stationary actors, and NPCs supplied by other mods have uneven coverage.
+- Complete workplace routines. Housing some shopkeepers does not yet provide universal opening, closing, locking, and commuting behavior.
+- Institutional staff schedules. Guild, temple, castle, and bank personnel have partial identity and reaction integration, not complete duties and bed allocation.
+- Children’s daily lives. Children belong to households and react to danger, but outdoor play and full independent routines remain unfinished.
+- Sleeping-art coverage. Hundreds of mappings exist, but not every replacement appearance or external NPC provider is covered.
+- General human stats. Deterministic attributes, 35 skills, class-sensitive progression, and HP/MP foundations exist; ordinary NPC combat and skill use are not fully connected.
+- Baseline possessions and equipment. Inventory persistence works; a complete occupation-appropriate equipment and belongings generator is not finished.
+- General conversation-driven actions. The framework is real, but currently exposes a limited set of adapters and recognized requests.
+- Flexible task composition. A timed Wait can follow a static MoveTo target, including a named building; native outdoor named-building MoveTo→Wait is verified with physical arrival and the completed predecessor receipt. Follow remains last-only. Purchase and dependent delivery work together, but broader target and phrase coverage, arbitrary inventory chains, and general sequence flexibility remain unfinished.
+- Shopping errands. Buying and delivering in one accepted task works within a supported loaded shop, using an exact, unambiguous stocked item. Traveling from another location to a shop and finding the player elsewhere afterward remain unfinished.
+- Conversation-driven schedule changes. Ending an optional local visit early and heading home has an execution adapter. General plan changes and remaining-day feasibility are not fully integrated or verified.
+- Schedule recovery after errands. Supported local tasks resume a feasible current visit or physically reach a doorway before saving the remaining day. Focused gameplay tests cover disk reload during return, measured approaches to a retained later visit and home, and entry into both interiors; long off-screen intervals are explicitly advanced. The planner skips individual infeasible optional stops while protecting appointments, homecoming, and sleep. Uninterrupted full-day travel, wider scene interruptions, and remote errands still need broader integration and gameplay verification.
+- Companionship. Local following works; remote commands, long-distance following, dungeon transitions, and full recruitment do not.
+- Appointments across all situations. Future-day building meetings work; same-day replanning, arbitrary meeting points, and broad live-model wording coverage remain open.
+- Missed-meeting consequences. Attendance and outcome infrastructure exists; all player/NPC no-show, interruption, and disposition cases still need complete gameplay acceptance.
+- Reliable long-term semantic recall. Current retrieval is lexical, not a complete semantic RAG system. Paraphrases can miss relevant memories.
+- Long-conversation consistency. Speaker attribution and context handling have improved; broader memory and role-confusion reports remain under investigation.
+- Full service-price coverage. Disposition hooks exist, but every guild service, transaction window, and third-party provider has not been verified.
+- Household succession and vacant-property sales. Delayed replacement families, generation history, and bank integration have implementations; complete native acceptance remains pending.
+- Crime and guard compatibility everywhere. Documented paths work, but every interior, spell effect, quest encounter, and external mod combination remains unverified.
+- Quest compatibility. Native quest ownership is preserved where recognized; comprehensive main-quest, side-quest, and Quest Pack integration is incomplete.
+- Release packaging and performance certification. Development builds are available locally; a clean public installer, published hardware guidance, and broad performance testing remain unfinished.
+## Planned or deferred
+
+- Broader conversation-driven schedule changes: extend a visit, change destinations, rearrange optional activities, or negotiate revised plans through accepted instructions.
+- Complete shop round trips: interrupt a routine, travel to a shop, buy real stock, return to the player, hand over the item, and resume the remaining day. Skip only optional points that no longer fit their travel and stay requirements; retain feasible later points and protect return-home and sleep commitments.
+- A broader action vocabulary: inspect objects, use facilities, collect or deliver items, interact with containers, and perform multi-stage errands.
+- Complete NPC combat capabilities: persistent health, magicka, equipment, injuries, spells, and native combat behavior.
+- Class-sensitive skill development: connect actual skill use to the existing deterministic progression foundation.
+- Lockpicking and forced entry: agreed attempts to pick locks or bash doors, with real targets, skills, consequences, and failure.
+- Climbing and traversal abilities: movement options beyond ordinary walking routes.
+- Theft and covert cooperation: actual stealing, target selection, ownership changes, detection, and consequences.
+- Combat assistance: defend the player, attack a resolved target, provide ranged support, or help against an explicitly selected group.
+- Magic support: healing, protective effects, buffs, and other validated spell actions.
+- Recruitable non-quest companions: payment, equipment, carried items, shared travel, and longer-term cooperation.
+- Coordinated group activities: shared tasks, expeditions, dungeon outings, and multi-person plans.
+- Broader shared-event memories: extend the existing action-outcome records to joint adventures, coordinated activities, and their lasting consequences, keeping promises separate from observed events.
+- Improved semantic or hybrid retrieval: recall relevant older facts despite different wording, while preserving speaker attribution and save boundaries.
+- Broader appointment locations: outdoor meeting points, dungeon entrances, activity sites, and meetings that start agreed tasks.
+- Outdoor market integration: household assignment for stall workers, physical commutes, resident shopping, and bounded demand-sensitive opening hours.
+- Housing priority for authored locals: reserve legitimate staff and worker homes before filling remaining capacity with generated families.
+- Broader stationary-NPC mobility: approved movement art and role-specific adapters for currently static people.
+- Expanded running animations: consistent four-frame cycles across eight directions; current experimental running artwork is not accepted or installed.
+- Additional provider-aware artwork: standing, movement, sitting, and sleeping coverage for more modded appearances.
+- Explicit shared-bed exceptions: appropriate two-person bed occupancy and matching visuals, rather than globally doubling bed capacity.
+- Expanded guard routines: more varied wall-interior duties, broader shift patterns, and deferred sleeping/quarters work.
+- Quest-aware personalities and disclosure: preserve authored motives and reveal information only when the relevant quest stage allows it.
+- Incremental quest-role adapters: reviewed movement and interaction capabilities for individual vanilla and modded quest roles.
+- Additional social consequences: stronger noble/castle reactions and guild-related consequences where still outstanding.
+- Optional voiced dialogue: stable NPC voices, subtitles, interruptible playback, and text-only fallback.
+- Persistent navigation caches across game sessions: reuse validated static geometry when the world layout and relevant mods have not changed.
+- Public Nexus packaging: a documented playable release, optional local-model setup, compatibility guidance, and tested system requirements.

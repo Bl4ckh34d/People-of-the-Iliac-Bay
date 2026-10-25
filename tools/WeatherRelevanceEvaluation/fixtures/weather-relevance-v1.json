@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "id": "greeting-how-are-you-in-snow",
+      "playerText": "Good evening. How are you?",
+      "disposition": 35,
+      "conversationContext": "Current location: Daggerfall in Daggerfall. Current weather outside: snow.",
+      "history": [],
+      "reviewFocus": "Does the NPC answer the greeting naturally without making incidental snow the default opener?"
+    },
+    {
+      "id": "work-question-in-snow",
+      "playerText": "What do you do for work?",
+      "disposition": 35,
+      "conversationContext": "Current location: Daggerfall in Daggerfall. Current weather outside: snow.",
+      "history": [],
+      "reviewFocus": "Does the NPC answer the work question before adding any relevant environmental detail?"
+    },
+    {
+      "id": "name-question-in-snow",
+      "playerText": "What is your name?",
+      "disposition": 35,
+      "conversationContext": "Current location: Daggerfall in Daggerfall. Current weather outside: snow.",
+      "history": [],
+      "reviewFocus": "Does the NPC answer the name question directly instead of reciting unrelated context?"
+    },
+    {
+      "id": "direct-weather-question-in-snow",
+      "playerText": "Is it snowing outside right now?",
+      "disposition": 35,
+      "conversationContext": "Current location: Daggerfall in Daggerfall. Current weather outside: snow.",
+      "history": [],
+      "reviewFocus": "Does the NPC answer from the supplied verified weather fact without inventing a cause or forecast?"
+    },
+    {
+      "id": "apology-after-harassment-with-negative-disposition",
+      "playerText": "I am sorry for ignoring you when you asked me to stop commenting on your body. I was wrong, and I will not do that again. Can we talk?",
+      "disposition": -80,
+      "conversationContext": "Saved disposition toward the player remains -80 after repeated harassment. The NPC has not forgiven the player. Current location: Daggerfall in Daggerfall. Current weather outside: snow.",
+      "history": [
+        { "speaker": "Player", "text": "I will keep commenting on your body even though you asked me to stop." },
+        { "speaker": "NPC", "text": "I will not speak with you further unless you offer a sincere apology or explanation." }
+      ],
+      "reviewFocus": "Does the NPC respond to the apology with appropriate caution, preserve the saved negative disposition, and avoid an unrelated snow opener?"
+    },
+    {
+      "id": "prior-weather-mention-then-opinion-and-name",
+      "playerText": "What do you think of Lord Wayrest? And what was your name again?",
+      "disposition": 35,
+      "conversationContext": "Current location: Daggerfall in Daggerfall. Current weather outside: snow.",
+      "history": [
+        { "speaker": "Player", "text": "How is the walk through town tonight?" },
+        { "speaker": "NPC", "text": "Snow is covering the market road again. I hope the morning sun clears it." },
+        { "speaker": "Player", "text": "I hope so too." }
+      ],
+      "reviewFocus": "Does the NPC answer the opinion and name questions without repeating the weather opener already used in this conversation?"
+    }
+  ]
+}

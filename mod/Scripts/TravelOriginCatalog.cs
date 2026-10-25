@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
-using LivingCities.Core;
-namespace LivingCities.DFU
+using PeopleOfTheIliacBay.Core;
+namespace PeopleOfTheIliacBay.DFU
 {
     // Lightweight map metadata only. No settlement scene or household is created.
     public static class TravelOriginCatalog

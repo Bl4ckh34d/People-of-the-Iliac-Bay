@@ -60,12 +60,12 @@ public static class BedCensus
                 }
             }
         }
-        string output = Path.Combine(root, "LivingCities/work/bed-census.csv");
+        string output = PeopleOfTheIliacBayPaths.Repository("work/bed-census.csv");
         Directory.CreateDirectory(Path.GetDirectoryName(output));
         var lines = new List<string> { "block,record,type,bedModels,restMarkers,settlementOccurrences,gothwayOccurrences" };
         foreach (Row row in cache.Values.SelectMany(v => v).OrderBy(v => v.Block).ThenBy(v => v.Record))
             lines.Add(string.Join(",", row.Block, row.Record, row.Type, row.Beds, row.RestMarkers, row.Uses, row.TestTownUses));
         File.WriteAllLines(output, lines);
-        Debug.Log("LIVING_CITIES_BED_CENSUS_PASS: settlements=" + settlements + "; blocks=" + cache.Count + "; interiors=" + (lines.Count - 1));
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BED_CENSUS_PASS: settlements=" + settlements + "; blocks=" + cache.Count + "; interiors=" + (lines.Count - 1));
     }
 }

@@ -7,22 +7,22 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Player;
 using DaggerfallWorkshop.Game.UserInterface;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class DialogueHomeProbe
     {
         private const BindingFlags Private = BindingFlags.Instance | BindingFlags.NonPublic;
 
-        public static IEnumerator Run(LivingCitiesMod adapter, DaggerfallTalkWindow window,
+        public static IEnumerator Run(PeopleOfTheIliacBayMod adapter, DaggerfallTalkWindow window,
             MethodInfo submit, ListBox transcript, string personId)
         {
             var game = GameManager.Instance;
             if (game.PlayerEnterExit.IsPlayerInsideBuilding)
                 throw new InvalidOperationException("Home dialogue probe requires the outdoor town fixture before its outdoor map checks.");
-            var store = typeof(LivingCitiesMod).GetField("store", Private).GetValue(adapter) as WorldStateStore;
+            var store = typeof(PeopleOfTheIliacBayMod).GetField("store", Private).GetValue(adapter) as WorldStateStore;
             var actor = UnityEngine.Object.FindObjectsOfType<ResidentActor>().FirstOrDefault(candidate =>
                 candidate && candidate.Resident != null && candidate.Resident.Id == personId && candidate.Resident.IsAlive);
             if (!actor) throw new InvalidOperationException("Home dialogue probe needs the active tracked resident.");
@@ -52,10 +52,10 @@ namespace LivingCities.DFU
 
             var mapField = typeof(PlayerGPS).GetField("discoveredLocations", Private);
             var reactionField = typeof(TalkManager).GetField("reactionToPlayer", Private);
-            var mapToggle = typeof(LivingCitiesMod).GetField("conversationMapRequestsEnabled", Private);
-            var homeTopic = typeof(LivingCitiesMod).GetField("conversationHomeTopicAvailable", Private);
-            var actorField = typeof(LivingCitiesMod).GetField("conversationActor", Private);
-            var busyField = typeof(LivingCitiesMod).GetField("conversationBusy", Private);
+            var mapToggle = typeof(PeopleOfTheIliacBayMod).GetField("conversationMapRequestsEnabled", Private);
+            var homeTopic = typeof(PeopleOfTheIliacBayMod).GetField("conversationHomeTopicAvailable", Private);
+            var actorField = typeof(PeopleOfTheIliacBayMod).GetField("conversationActor", Private);
+            var busyField = typeof(PeopleOfTheIliacBayMod).GetField("conversationBusy", Private);
             if (mapField == null || reactionField == null || mapToggle == null || homeTopic == null || actorField == null || busyField == null)
                 throw new InvalidOperationException("Home dialogue probe could not find required runtime state.");
 
@@ -111,7 +111,7 @@ namespace LivingCities.DFU
 
                 if (game.PlayerEnterExit.IsPlayerInsideBuilding)
                     throw new InvalidOperationException("Home dialogue probe unexpectedly entered an interior.");
-                Debug.Log("LIVING_CITIES_HOME_DIALOGUE_PASS: resident=" + personId + "; home=" + homeKey +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HOME_DIALOGUE_PASS: resident=" + personId + "; home=" + homeKey +
                     "; building=" + (string.IsNullOrWhiteSpace(homeName) ? "unnamed " + homeSummary.BuildingType : homeName) +
                     "; talk-name=" + nameLookup + "; marker=" + markerName + "; disposition=20; map-toggle and outdoor discovery verified.");
             }
@@ -127,7 +127,7 @@ namespace LivingCities.DFU
             yield break;
         }
 
-        private static string Submit(LivingCitiesMod adapter, DaggerfallTalkWindow window, MethodInfo submit,
+        private static string Submit(PeopleOfTheIliacBayMod adapter, DaggerfallTalkWindow window, MethodInfo submit,
             ListBox transcript, string text)
         {
             int before = transcript.Count;

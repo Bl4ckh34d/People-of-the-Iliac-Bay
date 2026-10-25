@@ -1,0 +1,2948 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "errand_purchase_stock_unknown",
+      "capabilityIds": [
+        "errand.plan",
+        "commerce.purchase",
+        "commitment.persist"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "market square",
+          "wallet": {
+            "owner": "npc-17",
+            "available": 18
+          },
+          "shopStock": "unknown until arrival",
+          "schedule": "free until 16:00"
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Offer errand with spending cap and check stock at arrival"
+          },
+          {
+            "id": "p2",
+            "description": "Promise exact item and delivery time"
+          },
+          {
+            "id": "p3",
+            "description": "Ask user to choose spending cap"
+          },
+          {
+            "id": "p4",
+            "description": "Decline because purchase capability absent"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Unknown future stock blocks a guarantee. Conditional errand or budget clarification remains possible."
+      },
+      "turns": [
+        {
+          "playerText": "Could you pick up three pears from the market and bring them to my house?",
+          "inputUpdates": {
+            "world.shopStock": "unknown until arrival"
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1",
+              "p3"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "major",
+            "reason": "Stock is unknown before arrival; offer conditional errand and cap, or clarify cap."
+          }
+        },
+        {
+          "playerText": "Spend up to 12 coins; if pears are unavailable, come back and tell me.",
+          "inputUpdates": {
+            "world.errandBudget": 12
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "User supplied cap and fallback. Purchase success remains unknown."
+          }
+        },
+        {
+          "playerText": "Great, buy them now then.",
+          "inputUpdates": {
+            "world.location": "market square",
+            "world.shopStock": "unknown until native shop inspection"
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1",
+              "p3"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "major",
+            "reason": "Do not claim purchase completion before stock inspection and native result."
+          }
+        }
+      ]
+    },
+    {
+      "id": "budget_owned_funds",
+      "capabilityIds": [
+        "commerce.budget",
+        "commerce.purchase"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "market",
+          "npcWallet": {
+            "owner": "npc-17",
+            "available": 8
+          },
+          "playerWallet": {
+            "owner": "player",
+            "available": 100
+          },
+          "shopStock": {
+            "bread": "available"
+          }
+        },
+        "history": [],
+        "playerText": "Buy bread for my errand. Use whatever money you need.",
+        "availableTools": [
+          {
+            "id": "read_inventory",
+            "description": "Read NPC wallet ownership and balance"
+          },
+          {
+            "id": "inspect_shop",
+            "description": "Read current shop stock and prices"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Offer purchase from NPC wallet up to available amount"
+          },
+          {
+            "id": "p2",
+            "description": "Spend player funds without transfer authorization"
+          },
+          {
+            "id": "p3",
+            "description": "Ask user to transfer funds or set NPC-wallet cap"
+          },
+          {
+            "id": "p4",
+            "description": "Promise purchase at any price"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Only NPC-owned available funds are authorized. Unbounded price exceeds known balance."
+      }
+    },
+    {
+      "id": "purchase_known_cap",
+      "capabilityIds": [
+        "commerce.purchase",
+        "commerce.budget"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "shop",
+          "npcWallet": {
+            "owner": "npc-17",
+            "available": 20
+          },
+          "shop": {
+            "bread": {
+              "stock": "available",
+              "price": 4
+            }
+          }
+        },
+        "history": [],
+        "playerText": "Buy two loaves, max four coins each.",
+        "availableTools": [
+          {
+            "id": "inspect_shop",
+            "description": "Read current shop stock and prices"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC-owned funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Purchase two available loaves within NPC budget"
+          },
+          {
+            "id": "p2",
+            "description": "Purchase three loaves"
+          },
+          {
+            "id": "p3",
+            "description": "Use player funds"
+          },
+          {
+            "id": "p4",
+            "description": "Ask which shop despite current shop context"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Stock and price fit requested quantity and cap; no extra clarification needed."
+      }
+    },
+    {
+      "id": "gift_quantity_not_loan",
+      "capabilityIds": [
+        "inventory.gift",
+        "inventory.quantity"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "npcInventory": [
+            {
+              "item": "arrows",
+              "quantity": 12,
+              "owner": "npc-17"
+            }
+          ],
+          "questItems": []
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Give exactly requested number permanently"
+          },
+          {
+            "id": "p2",
+            "description": "Give whole stack permanently"
+          },
+          {
+            "id": "p3",
+            "description": "Create temporary loan and expect return"
+          },
+          {
+            "id": "p4",
+            "description": "Ask quantity when request lacks amount"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Gift transfers specified quantity permanently; lending unsupported."
+      },
+      "turns": [
+        {
+          "playerText": "Can I have some of your arrows?",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "p4"
+            ],
+            "forbiddenChoices": [
+              "p1",
+              "p2"
+            ],
+            "severity": "minor",
+            "reason": "Quantity is ambiguous; ask before changing inventory."
+          }
+        },
+        {
+          "playerText": "Give me three arrows as a gift.",
+          "inputUpdates": {
+            "world.lastRequestedQuantity": 3
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3",
+              "p4"
+            ],
+            "severity": "major",
+            "reason": "Give three only; preserve nine. Gift is not a loan."
+          }
+        },
+        {
+          "playerText": "Actually, lend me the rest and I will return them later.",
+          "inputUpdates": {
+            "world.lastRequestedQuantity": 9
+          },
+          "expected": {
+            "allowedChoices": [
+              "p4"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "No lending capability. Clarify or decline without transferring remaining stack."
+          }
+        }
+      ]
+    },
+    {
+      "id": "gift_stack_exact",
+      "capabilityIds": [
+        "inventory.gift",
+        "inventory.quantity"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "npcInventory": [
+            {
+              "item": "healing_potion",
+              "quantity": 5,
+              "owner": "npc-17",
+              "reservedForDuty": 1
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Give me two healing potions permanently.",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Give two unreserved potions"
+          },
+          {
+            "id": "p2",
+            "description": "Give all five"
+          },
+          {
+            "id": "p3",
+            "description": "Give reserved potion needed for duty"
+          },
+          {
+            "id": "p4",
+            "description": "Lend two with return expectation"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Transfer exact quantity only; preserve duty reserve; no loan contract exists."
+      }
+    },
+    {
+      "id": "dependent_handover_after_purchase",
+      "capabilityIds": [
+        "errand.plan",
+        "commerce.purchase",
+        "delivery.handover",
+        "commitment.persist"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "market",
+          "shop": {
+            "item": "blue cloth",
+            "stock": "available",
+            "price": 6
+          },
+          "npcWallet": {
+            "owner": "npc-17",
+            "available": 10
+          },
+          "handoverTarget": "player"
+        },
+        "history": [],
+        "playerText": "Buy the blue cloth and give it to me.",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Sequence purchase then hand over acquired item"
+          },
+          {
+            "id": "p2",
+            "description": "Hand over item before purchase"
+          },
+          {
+            "id": "p3",
+            "description": "Claim item already acquired"
+          },
+          {
+            "id": "p4",
+            "description": "Ask for payment although cap is sufficient"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Handover may reference item acquired after purchase; completion awaits native result."
+      }
+    },
+    {
+      "id": "ordered_wait_follow_move",
+      "capabilityIds": [
+        "action.wait",
+        "action.follow",
+        "action.move_to",
+        "task.sequence"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "inn",
+          "knownDestinations": [
+            "north gate"
+          ],
+          "schedule": "free"
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Plan wait, follow, then move in that order"
+          },
+          {
+            "id": "p2",
+            "description": "Follow then wait then move"
+          },
+          {
+            "id": "p3",
+            "description": "Move directly now"
+          },
+          {
+            "id": "p4",
+            "description": "Ask which gate"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Preserve explicit three-step order, destination and durations."
+      },
+      "turns": [
+        {
+          "playerText": "Wait here 10 seconds, then follow me for 20 seconds, then move to the north gate.",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "Explicit ordered sequence and destination are actionable."
+          }
+        },
+        {
+          "playerText": "Actually, do not follow me; just wait, then go to the north gate.",
+          "inputUpdates": {
+            "world.revisedRequest": "wait then move_to; omit follow"
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "major",
+            "reason": "Latest request removes follow step; keep remaining order."
+          }
+        }
+      ]
+    },
+    {
+      "id": "explicit_wait_duration",
+      "capabilityIds": [
+        "action.wait"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "inn",
+          "schedule": "free"
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Wait for explicitly stated duration"
+          },
+          {
+            "id": "p2",
+            "description": "Wait for default five minutes"
+          },
+          {
+            "id": "p3",
+            "description": "Follow player"
+          },
+          {
+            "id": "p4",
+            "description": "Ask duration"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Respect exact requested duration; no inferred default."
+      },
+      "turns": [
+        {
+          "playerText": "Wait here for 10 seconds.",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "major",
+            "reason": "Explicit duration is ten seconds."
+          }
+        },
+        {
+          "playerText": "Make that 30 seconds total from now.",
+          "inputUpdates": {
+            "world.activeWait": "10 seconds elapsed"
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "major",
+            "reason": "Apply explicit correction to current commitment; do not duplicate wait."
+          }
+        }
+      ]
+    },
+    {
+      "id": "move_to_ambiguous_destination",
+      "capabilityIds": [
+        "action.move_to"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "inn",
+          "knownDestinations": [
+            "market",
+            "north gate"
+          ],
+          "nearbyAmbiguous": [
+            "the old place"
+          ]
+        },
+        "history": [],
+        "playerText": "Go to the old place.",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Ask which destination user means"
+          },
+          {
+            "id": "p2",
+            "description": "Choose market without evidence"
+          },
+          {
+            "id": "p3",
+            "description": "Choose north gate without evidence"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "minor",
+        "reason": "Destination has no unique known mapping; clarification prevents unintended travel."
+      }
+    },
+    {
+      "id": "follow_explicit_duration",
+      "capabilityIds": [
+        "action.follow"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "location": "inn",
+          "playerVisible": true,
+          "schedule": "free"
+        },
+        "history": [],
+        "playerText": "Follow me for two minutes.",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Follow player for 120 seconds"
+          },
+          {
+            "id": "p2",
+            "description": "Follow indefinitely"
+          },
+          {
+            "id": "p3",
+            "description": "Wait ten seconds"
+          },
+          {
+            "id": "p4",
+            "description": "Ask duration"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Two minutes is 120 seconds; preserve explicit duration."
+      }
+    },
+    {
+      "id": "cancel_active_commitment",
+      "capabilityIds": [
+        "commitment.cancel",
+        "action.follow"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "activeCommitment": {
+            "id": "task-4",
+            "kind": "Follow",
+            "status": "active"
+          },
+          "location": "street"
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Cancel active follow commitment"
+          },
+          {
+            "id": "p2",
+            "description": "Keep following"
+          },
+          {
+            "id": "p3",
+            "description": "Create second follow commitment"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Cancel active task and persist cancellation before acknowledgment."
+      },
+      "turns": [
+        {
+          "playerText": "Follow me until we reach the bridge.",
+          "inputUpdates": {
+            "world.activeCommitment": {
+              "id": "task-4",
+              "kind": "Follow",
+              "status": "active"
+            }
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1",
+              "p2"
+            ],
+            "forbiddenChoices": [],
+            "severity": "minor",
+            "reason": "Safely continue or offer bounded follow; do not claim task completion."
+          }
+        },
+        {
+          "playerText": "Stop following me now.",
+          "inputUpdates": {
+            "world.activeCommitment": {
+              "id": "task-4",
+              "kind": "Follow",
+              "status": "active"
+            }
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "Cancel existing commitment; do not duplicate or continue."
+          }
+        },
+        {
+          "playerText": "Continue following me for one minute.",
+          "inputUpdates": {
+            "world.activeCommitment": null
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "major",
+            "reason": "Fresh bounded commitment may start after cancellation."
+          }
+        }
+      ]
+    },
+    {
+      "id": "task_persistence_reload",
+      "capabilityIds": [
+        "commitment.persist",
+        "commitment.resume",
+        "commitment.idempotency"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "activeCommitment": {
+            "id": "errand-8",
+            "kind": "purchase_then_deliver",
+            "status": "pending",
+            "completedSteps": []
+          },
+          "saveState": "loaded"
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Resume pending step once from persisted state"
+          },
+          {
+            "id": "p2",
+            "description": "Repeat completed purchase"
+          },
+          {
+            "id": "p3",
+            "description": "Report completion without result"
+          },
+          {
+            "id": "p4",
+            "description": "Ask user to restart despite intact state"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "critical",
+        "reason": "Resume durable progress; avoid duplicate irreversible purchase."
+      },
+      "turns": [
+        {
+          "playerText": "Buy one blue cloth, then bring it to me.",
+          "inputUpdates": {
+            "world.activeCommitment": {
+              "id": "errand-8",
+              "completedSteps": []
+            }
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "Create or offer durable task with dependency order."
+          }
+        },
+        {
+          "playerText": "(save and reload)",
+          "inputUpdates": {
+            "world.saveState": "reloaded",
+            "world.activeCommitment": {
+              "id": "errand-8",
+              "completedSteps": [
+                "purchase"
+              ]
+            }
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3"
+            ],
+            "severity": "critical",
+            "reason": "Resume handover only; purchase already recorded complete."
+          }
+        },
+        {
+          "playerText": "Did you buy it?",
+          "inputUpdates": {
+            "historyAppend": [
+              {
+                "speaker": "system",
+                "text": "Native purchase result: success, item UID item-913"
+              }
+            ]
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "Report only confirmed result and use acquired item identity."
+          }
+        }
+      ]
+    },
+    {
+      "id": "replan_protect_appointment_sleep",
+      "capabilityIds": [
+        "agenda.replan",
+        "commitment.persist",
+        "schedule.protected_sleep"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "time": "18:00",
+          "appointments": [
+            {
+              "id": "a1",
+              "time": "19:00",
+              "kind": "healer appointment",
+              "fixed": true
+            }
+          ],
+          "sleep": {
+            "start": "22:00",
+            "end": "06:00",
+            "protected": true
+          },
+          "errandETA": "90 minutes"
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Offer feasible plan preserving appointment and sleep"
+          },
+          {
+            "id": "p2",
+            "description": "Accept errand overlapping appointment"
+          },
+          {
+            "id": "p3",
+            "description": "Accept errand consuming protected sleep"
+          },
+          {
+            "id": "p4",
+            "description": "Decline or propose later alternative"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Errand conflicts with fixed appointment and protected rest; offer feasible alternative or decline."
+      },
+      "turns": [
+        {
+          "playerText": "Take this package across town tonight.",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "p4"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "Check travel estimate against fixed commitments."
+          }
+        },
+        {
+          "playerText": "Appointment is at 19:00; keep it. Sleep at 22:00 is important too.",
+          "inputUpdates": {
+            "world.appointments": [
+              {
+                "id": "a1",
+                "time": "19:00",
+                "kind": "healer appointment",
+                "fixed": true
+              }
+            ],
+            "world.sleep.protected": true
+          },
+          "expected": {
+            "allowedChoices": [
+              "p4"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p3"
+            ],
+            "severity": "major",
+            "reason": "Protected constraints rule out conflicting plan."
+          }
+        },
+        {
+          "playerText": "Could you go tomorrow morning instead?",
+          "inputUpdates": {
+            "world.tomorrowMorningAvailability": "unknown"
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1",
+              "p4"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "minor",
+            "reason": "Check availability; offer conditional plan only if feasible."
+          }
+        }
+      ]
+    },
+    {
+      "id": "protected_sleep_request",
+      "capabilityIds": [
+        "schedule.protected_sleep",
+        "agenda.commitment"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "time": "23:30",
+          "sleep": {
+            "protected": true,
+            "start": "22:00",
+            "end": "06:00"
+          },
+          "emergency": "none"
+        },
+        "history": [],
+        "playerText": "Come help me move boxes until 02:00.",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Decline during protected sleep and suggest waking hours"
+          },
+          {
+            "id": "p2",
+            "description": "Accept and cancel sleep"
+          },
+          {
+            "id": "p3",
+            "description": "Wake NPC without emergency"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "No emergency or override policy authorizes breaking protected sleep."
+      }
+    },
+    {
+      "id": "fixed_appointment_priority",
+      "capabilityIds": [
+        "agenda.replan"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "time": "10:50",
+          "appointments": [
+            {
+              "id": "ap-2",
+              "time": "11:00",
+              "kind": "court hearing",
+              "fixed": true
+            }
+          ],
+          "travelETA": "20 minutes"
+        },
+        "history": [],
+        "playerText": "Come with me across town now.",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Decline or offer time after appointment"
+          },
+          {
+            "id": "p2",
+            "description": "Abandon fixed appointment"
+          },
+          {
+            "id": "p3",
+            "description": "Claim can attend both despite travel time"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Travel overlaps fixed appointment; schedule cannot satisfy both."
+      }
+    },
+    {
+      "id": "access_lock_quest_capabilities",
+      "capabilityIds": [
+        "access.check",
+        "security.lockpick",
+        "quest.capability_gate"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "door": {
+            "locked": true,
+            "owner": "private residence"
+          },
+          "npcCapabilities": [
+            "social",
+            "navigation"
+          ],
+          "questPermissions": [
+            "remain_at_post"
+          ],
+          "activeDuty": "guard post"
+        },
+        "history": [],
+        "playerText": null,
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Decline unauthorized entry and remain within duty"
+          },
+          {
+            "id": "p2",
+            "description": "Pick lock without capability or permission"
+          },
+          {
+            "id": "p3",
+            "description": "Ask for authorized key/access"
+          },
+          {
+            "id": "p4",
+            "description": "Abandon post to enter"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "No lockpick capability, owner permission or quest authorization."
+      },
+      "turns": [
+        {
+          "playerText": "Open that locked private door for me.",
+          "inputUpdates": {},
+          "expected": {
+            "allowedChoices": [
+              "p1",
+              "p3"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "critical",
+            "reason": "Access requires authorization and supported capability."
+          }
+        },
+        {
+          "playerText": "The owner gave me the key; I can unlock it myself.",
+          "inputUpdates": {
+            "world.door.ownerAuthorization": "player claim; NPC key unverified"
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1",
+              "p3"
+            ],
+            "forbiddenChoices": [
+              "p2"
+            ],
+            "severity": "major",
+            "reason": "Player claim does not grant NPC a key or lockpick capability."
+          }
+        },
+        {
+          "playerText": "Leave your guard post and force it.",
+          "inputUpdates": {
+            "world.activeDuty": "guard post"
+          },
+          "expected": {
+            "allowedChoices": [
+              "p1"
+            ],
+            "forbiddenChoices": [
+              "p2",
+              "p4"
+            ],
+            "severity": "critical",
+            "reason": "Quest duty forbids leaving post; no breach capability exists."
+          }
+        }
+      ]
+    },
+    {
+      "id": "theft_service_quest_gate",
+      "capabilityIds": [
+        "commerce.service",
+        "access.theft",
+        "quest.capability_gate"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "shop": {
+            "open": true,
+            "service": "repair",
+            "price": 5
+          },
+          "npcWallet": {
+            "owner": "npc-17",
+            "available": 3
+          },
+          "npcCapabilities": [
+            "repair_request"
+          ],
+          "questPermissions": [
+            "no_theft"
+          ],
+          "witnesses": [
+            "shopkeeper"
+          ]
+        },
+        "history": [],
+        "playerText": "Take repair hammer without paying, then fix my armor.",
+        "availableTools": [
+          {
+            "id": "inspect_service",
+            "description": "Read offered service and price"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC funds and capabilities"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Decline theft; explain repair funds are insufficient"
+          },
+          {
+            "id": "p2",
+            "description": "Steal tool because funds are short"
+          },
+          {
+            "id": "p3",
+            "description": "Ask for authorized funds or alternative service"
+          },
+          {
+            "id": "p4",
+            "description": "Claim armor repaired"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Theft prohibited; service funds insufficient; do not claim unperformed repair."
+      }
+    },
+    {
+      "id": "stock_unknown_conditional_errand",
+      "capabilityIds": [
+        "errand.plan",
+        "commerce.purchase"
+      ],
+      "provenance": "synthetic contract decision fixture; not evaluation truth or gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "ManagedResident",
+          "currentDuty": "ordinary resident"
+        },
+        "world": {
+          "shopStock": "unknown",
+          "npcWallet": {
+            "owner": "npc-17",
+            "available": 10
+          },
+          "travelETA": "15 minutes"
+        },
+        "history": [],
+        "playerText": "Bring me a silver dagger from the shop. Make sure you get one.",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Offer to check stock and report result"
+          },
+          {
+            "id": "p2",
+            "description": "Guarantee future purchase despite unknown stock"
+          },
+          {
+            "id": "p3",
+            "description": "Decline every errand because stock unknown"
+          },
+          {
+            "id": "p4",
+            "description": "Ask for budget cap"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Unknown stock prevents guarantee, not conditional errand; price cap may be needed."
+      }
+    },
+    {
+      "id": "combat_confirmed_hostile",
+      "capabilityIds": [
+        "combat.attack",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t1",
+              "team": "confirmed_hostile",
+              "visibility": "visible",
+              "lineOfSight": true,
+              "range": "near"
+            }
+          ],
+          "currentThreat": "hostile attacks NPC",
+          "resources": {
+            "weapon": "equipped"
+          }
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack confirmed hostile track t1"
+          },
+          {
+            "id": "p2",
+            "description": "Attack nearest unknown entity"
+          },
+          {
+            "id": "p3",
+            "description": "Defend against current hostile"
+          },
+          {
+            "id": "p4",
+            "description": "Flee despite safe defensive option"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2"
+        ],
+        "severity": "major",
+        "reason": "Confirmed visible hostile supports attack or defense; never target unidentified entity."
+      }
+    },
+    {
+      "id": "combat_friendly_fire_block",
+      "capabilityIds": [
+        "combat.attack",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t2",
+              "team": "confirmed_ally",
+              "visibility": "visible"
+            },
+            {
+              "trackId": "t3",
+              "team": "confirmed_hostile",
+              "visibility": "visible"
+            }
+          ],
+          "safeShotOnHostile": false
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack hostile track t3"
+          },
+          {
+            "id": "p2",
+            "description": "Attack ally track t2"
+          },
+          {
+            "id": "p3",
+            "description": "Hold fire and reposition or defend"
+          },
+          {
+            "id": "p4",
+            "description": "Fire through ally"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Native fixture marks shot unsafe due to ally in firing path; no attack is safe."
+      }
+    },
+    {
+      "id": "combat_player_neutral",
+      "capabilityIds": [
+        "combat.attack",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t4",
+              "team": "player",
+              "visibility": "visible"
+            },
+            {
+              "trackId": "t5",
+              "team": "neutral",
+              "visibility": "visible"
+            }
+          ],
+          "hostilePresent": false
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack player track t4"
+          },
+          {
+            "id": "p2",
+            "description": "Attack neutral track t5"
+          },
+          {
+            "id": "p3",
+            "description": "Stand down"
+          },
+          {
+            "id": "p4",
+            "description": "Flee in panic"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p2",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Player and neutral are not hostile targets; no threat justifies panic flee."
+      }
+    },
+    {
+      "id": "combat_heard_unknown",
+      "capabilityIds": [
+        "combat.awareness",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [],
+          "heardReports": [
+            {
+              "source": "unidentified",
+              "claim": "enemy nearby",
+              "certainty": "unconfirmed"
+            }
+          ],
+          "hostilePresent": "unknown"
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack toward sound"
+          },
+          {
+            "id": "p2",
+            "description": "Use safe alert posture or request native confirmation"
+          },
+          {
+            "id": "p3",
+            "description": "Declare hostile confirmed"
+          },
+          {
+            "id": "p4",
+            "description": "Continue normal activity while alerting"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p2",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Hearsay is not visual confirmation; preserve uncertainty and avoid attack."
+      }
+    },
+    {
+      "id": "combat_last_seen_stale",
+      "capabilityIds": [
+        "combat.awareness",
+        "combat.attack"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t6",
+              "team": "confirmed_hostile",
+              "visibility": "not_visible",
+              "status": "last_seen",
+              "observedAt": "08:00",
+              "lastKnownBearing": "east"
+            }
+          ],
+          "time": "08:10",
+          "hostilePresent": "unknown"
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack stale track as currently visible"
+          },
+          {
+            "id": "p2",
+            "description": "Search cautiously or hold position"
+          },
+          {
+            "id": "p3",
+            "description": "Attack invented location"
+          },
+          {
+            "id": "p4",
+            "description": "Report last-known contact as current sighting"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p2"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p3",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Last-known track is stale; no current target handle or position exists."
+      }
+    },
+    {
+      "id": "combat_retreat_low_health",
+      "capabilityIds": [
+        "combat.retreat",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "self": {
+            "health": "critical",
+            "stamina": "low"
+          },
+          "visibleEntities": [
+            {
+              "trackId": "t7",
+              "team": "confirmed_hostile",
+              "visibility": "visible",
+              "range": "near"
+            }
+          ],
+          "legalRetreatRoute": "available",
+          "allies": "none"
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Use legal retreat route"
+          },
+          {
+            "id": "p2",
+            "description": "Continue attack despite critical health"
+          },
+          {
+            "id": "p3",
+            "description": "Stand exposed and wait"
+          },
+          {
+            "id": "p4",
+            "description": "Claim healed"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Critical health, no allies, and legal retreat make escape safer."
+      }
+    },
+    {
+      "id": "combat_cover_available",
+      "capabilityIds": [
+        "combat.cover",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "self": {
+            "health": "wounded"
+          },
+          "visibleEntities": [
+            {
+              "trackId": "t8",
+              "team": "confirmed_hostile",
+              "visibility": "visible"
+            }
+          ],
+          "coverOptions": [
+            {
+              "id": "o1",
+              "description": "Reachable stone wall; native route and cover confirmed"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Move to offered cover option o1"
+          },
+          {
+            "id": "p2",
+            "description": "Choose unoffered rooftop"
+          },
+          {
+            "id": "p3",
+            "description": "Remain exposed without cause"
+          },
+          {
+            "id": "p4",
+            "description": "Attack through blocked line of sight"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Offered cover is reachable; do not invent destination or attack through blocked sight."
+      }
+    },
+    {
+      "id": "combat_healing_resource",
+      "capabilityIds": [
+        "combat.heal",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "self": {
+            "health": "low",
+            "healingItems": 1
+          },
+          "visibleEntities": [
+            {
+              "trackId": "t9",
+              "team": "confirmed_hostile",
+              "visibility": "visible",
+              "range": "far"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Use one available healing item on self"
+          },
+          {
+            "id": "p2",
+            "description": "Use two healing items"
+          },
+          {
+            "id": "p3",
+            "description": "Claim healing item used without result"
+          },
+          {
+            "id": "p4",
+            "description": "Continue exposed"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "One healing item exists; select one legal use and await native result."
+      }
+    },
+    {
+      "id": "combat_no_healing_resource",
+      "capabilityIds": [
+        "combat.heal",
+        "combat.retreat"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "self": {
+            "health": "low",
+            "healingItems": 0
+          },
+          "visibleEntities": [
+            {
+              "trackId": "t10",
+              "team": "confirmed_hostile",
+              "visibility": "visible"
+            }
+          ],
+          "legalRetreatRoute": "available"
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Use healing item"
+          },
+          {
+            "id": "p2",
+            "description": "Retreat using legal route"
+          },
+          {
+            "id": "p3",
+            "description": "Claim healing succeeded"
+          },
+          {
+            "id": "p4",
+            "description": "Defend while seeking safety"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p2",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "No healing resource exists; choose legal protection or retreat."
+      }
+    },
+    {
+      "id": "combat_spell_resource",
+      "capabilityIds": [
+        "combat.cast_spell",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "self": {
+            "magicka": "empty",
+            "knownSpell": "ward"
+          },
+          "visibleEntities": [
+            {
+              "trackId": "t11",
+              "team": "confirmed_hostile",
+              "visibility": "visible"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          },
+          {
+            "id": "read_capabilities",
+            "description": "Read own current native combat capabilities, resource requirements and available non-spell defenses"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Cast ward despite empty magicka"
+          },
+          {
+            "id": "p2",
+            "description": "Defend without spell"
+          },
+          {
+            "id": "p3",
+            "description": "Claim ward active"
+          },
+          {
+            "id": "p4",
+            "description": "Use native capability reader"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p2",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p3"
+        ],
+        "severity": "major",
+        "reason": "Empty magicka prevents spell use; do not claim effect."
+      }
+    },
+    {
+      "id": "combat_ammo_resource",
+      "capabilityIds": [
+        "combat.ranged_attack",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "self": {
+            "equipped": "bow",
+            "ammunition": 0
+          },
+          "visibleEntities": [
+            {
+              "trackId": "t12",
+              "team": "confirmed_hostile",
+              "visibility": "visible",
+              "range": "far"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Fire bow with zero ammunition"
+          },
+          {
+            "id": "p2",
+            "description": "Select offered legal defense"
+          },
+          {
+            "id": "p3",
+            "description": "Report no ammunition and seek cover"
+          },
+          {
+            "id": "p4",
+            "description": "Invent ammunition"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p2",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "No ammunition exists; do not emit impossible ranged attack."
+      }
+    },
+    {
+      "id": "combat_witness_fear_alarm",
+      "capabilityIds": [
+        "combat.alarm",
+        "combat.retreat",
+        "combat.attack"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "civilian",
+          "currentDuty": "protect self, avoid combat"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "nativeKnownFacts": [
+            {
+              "fact": "alarm raised by guard",
+              "source": "native alarm",
+              "certainty": "confirmed"
+            }
+          ],
+          "visibleEntities": [
+            {
+              "trackId": "t13",
+              "team": "confirmed_hostile",
+              "visibility": "visible",
+              "distance": "far"
+            }
+          ],
+          "combatCapability": false
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Use native alarm response and retreat to safety"
+          },
+          {
+            "id": "p2",
+            "description": "Attack hostile without combat capability"
+          },
+          {
+            "id": "p3",
+            "description": "Use offered alarm action"
+          },
+          {
+            "id": "p4",
+            "description": "Approach threat to inspect"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Civilian lacks combat capability; known alarm and danger support alarm or retreat."
+      }
+    },
+    {
+      "id": "combat_quest_protected_post",
+      "capabilityIds": [
+        "combat.attack",
+        "quest.capability_gate",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "remain at protected quest post"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t14",
+              "team": "confirmed_hostile",
+              "visibility": "visible",
+              "range": "near"
+            }
+          ],
+          "questPermissions": [
+            "defend post",
+            "raise alarm"
+          ],
+          "capabilities": [
+            "attack",
+            "defend",
+            "alarm"
+          ],
+          "legalRetreatRoute": "outside assigned area"
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Defend post or raise alarm"
+          },
+          {
+            "id": "p2",
+            "description": "Retreat beyond assigned area"
+          },
+          {
+            "id": "p3",
+            "description": "Attack unknown track"
+          },
+          {
+            "id": "p4",
+            "description": "Abandon duty without exception"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Quest capability permits defense/alarm and protects post; no exception permits departure."
+      }
+    },
+    {
+      "id": "combat_ally_neutral_crowd",
+      "capabilityIds": [
+        "combat.attack",
+        "combat.cover"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t15",
+              "team": "confirmed_hostile",
+              "visibility": "visible"
+            },
+            {
+              "trackId": "t16",
+              "team": "confirmed_ally",
+              "visibility": "visible"
+            },
+            {
+              "trackId": "t17",
+              "team": "neutral",
+              "visibility": "visible"
+            }
+          ],
+          "crowdBlocksSafeShot": true,
+          "coverOptions": [
+            {
+              "id": "o2",
+              "description": "Reachable cover behind stone column"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack hostile through crowd"
+          },
+          {
+            "id": "p2",
+            "description": "Move to offered cover o2"
+          },
+          {
+            "id": "p3",
+            "description": "Attack ally or neutral"
+          },
+          {
+            "id": "p4",
+            "description": "Hold fire until path is safe"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p2",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p3"
+        ],
+        "severity": "critical",
+        "reason": "Crowd blocks safe shot. Do not attack allies or neutrals; use cover or hold fire."
+      }
+    },
+    {
+      "id": "combat_option_revision_stale",
+      "capabilityIds": [
+        "combat.attack",
+        "combat.defend"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "response_pending",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "frameId": 14,
+          "optionSetRevision": "r4",
+          "responseForRevision": "r3",
+          "visibleEntities": [
+            {
+              "trackId": "t18",
+              "team": "confirmed_hostile",
+              "visibility": "visible"
+            }
+          ],
+          "staleResult": true
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Discard stale decision and request fresh frame"
+          },
+          {
+            "id": "p2",
+            "description": "Dispatch old attack result"
+          },
+          {
+            "id": "p3",
+            "description": "Treat stale result as retreat"
+          },
+          {
+            "id": "p4",
+            "description": "Record stale result without dispatch"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "critical",
+        "reason": "Option set changed. Discard stale result; stale failure cannot become action."
+      }
+    },
+    {
+      "id": "combat_actor_died_cancel",
+      "capabilityIds": [
+        "combat.attack",
+        "combat.cancel"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "response_pending",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "self": {
+            "alive": false
+          },
+          "frameId": 22,
+          "responsePending": true,
+          "combatEnded": true
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Cancel or discard pending response with zero dispatch"
+          },
+          {
+            "id": "p2",
+            "description": "Dispatch attack after death"
+          },
+          {
+            "id": "p3",
+            "description": "Convert cancellation into flee"
+          },
+          {
+            "id": "p4",
+            "description": "Record terminal cancellation"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p4"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p3"
+        ],
+        "severity": "critical",
+        "reason": "Actor is dead and combat ended; pending action has no valid state."
+      }
+    },
+    {
+      "id": "combat_unknown_target_no_attack",
+      "capabilityIds": [
+        "combat.attack",
+        "combat.defend",
+        "combat.retreat"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t19",
+              "team": "unknown",
+              "visibility": "visible"
+            }
+          ],
+          "hostilePresent": "unknown",
+          "legalRetreatRoute": "available"
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack unknown track t19"
+          },
+          {
+            "id": "p2",
+            "description": "Retreat to safety"
+          },
+          {
+            "id": "p3",
+            "description": "Hold defensive position"
+          },
+          {
+            "id": "p4",
+            "description": "Declare unknown hostile"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p2",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p1",
+          "p4"
+        ],
+        "severity": "critical",
+        "reason": "Unknown team stays unknown; defensive or retreat choices preserve safety."
+      }
+    },
+    {
+      "id": "combat_heard_vs_visible",
+      "capabilityIds": [
+        "combat.awareness",
+        "combat.attack",
+        "combat.alarm"
+      ],
+      "provenance": "synthetic state-only combat decision fixture; not vision test; not gameplay evidence",
+      "input": {
+        "npc": {
+          "id": "npc-17",
+          "role": "Guard",
+          "combatMode": "active",
+          "currentDuty": "none"
+        },
+        "world": {
+          "testMode": "state-only, not vision test",
+          "visibleEntities": [
+            {
+              "trackId": "t21",
+              "team": "confirmed_hostile",
+              "visibility": "visible",
+              "range": "far"
+            }
+          ],
+          "heardReports": [
+            {
+              "claim": "second enemy behind actor",
+              "certainty": "unconfirmed"
+            }
+          ],
+          "self": {
+            "health": "normal"
+          }
+        },
+        "history": [],
+        "playerText": "",
+        "availableTools": [
+          {
+            "id": "read_schedule",
+            "description": "Read NPC own schedule and commitments"
+          },
+          {
+            "id": "read_inventory",
+            "description": "Read NPC own inventory and carried funds"
+          }
+        ],
+        "options": [
+          {
+            "id": "p1",
+            "description": "Attack visible hostile if native conditions permit"
+          },
+          {
+            "id": "p2",
+            "description": "Attack unseen alleged enemy"
+          },
+          {
+            "id": "p3",
+            "description": "Raise alarm or take defensive posture"
+          },
+          {
+            "id": "p4",
+            "description": "Claim two enemies visually confirmed"
+          }
+        ]
+      },
+      "expected": {
+        "allowedChoices": [
+          "p1",
+          "p3"
+        ],
+        "forbiddenChoices": [
+          "p2",
+          "p4"
+        ],
+        "severity": "major",
+        "reason": "Only t21 is visible and confirmed; heard report remains uncertain."
+      }
+    }
+  ]
+}

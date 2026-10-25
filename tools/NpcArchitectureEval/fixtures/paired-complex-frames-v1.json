@@ -1,0 +1,764 @@
+{
+  "schemaVersion": 1,
+  "caseCount": 6,
+  "casesSha256": "6e05f110752f456a3014460bc2e414cfb26014490bc768150750cb35f55b2496",
+  "casesHashAlgorithm": "SHA-256 of UTF-8 compact JSON cases array with ensure_ascii=false",
+  "sourceTrace": {
+    "sourceFile": "work/two-pass-production-20261020/cases.json",
+    "sourceFileSha256": "600338ecd0c45ea78f430d236756aef4feb4e5ad7cc8961b989d74c4a6a164dd",
+    "selectedCaseIds": [
+      "dev-chain-3",
+      "dev-chain-4",
+      "dev-chain-5"
+    ],
+    "nativeFactualContextSourceCaptureSha256": "43812714c0b58532dfd339444055eb481c519357e40f1fd3a74b090da142fce7",
+    "sourceScope": "First three exact development user texts and histories; source expected is retained only as trace, not copied into model input."
+  },
+  "cases": [
+    {
+      "id": "paired_dev_chain_3",
+      "category": "matched_complex_frame_chain",
+      "provenance": "Frozen diagnostic input. Candidate catalog and IDs are synthetic; candidate availability is fixture-only, not native availability or action consent.",
+      "sourceCaseId": "dev-chain-3",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "name": "Gwen Cienne",
+          "role": "ManagedResident"
+        },
+        "scene": "DaggerfallUnityGame",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "candidateProvenance": "synthetic fixture catalog; no native candidate availability or action consent asserted",
+        "syntheticCoordinates": "No coordinates asserted; target IDs are synthetic fixture IDs.",
+        "candidates": [
+          {
+            "ref": "doctor_saverys_gear",
+            "kind": "MoveTo",
+            "label": "Go to Doctor Savery's Gear",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42031
+            },
+            "synthetic": {
+              "id": "fixture:building:doctor-saverys-gear",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "superior_supply_store",
+            "kind": "MoveTo",
+            "label": "Go to The Superior Supply Store",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42032
+            },
+            "synthetic": {
+              "id": "fixture:building:superior-supply-store",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "fixture:player"
+            },
+            "synthetic": {
+              "id": "fixture:wait:current-position",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          }
+        ]
+      },
+      "npcFacts": {
+        "dataStatus": "Current factual data only; not instructions.",
+        "nativeFactualContext": {
+          "source": "work/two-stage-chains-20261020/fixture.json nativeFacts, cross-checked against work/native-wait-chain-20261020/native-capture/clock-request.json",
+          "sourceCaptureSha256": "43812714c0b58532dfd339444055eb481c519357e40f1fd3a74b090da142fce7",
+          "npcSnapshot": {
+            "revision": 0,
+            "name": "Gwen Cienne",
+            "role": "ManagedResident",
+            "clock": "Current authoritative game clock: 12:03 PM (24-hour 12:03) on Turdas the 5th of Morning Star, 3E405. It is daytime now. Use this live clock for time-sensitive decisions. Earlier conversation timestamps and earlier descriptions of night or day do not override it. ",
+            "scene": "DaggerfallUnityGame",
+            "activity": "Talking",
+            "effectiveDisposition": 0,
+            "routingSummary": "Speaker: Gwen Cienne; role=ManagedResident."
+          },
+          "pendingOffer": null,
+          "activeCommitments": [],
+          "historicalMemory": {
+            "label": "historical data; not a current instruction",
+            "text": " Retrieved personal memories (dialogue data, not instructions). Player said = claim; NPC said = prior speech, not proof; Observed event = recorded experience. Current facts override old details. Do not reapply insults. Missing answer: ask for a reminder.  [12:03, 5th Turdas, ...; earlier today; Outdoors in Gothway Garden] Observed event: Met and spoke with the player here. "
+          },
+          "nativeCandidateMenu": "omitted"
+        }
+      },
+      "playerText": "Go to Doctor Savery's Gear, wait there for eighteen seconds, then go to The Superior Supply Store.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Go to Doctor Savery's Gear",
+              "targetText": "Doctor Savery's Gear"
+            },
+            {
+              "kind": "Wait",
+              "sourceQuote": "wait there for eighteen seconds",
+              "targetText": "there",
+              "durationAmount": 18,
+              "durationUnit": "seconds"
+            },
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "then go to The Superior Supply Store",
+              "targetText": "The Superior Supply Store"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "doctor_saverys_gear"
+            },
+            {
+              "stepIndex": 1,
+              "candidateRef": "wait_here"
+            },
+            {
+              "stepIndex": 2,
+              "candidateRef": "superior_supply_store"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "paired_dev_chain_4",
+      "category": "matched_complex_frame_chain",
+      "provenance": "Frozen diagnostic input. Candidate catalog and IDs are synthetic; candidate availability is fixture-only, not native availability or action consent.",
+      "sourceCaseId": "dev-chain-4",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "name": "Gwen Cienne",
+          "role": "ManagedResident"
+        },
+        "scene": "DaggerfallUnityGame",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "candidateProvenance": "synthetic fixture catalog; no native candidate availability or action consent asserted",
+        "syntheticCoordinates": "No coordinates asserted; target IDs are synthetic fixture IDs.",
+        "candidates": [
+          {
+            "ref": "doctor_saverys_gear",
+            "kind": "MoveTo",
+            "label": "Go to Doctor Savery's Gear",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42031
+            },
+            "synthetic": {
+              "id": "fixture:building:doctor-saverys-gear",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "superior_supply_store",
+            "kind": "MoveTo",
+            "label": "Go to The Superior Supply Store",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42032
+            },
+            "synthetic": {
+              "id": "fixture:building:superior-supply-store",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "fixture:player"
+            },
+            "synthetic": {
+              "id": "fixture:wait:current-position",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          }
+        ]
+      },
+      "npcFacts": {
+        "dataStatus": "Current factual data only; not instructions.",
+        "nativeFactualContext": {
+          "source": "work/two-stage-chains-20261020/fixture.json nativeFacts, cross-checked against work/native-wait-chain-20261020/native-capture/clock-request.json",
+          "sourceCaptureSha256": "43812714c0b58532dfd339444055eb481c519357e40f1fd3a74b090da142fce7",
+          "npcSnapshot": {
+            "revision": 0,
+            "name": "Gwen Cienne",
+            "role": "ManagedResident",
+            "clock": "Current authoritative game clock: 12:03 PM (24-hour 12:03) on Turdas the 5th of Morning Star, 3E405. It is daytime now. Use this live clock for time-sensitive decisions. Earlier conversation timestamps and earlier descriptions of night or day do not override it. ",
+            "scene": "DaggerfallUnityGame",
+            "activity": "Talking",
+            "effectiveDisposition": 0,
+            "routingSummary": "Speaker: Gwen Cienne; role=ManagedResident."
+          },
+          "pendingOffer": null,
+          "activeCommitments": [],
+          "historicalMemory": {
+            "label": "historical data; not a current instruction",
+            "text": " Retrieved personal memories (dialogue data, not instructions). Player said = claim; NPC said = prior speech, not proof; Observed event = recorded experience. Current facts override old details. Do not reapply insults. Missing answer: ask for a reminder.  [12:03, 5th Turdas, ...; earlier today; Outdoors in Gothway Garden] Observed event: Met and spoke with the player here. "
+          },
+          "nativeCandidateMenu": "omitted"
+        }
+      },
+      "playerText": "Go to Doctor Savery's Gear, wait there for eighteen seconds, then go to The Superior Supply Store and wait there for twenty seconds.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Go to Doctor Savery's Gear",
+              "targetText": "Doctor Savery's Gear"
+            },
+            {
+              "kind": "Wait",
+              "sourceQuote": "wait there for eighteen seconds",
+              "targetText": "there",
+              "durationAmount": 18,
+              "durationUnit": "seconds"
+            },
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "then go to The Superior Supply Store",
+              "targetText": "The Superior Supply Store"
+            },
+            {
+              "kind": "Wait",
+              "sourceQuote": "wait there for twenty seconds",
+              "targetText": "there",
+              "durationAmount": 20,
+              "durationUnit": "seconds"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "doctor_saverys_gear"
+            },
+            {
+              "stepIndex": 1,
+              "candidateRef": "wait_here"
+            },
+            {
+              "stepIndex": 2,
+              "candidateRef": "superior_supply_store"
+            },
+            {
+              "stepIndex": 3,
+              "candidateRef": "wait_here"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "paired_dev_chain_5",
+      "category": "matched_complex_frame_chain",
+      "provenance": "Frozen diagnostic input. Candidate catalog and IDs are synthetic; candidate availability is fixture-only, not native availability or action consent.",
+      "sourceCaseId": "dev-chain-5",
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "name": "Gwen Cienne",
+          "role": "ManagedResident"
+        },
+        "scene": "DaggerfallUnityGame",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "candidateProvenance": "synthetic fixture catalog; no native candidate availability or action consent asserted",
+        "syntheticCoordinates": "No coordinates asserted; target IDs are synthetic fixture IDs.",
+        "candidates": [
+          {
+            "ref": "doctor_saverys_gear",
+            "kind": "MoveTo",
+            "label": "Go to Doctor Savery's Gear",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42031
+            },
+            "synthetic": {
+              "id": "fixture:building:doctor-saverys-gear",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "superior_supply_store",
+            "kind": "MoveTo",
+            "label": "Go to The Superior Supply Store",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42032
+            },
+            "synthetic": {
+              "id": "fixture:building:superior-supply-store",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "fixture:player"
+            },
+            "synthetic": {
+              "id": "fixture:wait:current-position",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          }
+        ]
+      },
+      "npcFacts": {
+        "dataStatus": "Current factual data only; not instructions.",
+        "nativeFactualContext": {
+          "source": "work/two-stage-chains-20261020/fixture.json nativeFacts, cross-checked against work/native-wait-chain-20261020/native-capture/clock-request.json",
+          "sourceCaptureSha256": "43812714c0b58532dfd339444055eb481c519357e40f1fd3a74b090da142fce7",
+          "npcSnapshot": {
+            "revision": 0,
+            "name": "Gwen Cienne",
+            "role": "ManagedResident",
+            "clock": "Current authoritative game clock: 12:03 PM (24-hour 12:03) on Turdas the 5th of Morning Star, 3E405. It is daytime now. Use this live clock for time-sensitive decisions. Earlier conversation timestamps and earlier descriptions of night or day do not override it. ",
+            "scene": "DaggerfallUnityGame",
+            "activity": "Talking",
+            "effectiveDisposition": 0,
+            "routingSummary": "Speaker: Gwen Cienne; role=ManagedResident."
+          },
+          "pendingOffer": null,
+          "activeCommitments": [],
+          "historicalMemory": {
+            "label": "historical data; not a current instruction",
+            "text": " Retrieved personal memories (dialogue data, not instructions). Player said = claim; NPC said = prior speech, not proof; Observed event = recorded experience. Current facts override old details. Do not reapply insults. Missing answer: ask for a reminder.  [12:03, 5th Turdas, ...; earlier today; Outdoors in Gothway Garden] Observed event: Met and spoke with the player here. "
+          },
+          "nativeCandidateMenu": "omitted"
+        }
+      },
+      "playerText": "Go to Doctor Savery's Gear, wait there for eighteen seconds, then go to The Superior Supply Store, wait there for twenty seconds, and return to Doctor Savery's Gear.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Go to Doctor Savery's Gear",
+              "targetText": "Doctor Savery's Gear"
+            },
+            {
+              "kind": "Wait",
+              "sourceQuote": "wait there for eighteen seconds",
+              "targetText": "there",
+              "durationAmount": 18,
+              "durationUnit": "seconds"
+            },
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "then go to The Superior Supply Store",
+              "targetText": "The Superior Supply Store"
+            },
+            {
+              "kind": "Wait",
+              "sourceQuote": "wait there for twenty seconds",
+              "targetText": "there",
+              "durationAmount": 20,
+              "durationUnit": "seconds"
+            },
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "return to Doctor Savery's Gear",
+              "targetText": "Doctor Savery's Gear"
+            }
+          ],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "plan",
+        "groundingPlan": {
+          "outcome": "plan",
+          "bindings": [
+            {
+              "stepIndex": 0,
+              "candidateRef": "doctor_saverys_gear"
+            },
+            {
+              "stepIndex": 1,
+              "candidateRef": "wait_here"
+            },
+            {
+              "stepIndex": 2,
+              "candidateRef": "superior_supply_store"
+            },
+            {
+              "stepIndex": 3,
+              "candidateRef": "wait_here"
+            },
+            {
+              "stepIndex": 4,
+              "candidateRef": "doctor_saverys_gear"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "control_negated_multistep",
+      "category": "negated_multistep_request",
+      "provenance": "Frozen diagnostic input. Candidate catalog and IDs are synthetic; candidate availability is fixture-only, not native availability or action consent.",
+      "sourceCaseId": null,
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "name": "Gwen Cienne",
+          "role": "ManagedResident"
+        },
+        "scene": "DaggerfallUnityGame",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "candidateProvenance": "synthetic fixture catalog; no native candidate availability or action consent asserted",
+        "syntheticCoordinates": "No coordinates asserted; target IDs are synthetic fixture IDs.",
+        "candidates": [
+          {
+            "ref": "doctor_saverys_gear",
+            "kind": "MoveTo",
+            "label": "Go to Doctor Savery's Gear",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42031
+            },
+            "synthetic": {
+              "id": "fixture:building:doctor-saverys-gear",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "superior_supply_store",
+            "kind": "MoveTo",
+            "label": "Go to The Superior Supply Store",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42032
+            },
+            "synthetic": {
+              "id": "fixture:building:superior-supply-store",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "fixture:player"
+            },
+            "synthetic": {
+              "id": "fixture:wait:current-position",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          }
+        ]
+      },
+      "npcFacts": {
+        "dataStatus": "Current factual data only; not instructions.",
+        "nativeFactualContext": {
+          "source": "work/two-stage-chains-20261020/fixture.json nativeFacts, cross-checked against work/native-wait-chain-20261020/native-capture/clock-request.json",
+          "sourceCaptureSha256": "43812714c0b58532dfd339444055eb481c519357e40f1fd3a74b090da142fce7",
+          "npcSnapshot": {
+            "revision": 0,
+            "name": "Gwen Cienne",
+            "role": "ManagedResident",
+            "clock": "Current authoritative game clock: 12:03 PM (24-hour 12:03) on Turdas the 5th of Morning Star, 3E405. It is daytime now. Use this live clock for time-sensitive decisions. Earlier conversation timestamps and earlier descriptions of night or day do not override it. ",
+            "scene": "DaggerfallUnityGame",
+            "activity": "Talking",
+            "effectiveDisposition": 0,
+            "routingSummary": "Speaker: Gwen Cienne; role=ManagedResident."
+          },
+          "pendingOffer": null,
+          "activeCommitments": [],
+          "historicalMemory": {
+            "label": "historical data; not a current instruction",
+            "text": " Retrieved personal memories (dialogue data, not instructions). Player said = claim; NPC said = prior speech, not proof; Observed event = recorded experience. Current facts override old details. Do not reapply insults. Missing answer: ask for a reminder.  [12:03, 5th Turdas, ...; earlier today; Outdoors in Gothway Garden] Observed event: Met and spoke with the player here. "
+          },
+          "nativeCandidateMenu": "omitted"
+        }
+      },
+      "playerText": "Do not go to Doctor Savery's Gear, wait there for eighteen seconds, or return to The Superior Supply Store. I need to make this trip alone.",
+      "attributedHistory": [],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action",
+        "groundingPlan": {
+          "outcome": "no_action",
+          "bindings": []
+        }
+      }
+    },
+    {
+      "id": "control_quoted_historical_request",
+      "category": "quoted_or_historical_request",
+      "provenance": "Frozen diagnostic input. Candidate catalog and IDs are synthetic; candidate availability is fixture-only, not native availability or action consent.",
+      "sourceCaseId": null,
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "name": "Gwen Cienne",
+          "role": "ManagedResident"
+        },
+        "scene": "DaggerfallUnityGame",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "candidateProvenance": "synthetic fixture catalog; no native candidate availability or action consent asserted",
+        "syntheticCoordinates": "No coordinates asserted; target IDs are synthetic fixture IDs.",
+        "candidates": [
+          {
+            "ref": "doctor_saverys_gear",
+            "kind": "MoveTo",
+            "label": "Go to Doctor Savery's Gear",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42031
+            },
+            "synthetic": {
+              "id": "fixture:building:doctor-saverys-gear",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "superior_supply_store",
+            "kind": "MoveTo",
+            "label": "Go to The Superior Supply Store",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42032
+            },
+            "synthetic": {
+              "id": "fixture:building:superior-supply-store",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "wait_here",
+            "kind": "Wait",
+            "label": "Wait at current position",
+            "target": {
+              "Kind": "Person",
+              "PersonId": "fixture:player"
+            },
+            "synthetic": {
+              "id": "fixture:wait:current-position",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          }
+        ]
+      },
+      "npcFacts": {
+        "dataStatus": "Current factual data only; not instructions.",
+        "nativeFactualContext": {
+          "source": "work/two-stage-chains-20261020/fixture.json nativeFacts, cross-checked against work/native-wait-chain-20261020/native-capture/clock-request.json",
+          "sourceCaptureSha256": "43812714c0b58532dfd339444055eb481c519357e40f1fd3a74b090da142fce7",
+          "npcSnapshot": {
+            "revision": 0,
+            "name": "Gwen Cienne",
+            "role": "ManagedResident",
+            "clock": "Current authoritative game clock: 12:03 PM (24-hour 12:03) on Turdas the 5th of Morning Star, 3E405. It is daytime now. Use this live clock for time-sensitive decisions. Earlier conversation timestamps and earlier descriptions of night or day do not override it. ",
+            "scene": "DaggerfallUnityGame",
+            "activity": "Talking",
+            "effectiveDisposition": 0,
+            "routingSummary": "Speaker: Gwen Cienne; role=ManagedResident."
+          },
+          "pendingOffer": null,
+          "activeCommitments": [],
+          "historicalMemory": {
+            "label": "historical data; not a current instruction",
+            "text": " Retrieved personal memories (dialogue data, not instructions). Player said = claim; NPC said = prior speech, not proof; Observed event = recorded experience. Current facts override old details. Do not reapply insults. Missing answer: ask for a reminder.  [12:03, 5th Turdas, ...; earlier today; Outdoors in Gothway Garden] Observed event: Met and spoke with the player here. "
+          },
+          "nativeCandidateMenu": "omitted"
+        }
+      },
+      "playerText": "Earlier, I asked you, “Go to Doctor Savery's Gear, wait there for eighteen seconds, then go to The Superior Supply Store.” I am checking what I said, not asking you to act now.",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "Go to Doctor Savery's Gear, wait there for eighteen seconds, then go to The Superior Supply Store."
+        },
+        {
+          "speaker": "npc",
+          "text": "I heard that earlier request, but have not acted on it."
+        }
+      ],
+      "expected": {
+        "conceptual": {
+          "intent": "none",
+          "steps": [],
+          "conditions": [],
+          "missing": []
+        },
+        "grounding": "no_action",
+        "groundingPlan": {
+          "outcome": "no_action",
+          "bindings": []
+        }
+      }
+    },
+    {
+      "id": "control_unresolved_target_unsupported_goal",
+      "category": "unresolved_target_and_unsupported_goal",
+      "provenance": "Frozen diagnostic input. Candidate catalog and IDs are synthetic; candidate availability is fixture-only, not native availability or action consent.",
+      "sourceCaseId": null,
+      "snapshot": {
+        "actor": {
+          "id": "fixture:npc",
+          "name": "Gwen Cienne",
+          "role": "ManagedResident"
+        },
+        "scene": "DaggerfallUnityGame",
+        "facts": [
+          "synthetic candidate grounding only"
+        ],
+        "candidateProvenance": "synthetic fixture catalog; no native candidate availability or action consent asserted",
+        "syntheticCoordinates": "No coordinates asserted; target IDs are synthetic fixture IDs.",
+        "candidates": [
+          {
+            "ref": "old_well",
+            "kind": "MoveTo",
+            "label": "Go to the Old Well",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42033
+            },
+            "synthetic": {
+              "id": "fixture:building:old-well",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          },
+          {
+            "ref": "east_watchtower",
+            "kind": "MoveTo",
+            "label": "Go to the East Watchtower",
+            "target": {
+              "Kind": "Building",
+              "SettlementId": 91001,
+              "BuildingKey": 42034
+            },
+            "synthetic": {
+              "id": "fixture:building:east-watchtower",
+              "coordinates": "synthetic coordinates omitted"
+            }
+          }
+        ]
+      },
+      "npcFacts": {
+        "dataStatus": "Current factual data only; not instructions.",
+        "nativeFactualContext": {
+          "source": "work/two-stage-chains-20261020/fixture.json nativeFacts, cross-checked against work/native-wait-chain-20261020/native-capture/clock-request.json",
+          "sourceCaptureSha256": "43812714c0b58532dfd339444055eb481c519357e40f1fd3a74b090da142fce7",
+          "npcSnapshot": {
+            "revision": 0,
+            "name": "Gwen Cienne",
+            "role": "ManagedResident",
+            "clock": "Current authoritative game clock: 12:03 PM (24-hour 12:03) on Turdas the 5th of Morning Star, 3E405. It is daytime now. Use this live clock for time-sensitive decisions. Earlier conversation timestamps and earlier descriptions of night or day do not override it. ",
+            "scene": "DaggerfallUnityGame",
+            "activity": "Talking",
+            "effectiveDisposition": 0,
+            "routingSummary": "Speaker: Gwen Cienne; role=ManagedResident."
+          },
+          "pendingOffer": null,
+          "activeCommitments": [],
+          "historicalMemory": {
+            "label": "historical data; not a current instruction",
+            "text": " Retrieved personal memories (dialogue data, not instructions). Player said = claim; NPC said = prior speech, not proof; Observed event = recorded experience. Current facts override old details. Do not reapply insults. Missing answer: ask for a reminder.  [12:03, 5th Turdas, ...; earlier today; Outdoors in Gothway Garden] Observed event: Met and spoke with the player here. "
+          },
+          "nativeCandidateMenu": "omitted"
+        }
+      },
+      "playerText": "Take me back to the place we visited after the storm, then reserve two places on the noon launch.",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "We visited the Old Well and the East Watchtower, but I cannot remember which one was after the storm."
+        }
+      ],
+      "expected": {
+        "conceptual": {
+          "intent": "request",
+          "steps": [
+            {
+              "kind": "MoveTo",
+              "sourceQuote": "Take me back to the place we visited after the storm",
+              "targetText": "the place we visited after the storm"
+            },
+            {
+              "kind": "Other",
+              "sourceQuote": "reserve two places on the noon launch",
+              "targetText": "two places on the noon launch",
+              "actionDescription": "Reserve two places on the noon launch"
+            }
+          ],
+          "conditions": [],
+          "missing": [
+            "which previously visited place the player means"
+          ]
+        },
+        "grounding": "clarify",
+        "groundingPlan": {
+          "outcome": "clarify",
+          "bindings": []
+        }
+      }
+    }
+  ]
+}

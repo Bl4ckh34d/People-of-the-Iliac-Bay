@@ -5,13 +5,14 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
+using UnityEngine.AI;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Scene adapter only. Persistent identities and route evaluation stay in Core.
-    public sealed partial class TownGeometry : IWalkGrid
+    public sealed partial class TownGeometry : IWalkEdgeGrid
     {
         public sealed class Entrance
         {
@@ -27,6 +28,8 @@ namespace LivingCities.DFU
         public int RejectedDoors { get; private set; }
         public int Width { get { return navigation.NavGridWidth; } }
         public int Height { get { return navigation.NavGridHeight; } }
+        public bool UsesNativeNavigation {get{return NativeNavigationWorld.Current && NativeNavigationWorld.Current.Ready &&
+            NativeNavigationWorld.Current.Scene=="city-"+directory.MapID;}}
         public TownGeometry(BuildingDirectory directory, CityNavigation navigation, bool mapEntrances = true)
         {
             if (directory == null || navigation == null) throw new ArgumentNullException();
@@ -71,9 +74,29 @@ namespace LivingCities.DFU
         }
         public int Cost(int x, int z)
         {
+            if(x<0||z<0||x>=Width||z>=Height)return 0;
+            if(sharedGridCosts==null)sharedGridCosts=new byte[Width*Height];
+            int key=z*Width+x,stored=sharedGridCosts[key];
+            if(stored!=0)return stored-1;
+            int cost=ReadCost(x,z);sharedGridCosts[key]=(byte)(cost+1);return cost;
+        }
+        private int ReadCost(int x,int z)
+        {
             int weight = navigation.GetNavGridWeightLocal(x, z);
+            if(weight<=0) return 0;
+            var point=SceneCell(new GridCell(x,z));
+            if(FurnitureSeatCatalog.Blocks(point,point,CrowdMotion.BodyRadius)) return 0;
             // DFU weights are preference (higher is better); A* consumes cost.
             return weight <= 0 ? 0 : Math.Max(1, 16 - weight);
+        }
+        public bool CanStep(GridCell from,GridCell to)
+        {
+            if(sharedHorizontalEdges==null){sharedHorizontalEdges=new byte[Width*Height];sharedVerticalEdges=new byte[Width*Height];}
+            int key=Math.Min(from.Z,to.Z)*Width+Math.Min(from.X,to.X);
+            var edges=from.Z==to.Z?sharedHorizontalEdges:sharedVerticalEdges;
+            if(edges[key]!=0)return edges[key]==1;
+            bool clear=!FurnitureSeatCatalog.Blocks(SceneCell(from),SceneCell(to),CrowdMotion.BodyRadius);
+            edges[key]=(byte)(clear?1:2);return clear;
         }
         public Vector3 SceneCell(GridCell cell)
         { return navigation.WorldToScenePosition(navigation.NavGridToWorldPosition(new DFPosition(cell.X, cell.Z))); }
@@ -86,6 +109,13 @@ namespace LivingCities.DFU
         }
         public List<RoutePoint> RouteBetween(Entrance from, Entrance to)
         {
+            List<SavedRoutePoint> native;
+            if(TryNativeRoute(from.LocalDoor,to.LocalDoor,out native))
+            {
+                var route=new List<RoutePoint>();
+                foreach(var point in native)route.Add(new RoutePoint(point.X,point.Z));
+                return route;
+            }
             var cells = GridPathfinder.Find(this, from.Cell, to.Cell, 30000);
             var points = new List<RoutePoint>();
             if (cells.Count == 0) return points;
@@ -99,13 +129,18 @@ namespace LivingCities.DFU
             // Sphere casts do not detect blockers already overlapping their origin.
             // Check every waypoint, including the terminal doorway, before segments.
             foreach (var point in points)
+            {
+                var ground=ScenePoint(point);
+                if(FurnitureSeatCatalog.Blocks(ground,ground,CrowdMotion.BodyRadius)) return new List<RoutePoint>();
                 foreach (float height in new[] { 0.4f, 1.0f })
                     foreach (var collider in Physics.OverlapSphere(ScenePoint(point) + Vector3.up * height,
                         0.2f, ~0, QueryTriggerInteraction.Ignore))
                         if (IsStaticBlocker(collider)) return new List<RoutePoint>();
+            }
             for (int i = 1; i < points.Count; i++)
             {
                 Vector3 a = ScenePoint(points[i - 1]), b = ScenePoint(points[i]);
+                if(FurnitureSeatCatalog.Blocks(a,b,CrowdMotion.BodyRadius)) return new List<RoutePoint>();
                 Vector3 delta = b - a;
                 float distance = delta.magnitude;
                 if (distance < 0.001f) continue;
@@ -114,12 +149,22 @@ namespace LivingCities.DFU
                         distance, ~0, QueryTriggerInteraction.Ignore))
                         if (IsStaticBlocker(hit.collider)) return new List<RoutePoint>();
             }
+            var saved=new List<SavedRoutePoint>();
+            foreach(var point in points) saved.Add(new SavedRoutePoint {X=point.X,Z=point.Z});
+            // Reactive synchronous callers cannot drain a full lane survey or
+            // thousands of physics callbacks. Daily plans use ReadRouteSteps for
+            // the complete sliced smoothing, curves and corridor preparation.
+            var finish=OutdoorRouteSmoother.Begin(saved,OutdoorShortcutClear,8);
+            while(!finish.IsComplete) finish.Step(2);
+            points.Clear();foreach(var point in finish.Points) points.Add(new RoutePoint(point.X,point.Z));
             return points;
         }
         public List<SavedRoutePoint> RouteBetweenPoints(SavedRoutePoint from, SavedRoutePoint to)
         {
             Vector3 a = ScenePoint(new RoutePoint(from.X, from.Z));
             Vector3 b = ScenePoint(new RoutePoint(to.X, to.Z));
+            List<SavedRoutePoint> native;
+            if(TryNativeRoute(origin.InverseTransformPoint(a),origin.InverseTransformPoint(b),out native))return native;
             GridCell start, end;
             var result = new List<SavedRoutePoint>();
             if (!FindEntranceCell(a, out start) || !FindEntranceCell(b, out end)) return result;
@@ -127,6 +172,31 @@ namespace LivingCities.DFU
                 new Entrance { Cell = end, LocalDoor = origin.InverseTransformPoint(b) });
             foreach (var point in points) result.Add(new SavedRoutePoint { X = point.X, Z = point.Z });
             return result;
+        }
+        private bool TryNativeRoute(Vector3 localFrom,Vector3 localTo,out List<SavedRoutePoint> result)
+        {
+            result=null;
+            if(!UsesNativeNavigation)return false;
+            var from=ScenePoint(new RoutePoint(localFrom.x,localFrom.z));
+            var to=ScenePoint(new RoutePoint(localTo.x,localTo.z));
+            NavMeshHit start,end;
+            result=new List<SavedRoutePoint>();
+            if(!NavMesh.SamplePosition(from,out start,0.4f,NavMesh.AllAreas) ||
+                !NavMesh.SamplePosition(to,out end,0.4f,NavMesh.AllAreas))return true;
+            var path=new NavMeshPath();
+            if(!NavMesh.CalculatePath(start.position,end.position,NavMesh.AllAreas,path) ||
+                path.status!=NavMeshPathStatus.PathComplete)return true;
+            // Store the same route used by the native mover. Grid detours would
+            // otherwise inflate walking times and leave early arrivals at doors.
+            result=new List<SavedRoutePoint>{new SavedRoutePoint {X=localFrom.x,Z=localFrom.z}};
+            foreach(var corner in path.corners)
+            {
+                var local=origin.InverseTransformPoint(corner);var last=result[result.Count-1];
+                if(Math.Abs(last.X-local.x)+Math.Abs(last.Z-local.z)>0.01)
+                    result.Add(new SavedRoutePoint {X=local.x,Z=local.z});
+            }
+            result.Add(new SavedRoutePoint {X=localTo.x,Z=localTo.z});
+            return true;
         }
         private bool FindEntranceCell(Vector3 door, out GridCell result)
         {
@@ -140,6 +210,7 @@ namespace LivingCities.DFU
                 var cell = new GridCell(x, z);
                 Vector3 target = SceneCell(cell) + Vector3.up;
                 Vector3 start = new Vector3(door.x, target.y, door.z);
+                if(FurnitureSeatCatalog.Blocks(start-Vector3.up,target-Vector3.up,CrowdMotion.BodyRadius)) continue;
                 // This first adapter handles ground-level entrances only. Do not snap
                 // an upper-floor doorway vertically down onto an unrelated street.
                 if (Math.Abs(door.y - target.y) > 1.5f) continue;

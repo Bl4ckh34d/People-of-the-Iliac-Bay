@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoWarn>$(NoWarn);CS8600</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+    <Compile Include="../../mod/Scripts/LocalDialogueNativeTemplate.cs" Link="LocalDialogueNativeTemplate.cs" />
+    <Reference Include="FullSerializer - Unity">
+      <HintPath>../../../Player/DaggerfallUnity_Data/Managed/FullSerializer - Unity.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

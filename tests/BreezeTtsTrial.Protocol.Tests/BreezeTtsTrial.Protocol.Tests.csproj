@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../src/PeopleOfTheIliacBay.Core/BreezeTtsTrialProtocol.cs" Link="BreezeTtsTrialProtocol.cs" />
+    <Compile Include="../../src/PeopleOfTheIliacBay.Core/NpcPersonality.cs" Link="NpcPersonality.cs" />
+    <Compile Include="../../src/PeopleOfTheIliacBay.Core/StableSeed.cs" Link="StableSeed.cs" />
+  </ItemGroup>
+</Project>

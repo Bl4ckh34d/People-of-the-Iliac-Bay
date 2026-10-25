@@ -23,7 +23,7 @@ public static class ExternalModInspection
             "Player/DaggerfallUnity_Data/StreamingAssets/Mods"), "*.dfmod"))
         {
             string name = Path.GetFileNameWithoutExtension(file);
-            if (name == "livingcities" || name == "basicroads") continue;
+            if (name == "peopleoftheiliacbay" || name == "basicroads") continue;
             var bundle = AssetBundle.LoadFromFile(file);
             if (!bundle) throw new InvalidOperationException("Cannot load dependency: " + file);
             try

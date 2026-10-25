@@ -1,12 +1,12 @@
 using System;
 using System.Collections;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class ResidentTripProbe
     {
@@ -15,7 +15,7 @@ namespace LivingCities.DFU
             var game=GameManager.Instance;
             game.PlayerEntity.GodMode=true;
             game.PlayerEntity.CrimeCommitted=DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;
-            var host=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var host=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             yield return VisitorOriginProbe.Run();
             var clearance=new MeshWalkClearance();
             clearance.Add(new ModelData {
@@ -35,7 +35,7 @@ namespace LivingCities.DFU
             while(workStarts.Count<2 && Time.unscaledTime<workDeadline) yield return null;
             if(workStarts.Count!=2 || workStarts[1]-workStarts[0]<0.099f)
                 throw new InvalidOperationException("Concurrent background requests were not staggered or cancellation consumed work.");
-            Debug.Log("LIVING_CITIES_WORK_STAGGER_PASS: concurrent starts separated by "+(workStarts[1]-workStarts[0])+" seconds; cancelled request omitted.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WORK_STAGGER_PASS: concurrent starts separated by "+(workStarts[1]-workStarts[0])+" seconds; cancelled request omitted.");
             OverlandRoadNetwork roads;
             if(!host.RoadNetwork.TryGet(out roads))
                 throw new InvalidOperationException("Basic Roads runtime network unavailable.");
@@ -58,8 +58,8 @@ namespace LivingCities.DFU
             bool invalidPublished=false;
             yield return host.RoadNetwork.FindRoute(207,213,207,211,10000,()=>false,path=>invalidPublished=true);
             if(invalidPublished) throw new InvalidOperationException("Invalidated route request published a result.");
-            Debug.Log("LIVING_CITIES_ROAD_SLICES_PASS: equivalent route across frames; invalidated request suppressed.");
-            Debug.Log("LIVING_CITIES_ROAD_NETWORK_PASS: provider road/track import; "+connected.Count+" route points; cached snapshot.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_SLICES_PASS: equivalent route across frames; invalidated request suppressed.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_NETWORK_PASS: provider road/track import; "+connected.Count+" route points; cached snapshot.");
             var streets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();
             var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             var unloaded=new UnloadedSettlementSurvey.Result();
@@ -69,7 +69,7 @@ namespace LivingCities.DFU
             var nativeRect=terrainObject.GetComponent<DaggerfallTerrain>().MapData.locationRect;
             if(unloaded.Grid==null || unloaded.Grid.LocationRect!=nativeRect)
                 throw new InvalidOperationException("Unloaded wilderness boundary disagrees with native terrain.");
-            Debug.Log("LIVING_CITIES_UNLOADED_BOUNDARY_PASS: native terrain location rectangle matches "+nativeRect);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_BOUNDARY_PASS: native terrain location rectangle matches "+nativeRect);
             var navigation=game.StreamingWorld.GetCurrentCityNavigation();
             if(unloaded.Grid==null || unloaded.Grid.Width!=navigation.NavGridWidth || unloaded.Grid.Height!=navigation.NavGridHeight ||
                 unloaded.Grid.Buildings.Count!=directory.BuildingCount) throw new InvalidOperationException("Unloaded settlement survey dimensions/buildings disagree.");
@@ -158,7 +158,7 @@ namespace LivingCities.DFU
                         var terrain=accessTerrainParent.GetComponent<Terrain>();
                         from.y=terrain.SampleHeight(from)+terrain.transform.position.y;
                         to.y=terrain.SampleHeight(to)+terrain.transform.position.y;
-                        if(ResidentDepartureSurvey.Bridge(from,to,terrain,directory.transform,message=>Debug.Log("LIVING_CITIES_ROAD_ACCESS_REJECT: "+message))==null) {clear=false; break;}
+                        if(ResidentDepartureSurvey.Bridge(from,to,terrain,directory.transform,message=>Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_ACCESS_REJECT: "+message))==null) {clear=false; break;}
                     }
                     if(clear) verifiedAccesses++;
                     yield return null;
@@ -167,7 +167,7 @@ namespace LivingCities.DFU
                 var cancelledAccess=new UnloadedSettlementSurvey.RoadAccessResult();
                 yield return unloaded.Grid.ReadRoadAccessSteps(regional,cancelledAccess,()=>false);
                 if(cancelledAccess.Accesses!=null) throw new InvalidOperationException("Cancelled road access survey published.");
-                Debug.Log("LIVING_CITIES_UNLOADED_ROAD_ACCESS_PASS: candidates="+accessResult.Accesses.Count+"; live terrain/collision clear="+verifiedAccesses);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_ROAD_ACCESS_PASS: candidates="+accessResult.Accesses.Count+"; live terrain/collision clear="+verifiedAccesses);
                 var firstAccess=accessResult.Accesses[0];
                 var doorCandidates=new System.Collections.Generic.List<UnloadedSettlementSurvey.Entrance>(unloaded.Grid.Entrances);
                 var streetPoint=unloaded.Grid.LocalCell(firstAccess.StreetCell);
@@ -207,7 +207,7 @@ namespace LivingCities.DFU
                 var cancelledBuilding=new UnloadedSettlementSurvey.BuildingRoadRoute();
                 yield return unloaded.Grid.ReadRoadBuildingRouteSteps(firstAccess,doorCandidates[0],cancelledBuilding,()=>false);
                 if(cancelledBuilding.Points!=null) throw new InvalidOperationException("Cancelled road/building route published.");
-                Debug.Log("LIVING_CITIES_ROAD_BUILDING_ROUTE_PASS: building="+buildingRoute.BuildingKey+"; points="+buildingRoute.Points.Count+"; metres="+buildingRoute.Metres);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_BUILDING_ROUTE_PASS: building="+buildingRoute.BuildingKey+"; points="+buildingRoute.Points.Count+"; metres="+buildingRoute.Metres);
                 var innKeys=new System.Collections.Generic.HashSet<int>();
                 foreach(var summary in unloaded.Grid.Buildings)
                     if(summary.BuildingType==DaggerfallConnect.DFLocation.BuildingTypes.Tavern) innKeys.Add(summary.buildingKey);
@@ -247,7 +247,7 @@ namespace LivingCities.DFU
                 var atInn=overnightTiming.Evaluate(12*3600+generatedVisit.Stops[0].WalkSeconds+generatedVisit.Stops[0].DwellSeconds+innMetres+1);
                 if(atInn.BuildingKey!=innKey || atInn.Purpose!=ResidentVisitPurpose.Inn || atInn.Phase!=ResidentVisitPhase.Inside)
                     throw new InvalidOperationException("Chained itinerary did not reach its inn.");
-                Debug.Log("LIVING_CITIES_SERVICE_INN_ROUTE_PASS: inn="+innKey+"; segments="+(toInn.Points.Count-1)+"; metres="+innMetres+"; itinerary only, no booking.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SERVICE_INN_ROUTE_PASS: inn="+innKey+"; segments="+(toInn.Points.Count-1)+"; metres="+innMetres+"; itinerary only, no booking.");
                 var nightSkeleton=ResidentTrip.Create("overnight-route-probe",1,directory.MapID,12*3600-10,600,10,
                     new[]{new RoutePoint(207,212),new RoutePoint(207,213)});
                 nightSkeleton.Destination=generatedVisit;
@@ -259,7 +259,7 @@ namespace LivingCities.DFU
                     sleepingVisit.VisitLeaveAt%86400<9*3600 || sleepingVisit.VisitLeaveAt%86400>=11*3600 ||
                     Math.Abs(nightPlan.HomeAt-nightRestored.HomeAt)>0.001)
                     throw new InvalidOperationException("Generated native overnight timing or serialization failed.");
-                Debug.Log("LIVING_CITIES_OVERNIGHT_TIMING_PASS: real service/inn route retains night, morning checkout and return after serialization.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_OVERNIGHT_TIMING_PASS: real service/inn route retains night, morning checkout and return after serialization.");
                 var plannerState=(WorldState)host.GetSaveData();
                 var homePopulation=plannerState.Settlements.Find(s=>s.SettlementId==directory.MapID);
                 var planningPeople=new System.Collections.Generic.List<Resident>();
@@ -286,10 +286,10 @@ namespace LivingCities.DFU
                     };
                     return distance(a).CompareTo(distance(b));
                 });
-                Debug.Log("LIVING_CITIES_PLANNER_ROAD: nodes="+plannedRoad.Count+"; access="+plannerStreetPoint+"; candidates="+planningPeople.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PLANNER_ROAD: nodes="+plannedRoad.Count+"; access="+plannerStreetPoint+"; candidates="+planningPeople.Count);
                 var awaySurvey=new UnloadedSettlementSurvey.Result();
                 yield return UnloadedSettlementSurvey.ReadSteps(awayLocation,awaySurvey);
-                var coldStore=new WorldStateStore(plannerState.WorldSeed,LivingCitiesMod.ConversationArchiveRoot());
+                var coldStore=new WorldStateStore(plannerState.WorldSeed,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 var coldPopulation=new UnloadedPopulation.Result();
                 foreach(var building in awaySurvey.Grid.Buildings)
                 {
@@ -314,8 +314,8 @@ namespace LivingCities.DFU
                 if(completedCold.IsPartial || completedCold.Households.Count<=1 || retainedCold.Residents[0].Id!=coldPerson.Id ||
                     retainedCold.Residents[0].FullName!=coldPerson.FullName || retainedCold.Surname!=coldHome.Surname)
                     throw new InvalidOperationException("Reserved traveler identity changed when hometown was completed.");
-                Debug.Log("LIVING_CITIES_RESERVED_HOUSEHOLD_PASS: one surveyed home reserved; native restore and full hometown completion preserve identity/family; loaded scene unchanged.");
-                var incomingStore=new WorldStateStore(plannerState.WorldSeed,LivingCitiesMod.ConversationArchiveRoot());
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESERVED_HOUSEHOLD_PASS: one surveyed home reserved; native restore and full hometown completion preserve identity/family; loaded scene unchanged.");
+                var incomingStore=new WorldStateStore(plannerState.WorldSeed,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 int incomingDay=(int)(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()/86400)+1;
                 yield return host.ProbeUnloadedTravelDay(awayLocation,directory.LocationData,incomingStore,incomingDay,()=>true);
                 var incomingState=incomingStore.Snapshot();
@@ -333,7 +333,7 @@ namespace LivingCities.DFU
                 if(!incomingStore.IsResidentAway(incomingTrip.ResidentId,incomingTrip.ArrivesAt) ||
                     incomingStore.IsResidentAway(incomingTrip.ResidentId,incomingTrip.HomeAt))
                     throw new InvalidOperationException("Reserved incoming traveler lost serialized home absence or return.");
-                Debug.Log("LIVING_CITIES_UNVISITED_ORIGIN_PASS: production frame runner; one reserved household; original traveler routes to loaded town; native restore.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNVISITED_ORIGIN_PASS: production frame runner; one reserved household; original traveler routes to loaded town; native restore.");
                 var planned=new ResidentTripPlanner.Result();
                 for(int candidate=0;candidate<Math.Min(4,planningPeople.Count);candidate++)
                 {
@@ -341,7 +341,7 @@ namespace LivingCities.DFU
                     var proposal=new ResidentTravelProposal {ResidentId=resident.Id,HomeSettlement=directory.MapID,DestinationSettlement=awayLocation.MapTableData.MapId,
                         DesiredDeparture=Math.Floor(DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()/86400.0)*86400+86400+8*3600,VisitDays=1,Purpose=ResidentVisitPurpose.Shop};
                     yield return ResidentTripPlanner.Prepare(proposal,resident,unloaded.Grid,awaySurvey.Grid,plannedRoad,1,planned,()=>true);
-                    Debug.Log("LIVING_CITIES_PLANNER_CANDIDATE: home="+resident.HomeKey+"; result="+(planned.Trip!=null ? "prepared" : planned.Unavailable));
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PLANNER_CANDIDATE: home="+resident.HomeKey+"; result="+(planned.Trip!=null ? "prepared" : planned.Unavailable));
                     if(planned.Trip!=null) break;
                 }
                 if(planned.Trip==null) throw new InvalidOperationException("Original-resident planner failed: "+planned.Unavailable);
@@ -353,15 +353,15 @@ namespace LivingCities.DFU
                     multiDay.Trip.Destination.Stops[firstInnIndex].DwellSeconds<2*3600 ||
                     multiDay.Trip.Destination.Stops[firstInnIndex].KeepRoomUntil<=multiDay.Trip.ArrivesAt)
                     throw new InvalidOperationException("Native multi-day routing failed: "+multiDay.Unavailable);
-                var overnightStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());overnightStore.Restore(plannerState);overnightStore.ScheduleResidentTrip(multiDay.Trip);
-                var overnightReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());overnightReload.Restore(RoundTrip(overnightStore.Snapshot()));
+                var overnightStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());overnightStore.Restore(plannerState);overnightStore.ScheduleResidentTrip(multiDay.Trip);
+                var overnightReload=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());overnightReload.Restore(RoundTrip(overnightStore.Snapshot()));
                 if(!overnightReload.IsResidentAway(multiDay.Trip.ResidentId,multiDay.Trip.ArrivesAt) ||
                     overnightReload.IsResidentAway(multiDay.Trip.ResidentId,multiDay.Trip.HomeAt))
                     throw new InvalidOperationException("Multi-day original identity lost absence or return.");
                 var cancelledNight=new ResidentTripPlanner.Result();
                 yield return ResidentTripPlanner.ExtendOvernight(planned.Trip,2,awaySurvey.Grid,1,123,cancelledNight,()=>false);
                 if(cancelledNight.Trip!=null) throw new InvalidOperationException("Cancelled multi-day route published a trip.");
-                Debug.Log("LIVING_CITIES_OVERNIGHT_ROUTE_PASS: original="+multiDay.Trip.ResidentId+"; inn="+multiDay.InnDoor.BuildingKey+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_OVERNIGHT_ROUTE_PASS: original="+multiDay.Trip.ResidentId+"; inn="+multiDay.InnDoor.BuildingKey+
                     "; stops="+multiDay.Trip.Destination.Stops.Count+"; no booking or automatic enablement.");
                 var lateTrip=ResidentTrip.CopyValidated(planned.Trip);
                 // Route-only fixture starts at the regional road. Home/gate actor
@@ -382,11 +382,11 @@ namespace LivingCities.DFU
                 var lateVisits=new System.Collections.Generic.List<ResidentVisitSnapshot>(ResidentVisitJourney.Create(latePlan.Trip.ArrivesAt,latePlan.Trip.Destination).ScheduledVisits());
                 if(lateVisits[1].EnterAt<lateVisits[0].LeaveAt || Math.Floor(lateVisits[1].EnterAt/86400)<=Math.Floor(lateVisits[0].EnterAt/86400))
                     throw new InvalidOperationException("Late service did not follow the overnight stay.");
-                var lateStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());lateStore.Restore(plannerState);lateStore.ScheduleResidentTrip(latePlan.Trip);
+                var lateStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());lateStore.Restore(plannerState);lateStore.ScheduleResidentTrip(latePlan.Trip);
                 lateStore.Restore(RoundTrip(lateStore.Snapshot()));
                 if(lateStore.ResidentTripAt(latePlan.Trip.ResidentId,lateVisits[0].EnterAt+60).VisitPurpose!=ResidentVisitPurpose.Inn)
                     throw new InvalidOperationException("Lodging-first native restore lost the arrival night.");
-                Debug.Log("LIVING_CITIES_LODGING_FIRST_PASS: inn="+latePlan.InnDoor.BuildingKey+"; original service="+lateVisits[1].BuildingKey+"; night before service, native restore.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_LODGING_FIRST_PASS: inn="+latePlan.InnDoor.BuildingKey+"; original service="+lateVisits[1].BuildingKey+"; night before service, native restore.");
                 var socialTrip=ResidentTrip.CopyValidated(planned.Trip);
                 var socialStop=ResidentVisitJourney.Copy(multiDay.Trip.Destination).Stops[firstInnIndex];
                 var socialApproach=new System.Collections.Generic.List<SavedRoutePoint>();
@@ -409,12 +409,12 @@ namespace LivingCities.DFU
                 if(sameInn.Trip==null || sameInn.InnDoor.BuildingKey!=socialStop.BuildingKey || sameInn.Trip.Destination.Stops.Count!=1 ||
                     sameInn.Trip.Destination.Stops[0].WalkSeconds!=socialStop.WalkSeconds || sameInn.Trip.Destination.Stops[0].DwellSeconds<26*3600)
                     throw new InvalidOperationException("Social destination could not host its own overnight stay.");
-                var socialStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());socialStore.Restore(plannerState);socialStore.ScheduleResidentTrip(sameInn.Trip);
+                var socialStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());socialStore.Restore(plannerState);socialStore.ScheduleResidentTrip(sameInn.Trip);
                 socialStore.Restore(RoundTrip(socialStore.Snapshot()));
                 if(!socialStore.IsResidentAway(sameInn.Trip.ResidentId,sameInn.Trip.ArrivesAt+86400))
                     throw new InvalidOperationException("Same-inn stay lost home absence on native restore.");
-                Debug.Log("LIVING_CITIES_SAME_INN_STAY_PASS: only available inn="+socialStop.BuildingKey+"; original approach, two nights and serialized absence.");
-                var lodgingStore=new WorldStateStore(plannerState.WorldSeed,LivingCitiesMod.ConversationArchiveRoot());
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SAME_INN_STAY_PASS: only available inn="+socialStop.BuildingKey+"; original approach, two nights and serialized absence.");
+                var lodgingStore=new WorldStateStore(plannerState.WorldSeed,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 lodgingStore.GetOrCreateFamilies(directory.MapID,HousingSurvey.Read(directory));
                 var housed=new ResidentTripPlanner.Result();
                 yield return ResidentTripPlanner.PrepareLodgedTrip(planned.Trip,2,awaySurvey.Grid,awayLocation,lodgingStore,1,123,housed,()=>true);
@@ -426,14 +426,14 @@ namespace LivingCities.DFU
                     lateDay.Trip.Destination.Stops.Count!=2 || lateDay.Trip.Destination.Stops[0].Purpose!=ResidentVisitPurpose.Inn ||
                     lateDay.Trip.Destination.Stops[1].BuildingKey!=lateTrip.Destination.Stops[0].BuildingKey)
                     throw new InvalidOperationException("Late day visit failed capacity-aware overnight promotion: "+lateDay.Unavailable);
-                var lateDayStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());lateDayStore.Restore(lodgingStore.Snapshot());
+                var lateDayStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());lateDayStore.Restore(lodgingStore.Snapshot());
                 lateDayStore.ScheduleResidentTrip(lateDay.Trip);lateDayStore.Restore(RoundTrip(lateDayStore.Snapshot()));
                 var restoredLateTrip=lateDayStore.GetResidentDialogueTrip(lateDay.Trip.ResidentId);
-                Debug.Log("LIVING_CITIES_NATIVE_TRIP_ROUNDING: homeDelta="+(restoredLateTrip.HomeAt-lateDay.Trip.HomeAt).ToString("R"));
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_TRIP_ROUNDING: homeDelta="+(restoredLateTrip.HomeAt-lateDay.Trip.HomeAt).ToString("R"));
                 if(!lateDayStore.IsResidentAway(lateDay.Trip.ResidentId,lateDay.Trip.InnReceptions[0].VisitEnterAt+60) ||
                     lateDayStore.IsResidentAway(lateDay.Trip.ResidentId,restoredLateTrip.HomeAt))
                     throw new InvalidOperationException("Promoted day visit lost original home absence or return.");
-                Debug.Log("LIVING_CITIES_DAY_VISIT_LODGING_PASS: one-day request promotes to one keeper-bound night before original service; no prepayment; native restore.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAY_VISIT_LODGING_PASS: one-day request promotes to one keeper-bound night before original service; no prepayment; native restore.");
                 var remoteHomes=new System.Collections.Generic.List<BuildingSummary>();
                 foreach(var building in awaySurvey.Grid.Buildings)
                     if(building.BuildingType>=DaggerfallConnect.DFLocation.BuildingTypes.House1 && building.BuildingType<=DaggerfallConnect.DFLocation.BuildingTypes.House6) remoteHomes.Add(building);
@@ -453,7 +453,7 @@ namespace LivingCities.DFU
                 if(alternative.Trip.InnReceptions.Count!=1 || alternative.Trip.InnStays.Count!=0)
                     throw new InvalidOperationException("Prepared trip lacks reception plan or paid before arrival.");
                 lodgingStore.ScheduleResidentTrip(alternative.Trip);
-                var lodgingReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());lodgingReload.Restore(RoundTrip(lodgingStore.Snapshot()));
+                var lodgingReload=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());lodgingReload.Restore(RoundTrip(lodgingStore.Snapshot()));
                 if(!lodgingReload.IsResidentAway(alternative.Trip.ResidentId,alternative.Trip.ArrivesAt))
                     throw new InvalidOperationException("Capacity-selected trip lost ownership on restore.");
                 var reception=alternative.Trip.InnReceptions[0];
@@ -470,12 +470,12 @@ namespace LivingCities.DFU
                 if(lodgingReload.ResidentInnAdmission(alternative.Trip.ResidentId,reception.ServiceEndsAt+1)!=TravelerAdmission.Admitted ||
                     lodgingReload.ResidentInnBed(alternative.Trip.ResidentId,reception.ServiceEndsAt+1)==null)
                     throw new InvalidOperationException("Remote payment or bed lost on native restore.");
-                Debug.Log("LIVING_CITIES_PLANNED_RECEPTION_PASS: building="+alternative.InnDoor.BuildingKey+"; remote route, native restore, delayed payment.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PLANNED_RECEPTION_PASS: building="+alternative.InnDoor.BuildingKey+"; remote route, native restore, delayed payment.");
                 var deadState=RoundTrip(lodgingStore.Snapshot());
                 var deadKeeper=deadState.NativePeople.Find(p=>p.Id==reception.KeeperId);
                 if(deadKeeper==null) throw new InvalidOperationException("Remote keeper identity not persisted.");
                 deadKeeper.IsAlive=false;
-                var unavailable=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());unavailable.Restore(deadState);
+                var unavailable=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());unavailable.Restore(deadState);
                 if(unavailable.HasUnpreparedResidentInnAdmission(alternative.Trip.DestinationSettlement,reception.BuildingKey,reception.ServiceEndsAt+1) ||
                     unavailable.TryAdmitResidentInn(alternative.Trip.ResidentId,reception.ServiceEndsAt+1) ||
                     unavailable.Snapshot().ResidentTrips.Find(t=>t.ResidentId==alternative.Trip.ResidentId).ServiceExits.Count!=1)
@@ -483,10 +483,10 @@ namespace LivingCities.DFU
                 unavailable.Restore(RoundTrip(unavailable.Snapshot()));
                 if(unavailable.NativePeopleFor(alternative.Trip.DestinationSettlement).Find(p=>p.Id==reception.KeeperId).IsAlive)
                     throw new InvalidOperationException("Refused arrival revived remote keeper.");
-                Debug.Log("LIVING_CITIES_KEEPER_ADMISSION_PASS: dead bound keeper rejects payment, prepares exit and stays dead across native restore.");
-                Debug.Log("LIVING_CITIES_OVERNIGHT_CAPACITY_PASS: homes="+actualHomes.Households.Count+"; full="+firstInn+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_ADMISSION_PASS: dead bound keeper rejects payment, prepares exit and stays dead across native restore.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_OVERNIGHT_CAPACITY_PASS: homes="+actualHomes.Households.Count+"; full="+firstInn+
                     "; alternative="+alternative.InnDoor.BuildingKey+"; room remains unbooked until arrival.");
-                var plannedStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); plannedStore.Restore(plannerState);
+                var plannedStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); plannedStore.Restore(plannerState);
                 double commitTime=planned.Trip.DepartsAt-1;
                 if(ResidentTripPlanner.Commit(plannedStore,planned.Trip,()=>false,commitTime) ||
                     ResidentTripPlanner.Commit(plannedStore,planned.Trip,()=>true,planned.Trip.DepartsAt))
@@ -494,21 +494,21 @@ namespace LivingCities.DFU
                 if(!ResidentTripPlanner.Commit(plannedStore,planned.Trip,()=>true,commitTime) ||
                     ResidentTripPlanner.Commit(plannedStore,planned.Trip,()=>true,commitTime))
                     throw new InvalidOperationException("Planner commit failed or duplicated an overlapping trip.");
-                Debug.Log("LIVING_CITIES_TRAVEL_COMMIT_PASS: stale/late requests rejected; valid original resident committed once.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TRAVEL_COMMIT_PASS: stale/late requests rejected; valid original resident committed once.");
                 var adjacent=ResidentTrip.Create(planned.Trip.ResidentId,planned.Trip.HomeSettlement,planned.Trip.DestinationSettlement,
                     planned.Trip.DepartsAt,600,100,new[]{new RoutePoint(207.2,213),new RoutePoint(207.8,213)});
-                var adjacentStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); adjacentStore.Restore(plannerState); adjacentStore.ScheduleResidentTrip(adjacent);
-                var adjacentReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); adjacentReload.Restore(RoundTrip(adjacentStore.Snapshot()));
+                var adjacentStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); adjacentStore.Restore(plannerState); adjacentStore.ScheduleResidentTrip(adjacent);
+                var adjacentReload=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); adjacentReload.Restore(RoundTrip(adjacentStore.Snapshot()));
                 var adjacentPosition=adjacentReload.ResidentTripAt(adjacent.ResidentId,adjacent.DepartsAt+30);
                 if(adjacentPosition.Phase!=ResidentTripPhase.Outbound || Math.Abs(adjacentPosition.Position.X-207.5)>0.000001 ||
                     adjacentReload.IsResidentAway(adjacent.ResidentId,adjacent.HomeAt))
                     throw new InvalidOperationException("Two trimmed endpoints lost native save continuity.");
-                Debug.Log("LIVING_CITIES_ADJACENT_ROAD_SAVE_PASS: two trimmed endpoints retain midpoint travel and return after native save.");
-                var restoredPlan=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); restoredPlan.Restore(RoundTrip(plannedStore.Snapshot()));
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ADJACENT_ROAD_SAVE_PASS: two trimmed endpoints retain midpoint travel and return after native save.");
+                var restoredPlan=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restoredPlan.Restore(RoundTrip(plannedStore.Snapshot()));
                 if(!restoredPlan.IsResidentAway(planned.Trip.ResidentId,planned.Trip.ArrivesAt) || restoredPlan.IsResidentAway(planned.Trip.ResidentId,planned.Trip.HomeAt))
                     throw new InvalidOperationException("Prepared trip lost original-resident absence/return across native save.");
-                Debug.Log("LIVING_CITIES_RESIDENT_PLANNER_PASS: original="+planned.Trip.ResidentId+"; destination="+planned.Trip.DestinationSettlement+"; road nodes="+planned.Trip.Road.Count);
-                var batchStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); batchStore.Restore(plannerState);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_PLANNER_PASS: original="+planned.Trip.ResidentId+"; destination="+planned.Trip.DestinationSettlement+"; road nodes="+planned.Trip.Road.Count);
+                var batchStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); batchStore.Restore(plannerState);
                 var batchProposal=new ResidentTravelProposal {ResidentId=planned.Trip.ResidentId,HomeSettlement=planned.Trip.HomeSettlement,
                     DestinationSettlement=planned.Trip.DestinationSettlement,DesiredDeparture=planned.Trip.DepartsAt,VisitDays=3,Purpose=ResidentVisitPurpose.Shop};
                 int batchFrame=Time.frameCount;
@@ -519,23 +519,23 @@ namespace LivingCities.DFU
                 if(batchTrip.InnReceptions.Count!=2 || batchTrip.InnStays.Count!=0 ||
                     batchTrip.InnReceptions.Exists(r=>string.IsNullOrEmpty(r.KeeperId)))
                     throw new InvalidOperationException("Automatic three-day trip lost its two planned nights or prepaid before arrival.");
-                var batchReload=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot());batchReload.Restore(RoundTrip(batchStore.Snapshot()));
+                var batchReload=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot());batchReload.Restore(RoundTrip(batchStore.Snapshot()));
                 if(!batchReload.IsResidentAway(batchTrip.ResidentId,batchTrip.InnReceptions[1].VisitEnterAt) ||
                     batchReload.IsResidentAway(batchTrip.ResidentId,batchTrip.HomeAt))
                     throw new InvalidOperationException("Automatic multi-day trip lost original identity absence or return after save/load.");
-                var cancelledStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); cancelledStore.Restore(plannerState);
+                var cancelledStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); cancelledStore.Restore(plannerState);
                 yield return host.ProbeTravelBatch(directory.LocationData,awayLocation,cancelledStore,homePopulation,batchProposal,()=>false);
                 if(cancelledStore.Snapshot().ResidentTrips.Exists(t=>t.ResidentId==batchProposal.ResidentId))
                     throw new InvalidOperationException("Invalidated live travel batch committed a resident.");
-                Debug.Log("LIVING_CITIES_DAILY_TRAVEL_BATCH_PASS: live Update runner scheduled original resident across frames; cancellation committed nothing.");
-                Debug.Log("LIVING_CITIES_AUTOMATIC_OVERNIGHT_PASS: three-day proposal; two keeper-bound nights; no prepayment; original identity and return survive save/load.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_TRAVEL_BATCH_PASS: live Update runner scheduled original resident across frames; cancellation committed nothing.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_AUTOMATIC_OVERNIGHT_PASS: three-day proposal; two keeper-bound nights; no prepayment; original identity and return survive save/load.");
             }
             finally
             {
                 foreach(var gate in nativeGates) gate.SetOpen(!DaggerfallUnity.Instance.WorldTime.Now.IsNight);
                 Physics.SyncTransforms();
             }
-            Debug.Log("LIVING_CITIES_UNLOADED_GATES_PASS: "+nativeGates.Length+" open crossings/street connections; closed model blocks crossing.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_GATES_PASS: "+nativeGates.Length+" open crossings/street connections; closed model blocks crossing.");
             int clearApproaches=0;
             var approachCells=new System.Collections.Generic.List<GridCell>();
             foreach(var entrance in unloaded.Grid.Entrances)
@@ -555,7 +555,7 @@ namespace LivingCities.DFU
                 yield return null;
             }
             if(clearApproaches<400) throw new InvalidOperationException("Unloaded approach coverage unexpectedly low: "+clearApproaches);
-            Debug.Log("LIVING_CITIES_MODEL_CLEARANCE_PASS: wall/corner/overlap fixtures; "+clearApproaches+" model-cleared entrance approaches also clear in native physics.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_MODEL_CLEARANCE_PASS: wall/corner/overlap fixtures; "+clearApproaches+" model-cleared entrance approaches also clear in native physics.");
             int routeAttempts=0,verifiedSegments=0;
             foreach(var destination in approachCells)
             {
@@ -580,7 +580,7 @@ namespace LivingCities.DFU
                 break;
             }
             if(verifiedSegments<9) throw new InvalidOperationException("No nontrivial model-cleared service route was found.");
-            Debug.Log("LIVING_CITIES_MODEL_ROUTE_PASS: "+verifiedSegments+" route segments clear native collision at both walking heights.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_MODEL_ROUTE_PASS: "+verifiedSegments+" route segments clear native collision at both walking heights.");
             GridCell routeStart=default(GridCell),routeEnd=default(GridCell);
             bool foundPair=false;
             for(int z=0;z<unloaded.Grid.Height && !foundPair;z++)
@@ -601,7 +601,7 @@ namespace LivingCities.DFU
             routeValid=false;
             while(pending.MoveNext()) yield return pending.Current;
             if(cancelled.Points!=null) throw new InvalidOperationException("Cancelled destination route was published.");
-            Debug.Log("LIVING_CITIES_UNLOADED_SETTLEMENT_PASS: all native navigation cells, service buildings and "+matchedDoors+" building doors match without loading a scene.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNLOADED_SETTLEMENT_PASS: all native navigation cells, service buildings and "+matchedDoors+" building doors match without loading a scene.");
             var state=(WorldState)host.GetSaveData();
             var town=state.Settlements.Find(s=>s.SettlementId==directory.MapID);
             var home=town.Households.Find(h=>h.Residents.Count==1 && h.Residents[0].IsAlive &&
@@ -656,15 +656,19 @@ namespace LivingCities.DFU
             if(!actor || !actor.gameObject.activeInHierarchy || actor.Resident.Id!=person.Id ||
                 actor.Resident.FullName!=person.FullName || streets.HouseholdRoutineLocked(home.BuildingKey)!=false)
                 throw new InvalidOperationException("Returning resident did not resume same identity and home access.");
-            Debug.Log("LIVING_CITIES_RESIDENT_TRIP_PASS: "+person.Id+"; home actor/lock departure, native serializer restore and same-identity return.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_RESIDENT_TRIP_PASS: "+person.Id+"; home actor/lock departure, native serializer restore and same-identity return.");
             game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(2);
             var townGeometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation());
-            // This home's surveyed exit is south; do not force a northbound
-            // regional edge through the town after reaching that exit.
+            // Resolve the actual gate/street path to the southern regional road.
             var homeRoad=roads.Find(207,213,207,214,10000);
             if(homeRoad.Count<2) throw new InvalidOperationException("Southern road fixture disconnected.");
-            var departure=ResidentDepartureSurvey.Read(townGeometry,directory,home.BuildingKey,homeRoad);
-            if(departure==null) throw new InvalidOperationException("Home has no clear join to the regional road.");
+            var departure=new ResidentDepartureSurvey();
+            var cancelledDeparture=new ResidentDepartureSurvey();
+            yield return ResidentDepartureSurvey.ReadSteps(townGeometry,directory,home.BuildingKey,homeRoad,cancelledDeparture,()=>false);
+            if(cancelledDeparture.HomeRoute!=null || cancelledDeparture.Road!=null)
+                throw new InvalidOperationException("Cancelled departure published a route.");
+            yield return ResidentDepartureSurvey.ReadSteps(townGeometry,directory,home.BuildingKey,homeRoad,departure,()=>directory && !game.IsPlayerInside);
+            if(departure.HomeRoute==null) throw new InvalidOperationException("Home has no clear join to the regional road.");
             var homeTrip=ResidentTrip.Create(person.Id,directory.MapID,206728581,clock.ToSeconds()+120,600,4000,departure.Road);
             var homePath=departure.HomeRoute;
             double metres=0;
@@ -708,15 +712,15 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Road actor missing at continuous exit handoff.");
             if(joinedActor!=originalBody || joinedActor.GetComponent<DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour>().Entity.CurrentHealth!=30)
                 throw new InvalidOperationException("Road handoff recreated the actor or reset health.");
-            Debug.Log("LIVING_CITIES_ROAD_JOIN_PASS: surveyed clear bridge, matching endpoints and same-resident road handoff.");
-            Debug.Log("LIVING_CITIES_HOME_CONNECTOR_PASS: surveyed home-to-gate movement, lock, serializer continuation and exit.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_JOIN_PASS: surveyed clear bridge, matching endpoints and same-resident road handoff.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_HOME_CONNECTOR_PASS: surveyed home-to-gate movement, lock, serializer continuation and exit.");
             clock.RaiseTime((float)(homeTrip.HomeEntryAt+1-clock.ToSeconds()));
             yield return new WaitForSecondsRealtime(1);
             var returnedBody=streets.FindActor(person.Id);
             if(returnedBody!=originalBody || originalEntity.CurrentHealth!=30 ||
                 UnityEngine.Object.FindObjectOfType<RoadTravelActors>().Find(person.Id))
                 throw new InvalidOperationException("Home return recreated the actor or retained duplicate road ownership.");
-            Debug.Log("LIVING_CITIES_ROAD_TRANSFER_PASS: same live body and health retained in both directions.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_TRANSFER_PASS: same live body and health retained in both directions.");
             state=(WorldState)host.GetSaveData(); state.ResidentTrips.Clear();
             state.ResidentTrips.Add(ResidentTrip.Create(person.Id,directory.MapID,206728581,
                 clock.ToSeconds()-4000,600,4000,connected));
@@ -750,7 +754,7 @@ namespace LivingCities.DFU
             game.PlayerMotor.transform.position=roadGround+Vector3.up+Vector3.right*3;
             yield return new WaitForSecondsRealtime(1);
             if(!roadActors.Find(person.Id)) throw new InvalidOperationException("Road resident failed to reconstruct nearby.");
-            Debug.Log("LIVING_CITIES_ROAD_ACTOR_PASS: same named resident walks wilderness terrain; distance cull and reconstruction.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ROAD_ACTOR_PASS: same named resident walks wilderness terrain; distance cull and reconstruction.");
             state=(WorldState)host.GetSaveData();
             var itinerary=new ResidentDestination {ExitWalkSeconds=60};
             itinerary.Stops.Add(new ResidentVisitStop {BuildingKey=10,Purpose=ResidentVisitPurpose.Shop,WalkSeconds=30,DwellSeconds=120,
@@ -759,13 +763,13 @@ namespace LivingCities.DFU
                 Route=new System.Collections.Generic.List<SavedRoutePoint> {new SavedRoutePoint {X=10,Z=0},new SavedRoutePoint {X=20,Z=0}}});
             itinerary.ExitRoute.Add(new SavedRoutePoint {X=20,Z=0}); itinerary.ExitRoute.Add(new SavedRoutePoint {X=0,Z=0});
             state.ResidentTrips[0].Destination=itinerary;
-            var itineraryStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); itineraryStore.Restore(RoundTrip(state));
+            var itineraryStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); itineraryStore.Restore(RoundTrip(state));
             var timed=ResidentTrip.CopyValidated(state.ResidentTrips[0]);
             if(itineraryStore.ResidentTripAt(person.Id,timed.ArrivesAt+60).BuildingKey!=10 ||
                 itineraryStore.ResidentTripAt(person.Id,timed.ArrivesAt+200).BuildingKey!=20 ||
                 itineraryStore.ResidentTripAt(person.Id,timed.HomeAt).Phase!=ResidentTripPhase.Home)
                 throw new InvalidOperationException("Native destination itinerary serialization changed timing or stop identity.");
-            Debug.Log("LIVING_CITIES_DESTINATION_SAVE_PASS: two-stop itinerary and derived home return survive native serializer.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_SAVE_PASS: two-stop itinerary and derived home return survive native serializer.");
             itineraryStore.GetOrCreate(timed.DestinationSettlement,new[]{30},1);
             var victim=itineraryStore.DestinationResidents(timed.DestinationSettlement,timed.ArrivesAt+60).Find(r=>r.Id==person.Id);
             if(victim==null) throw new InvalidOperationException("Native visitor identity missing.");
@@ -773,17 +777,17 @@ namespace LivingCities.DFU
             itineraryStore.LocateViolence(incident.Id,10,0,0,0);
             victim.IsAlive=false;
             itineraryStore.ConfirmCorpse(incident.Id,timed.ArrivesAt+61);
-            var crimeStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); crimeStore.Restore(RoundTrip(itineraryStore.Snapshot()));
+            var crimeStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); crimeStore.Restore(RoundTrip(itineraryStore.Snapshot()));
             if(crimeStore.DestinationResidents(timed.DestinationSettlement,timed.ArrivesAt+62).Count!=0 ||
                 crimeStore.ResidentTripAt(victim.Id,timed.HomeAt).Phase!=ResidentTripPhase.Unavailable ||
                 crimeStore.RecordViolence(timed.DestinationSettlement,victim.Id,timed.HomeAt).Id!=incident.Id)
                 throw new InvalidOperationException("Native visitor death or incident lost across serialization.");
-            Debug.Log("LIVING_CITIES_DESTINATION_CRIME_SAVE_PASS: original resident death and destination corpse survive native serializer.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_CRIME_SAVE_PASS: original resident death and destination corpse survive native serializer.");
             game.StreamingWorld.TeleportToCoordinates(207,213);
             yield return new WaitForSecondsRealtime(3); yield return Ready(streets);
             directory=game.StreamingWorld.GetCurrentBuildingDirectory();
             townGeometry=new TownGeometry(directory,game.StreamingWorld.GetCurrentCityNavigation());
-            var visitorStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); visitorStore.Restore((WorldState)host.GetSaveData());
+            var visitorStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); visitorStore.Restore((WorldState)host.GetSaveData());
             var foreign=visitorStore.GetOrCreate(206728581,new[]{30},1).Households[0].Residents[0];
             var visitTrip=ResidentTrip.Create(foreign.Id,206728581,directory.MapID,clock.ToSeconds()-100,600,100,
                 new[]{new RoutePoint(207,212),new RoutePoint(207,213)});
@@ -805,7 +809,7 @@ namespace LivingCities.DFU
             yield return new WaitForSecondsRealtime(2);
             if(!visitor || Vector3.Distance(visitorBefore,visitor.transform.position)<0.01f)
                 throw new InvalidOperationException("Destination visitor failed to move along visit route.");
-            Debug.Log("LIVING_CITIES_DESTINATION_ACTOR_PASS: original foreign resident renders and walks destination itinerary.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_ACTOR_PASS: original foreign resident renders and walks destination itinerary.");
             owner=null;
             foreach(var candidate in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
                 foreach(var entry in candidate.Doors ?? new StaticDoor[0])
@@ -828,7 +832,7 @@ namespace LivingCities.DFU
                 System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(streets);
             var exitRoute=exitGeometry.RouteToExit(streets.FindActor(foreign.Id).transform.position-Vector3.up);
             if(exitRoute.Count<2) throw new InvalidOperationException("Foreign visitor has no service exit route.");
-            var exitStore=new WorldStateStore(1,LivingCitiesMod.ConversationArchiveRoot()); exitStore.Restore((WorldState)host.GetSaveData());
+            var exitStore=new WorldStateStore(1,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); exitStore.Restore((WorldState)host.GetSaveData());
             var exitVisit=exitStore.ResidentTripAt(foreign.Id,clock.ToSeconds());
             exitStore.SaveResidentServiceExit(foreign.Id,new ResidentServiceExit {BuildingKey=home.BuildingKey,
                 VisitEnterAt=exitVisit.VisitEnterAt,VisitLeaveAt=exitVisit.VisitLeaveAt,StartedAt=clock.ToSeconds(),
@@ -841,11 +845,11 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Foreign service exit vanished before reaching door.");
             clock.RaiseTime((float)(exitEnd+1-clock.ToSeconds())); yield return new WaitForSecondsRealtime(1);
             if(streets.FindActor(foreign.Id)) throw new InvalidOperationException("Foreign service exit failed to leave interior.");
-            Debug.Log("LIVING_CITIES_SERVICE_EXIT_PASS: surveyed exit survives native restore, retains interior presence until exit then advances onward.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SERVICE_EXIT_PASS: surveyed exit survives native restore, retains interior presence until exit then advances onward.");
             clock.RaiseTime((float)(acceptedTrip.ReturnsFromVisitAt+1-clock.ToSeconds()));
             yield return new WaitForSecondsRealtime(1);
             if(streets.FindActor(foreign.Id)) throw new InvalidOperationException("Departed visitor still occupies destination interior.");
-            Debug.Log("LIVING_CITIES_DESTINATION_INTERIOR_PASS: same visitor enters scheduled building, restores and leaves on time.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DESTINATION_INTERIOR_PASS: same visitor enters scheduled building, restores and leaves on time.");
         }
         private static WorldState RoundTrip(WorldState state)
         { return (WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),state)); }
@@ -878,7 +882,7 @@ namespace LivingCities.DFU
             float deadline=Time.realtimeSinceStartup+30;
             while(!streets.Ready && Time.realtimeSinceStartup<deadline) yield return null;
             if(!streets.Ready) throw new InvalidOperationException("Trip fixture population reload timed out; "+
-                UnityEngine.Object.FindObjectOfType<LivingCitiesMod>().TestStatus());
+                UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>().TestStatus());
         }
     }
 }

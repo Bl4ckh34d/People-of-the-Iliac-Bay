@@ -5,10 +5,10 @@ using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Runs only after the family fixture in the explicitly requested bed probe.
     public static class BedGeometryProbe
@@ -20,7 +20,7 @@ namespace LivingCities.DFU
             if (!interior) throw new InvalidOperationException("Bed probe requires loaded family home.");
             var beds = BedGeometry.Read(interior);
             if (beds.Count == 0) throw new InvalidOperationException("Family fixture contains no actual bed.");
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var world = (WorldState)adapter.GetSaveData();
             var town = world.Settlements.Find(t => t.SettlementId == game.PlayerGPS.CurrentLocation.MapTableData.MapId);
             var home = town.Households.Find(h => h.BuildingKey == interior.EntryDoor.buildingKey);
@@ -40,7 +40,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Multiple residents assigned to one bed.");
             string before = Signature(claims);
             // Reload the existing disposable fixture, then reconstruct from new scene objects.
-            int save = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - family home");
+            int save = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "People of the Iliac Bay - family home");
             bool loaded = false;
             SaveLoadManager.OnLoadEventHandler handler = ignored => loaded = true;
             SaveLoadManager.OnLoad += handler;
@@ -90,7 +90,7 @@ namespace LivingCities.DFU
                     if (bed.ModelId == modelId) { VerifySurface(interior, bed); verifiedModels.Add(modelId); }
                 if (!verifiedModels.Contains(modelId)) throw new InvalidOperationException("Real bed fixture did not contain requested model.");
             }
-            Debug.Log("LIVING_CITIES_TOWN_BEDS_PASS: all three loaded mattress models, exclusive family beds and save/load; familyBeds=" + beds.Count + "; residents=" + living);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_BEDS_PASS: all three loaded mattress models, exclusive family beds and save/load; familyBeds=" + beds.Count + "; residents=" + living);
         }
         private static void VerifySurface(DaggerfallInterior interior, BedAnchor bed)
         {
@@ -101,7 +101,7 @@ namespace LivingCities.DFU
                 !hit.collider.transform.IsChildOf(interior.transform) || hit.normal.y < 0.99f ||
                 Vector3.Distance(hit.point, center) > 0.005f)
                 throw new InvalidOperationException("Calculated mattress does not meet the loaded collider: " + bed.ModelId + " at " + center);
-            Debug.Log("LIVING_CITIES_TOWN_BED_SURFACE: model=" + bed.ModelId + "; building=" + interior.EntryDoor.buildingKey +
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_BED_SURFACE: model=" + bed.ModelId + "; building=" + interior.EntryDoor.buildingKey +
                 "; record=" + bed.RecordIndex + "; center=" + center + "; hit=" + hit.point + "; size=" + bed.Length + "x" + bed.Width);
         }
         private static string Signature(List<BedAssignment> claims)

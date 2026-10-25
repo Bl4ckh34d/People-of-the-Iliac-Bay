@@ -1,0 +1,10 @@
+# Receipt-bound speech-act stage
+
+The user approved comparing D3 Nano, Qwen and their combination, then integrating the better supported solution. Existing native combat remains authoritative. Work takes place in the current dirty checkout because HEAD does not contain the assembled mod. Portrait assets are outside this change.
+
+1. Re-run the existing 18-case diagnostic against the actual Nano Q8 and Qwen2.5-3B Q4 endpoints. Freeze a new contrast corpus before inference, including quoted speech, fictional questions, real conditional threats, negation, mixed statements and context-dependent replies. Keep expected labels out of requests; compare both option orders.
+2. Compare a small, personality-independent classification task. Personality belongs in reaction magnitude, not in whether the player actually threatened someone. Score false direct threats separately. Compare independent agreement as an additional two-model strategy; do not treat a prior model suggestion as verified evidence.
+3. Add a typed classifier result tied to the exact appraisal request. Lock its speech category in the later grammar and parser. Indirect/uncertain speech cannot authorize threat punishment against the speaker. Rejected, missing or stale classification must never fall back to unconstrained threat appraisal.
+4. Integrate the selected classifier into the existing cancellable background dispatch; preserve foreground priority, save ownership and final native freshness checks. Inspect the immediate dialogue hostility path for the same bypass.
+5. Add failing regression tests before implementation for class replacement, protected speech penalties, foreign request results, stale/duplicate commits and cancellation. Run Core, adapter, runtime compile and targeted live completion checks. Obtain an independent Luna/high code review, repair findings, then build/install the mod if checks pass.
+6. Report model accuracy and latency separately from native acceptance, resource observations separately from estimates, and remaining gameplay limitations. Capture verified results in Obsidian.

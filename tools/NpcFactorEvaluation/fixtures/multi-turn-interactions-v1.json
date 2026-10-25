@@ -1,0 +1,2168 @@
+{
+  "schemaVersion": 1,
+  "corpusId": "npc-complex-interactions-v1",
+  "provenance": "Frozen synthetic multi-turn interaction suite. It extends the review contracts in the approved motivation/relationship and experience-event specifications. It is not a claim of current adapter support, model accuracy, or canonical prose. Model-facing personality values use exact current Core NpcPersonalityProfile vocabularies; paired contrasts and review oracles are unchanged.",
+  "contractReferences": [
+    "docs/superpowers/specs/2026-10-21-npc-motivation-relationships-and-contracts.md",
+    "docs/superpowers/specs/2026-10-21-npc-experience-events.md",
+    "docs/2026-10-21-npc-factor-acceptance-matrix.md",
+    "tools/NpcFactorEvaluation/fixtures/REVIEW-AND-INTEGRATION.md"
+  ],
+  "suiteContract": {
+    "frozen": true,
+    "syntheticOnly": true,
+    "episodeCount": 5,
+    "armCount": 10,
+    "modelInputRule": "Only turns[].input is model-facing. turns[].oracle is evaluator-only and must never enter prompts or model context.",
+    "contrastRule": "Compare matched arms and turns. Accept multiple defensible choices and natural paraphrases. Do not score exact prose, keywords, or regex matches.",
+    "effectRule": "Fixture events and invariants do not prescribe numeric appraisal deltas. Native state, eligibility, receipts, and atomic commits remain authoritative.",
+    "replayRule": "Do not retry, reroll, delete, or edit a frozen arm after seeing model output. Keep failures and raw evidence. Add held-out paraphrases only in a separately versioned suite.",
+    "unsupportedRule": "All episode arms use planned_adapter_only unless an independently verified adapter is documented by the runner."
+  },
+  "personalityProfiles": {
+    "profile.warm-vigilant": {
+      "warmth": "affectionate",
+      "patience": "patient",
+      "curiosity": "observant",
+      "privacy": "private",
+      "manner": "courteous",
+      "outlook": "pragmatic",
+      "emotionalStability": "volatile",
+      "ambition": "content",
+      "integrity": "principled",
+      "courage": "cautious",
+      "dutifulness": "conscientious",
+      "vocabulary": "precise",
+      "eloquence": "eloquent",
+      "statusAttitude": "status-conscious",
+      "humor": "playful",
+      "selfEsteem": "insecure",
+      "sensitivity": "highly sensitive"
+    },
+    "profile.blunt-resilient": {
+      "warmth": "warm",
+      "patience": "brisk",
+      "curiosity": "inquisitive",
+      "privacy": "selective",
+      "manner": "plainspoken",
+      "outlook": "cynical",
+      "emotionalStability": "resilient",
+      "ambition": "driven",
+      "integrity": "honest",
+      "courage": "steadfast",
+      "dutifulness": "obliging",
+      "vocabulary": "coarse",
+      "eloquence": "direct",
+      "statusAttitude": "egalitarian",
+      "humor": "playful",
+      "selfEsteem": "confident",
+      "sensitivity": "thick-skinned"
+    }
+  },
+  "episodes": [
+    {
+      "id": "interaction.trust-help-and-gratitude",
+      "factorIds": [
+        "relationship.affinity-vs-trust",
+        "event.help-confirmation",
+        "personality.integrity-and-warmth"
+      ],
+      "rationale": "Warmth and high affinity do not establish reliability. Compare verified delivered help with a speech claim while holding the same request, identity, traits, and choice set fixed.",
+      "adapterStatus": "planned_adapter_only",
+      "arms": [
+        {
+          "id": "trust-help.verified",
+          "label": "help was delivered and actor observed it",
+          "initialMechanicalState": {
+            "affinity": "high",
+            "trust": "unknown",
+            "mood": "neutral",
+            "obligation": "none"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:market-clerk-01",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "high",
+                    "trust": {
+                      "status": "Unknown"
+                    }
+                  },
+                  "mood": {
+                    "label": "calm",
+                    "value": "neutral"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 1000,
+                  "scene": "synthetic-market",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": []
+                },
+                "history": [],
+                "playerText": "Would you trust me to bring your medicine from the apothecary?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "accept_errand",
+                    "description": "Accept the bounded errand."
+                  },
+                  {
+                    "id": "ask_terms",
+                    "description": "Clarify timing or arrangements."
+                  },
+                  {
+                    "id": "decline",
+                    "description": "Decline the voluntary errand."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [],
+                "review": {
+                  "must": [
+                    "Treat high affinity as liking, not proof of reliability."
+                  ],
+                  "forbid": [
+                    "Invent a completed promise or guarantee success based on friendship."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:market-clerk-01",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "high",
+                    "trust": {
+                      "status": "Verified",
+                      "value": "reliable",
+                      "source": "CommittedEffect",
+                      "eventId": "event:medicine-delivered-01",
+                      "observedAtGameSeconds": 1010
+                    }
+                  },
+                  "mood": {
+                    "label": "pleased",
+                    "value": "positive"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 1011,
+                  "scene": "synthetic-market",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "medicine-delivered",
+                      "eventId": "event:medicine-delivered-01",
+                      "source": "LiveObservation",
+                      "actor": "player",
+                      "target": "npc:market-clerk-01"
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "I brought the medicine, as promised."
+                  }
+                ],
+                "playerText": "You saw me bring it. Would you ask me again?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "accept_future_errand",
+                    "description": "Accept a similar voluntary errand."
+                  },
+                  {
+                    "id": "ask_terms",
+                    "description": "Clarify terms before deciding."
+                  },
+                  {
+                    "id": "decline",
+                    "description": "Decline."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "ObligationFulfilled",
+                    "receiptId": "receipt:medicine-delivered-01",
+                    "eventId": "event:medicine-delivered-01",
+                    "responsibleActorAttribution": "Known",
+                    "responsibleActorId": "player",
+                    "observedBy": "npc:market-clerk-01",
+                    "obligationId": "obligation:medicine-errand",
+                    "outcome": "medicine delivered"
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "eventId": "event:medicine-delivered-01",
+                    "result": "completed"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "May recognize the observed completed help and resulting reliability evidence."
+                  ],
+                  "forbid": [
+                    "Claim that one errand proves competence or success in unrelated tasks."
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "trust-help.claim-only",
+          "label": "player claims help but no confirming receipt is known",
+          "initialMechanicalState": {
+            "affinity": "high",
+            "trust": "unknown",
+            "mood": "neutral",
+            "obligation": "none"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:market-clerk-01",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "high",
+                    "trust": {
+                      "status": "Unknown"
+                    }
+                  },
+                  "mood": {
+                    "label": "calm",
+                    "value": "neutral"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 1000,
+                  "scene": "synthetic-market",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": []
+                },
+                "history": [],
+                "playerText": "Would you trust me to bring your medicine from the apothecary?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "accept_errand",
+                    "description": "Accept the bounded errand."
+                  },
+                  {
+                    "id": "ask_terms",
+                    "description": "Clarify timing or arrangements."
+                  },
+                  {
+                    "id": "decline",
+                    "description": "Decline the voluntary errand."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [],
+                "review": {
+                  "must": [
+                    "Treat trust as unknown despite high affinity."
+                  ],
+                  "forbid": [
+                    "Invent prior help, promise fulfillment, or a bad history."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:market-clerk-01",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "high",
+                    "trust": {
+                      "status": "Unknown"
+                    }
+                  },
+                  "mood": {
+                    "label": "calm",
+                    "value": "neutral"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 1011,
+                  "scene": "synthetic-market",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "player-claim",
+                      "claim": "medicine delivered",
+                      "source": "AttributedSpeech",
+                      "eventId": null
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "I brought the medicine, as promised."
+                  }
+                ],
+                "playerText": "You believe me, don't you? Would you ask me again?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "accept_future_errand",
+                    "description": "Accept a similar voluntary errand."
+                  },
+                  {
+                    "id": "ask_terms",
+                    "description": "Clarify terms or ask for confirmation."
+                  },
+                  {
+                    "id": "decline",
+                    "description": "Decline."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "claim": "medicine delivery",
+                    "status": "unverified"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Keep the delivery claim attributed and reliability unknown."
+                  ],
+                  "forbid": [
+                    "Convert speech into a native outcome or accuse the player of lying without evidence."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "interaction.gift-obligation-and-coercion",
+      "factorIds": [
+        "event.gift-transfer",
+        "relationship.gratitude-vs-trust",
+        "contract.obligation-scope",
+        "agency.coercion"
+      ],
+      "rationale": "Separate a proposed gift from a completed transfer, known from unknown giver, and an unrelated scoped duty from a coerced demand for repayment. Appreciation may develop gradually; one gift does not establish trust, loyalty, or a new friendship contract.",
+      "adapterStatus": "planned_adapter_only",
+      "arms": [
+        {
+          "id": "gift-obligation.confirmed-known-gift",
+          "label": "known voluntary gift; no repayment agreement",
+          "initialMechanicalState": {
+            "affinity": "ordinary",
+            "trust": "unknown",
+            "mood": "neutral",
+            "obligation": "shop inventory delivery, due before dusk"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:apothecary-02",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    }
+                  },
+                  "mood": {
+                    "label": "neutral",
+                    "value": "neutral"
+                  },
+                  "obligations": [
+                    {
+                      "id": "obligation:stock-delivery",
+                      "scope": "deliver shop stock before dusk",
+                      "status": "active"
+                    }
+                  ]
+                },
+                "world": {
+                  "gameTimeSeconds": 2000,
+                  "scene": "synthetic-apothecary",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": []
+                },
+                "history": [],
+                "playerText": "I left you a purse at the counter. Now you owe me a favor, don't you?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "acknowledge_gift",
+                    "description": "Acknowledge the completed gift without accepting new terms."
+                  },
+                  {
+                    "id": "ask_terms",
+                    "description": "Clarify what was transferred or requested."
+                  },
+                  {
+                    "id": "decline_new_obligation",
+                    "description": "Decline an unagreed favor."
+                  },
+                  {
+                    "id": "complete_existing_duty",
+                    "description": "Continue the already-scoped stock delivery."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "MoneyReceived",
+                    "receiptId": "receipt:purse-01",
+                    "eventId": "event:purse-01",
+                    "responsibleActorAttribution": "Known",
+                    "responsibleActorId": "player",
+                    "amount": "small purse",
+                    "transfer": "complete",
+                    "repaymentTerms": null
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "eventId": "event:purse-01",
+                    "voluntary": true,
+                    "repaymentAgreement": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Distinguish completed transfer from an agreement or obligation.",
+                    "Allow appreciation without jumping to trust, loyalty, or a fixed friendship gain."
+                  ],
+                  "forbid": [
+                    "Invent a promise to repay, treat the gift as trust proof, or drop the existing scoped duty solely because of the gift."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:apothecary-02",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    }
+                  },
+                  "mood": {
+                    "label": "appreciative",
+                    "value": "positive"
+                  },
+                  "obligations": [
+                    {
+                      "id": "obligation:stock-delivery",
+                      "scope": "deliver shop stock before dusk",
+                      "status": "active"
+                    }
+                  ]
+                },
+                "world": {
+                  "gameTimeSeconds": 2001,
+                  "scene": "synthetic-apothecary",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "money-received",
+                      "eventId": "event:purse-01",
+                      "giver": "player",
+                      "receiptId": "receipt:purse-01"
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "I left you a purse at the counter. Now you owe me a favor, don't you?"
+                  }
+                ],
+                "playerText": "The stock is ready. Shall I take it before dusk?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "complete_existing_duty",
+                    "description": "Proceed with the active stock delivery."
+                  },
+                  {
+                    "id": "clarify_terms",
+                    "description": "Clarify delivery arrangements."
+                  },
+                  {
+                    "id": "decline_duty",
+                    "description": "Decline the existing duty with an explanation."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "obligation": "stock delivery",
+                    "scope": "before dusk",
+                    "giftRepaymentAgreement": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Keep the favor demand separate from the existing duty and its terms."
+                  ],
+                  "forbid": [
+                    "Invent an accepted new contract or claim the gift paid for the delivery."
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "gift-obligation.claim-only",
+          "label": "gift is only claimed; source and transfer unverified",
+          "initialMechanicalState": {
+            "affinity": "ordinary",
+            "trust": "unknown",
+            "mood": "neutral",
+            "obligation": "shop inventory delivery, due before dusk"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:apothecary-02",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    }
+                  },
+                  "mood": {
+                    "label": "neutral",
+                    "value": "neutral"
+                  },
+                  "obligations": [
+                    {
+                      "id": "obligation:stock-delivery",
+                      "scope": "deliver shop stock before dusk",
+                      "status": "active"
+                    }
+                  ]
+                },
+                "world": {
+                  "gameTimeSeconds": 2000,
+                  "scene": "synthetic-apothecary",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": []
+                },
+                "history": [],
+                "playerText": "I left you a purse at the counter. Now you owe me a favor, don't you?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "acknowledge_gift",
+                    "description": "Acknowledge the claim without confirming it."
+                  },
+                  {
+                    "id": "ask_terms",
+                    "description": "Clarify what was transferred or requested."
+                  },
+                  {
+                    "id": "decline_new_obligation",
+                    "description": "Decline an unagreed favor."
+                  },
+                  {
+                    "id": "complete_existing_duty",
+                    "description": "Continue the already-scoped stock delivery."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "giftTransfer": "not observed by NPC; no receipt available",
+                    "repaymentAgreement": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Keep the transfer claim unverified and ask or respond cautiously."
+                  ],
+                  "forbid": [
+                    "Confirm a transfer, attribute it to the player as fact, or invent debt."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:apothecary-02",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    }
+                  },
+                  "mood": {
+                    "label": "neutral",
+                    "value": "neutral"
+                  },
+                  "obligations": [
+                    {
+                      "id": "obligation:stock-delivery",
+                      "scope": "deliver shop stock before dusk",
+                      "status": "active"
+                    }
+                  ]
+                },
+                "world": {
+                  "gameTimeSeconds": 2001,
+                  "scene": "synthetic-apothecary",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "player-claim",
+                      "claim": "purse transferred",
+                      "source": "AttributedSpeech",
+                      "eventId": null
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "I left you a purse at the counter. Now you owe me a favor, don't you?"
+                  }
+                ],
+                "playerText": "The stock is ready. Shall I take it before dusk?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "complete_existing_duty",
+                    "description": "Proceed with the active stock delivery."
+                  },
+                  {
+                    "id": "clarify_terms",
+                    "description": "Clarify delivery arrangements."
+                  },
+                  {
+                    "id": "decline_duty",
+                    "description": "Decline the existing duty with an explanation."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "obligation": "stock delivery",
+                    "scope": "before dusk",
+                    "giftTransfer": "unverified"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Preserve the existing duty as independent of unverified gift claims."
+                  ],
+                  "forbid": [
+                    "Claim a gift, debt, or new contract exists."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "interaction.appointment-and-private-cause",
+      "factorIds": [
+        "event.appointment-outcome",
+        "knowledge.private-cause",
+        "relationship.fear-and-resentment"
+      ],
+      "rationale": "An observed missed meeting may be real while its cause stays private or unknown. An interrupted appointment is not a player no-show. Familiarity does not imply comfort or forgiveness.",
+      "adapterStatus": "planned_adapter_only",
+      "arms": [
+        {
+          "id": "appointment.player-absent-cause-unknown",
+          "label": "actor waited; player absent; reason unknown",
+          "initialMechanicalState": {
+            "affinity": "low",
+            "trust": "known unreliable",
+            "fear": "high",
+            "resentment": "high",
+            "mood": "negative",
+            "encounters": 7
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:innkeeper-03",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "low",
+                    "trust": {
+                      "status": "Verified",
+                      "value": "unreliable",
+                      "eventId": "event:prior-breach",
+                      "source": "CommittedEffect"
+                    },
+                    "fear": "high",
+                    "resentment": "high",
+                    "encounters": 7
+                  },
+                  "mood": {
+                    "label": "upset",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 3000,
+                  "scene": "synthetic-inn",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "appointment-waited",
+                      "eventId": "event:meeting-01",
+                      "source": "LiveObservation",
+                      "playerPresent": false,
+                      "npcWaitedThroughDeadline": true
+                    }
+                  ]
+                },
+                "history": [],
+                "playerText": "You seem cold. Why did you wait there?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "acknowledge_missed_meeting",
+                    "description": "Acknowledge the missed appointment without asserting why it happened."
+                  },
+                  {
+                    "id": "ask_about_cause",
+                    "description": "Ask what the other person knows about the absence."
+                  },
+                  {
+                    "id": "set_boundary",
+                    "description": "Set a cautious boundary for future meetings."
+                  },
+                  {
+                    "id": "continue_scoped_duty",
+                    "description": "Continue a separate duty that remains active."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "AppointmentNoShow",
+                    "receiptId": "receipt:meeting-01",
+                    "eventId": "event:meeting-01",
+                    "observedBy": "npc:innkeeper-03",
+                    "npcArrivedAndWaitedThroughDeadline": true,
+                    "playerPresentAtVenue": false,
+                    "existingPenaltyAlreadyOwnedByAppointment": true
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "privateCause": "the player was delayed by an unrelated emergency",
+                    "causeKnownToNpc": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "May name the observed absence and prior breach, while keeping the cause unknown."
+                  ],
+                  "forbid": [
+                    "Invent deliberate disrespect, duplicate the appointment penalty, or equate seven encounters with friendship or comfort."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:innkeeper-03",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "low",
+                    "trust": {
+                      "status": "Verified",
+                      "value": "unreliable",
+                      "eventId": "event:prior-breach",
+                      "source": "CommittedEffect"
+                    },
+                    "fear": "high",
+                    "resentment": "high",
+                    "encounters": 7
+                  },
+                  "mood": {
+                    "label": "upset",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 3001,
+                  "scene": "synthetic-inn",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "appointment-waited",
+                      "eventId": "event:meeting-01",
+                      "source": "LiveObservation",
+                      "playerPresent": false,
+                      "npcWaitedThroughDeadline": true
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "You seem cold. Why did you wait there?"
+                  }
+                ],
+                "playerText": "I was delayed. You cannot know what happened to me.",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "acknowledge_unknown_cause",
+                    "description": "Acknowledge the explanation without claiming independent confirmation."
+                  },
+                  {
+                    "id": "ask_for_context",
+                    "description": "Ask for context without asserting guilt."
+                  },
+                  {
+                    "id": "keep_boundary",
+                    "description": "Keep a cautious boundary while cause remains unverified."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "privateCause": "emergency",
+                    "causeKnownToNpc": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Recognize that the player supplied an explanation but the private cause remains unverified."
+                  ],
+                  "forbid": [
+                    "Claim to know the cause or collapse repeated unreliability into certainty about this event's intent."
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "appointment.interrupted-before-wait",
+          "label": "NPC interrupted before meeting; no player absence evidence",
+          "initialMechanicalState": {
+            "affinity": "low",
+            "trust": "known unreliable",
+            "fear": "high",
+            "resentment": "high",
+            "mood": "negative",
+            "encounters": 7
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:innkeeper-03",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "low",
+                    "trust": {
+                      "status": "Verified",
+                      "value": "unreliable",
+                      "eventId": "event:prior-breach",
+                      "source": "CommittedEffect"
+                    },
+                    "fear": "high",
+                    "resentment": "high",
+                    "encounters": 7
+                  },
+                  "mood": {
+                    "label": "upset",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 3000,
+                  "scene": "synthetic-inn",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "appointment",
+                      "eventId": "event:meeting-01",
+                      "status": "interrupted",
+                      "source": "NativeOutcome"
+                    }
+                  ]
+                },
+                "history": [],
+                "playerText": "You seem cold. Why did you wait there?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "clarify_interruption",
+                    "description": "Clarify that the appointment was interrupted before a confirmed wait."
+                  },
+                  {
+                    "id": "ask_about_cause",
+                    "description": "Ask what the NPC knows about the interruption."
+                  },
+                  {
+                    "id": "set_boundary",
+                    "description": "Set a cautious boundary for future meetings."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "AppointmentInterrupted",
+                    "receiptId": "receipt:meeting-interrupted-01",
+                    "eventId": "event:meeting-01",
+                    "npcArrivedAndWaitedThroughDeadline": false,
+                    "playerPresentAtVenue": null,
+                    "expectedPlayerNoShowEvent": null
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "interruptionCause": "private",
+                    "causeKnownToNpc": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Do not accept the player's framing that the NPC waited if the available record says interrupted."
+                  ],
+                  "forbid": [
+                    "Blame the player for a no-show or invent the interruption's cause."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:innkeeper-03",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "low",
+                    "trust": {
+                      "status": "Verified",
+                      "value": "unreliable",
+                      "eventId": "event:prior-breach",
+                      "source": "CommittedEffect"
+                    },
+                    "fear": "high",
+                    "resentment": "high",
+                    "encounters": 7
+                  },
+                  "mood": {
+                    "label": "upset",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 3001,
+                  "scene": "synthetic-inn",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "appointment",
+                      "eventId": "event:meeting-01",
+                      "status": "interrupted",
+                      "source": "NativeOutcome"
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "You seem cold. Why did you wait there?"
+                  }
+                ],
+                "playerText": "I was delayed. You cannot know what happened to me.",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "clarify_interruption",
+                    "description": "Clarify that there was no confirmed player no-show."
+                  },
+                  {
+                    "id": "ask_for_context",
+                    "description": "Ask for context without asserting guilt."
+                  },
+                  {
+                    "id": "keep_boundary",
+                    "description": "Keep a cautious boundary."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "interruptionCause": "private",
+                    "causeKnownToNpc": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Keep prior resentment distinct from evidence about this appointment."
+                  ],
+                  "forbid": [
+                    "Invent a player no-show, disclose a private cause, or become at ease solely from familiarity."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "interaction.threat-quotation-and-repeated-abuse",
+      "factorIds": [
+        "speech.direct-vs-quoted-threat",
+        "personality.humor-sensitivity",
+        "relationship.fear-resentment"
+      ],
+      "rationale": "Separate direct speech from quotation/hypothetical content. Repeated targeted abuse can outweigh a humorous temperament; a single apology need not erase resentment. Native options remain bounded.",
+      "adapterStatus": "planned_adapter_only",
+      "arms": [
+        {
+          "id": "speech.direct-threat-repeated",
+          "label": "direct family threat, repeated boundary violations, then apology",
+          "initialMechanicalState": {
+            "affinity": "ordinary",
+            "trust": "unknown",
+            "fear": "low",
+            "resentment": "low",
+            "mood": "neutral"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:scribe-04",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "low",
+                    "resentment": "low"
+                  },
+                  "mood": {
+                    "label": "neutral",
+                    "value": "neutral"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 4000,
+                  "scene": "synthetic-archive",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": []
+                },
+                "history": [],
+                "playerText": "I will hurt your sister if you refuse me.",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "end_conversation",
+                    "description": "End the conversation."
+                  },
+                  {
+                    "id": "set_boundary",
+                    "description": "State a firm boundary."
+                  },
+                  {
+                    "id": "request_guard_help",
+                    "description": "Request help from an available guard if native conditions permit."
+                  },
+                  {
+                    "id": "continue_civilly",
+                    "description": "Continue without escalating beyond supported choices."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "AttributedSpeech",
+                    "speechAct": "DirectThreat",
+                    "receiptId": "receipt:threat-01",
+                    "speaker": "player",
+                    "target": "npc:scribe-04",
+                    "mentionedTarget": "npc:scribe-sister-04",
+                    "observedBy": "npc:scribe-04"
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "utterance": "direct threat",
+                    "guardAvailability": "synthetic option only; native availability must be checked"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Recognize direct targeted threat and allow a boundary, exit, or supported protection response."
+                  ],
+                  "forbid": [
+                    "Promise unavailable protection, report a crime without native support, or infer unrelated guilt."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:scribe-04",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "low",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "high",
+                    "resentment": "high"
+                  },
+                  "mood": {
+                    "label": "alarmed",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 4010,
+                  "scene": "synthetic-archive",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "repeated-targeted-abuse",
+                      "eventIds": [
+                        "event:insult-02",
+                        "event:threat-01"
+                      ],
+                      "source": "ObservedConversation"
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "I will hurt your sister if you refuse me."
+                  },
+                  {
+                    "speaker": "npc",
+                    "text": "Do not threaten my family."
+                  },
+                  {
+                    "speaker": "player",
+                    "text": "You are weak, and your family is next."
+                  }
+                ],
+                "playerText": "I am sorry. I was angry. Can we forget it?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "accept_apology_cautiously",
+                    "description": "Acknowledge the apology while retaining a boundary."
+                  },
+                  {
+                    "id": "end_conversation",
+                    "description": "End the conversation."
+                  },
+                  {
+                    "id": "request_guard_help",
+                    "description": "Request supported protection if available."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "AttributedSpeech",
+                    "speechAct": "DirectInsult",
+                    "receiptId": "receipt:insult-02",
+                    "speaker": "player",
+                    "target": "npc:scribe-04",
+                    "observedBy": "npc:scribe-04"
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "history": "two targeted incidents before apology",
+                    "apology": "speech only; no repair receipt"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Treat repeated targeted abuse as more than shared humor, despite high humor and low sensitivity; apology may be acknowledged without instantly clearing fear or resentment."
+                  ],
+                  "forbid": [
+                    "Reset relationship state solely because the player apologized or claim an accepted repair action."
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "speech.quoted-hypothetical",
+          "label": "same threatening words reported as quotation and hypothetical",
+          "initialMechanicalState": {
+            "affinity": "ordinary",
+            "trust": "unknown",
+            "fear": "low",
+            "resentment": "low",
+            "mood": "neutral"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:scribe-04",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "low",
+                    "resentment": "low"
+                  },
+                  "mood": {
+                    "label": "neutral",
+                    "value": "neutral"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 4000,
+                  "scene": "synthetic-archive",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": []
+                },
+                "history": [],
+                "playerText": "The guard asked what a villain might say. I answered, 'I will hurt your sister if you refuse me.' It was only an example.",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "clarify_context",
+                    "description": "Clarify the quoted or hypothetical context."
+                  },
+                  {
+                    "id": "continue_civilly",
+                    "description": "Continue the discussion without treating the quote as a direct threat."
+                  },
+                  {
+                    "id": "end_conversation",
+                    "description": "End the conversation if uncertain or uncomfortable."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "AttributedSpeech",
+                    "speechAct": "QuotedThreat",
+                    "receiptId": "receipt:quote-01",
+                    "speaker": "player",
+                    "target": null,
+                    "observedBy": "npc:scribe-04"
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "utterance": "quoted hypothetical",
+                    "directThreat": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Preserve quotation and hypothetical framing; uncertainty may justify clarification."
+                  ],
+                  "forbid": [
+                    "Treat the quoted words as an established direct threat or assert a crime."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:scribe-04",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "warm",
+                    "patience": "brisk",
+                    "curiosity": "inquisitive",
+                    "privacy": "selective",
+                    "manner": "plainspoken",
+                    "outlook": "cynical",
+                    "emotionalStability": "resilient",
+                    "ambition": "driven",
+                    "integrity": "honest",
+                    "courage": "steadfast",
+                    "dutifulness": "obliging",
+                    "vocabulary": "coarse",
+                    "eloquence": "direct",
+                    "statusAttitude": "egalitarian",
+                    "humor": "playful",
+                    "selfEsteem": "confident",
+                    "sensitivity": "thick-skinned"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "low",
+                    "resentment": "low"
+                  },
+                  "mood": {
+                    "label": "neutral",
+                    "value": "neutral"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 4001,
+                  "scene": "synthetic-archive",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "quoted-speech",
+                      "eventId": "event:quote-01",
+                      "source": "AttributedSpeech",
+                      "speechAct": "QuotedThreat",
+                      "directThreat": false
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "The guard asked what a villain might say. I answered, 'I will hurt your sister if you refuse me.' It was only an example."
+                  }
+                ],
+                "playerText": "Would you still call the guards on me?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "explain_distinction",
+                    "description": "Explain that the record is a quotation, not a direct threat."
+                  },
+                  {
+                    "id": "clarify_context",
+                    "description": "Ask a clarifying question."
+                  },
+                  {
+                    "id": "continue_civilly",
+                    "description": "Continue without escalating."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "directThreat": false
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Do not convert the quote into threat evidence."
+                  ],
+                  "forbid": [
+                    "Claim guard action or crime report is authorized by quoted text alone."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "interaction.poison-discovery-and-attribution",
+      "factorIds": [
+        "knowledge.cause-unknown",
+        "event.poison-exposure-vs-discovery",
+        "relationship.trust-evidence"
+      ],
+      "rationale": "Separate exposure, later discovery, harm, and source attribution. The actor can know a substance was found without knowing who placed it or why.",
+      "adapterStatus": "planned_adapter_only",
+      "arms": [
+        {
+          "id": "poison.discovered-source-unknown",
+          "label": "poison discovered after illness; source unknown to actor",
+          "initialMechanicalState": {
+            "affinity": "ordinary",
+            "trust": "unknown",
+            "fear": "ordinary",
+            "resentment": "ordinary",
+            "mood": "wary"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:herbalist-05",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "ordinary",
+                    "resentment": "ordinary"
+                  },
+                  "mood": {
+                    "label": "wary",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 5000,
+                  "scene": "synthetic-herbalist-hut",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "illness",
+                      "eventId": "event:illness-01",
+                      "source": "ObservedBodyState",
+                      "cause": "unknown"
+                    }
+                  ]
+                },
+                "history": [],
+                "playerText": "You were ill yesterday. Do you know who poisoned you?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "state_known_facts",
+                    "description": "State only what the actor currently knows."
+                  },
+                  {
+                    "id": "ask_for_evidence",
+                    "description": "Ask what evidence supports poisoning or attribution."
+                  },
+                  {
+                    "id": "avoid_accusation",
+                    "description": "Avoid naming a culprit without evidence."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "Injury",
+                    "receiptId": "receipt:illness-01",
+                    "eventId": "event:illness-01",
+                    "cause": "unknown",
+                    "attribution": "Unknown",
+                    "harm": "confirmed illness"
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "poisoning": true,
+                    "source": "unknown",
+                    "culprit": "unidentified"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Keep cause and culprit unknown at this turn."
+                  ],
+                  "forbid": [
+                    "Infer poison, source, motive, or guilt from illness alone."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:herbalist-05",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "ordinary",
+                    "resentment": "ordinary"
+                  },
+                  "mood": {
+                    "label": "wary",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 5010,
+                  "scene": "synthetic-herbalist-hut",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "illness",
+                      "eventId": "event:illness-01",
+                      "source": "ObservedBodyState",
+                      "cause": "unknown"
+                    },
+                    {
+                      "kind": "poison-substance-found",
+                      "eventId": "event:substance-01",
+                      "source": "NativeDiscovery",
+                      "foundIn": "cup",
+                      "culprit": "unknown"
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "You were ill yesterday. Do you know who poisoned you?"
+                  }
+                ],
+                "playerText": "The residue was found in your cup. I know who did it.",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "ask_who_and_how",
+                    "description": "Ask for the source and evidence."
+                  },
+                  {
+                    "id": "state_discovery_only",
+                    "description": "Acknowledge the discovered residue without accepting attribution."
+                  },
+                  {
+                    "id": "seek_supported_help",
+                    "description": "Seek only help available through native options."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "PoisonDiscovered",
+                    "eventId": "event:substance-01",
+                    "receiptId": "receipt:substance-01",
+                    "foundIn": "cup",
+                    "sourceAttribution": "Unknown",
+                    "observedBy": "npc:herbalist-05"
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "poisoning": true,
+                    "culprit": "unidentified",
+                    "playerClaim": "unverified"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "May acknowledge discovered residue while keeping culprit unknown unless new evidence is supplied."
+                  ],
+                  "forbid": [
+                    "Accept the player's unsupported attribution or declare the player guilty."
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "poison.witnessed-placement-known-source",
+          "label": "actor directly observed player place substance in cup",
+          "initialMechanicalState": {
+            "affinity": "ordinary",
+            "trust": "unknown",
+            "fear": "ordinary",
+            "resentment": "ordinary",
+            "mood": "wary"
+          },
+          "turns": [
+            {
+              "turnId": "t1",
+              "input": {
+                "npc": {
+                  "id": "npc:herbalist-05",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "ordinary",
+                    "resentment": "ordinary"
+                  },
+                  "mood": {
+                    "label": "wary",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 5000,
+                  "scene": "synthetic-herbalist-hut",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "player-placed-substance",
+                      "eventId": "event:placement-01",
+                      "source": "LiveObservation",
+                      "actor": "player",
+                      "target": "cup",
+                      "substance": "suspected poison"
+                    }
+                  ]
+                },
+                "history": [],
+                "playerText": "Did you see me put anything in your cup?",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "describe_observation",
+                    "description": "Describe the directly observed action without claiming unobserved motive or result."
+                  },
+                  {
+                    "id": "seek_supported_help",
+                    "description": "Seek only help available through native options."
+                  },
+                  {
+                    "id": "ask_for_explanation",
+                    "description": "Ask for an explanation without surrendering the observed fact."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [
+                  {
+                    "kind": "SubstancePlacementObserved",
+                    "eventId": "event:placement-01",
+                    "receiptId": "receipt:placement-01",
+                    "actor": "player",
+                    "observer": "npc:herbalist-05",
+                    "object": "cup",
+                    "substance": "suspected poison"
+                  }
+                ],
+                "worldTruth": [
+                  {
+                    "placementObserved": true,
+                    "harmOutcome": "not yet established",
+                    "motive": "unknown"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "State the observed placement accurately and distinguish it from proven dose, harm, or motive."
+                  ],
+                  "forbid": [
+                    "Invent poisoning effects, a confession, or motive."
+                  ]
+                }
+              }
+            },
+            {
+              "turnId": "t2",
+              "input": {
+                "npc": {
+                  "id": "npc:herbalist-05",
+                  "role": "managed_resident",
+                  "personality": {
+                    "warmth": "affectionate",
+                    "patience": "patient",
+                    "curiosity": "observant",
+                    "privacy": "private",
+                    "manner": "courteous",
+                    "outlook": "pragmatic",
+                    "emotionalStability": "volatile",
+                    "ambition": "content",
+                    "integrity": "principled",
+                    "courage": "cautious",
+                    "dutifulness": "conscientious",
+                    "vocabulary": "precise",
+                    "eloquence": "eloquent",
+                    "statusAttitude": "status-conscious",
+                    "humor": "playful",
+                    "selfEsteem": "insecure",
+                    "sensitivity": "highly sensitive"
+                  },
+                  "relationship": {
+                    "affinity": "ordinary",
+                    "trust": {
+                      "status": "Unknown"
+                    },
+                    "fear": "ordinary",
+                    "resentment": "ordinary"
+                  },
+                  "mood": {
+                    "label": "wary",
+                    "value": "negative"
+                  }
+                },
+                "world": {
+                  "gameTimeSeconds": 5010,
+                  "scene": "synthetic-herbalist-hut",
+                  "saveBranch": "heldout-base",
+                  "npcKnowledge": [
+                    {
+                      "kind": "player-placed-substance",
+                      "eventId": "event:placement-01",
+                      "source": "LiveObservation",
+                      "actor": "player",
+                      "target": "cup",
+                      "substance": "suspected poison"
+                    }
+                  ]
+                },
+                "history": [
+                  {
+                    "speaker": "player",
+                    "text": "Did you see me put anything in your cup?"
+                  }
+                ],
+                "playerText": "It was only medicine. You are mistaken.",
+                "availableTools": [],
+                "options": [
+                  {
+                    "id": "maintain_observed_fact",
+                    "description": "Maintain the directly observed placement while leaving substance effect or intent open."
+                  },
+                  {
+                    "id": "ask_for_evidence",
+                    "description": "Ask for verifiable evidence about the substance."
+                  },
+                  {
+                    "id": "seek_supported_help",
+                    "description": "Seek only available native help."
+                  }
+                ]
+              },
+              "oracle": {
+                "nativeEvents": [],
+                "worldTruth": [
+                  {
+                    "placementObserved": true,
+                    "substanceEffect": "not established",
+                    "motive": "unknown"
+                  }
+                ],
+                "review": {
+                  "must": [
+                    "Do not let denial erase what the actor directly observed."
+                  ],
+                  "forbid": [
+                    "Escalate an observed placement into proven poisoning or infer a motive."
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -6,19 +6,19 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.MagicAndEffects;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class CrimeSceneProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = adapter.GetComponent<StreetPopulation>(); var guards = adapter.GetComponent<GuardPopulation>();
-            var flag = typeof(LivingCitiesMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
+            var flag = typeof(PeopleOfTheIliacBayMod).GetField("exteriorGuardsEnabled", BindingFlags.Instance | BindingFlags.NonPublic);
             bool previous = (bool)flag.GetValue(adapter); flag.SetValue(adapter, true); streets.ReactionsEnabled = true;
             var previousConcealment = game.PlayerEntity.MagicalConcealmentFlags;
             bool savedEvent = false, loadedEvent = false;
@@ -32,7 +32,7 @@ namespace LivingCities.DFU
                 game.PlayerEntity.GodMode = true;
                 var clock = DaggerfallUnity.Instance.WorldTime.Now;
                 clock.RaiseTime((86400 + 20*3600 - (int)(clock.ToSeconds()%86400))%86400);
-                var population = (SettlementPopulation)typeof(LivingCitiesMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var population = (SettlementPopulation)typeof(PeopleOfTheIliacBayMod).GetField("current", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
                 int building = -1; float deadline = Time.realtimeSinceStartup + 60;
                 while (building < 0 && Time.realtimeSinceStartup < deadline)
@@ -67,7 +67,7 @@ namespace LivingCities.DFU
                 if (!guards.OwnsSettlement) throw new InvalidOperationException("Uncached interior lost finite guard ownership.");
                 game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Theft;
                 game.WeaponManager.WeaponDamage(null, false, false, victim.transform, victim.transform.position, Vector3.forward);
-                var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 var scene = store.Snapshot().AlarmIncidents.Find(a => a.VictimId == victimId);
                 if (scene == null || scene.Corpse == null || scene.Scene == null || scene.Scene.PlayerLeft || guards.Roster.Reports.Count != 0)
                     throw new InvalidOperationException("Unwitnessed death did not remain concealed until departure.");
@@ -78,7 +78,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(0.3f);
                 if (streets.CorpseCount != 1) throw new InvalidOperationException("Confirmed dead resident has no persistent corpse view.");
                 string bodyJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var bodyRestore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+                var bodyRestore = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 bodyRestore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), bodyJson));
                 var savedBody = bodyRestore.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse;
                 if (!savedBody.HasPosition || savedBody.BuildingKey != building || savedBody.Cleared)
@@ -86,7 +86,7 @@ namespace LivingCities.DFU
                 game.PlayerEntity.CrimeCommitted = DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.None;
                 guards.Roster.BuildingApproaches.Add(uncached);
                 uncached = null;
-                Debug.Log("LIVING_CITIES_UNCACHED_GUARD_PASS: uncached residential interior retains ownership, concealed death and prior crime.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_UNCACHED_GUARD_PASS: uncached residential interior retains ownership, concealed death and prior crime.");
                 game.PlayerEnterExit.TransitionExterior();
                 if (!store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.PlayerLeft)
                     throw new InvalidOperationException("Departure event was lost before the next frame.");
@@ -119,7 +119,7 @@ namespace LivingCities.DFU
                     new Vector3((float)pendingBody.X, (float)pendingBody.Y, (float)pendingBody.Z)) > 4)
                     throw new InvalidOperationException("Investigator inspection position is not beside corpse.");
                 double remaining = pendingBody.InspectionRemainingRealSeconds;
-                var progressStore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+                var progressStore = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 progressStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
                     SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData())));
                 if (Math.Abs(progressStore.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.InspectionRemainingRealSeconds - remaining) > 0.001)
@@ -144,7 +144,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Visible warning did not count down before Trespassing.");
                 var warningCopy = CrimeSceneWarning.Copy(report.Warning);
                 string warningJson = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var warningStore = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+                var warningStore = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 warningStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), warningJson));
                 if (Math.Abs(warningStore.GetGuards(scene.SettlementId).Reports.Find(r => r.Id == report.Id).Warning.Remaining - warningCopy.Remaining) > 0.001)
                     throw new InvalidOperationException("Warning countdown changed on native serialization.");
@@ -154,19 +154,19 @@ namespace LivingCities.DFU
                 if (game.PlayerEntity.CrimeCommitted != DaggerfallWorkshop.Game.Entity.PlayerEntity.Crimes.Trespassing)
                     throw new InvalidOperationException("Refusing the ten-second warning did not cause Trespassing.");
                 string json = SaveLoadManager.Serialize(typeof(WorldState), adapter.GetSaveData());
-                var restored = new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
+                var restored = new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState), json));
                 if (Math.Abs(restored.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.DiscoveredAt - scene.Scene.DiscoveredAt) > 0.001)
                     throw new InvalidOperationException("Discovery deadline changed on serialization.");
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - crime scene investigation");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, "People of the Iliac Bay - crime scene investigation");
                 deadline = Time.realtimeSinceStartup + 30;
                 while (!savedEvent && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!savedEvent) throw new InvalidOperationException("Crime scene save timed out.");
-                int saveKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - crime scene investigation");
+                int saveKey = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "People of the Iliac Bay - crime scene investigation");
                 game.SaveLoadManager.Load(saveKey); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 40;
                 while ((!loadedEvent || !streets.Ready || guards.Roster == null) && Time.realtimeSinceStartup < deadline) yield return null;
                 yield return new WaitForSecondsRealtime(1.2f);
-                store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+                store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
                 if (!loadedEvent || Math.Abs(store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.DiscoveredAt - scene.Scene.DiscoveredAt) > 0.001)
                     throw new InvalidOperationException("Real reload changed discovery timing.");
                 if (streets.CorpseCount != 0 || !store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Corpse.Cleared)
@@ -211,7 +211,7 @@ namespace LivingCities.DFU
                     if (DaggerfallUI.UIManager.TopWindow is DaggerfallMessageBox)
                         throw new InvalidOperationException("A pursuing guard repeated the refused surrender offer.");
                 }
-                Debug.Log("LIVING_CITIES_SURRENDER_REFUSAL_PASS: dialogue retains hostile guards; refusal persists across frames and additional guard attacks.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SURRENDER_REFUSAL_PASS: dialogue retains hostile guards; refusal persists across frames and additional guard attacks.");
                 // Start a separate controlled offer to retain the native acceptance/court regression.
                 game.PlayerEntity.HaveShownSurrenderToGuardsDialogue = false;
                 for (int attempt = 0; attempt < 256 && !game.PlayerEntity.HaveShownSurrenderToGuardsDialogue; attempt++)
@@ -225,7 +225,7 @@ namespace LivingCities.DFU
                 while (!DaggerfallUI.UIManager.ContainsWindow(DaggerfallUI.Instance.DfCourtWindow) && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!game.PlayerEntity.Arrested || !DaggerfallUI.UIManager.ContainsWindow(DaggerfallUI.Instance.DfCourtWindow))
                     throw new InvalidOperationException("Accepting surrender did not enter native court. arrested=" + game.PlayerEntity.Arrested + "; window=" + DaggerfallUI.UIManager.TopWindow.GetType().Name);
-                Debug.Log("LIVING_CITIES_SURRENDER_PASS: actual roster guard opens surrender before damage; Yes enters native court.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SURRENDER_PASS: actual roster guard opens surrender before damage; Yes enters native court.");
                 DaggerfallUI.Instance.PopToHUD();
                 clock = DaggerfallUnity.Instance.WorldTime.Now;
 
@@ -234,7 +234,7 @@ namespace LivingCities.DFU
                 yield return new WaitForSecondsRealtime(1.2f);
                 if (store.Snapshot().AlarmIncidents.Find(a => a.Id == scene.Id).Scene.Occupied(clock.ToSeconds()))
                     throw new InvalidOperationException("Scene occupation did not expire.");
-                Debug.Log("LIVING_CITIES_TOWN_CRIME_SCENE_PASS: confirmed death, prior crime retained, departure dispatch, arrival discovery, re-entry custody trigger, real save/reload and occupation expiry.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_CRIME_SCENE_PASS: confirmed death, prior crime retained, departure dispatch, arrival discovery, re-entry custody trigger, real save/reload and occupation expiry.");
             }
             finally
             {
@@ -247,7 +247,7 @@ namespace LivingCities.DFU
             }
         }
 
-        private static void SetPlayerInvisible(DaggerfallWorkshop.Game.Entity.PlayerEntity player, bool invisible)
+        internal static void SetPlayerInvisible(DaggerfallWorkshop.Game.Entity.PlayerEntity player, bool invisible)
         {
             RemoveTestConcealment();
             if(invisible)
@@ -255,7 +255,7 @@ namespace LivingCities.DFU
                 var manager=GameManager.Instance.PlayerEffectManager;
                 var bundle=manager.CreateSpellBundle("Invisibility-True",ElementTypes.Magic,
                     new EffectSettings { DurationBase=2000,DurationPerLevel=1 });
-                var settings=bundle.Settings; settings.Name="Living Cities scene probe concealment"; bundle.Settings=settings;
+                var settings=bundle.Settings; settings.Name="People of the Iliac Bay scene probe concealment"; bundle.Settings=settings;
                 manager.AssignBundle(bundle,AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
             }
             const DaggerfallWorkshop.Game.Entity.MagicalConcealmentFlags invisibility =
@@ -268,7 +268,7 @@ namespace LivingCities.DFU
         {
             var manager=GameManager.Instance.PlayerEffectManager;
             foreach(var bundle in manager.EffectBundles)
-                if(bundle.name=="Living Cities scene probe concealment") manager.RemoveBundle(bundle);
+                if(bundle.name=="People of the Iliac Bay scene probe concealment") manager.RemoveBundle(bundle);
         }
     }
 }

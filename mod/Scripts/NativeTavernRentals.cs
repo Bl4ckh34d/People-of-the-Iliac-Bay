@@ -6,10 +6,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class NativeTavernRentals : IDisposable
     {
@@ -32,6 +32,7 @@ namespace LivingCities.DFU
             if(allocated!=null && !store.ReconcilePlayerLodging(town,entry.buildingKey,allocated,now,receipt.expiryTime))
                 throw new InvalidOperationException("Native paid rental conflicts with destination inventory.");
             NativeInnOccupants.Claim(store,town,location,entry,inventory.Rooms,inventory.Occupants,now,inventory.KeeperHash);
+            StreetPopulation.RegisterSurveyedInnCatalog(store,town,location,entry,inventory,now);
         }
         private DaggerfallInterior surveyed;
         private List<LodgingRoom> rooms;
@@ -58,8 +59,11 @@ namespace LivingCities.DFU
         private int surveyKey;
         private float surveyStartsAt;
         private bool surveyStarted;
+        private WorldStateStore surveyStore;
+        private object surveyEpoch;
         private sealed class Inventory
         {
+            public TavernRoomSurvey.Result Source;
             public List<LodgingRoom> Rooms;
             public Dictionary<int,string> Markers;
             public Dictionary<int,string> Occupants;
@@ -93,7 +97,10 @@ namespace LivingCities.DFU
                     if(!owner) throw new InvalidOperationException("Tavern entrance unavailable.");
                     item.Entry=entry;
                     surveyResult=new TavernRoomSurvey.Result(); surveyInventory=item; surveyKey=key;
-                    surveyOperation=TavernRoomSurvey.ReadUnloadedSteps(owner.transform,entry,surveyResult);
+                    var epoch=store.CaptureNpcVitalsWriteEpoch();
+                    surveyStore=store;surveyEpoch=epoch;
+                    surveyOperation=TavernRoomSurvey.ReadServiceSteps(owner.transform,entry,directory.LocationData.Climate.ClimateType,surveyResult,
+                        ()=>inventoryDirectory==directory && ReferenceEquals(getStore(),store) && store.IsNpcVitalsWriteEpochCurrent(epoch));
                     surveyStartsAt=Time.unscaledTime+0.1f;
                     surveyStarted=false;
                     return;
@@ -101,7 +108,7 @@ namespace LivingCities.DFU
                 catch(Exception error)
                 {
                     item.Failure=error.Message;
-                    Debug.LogWarning("LIVING_CITIES_TAVERN_SURVEY_FAILED: "+directory.MapID+":"+key+": "+item.Failure);
+                    Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_SURVEY_FAILED: "+directory.MapID+":"+key+": "+item.Failure);
                 }
             }
             if(item.Rooms==null) return; // Retry geometry only after the settlement layout reloads.
@@ -114,13 +121,13 @@ namespace LivingCities.DFU
                 var receipt=GameManager.Instance.PlayerEntity.GetRentedRoom(directory.MapID,key);
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
                 RegisterInventory(store,directory.MapID,directory.LocationData,item.Entry,
-                    new TavernRoomSurvey.Result {Rooms=item.Rooms,Markers=item.Markers,Occupants=item.Occupants},receipt,now);
+                    item.Source??new TavernRoomSurvey.Result {Rooms=item.Rooms,Markers=item.Markers,Occupants=item.Occupants},receipt,now);
                 item.Failure=null;
                 store.AdvanceInnAdmissions(directory.MapID,now,8,key);
             }
             catch(Exception error)
             {
-                if(item.Failure!=error.Message) Debug.LogWarning("LIVING_CITIES_RENTAL_CONFLICT: "+directory.MapID+":"+key+": "+error.Message);
+                if(item.Failure!=error.Message) Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RENTAL_CONFLICT: "+directory.MapID+":"+key+": "+error.Message);
                 item.Failure=error.Message;
             }
         }
@@ -128,22 +135,26 @@ namespace LivingCities.DFU
         public void Install(Func<WorldStateStore> store,Func<bool> enabled)
         {
             getStore=store; available=enabled;
-            var type=Type.GetType("LivingCities.QuestHooks.NativeTavernRentalHooks, LivingCities.QuestHooks",true);
+            var type=Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeTavernRentalHooks, PeopleOfTheIliacBay.QuestHooks",true);
             hooks=(IDisposable)Activator.CreateInstance(type,new object[] {
                 new Func<int,int,int,Action,bool>(Rent),new Func<bool,string>(RestBlocked) });
         }
         public void Dispose() { CancelSurvey(); if(hooks!=null) hooks.Dispose(); hooks=null; }
         private void CancelSurvey()
         {
-            if(surveyOperation==null) return;
-            (surveyOperation as IDisposable)?.Dispose(); surveyOperation=null;
-            inventory.Remove(surveyKey); surveyInventory=null; surveyResult=null;
+            if(surveyOperation!=null)
+            {
+                (surveyOperation as IDisposable)?.Dispose();surveyOperation=null;
+                inventory.Remove(surveyKey);
+            }
+            surveyInventory=null;surveyResult=null;surveyStore=null;surveyEpoch=null;
         }
         public void AdvanceSurvey()
         {
             if(surveyOperation==null || Time.unscaledTime<surveyStartsAt) return;
             if(available==null || !available() || !inventoryDirectory ||
-                GameManager.Instance.IsPlayerInside || GameManager.Instance.StreamingWorld.GetCurrentBuildingDirectory()!=inventoryDirectory)
+                GameManager.Instance.IsPlayerInside || GameManager.Instance.StreamingWorld.GetCurrentBuildingDirectory()!=inventoryDirectory ||
+                getStore==null || surveyStore==null || !ReferenceEquals(getStore(),surveyStore) || !surveyStore.IsNpcVitalsWriteEpochCurrent(surveyEpoch))
             { CancelSurvey(); return; }
             if(!surveyStarted)
             {
@@ -154,22 +165,30 @@ namespace LivingCities.DFU
             try
             {
                 if(surveyOperation.MoveNext()) return;
+                // Cancellation intentionally publishes no partial result. Drop
+                // its cache entry so the current save branch can survey again.
+                if(!surveyStore.IsNpcVitalsWriteEpochCurrent(surveyEpoch) || surveyResult==null || surveyResult.Rooms==null ||
+                    surveyResult.Markers==null || surveyResult.Occupants==null)
+                {CancelSurvey();return;}
                 (surveyOperation as IDisposable)?.Dispose(); surveyOperation=null;
+                surveyInventory.Source=surveyResult;
                 surveyInventory.Markers=surveyResult.Markers; surveyInventory.Occupants=surveyResult.Occupants;
                 var eligible=new HashSet<string>(surveyResult.Markers.Values);
                 foreach(var room in surveyResult.Rooms) room.NonRentable=!eligible.Contains(room.Id);
                 surveyInventory.Rooms=surveyResult.Rooms;
                 ReconcileInventory(getStore(),inventoryDirectory,surveyKey,surveyInventory);
-                Debug.Log("LIVING_CITIES_TAVERN_INVENTORY: "+inventoryDirectory.MapID+":"+surveyKey+"; rooms="+surveyInventory.Rooms.Count);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_INVENTORY: "+inventoryDirectory.MapID+":"+surveyKey+"; rooms="+surveyInventory.Rooms.Count);
                 surveyResult=null; surveyInventory=null;
+                surveyStore=null;surveyEpoch=null;
             }
             catch(Exception error)
             {
                 var item=surveyInventory;
                 if(surveyOperation!=null) (surveyOperation as IDisposable)?.Dispose();
                 surveyOperation=null; surveyResult=null; surveyInventory=null;
+                surveyStore=null;surveyEpoch=null;
                 if(item!=null) item.Failure=error.Message;
-                Debug.LogWarning("LIVING_CITIES_TAVERN_SURVEY_FAILED: "+surveyKey+": "+error.Message);
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_TAVERN_SURVEY_FAILED: "+surveyKey+": "+error);
             }
             finally { RuntimeTiming.End("tavern-survey-slice",started); }
         }
@@ -213,7 +232,7 @@ namespace LivingCities.DFU
             }
             catch(Exception error)
             {
-                Debug.LogWarning("LIVING_CITIES_REST_REFUSED: "+town+":"+building+": "+error.Message);
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_REST_REFUSED: "+town+":"+building+": "+error.Message);
                 return "The keeper cannot confirm access to this bed.";
             }
         }
@@ -251,7 +270,7 @@ namespace LivingCities.DFU
                 // An unsupported layout without managed reservations remains vanilla.
                 // Once bookings exist, falling through could sell another guest's room.
                 bool managed=store.Snapshot().Lodgings.Exists(t=>t.SettlementId==town && t.BuildingKey==building);
-                Debug.LogWarning("LIVING_CITIES_RENTAL_SURVEY: "+town+":"+building+": "+error.Message);
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RENTAL_SURVEY: "+town+":"+building+": "+error.Message);
                 if(!managed) return false;
                 close(); DaggerfallUI.MessageBox("The keeper cannot confirm rooms in this changed building."); return true;
             }
@@ -307,7 +326,7 @@ namespace LivingCities.DFU
             }
             catch(Exception error)
             {
-                Debug.LogWarning("LIVING_CITIES_RENTAL_REFUSED: "+town+":"+building+": "+error.Message);
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RENTAL_REFUSED: "+town+":"+building+": "+error.Message);
                 DaggerfallUI.MessageBox("The keeper cannot confirm that room. Please try again later."); return true;
             }
         }
@@ -353,7 +372,7 @@ namespace LivingCities.DFU
             catch(Exception error)
             {
                 string failure=directory.MapID+":"+building+": "+error.Message;
-                if(lastFailure!=failure) Debug.LogWarning("LIVING_CITIES_RENTAL_CONFLICT: "+failure);
+                if(lastFailure!=failure) Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_RENTAL_CONFLICT: "+failure);
                 lastFailure=failure;
             }
         }

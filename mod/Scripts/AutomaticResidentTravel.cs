@@ -5,12 +5,12 @@ using DaggerfallConnect;
 using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
-    public sealed partial class LivingCitiesMod
+    public sealed partial class PeopleOfTheIliacBayMod
     {
         private readonly Stack<IEnumerator> travelWork=new Stack<IEnumerator>();
         private readonly HashSet<int> travelPlannedTowns=new HashSet<int>();
@@ -45,7 +45,7 @@ namespace LivingCities.DFU
             }
             catch(Exception error)
             {
-                Debug.LogError("LIVING_CITIES_TRAVEL_PLANNING_FAILED: "+error);
+                Debug.LogError("PEOPLE_OF_THE_ILIAC_BAY_TRAVEL_PLANNING_FAILED: "+error);
                 while(travelWork.Count>0) (travelWork.Pop() as IDisposable)?.Dispose();
                 travelValid=null;
             }
@@ -213,7 +213,7 @@ namespace LivingCities.DFU
                 }
                 yield return null;
             }
-            Debug.Log("LIVING_CITIES_DAILY_TRAVEL: settlement="+population.SettlementId+"; proposals="+proposals.Count+"; discovered="+discover+"; committed="+committed);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAILY_TRAVEL: settlement="+population.SettlementId+"; proposals="+proposals.Count+"; discovered="+discover+"; committed="+committed);
         }
         internal IEnumerator ProbeUnloadedTravelDay(DFLocation source,DFLocation destination,WorldStateStore fixtureStore,int day,Func<bool> valid,bool discover=false)
         {

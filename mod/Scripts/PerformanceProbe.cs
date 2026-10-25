@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using DaggerfallWorkshop.Game;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class PerformanceProbe
     {
@@ -27,7 +27,7 @@ namespace LivingCities.DFU
             int planningSlices=0;
             int approachSlices=0;
             int migrationSlices=0;
-            bool restoreRegression=Array.IndexOf(Environment.GetCommandLineArgs(),"-livingcities-fixture-save")>=0;
+            bool restoreRegression=Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-fixture-save")>=0;
             foreach(string phase in new[] { "city-initial-surveys", "city-later-sample", "city-approach-sample" })
             {
                 RuntimeTiming.Reset();
@@ -40,7 +40,7 @@ namespace LivingCities.DFU
                     if(GameManager.IsGamePaused || !GameManager.Instance.IsPlayingGame())
                     {
                         if(++resumed>3) throw new InvalidOperationException("Performance fixture repeatedly pauses; sample rejected.");
-                        Debug.Log("LIVING_CITIES_PERF_RESUME: excluding paused sample; window="+
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERF_RESUME: excluding paused sample; window="+
                             (DaggerfallUI.UIManager.TopWindow==null ? "none" : DaggerfallUI.UIManager.TopWindow.GetType().Name));
                         DaggerfallUI.Instance.PopToHUD(); GameManager.Instance.PauseGame(false);
                         yield return null;
@@ -56,7 +56,7 @@ namespace LivingCities.DFU
                 planningSlices+=RuntimeTiming.Calls("resident-travel-planning-slice");
                 approachSlices+=RuntimeTiming.Calls("guard-approach-route-slice");
                 migrationSlices+=RuntimeTiming.Calls("guard-post-migration-slice");
-                Debug.Log("LIVING_CITIES_PERF_FRAMES: "+phase+"; frames="+frames.Count+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERF_FRAMES: "+phase+"; frames="+frames.Count+
                     "; p50Ms="+frames[frames.Count/2].ToString("F2")+
                     "; p95Ms="+frames[(int)((frames.Count-1)*.95)].ToString("F2")+
                     "; p99Ms="+frames[(int)((frames.Count-1)*.99)].ToString("F2")+
@@ -70,22 +70,30 @@ namespace LivingCities.DFU
             if(approachSlices==0) throw new InvalidOperationException("Performance fixture did not exercise guard approach preparation.");
             var guards=UnityEngine.Object.FindObjectOfType<GuardPopulation>();
             if(!guards) throw new InvalidOperationException("Performance fixture lost guard controller.");
+            var directory=GameManager.Instance.StreamingWorld.GetCurrentBuildingDirectory();
+            if(!directory || !guards.GateDutySurveyComplete)
+                throw new InvalidOperationException("Performance sample ended before the native gate survey completed.");
+            int nativeGateCount=directory.GetComponentsInChildren<DaggerfallWorkshop.DaggerfallCityGate>().Length;
             var posts=guards.GateGuardDutySnapshots(clock.ToSeconds());
-            if(posts.Count==0 || posts.Exists(p=>string.IsNullOrEmpty(p.GuardId)))
+            if((nativeGateCount>0 && posts.Count==0) || posts.Exists(p=>string.IsNullOrEmpty(p.GuardId)))
                 throw new InvalidOperationException("Performance sample ended before gate assignments completed.");
+            if(nativeGateCount==0 && posts.Count!=0)
+                throw new InvalidOperationException("A settlement without native gates retained gate assignments.");
             int wallPlans=guards.Roster.Guards.FindAll(g=>g.PostRecall!=null && g.PostRecall.WallDuty!=null).Count;
             if(wallPlans<posts.FindAll(p=>p.ExteriorAssignment).Count)
                 throw new InvalidOperationException("Performance sample ended before wall plans completed.");
-            Debug.Log("LIVING_CITIES_PERF_GATE_SETUP_COMPLETE: posts="+posts.Count+"; wallPlans="+wallPlans);
-            var adapter=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
-            var state=adapter ? adapter.GetSaveData() as LivingCities.Core.WorldState : null;
-            var directory=GameManager.Instance.StreamingWorld.GetCurrentBuildingDirectory();
+            if(nativeGateCount==0)
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERF_GATE_NOT_APPLICABLE: nativeGates=0; surveyComplete=true; posts=0.");
+            else
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERF_GATE_SETUP_COMPLETE: posts="+posts.Count+"; wallPlans="+wallPlans);
+            var adapter=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
+            var state=adapter ? adapter.GetSaveData() as PeopleOfTheIliacBay.Core.WorldState : null;
             var routines=state==null || !directory ? null : state.Routines.Find(t=>t.SettlementId==directory.MapID);
             if(routines==null || routines.ItineraryVersion!=1 || !routines.Residents.Exists(r=>r.Itinerary!=null))
                 throw new InvalidOperationException("Performance sample ended before daily itineraries became active.");
-            Debug.Log("LIVING_CITIES_PERF_DAILY_ACTIVE: routines="+routines.Residents.Count+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERF_DAILY_ACTIVE: routines="+routines.Residents.Count+
                 "; itineraries="+routines.Residents.FindAll(r=>r.Itinerary!=null).Count);
-            Debug.Log("LIVING_CITIES_PERFORMANCE_PASS: city timing samples collected; automatic planning slices="+planningSlices+"; not a world-scale performance guarantee.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERFORMANCE_PASS: city timing samples collected; automatic planning slices="+planningSlices+"; not a world-scale performance guarantee.");
         }
     }
 }

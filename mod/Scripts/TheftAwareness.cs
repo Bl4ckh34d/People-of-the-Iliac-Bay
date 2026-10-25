@@ -2,10 +2,10 @@ using System;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -14,7 +14,7 @@ namespace LivingCities.DFU
         public int TheftWitnessRange { get; set; } = 20;
         private void InstallTheftHook()
         {
-            var type = Type.GetType("LivingCities.QuestHooks.NativeTheftHooks, LivingCities.QuestHooks", true);
+            var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeTheftHooks, PeopleOfTheIliacBay.QuestHooks", true);
             theftHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool?>(HasTheftWitness) });
         }
         public bool? HasTheftWitness()

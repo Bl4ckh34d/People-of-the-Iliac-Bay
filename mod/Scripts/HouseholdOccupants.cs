@@ -6,7 +6,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Questing;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {

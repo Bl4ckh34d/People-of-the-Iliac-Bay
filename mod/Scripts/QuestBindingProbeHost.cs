@@ -7,22 +7,22 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Test-only bridge to a separate compiled probe; no dependency in normal play.
     public static class QuestBindingProbeHost
     {
         public static IEnumerator Run()
         {
-            var probe = Type.GetType("LivingCities.Probes.QuestBindingProbe, QuestBindingProbe", true);
+            var probe = Type.GetType("PeopleOfTheIliacBay.Probes.QuestBindingProbe, QuestBindingProbe", true);
             var game = GameManager.Instance;
             if (game.PlayerEnterExit.IsPlayerInside) game.PlayerEnterExit.TransitionExterior();
             yield return new WaitForSecondsRealtime(1);
             int mapId = game.PlayerGPS.CurrentMapID;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             string originalPopulation = JsonUtility.ToJson(adapter.GetSaveData());
             var population = ((WorldState)adapter.GetSaveData()).Settlements.Find(t => t.SettlementId == mapId);
             var homes = new Dictionary<int, string[]>();

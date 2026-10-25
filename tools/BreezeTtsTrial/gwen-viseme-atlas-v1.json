@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "prototypeOnly": true,
+  "personId": "s:206728581:h:131074:r:0",
+  "personNameEvidence": "Gwen Cienne",
+  "portraitArchive": "TFAC00I0.RCI",
+  "portraitFaceIndex": 76,
+  "nativePortraitSize": [64, 64],
+  "mouthRectTopLeftPixels": { "x": 18, "y": 35, "width": 28, "height": 20 },
+  "atlasPath": "art/portraits/prototype-gwen/gwen-visemes-atlas-v1.png",
+  "atlasSizePixels": [1254, 1254],
+  "cellSizePixels": [418, 418],
+  "tileOrderTopToBottomLeftToRight": ["A", "B", "C", "D", "E", "F", "G", "H", "X"],
+  "defaultShape": "X",
+  "playbackClock": "AudioSource.timeSamples",
+  "cueInput": "Rhubarb JSON mouthCues; start/end seconds relative to the exact finalized WAV",
+  "runtimeRule": "Copy only the corresponding normalized mouthRect from the selected atlas cell over the original native face. X always restores the unmodified native face. Do not show this atlas for other people or face indices.",
+  "identityEvidence": "Captured installed-game portrait crop matched face record 76 from the Breton female outfit-3 range 72-95. Face 76 is evidenced for that capture only; it is not saved by the game as a durable resident field.",
+  "artGenerationNote": "Generated atlas tiles are full-face references; runtime must discard every generated pixel outside the fixed mouth rectangle to preserve the original portrait identity."
+}

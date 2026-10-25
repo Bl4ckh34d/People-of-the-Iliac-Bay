@@ -4,10 +4,10 @@ using System.Reflection;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed class GateGuardDutySnapshot
     {
@@ -44,6 +44,7 @@ namespace LivingCities.DFU
         private static FieldInfo gateOpenField;
         private static bool gateOpenFieldResolved;
         private bool gateDutySurveyed;
+        internal bool GateDutySurveyComplete { get { return gateDutySurveyed; } }
         private bool gateApproachesDirty;
         private float nextGateDutyTick;
         private readonly Stack<System.Collections.IEnumerator> gateDutyWork=new Stack<System.Collections.IEnumerator>();
@@ -76,12 +77,12 @@ namespace LivingCities.DFU
             int target = GuardRoster.TargetWithGateSlots(baseGuardTarget, sites.Count);
             if (target > Roster.Target && !publicPostSurveyPending)
                 try { Roster.IncreaseTarget(target, publicPostSites); }
-                catch (ArgumentException) { Debug.Log("LIVING_CITIES_GARRISON_EXPANSION_PENDING: insufficient distinct reachable posts."); }
-            Debug.Log("LIVING_CITIES_GARRISON_BUDGET: base=" + baseGuardTarget + "; gateSlots=" +
+                catch (ArgumentException) { Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GARRISON_EXPANSION_PENDING: insufficient distinct reachable posts."); }
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GARRISON_BUDGET: base=" + baseGuardTarget + "; gateSlots=" +
                 (sites.Count * GuardRoster.GateSlotsPerGate) + "; target=" + Roster.Target);
             BindExistingGateGuards();
             gateDutySurveyed = true;
-            Debug.Log("LIVING_CITIES_GATE_POST_SURVEY: gates=" + sites.Count + "; pairedPosts=" + gateDutyPairs.Count);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_POST_SURVEY: gates=" + sites.Count + "; pairedPosts=" + gateDutyPairs.Count);
         }
 
         // Call after Roster.Advance(now) in GuardPopulation.Update.
@@ -93,9 +94,6 @@ namespace LivingCities.DFU
             if (Time.unscaledTime < nextGateDutyTick) return;
             if (!gateDutySurveyed) InitializeGateGuardPosts();
             if (!gateDutySurveyed || gateDutyPairs.Count == 0) return;
-            if (SettlementHaunting.StreetsDangerous(Roster.SettlementId,
-                GameManager.Instance.PlayerEntity.GlobalVars.GetGlobalVar(0), now))
-            { CancelGateDutyWork(); return; }
             if(gateDutyWork.Count==0)
             {
                 if(!BackgroundWork.TryStart()) return;
@@ -208,7 +206,7 @@ namespace LivingCities.DFU
                     InvalidateGateApproaches();
                     if (!shouldBeOutside && pair.RecoverInside)
                     { pair.RecoverInside = false; pair.HoldInsideUntil = now + 600; }
-                    Debug.Log("LIVING_CITIES_GATE_GUARD_MOVE: " + pair.GuardId + "; side=" + pair.Side +
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GATE_GUARD_MOVE: " + pair.GuardId + "; side=" + pair.Side +
                         "; target=" + (shouldBeOutside ? "outside" : "inside"));
                 }
                 catch (ArgumentException) { /* Preserve identity and wait until a safe route is available. */ }

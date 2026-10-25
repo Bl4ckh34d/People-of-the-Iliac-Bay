@@ -2,10 +2,10 @@ using System;
 using System.Reflection;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.UserInterface;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Native editing and focus, with word-wrapped rendering in the classic question panel.
     public sealed class WrappedDialogueInput : TextBox
@@ -37,9 +37,16 @@ namespace LivingCities.DFU
         protected override void MouseClick(Vector2 position)
         {
             base.MouseClick(position);
+            setCaret.Invoke(this, new object[] { CaretAtPosition(position) });
+        }
+
+        // Shared by mouse handling and the native UI acceptance probe. Position
+        // is in this component's local coordinates, as supplied by MouseClick.
+        internal int CaretAtPosition(Vector2 position)
+        {
             Layout();
             int row = viewport.FirstLine + (int)Math.Max(0, (position.y - TextOffset) / LineHeight);
-            setCaret.Invoke(this, new object[] { viewport.HitTest(position.x - TextOffset, row, Text, Measure) });
+            return viewport.HitTest(position.x - TextOffset, row, Text, Measure);
         }
 
         public override void Draw()

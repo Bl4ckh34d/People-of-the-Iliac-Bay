@@ -8,7 +8,7 @@ using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class TheftTransferProbe
     {
@@ -42,7 +42,7 @@ namespace LivingCities.DFU
                     inventory.CloseWindow();
                     if (!game.PlayerEntity.Items.Contains(item) || loot.Items.Contains(item) || game.PlayerEntity.CrimeCommitted != priorCrime)
                         throw new InvalidOperationException("Private-property theft failed transfer or added crime on inventory close.");
-                    Debug.Log("LIVING_CITIES_PRIVATE_THEFT_PASS: native private loot transferred and inventory close added no crime.");
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PRIVATE_THEFT_PASS: native private loot transferred and inventory close added no crime.");
                     yield break;
                 }
                 var window = new DaggerfallTradeWindow(DaggerfallUI.UIManager, null, DaggerfallTradeWindow.WindowModes.Buy);
@@ -56,7 +56,7 @@ namespace LivingCities.DFU
                 typeof(DaggerfallTradeWindow).GetMethod("DoSteal", flags).Invoke(window, null);
                 if (!game.PlayerEntity.Items.Contains(item) || basket.Contains(item) || game.PlayerEntity.CrimeCommitted != priorCrime)
                     throw new InvalidOperationException("Unobserved shop theft failed actual item transfer or changed crime.");
-                Debug.Log("LIVING_CITIES_THEFT_TRANSFER_PASS: native shop basket transferred to player without crime.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_THEFT_TRANSFER_PASS: native shop basket transferred to player without crime.");
             }
             finally
             {

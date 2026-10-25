@@ -6,14 +6,15 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
         private System.IDisposable keeperServiceHook;
+        private KeeperStandingArt keeperStandingArt;
         private sealed class KeeperView
         {
             public StaticNPC Npc;
@@ -24,7 +25,7 @@ namespace LivingCities.DFU
         private readonly Dictionary<string, DailySchedule> keeperSchedules = new Dictionary<string, DailySchedule>();
         private void ObserveKeeperThreat(DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour target,string key,double now)
         {
-            if(!interior) return;
+            if(!interior || target.Entity.IsInvisible) return;
             foreach(var npc in interior.GetComponentsInChildren<StaticNPC>())
             {
                 var person=KeeperPerson(npc);
@@ -117,7 +118,7 @@ namespace LivingCities.DFU
         }
         private void InstallKeeperServiceHook()
         {
-            var type = System.Type.GetType("LivingCities.QuestHooks.NativeServiceHooks, LivingCities.QuestHooks", true);
+            var type = System.Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeServiceHooks, PeopleOfTheIliacBay.QuestHooks", true);
             keeperServiceHook = (System.IDisposable)System.Activator.CreateInstance(type,
                 new object[] { new System.Func<StaticNPC, bool>(KeeperServiceBlocked) });
         }
@@ -192,12 +193,13 @@ namespace LivingCities.DFU
                 // Finite guards learn through the existing physical witness/discovery
                 // pipeline. Explicitly disabled finite guards retain native reporting.
                 if (!guards || !guards.OwnsSettlement) player.SpawnCityGuards(true);
-                Debug.Log("LIVING_CITIES_KEEPER_DEATH: " + keeper.Id + "; witnesses=" + alarm.People.Count + "; concealed=" + concealed);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_DEATH: " + keeper.Id + "; witnesses=" + alarm.People.Count + "; concealed=" + concealed);
             };
         }
         public void ObserveKeeperViolence(CivilianIncident alarm, Vector3 victim, double now)
         {
-            if (!ReactionsEnabled || !interior || alarm == null) return;
+            if (!ReactionsEnabled || alarm == null) return;
+            if(!interior) { ObserveExteriorStaticWitnesses(alarm,victim,now);return; }
             SurveyKeeperIdentities();
             foreach (var npc in interior.GetComponentsInChildren<StaticNPC>(true))
             {
@@ -258,6 +260,8 @@ namespace LivingCities.DFU
                 if (person == null) continue;
                 KeeperView view;
                 var sleepingPose=npc.GetComponent<SleepingPose>();
+                var directional=npc.GetComponent<DirectionalKeeperPose>();
+                if(directional) directional.SetStanding(false);
                 if (sleepingPose && sleepingPose.Active && ReactionsEnabled && worldStore.NativeResponse(person.Id)!=null &&
                     !keeperViews.ContainsKey(person.Id))
                 {
@@ -266,6 +270,7 @@ namespace LivingCities.DFU
                         Offset=Vector3.up*(billboard ? billboard.Summary.Size.y*0.5f : 1), WasActive=npc.gameObject.activeSelf });
                 }
                 UpdateKeeperSleep(npc, person, now, ReactionsEnabled && worldStore.NativeResponse(person.Id) != null);
+                sleepingPose=npc.GetComponent<SleepingPose>();
                 if (!person.IsAlive)
                 {
                     npc.gameObject.SetActive(false);
@@ -280,6 +285,22 @@ namespace LivingCities.DFU
                 {
                     if (keeperViews.TryGetValue(person.Id, out view))
                     { RestoreKeeperView(view); keeperViews.Remove(person.Id); }
+                    if(keeperStandingArt!=null && (!sleepingPose || !sleepingPose.Active) &&
+                        NativeBusinessServices.IsKeeper(npc,interior.BuildingData.BuildingType))
+                    {
+                        var source=npc.GetComponent<DaggerfallBillboard>();
+                        if(source && source.Summary.Archive==182 && source.Summary.Record==0 && (directional || SleepingArt.SourceProvider(182,0)==""))
+                        {
+                            if(!directional)
+                            {
+                                directional=npc.gameObject.AddComponent<DirectionalKeeperPose>();
+                                var forward=indoorGeometry!=null && indoorGeometry.EntryGround.HasValue ?
+                                    indoorGeometry.EntryGround.Value-npc.transform.position : Vector3.forward;
+                                directional.Configure(source,keeperStandingArt,forward);
+                            }
+                            directional.SetStanding(true);
+                        }
+                    }
                     continue;
                 }
                 if (!keeperViews.TryGetValue(person.Id, out view))
@@ -366,7 +387,7 @@ namespace LivingCities.DFU
                 worldStore.PreferNativeWorkplaceBed(keeper.Id,keeperHome);
                 if(previousHome!=keeper.HomeKey) keeperSchedules.Remove(keeper.Id);
                 if (keeper.HomeKey < 0 && worldStore.AssignNativeBed(keeper.Id, keeperHome, keeperHomes))
-                    Debug.Log("LIVING_CITIES_KEEPER_HOME: " + keeper.Id + "; " + keeper.Name + "; home=" + keeper.HomeKey + "; bed=" + keeper.BedSlot);
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_KEEPER_HOME: " + keeper.Id + "; " + keeper.Name + "; home=" + keeper.HomeKey + "; bed=" + keeper.BedSlot);
                 keepers.Add(keeper);
             }
             // Preserve all original staff reservations before adding a family to spare beds.

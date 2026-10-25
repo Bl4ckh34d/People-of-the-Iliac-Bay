@@ -1,0 +1,599 @@
+{
+  "schemaVersion": 1,
+  "caseCount": 35,
+  "casesSha256": "c10eb8faa2563ff655f4845d6a206491c1ead537d4b8631c0ba08af6a8dd5eba",
+  "casesHashAlgorithm": "SHA-256 of UTF-8 compact JSON cases array with ensure_ascii=false",
+  "provenance": "Fresh diagnostic for route-to-interpreter-to-Core Wait gate. No offers or commitments are supplied. Native context, Wait target, and candidate availability must come from captured runtime state; expected labels are scoring-only. A Wait duration omitted from the utterance uses native 300-second default. intentOutcomes lists acceptable extracted intents. Unsupported requests allow clarify or none but never a Wait plan; outcome records preferred final result. Pre-inference gold review clarified two quoted-instruction SOCIAL controls: one asks about a public sign, the other about fictional story dialogue. Any Core completion in this pilot must use an explicitly synthetic observation, not claim a native game effect.",
+  "cases": [
+    {
+      "id": "wait_pos_hold_place_twenty",
+      "category": "direct_wait_explicit_duration",
+      "playerText": "Please hold your place here for twenty seconds while I secure this clasp.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 20
+      }
+    },
+    {
+      "id": "wait_pos_half_minute",
+      "category": "direct_wait_explicit_duration",
+      "playerText": "Stay right here for half a minute while I check the seal.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 30
+      }
+    },
+    {
+      "id": "wait_pos_ninety_seconds",
+      "category": "direct_wait_explicit_duration",
+      "playerText": "Would you remain here for ninety seconds while I count the wagons?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 90
+      }
+    },
+    {
+      "id": "wait_pos_two_minutes_maps",
+      "category": "direct_wait_explicit_duration",
+      "playerText": "Wait here for two minutes so I can compare these maps.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 120
+      }
+    },
+    {
+      "id": "wait_pos_five_minutes_tally",
+      "category": "direct_wait_explicit_duration",
+      "playerText": "Keep your place here for five minutes while I finish the tally.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 300
+      }
+    },
+    {
+      "id": "wait_pos_indirect_twenty",
+      "category": "polite_indirect_wait",
+      "playerText": "Could you stay where you are for 20 seconds, please?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 20
+      }
+    },
+    {
+      "id": "wait_pos_need_thirty",
+      "category": "direct_wait_explicit_duration",
+      "playerText": "I need you to wait here for 30 seconds while I mark this page.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 30
+      }
+    },
+    {
+      "id": "wait_pos_ninety_return",
+      "category": "polite_indirect_wait",
+      "playerText": "Please wait here for 90 seconds; I will be right back.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 90
+      }
+    },
+    {
+      "id": "wait_pos_two_minutes_clerk",
+      "category": "polite_indirect_wait",
+      "playerText": "Would you wait here for two minutes while the clerk checks my name?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 120
+      }
+    },
+    {
+      "id": "wait_pos_default_read_note",
+      "category": "direct_wait_default_duration",
+      "playerText": "Could you wait right where you are while I read this note?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "request"
+        ],
+        "outcome": "completed",
+        "durationSeconds": 300
+      }
+    },
+    {
+      "id": "wait_ctl_hypothetical_captain",
+      "category": "hypothetical_wait",
+      "playerText": "Would you wait here for thirty seconds if the captain asked?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_report_mara",
+      "category": "reported_wait",
+      "playerText": "Mara says you waited here for half a minute yesterday; was that true?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_quoted_board",
+      "category": "quoted_wait",
+      "playerText": "The board reads, 'Wait here for one minute.' Why would it give that instruction?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_negated_rounds",
+      "category": "negated_wait",
+      "playerText": "Don't wait here; keep going with your rounds.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_not_needed",
+      "category": "negated_wait",
+      "playerText": "You needn't stay here for twenty seconds; I am ready.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_player_own_wait",
+      "category": "player_own_intent",
+      "playerText": "I will stand here for half a minute; you can continue your patrol.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_past_dawn",
+      "category": "past_event_question",
+      "playerText": "Did you wait here for ninety seconds at dawn?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_general_custom",
+      "category": "social_information_question",
+      "playerText": "How long do people usually wait at this gate?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_history_no",
+      "category": "multi_turn_social_control",
+      "playerText": "No, I only wanted to know how the clock works.",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "What time is it?"
+        },
+        {
+          "speaker": "npc",
+          "text": "Would you like me to wait here?"
+        }
+      ],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_sister_quote",
+      "category": "third_party_quoted_request",
+      "playerText": "In the old folktale, the queen tells her guard, 'Wait here for a minute.' Why would she say that?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_rhetorical_request",
+      "category": "rhetorical_question",
+      "playerText": "Who would ask someone to wait at a gate for a minute?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_history_followup_social",
+      "category": "multi_turn_social_followup",
+      "playerText": "That sounds tiring. Did the rain stop?",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "The porter told me to wait by the bridge for twenty minutes."
+        },
+        {
+          "speaker": "npc",
+          "text": "That was the porter's instruction to you, not a request for me."
+        }
+      ],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_ctl_general_meaning",
+      "category": "quoted_phrase_question",
+      "playerText": "What does the phrase 'wait here' mean in a guard's order?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "SOCIAL"
+        ],
+        "intentOutcomes": [
+          "none"
+        ],
+        "outcome": "no_action",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_follow_30",
+      "category": "unsupported_follow_only_wait_available",
+      "playerText": "Follow me for 30 seconds.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_walk_not_stay",
+      "category": "unsupported_follow_only_wait_available",
+      "playerText": "Walk with me; don't stay here.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_move_then_wait",
+      "category": "unsupported_move_and_wait",
+      "playerText": "Go to the north arch and wait there for thirty seconds.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_remote_gate",
+      "category": "unsupported_remote_wait_target",
+      "playerText": "Wait at the north gate for one minute.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_bridge_wait",
+      "category": "unsupported_remote_wait_target",
+      "playerText": "Could you wait by the bridge until I get there?",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_conditional_bell",
+      "category": "unsupported_conditional_wait",
+      "playerText": "If the bell rings, please wait here for twenty seconds.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_conditional_porter",
+      "category": "unsupported_conditional_wait",
+      "playerText": "If the porter arrives, stay at the door for two minutes.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_purchase_tea",
+      "category": "unsupported_purchase_only_wait_available",
+      "playerText": "Please buy me a cup of tea.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_transfer_ring",
+      "category": "unsupported_transfer_only_wait_available",
+      "playerText": "Give Mara my silver ring.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_carry_parcel",
+      "category": "unsupported_move_transfer_only_wait_available",
+      "playerText": "Carry this parcel to the tailor and hand it over.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_follow_then_wait",
+      "category": "unsupported_follow_wait_sequence",
+      "playerText": "Follow me for thirty seconds, then wait here for a minute.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    },
+    {
+      "id": "wait_unsupported_wait_till_sunrise",
+      "category": "unsupported_unbounded_wait_condition",
+      "playerText": "Wait here until sunrise.",
+      "attributedHistory": [],
+      "expected": {
+        "routes": [
+          "ACTION_REQUEST"
+        ],
+        "intentOutcomes": [
+          "clarify",
+          "none"
+        ],
+        "outcome": "clarify",
+        "durationSeconds": null
+      }
+    }
+  ]
+}

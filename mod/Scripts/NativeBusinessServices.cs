@@ -5,7 +5,7 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Utility;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Mirrors PlayerActivate.StaticNPCClick's service routing. A native source
     // building or a bed claim alone is never a business role.

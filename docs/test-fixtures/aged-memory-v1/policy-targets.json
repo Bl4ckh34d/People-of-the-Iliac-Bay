@@ -1,0 +1,22 @@
+{
+  "status": "provisional_targets_not_runtime_defaults",
+  "game_day_seconds": 86400,
+  "eligible_age_days_strictly_greater_than": 30,
+  "older_theme_age_days": 90,
+  "pressure_eligible_age_days_strictly_greater_than": 7,
+  "per_npc_pressure_high_utf8_bytes": 65536,
+  "per_npc_pressure_low_utf8_bytes": 49152,
+  "aggregate_recent_pressure_high_utf8_bytes": 16777216,
+  "aggregate_recent_pressure_low_utf8_bytes": 12582912,
+  "recent_utf8_bytes": 65536,
+  "summary_utf8_bytes": 16384,
+  "landmark_utf8_bytes": 8192,
+  "provenance_utf8_bytes": 8192,
+  "quiet_seconds": 10,
+  "nearby_radius_m": 8,
+  "max_concurrent_model_jobs": 1,
+  "max_repair_attempts": 2,
+  "overflow_policy": "Never delete protected or unvalidated evidence to satisfy a target. Report overflow.",
+  "model": "Gemma 4 E4B Q4_K_M",
+  "language": "English"
+}

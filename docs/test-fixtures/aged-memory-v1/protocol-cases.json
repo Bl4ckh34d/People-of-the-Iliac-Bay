@@ -1,0 +1,282 @@
+[
+  {
+    "id": "S01",
+    "area": "age",
+    "trigger": "Age exactly 30 game days",
+    "expected": "Not eligible under current strict greater-than gate.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S02",
+    "area": "age",
+    "trigger": "Age 30 game days plus one second",
+    "expected": "Eligible if all other protection and source checks pass.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S03",
+    "area": "age",
+    "trigger": "Wall clock advances while game time is fixed",
+    "expected": "Eligibility unchanged.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S04",
+    "area": "age",
+    "trigger": "Later summary of day10 and day11 is compacted again",
+    "expected": "Keep original source time range, not creation time as event time.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S05",
+    "area": "storage",
+    "trigger": "1000 routine episodes for one NPC are summarized repeatedly",
+    "expected": "Measure post-encoding bytes; bounded active-generation target; no growing list of all source hashes.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S06",
+    "area": "storage",
+    "trigger": "All candidates have high emotion",
+    "expected": "Landmark allocation remains bounded; stronger evidence gets detail, no unlimited importance exception.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S07",
+    "area": "storage",
+    "trigger": "Open commitments exceed budget",
+    "expected": "Preserve authoritative commitments, report protected overflow; do not claim a hard total cap.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S08",
+    "area": "storage",
+    "trigger": "No eligible old material and recent buffer above target",
+    "expected": "Keep evidence, report backlog and apply explicit producer backpressure; no silent deletion.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S09",
+    "area": "semantic_rejection",
+    "trigger": "Malformed or source-unfaithful summary twice repaired unsuccessfully",
+    "expected": "Keep original sources; mark unresolved; zero reclaim permission.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S10",
+    "area": "stale",
+    "trigger": "Append happens during summary generation",
+    "expected": "Reject exact-head publication or explicitly rebase unmodified captured range; never drop appended turns.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S11",
+    "area": "stale",
+    "trigger": "Load another save before completion",
+    "expected": "Reject old owner/save epoch/branch callback.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S12",
+    "area": "stale",
+    "trigger": "Personality or accepted-appraisal fingerprint changes",
+    "expected": "Reject stale selection context; retry from a fresh snapshot.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S13",
+    "area": "crash",
+    "trigger": "Crash before new generation files are flushed",
+    "expected": "Old checkpoint remains readable; incomplete staging ignored.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S14",
+    "area": "crash",
+    "trigger": "Crash after generation write but before actual successful game save",
+    "expected": "Old root retained; no collection based solely on GetSaveData.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S15",
+    "area": "crash",
+    "trigger": "Disk full or invalid generation reload",
+    "expected": "Publication rejected; original retained.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S16",
+    "area": "crash",
+    "trigger": "Crash after save commit before reclaim",
+    "expected": "New generation readable; old data remains harmless surplus.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S17",
+    "area": "roots",
+    "trigger": "Retained old save points to raw parent",
+    "expected": "Raw parent pinned; active generation can still be independent.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S18",
+    "area": "roots",
+    "trigger": "Unknown or inaccessible save directory",
+    "expected": "Disable reclamation; report incomplete root census.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S19",
+    "area": "roots",
+    "trigger": "Export reader pins a generation",
+    "expected": "Reclamation waits for reader/export pin release.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S20",
+    "area": "branch",
+    "trigger": "Rewind before a betrayal then save a new branch",
+    "expected": "No future betrayal appears in the new branch.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S21",
+    "area": "portability",
+    "trigger": "Export compacted save then import into empty archive",
+    "expected": "All referenced dependencies included; load succeeds without deleted raw chunks.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S22",
+    "area": "portability",
+    "trigger": "Load or import existing version1 archive package",
+    "expected": "Legacy reader remains supported; no forced destructive conversion.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S23",
+    "area": "dedupe",
+    "trigger": "Old applied receipt is replayed after consumed-inbox compaction",
+    "expected": "Reject replay; no second mood/trust/inventory effect.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S24",
+    "area": "dedupe",
+    "trigger": "Legacy producer has no durable monotonic sequence",
+    "expected": "Retain exact replay protection; no probabilistic-only deletion or false exactly-once claim.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S25",
+    "area": "scheduler",
+    "trigger": "Any nearby NPC approaches during background model work",
+    "expected": "Cancel/yield and reject late result; proximity is not limited to last speaker.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S26",
+    "area": "scheduler",
+    "trigger": "Dialogue or TTS starts during work",
+    "expected": "Foreground queue wins; measure actual inference cancellation latency.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S27",
+    "area": "scheduler",
+    "trigger": "Combat, save/load or scene transition begins",
+    "expected": "Stop batch publication and cancel inference; retain last valid generation.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S28",
+    "area": "scheduler",
+    "trigger": "Crowd leaves and returns repeatedly",
+    "expected": "Quiet hysteresis/backoff avoids repeated immediate restart.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S29",
+    "area": "scheduler",
+    "trigger": "Twelve jobs exhausted and game day passes",
+    "expected": "Budget resumes; cancellation cannot refresh attempts.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S30",
+    "area": "capacity",
+    "trigger": "Run ten simulated game years at 100, 1000 and 10000 NPCs",
+    "expected": "Report active archive, retained roots, inbox, accepted outcomes, RAM and load time separately.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S31",
+    "area": "shared_event",
+    "trigger": "Wedding event has two participant memories and a private detail",
+    "expected": "Shared event ID; observer-specific visibility; do not invent cross-NPC synchronization.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S32",
+    "area": "emotion",
+    "trigger": "Appraisal payload is pruned before its durable salience capsule exists",
+    "expected": "Reject pruning; later summaries must retain accepted historical cue and attribution.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S33",
+    "area": "age_pressure",
+    "trigger": "Eight-day-old long conversations exceed the recent-memory high-water mark",
+    "expected": "Eligible for detail-preserving pressure compaction; significant specifics remain.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S34",
+    "area": "age_pressure",
+    "trigger": "Eight-day-old ordinary conversations with no storage pressure",
+    "expected": "Keep detailed episodes; do not force monthly-level compression early.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S35",
+    "area": "age_pressure",
+    "trigger": "Six-day-old conversations exceed the high-water mark",
+    "expected": "Keep detailed recent evidence and report overflow; pressure cannot bypass the seven-day floor.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S36",
+    "area": "age_pressure",
+    "trigger": "Data pressure comes from many NPCs rather than one verbose NPC",
+    "expected": "Aggregate recent-byte trigger activates fair batches across eligible NPCs; do not starve quieter NPCs.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S37",
+    "area": "age_pressure",
+    "trigger": "Measured bytes fluctuate around the high-water threshold",
+    "expected": "Separate low-water release threshold prevents repeated enter/exit oscillation.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S38",
+    "area": "age_pressure",
+    "trigger": "Same significant event at eight days under pressure and at one hundred eighty days",
+    "expected": "Early summary retains more specifics; old landmark keeps central meaning and attribution; both use personality/emotion.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S39",
+    "area": "age_pressure",
+    "trigger": "Exactly seven game days under pressure",
+    "expected": "Not eligible until strictly older than the configured seven-day floor.",
+    "execution_status": "not_run"
+  },
+  {
+    "id": "S40",
+    "area": "age_pressure",
+    "trigger": "Large current conversations only; all sources younger than seven days",
+    "expected": "No eligible deletion; show protected backlog rather than falsely claiming bounded storage.",
+    "execution_status": "not_run"
+  }
+]

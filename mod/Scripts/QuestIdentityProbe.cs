@@ -8,19 +8,19 @@ using DaggerfallWorkshop.Game.Questing;
 using DaggerfallWorkshop.Game.Serialization;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Opt-in disposable-save probe, not gameplay or a quest replacement system.
     public static class QuestIdentityProbe
     {
-        private const string SaveName = "Living Cities - quest identity probe";
+        private const string SaveName = "People of the Iliac Bay - quest identity probe";
         private static readonly Symbol Owner = new Symbol("_owner_");
         private static readonly Symbol Clicked = new Symbol("_clicked_");
 
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            Require(game.PlayerEntity.Name.StartsWith("LivingCitiesTest-", StringComparison.Ordinal), "Disposable character required.");
+            Require(game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal), "Disposable character required.");
             // Generated family homes may contain no original NPC at all. Use a
             // real tavern, whose vanilla occupants can own a Questor resource.
             if (game.PlayerEnterExit.IsPlayerInside) game.PlayerEnterExit.TransitionExterior();
@@ -49,7 +49,7 @@ namespace LivingCities.DFU
             Vector3 originalPosition = npc.transform.position;
             machine.LastNPCClicked = npc;
             var quest = machine.ParseQuest("_LC_ID_PROBE", new[] {
-                "Quest: _LC_ID_PROBE", "DisplayName: Living Cities identity probe", "QRC:",
+                "Quest: _LC_ID_PROBE", "DisplayName: People of the Iliac Bay identity probe", "QRC:",
                 "Message: 1000", "Disposable integration probe.", "", "QBN:",
                 "Person _owner_ group Questor", "", "_clicked_ task:", " clicked npc _owner_" });
             Require(quest != null, "Probe quest did not parse.");
@@ -114,7 +114,7 @@ namespace LivingCities.DFU
                 Require(matches == 1 && npc.GetInstanceID() != previousInstance, "Reload did not reconstruct one original NPC.");
                 RequireBinding(npc, quest, originalJson, originalName);
                 CheckNativeClick(npc, quest);
-                Debug.Log("LIVING_CITIES_TOWN_QUEST_PASS: transform, native click task, hide/show, reconstructed identity and save/load; quest=" +
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_QUEST_PASS: transform, native click task, hide/show, reconstructed identity and save/load; quest=" +
                     uid + "; name=" + originalName + "; building=" + originalData.buildingKey + "; save=" + game.SaveLoadManager.GetSaveFolder(key));
             }
             finally

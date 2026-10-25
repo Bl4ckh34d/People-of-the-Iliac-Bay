@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <AssemblyName>PeopleOfTheIliacBay.Tests</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/ConversationMemoryTests.cs" Link="ConversationMemoryTests.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/ConversationRetrievalTests.cs" Link="ConversationRetrievalTests.cs" />
+    <Compile Include="../PeopleOfTheIliacBay.Tests/NpcObservedSpeechTestFixture.cs" Link="NpcObservedSpeechTestFixture.cs" />
+  </ItemGroup>
+</Project>

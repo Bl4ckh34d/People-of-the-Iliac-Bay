@@ -1,0 +1,573 @@
+{
+  "schemaVersion": 1,
+  "caseCount": 32,
+  "casesSha256": "ce058c6fa91f525a94827748db4a5c1657b62de8a066bb0dc14bbe6a46b4b819",
+  "casesHashAlgorithm": "SHA-256 of UTF-8 compact JSON cases array with ensure_ascii=false",
+  "provenance": "Fresh v2 diagnostic roots authored before any v2 inference. Native facts derive from captured game context; attributed history, current offers and commitments are explicit synthetic overrides. This is a finite held-out diagnostic, not representative coverage of all NPC features.",
+  "cases": [
+    {
+      "id": "held_old_crate",
+      "category": "past_event_question",
+      "playerText": "Was it you who carried the crate last winter?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_hypothetical_guide",
+      "category": "hypothetical_request",
+      "playerText": "If I ever needed a guide, would you be willing?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_guard_wagon_price",
+      "category": "hypothetical_price",
+      "playerText": "What would you charge if a visitor asked you to guard a wagon?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_brother_future",
+      "category": "third_party_future_request",
+      "playerText": "My brother plans to ask you to collect the medicine.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_story_silver_cup",
+      "category": "quoted_directive",
+      "playerText": "In that story the innkeeper says, 'Bring me the silver cup.' Did you understand the ending?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_chest_myself",
+      "category": "denied_assistance",
+      "playerText": "I can handle the locked chest myself; you needn't do anything.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_thanks_existing",
+      "category": "social_during_commitment",
+      "playerText": "You are already doing what I need. I am only thanking you.",
+      "attributedHistory": [],
+      "commitments": [
+        {
+          "id": "fresh:walk:1",
+          "kind": "action-task",
+          "status": "executing",
+          "revision": 2,
+          "actionKind": "Follow"
+        }
+      ],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_hypothetical_thief",
+      "category": "hypothetical_third_party",
+      "playerText": "Would a thief hide behind that stall if the guards approached?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_docks_alone",
+      "category": "player_own_plan",
+      "playerText": "I'm leaving for the docks later. I wasn't inviting you.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_old_offer_regret",
+      "category": "historical_offer",
+      "playerText": "Your offer last month was generous. I regret turning it down.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_poster_doorway",
+      "category": "quoted_directive_question",
+      "playerText": "The sentence 'Stay at the doorway' appears on this poster. Why?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_old_argument",
+      "category": "reported_cancellation",
+      "playerText": "I once told you to stop following me. We are only discussing that old argument.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_recall_shop",
+      "category": "memory_question",
+      "playerText": "Do you remember which shop I visited yesterday?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_family_question",
+      "category": "ordinary_social",
+      "playerText": "Before we talk about work, how is your family?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_undecided",
+      "category": "no_current_request",
+      "playerText": "I haven't decided whether I need anything from you.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_book_cancel_phrase",
+      "category": "quoted_cancel_during_commitment",
+      "playerText": "What does 'cancel the errand' mean in the book you're reading?",
+      "attributedHistory": [],
+      "commitments": [
+        {
+          "id": "fresh:task:1",
+          "kind": "task",
+          "status": "running",
+          "revision": 3
+        }
+      ],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "SOCIAL"
+      ],
+      "notes": "Fresh diagnostic root; not selected from model output."
+    },
+    {
+      "id": "held_loaf_return",
+      "category": "purchase_and_delivery",
+      "playerText": "Please fetch a loaf and bring it to me once you've paid.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_guard_pack",
+      "category": "conditional_wait",
+      "playerText": "Could you stay with my pack until I come back?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_safe_roads",
+      "category": "conditional_travel",
+      "playerText": "If the roads are clear after lunch, escort me to the mill.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_carry_note",
+      "category": "message_delivery",
+      "playerText": "Will you take a note to the armourer for me?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_find_bow_repair",
+      "category": "multistep_service",
+      "playerText": "Find someone who can mend this bow, then lead me to them.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_watch_alley",
+      "category": "conditional_awareness",
+      "playerText": "Please keep an eye on the alley and warn me if you see a guard.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_reserve_room",
+      "category": "future_service_request",
+      "playerText": "I'd like you to reserve a room for tonight at the inn.",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_fight_wolves",
+      "category": "combat_assistance",
+      "playerText": "Can you help me fight the wolves outside town?",
+      "attributedHistory": [],
+      "commitments": [],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "ACTION_REQUEST"
+      ],
+      "notes": "A current request remains ACTION_REQUEST even if the native capability or target is unavailable. This replay does not execute it."
+    },
+    {
+      "id": "held_offer_accept",
+      "category": "live_offer_assent",
+      "playerText": "All right. I'll take you up on that.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "I can walk with you for four minutes, if you like."
+        }
+      ],
+      "commitments": [],
+      "pendingOffer": {
+        "optionId": 21,
+        "kind": "Follow",
+        "status": "pending",
+        "label": "accompany the player",
+        "itemSourceStep": 0,
+        "maximumQuantity": 0,
+        "durationSeconds": 240,
+        "target": {
+          "Kind": "Person",
+          "PersonId": "player",
+          "ContainerId": null,
+          "ItemId": null,
+          "WorldSpaceId": null,
+          "Quantity": 1,
+          "QuotedGold": 0,
+          "TransferDirection": "NpcToCounterparty",
+          "SettlementId": 0,
+          "BuildingKey": -1,
+          "X": 0,
+          "Y": 0,
+          "Z": 0
+        }
+      },
+      "expectedRoutes": [
+        "OFFER_RESPONSE"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "held_offer_refuse",
+      "category": "live_offer_refusal",
+      "playerText": "No, keep to your own plans instead.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "I could accompany you for four minutes."
+        }
+      ],
+      "commitments": [],
+      "pendingOffer": {
+        "optionId": 21,
+        "kind": "Follow",
+        "status": "pending",
+        "label": "accompany the player",
+        "itemSourceStep": 0,
+        "maximumQuantity": 0,
+        "durationSeconds": 240,
+        "target": {
+          "Kind": "Person",
+          "PersonId": "player",
+          "ContainerId": null,
+          "ItemId": null,
+          "WorldSpaceId": null,
+          "Quantity": 1,
+          "QuotedGold": 0,
+          "TransferDirection": "NpcToCounterparty",
+          "SettlementId": 0,
+          "BuildingKey": -1,
+          "X": 0,
+          "Y": 0,
+          "Z": 0
+        }
+      },
+      "expectedRoutes": [
+        "OFFER_RESPONSE"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "held_offer_wait",
+      "category": "live_wait_assent",
+      "playerText": "That would help. Stay exactly where you offered.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "I can wait at this spot for two minutes."
+        }
+      ],
+      "commitments": [],
+      "pendingOffer": {
+        "optionId": 22,
+        "kind": "Wait",
+        "status": "pending",
+        "label": "wait at the current observed point",
+        "itemSourceStep": 0,
+        "maximumQuantity": 0,
+        "durationSeconds": 120,
+        "target": {
+          "Kind": "WorldPoint",
+          "WorldSpaceId": "settlement:206728581",
+          "SettlementId": 206728581,
+          "BuildingKey": -1,
+          "X": 8,
+          "Y": 0,
+          "Z": 4,
+          "PersonId": null,
+          "ContainerId": null,
+          "ItemId": null,
+          "Quantity": 1,
+          "QuotedGold": 0,
+          "TransferDirection": "NpcToCounterparty"
+        }
+      },
+      "expectedRoutes": [
+        "OFFER_RESPONSE"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "held_offer_exact_duration",
+      "category": "live_offer_bound_assent",
+      "playerText": "Yes, do that now, for the amount of time you just proposed.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "Shall I wait at this spot for two minutes?"
+        }
+      ],
+      "commitments": [],
+      "pendingOffer": {
+        "optionId": 22,
+        "kind": "Wait",
+        "status": "pending",
+        "label": "wait at the current observed point",
+        "itemSourceStep": 0,
+        "maximumQuantity": 0,
+        "durationSeconds": 120,
+        "target": {
+          "Kind": "WorldPoint",
+          "WorldSpaceId": "settlement:206728581",
+          "SettlementId": 206728581,
+          "BuildingKey": -1,
+          "X": 8,
+          "Y": 0,
+          "Z": 4,
+          "PersonId": null,
+          "ContainerId": null,
+          "ItemId": null,
+          "Quantity": 1,
+          "QuotedGold": 0,
+          "TransferDirection": "NpcToCounterparty"
+        }
+      },
+      "expectedRoutes": [
+        "OFFER_RESPONSE"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "held_commit_stop_follow",
+      "category": "cancel_active_follow",
+      "playerText": "We're done with this walk. Stop following me now.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "I am accompanying you as agreed."
+        }
+      ],
+      "commitments": [
+        {
+          "id": "fresh:walk:1",
+          "kind": "action-task",
+          "status": "executing",
+          "revision": 2,
+          "actionKind": "Follow"
+        }
+      ],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "COMMITMENT_UPDATE"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "held_commit_cancel_meeting",
+      "category": "cancel_accepted_appointment",
+      "playerText": "Let's abandon our meeting rather than change the time.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "Our meeting is accepted."
+        }
+      ],
+      "commitments": [
+        {
+          "id": "fresh:appointment:1",
+          "kind": "appointment",
+          "status": "accepted",
+          "revision": 1
+        }
+      ],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "COMMITMENT_UPDATE"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "held_commit_change_quantity",
+      "category": "modify_running_errand",
+      "playerText": "Do not buy three after all; change the order to one.",
+      "attributedHistory": [
+        {
+          "speaker": "player",
+          "text": "Buy three apples for me."
+        },
+        {
+          "speaker": "npc",
+          "text": "I accepted your errand and will buy three."
+        }
+      ],
+      "commitments": [
+        {
+          "id": "fresh:task:1",
+          "kind": "task",
+          "status": "running",
+          "revision": 3
+        }
+      ],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "COMMITMENT_UPDATE"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "held_commit_pause",
+      "category": "pause_current_errand",
+      "playerText": "Pause the errand you are carrying out until I call for you.",
+      "attributedHistory": [
+        {
+          "speaker": "npc",
+          "text": "I am carrying out your accepted errand."
+        }
+      ],
+      "commitments": [
+        {
+          "id": "fresh:task:1",
+          "kind": "task",
+          "status": "running",
+          "revision": 3
+        }
+      ],
+      "pendingOffer": null,
+      "expectedRoutes": [
+        "COMMITMENT_UPDATE"
+      ],
+      "notes": ""
+    }
+  ]
+}

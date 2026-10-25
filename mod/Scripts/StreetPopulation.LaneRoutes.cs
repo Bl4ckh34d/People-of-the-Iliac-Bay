@@ -1,37 +1,24 @@
 using System;
 using System.Collections.Generic;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
         private List<RoutePoint> OffsetStreetPath(IList<RoutePoint> route, uint seed)
         {
+            // Native agents handle separation. Do not bend their saved route
+            // back into the legacy grid's personal lanes and walking times.
+            if(geometry!=null && geometry.UsesNativeNavigation)
+                return new List<RoutePoint>(route);
             if (geometry == null) return new List<RoutePoint>(route);
             return geometry.OffsetStreetRoute(route, seed);
         }
 
-        private ResidentDestination OffsetStreetItinerary(ResidentDestination source, uint seed)
+        private ResidentDestination OffsetStreetItinerary(ResidentRoutine source, uint seed)
         {
-            var copy = ResidentVisitJourney.Copy(source);
-            foreach (var stop in copy.Stops)
-            {
-                double before = RouteLength(stop.Route);
-                var route = OffsetSavedRoute(stop.Route, seed);
-                double after = RouteLength(route);
-                stop.Route = route;
-                if (before > 0) stop.WalkSeconds *= after / before;
-            }
-            if (copy.Stops.Count > 0 && copy.Stops[0].WalkSeconds < copy.EntryGateSeconds)
-                copy.Stops[0].WalkSeconds = copy.EntryGateSeconds;
-            double exitBefore = RouteLength(copy.ExitRoute);
-            var exit = OffsetSavedRoute(copy.ExitRoute, seed);
-            double exitAfter = RouteLength(exit);
-            copy.ExitRoute = exit;
-            if (exitBefore > 0) copy.ExitWalkSeconds *= exitAfter / exitBefore;
-            if (copy.ExitWalkSeconds < copy.ExitGateSeconds) copy.ExitWalkSeconds = copy.ExitGateSeconds;
-            return copy;
+            return OutdoorRoutineMigration.RuntimeItinerary(source,route=>OffsetSavedRoute(route,seed));
         }
 
         private List<SavedRoutePoint> OffsetSavedRoute(List<SavedRoutePoint> route, uint seed)

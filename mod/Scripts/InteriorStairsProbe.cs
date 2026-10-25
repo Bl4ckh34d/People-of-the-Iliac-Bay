@@ -2,10 +2,10 @@ using System;
 using System.Collections;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class InteriorStairsProbe
     {
@@ -16,7 +16,7 @@ namespace LivingCities.DFU
             var timer = System.Diagnostics.Stopwatch.StartNew();
             var graph = new InteriorGeometry(room);
             timer.Stop();
-            Debug.Log("LIVING_CITIES_INTERIOR_SURVEY_TIME: fixture=131343; milliseconds=" + timer.ElapsedMilliseconds);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INTERIOR_SURVEY_TIME: fixture=131343; milliseconds=" + timer.ElapsedMilliseconds);
             if (!graph.EntryGround.HasValue) throw new InvalidOperationException("Stair fixture lacks entry ground.");
             int upper = 0, routed = 0; string samples = ""; Vector3 chosen = Vector3.zero;
             foreach (var bed in BedGeometry.Read(room))
@@ -63,10 +63,10 @@ namespace LivingCities.DFU
             }
             if (upper == 0 || routed == 0)
                 throw new InvalidOperationException("Upper-floor escape unavailable; clear samples=" + upper + "; routed=" + routed + "; " + samples);
-            Debug.Log("LIVING_CITIES_INTERIOR_STAIRS_PASS: actual upper bedroom floor routes to exit; clear=" + upper + "; routed=" + routed);
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INTERIOR_STAIRS_PASS: actual upper bedroom floor routes to exit; clear=" + upper + "; routed=" + routed);
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = adapter.GetComponent<StreetPopulation>(); streets.ReactionsEnabled = true;
-            var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(adapter);
+            var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(adapter);
             var world = store.Snapshot(); var keeper = world.NativePeople.Find(p=>p.Id==keeperId);
             var npc = Array.Find(room.GetComponentsInChildren<StaticNPC>(true),n=>n.Data.hash==keeper.NativeHash);
             if (!npc || streets.KeeperServiceBlocked(npc)) throw new InvalidOperationException("Stair movement fixture keeper unavailable.");
@@ -102,7 +102,7 @@ namespace LivingCities.DFU
             yield return new WaitForSecondsRealtime(0.25f);
             if (lowY>chosen.y-2 || npc.gameObject.activeSelf)
                 throw new InvalidOperationException("Live keeper failed to descend stairs and exit.");
-            Debug.Log("LIVING_CITIES_INTERIOR_STAIRS_MOVEMENT_PASS: controlled upstairs native keeper follows saved descending path and physically reaches exit.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INTERIOR_STAIRS_MOVEMENT_PASS: controlled upstairs native keeper follows saved descending path and physically reaches exit.");
         }
     }
 }

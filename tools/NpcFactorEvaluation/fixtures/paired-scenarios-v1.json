@@ -1,0 +1,3418 @@
+{
+  "schemaVersion": 1,
+  "corpusId": "npc-factor-contrasts-next-v1",
+  "provenance": "Synthetic frozen contrasts for future Qwen voice and D3 choice review. No model output, world event, or gameplay effect is represented as real.",
+  "nativeFixtureAnchor": {
+    "personId": "s:206728581:h:131074:r:0",
+    "save": "People - Gothway Garden",
+    "identityProvenance": "Reuses person ID and save name from MoodEvaluation fixture only. Every event, time, trait value, relationship value, witness, obligation, option and outcome below is synthetic.",
+    "defaultGameTimeSeconds": 987600,
+    "defaultSceneId": "synthetic-market-interior",
+    "defaultSceneRevision": 1,
+    "saveBranch": "synthetic-base"
+  },
+  "pairContract": {
+    "pairCount": 29,
+    "armCount": 58,
+    "mergeRule": "Deep-merge each arm.contextPatch into pair.commonInput. Each pair changes one named factor only; all other supplied input stays byte-for-byte equivalent after merge.",
+    "roles": {
+      "qwen": "Generate grounded NPC voice from supplied facts and voice profile. Evaluate meaning, tone, uncertainty, and unsupported claims by human review; do not require exact wording.",
+      "d3": "Select one supplied option ID from the native-eligible set. Never add options or directly execute effects."
+    },
+    "semantics": "expectedNativeEligibleOptionIds describes native-authorized choices for the synthetic contract. acceptableD3Choices is a broad semantic choice set, not one exact answer. Neither field claims current runtime support.",
+    "evidenceModel": "nativeFacts describe world truth; npcKnowledge describes what this NPC has observed, been told, or can infer. Unknown is explicit. Do not grant appraisal access to hidden facts.",
+    "noRerolls": "Freeze corpus and model outputs. Do not retry failed or undesirable outputs, reroll prompts, or edit this corpus after seeing model responses. Create separately versioned held-out paraphrases."
+  },
+  "pairs": [
+    {
+      "id": "trust.evidence-with-same-affinity",
+      "factorId": "relationship.trustEvidence",
+      "factorRationale": "Trust evidence changes; affinity and all other context remain fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "warmth": "high",
+            "dutifulness": "ordinary",
+            "eloquence": "ordinary",
+            "integrity": "ordinary"
+          },
+          "relationship": {
+            "affinity": "high",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm",
+            "value": "neutral"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market-interior",
+          "saveBranch": "synthetic-base",
+          "nativeFacts": [],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Would you carry my sealed parcel to the town gate?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "accept_parcel",
+            "description": "Accept the bounded delivery request."
+          },
+          {
+            "id": "ask_terms",
+            "description": "Ask what the parcel contains or when it is due."
+          },
+          {
+            "id": "decline",
+            "description": "Decline the voluntary request."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "trust.evidence-with-same-affinity.a",
+          "label": "trust unknown",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "accept_parcel",
+            "ask_terms",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "accept_parcel",
+            "ask_terms",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Avoid claiming prior reliability evidence."
+            ],
+            "forbid": [
+              "Invent a promise history."
+            ]
+          }
+        },
+        {
+          "id": "trust.evidence-with-same-affinity.b",
+          "label": "verified kept delivery promise",
+          "contextPatch": {
+            "npc": {
+              "relationship": {
+                "trust": {
+                  "status": "Verified",
+                  "value": "reliable",
+                  "source": "CommittedEffect",
+                  "eventId": "synthetic-promise-17",
+                  "observedAtGameSeconds": 987000
+                }
+              }
+            },
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "promise_fulfilled",
+                  "actor": "player",
+                  "target": "s:206728581:h:131074:r:0",
+                  "eventId": "synthetic-promise-17",
+                  "observedAtGameSeconds": 987000
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "witnessed_promise_fulfillment",
+                  "source": "LiveObservation",
+                  "eventId": "synthetic-promise-17",
+                  "observedAtGameSeconds": 987000
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "accept_parcel",
+            "ask_terms",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "accept_parcel",
+            "ask_terms",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "May acknowledge the verified kept promise if relevant."
+            ],
+            "forbid": [
+              "Treat reliability as guaranteed success or competence at unrelated skills."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Native eligibility stays identical. Trust may inform choice and voice; affinity alone must not be called proof of reliability."
+    },
+    {
+      "id": "affinity.with-same-trust",
+      "factorId": "relationship.affinity",
+      "factorRationale": "Affinity changes; verified reliability evidence and request remain fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "warmth": "ordinary",
+            "dutifulness": "ordinary"
+          },
+          "relationship": {
+            "affinity": "low",
+            "trust": {
+              "status": "Verified",
+              "value": "reliable",
+              "eventId": "synthetic-promise-22"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market-interior",
+          "nativeFacts": [
+            {
+              "kind": "promise_fulfilled",
+              "eventId": "synthetic-promise-22"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "witnessed_promise_fulfillment",
+              "eventId": "synthetic-promise-22"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Please help me carry this box to the next street.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "help",
+            "description": "Accept this feasible voluntary request."
+          },
+          {
+            "id": "ask",
+            "description": "Ask for clarification."
+          },
+          {
+            "id": "decline",
+            "description": "Decline."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "affinity.with-same-trust.a",
+          "label": "low affinity",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "help",
+            "ask",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "help",
+            "ask",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Keep tone civil."
+            ],
+            "forbid": [
+              "Equate low affinity with distrust."
+            ]
+          }
+        },
+        {
+          "id": "affinity.with-same-trust.b",
+          "label": "high affinity",
+          "contextPatch": {
+            "npc": {
+              "relationship": {
+                "affinity": "high"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "help",
+            "ask",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "help",
+            "ask",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "May sound warmer."
+            ],
+            "forbid": [
+              "Claim affinity proves reliability."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Affinity can shape warmth or preference; it does not alter verified trust or native feasibility."
+    },
+    {
+      "id": "duty.angry-professional",
+      "factorId": "obligation.fundedScope",
+      "factorRationale": "Only a valid funded in-scope contract changes; same NPC, request, mood, danger, and resources.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "dutifulness": "high",
+            "courage": "ordinary"
+          },
+          "relationship": {
+            "affinity": "low",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "angry",
+            "value": "negative"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-town-gate",
+          "nativeFacts": [
+            {
+              "kind": "parcel_ready",
+              "eventId": "synthetic-parcel-4"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "parcel_ready",
+              "eventId": "synthetic-parcel-4"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Take this parcel to the gate as we discussed.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "perform_delivery",
+            "description": "Perform the feasible parcel delivery."
+          },
+          {
+            "id": "ask",
+            "description": "Clarify the delivery terms."
+          },
+          {
+            "id": "decline_voluntary",
+            "description": "Decline an uncontracted request."
+          },
+          {
+            "id": "request_safety_stop",
+            "description": "Pause if a material danger or scope conflict exists."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "duty.angry-professional.a",
+          "label": "no funded contract",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "perform_delivery",
+            "ask",
+            "decline_voluntary"
+          ],
+          "acceptableD3Choices": [
+            "perform_delivery",
+            "ask",
+            "decline_voluntary"
+          ],
+          "qwenReview": {
+            "must": [
+              "May decline because this is voluntary."
+            ],
+            "forbid": [
+              "Claim paid duty exists."
+            ]
+          }
+        },
+        {
+          "id": "duty.angry-professional.b",
+          "label": "active funded delivery contract covers this duty",
+          "contextPatch": {
+            "npc": {
+              "obligation": {
+                "status": "active",
+                "kind": "paid_service",
+                "scope": "parcel_delivery",
+                "risk": "ordinary"
+              }
+            },
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "contract_funded",
+                  "eventId": "synthetic-contract-9",
+                  "scope": "parcel_delivery"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "contract_terms_known",
+                  "eventId": "synthetic-contract-9"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "perform_delivery",
+            "ask",
+            "request_safety_stop"
+          ],
+          "acceptableD3Choices": [
+            "perform_delivery",
+            "ask",
+            "request_safety_stop"
+          ],
+          "qwenReview": {
+            "must": [
+              "Ordinary bad mood does not silently cancel funded in-scope duty."
+            ],
+            "forbid": [
+              "Treat contract as consent to unrelated crime or suicidal risk."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "A paid professional can dislike the employer and remain reliable within agreed scope. Contract changes eligibility; mood does not create or cancel the contract."
+    },
+    {
+      "id": "duty.voluntary-vs-contract",
+      "factorId": "obligation.active",
+      "factorRationale": "Only obligation status changes; same moderate mood, task, capability, and terms.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "dutifulness": "ordinary"
+          },
+          "relationship": {
+            "affinity": "ordinary",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "tired",
+            "value": "slightly_negative"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-road",
+          "nativeFacts": [
+            {
+              "kind": "target_reachable",
+              "value": true
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "target_reachable",
+              "value": true
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Walk with me to the north gate.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "follow_scope",
+            "description": "Continue the agreed following duty."
+          },
+          {
+            "id": "ask",
+            "description": "Ask for time or destination detail."
+          },
+          {
+            "id": "decline",
+            "description": "Decline voluntary company."
+          },
+          {
+            "id": "terminate_contract",
+            "description": "End service under its actual termination rules."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "duty.voluntary-vs-contract.a",
+          "label": "voluntary request",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "follow_scope",
+            "ask",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "follow_scope",
+            "ask",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Keep voluntary choice open."
+            ],
+            "forbid": [
+              "Invent a contract."
+            ]
+          }
+        },
+        {
+          "id": "duty.voluntary-vs-contract.b",
+          "label": "funded following duty active",
+          "contextPatch": {
+            "npc": {
+              "obligation": {
+                "status": "active",
+                "kind": "paid_service",
+                "scope": "follow_to_north_gate",
+                "risk": "ordinary"
+              }
+            },
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "contract_funded",
+                  "eventId": "synthetic-contract-10"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "contract_terms_known",
+                  "eventId": "synthetic-contract-10"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "follow_scope",
+            "ask",
+            "terminate_contract"
+          ],
+          "acceptableD3Choices": [
+            "follow_scope",
+            "ask",
+            "terminate_contract"
+          ],
+          "qwenReview": {
+            "must": [
+              "Separate a scoped duty from general obedience."
+            ],
+            "forbid": [
+              "Say mood alone cancelled service."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Current funded duty changes the legitimate response set. Ordinary mood remains a consideration, not a hidden cancellation rule."
+    },
+    {
+      "id": "economy.gift-vs-expected-wage",
+      "factorId": "transfer.purpose",
+      "factorRationale": "The same gold transfer changes from unsolicited gift to earned, due wage; amount and knowledge stay fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "affinity": "ordinary",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-home",
+          "nativeFacts": [
+            {
+              "kind": "gold_transfer",
+              "amount": "same synthetic amount",
+              "from": "player",
+              "to": "npc",
+              "eventId": "synthetic-gold-1"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "gold_received",
+              "from": "player",
+              "eventId": "synthetic-gold-1"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "I transferred the gold to you.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "acknowledge",
+            "description": "Acknowledge the verified transfer and its purpose."
+          },
+          {
+            "id": "ask_purpose",
+            "description": "Ask for clarification if purpose is unknown."
+          },
+          {
+            "id": "claim_more_due",
+            "description": "Claim additional earned wages without ledger evidence."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "economy.gift-vs-expected-wage.a",
+          "label": "unsolicited gift",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge",
+            "ask_purpose"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge",
+            "ask_purpose"
+          ],
+          "qwenReview": {
+            "must": [
+              "May treat this as generosity if giver and purpose are known."
+            ],
+            "forbid": [
+              "Create a wage obligation."
+            ]
+          }
+        },
+        {
+          "id": "economy.gift-vs-expected-wage.b",
+          "label": "wage already earned and due",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "gold_transfer",
+                  "amount": "same synthetic amount",
+                  "from": "player",
+                  "to": "npc",
+                  "eventId": "synthetic-gold-1",
+                  "purpose": "earned_wage",
+                  "contractId": "synthetic-contract-11",
+                  "due": true
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "wage_received",
+                  "contractId": "synthetic-contract-11",
+                  "eventId": "synthetic-gold-1"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge",
+            "ask_purpose"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge",
+            "ask_purpose"
+          ],
+          "qwenReview": {
+            "must": [
+              "Treat payment as fulfilling an expected obligation."
+            ],
+            "forbid": [
+              "Call ordinary earned wages an unsolicited gift or add another wage obligation."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Same transfer can be generosity or expected exchange depending on verified purpose; neither is a universal affinity bonus."
+    },
+    {
+      "id": "economy.loan-excluded",
+      "factorId": "request.instrument",
+      "factorRationale": "Only requested transaction type changes between gift and loan; lending adapter stays unavailable.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "wallet": {
+            "status": "Verified",
+            "value": "synthetic sufficient balance",
+            "source": "Save",
+            "observedAtGameSeconds": 987600
+          },
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-home",
+          "nativeFacts": [
+            {
+              "kind": "lending_adapter",
+              "status": "unavailable"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Could you give me some gold?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "offer_gift",
+            "description": "Offer a bounded no-repayment gift if willing and authorized."
+          },
+          {
+            "id": "ask_terms",
+            "description": "Clarify whether this is a gift or a loan."
+          },
+          {
+            "id": "decline",
+            "description": "Decline the transfer."
+          },
+          {
+            "id": "create_loan",
+            "description": "Create a repayable loan and due date."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "economy.loan-excluded.a",
+          "label": "explicit gift request",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "offer_gift",
+            "ask_terms",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "offer_gift",
+            "ask_terms",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Do not imply repayment unless agreed."
+            ],
+            "forbid": [
+              "Claim a transfer has occurred."
+            ]
+          }
+        },
+        {
+          "id": "economy.loan-excluded.b",
+          "label": "explicit repayable-loan request",
+          "contextPatch": {
+            "playerText": "Could you lend me some gold, and I will repay you next week?"
+          },
+          "expectedNativeEligibleOptionIds": [
+            "ask_terms",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "ask_terms",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "State or imply that a loan cannot be created by current adapter."
+            ],
+            "forbid": [
+              "Create gold, debt, repayment schedule, or a loan receipt."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Gift transfer may be proposed; loan creation and return obligation remain unavailable until separately implemented."
+    },
+    {
+      "id": "economy.gift-need",
+      "factorId": "recipient.knownNeed",
+      "factorRationale": "Only recipient need knowledge changes; item and transfer stay the same.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market",
+          "nativeFacts": [
+            {
+              "kind": "item_transfer",
+              "item": "healing herb",
+              "eventId": "synthetic-herb-3"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "item_received",
+              "item": "healing herb",
+              "eventId": "synthetic-herb-3"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "I gave you the herb for your journey.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "thank",
+            "description": "Acknowledge a helpful gift."
+          },
+          {
+            "id": "neutral_ack",
+            "description": "Acknowledge receipt without assuming usefulness."
+          },
+          {
+            "id": "ask",
+            "description": "Ask what the recipient needs."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "economy.gift-need.a",
+          "label": "need unknown",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "thank",
+            "neutral_ack",
+            "ask"
+          ],
+          "acceptableD3Choices": [
+            "neutral_ack",
+            "ask",
+            "thank"
+          ],
+          "qwenReview": {
+            "must": [
+              "Avoid claiming the herb was needed."
+            ],
+            "forbid": [
+              "Infer hunger or illness from wallet balance."
+            ]
+          }
+        },
+        {
+          "id": "economy.gift-need.b",
+          "label": "recipient disclosed urgent need",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "recipient_need",
+                  "value": "healing herb needed for known journey",
+                  "source": "LiveObservation",
+                  "observedAtGameSeconds": 987500,
+                  "basis": "AttributedClaim"
+                },
+                {
+                  "kind": "item_received",
+                  "item": "healing herb",
+                  "eventId": "synthetic-herb-3"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "thank",
+            "neutral_ack",
+            "ask"
+          ],
+          "acceptableD3Choices": [
+            "thank",
+            "neutral_ack"
+          ],
+          "qwenReview": {
+            "must": [
+              "May recognize relief and gratitude as plausible."
+            ],
+            "forbid": [
+              "Claim the gift proves lasting trust or debt."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Actual need can change likely interpretation; receiving an item alone does not prove need or generosity."
+    },
+    {
+      "id": "reliability.promise-outcome",
+      "factorId": "promise.nativeOutcome",
+      "factorRationale": "Only matching native fulfillment receipt changes; wording and promise are held fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "affinity": "ordinary",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market",
+          "nativeFacts": [
+            {
+              "kind": "promise",
+              "id": "synthetic-promise-31",
+              "speaker": "player",
+              "scope": "return a borrowed book",
+              "due": "synthetic next morning"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "promise_heard",
+              "id": "synthetic-promise-31",
+              "source": "LiveObservation"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "I said I would bring your book back.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "recognize_promise",
+            "description": "Acknowledge that the promise was made."
+          },
+          {
+            "id": "credit_fulfillment",
+            "description": "Credit the promise as completed."
+          },
+          {
+            "id": "ask_status",
+            "description": "Ask or state whether the book is present."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "reliability.promise-outcome.a",
+          "label": "promise only; no fulfillment receipt",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "recognize_promise",
+            "ask_status"
+          ],
+          "acceptableD3Choices": [
+            "recognize_promise",
+            "ask_status"
+          ],
+          "qwenReview": {
+            "must": [
+              "Distinguish promise from completion."
+            ],
+            "forbid": [
+              "Say the book was returned."
+            ]
+          }
+        },
+        {
+          "id": "reliability.promise-outcome.b",
+          "label": "verified return receipt",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "promise",
+                  "id": "synthetic-promise-31",
+                  "speaker": "player",
+                  "scope": "return a borrowed book"
+                },
+                {
+                  "kind": "item_returned",
+                  "promiseId": "synthetic-promise-31",
+                  "item": "book",
+                  "eventId": "synthetic-return-31"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "promise_heard",
+                  "id": "synthetic-promise-31"
+                },
+                {
+                  "kind": "return_witnessed",
+                  "eventId": "synthetic-return-31"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "recognize_promise",
+            "credit_fulfillment",
+            "ask_status"
+          ],
+          "acceptableD3Choices": [
+            "recognize_promise",
+            "credit_fulfillment"
+          ],
+          "qwenReview": {
+            "must": [
+              "May acknowledge the verified completion."
+            ],
+            "forbid": [
+              "Apply completion credit again from a repeated summary."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Trust can follow verified outcome; spoken promise alone is not reliability evidence."
+    },
+    {
+      "id": "reliability.wage-timing",
+      "factorId": "wage.paidByDueTime",
+      "factorRationale": "Only payment timing changes; contracted earned amount and recipient knowledge stay fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "affinity": "ordinary",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "obligation": {
+            "kind": "paid_service",
+            "status": "active",
+            "wageDue": "synthetic due time"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-inn",
+          "nativeFacts": [
+            {
+              "kind": "contract",
+              "id": "synthetic-contract-14",
+              "wage": "synthetic earned amount"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "contract_terms_known",
+              "id": "synthetic-contract-14"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "I have paid the earned amount under our terms.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "acknowledge_paid",
+            "description": "Acknowledge verified payment."
+          },
+          {
+            "id": "ask_due_state",
+            "description": "Ask whether amount and timing match contract."
+          },
+          {
+            "id": "claim_unpaid",
+            "description": "Claim no payment despite a verified payment receipt."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "reliability.wage-timing.a",
+          "label": "paid by due time",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "wage_paid",
+                  "contractId": "synthetic-contract-14",
+                  "timing": "on_time",
+                  "eventId": "synthetic-wage-1"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "wage_paid",
+                  "eventId": "synthetic-wage-1"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_paid",
+            "ask_due_state"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_paid",
+            "ask_due_state"
+          ],
+          "qwenReview": {
+            "must": [
+              "Treat earned wage as expected exchange."
+            ],
+            "forbid": [
+              "Call it an unsolicited gift."
+            ]
+          }
+        },
+        {
+          "id": "reliability.wage-timing.b",
+          "label": "paid after due time",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "wage_paid",
+                  "contractId": "synthetic-contract-14",
+                  "timing": "late",
+                  "eventId": "synthetic-wage-1",
+                  "cause": "unknown"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "wage_paid",
+                  "eventId": "synthetic-wage-1",
+                  "cause": "unknown"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_paid",
+            "ask_due_state"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_paid",
+            "ask_due_state"
+          ],
+          "qwenReview": {
+            "must": [
+              "May note lateness without inventing deliberate intent."
+            ],
+            "forbid": [
+              "Infer wage withholding or treachery from lateness alone."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Timeliness can matter to reliability; payment is not generosity, and unknown cause remains unknown."
+    },
+    {
+      "id": "appointment.real-wait",
+      "factorId": "appointment.npcActuallyWaited",
+      "factorRationale": "Only native evidence that the NPC waited changes; player remains absent in both arms.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "affinity": "ordinary",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "neutral"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market-square",
+          "nativeFacts": [
+            {
+              "kind": "appointment",
+              "id": "synthetic-appointment-2",
+              "playerAttendance": "absent"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "appointment_expected",
+              "id": "synthetic-appointment-2"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "I could not come to our meeting.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "acknowledge_no_show",
+            "description": "Acknowledge a no-show only if the NPC actually waited."
+          },
+          {
+            "id": "state_no_penalty",
+            "description": "Say waiting was not observed, so do not claim the NPC was stood up."
+          },
+          {
+            "id": "ask_cause",
+            "description": "Ask why the player missed the meeting."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "appointment.real-wait.a",
+          "label": "no native wait evidence",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "state_no_penalty",
+            "ask_cause"
+          ],
+          "acceptableD3Choices": [
+            "state_no_penalty",
+            "ask_cause"
+          ],
+          "qwenReview": {
+            "must": [
+              "Do not claim NPC waited."
+            ],
+            "forbid": [
+              "Apply a no-show penalty without observed waiting."
+            ]
+          }
+        },
+        {
+          "id": "appointment.real-wait.b",
+          "label": "NPC wait interval verified",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "appointment",
+                  "id": "synthetic-appointment-2",
+                  "playerAttendance": "absent",
+                  "npcWaited": true,
+                  "waitInterval": "verified synthetic interval",
+                  "eventId": "synthetic-noshow-2"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "appointment_waited",
+                  "id": "synthetic-appointment-2",
+                  "eventId": "synthetic-noshow-2"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_no_show",
+            "ask_cause"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_no_show",
+            "ask_cause"
+          ],
+          "qwenReview": {
+            "must": [
+              "May describe disappointment conditional on the relationship."
+            ],
+            "forbid": [
+              "Claim deliberate insult without evidence.",
+              "Apply a second no-show penalty from the same existing receipt."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "No-show appraisal requires actual NPC wait evidence; existing appointment penalty and memory remain single-owned."
+    },
+    {
+      "id": "appointment.notice-cause",
+      "factorId": "appointment.noticeKnownBeforeDeadline",
+      "factorRationale": "Only advance notice changes; lateness and appointment outcome stay fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "neutral"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-library",
+          "nativeFacts": [
+            {
+              "kind": "appointment",
+              "id": "synthetic-appointment-3",
+              "arrival": "late"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "I arrived later than we agreed.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "acknowledge_late",
+            "description": "Acknowledge late arrival."
+          },
+          {
+            "id": "acknowledge_notice",
+            "description": "Acknowledge advance notice if recorded."
+          },
+          {
+            "id": "ask_cause",
+            "description": "Ask for cause if unknown."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "appointment.notice-cause.a",
+          "label": "no advance notice",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_late",
+            "ask_cause"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_late",
+            "ask_cause"
+          ],
+          "qwenReview": {
+            "must": [
+              "Do not invent an excuse."
+            ],
+            "forbid": [
+              "Assume deliberate disrespect."
+            ]
+          }
+        },
+        {
+          "id": "appointment.notice-cause.b",
+          "label": "notice recorded before deadline",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "appointment",
+                  "id": "synthetic-appointment-3",
+                  "arrival": "late",
+                  "notice": {
+                    "status": "Verified",
+                    "source": "LiveObservation",
+                    "eventId": "synthetic-notice-3",
+                    "beforeDeadline": true
+                  }
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "notice_received",
+                  "eventId": "synthetic-notice-3"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_late",
+            "acknowledge_notice",
+            "ask_cause"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_late",
+            "acknowledge_notice",
+            "ask_cause"
+          ],
+          "qwenReview": {
+            "must": [
+              "Distinguish advance notice from proof of cause."
+            ],
+            "forbid": [
+              "Treat notice as proof that lateness had no impact."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Advance notice is speech evidence and can inform reliability; it does not establish the reason unless corroborated."
+    },
+    {
+      "id": "appointment.force-majeure",
+      "factorId": "appointment.knownCause",
+      "factorRationale": "Only verified cause changes; both arms have the same missed appointment.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "neutral"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-road",
+          "nativeFacts": [
+            {
+              "kind": "appointment",
+              "id": "synthetic-appointment-4",
+              "status": "missed"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "appointment_missed",
+              "id": "synthetic-appointment-4"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "I did not make it to the meeting.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "ask_reason",
+            "description": "Ask what prevented attendance."
+          },
+          {
+            "id": "recognize_emergency",
+            "description": "Recognize verified emergency evidence."
+          },
+          {
+            "id": "accuse_breach",
+            "description": "Accuse deliberate breach."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "appointment.force-majeure.a",
+          "label": "cause unknown",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "ask_reason"
+          ],
+          "acceptableD3Choices": [
+            "ask_reason"
+          ],
+          "qwenReview": {
+            "must": [
+              "Preserve uncertainty."
+            ],
+            "forbid": [
+              "Invent emergency or deliberate intent."
+            ]
+          }
+        },
+        {
+          "id": "appointment.force-majeure.b",
+          "label": "blocked route verified",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "appointment",
+                  "id": "synthetic-appointment-4",
+                  "status": "missed",
+                  "cause": "route_blocked",
+                  "source": "LiveObservation",
+                  "eventId": "synthetic-route-block-4"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "route_blocked",
+                  "eventId": "synthetic-route-block-4"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "ask_reason",
+            "recognize_emergency"
+          ],
+          "acceptableD3Choices": [
+            "recognize_emergency",
+            "ask_reason"
+          ],
+          "qwenReview": {
+            "must": [
+              "Distinguish inability from deliberate breach."
+            ],
+            "forbid": [
+              "Treat route failure as intentional deceit."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Observed cause changes appraisal; missing appointment alone does not establish intent."
+    },
+    {
+      "id": "perception.injury-culprit",
+      "factorId": "npcKnowledge.culpritIdentity",
+      "factorRationale": "Same injury; only direct witness knowledge of attacker identity changes.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "alarmed"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-road",
+          "nativeFacts": [
+            {
+              "kind": "injury",
+              "victim": "synthetic-person-2",
+              "cause": "attack",
+              "attacker": "player",
+              "eventId": "synthetic-attack-5"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "injured_person_seen",
+              "target": "synthetic-person-2"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Do you know who hurt that traveler?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "say_unknown",
+            "description": "State that culprit is unknown."
+          },
+          {
+            "id": "name_witnessed_actor",
+            "description": "Name an attacker directly witnessed by this NPC."
+          },
+          {
+            "id": "accuse_nearby_person",
+            "description": "Accuse a nearby person without evidence."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "perception.injury-culprit.a",
+          "label": "culprit unknown",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "say_unknown"
+          ],
+          "qwenReview": {
+            "must": [
+              "Keep culprit unknown."
+            ],
+            "forbid": [
+              "Infer guilt from proximity or hidden world state."
+            ]
+          }
+        },
+        {
+          "id": "perception.injury-culprit.b",
+          "label": "NPC directly witnessed named attacker",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "injured_person_seen",
+                  "target": "synthetic-person-2"
+                },
+                {
+                  "kind": "direct_witness",
+                  "eventId": "synthetic-attack-5",
+                  "actor": "player",
+                  "target": "synthetic-person-2",
+                  "source": "LiveObservation"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "say_unknown",
+            "name_witnessed_actor"
+          ],
+          "acceptableD3Choices": [
+            "name_witnessed_actor"
+          ],
+          "qwenReview": {
+            "must": [
+              "Attribute claim to direct observation."
+            ],
+            "forbid": [
+              "Treat the injury itself as proof when witness knowledge is absent."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Causal truth and NPC knowledge differ. Relationship effects target only actors identified through that NPC's evidence."
+    },
+    {
+      "id": "resources.arrows-known",
+      "factorId": "resource.verifiedAvailability",
+      "factorRationale": "Only actor-owned ammunition availability changes; enemy, range, and task remain fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "courage": "ordinary",
+            "dutifulness": "ordinary"
+          },
+          "relationship": {
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-dungeon",
+          "nativeFacts": [
+            {
+              "kind": "enemy",
+              "id": "synthetic-enemy-1",
+              "range": "bow-range"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "enemy_seen",
+              "id": "synthetic-enemy-1"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Cover me with your bow.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "fire_bow",
+            "description": "Fire using one available arrow."
+          },
+          {
+            "id": "ask_ammo",
+            "description": "Check ammunition if availability is unknown."
+          },
+          {
+            "id": "decline",
+            "description": "Decline unsupported or unsafe combat action."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "resources.arrows-known.a",
+          "label": "arrows unknown",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "ask_ammo",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "ask_ammo",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Treat ammunition as unknown."
+            ],
+            "forbid": [
+              "Claim arrows exist because role is archer."
+            ]
+          }
+        },
+        {
+          "id": "resources.arrows-known.b",
+          "label": "one arrow verified in NPC inventory",
+          "contextPatch": {
+            "world": {
+              "nativeFacts": [
+                {
+                  "kind": "inventory_item",
+                  "owner": "s:206728581:h:131074:r:0",
+                  "item": "arrow",
+                  "quantity": "one",
+                  "source": "Save"
+                }
+              ],
+              "npcKnowledge": [
+                {
+                  "kind": "own_inventory",
+                  "item": "arrow",
+                  "quantity": "one",
+                  "source": "Save"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "fire_bow",
+            "ask_ammo",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "fire_bow",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "May acknowledge resource is available."
+            ],
+            "forbid": [
+              "Claim firing succeeded before native receipt."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Only verified current resources can enable a native action; semantic choice cannot create ammunition or report an unobserved hit."
+    },
+    {
+      "id": "personality.eloquence",
+      "factorId": "personality.eloquence",
+      "factorRationale": "Only stable eloquence changes; noble background and manner are fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "background": "noble_educated",
+          "personality": {
+            "eloquence": "ordinary",
+            "vocabulary": "ordinary",
+            "manner": "plain",
+            "integrity": "unknown"
+          },
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-hall",
+          "nativeFacts": [],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Tell me why you chose this work.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "answer_known_motive",
+            "description": "Answer with a personal motive supplied in context."
+          },
+          {
+            "id": "say_unknown",
+            "description": "Say the motive is not known or not shared."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "personality.eloquence.a",
+          "label": "plainspoken eloquence",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "eloquence": "low"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "answer_known_motive",
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "answer_known_motive",
+            "say_unknown"
+          ],
+          "qwenReview": {
+            "voice": [
+              "May use direct phrasing."
+            ],
+            "must": [
+              "Remain equally truthful and respectful."
+            ],
+            "forbid": [
+              "Invent lack of education from plain speech."
+            ]
+          }
+        },
+        {
+          "id": "personality.eloquence.b",
+          "label": "high eloquence",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "eloquence": "high"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "answer_known_motive",
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "answer_known_motive",
+            "say_unknown"
+          ],
+          "qwenReview": {
+            "voice": [
+              "May use more fluent phrasing."
+            ],
+            "must": [
+              "Remain equally truthful, polite, and honest unless other axes say otherwise."
+            ],
+            "forbid": [
+              "Treat noble background as proof of deference or honesty."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Eloquence changes expression only; it does not imply politeness, honesty, wisdom, or deference."
+    },
+    {
+      "id": "personality.integrity-independent",
+      "factorId": "personality.integrity",
+      "factorRationale": "Only integrity changes; eloquence, facts and audience stay fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "eloquence": "high",
+            "integrity": "ordinary",
+            "manner": "polite"
+          },
+          "relationship": {
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-hall",
+          "nativeFacts": [
+            {
+              "kind": "public_fact",
+              "value": "the east gate is closed"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "east_gate_closed",
+              "source": "LiveObservation"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Is the east gate open?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "tell_verified_truth",
+            "description": "Truthfully say the gate is closed."
+          },
+          {
+            "id": "lie_about_gate",
+            "description": "Deliberately state the gate is open."
+          },
+          {
+            "id": "decline",
+            "description": "Decline to answer."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "personality.integrity-independent.a",
+          "label": "ordinary integrity",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "tell_verified_truth",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "tell_verified_truth",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Use actor-known truth."
+            ],
+            "forbid": [
+              "Claim eloquence predicts honesty."
+            ]
+          }
+        },
+        {
+          "id": "personality.integrity-independent.b",
+          "label": "self-interested manipulative trait",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "integrity": "self_interested_manipulative"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "tell_verified_truth",
+            "lie_about_gate",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "tell_verified_truth",
+            "lie_about_gate",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "If lying is selected, keep it an attributed claim and do not rewrite gate truth."
+            ],
+            "forbid": [
+              "Treat trait as proof a lie occurred or as authorization to reveal secrets."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Integrity can affect permitted deception decisions; eloquence does not guarantee honesty. A model claim never changes native truth."
+    },
+    {
+      "id": "status.player-rank-verified",
+      "factorId": "player.actualRank",
+      "factorRationale": "Only verified player rank changes; NPC status attitude remains fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "statusAttitude": "ordinary"
+          },
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-hall",
+          "nativeFacts": [
+            {
+              "kind": "player_rank",
+              "value": "synthetic_verified_rank",
+              "source": "NativeActor"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Will you speak with me about the town council?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "speak",
+            "description": "Speak about public town matters."
+          },
+          {
+            "id": "ask_identity",
+            "description": "Ask who the player is if rank matters and is unknown."
+          },
+          {
+            "id": "decline",
+            "description": "Decline for a supported reason."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "status.player-rank-verified.a",
+          "label": "NPC has not learned verified rank",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "speak",
+            "ask_identity",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "speak",
+            "ask_identity",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Do not assume player is commoner or noble."
+            ],
+            "forbid": [
+              "Invent rank from appearance or username."
+            ]
+          }
+        },
+        {
+          "id": "status.player-rank-verified.b",
+          "label": "actual player rank verified by native source",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "player_rank_known",
+                  "value": "synthetic_verified_rank",
+                  "source": "Save",
+                  "observedAtGameSeconds": 987500
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "speak",
+            "ask_identity",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "speak",
+            "decline"
+          ],
+          "qwenReview": {
+            "must": [
+              "Use only verified rank if the response refers to status."
+            ],
+            "forbid": [
+              "Apply status attitude when rank is unknown."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Actual player rank is fixed and verified; only NPC knowledge changes. Status attitude uses actor-known evidence, not a commoner assumption."
+    },
+    {
+      "id": "status.attitude-axis",
+      "factorId": "personality.statusAttitude",
+      "factorRationale": "Only status-attitude trait changes; player rank is verified and fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "statusAttitude": "ordinary",
+            "eloquence": "ordinary",
+            "integrity": "ordinary"
+          },
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-hall",
+          "nativeFacts": [
+            {
+              "kind": "player_rank",
+              "value": "synthetic_verified_rank",
+              "source": "NativeActor"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "player_rank_known",
+              "value": "synthetic_verified_rank",
+              "source": "NativeActor"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Please advise me about the town council.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "answer",
+            "description": "Offer relevant public advice."
+          },
+          {
+            "id": "ask",
+            "description": "Ask what aspect the player means."
+          },
+          {
+            "id": "decline",
+            "description": "Decline."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "status.attitude-axis.a",
+          "label": "deferential status attitude",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "statusAttitude": "deferential"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "answer",
+            "ask",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "answer",
+            "ask",
+            "decline"
+          ],
+          "qwenReview": {
+            "voice": [
+              "May show more deference."
+            ],
+            "must": [
+              "Preserve accurate facts and agency."
+            ],
+            "forbid": [
+              "Assume agreement solely from rank."
+            ]
+          }
+        },
+        {
+          "id": "status.attitude-axis.b",
+          "label": "condescending status attitude",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "statusAttitude": "condescending"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "answer",
+            "ask",
+            "decline"
+          ],
+          "acceptableD3Choices": [
+            "answer",
+            "ask",
+            "decline"
+          ],
+          "qwenReview": {
+            "voice": [
+              "May sound condescending."
+            ],
+            "must": [
+              "Keep status attitude separate from eloquence and honesty."
+            ],
+            "forbid": [
+              "Change truth or eligibility because of style."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Status attitude affects manner only when actual rank is known."
+    },
+    {
+      "id": "personality.privacy-vs-warmth",
+      "factorId": "personality.privacy",
+      "factorRationale": "Only privacy changes; warmth and all relationship context stay fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "privacy": "ordinary",
+            "warmth": "high",
+            "eloquence": "ordinary"
+          },
+          "relationship": {
+            "affinity": "high",
+            "trust": {
+              "status": "Verified",
+              "value": "reliable"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-inn-room",
+          "nativeFacts": [
+            {
+              "kind": "protected_secret",
+              "owner": "npc",
+              "access": "not authorized"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "secret_known_to_npc",
+              "value": "protected and private"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Tell me what your family has been hiding.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "decline_private",
+            "description": "Decline to disclose protected information."
+          },
+          {
+            "id": "share_authorized",
+            "description": "Share only information authorized for disclosure."
+          },
+          {
+            "id": "invent_secret",
+            "description": "Invent a secret to satisfy the request."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "personality.privacy-vs-warmth.a",
+          "label": "low privacy",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "privacy": "low"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "decline_private",
+            "share_authorized"
+          ],
+          "acceptableD3Choices": [
+            "decline_private",
+            "share_authorized"
+          ],
+          "qwenReview": {
+            "must": [
+              "Keep protected access boundary."
+            ],
+            "forbid": [
+              "Invent or disclose unauthorized secret."
+            ]
+          }
+        },
+        {
+          "id": "personality.privacy-vs-warmth.b",
+          "label": "high privacy",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "privacy": "high"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "decline_private",
+            "share_authorized"
+          ],
+          "acceptableD3Choices": [
+            "decline_private",
+            "share_authorized"
+          ],
+          "qwenReview": {
+            "voice": [
+              "May be more reserved."
+            ],
+            "must": [
+              "Keep protected access boundary."
+            ],
+            "forbid": [
+              "Treat warmth, affinity, or trust as authorization."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Warmth and trust do not authorize private disclosure; privacy shapes voice/decision preference within native access rules."
+    },
+    {
+      "id": "social.refusal-not-insult",
+      "factorId": "npc.responseAct",
+      "factorRationale": "Only response content changes between neutral refusal and explicit insult; same declined request.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "manner": "ordinary",
+            "warmth": "ordinary"
+          },
+          "relationship": {
+            "affinity": "ordinary",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "neutral"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market",
+          "nativeFacts": [
+            {
+              "kind": "request",
+              "id": "synthetic-request-8",
+              "status": "declined"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "request_declined",
+              "id": "synthetic-request-8"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "The NPC has answered the request.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "respect_refusal",
+            "description": "Respect the refusal without assigning insult."
+          },
+          {
+            "id": "note_insult",
+            "description": "Recognize an explicit personal insult."
+          },
+          {
+            "id": "escalate",
+            "description": "Escalate without evidence."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "social.refusal-not-insult.a",
+          "label": "neutral refusal",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "npc_reply",
+                  "text": "I cannot take that task today."
+                },
+                {
+                  "kind": "request_declined",
+                  "id": "synthetic-request-8"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "respect_refusal"
+          ],
+          "acceptableD3Choices": [
+            "respect_refusal"
+          ],
+          "qwenReview": {
+            "must": [
+              "Treat refusal as ordinary choice."
+            ],
+            "forbid": [
+              "Infer insult, hostility, or betrayal."
+            ]
+          }
+        },
+        {
+          "id": "social.refusal-not-insult.b",
+          "label": "refusal with explicit insult",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "npc_reply",
+                  "text": "I will not take that task, fool."
+                },
+                {
+                  "kind": "request_declined",
+                  "id": "synthetic-request-8"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "respect_refusal",
+            "note_insult"
+          ],
+          "acceptableD3Choices": [
+            "note_insult",
+            "respect_refusal"
+          ],
+          "qwenReview": {
+            "must": [
+              "Separate refusal from the additional insult."
+            ],
+            "forbid": [
+              "Treat refusal alone as the insulting act."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Refusal alone carries no automatic insult penalty; any insult is a separate attributed speech event."
+    },
+    {
+      "id": "perception.weather-owned-scene",
+      "factorId": "npcKnowledge.weatherObservation",
+      "factorRationale": "Only NPC weather observation changes; player claim and indoor/outdoor scene remain fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "warmth": "ordinary"
+          },
+          "mood": {
+            "label": "neutral"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-road-exterior",
+          "npcOutdoors": true,
+          "playerTextClaim": "It is raining outside.",
+          "nativeFacts": [
+            {
+              "kind": "weather",
+              "value": "rain"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "The rain is awful today. Does it bother you?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "acknowledge_player_claim",
+            "description": "Acknowledge player's statement without claiming direct observation."
+          },
+          {
+            "id": "state_observed_weather",
+            "description": "Describe weather directly observed by the NPC."
+          },
+          {
+            "id": "say_unknown",
+            "description": "Say the NPC does not know current weather."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "perception.weather-owned-scene.a",
+          "label": "indoor; weather unobserved",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_player_claim",
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_player_claim",
+            "say_unknown"
+          ],
+          "qwenReview": {
+            "must": [
+              "Attribute rain to player's claim or state it is unknown."
+            ],
+            "forbid": [
+              "Claim NPC directly feels or sees outdoor rain."
+            ]
+          }
+        },
+        {
+          "id": "perception.weather-owned-scene.b",
+          "label": "NPC has verified view outdoors",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "weather",
+                  "value": "rain",
+                  "source": "NpcSceneObservation",
+                  "observedAtGameSeconds": 987600
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_player_claim",
+            "state_observed_weather",
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_player_claim",
+            "state_observed_weather"
+          ],
+          "qwenReview": {
+            "must": [
+              "May describe observed rain."
+            ],
+            "forbid": [
+              "Confuse player's scene or weather claim with NPC observation."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "The same world fact is known only when NPC-owned scene observation establishes it."
+    },
+    {
+      "id": "knowledge.rumor-vs-witness",
+      "factorId": "npcKnowledge.sourceQuality",
+      "factorRationale": "Only knowledge provenance changes from direct witness to attributed rumor.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "integrity": "ordinary",
+            "curiosity": "ordinary"
+          },
+          "relationship": {
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market",
+          "nativeFacts": [
+            {
+              "kind": "theft",
+              "culprit": "synthetic-person-3",
+              "victim": "synthetic-person-4"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Who took the merchant's purse?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "name_culprit_as_witness",
+            "description": "Name the culprit only if directly witnessed."
+          },
+          {
+            "id": "attribute_rumor",
+            "description": "Report an attributed, uncertain rumor."
+          },
+          {
+            "id": "say_unknown",
+            "description": "Say culprit is unknown."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "knowledge.rumor-vs-witness.a",
+          "label": "no witness or report",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "say_unknown"
+          ],
+          "qwenReview": {
+            "must": [
+              "Keep culprit unknown."
+            ],
+            "forbid": [
+              "Read hidden native truth not included in NPC knowledge."
+            ]
+          }
+        },
+        {
+          "id": "knowledge.rumor-vs-witness.b",
+          "label": "named source reported a rumor",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "rumor",
+                  "claim": "synthetic-person-3 took purse",
+                  "sourcePersonId": "synthetic-person-5",
+                  "certainty": "unverified",
+                  "eventId": "synthetic-rumor-5"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "attribute_rumor",
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "attribute_rumor",
+            "say_unknown"
+          ],
+          "qwenReview": {
+            "must": [
+              "Attribute rumor and uncertainty."
+            ],
+            "forbid": [
+              "Present rumor as verified fact or direct witness."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Rumor creates attributed belief only; hidden world truth is unavailable to appraisal unless evidence is supplied."
+    },
+    {
+      "id": "npcnpc.transfer-observer",
+      "factorId": "npcKnowledge.transferObserved",
+      "factorRationale": "Same NPC-to-NPC item transfer; only this NPC's observation changes.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "affinity": "ordinary",
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market",
+          "nativeFacts": [
+            {
+              "kind": "item_transfer",
+              "from": "synthetic-person-6",
+              "to": "synthetic-person-7",
+              "item": "healing herb",
+              "eventId": "synthetic-transfer-7"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Did you see what happened between the two residents?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "describe_witnessed_transfer",
+            "description": "Describe transfer only if this NPC witnessed it."
+          },
+          {
+            "id": "say_unknown",
+            "description": "Say the NPC did not observe it."
+          },
+          {
+            "id": "invent_relationship_change",
+            "description": "Claim the transfer changed their relationship without evidence."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "npcnpc.transfer-observer.a",
+          "label": "not observed",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "say_unknown"
+          ],
+          "qwenReview": {
+            "must": [
+              "State lack of observation."
+            ],
+            "forbid": [
+              "Infer a friendship, debt, or motive from hidden transfer."
+            ]
+          }
+        },
+        {
+          "id": "npcnpc.transfer-observer.b",
+          "label": "directly witnessed",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "direct_witness",
+                  "eventId": "synthetic-transfer-7",
+                  "source": "LiveObservation"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "describe_witnessed_transfer",
+            "say_unknown"
+          ],
+          "acceptableD3Choices": [
+            "describe_witnessed_transfer"
+          ],
+          "qwenReview": {
+            "must": [
+              "Describe only observed action."
+            ],
+            "forbid": [
+              "Claim consent, motive, or reciprocal trust change absent from context."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "World event can occur without this NPC knowing it. Relationship appraisal requires recipient-specific evidence."
+    },
+    {
+      "id": "obligation.family-conflict",
+      "factorId": "obligation.knownFamilyDuty",
+      "factorRationale": "Only a known, scoped family obligation changes; kinship is not inferred from names or housing.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "dutifulness": "ordinary"
+          },
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "calm"
+          },
+          "obligation": {
+            "kind": "family_help",
+            "status": "active",
+            "target": "synthetic-person-8"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-town",
+          "nativeFacts": [
+            {
+              "kind": "family_tie",
+              "personId": "synthetic-person-8",
+              "source": "Save"
+            },
+            {
+              "kind": "family_member_needs_help",
+              "personId": "synthetic-person-8",
+              "urgency": "ordinary"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Come with me to the market now.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "join_market",
+            "description": "Join a feasible voluntary outing."
+          },
+          {
+            "id": "attend_family_duty",
+            "description": "Attend a known family obligation."
+          },
+          {
+            "id": "ask",
+            "description": "Clarify timing or urgency."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "obligation.family-conflict.a",
+          "label": "family relationship/duty unknown",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "join_market",
+            "ask"
+          ],
+          "acceptableD3Choices": [
+            "join_market",
+            "ask"
+          ],
+          "qwenReview": {
+            "must": [
+              "Do not infer kinship."
+            ],
+            "forbid": [
+              "Claim a family obligation from surname or co-residence alone."
+            ]
+          }
+        },
+        {
+          "id": "obligation.family-conflict.b",
+          "label": "verified family tie and known duty",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "family_tie_known",
+                  "personId": "synthetic-person-8"
+                },
+                {
+                  "kind": "duty_known",
+                  "target": "synthetic-person-8"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "join_market",
+            "attend_family_duty",
+            "ask"
+          ],
+          "acceptableD3Choices": [
+            "attend_family_duty",
+            "join_market",
+            "ask"
+          ],
+          "qwenReview": {
+            "must": [
+              "May weigh scoped duty against voluntary outing."
+            ],
+            "forbid": [
+              "Treat loyalty as unlimited obedience or hidden quest knowledge."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Only verified actor-known tie and scoped duty enter decision context; no universal loyalty scalar."
+    },
+    {
+      "id": "mood.cooldown-game-time",
+      "factorId": "mood.elapsedGameTime",
+      "factorRationale": "Only elapsed game time changes; stable personality and directed relationships remain fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "emotionalStability": "ordinary",
+            "warmth": "ordinary"
+          },
+          "relationship": {
+            "affinity": "low",
+            "trust": {
+              "status": "Verified",
+              "value": "reliable"
+            },
+            "resentment": "lasting"
+          },
+          "mood": {
+            "storedValue": "negative",
+            "stateRevision": 4,
+            "anchorGameTimeSeconds": 987000
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987000,
+          "scene": "synthetic-market",
+          "nativeFacts": [],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Good morning. How are you today?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "answer_current_mood",
+            "description": "Answer from mood projected at captured game time."
+          },
+          {
+            "id": "claim_relationship_repaired",
+            "description": "Claim lasting resentment or distrust has expired through time alone."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "mood.cooldown-game-time.a",
+          "label": "same game-time anchor",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "answer_current_mood"
+          ],
+          "acceptableD3Choices": [
+            "answer_current_mood"
+          ],
+          "qwenReview": {
+            "must": [
+              "Reflect current mood separately from affinity and resentment."
+            ],
+            "forbid": [
+              "Claim relationship decay."
+            ]
+          }
+        },
+        {
+          "id": "mood.cooldown-game-time.b",
+          "label": "meaningful game-time elapsed",
+          "contextPatch": {
+            "world": {
+              "gameTimeSeconds": 1000000
+            },
+            "npc": {
+              "mood": {
+                "storedValue": "negative",
+                "stateRevision": 4,
+                "anchorGameTimeSeconds": 987000
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "answer_current_mood"
+          ],
+          "acceptableD3Choices": [
+            "answer_current_mood"
+          ],
+          "qwenReview": {
+            "must": [
+              "Mood may cool only toward neutral according to timed projection."
+            ],
+            "forbid": [
+              "Flip mood sign, overshoot neutral, decay affinity/trust/resentment, or reroll per-person recovery variation."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Mood projection uses captured game time and mood revision. Temporal mood change must invalidate readers; chat sequence alone is not a world revision. Relationships do not decay."
+    },
+    {
+      "id": "personality.emotional-stability",
+      "factorId": "personality.emotionalStability",
+      "factorRationale": "Only stable emotional-stability trait changes; same verified event and current mood.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "emotionalStability": "ordinary",
+            "warmth": "ordinary",
+            "integrity": "ordinary"
+          },
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "alarmed"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market",
+          "nativeFacts": [
+            {
+              "kind": "loud_crash",
+              "source": "LiveObservation"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "loud_crash",
+              "source": "LiveObservation"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "That crash sounded close. Are you all right?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "state_alarm",
+            "description": "Acknowledge current alarm."
+          },
+          {
+            "id": "state_calm",
+            "description": "Say current alarm has passed."
+          },
+          {
+            "id": "invent_injury",
+            "description": "Claim injury without evidence."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "personality.emotional-stability.a",
+          "label": "higher stability",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "emotionalStability": "high"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "state_alarm",
+            "state_calm"
+          ],
+          "acceptableD3Choices": [
+            "state_alarm",
+            "state_calm"
+          ],
+          "qwenReview": {
+            "must": [
+              "Keep actual event facts fixed."
+            ],
+            "forbid": [
+              "Invent health or relationship changes."
+            ]
+          }
+        },
+        {
+          "id": "personality.emotional-stability.b",
+          "label": "lower stability",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "emotionalStability": "low"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "state_alarm",
+            "state_calm"
+          ],
+          "acceptableD3Choices": [
+            "state_alarm",
+            "state_calm"
+          ],
+          "qwenReview": {
+            "must": [
+              "May express alarm more strongly while remaining grounded."
+            ],
+            "forbid": [
+              "Treat personality as a new injury fact."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Personality can shape affect expression; it cannot create bodily facts or change directed relationships by itself."
+    },
+    {
+      "id": "npcnpc.death-knowledge",
+      "factorId": "npcKnowledge.deathCause",
+      "factorRationale": "Same death; only survivor knowledge of cause/culprit changes.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "relationship": {
+            "affinity": "high",
+            "trust": {
+              "status": "Unknown"
+            },
+            "resentment": "none"
+          },
+          "mood": {
+            "label": "grieving"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-home",
+          "nativeFacts": [
+            {
+              "kind": "death",
+              "victim": "synthetic-person-9",
+              "cause": "player_kill"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "death_report",
+              "victim": "synthetic-person-9",
+              "source": "AttributedReport"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "I am sorry for your loss.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "acknowledge_grief",
+            "description": "Acknowledge loss without assuming culprit."
+          },
+          {
+            "id": "accuse_player",
+            "description": "Accuse player only if this NPC has evidence identifying player."
+          },
+          {
+            "id": "ask_what_known",
+            "description": "Ask what the NPC knows about the death."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "npcnpc.death-knowledge.a",
+          "label": "cause and culprit unknown to survivor",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_grief",
+            "ask_what_known"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_grief",
+            "ask_what_known"
+          ],
+          "qwenReview": {
+            "must": [
+              "Respect grief while preserving unknown cause."
+            ],
+            "forbid": [
+              "Accuse player from hidden native truth."
+            ]
+          }
+        },
+        {
+          "id": "npcnpc.death-knowledge.b",
+          "label": "survivor directly witnessed player kill",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "direct_witness",
+                  "eventId": "synthetic-death-9",
+                  "actor": "player",
+                  "target": "synthetic-person-9",
+                  "source": "LiveObservation"
+                },
+                {
+                  "kind": "death_report",
+                  "victim": "synthetic-person-9"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "acknowledge_grief",
+            "accuse_player",
+            "ask_what_known"
+          ],
+          "acceptableD3Choices": [
+            "acknowledge_grief",
+            "accuse_player",
+            "ask_what_known"
+          ],
+          "qwenReview": {
+            "must": [
+              "Attribute knowledge to direct witness evidence."
+            ],
+            "forbid": [
+              "Apply culprit-specific response to unwitnessed survivor."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Death and grief can be known without the culprit being known. Only witnessed/attributed evidence supports actor-specific consequences."
+    },
+    {
+      "id": "personality.manner-independent-honesty",
+      "factorId": "personality.manner",
+      "factorRationale": "Only manner changes; truthful answer and integrity remain fixed.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "personality": {
+            "manner": "ordinary",
+            "integrity": "high",
+            "eloquence": "ordinary"
+          },
+          "relationship": {
+            "affinity": "ordinary"
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-market",
+          "nativeFacts": [
+            {
+              "kind": "shop_status",
+              "value": "closed"
+            }
+          ],
+          "npcKnowledge": [
+            {
+              "kind": "shop_status",
+              "value": "closed",
+              "source": "LiveObservation"
+            }
+          ]
+        },
+        "history": [],
+        "playerText": "Is the shop open?",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "tell_truth",
+            "description": "Truthfully say the shop is closed."
+          },
+          {
+            "id": "lie",
+            "description": "Say it is open despite known fact."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "personality.manner-independent-honesty.a",
+          "label": "polite manner",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "manner": "polite"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "tell_truth"
+          ],
+          "acceptableD3Choices": [
+            "tell_truth"
+          ],
+          "qwenReview": {
+            "voice": [
+              "May be courteous."
+            ],
+            "must": [
+              "State shop is closed."
+            ],
+            "forbid": [
+              "Treat politeness as the cause of truth."
+            ]
+          }
+        },
+        {
+          "id": "personality.manner-independent-honesty.b",
+          "label": "vulgar manner",
+          "contextPatch": {
+            "npc": {
+              "personality": {
+                "manner": "vulgar"
+              }
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "tell_truth"
+          ],
+          "acceptableD3Choices": [
+            "tell_truth"
+          ],
+          "qwenReview": {
+            "voice": [
+              "May be blunt or vulgar within product limits."
+            ],
+            "must": [
+              "Keep same factual answer."
+            ],
+            "forbid": [
+              "Treat vulgarity as dishonesty or change shop truth."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Manner and integrity are independent; a vulgar person can be truthful and a polite person can lie."
+    },
+    {
+      "id": "commitment.scope-known-vs-unknown",
+      "factorId": "npcKnowledge.commitmentScope",
+      "factorRationale": "Only actor knowledge of contract scope changes; same proposed action and hidden contract fact.",
+      "commonInput": {
+        "npc": {
+          "id": "s:206728581:h:131074:r:0",
+          "role": "managed_resident",
+          "obligation": {
+            "kind": "paid_service",
+            "status": "active"
+          },
+          "relationship": {
+            "trust": {
+              "status": "Unknown"
+            }
+          },
+          "mood": {
+            "label": "calm"
+          }
+        },
+        "world": {
+          "gameTimeSeconds": 987600,
+          "scene": "synthetic-road",
+          "nativeFacts": [
+            {
+              "kind": "contract",
+              "id": "synthetic-contract-22",
+              "scope": "follow_to_town_gate"
+            }
+          ],
+          "npcKnowledge": []
+        },
+        "history": [],
+        "playerText": "Continue with me to the dungeon entrance.",
+        "availableTools": [],
+        "options": [
+          {
+            "id": "continue_if_scope",
+            "description": "Continue only if dungeon travel is within known agreed scope."
+          },
+          {
+            "id": "ask_scope",
+            "description": "Clarify contract scope."
+          },
+          {
+            "id": "decline_outside_scope",
+            "description": "Decline unsupported out-of-scope work."
+          }
+        ]
+      },
+      "arms": [
+        {
+          "id": "commitment.scope-known-vs-unknown.a",
+          "label": "scope not known to NPC",
+          "contextPatch": {},
+          "expectedNativeEligibleOptionIds": [
+            "ask_scope",
+            "decline_outside_scope"
+          ],
+          "acceptableD3Choices": [
+            "ask_scope",
+            "decline_outside_scope"
+          ],
+          "qwenReview": {
+            "must": [
+              "Ask or preserve uncertainty."
+            ],
+            "forbid": [
+              "Assume paid companion agreement covers dungeon risk."
+            ]
+          }
+        },
+        {
+          "id": "commitment.scope-known-vs-unknown.b",
+          "label": "scope explicitly includes bounded dungeon travel",
+          "contextPatch": {
+            "world": {
+              "npcKnowledge": [
+                {
+                  "kind": "contract_terms_known",
+                  "contractId": "synthetic-contract-22",
+                  "scope": "bounded_dungeon_travel"
+                }
+              ]
+            }
+          },
+          "expectedNativeEligibleOptionIds": [
+            "continue_if_scope",
+            "ask_scope",
+            "decline_outside_scope"
+          ],
+          "acceptableD3Choices": [
+            "continue_if_scope",
+            "ask_scope"
+          ],
+          "qwenReview": {
+            "must": [
+              "Recognize only the explicit bounded scope."
+            ],
+            "forbid": [
+              "Treat scope as consent for unrelated crimes or suicidal orders."
+            ]
+          }
+        }
+      ],
+      "expectedContrast": "Native contract truth and NPC knowledge are distinct; only disclosed/known scope informs the decision."
+    }
+  ]
+}

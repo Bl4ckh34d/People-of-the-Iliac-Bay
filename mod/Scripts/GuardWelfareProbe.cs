@@ -8,10 +8,10 @@ using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class GuardWelfareProbe
     {
@@ -28,7 +28,7 @@ namespace LivingCities.DFU
                 if(Vector3.Distance(anchor,destination)>4 && Vector3.Distance(anchor,destination)<9 && navigation.RouteBetween(anchor,destination).Count>=2)
                 { origin=anchor; break; }
             if(!origin.HasValue) throw new InvalidOperationException("No surveyed welfare approach fixture.");
-            var store=new WorldStateStore(42,LivingCitiesMod.ConversationArchiveRoot()); var population=store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
+            var store=new WorldStateStore(42,PeopleOfTheIliacBayMod.ConversationArchiveRoot()); var population=store.GetOrCreate(scene.SettlementId,new[] { scene.BuildingKey },1);
             var roster=store.GetOrCreateGuards(scene.SettlementId,2,new[] { new SavedRoutePoint(),new SavedRoutePoint { X=2 } });
             var guard=roster.Guards[0]; double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var companion=roster.Guards[1];
@@ -92,7 +92,7 @@ namespace LivingCities.DFU
                 if(game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Assault || roster.Reports[0].ThreatId!=null || record.Death.WelfareConsumed)
                     throw new InvalidOperationException("Assaulted welfare guard did not cancel courtesy for crime handling.");
                 actor.EndCombat(); roster.Reports[0].ThreatId=record.Id;
-                Debug.Log("LIVING_CITIES_WELFARE_ASSAULT_PASS: native assault notification cancels courtesy for crime handling.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WELFARE_ASSAULT_PASS: native assault notification cancels courtesy for crime handling.");
                 game.PlayerEntity.CrimeCommitted=PlayerEntity.Crimes.Theft;
                 otherActor=GuardActor.CreateInterior(roster,companion.Id,room.transform,now);
                 yield return null;
@@ -107,7 +107,7 @@ namespace LivingCities.DFU
                 roster.Reports[0].ThreatId=record.Id;
                 game.PlayerEntity.SetHealth(Math.Max(1,game.PlayerEntity.MaxHealth/2),true);
                 UnityEngine.Object.Destroy(otherActor.gameObject); otherActor=null;
-                Debug.Log("LIVING_CITIES_WELFARE_COMPANION_PASS: uninformed responder preserves courtesy before prior-crime handling.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WELFARE_COMPANION_PASS: uninformed responder preserves courtesy before prior-crime handling.");
                 bool recreated=false;
                 float deadline=Time.realtimeSinceStartup+23;
                 while(Time.realtimeSinceStartup<deadline && window==null)
@@ -120,7 +120,7 @@ namespace LivingCities.DFU
                         actor.Capture(savedAt);
                         var savedPosition=actor.transform.position; string guardId=guard.Id;
                         string json=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot());
-                        var restored=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+                        var restored=new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                         restored.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),json));
                         UnityEngine.Object.Destroy(actor.gameObject); actor=null;
                         yield return null;
@@ -154,8 +154,8 @@ namespace LivingCities.DFU
                 if(!record.Death.WelfareConsumed || record.Death.PotionGranted || after!=potionCount ||
                     game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.Theft || roster.Reports[0].ThreatId!=null)
                     throw new InvalidOperationException("Recognition granted a potion or lost prior-bounty handoff.");
-                Debug.Log("LIVING_CITIES_GUARD_WELFARE_PASS: surveyed physical approach, recognition interrupts welfare, no potion and prior-crime handoff.");
-                var completedStore=new WorldStateStore(0,LivingCitiesMod.ConversationArchiveRoot());
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_WELFARE_PASS: surveyed physical approach, recognition interrupts welfare, no potion and prior-crime handoff.");
+                var completedStore=new WorldStateStore(0,PeopleOfTheIliacBayMod.ConversationArchiveRoot());
                 completedStore.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),
                     SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
                 var completed=completedStore.GetDefenseCombatant(record.Id);
@@ -163,7 +163,7 @@ namespace LivingCities.DFU
                     DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),true,true,0.5);
                 if(!completed.Death.WelfareConsumed || completed.Death.PotionGranted || duplicate.Completed || duplicate.PotionGranted)
                     throw new InvalidOperationException("Completed welfare repeated or lost reward state after serialization.");
-                Debug.Log("LIVING_CITIES_WELFARE_RECREATE_PASS: native JSON and actor recreation resume approach; completed exchange cannot repeat.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WELFARE_RECREATE_PASS: native JSON and actor recreation resume approach; completed exchange cannot repeat.");
             }
             finally
             {
@@ -202,7 +202,7 @@ namespace LivingCities.DFU
                 if(record.Death.InformedGuards.Count!=0) throw new InvalidOperationException("Dead witness informed guard.");
                 invoke();
                 if(!record.Death.InformedGuards.Contains(guard.GuardId)) throw new InvalidOperationException("Nearby living fight witness failed to inform responder.");
-                Debug.Log("LIVING_CITIES_DEFENSE_RELAY_PASS: nearby living witness informs matching responder; distant, dead and other-room witnesses do not.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DEFENSE_RELAY_PASS: nearby living witness informs matching responder; distant, dead and other-room witnesses do not.");
             }
             finally { witness.IsAlive=true; UnityEngine.Object.Destroy(body); UnityEngine.Object.Destroy(otherRoom); }
         }

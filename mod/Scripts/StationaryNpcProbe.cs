@@ -6,16 +6,16 @@ using DaggerfallConnect.Arena2;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Questing;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class StationaryNpcProbe
     {
         public static IEnumerator Run()
         {
             var game=GameManager.Instance;
-            var adapter=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets=adapter.GetComponent<StreetPopulation>();
             game.PlayerEntity.GodMode=true; streets.ReactionsEnabled=true;
             if(game.IsPlayerInside) game.PlayerEnterExit.TransitionExterior();
@@ -64,11 +64,11 @@ namespace LivingCities.DFU
                         throw new InvalidOperationException("Ordinary static NPC revived on interior re-entry: "+type);
                 }
                 if(ids.Count>0) types++;
-                Debug.Log("LIVING_CITIES_STATIONARY_TYPE_PASS: "+type+"; killed="+ids.Count+"; re-entry retains death.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIONARY_TYPE_PASS: "+type+"; killed="+ids.Count+"; re-entry retains death.");
                 game.PlayerEnterExit.TransitionExterior(); yield return new WaitForSecondsRealtime(1);
             }
             if(killed<3 || types<3) throw new InvalidOperationException("Stationary NPC test did not cover three building categories.");
-            Debug.Log("LIVING_CITIES_STATIONARY_PASS: native hits and persistent deaths; people="+killed+"; buildingTypes="+types);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STATIONARY_PASS: native hits and persistent deaths; people="+killed+"; buildingTypes="+types);
         }
     }
 }

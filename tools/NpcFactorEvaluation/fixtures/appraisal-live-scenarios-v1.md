@@ -1,0 +1,9 @@
+# Experience appraisal live-model input fixture
+
+`appraisal-live-scenarios-v1.json` supplies four seeded personality profiles and eight evidence scenarios. `AppraisalFixturePreparation.BuildCases(path)` expands them into 32 requests through production Core factories. Each current generated profile has exactly three saved `SelectedTraits` under personality V3; the fixture's `profileTraitCount` records that selected count. Each request carries numeric mood and affinity state plus the configured known/unknown trust, fear and resentment snapshot. The exact Core prompt hash is attached to the request row.
+
+The harness must send only `AppraisalFixtureCase.Request.Prompt` to the model. `CaseId`, `Label`, input hash, fixture text and any review expectations stay outside the prompt. Review labels distinguish native gift, confirmed help, health-episode injury, status onset, confirmed waited no-show, and observed direct, quoted and hypothetical threat-like speech. Speech events use `FromObservedSpeech`, so text never becomes a claimed or confirmed world event. The no-show case uses `NpcAppointmentExperience.TryCreate` and passes the observed-wait gate.
+
+All rows are synthetic inputs. Core has no injury-cause or status-cause field, so the health-episode and status-onset cases cannot test poison-specific recognition. They must remain labeled injury and status onset. Do not add poison wording to the model context. This fixture does not cover unimplemented adapters or establish gameplay behavior.
+
+`AppraisalFixturePreparation.TryParseResponse` calls `NpcExperienceAppraisalContract.TryParseResponse` on exact raw output. Only an actual `NpcExperienceAppraisalTicket` captured from a real `WorldStateStore` can reach `TryCommitNativeTicket`; that method forwards the exact response to the store's atomic commit. Fixture-built requests cannot create tickets or commit world state. Semantic review remains human: use no exact-text, keyword or regex scoring.

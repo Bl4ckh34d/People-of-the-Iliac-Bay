@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
@@ -21,7 +21,7 @@ namespace LivingCities.DFU
                     TavernRoomSurvey.Read(interior,out markers,out occupants,out shopBedrooms);
                 }
                 catch(Exception error)
-                { Debug.LogWarning("LIVING_CITIES_SHOP_BEDROOM_REPLACEMENT_SKIPPED: "+interior.EntryDoor.buildingKey+"; "+error.Message); }
+                { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_SHOP_BEDROOM_REPLACEMENT_SKIPPED: "+interior.EntryDoor.buildingKey+"; "+error.Message); }
             }
             BuildingSummary building;
             if(shopBedrooms!=null && directory.GetBuildingSummary(interior.EntryDoor.buildingKey,out building))

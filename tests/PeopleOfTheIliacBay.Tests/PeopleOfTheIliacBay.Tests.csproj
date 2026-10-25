@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PeopleOfTheIliacBay.Core/PeopleOfTheIliacBay.Core.csproj" />
+    <Reference Include="FullSerializer - Unity">
+      <HintPath>../../../Player/DaggerfallUnity_Data/Managed/FullSerializer - Unity.dll</HintPath>
+    </Reference>
+    <Compile Include="../../mod/Scripts/PortraitVisemeTimeline.cs" Link="Runtime/PortraitVisemeTimeline.cs" />
+    <Compile Include="../../mod/Scripts/PortraitVisemeSidecar.cs" Link="Runtime/PortraitVisemeSidecar.cs" />
+    <Compile Include="../../mod/Scripts/PortraitPreparedPresentation.cs" Link="Runtime/PortraitPreparedPresentation.cs" />
+    <Compile Include="../../mod/Scripts/BreezeTtsStreamingPolicy.cs" Link="Runtime/BreezeTtsStreamingPolicy.cs" />
+    <Compile Include="../../mod/Scripts/PortraitSpeechOwnership.cs" Link="Runtime/PortraitSpeechOwnership.cs" />
+    <Compile Include="../../mod/Scripts/PortraitSpeechLoadPolicy.cs" Link="Runtime/PortraitSpeechLoadPolicy.cs" />
+    <Compile Include="../../mod/Scripts/PortraitVisemePreviewPolicy.cs" Link="Runtime/PortraitVisemePreviewPolicy.cs" />
+    <Compile Include="../../mod/Scripts/SplitPortraitManifest.cs" Link="Runtime/SplitPortraitManifest.cs" />
+    <Compile Include="../../mod/Scripts/SplitPortraitComposition.cs" Link="Runtime/SplitPortraitComposition.cs" />
+    <Compile Include="../../mod/Scripts/SplitPortraitPresentation.cs" Link="Runtime/SplitPortraitPresentation.cs" />
+  </ItemGroup>
+</Project>

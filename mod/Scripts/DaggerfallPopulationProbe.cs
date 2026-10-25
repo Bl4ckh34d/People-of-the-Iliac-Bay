@@ -2,16 +2,16 @@ using System;
 using System.Collections;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class DaggerfallPopulationProbe
     {
         internal static bool SuppressCityActors;
         public static IEnumerator Run()
         {
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
             var game=GameManager.Instance; bool oldCurse=game.PlayerEntity.GlobalVars.GetGlobalVar(0);
             bool oldSuppression=SuppressCityActors; SuppressCityActors=false;
@@ -40,7 +40,7 @@ namespace LivingCities.DFU
                     geometry.SurveyGateGuardPosts().Count);
                 if(checkedResidents<100 || streets.PlannedCount<100 || guards.Roster.Target!=expected)
                     throw new InvalidOperationException("Incomplete city population or incorrect garrison scale.");
-                Debug.Log("LIVING_CITIES_CITY_POPULATION_PASS: residents="+residents+"; plans="+streets.PlannedCount+
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITY_POPULATION_PASS: residents="+residents+"; plans="+streets.PlannedCount+
                     "; guards="+guards.Roster.Target+"; initialSeconds="+(Time.realtimeSinceStartup-started));
                 yield return DaggerfallSaveProbe.Run(mod,streets,guards);
                 yield return DaggerfallMovementProbe.Run(mod,streets);

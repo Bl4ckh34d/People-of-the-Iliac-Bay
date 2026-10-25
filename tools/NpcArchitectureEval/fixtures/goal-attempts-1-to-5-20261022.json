@@ -1,0 +1,595 @@
+{
+  "schemaVersion": 1,
+  "factualContext": "Synthetic interpretation fixture. Speaker is a managed adult resident. No candidate list, consent, inventory, route or completed action is supplied. Do not assume capabilities or feasibility.",
+  "cases": [
+    {
+      "id": "places-1",
+      "text": "Go to Doctor Savery's Gear.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "places-2",
+      "text": "Go to Doctor Savery's Gear, then wait there for eighteen seconds.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "",
+              "there",
+              "here"
+            ],
+            "duration": {
+              "amount": 18,
+              "unit": "GameSeconds"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "places-3",
+      "text": "Go to Doctor Savery's Gear, then wait there for eighteen seconds, then go to The Superior Supply Store.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "",
+              "there",
+              "here"
+            ],
+            "duration": {
+              "amount": 18,
+              "unit": "GameSeconds"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "The Superior Supply Store"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "places-4",
+      "text": "Go to Doctor Savery's Gear, then wait there for eighteen seconds, then go to The Superior Supply Store, then wait there for twenty-four seconds.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo",
+          "Wait"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "",
+              "there",
+              "here"
+            ],
+            "duration": {
+              "amount": 18,
+              "unit": "GameSeconds"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "The Superior Supply Store"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "",
+              "there",
+              "here"
+            ],
+            "duration": {
+              "amount": 24,
+              "unit": "GameSeconds"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "places-5",
+      "text": "Go to Doctor Savery's Gear, then wait there for eighteen seconds, then go to The Superior Supply Store, then wait there for twenty-four seconds, then follow me.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait",
+          "MoveTo",
+          "Wait",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "",
+              "there",
+              "here"
+            ],
+            "duration": {
+              "amount": 18,
+              "unit": "GameSeconds"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "The Superior Supply Store"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "",
+              "there",
+              "here"
+            ],
+            "duration": {
+              "amount": 24,
+              "unit": "GameSeconds"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "",
+              "me",
+              "the player"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "Follow"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "quantities-1",
+      "text": "Wait here for two minutes.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 2,
+              "unit": "GameMinutes"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "quantities-2",
+      "text": "Wait here for two minutes, then go to Doctor Savery's Gear.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 2,
+              "unit": "GameMinutes"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "quantities-3",
+      "text": "Wait here for two minutes, then go to Doctor Savery's Gear, then buy three apples.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Purchase"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 2,
+              "unit": "GameMinutes"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "apples",
+              "three apples"
+            ],
+            "duration": null,
+            "quantity": 3,
+            "kind": "Purchase"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "quantities-4",
+      "text": "Wait here for two minutes, then go to Doctor Savery's Gear, then buy three apples, then give me two apples.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Purchase",
+          "Transfer"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 2,
+              "unit": "GameMinutes"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "apples",
+              "three apples"
+            ],
+            "duration": null,
+            "quantity": 3,
+            "kind": "Purchase"
+          },
+          {
+            "targets": [
+              "me",
+              "apples",
+              "two apples",
+              "me two apples"
+            ],
+            "duration": null,
+            "quantity": 2,
+            "kind": "Transfer"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "quantities-5",
+      "text": "Wait here for two minutes, then go to Doctor Savery's Gear, then buy three apples, then give me two apples, then follow me for half an hour.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "Wait",
+          "MoveTo",
+          "Purchase",
+          "Transfer",
+          "Follow"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "",
+              "here"
+            ],
+            "duration": {
+              "amount": 2,
+              "unit": "GameMinutes"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          },
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "apples",
+              "three apples"
+            ],
+            "duration": null,
+            "quantity": 3,
+            "kind": "Purchase"
+          },
+          {
+            "targets": [
+              "me",
+              "apples",
+              "two apples",
+              "me two apples"
+            ],
+            "duration": null,
+            "quantity": 2,
+            "kind": "Transfer"
+          },
+          {
+            "targets": [
+              "",
+              "me",
+              "the player"
+            ],
+            "duration": {
+              "amount": 0.5,
+              "unit": "GameHours"
+            },
+            "quantity": null,
+            "kind": "Follow"
+          }
+        ],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "negated",
+      "text": "Do not go to Doctor Savery's Gear. I am not asking you to wait or follow me.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "quoted",
+      "text": "Yesterday she said, 'Go to Doctor Savery's Gear, wait eighteen seconds, then follow me.' What did she mean?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "hypothetical",
+      "text": "If someone asked you to go to Doctor Savery's Gear and wait eighteen seconds, would that be reasonable? I am only asking hypothetically.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "fiction",
+      "text": "In my story the hero orders: 'Buy three apples, give me two apples, then follow me.' Is that believable dialogue?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "capability",
+      "text": "Are you able to carry items for people? I am only asking about your abilities.",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "smalltalk",
+      "text": "How have you been since we last spoke?",
+      "history": "",
+      "expected": {
+        "intent": "None",
+        "kinds": [],
+        "steps": [],
+        "conditions": [],
+        "exclusions": []
+      }
+    },
+    {
+      "id": "condition",
+      "text": "Go to Doctor Savery's Gear only if the door is open, then wait eighteen seconds; do not enter the cellar.",
+      "history": "",
+      "expected": {
+        "intent": "Request",
+        "kinds": [
+          "MoveTo",
+          "Wait"
+        ],
+        "steps": [
+          {
+            "targets": [
+              "Doctor Savery's Gear"
+            ],
+            "duration": null,
+            "quantity": null,
+            "kind": "MoveTo"
+          },
+          {
+            "targets": [
+              "",
+              "there",
+              "here"
+            ],
+            "duration": {
+              "amount": 18,
+              "unit": "GameSeconds"
+            },
+            "quantity": null,
+            "kind": "Wait"
+          }
+        ],
+        "conditions": [
+          "only if the door is open"
+        ],
+        "exclusions": [
+          "do not enter the cellar"
+        ]
+      }
+    }
+  ]
+}

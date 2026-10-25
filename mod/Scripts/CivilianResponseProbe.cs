@@ -6,17 +6,17 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Serialization;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class CivilianResponseProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = UnityEngine.Object.FindObjectOfType<StreetPopulation>();
             if (!game.PlayerEnterExit.IsPlayerInsideBuilding) throw new InvalidOperationException("Response probe needs family interior.");
             streets.ReactionsEnabled = true;
@@ -35,7 +35,7 @@ namespace LivingCities.DFU
             var alarm = snapshot.AlarmIncidents.Find(a => a.VictimId == victimId);
             if (alarm == null || !alarm.People.Exists(p => p.ResidentId == witnessId && p.DirectWitness) || victim.Resident.IsAlive)
                 throw new InvalidOperationException("Native killing did not create the witnessed incident/death.");
-            var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+            var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
             var live = store.ActiveAlarm(witnessId, DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()).People.Find(p => p.ResidentId == witnessId);
             // Force both branches on this disposable test witness; stable default selection has core tests.
             live.Reaction = CivilianReaction.Flee;
@@ -89,11 +89,11 @@ namespace LivingCities.DFU
             SaveLoadManager.OnSave += onSave; SaveLoadManager.OnLoad += onLoad;
             try
             {
-                game.SaveLoadManager.Save(game.PlayerEntity.Name, "Living Cities - civilian response");
+                game.SaveLoadManager.Save(game.PlayerEntity.Name, "People of the Iliac Bay - civilian response");
                 float deadline = Time.realtimeSinceStartup + 30;
                 while (!saved && Time.realtimeSinceStartup < deadline) yield return null;
                 if (!saved) throw new InvalidOperationException("Response save timed out.");
-                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "Living Cities - civilian response");
+                int key = game.SaveLoadManager.FindSaveFolderByNames(game.PlayerEntity.Name, "People of the Iliac Bay - civilian response");
                 game.SaveLoadManager.Load(key); DaggerfallUI.Instance.PopToHUD();
                 deadline = Time.realtimeSinceStartup + 60;
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < deadline) yield return null;
@@ -104,7 +104,7 @@ namespace LivingCities.DFU
                 if (restored == null || !restored.People.Exists(p => p.ResidentId == witnessId && p.Reaction == CivilianReaction.Fight) ||
                     !witness || witness.Person.NameNPC != name)
                     throw new InvalidOperationException("Incident or reacting identity missing after reload.");
-                Debug.Log("LIVING_CITIES_TOWN_RESPONSE_PASS: native weapon hook, witnessed murder, retreat, counterattack, talk refusal, identity and real save/load; victim=" + victimId + "; witness=" + witnessId + "; save=" + key);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_RESPONSE_PASS: native weapon hook, witnessed murder, retreat, counterattack, talk refusal, identity and real save/load; victim=" + victimId + "; witness=" + witnessId + "; save=" + key);
             }
             finally { SaveLoadManager.OnSave -= onSave; SaveLoadManager.OnLoad -= onLoad; }
         }

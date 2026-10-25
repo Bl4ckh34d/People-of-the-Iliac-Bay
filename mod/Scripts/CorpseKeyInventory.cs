@@ -5,16 +5,17 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
         private IDisposable corpseTransferHook;
         private DaggerfallLoot corpseInventory;
         private string corpseInventoryIncident;
+        private NativeNpcInventoryBinding corpseInventoryBinding;
         private readonly HashSet<DaggerfallUnityItem> issuedCorpseKeys = new HashSet<DaggerfallUnityItem>();
 
         private void InitializeCorpseKeys(CivilianIncident alarm)
@@ -51,14 +52,24 @@ namespace LivingCities.DFU
 
         private void InstallCorpseTransferHook()
         {
-            var type = Type.GetType("LivingCities.QuestHooks.NativeItemTransferHooks, LivingCities.QuestHooks", true);
+            var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeItemTransferHooks, PeopleOfTheIliacBay.QuestHooks", true);
             corpseTransferHook = (IDisposable)Activator.CreateInstance(type, new object[] {
                 new Func<DaggerfallUnityItem,ItemCollection,ItemCollection,bool>((item,source,target) =>
-                    corpseInventory && ReferenceEquals(source,corpseInventory.Items) && issuedCorpseKeys.Contains(item)),
+                    corpseInventory && (ReferenceEquals(source,corpseInventory.Items) || ReferenceEquals(target,corpseInventory.Items))),
+                new Func<DaggerfallUnityItem,ItemCollection,ItemCollection,bool>((item,source,target) => {
+                    bool outgoing=ReferenceEquals(source,corpseInventory.Items);
+                    if(outgoing && item is HouseholdPropertyKeyItem && !issuedCorpseKeys.Contains(item))return false;
+                    // Persist item ownership before consuming one-time key claim.
+                    // Rejected snapshots cause the transfer hook to restore native collections.
+                    if(!TryCaptureOpenCorpseInventory())return false;
+                    if(outgoing && issuedCorpseKeys.Contains(item) &&
+                        !worldStore.MarkCorpsePropertyKeyTaken(corpseInventoryIncident,item.enchantmentPoints,item.message))return false;
+                    return true;
+                }),
                 new Action<DaggerfallUnityItem,ItemCollection,ItemCollection>((item,source,target) => {
-                    if (!worldStore.MarkCorpsePropertyKeyTaken(corpseInventoryIncident,item.enchantmentPoints,item.message))
-                        throw new InvalidOperationException("Transferred corpse key had no available ownership claim.");
-                    issuedCorpseKeys.Remove(item);
+                    bool outgoing=ReferenceEquals(source,corpseInventory.Items);
+                    if(outgoing && issuedCorpseKeys.Contains(item))issuedCorpseKeys.Remove(item);
+                    if(!outgoing)return;
                     if (GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding)
                     {
                         if (ReactionsEnabled && HasTheftWitness() == true)
@@ -71,6 +82,11 @@ namespace LivingCities.DFU
                         }
                     }
                     else ReportCorpseLoot(corpseInventoryIncident);
+                }),
+                new Action<DaggerfallUnityItem,ItemCollection,ItemCollection>((item,source,target) => {
+                    // A successful first capture may precede a rejected key claim.
+                    // Resnapshot restored source so save ledger matches native state.
+                    CaptureOpenCorpseInventory();
                 })
             });
             DaggerfallUI.UIManager.OnWindowChange += OnCorpseInventoryWindowChanged;
@@ -82,7 +98,7 @@ namespace LivingCities.DFU
         {
             DaggerfallUI.UIManager.OnWindowChange -= OnCorpseInventoryWindowChanged;
             if (corpseTransferHook != null) corpseTransferHook.Dispose();
-            if (corpseInventory) Destroy(corpseInventory.gameObject);
+            CloseCorpseInventory();
         }
 
         public void OpenCorpseInventory(string incidentId)
@@ -93,36 +109,62 @@ namespace LivingCities.DFU
             if (corpseInventory) return;
             worldStore.InitializeCorpseHomeKey(incidentId,null,AllowsPropertyKey);
             var claims=worldStore.GetAvailableCorpsePropertyKeyClaims(incidentId,AllowsCorpsePropertyKey);
-            if (claims.Count==0) { DaggerfallUI.AddHUDText("The body carries nothing you can take."); return; }
+            string owner=worldStore.CorpseInventoryOwner(incidentId),reason;
+            NativeNpcInventoryBinding binding;
+            if(owner==null || !NativeNpcInventoryBridge.TryOpen(worldStore,owner,null,
+                NativeNpcInventoryBridge.InitialWalletGold(worldStore,owner),out binding,out reason))
+            {DaggerfallUI.AddHUDText("The body's saved inventory is unavailable.");return;}
+            if(!NativeNpcInventoryBridge.TryMaterializeCorpseWallet(worldStore,binding,out reason))
+                throw new InvalidOperationException(reason);
+            issuedCorpseKeys.Clear();
+            foreach(var claim in claims)
+            {
+                DaggerfallUnityItem key=null;
+                for(int i=0;i<binding.Items.Count;i++)
+                    if(HouseholdPropertyKeyItem.IsMatching(binding.Items.GetItem(i),claim.SettlementId,claim.BuildingKey))
+                    {key=binding.Items.GetItem(i);break;}
+                if(key==null){key=new HouseholdPropertyKeyItem(claim.SettlementId,claim.BuildingKey);binding.Items.AddItem(key,noStack:true);}
+                issuedCorpseKeys.Add(key);
+            }
+            if(!NativeNpcInventoryBridge.TryCapture(worldStore,binding,out reason))throw new InvalidOperationException(reason);
             var container=new GameObject("People of the Iliac Bay corpse inventory");
             container.transform.position=body.transform.position;
             corpseInventory=container.AddComponent<DaggerfallLoot>();
             corpseInventory.ContainerType=LootContainerTypes.CorpseMarker;
             corpseInventoryIncident=incidentId;
-            issuedCorpseKeys.Clear();
-            foreach(var claim in claims)
-            {
-                var key=new HouseholdPropertyKeyItem(claim.SettlementId,claim.BuildingKey);
-                issuedCorpseKeys.Add(key); corpseInventory.Items.AddItem(key);
-            }
+            for(int i=0;i<binding.Items.Count;i++)corpseInventory.Items.AddItem(binding.Items.GetItem(i),noStack:true);
+            binding.Items=corpseInventory.Items;corpseInventoryBinding=binding;
             DaggerfallUI.Instance.InventoryWindow.LootTarget=corpseInventory;
             DaggerfallUI.UIManager.PushWindow(DaggerfallUI.Instance.InventoryWindow);
         }
 
         private void UpdateCorpseInventory()
         {
-            if (!corpseInventory || DaggerfallUI.Instance.InventoryWindow.LootTarget==corpseInventory) return;
-            // Native inventory permits deposits. Preserve them in its serializable
-            // ground container; unclaimed generated keys remain in our corpse ledger.
-            DaggerfallLoot dropped=null;
-            foreach(var item in new List<DaggerfallUnityItem>(corpseInventory.Items.Export()))
-            {
-                if (issuedCorpseKeys.Contains(item)) continue;
-                if (!dropped) dropped=GameObjectHelper.CreateDroppedLootContainer(GameManager.Instance.PlayerObject,DaggerfallUnity.NextUID);
-                dropped.Items.Transfer(item,corpseInventory.Items);
-            }
-            Destroy(corpseInventory.gameObject);
-            corpseInventory=null; corpseInventoryIncident=null; issuedCorpseKeys.Clear();
+            if (corpseInventoryBinding==null || corpseInventory && DaggerfallUI.Instance.InventoryWindow.LootTarget==corpseInventory) return;
+            CloseCorpseInventory();
+        }
+        public void CaptureNpcInventories()
+        {
+            foreach(var actor in actors.Values)if(actor)actor.CaptureState();
+            CaptureOpenCorpseInventory();
+        }
+        private void CaptureOpenCorpseInventory()
+        {
+            if(corpseInventoryBinding==null)return;
+            string reason;if(!NativeNpcInventoryBridge.TryCapture(worldStore,corpseInventoryBinding,out reason))throw new InvalidOperationException(reason);
+        }
+        private bool TryCaptureOpenCorpseInventory()
+        {
+            if(corpseInventoryBinding==null)return false;
+            string reason;return NativeNpcInventoryBridge.TryCapture(worldStore,corpseInventoryBinding,out reason);
+        }
+        public void CloseCorpseInventory()
+        {
+            if(corpseInventoryBinding==null && !corpseInventory)return;
+            CaptureOpenCorpseInventory();
+            if(corpseInventory && DaggerfallUI.Instance.InventoryWindow.LootTarget==corpseInventory)DaggerfallUI.Instance.InventoryWindow.LootTarget=null;
+            if(corpseInventory)Destroy(corpseInventory.gameObject);
+            corpseInventory=null; corpseInventoryIncident=null;corpseInventoryBinding=null;issuedCorpseKeys.Clear();
         }
     }
 }

@@ -13,4 +13,19 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - name: Run simulation tests
-        run: dotnet run --project tests/LivingCities.Tests --configuration Release
+        shell: pwsh
+        run: |
+          ./tools/RestoreTestDependencies.ps1
+          dotnet run --project tests/PeopleOfTheIliacBay.Tests --configuration Release
+      - name: Check PowerShell syntax and source policy
+        shell: pwsh
+        run: |
+          ./tools/TestToolingSyntax.ps1
+          ./tools/TestToolingProtocols.ps1
+          python tools/check_source_policy.py
+      - name: Check local dialogue transport
+        run: dotnet run --project tests/LocalDialogueTransport.Regression --configuration Release
+      - name: Run personal barter contract tests
+        run: dotnet run --project tests/PersonalBarterContract.Regression --configuration Release
+      - name: Run decision adapter tests without model or game services
+        run: dotnet run --project tests/DecisionAdapter.Tests --configuration Release

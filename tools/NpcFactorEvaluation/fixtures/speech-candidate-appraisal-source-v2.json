@@ -1,0 +1,145 @@
+{
+  "fixtureId": "npc-experience-appraisal-live-scenarios-v2",
+  "fixtureVersion": 2,
+  "provenance": "Synthetic offline inputs expanded through production Core factories. V2 corrects causal attribution: injury and status onset retain unknown actor attribution. Not captured from a running game. Review labels stay outside model prompts.",
+  "profileTraitCount": 17,
+  "profiles": [
+    {
+      "personId": "npc:appraisal-commoner-steady",
+      "seed": 7041,
+      "background": "Commoner",
+      "currentMood": -35,
+      "moodRevision": 3,
+      "moodGameTime": 1600,
+      "capturedGameTime": 2300,
+      "currentAffinity": 20,
+      "affinityRevision": 4,
+      "positiveAffinityCredit": 2,
+      "relationshipGameTime": 1590,
+      "trustKnown": true,
+      "reliabilityTrust": 55,
+      "trustConfidence": 20,
+      "trustEvidenceCount": 2,
+      "resentment": 12,
+      "fear": 8
+    },
+    {
+      "personId": "npc:appraisal-commoner-warm",
+      "seed": 7042,
+      "background": "Commoner",
+      "currentMood": 22,
+      "moodRevision": 8,
+      "moodGameTime": 1600,
+      "capturedGameTime": 2300,
+      "currentAffinity": 45,
+      "affinityRevision": 5,
+      "positiveAffinityCredit": 4,
+      "relationshipGameTime": 1590,
+      "trustKnown": false,
+      "reliabilityTrust": 0,
+      "trustConfidence": 0,
+      "trustEvidenceCount": 0,
+      "resentment": 2,
+      "fear": 0
+    },
+    {
+      "personId": "npc:appraisal-noble-wary",
+      "seed": 8101,
+      "background": "Noble",
+      "currentMood": -68,
+      "moodRevision": 5,
+      "moodGameTime": 1600,
+      "capturedGameTime": 2300,
+      "currentAffinity": -25,
+      "affinityRevision": 9,
+      "positiveAffinityCredit": 0,
+      "relationshipGameTime": 1590,
+      "trustKnown": true,
+      "reliabilityTrust": 20,
+      "trustConfidence": 10,
+      "trustEvidenceCount": 1,
+      "resentment": 70,
+      "fear": 75
+    },
+    {
+      "personId": "npc:appraisal-noble-confident",
+      "seed": 8102,
+      "background": "Noble",
+      "currentMood": 55,
+      "moodRevision": 2,
+      "moodGameTime": 1600,
+      "capturedGameTime": 2300,
+      "currentAffinity": 5,
+      "affinityRevision": 3,
+      "positiveAffinityCredit": 1,
+      "relationshipGameTime": 1590,
+      "trustKnown": true,
+      "reliabilityTrust": 80,
+      "trustConfidence": 80,
+      "trustEvidenceCount": 8,
+      "resentment": 1,
+      "fear": 5
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "native-known-gift",
+      "type": "known-gift",
+      "reviewLabel": "Known native gift; item valuation unknown",
+      "observedGameTime": 1620,
+      "responsibleActorAttribution": "Known",
+      "responsibleActorId": "player"
+    },
+    {
+      "id": "native-confirmed-help",
+      "type": "confirmed-help",
+      "reviewLabel": "Confirmed native combat help",
+      "observedGameTime": 1621,
+      "responsibleActorAttribution": "Known",
+      "responsibleActorId": "player"
+    },
+    {
+      "id": "native-injury-health-episode",
+      "type": "injury-health-episode",
+      "reviewLabel": "Native injury episode; cause unavailable",
+      "observedGameTime": 1622,
+      "responsibleActorAttribution": "Unknown"
+    },
+    {
+      "id": "native-status-onset-unknown-cause",
+      "type": "status-onset",
+      "reviewLabel": "Native status onset; poisoning cause is not encoded",
+      "observedGameTime": 1623,
+      "responsibleActorAttribution": "Unknown"
+    },
+    {
+      "id": "native-confirmed-no-show",
+      "type": "confirmed-no-show",
+      "reviewLabel": "Confirmed native appointment no-show after required wait",
+      "observedGameTime": 2201,
+      "responsibleActorAttribution": "Known",
+      "responsibleActorId": "player"
+    },
+    {
+      "id": "observed-direct-threat",
+      "type": "direct-threat",
+      "reviewLabel": "Observed direct threat",
+      "observedGameTime": 1624,
+      "observedUtterance": "I will burn down your home tonight if you speak to the guards."
+    },
+    {
+      "id": "observed-quoted-threat",
+      "type": "quoted-threat",
+      "reviewLabel": "Observed quotation containing a threat",
+      "observedGameTime": 1625,
+      "observedUtterance": "The bandit said, ‘I will burn down your home tonight if you speak to the guards.’"
+    },
+    {
+      "id": "observed-hypothetical-threat",
+      "type": "hypothetical-threat",
+      "reviewLabel": "Observed hypothetical harm statement",
+      "observedGameTime": 1626,
+      "observedUtterance": "Imagine a tale where someone threatens you. What would change if the line were, ‘I will burn down your home tonight’?"
+    }
+  ]
+}

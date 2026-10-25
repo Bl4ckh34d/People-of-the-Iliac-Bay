@@ -16,10 +16,10 @@ using DaggerfallWorkshop.Game.Utility;
 using DaggerfallWorkshop.Game.Utility.ModSupport;
 using DaggerfallWorkshop.Game.Utility.ModSupport.ModSettings;
 using DaggerfallWorkshop.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Opt-in validation of an unchanged shipped quest. This is not an automatic eligibility rule.
     public static class VanillaDeliveryProbe
@@ -42,8 +42,8 @@ namespace LivingCities.DFU
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            Require(game.PlayerEntity.Name.StartsWith("LivingCitiesTest-", StringComparison.Ordinal), "Disposable character required.");
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            Require(game.PlayerEntity.Name.StartsWith("PeopleOfTheIliacBayTest-",StringComparison.Ordinal), "Disposable character required.");
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var town = ((WorldState)adapter.GetSaveData()).Settlements.Find(t => t.SettlementId == game.PlayerGPS.CurrentMapID);
             var directory = game.StreamingWorld.GetCurrentBuildingDirectory();
             var taverns = directory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern);
@@ -140,7 +140,7 @@ namespace LivingCities.DFU
             }
             Require(package != null, "Quest script did not give its delivery item.");
             yield return QuestOfferProbe.Enter(home.BuildingKey);
-            yield return ReloadFixture("Living Cities - vanilla delivery");
+            yield return ReloadFixture("People of the Iliac Bay - vanilla delivery");
             quest = QuestMachine.Instance.GetQuest(binding.QuestUid);
             Require(quest != null && game.PlayerEntity.Items.Contains(quest.GetItem(new Symbol(package))),
                 "Actual quest or delivery item lost across reload.");
@@ -179,7 +179,7 @@ namespace LivingCities.DFU
             Require(((WorldState)adapter.GetSaveData()).QuestBindings.Exists(b => b.QuestUid == binding.QuestUid),
                 "Quest completion erased historical resident contract.");
             ApplyQuestSetting(adapter, true);
-            Debug.Log("LIVING_CITIES_TOWN_DELIVERY_PASS: automatic A0C00Y14 binding; social offer acceptance; native package; real save/load; native recipient hand-in; collected gold=" +
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TOWN_DELIVERY_PASS: automatic A0C00Y14 binding; social offer acceptance; native package; real save/load; native recipient hand-in; collected gold=" +
                 reward + "; recipient=" + binding.PersonName + "; resident=" + resident.Id + "; uid=" + binding.QuestUid);
         }
         private static string MessageText(Quest quest, int id)
@@ -188,10 +188,10 @@ namespace LivingCities.DFU
             foreach (var token in quest.GetMessage(id).GetTextTokens()) result += token.text + " ";
             return result;
         }
-        private static void ApplyQuestSetting(LivingCitiesMod adapter, bool enabled)
+        private static void ApplyQuestSetting(PeopleOfTheIliacBayMod adapter, bool enabled)
         {
             // Exercise the native settings callback without changing the user's settings file.
-            var mod = (Mod)typeof(LivingCitiesMod).GetField("mod", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
+            var mod = (Mod)typeof(PeopleOfTheIliacBayMod).GetField("mod", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(adapter);
             var settings = mod.GetSettings();
             var data = (ModSettingsData)typeof(ModSettings).GetField("data", BindingFlags.Instance | BindingFlags.NonPublic).GetValue(settings);
             ToggleKey key;

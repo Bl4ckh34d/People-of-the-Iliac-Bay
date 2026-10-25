@@ -3,14 +3,14 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game.Items;
 using DaggerfallWorkshop.Game.Serialization;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     /// <summary>
     /// A non-magical key bound to one property's settlement and building identity.
     /// </summary>
     public sealed class HouseholdPropertyKeyItem : DaggerfallUnityItem
     {
-        // LC marker + version slot keeps this above vanilla and away from low custom indexes.
+        // Persisted custom-template marker + version slot; keep it above vanilla and away from low custom indexes.
         public new const int TemplateIndex = 0x4C430001;
 
         // DFU creates custom item classes through Activator during inventory restore.

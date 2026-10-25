@@ -3,9 +3,9 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using UnityEngine;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Reachable standing places and stair routes, surveyed from the actual exit.
     public sealed class InteriorGeometry
@@ -51,10 +51,12 @@ namespace LivingCities.DFU
         private const float MaximumRise = 0.5f;
         private readonly Dictionary<Vector3Int, Vector3> stepCorners = new Dictionary<Vector3Int, Vector3>();
         private System.Collections.IEnumerator survey;
+        private readonly FurnitureSeatCatalog seating;
         public InteriorGeometry(DaggerfallInterior interior,float bodyRadius=0.24f,float top=1.65f,
             Vector3? surveySeed=null,System.Func<Vector3,Vector3,bool> boundary=null,bool sampleFloorOnly=false,bool deferSurvey=false)
         {
             this.interior = interior;
+            seating=FurnitureSeatCatalog.ForInterior(interior);
             this.boundary=boundary;
             Radius=bodyRadius; bodyTop=top;
             var markers = new List<Vector3>(interior.FindMarkers(DaggerfallInterior.InteriorMarkerTypes.Enter));
@@ -140,7 +142,7 @@ namespace LivingCities.DFU
                     AddFloorEdge(Cell(point,seed),cell,stepped ? (Vector3?)corner : null);
                 }
             }
-            if (queue.Count > 0) Debug.LogWarning("LIVING_CITIES_INTERIOR_SURVEY_LIMIT: building=" + interior.EntryDoor.buildingKey + "; nodes=" + floors.Count);
+            if (queue.Count > 0) Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_INTERIOR_SURVEY_LIMIT: building=" + interior.EntryDoor.buildingKey + "; nodes=" + floors.Count);
             IsComplete=queue.Count==0;
         }
         private void AddFloorEdge(Vector3Int from,Vector3Int to,Vector3? corner)
@@ -151,6 +153,26 @@ namespace LivingCities.DFU
         }
         private static bool ContainsEdge(List<FloorEdge> edges,Vector3Int target)
         { foreach(var edge in edges) if(edge.To==target) return true; return false; }
+        private sealed class DetourCell : System.IComparable<DetourCell>
+        {
+            public Vector3Int Cell;
+            public float Cost,Score;
+            public int CompareTo(DetourCell other)
+            {
+                int order=Score.CompareTo(other.Score);
+                if(order==0) order=Cost.CompareTo(other.Cost);
+                if(order==0) order=Cell.x.CompareTo(other.Cell.x);
+                if(order==0) order=Cell.y.CompareTo(other.Cell.y);
+                if(order==0) order=Cell.z.CompareTo(other.Cell.z);
+                return order;
+            }
+        }
+        private float DetourDistance(Vector3Int cell,Dictionary<Vector3Int,int> goals)
+        {
+            float nearest=float.MaxValue;
+            foreach(var goal in goals.Keys) nearest=Mathf.Min(nearest,Vector3.Distance(floors[cell],floors[goal]));
+            return nearest;
+        }
         public List<GuardPoint3> FindLocalDetour(Vector3 ground,IList<Vector3> crowd,float separation,
             IList<GuardPoint3> rejoinRoute,out int rejoinIndex,int maximumVisited=160,float minimumRejoinDistance=0.65f)
         {
@@ -192,11 +214,20 @@ namespace LivingCities.DFU
                     if(!Floor(sample,0.4f,0.8f,out floor) || Mathf.Abs(floor.y-sample.y)>0.3f) {supported=false;break;}
                 }
                 if(!supported || !CrowdSeparated(ground,startGround,crowd,separation)) continue;
-                var queue=new Queue<Vector3Int>();var previous=new Dictionary<Vector3Int,Vector3Int>();
-                var seen=new HashSet<Vector3Int>();queue.Enqueue(start);seen.Add(start);
+                // Spend the same bounded work toward a usable rejoin, rather than
+                // exhausting it in every direction around a blocked corridor.
+                var queue=new SortedSet<DetourCell>();var previous=new Dictionary<Vector3Int,Vector3Int>();
+                var costs=new Dictionary<Vector3Int,float>();var seen=new HashSet<Vector3Int>();
+                costs[start]=0;queue.Add(new DetourCell {Cell=start,Score=DetourDistance(start,goals)});
                 while(queue.Count>0 && visited++<maximumVisited)
                 {
-                    var cell=queue.Dequeue();if(goals.ContainsKey(cell))
+                    var current=queue.Min;queue.Remove(current);var cell=current.Cell;
+                    if(seen.Contains(cell) || current.Cost>costs[cell]) continue;
+                    seen.Add(cell);
+                    int selectedGoal;
+                    if(goals.TryGetValue(cell,out selectedGoal) &&
+                        ShortcutSupportedAndClear(LocalPoint(floors[cell]),rejoinRoute[selectedGoal]) &&
+                        CrowdSeparated(floors[cell],interior.transform.TransformPoint(Point(rejoinRoute[selectedGoal])),crowd,separation))
                     {
                         rejoinIndex=goals[cell];var cells=new List<Vector3Int>();var cursor=cell;cells.Add(cursor);
                         while(cursor!=start){cursor=previous[cursor];cells.Add(cursor);}cells.Reverse();
@@ -210,6 +241,10 @@ namespace LivingCities.DFU
                             }
                             route.Add(LocalPoint(floors[pathCell]));
                         }
+                        // Grid-cell membership is not the exact saved endpoint.
+                        // Preserve the selected corner before attaching its tail.
+                        var exact=rejoinRoute[rejoinIndex];
+                        route.Add(new GuardPoint3 {X=exact.X,Y=exact.Y,Z=exact.Z});
                         return route;
                     }
                     List<FloorEdge> edges;
@@ -222,7 +257,11 @@ namespace LivingCities.DFU
                         Vector3 corner=edge.Corner.HasValue?edge.Corner.Value:Vector3.zero;
                         if(edge.Corner.HasValue && !CrowdSeparated(from,corner,crowd,separation)) continue;
                         if(!CrowdSeparated(edge.Corner.HasValue?corner:from,to,crowd,separation)) continue;
-                        seen.Add(edge.To);previous.Add(edge.To,cell);queue.Enqueue(edge.To);
+                        float cost=current.Cost+(edge.Corner.HasValue ? Vector3.Distance(from,corner)+Vector3.Distance(corner,to) : Vector3.Distance(from,to));
+                        float priorCost;
+                        if(costs.TryGetValue(edge.To,out priorCost) && priorCost<=cost) continue;
+                        costs[edge.To]=cost;previous[edge.To]=cell;
+                        queue.Add(new DetourCell {Cell=edge.To,Cost=cost,Score=cost+DetourDistance(edge.To,goals)});
                     }
                 }
             }
@@ -305,6 +344,11 @@ namespace LivingCities.DFU
         }
         public List<GuardPoint3> RouteBetween(Vector3 localFrom,Vector3 localTo)
         {
+            // A clear room segment needs no detour through the exit survey tree.
+            // Bound this one planning-time probe; keep stairs/obstacles on the graph.
+            if((localTo-localFrom).sqrMagnitude<=400 && ShortcutSupportedAndClear(
+                new GuardPoint3 {X=localFrom.x,Y=localFrom.y,Z=localFrom.z},new GuardPoint3 {X=localTo.x,Y=localTo.y,Z=localTo.z}))
+                return new List<GuardPoint3> {new GuardPoint3 {X=localFrom.x,Y=localFrom.y,Z=localFrom.z},new GuardPoint3 {X=localTo.x,Y=localTo.y,Z=localTo.z}};
             // Preserve the complete parent chains until their shared ancestor is
             // found. Simplify only after the two surveyed paths have been joined.
             var a=RouteToExitRaw(interior.transform.TransformPoint(localFrom));
@@ -408,6 +452,7 @@ namespace LivingCities.DFU
         { return new Vector3Int(Mathf.RoundToInt((point.x-seed.x)/GridStep), Mathf.RoundToInt((point.y-seed.y)/0.2f), Mathf.RoundToInt((point.z-seed.z)/GridStep)); }
         private bool SweepsClear(Vector3 from, Vector3 to)
         {
+            if(seating.BlocksGeometry(from,to,Radius))return false;
             if(boundary!=null && !boundary(from,to)) return false;
             Vector3 delta = to-from;
             if (delta.sqrMagnitude < 0.000001f) return true;
@@ -426,6 +471,7 @@ namespace LivingCities.DFU
         }
         private bool Clear(Vector3 ground)
         {
+            if(seating.BlocksGeometry(ground,ground,Radius))return false;
             if(boundary!=null && !boundary(ground,ground)) return false;
             foreach (var collider in Physics.OverlapCapsule(ground + Vector3.up * BodyBase, ground + Vector3.up * bodyTop,
                 Radius, ~0, QueryTriggerInteraction.Ignore))

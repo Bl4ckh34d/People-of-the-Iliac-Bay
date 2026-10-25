@@ -11,12 +11,12 @@ using DaggerfallWorkshop.Game.Utility.ModSupport;
 using HarmonyLib;
 using UnityEngine;
 
-namespace LivingCities.Probes
+namespace PeopleOfTheIliacBay.Probes
 {
     // Disposable feasibility probe. No general-purpose quest rewriting is enabled.
     public static class QuestBindingProbe
     {
-        private const string Owner = "local.livingcities.quest-binding-probe";
+        private const string Owner = "local.peopleoftheiliacbay.quest-binding-probe";
         private const string QuestName = "_LC_BIND_PROBE";
         private static readonly Symbol Recipient = new Symbol("_recipient_");
         private static IDictionary<int, string[]> homes;
@@ -91,7 +91,7 @@ namespace LivingCities.Probes
                 Require(info == null || !info.Owners.Contains(Owner), "Probe patch remained installed.");
                 Require(machine.ParseQuest(QuestName, source) != null && calls == beforeExcluded,
                     "Interception continued after unpatching.");
-                Debug.Log("LIVING_CITIES_QUEST_BINDING_PASS: parser interception before offer; partial preview; fixed name; native prompt labels; changed dialog destination; FullSerializer; patches removed; recipient=" + expected[0]);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_QUEST_BINDING_PASS: parser interception before offer; partial preview; fixed name; native prompt labels; changed dialog destination; FullSerializer; patches removed; recipient=" + expected[0]);
             }
             finally { harmony.UnpatchAll(Owner); homes = null; }
             yield break;

@@ -7,17 +7,17 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.MagicAndEffects;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class InnAlarmProbe
     {
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var mod = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var mod = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             var streets = mod.GetComponent<StreetPopulation>();
             var guards = mod.GetComponent<GuardPopulation>();
             if (game.PlayerEnterExit.IsPlayerInsideBuilding) game.PlayerEnterExit.TransitionExterior();
@@ -39,7 +39,7 @@ namespace LivingCities.DFU
             yield return new WaitForSecondsRealtime(1); DaggerfallUI.Instance.PopToHUD();
             streets.ReactionsEnabled = true;
             var room = game.PlayerEnterExit.Interior;
-            var store = (WorldStateStore)typeof(LivingCitiesMod).GetField("store",
+            var store = (WorldStateStore)typeof(PeopleOfTheIliacBayMod).GetField("store",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(mod);
             typeof(StreetPopulation).GetMethod("SurveyKeeperIdentities", System.Reflection.BindingFlags.Instance |
                 System.Reflection.BindingFlags.NonPublic).Invoke(streets, null);
@@ -88,7 +88,7 @@ namespace LivingCities.DFU
                 }
                 if (recipient.Escape == null) throw new InvalidOperationException("Other-room occupant did not receive a planned escape despite a valid guard route.");
             }
-            Debug.Log("LIVING_CITIES_INN_ALARM_PASS: real native murder, direct witness, separated room occupant alarmed and fleeing; escape=" +
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INN_ALARM_PASS: real native murder, direct witness, separated room occupant alarmed and fleeing; escape=" +
                 (recipient.Escape != null) + "; postedRoute=" + (outside != null) + "; victim=" + victimPerson.Id + "; recipient=" + remotePerson.Id);
             string travelerId="traveler:inn-crime-probe:"+Guid.NewGuid().ToString("N");
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
@@ -115,7 +115,7 @@ namespace LivingCities.DFU
             yield return null; yield return null;
             if(clock.ToSeconds()<arriving.Escape.ExitAt || streets.FindActor(travelerId))
                 throw new InvalidOperationException("Arriving inn traveler failed to leave after corpse discovery.");
-            Debug.Log("LIVING_CITIES_INN_TRAVELER_CORPSE_PASS: arriving registered traveler discovers corpse, avoids room idle and exits on neutral report route.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INN_TRAVELER_CORPSE_PASS: arriving registered traveler discovers corpse, avoids room idle and exits on neutral report route.");
             var currentAlarm=store.Snapshot().AlarmIncidents.Find(a=>a.Id==alarm.Id);
             var direct=currentAlarm.People.Find(p=>p.DirectWitness && p.Escape!=null);
             if(direct==null) throw new InvalidOperationException("Witnessed inspection requires a real escaping eyewitness.");
@@ -141,7 +141,7 @@ namespace LivingCities.DFU
                 var concealment=game.PlayerEffectManager.CreateSpellBundle("Invisibility-True",
                     ElementTypes.Magic,new EffectSettings { DurationBase=2000,DurationPerLevel=1 });
                 var concealmentSettings=concealment.Settings;
-                concealmentSettings.Name="Living Cities inspection test concealment";
+                concealmentSettings.Name="People of the Iliac Bay inspection test concealment";
                 concealment.Settings=concealmentSettings;
                 game.PlayerEffectManager.AssignBundle(concealment,AssignBundleFlags.BypassSavingThrows|AssignBundleFlags.BypassChance);
                 yield return null; yield return null;
@@ -196,7 +196,7 @@ namespace LivingCities.DFU
                 if(!inspecting || !cleared)
                 {
                     var failedBody=store.GetCrimeSceneCorpseSnapshot(alarm.Id);
-                    Debug.Log("LIVING_CITIES_INSPECTION_DIAGNOSTIC: arrival="+murderReport.HasArrival+"; inspector="+failedBody.InspectionGuardId+
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INSPECTION_DIAGNOSTIC: arrival="+murderReport.HasArrival+"; inspector="+failedBody.InspectionGuardId+
                         "; remaining="+failedBody.InspectionRemainingRealSeconds+"; body="+failedBody.X+","+failedBody.Y+","+failedBody.Z);
                     var motions=(System.Collections.IDictionary)typeof(GuardPopulation).GetField("crimeSceneMotions",
                         System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic).GetValue(guards);
@@ -209,7 +209,7 @@ namespace LivingCities.DFU
                             var points=(System.Collections.ICollection)motion.GetType().GetField("Route").GetValue(motion);
                             route=(points==null ? "null" : points.Count.ToString())+"/"+motion.GetType().GetField("Segment").GetValue(motion);
                         }
-                        Debug.Log("LIVING_CITIES_INSPECTION_GUARD: "+guard.Id+"; duty="+guard.Duty+"; route="+route+
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INSPECTION_GUARD: "+guard.Id+"; duty="+guard.Duty+"; route="+route+
                             "; pos="+(pos==null ? "outside" : pos.X+","+pos.Y+","+pos.Z));
                         if(guard.Id==failedBody.InspectionGuardId && pos!=null)
                         {
@@ -219,11 +219,11 @@ namespace LivingCities.DFU
                             var ground=scene.TransformPoint(new Vector3((float)pos.X,(float)pos.Y-1,(float)pos.Z));
                             var clear=typeof(InteriorGeometry).GetMethod("Clear",System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
                             var actual=UnityEngine.Object.FindObjectsOfType<GuardActor>().FirstOrDefault(a=>a.GuardId==guard.Id);
-                            Debug.Log("LIVING_CITIES_INSPECTION_CONNECTION: clear="+clear.Invoke(nav,new object[]{ground})+"; exit="+nav.RouteToExit(ground).Count+
+                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INSPECTION_CONNECTION: clear="+clear.Invoke(nav,new object[]{ground})+"; exit="+nav.RouteToExit(ground).Count+
                                 "; ready="+(actual && actual.CombatReady)+"; hostile="+(actual && actual.GetComponent<EnemyMotor>().IsHostile)+"; paused="+GameManager.IsGamePaused+
                                 "; invisible="+game.PlayerEntity.IsInvisible+"; remainingPursuit="+(guard.Interior.PursuitUntil-clock.ToSeconds()));
                             foreach(var hit in Physics.RaycastAll(ground+Vector3.up*0.4f,Vector3.down,0.8f,~0,QueryTriggerInteraction.Ignore))
-                                Debug.Log("LIVING_CITIES_INSPECTION_FLOOR: "+hit.collider.name+"; y="+scene.InverseTransformPoint(hit.point).y+"; normal="+hit.normal.y);
+                                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INSPECTION_FLOOR: "+hit.collider.name+"; y="+scene.InverseTransformPoint(hit.point).y+"; normal="+hit.normal.y);
                             int approachCount=0,reachable=0,visible=0;
                             foreach(var anchor in nav.ApproachPoints(new Vector3((float)failedBody.X,(float)failedBody.Y,(float)failedBody.Z),1.5f,2))
                             {
@@ -231,7 +231,7 @@ namespace LivingCities.DFU
                                 if(nav.RouteToExit(scene.TransformPoint(anchor)).Count>=2) reachable++;
                                 if(nav.HasClearLine(scene.TransformPoint(anchor+Vector3.up*1.25f),scene.TransformPoint(new Vector3((float)failedBody.X,(float)failedBody.Y+0.5f,(float)failedBody.Z)))) visible++;
                             }
-                            Debug.Log("LIVING_CITIES_INSPECTION_TARGETS: candidates="+approachCount+"; reachable="+reachable+"; visible="+visible);
+                            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INSPECTION_TARGETS: candidates="+approachCount+"; reachable="+reachable+"; visible="+visible);
                         }
                     }
                     throw new InvalidOperationException("Witnessed inn murder did not receive physical inspection and cleanup.");
@@ -240,8 +240,8 @@ namespace LivingCities.DFU
                 if(!replacementInspected || killedInspector==null || guards.Roster.Guards.Find(g=>g.Id==killedInspector).IsAlive ||
                     Math.Abs(murderReport.InvestigationUntil-occupationDeadline)>0.001)
                     throw new InvalidOperationException("Replacement inspector did not finish independently within the original occupation.");
-                Debug.Log("LIVING_CITIES_REPLACEMENT_INSPECTOR_PASS: native inspector death during inspection; another arrived responder physically inspected and cleared body; occupation deadline unchanged.");
-                Debug.Log("LIVING_CITIES_WITNESSED_INSPECTION_PASS: real eyewitness retained Murder; native combat lost-sight search expired; guard inspected and cleared corpse without clearing crime.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REPLACEMENT_INSPECTOR_PASS: native inspector death during inspection; another arrived responder physically inspected and cleared body; occupation deadline unchanged.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WITNESSED_INSPECTION_PASS: real eyewitness retained Murder; native combat lost-sight search expired; guard inspected and cleared corpse without clearing crime.");
             }
             finally
             {

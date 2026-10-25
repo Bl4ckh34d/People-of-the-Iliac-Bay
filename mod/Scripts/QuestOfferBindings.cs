@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Questing;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Caller supplies an explicit eligibility rule; never classify arbitrary quest homes here.
     public sealed class QuestOfferBindings : IDisposable
@@ -27,7 +27,7 @@ namespace LivingCities.DFU
             this.allowNewBindings = allowNewBindings;
             committed = store.Snapshot().QuestBindings;
             IndexResidents();
-            var type = Type.GetType("LivingCities.QuestHooks.NativeQuestOfferHooks, LivingCities.QuestHooks", true);
+            var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeQuestOfferHooks, PeopleOfTheIliacBay.QuestHooks", true);
             hooks = (IDisposable)Activator.CreateInstance(type, new object[] {
                 new Func<Quest, bool>(CanStart), new Action<Quest>(Started), new Action<Quest>(Discard), new Func<StaticNPC, string>(ResidentName),
                 new Action<Quest, string[], bool>(Parsed) });
@@ -38,7 +38,7 @@ namespace LivingCities.DFU
             var binding = select(quest, source);
             if (binding == null) return;
             try { Prepare(quest, new[] { binding }); }
-            catch (ArgumentException ex) { Debug.LogWarning("LIVING_CITIES_BINDING_SKIPPED: " + ex.Message); }
+            catch (ArgumentException ex) { Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_BINDING_SKIPPED: " + ex.Message); }
         }
         public void Prepare(Quest quest, IEnumerable<QuestResidentBinding> candidates)
         {
@@ -90,7 +90,7 @@ namespace LivingCities.DFU
             }
             catch (ArgumentException ex)
             {
-                Debug.LogWarning("LIVING_CITIES_OFFER_UNAVAILABLE: " + ex.Message);
+                Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_OFFER_UNAVAILABLE: " + ex.Message);
                 return false;
             }
         }

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     public static class CrowdProbe
     {
@@ -43,7 +43,7 @@ namespace LivingCities.DFU
                 if(found) break;
             }
             if(!found) throw new InvalidOperationException("No long street segment for crowd probe.");
-            var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>(); var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
+            var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var streets=mod.GetComponent<StreetPopulation>(); var guards=mod.GetComponent<GuardPopulation>();
             VerifyHaltBystanderCadence(streets,from,to);
             bool modEnabled=mod.enabled,streetEnabled=streets.enabled,guardEnabled=guards.enabled;
             mod.enabled=false; streets.enabled=false; guards.enabled=false; streets.Clear(); guards.Clear();
@@ -81,8 +81,8 @@ namespace LivingCities.DFU
                 if(Vector3.Distance(first.transform.position,to+Vector3.up)>0.3f || Vector3.Distance(second.transform.position,from+Vector3.up)>0.3f)
                     throw new InvalidOperationException("Opposing street walkers did not pass: "+first.transform.position+" / "+second.transform.position);
                 if(earlyAvoidanceGap<=1.1f) throw new InvalidOperationException("Walkers waited until close range to evade: "+earlyAvoidanceGap);
-                Debug.Log("LIVING_CITIES_COMFORT_AVOIDANCE_PASS: lateral correction began at separation="+earlyAvoidanceGap);
-                Debug.Log("LIVING_CITIES_CROWD_PASS: actual opposing street walkers pass; minimum separation="+minimum);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMFORT_AVOIDANCE_PASS: lateral correction began at separation="+earlyAvoidanceGap);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CROWD_PASS: actual opposing street walkers pass; minimum separation="+minimum);
                 first.GetComponent<CrowdMotion>().ResetPlacement(); second.GetComponent<CrowdMotion>().ResetPlacement();
                 a.Place(from,delta); b.Place(to,-delta);
                 wall=GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -105,7 +105,7 @@ namespace LivingCities.DFU
                 }
                 // Local steering guarantees collision safety, not a new route around
                 // arbitrary obstructions. Route replanning remains a separate task.
-                Debug.Log("LIVING_CITIES_CROWD_WALL_PASS: actual walkers remain outside an inserted wall; automatic rerouting is not asserted.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CROWD_WALL_PASS: actual walkers remain outside an inserted wall; automatic rerouting is not asserted.");
             }
             finally
             {
@@ -146,7 +146,7 @@ namespace LivingCities.DFU
             var radius=(float)type.GetField("lastHaltAudibleRange",flags).GetValue(streets);
             if(Vector3.Distance(heard,guardPosition)>0.01f || Math.Abs(radius-20f)>0.01f)
                 throw new InvalidOperationException("StreetPopulation did not receive the guard Halt event with its hearing range.");
-            Debug.Log("LIVING_CITIES_CROWD_HALT_PASS: listener receives guard origin/range; twenty-second repeats; stable retreat/watch thresholds and hysteresis pass.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CROWD_HALT_PASS: listener receives guard origin/range; twenty-second repeats; stable retreat/watch thresholds and hysteresis pass.");
         }
         private static bool Static(Collider collider)
         {

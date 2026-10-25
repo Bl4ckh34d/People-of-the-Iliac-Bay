@@ -6,10 +6,10 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.Utility;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Runs only in the disposable smoke-test session; does not save regional fixtures.
     public static class RegionalIdentityProbe
@@ -43,7 +43,7 @@ namespace LivingCities.DFU
                     throw new InvalidOperationException("Regional arrival timed out: "+bank);
                 yield return new WaitForSecondsRealtime(2);
                 DaggerfallUI.Instance.PopToHUD();
-                var mod=UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+                var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
                 SettlementPopulation town=null;
                 deadline=Time.realtimeSinceStartup+20;
                 do
@@ -94,8 +94,8 @@ namespace LivingCities.DFU
                     if(actorsChecked>=2) break;
                 }
                 if(actorsChecked<2 || streets.PlannedCount==0) throw new InvalidOperationException("Regional actor/schedule sample missing.");
-                Debug.Log("LIVING_CITIES_REGIONAL_ACTORS_PASS: "+location.Name+"; plans="+streets.PlannedCount+"; guards="+guards.Roster.Target+"; actors="+actorsChecked);
-                Debug.Log("LIVING_CITIES_REGIONAL_LIVE_PASS: bank="+bank+"; location="+location.Name+"; race="+race+"; residents="+checkedPeople+"; example="+town.Households[0].Residents[0].FullName);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REGIONAL_ACTORS_PASS: "+location.Name+"; plans="+streets.PlannedCount+"; guards="+guards.Roster.Target+"; actors="+actorsChecked);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_REGIONAL_LIVE_PASS: bank="+bank+"; location="+location.Name+"; race="+race+"; residents="+checkedPeople+"; example="+town.Households[0].Residents[0].FullName);
             }
         }
     }

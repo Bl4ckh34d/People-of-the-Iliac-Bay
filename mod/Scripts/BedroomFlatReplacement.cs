@@ -5,8 +5,8 @@ using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Guilds;
 using DaggerfallWorkshop.Game.Questing;
-using LivingCities.Core;
-namespace LivingCities.DFU
+using PeopleOfTheIliacBay.Core;
+namespace PeopleOfTheIliacBay.DFU
 {
     internal static class BedroomFlatReplacement
     {

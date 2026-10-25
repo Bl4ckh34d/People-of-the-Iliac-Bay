@@ -1,0 +1,222 @@
+{
+  "schemaVersion": 1,
+  "status": "prepared-no-audio-generated",
+  "purpose": "Final English-accent listening audition using each already-approved race/gender timbre WAV as a fixed speaker reference. This is a pronunciation experiment, not a production geographic policy.",
+  "contentNotice": "Fictional accent-direction audition for local voice design. Accent labels are exploratory and should not be treated as canon, real-world identity claims, or a production geography policy. The original 20 race/gender WAVs are fixed speaker references; all new samples reuse the exact same fixed text, matching seed, and CFG 4. Khajiit and Argonian receive the requested stronger scratchy texture; other timbres stay as established.",
+  "fixedText": "Good day, traveller. The road ahead is long, but you are welcome to rest here for a while.",
+  "trialControls": {
+    "language": "English",
+    "emotion": "neutral",
+    "deliveryMode": "normal",
+    "guidance_scale": 4,
+    "sameTextForEverySample": true,
+    "seedPolicy": "Reuse the exact seed from the matching original race/gender sample; no rerolls.",
+    "speakerReferencePolicy": "Use the corresponding successful WAV from race-voices-01 plus its exact transcript as fixed speaker reference.",
+    "accentVariesByRace": true,
+    "timbrePolicy": "Preserve the existing race/gender timbre directions except explicitly strengthen Khajiit scratchy dry smoky rasp and Argonian scratchy deep guttural croak.",
+    "isolationGoal": "Audition English accent differences while holding reference speaker, text, seed, emotion, delivery and CFG fixed."
+  },
+  "sourceBatch": "work/breeze-tts-20261021/race-voices-01/race_voice_batch.json",
+  "samples": [
+    {
+      "sampleId": "accent-breton-female",
+      "race": "Breton",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71001,
+      "accentLabel": "Southern English",
+      "referenceSampleId": "race-breton-female",
+      "voiceDesignInstruction": "Adult female with a clear, composed mid-register voice with light, even resonance. Use a natural Southern English accent. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-breton-male",
+      "race": "Breton",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71002,
+      "accentLabel": "Southern English",
+      "referenceSampleId": "race-breton-male",
+      "voiceDesignInstruction": "Adult male with a clear, composed mid-register voice with light, even resonance. Use a natural Southern English accent. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-imperial-female",
+      "race": "Imperial",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71003,
+      "accentLabel": "Cultivated British English",
+      "referenceSampleId": "race-imperial-female",
+      "voiceDesignInstruction": "Adult female with a balanced mid-register voice, smooth resonance and crisp articulation. Use a cultivated, precise British English accent. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-imperial-male",
+      "race": "Imperial",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71004,
+      "accentLabel": "Cultivated British English",
+      "referenceSampleId": "race-imperial-male",
+      "voiceDesignInstruction": "Adult male with a balanced mid-register voice, smooth resonance and crisp articulation. Use a cultivated, precise British English accent. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-nord-female",
+      "race": "Nord",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71005,
+      "accentLabel": "Scandinavian-influenced English",
+      "referenceSampleId": "race-nord-female",
+      "voiceDesignInstruction": "Adult female with a weathered, steady mid-low voice and firm resonance. Speak English with a clearly Scandinavian-influenced accent, with Norwegian/Swedish cadence, rolled Rs and Scandinavian vowel qualities; keep the words intelligible without caricature. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-nord-male",
+      "race": "Nord",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71006,
+      "accentLabel": "Scandinavian-influenced English",
+      "referenceSampleId": "race-nord-male",
+      "voiceDesignInstruction": "Adult male with a weathered, steady mid-low voice and firm resonance. Speak English with a clearly Scandinavian-influenced accent, with Norwegian/Swedish cadence, rolled Rs and Scandinavian vowel qualities; keep the words intelligible without caricature. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-redguard-female",
+      "race": "Redguard",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71007,
+      "accentLabel": "Kenyan English",
+      "referenceSampleId": "race-redguard-female",
+      "voiceDesignInstruction": "Adult female with a rich, dark, lower-register voice and deep resonance. Use a Kenyan English accent and cadence, with clear English articulation. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-redguard-male",
+      "race": "Redguard",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71008,
+      "accentLabel": "Kenyan English",
+      "referenceSampleId": "race-redguard-male",
+      "voiceDesignInstruction": "Adult male with a rich, dark, lower-register voice and deep resonance. Use a Kenyan English accent and cadence, with clear English articulation. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-dunmer-female",
+      "race": "Dunmer",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71009,
+      "accentLabel": "Scottish English",
+      "referenceSampleId": "race-dunmer-female",
+      "voiceDesignInstruction": "Adult female with a reserved, smoky mid-register voice and precise articulation. Use a Scottish English accent and cadence, with clear articulation. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-dunmer-male",
+      "race": "Dunmer",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71010,
+      "accentLabel": "Scottish English",
+      "referenceSampleId": "race-dunmer-male",
+      "voiceDesignInstruction": "Adult male with a reserved, smoky mid-register voice and precise articulation. Use a Scottish English accent and cadence, with clear articulation. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-altmer-female",
+      "race": "Altmer",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71011,
+      "accentLabel": "Cultivated British English",
+      "referenceSampleId": "race-altmer-female",
+      "voiceDesignInstruction": "Adult female with a cultivated, clear mid-high voice and precise articulation. Use a cultivated, precise British English accent. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-altmer-male",
+      "race": "Altmer",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71012,
+      "accentLabel": "Cultivated British English",
+      "referenceSampleId": "race-altmer-male",
+      "voiceDesignInstruction": "Adult male with a cultivated, clear mid-high voice and precise articulation. Use a cultivated, precise British English accent. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-bosmer-female",
+      "race": "Bosmer",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71013,
+      "accentLabel": "Welsh English",
+      "referenceSampleId": "race-bosmer-female",
+      "voiceDesignInstruction": "Adult female with a light, nimble mid-high voice and quick, clear articulation. Use a Welsh English accent and cadence, with clear articulation. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-bosmer-male",
+      "race": "Bosmer",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71014,
+      "accentLabel": "Welsh English",
+      "referenceSampleId": "race-bosmer-male",
+      "voiceDesignInstruction": "Adult male with a light, nimble mid-high voice and quick, clear articulation. Use a Welsh English accent and cadence, with clear articulation. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-orc-female",
+      "race": "Orc",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71015,
+      "accentLabel": "Northern English",
+      "referenceSampleId": "race-orc-female",
+      "voiceDesignInstruction": "Adult female with a low, rough, powerful voice with firm, gritty texture. Use a Northern English accent and cadence. Keep it clearly feminine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-orc-male",
+      "race": "Orc",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71016,
+      "accentLabel": "Northern English",
+      "referenceSampleId": "race-orc-male",
+      "voiceDesignInstruction": "Adult male with a low, rough, powerful voice with firm, gritty texture. Use a Northern English accent and cadence. Keep it clearly masculine. Keep the delivery natural and neutral. Preserve the reference speaker timbre."
+    },
+    {
+      "sampleId": "accent-khajiit-female",
+      "race": "Khajiit",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71017,
+      "accentLabel": "Arabic-influenced English",
+      "referenceSampleId": "race-khajiit-female",
+      "voiceDesignInstruction": "Adult female with a very scratchy, dry, smoky, husky mid-register voice with a pronounced rough rasp and slight purring resonance. Use a restrained Arabic-influenced English accent, preserving clear English articulation. Keep it clearly feminine. Keep the delivery natural and neutral. Make the scratchy texture clearly audible while retaining the established gender presentation."
+    },
+    {
+      "sampleId": "accent-khajiit-male",
+      "race": "Khajiit",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71018,
+      "accentLabel": "Arabic-influenced English",
+      "referenceSampleId": "race-khajiit-male",
+      "voiceDesignInstruction": "Adult male with a very scratchy, dry, smoky, husky mid-register voice with a pronounced rough rasp and slight purring resonance. Use a restrained Arabic-influenced English accent, preserving clear English articulation. Keep it clearly masculine. Keep the delivery natural and neutral. Make the scratchy texture clearly audible while retaining the established gender presentation."
+    },
+    {
+      "sampleId": "accent-argonian-female",
+      "race": "Argonian",
+      "genderPresentation": "female",
+      "adultAgePresentation": "adult",
+      "seed": 71019,
+      "accentLabel": "Brazilian Portuguese-influenced English",
+      "referenceSampleId": "race-argonian-female",
+      "voiceDesignInstruction": "Adult female with a very scratchy, dry, deep, throaty guttural croak with a strong smoky rasp. Use a Brazilian Portuguese-influenced English accent, preserving clear English articulation. Keep it clearly feminine. Keep the delivery natural and neutral. Make the scratchy texture clearly audible while retaining the established gender presentation."
+    },
+    {
+      "sampleId": "accent-argonian-male",
+      "race": "Argonian",
+      "genderPresentation": "male",
+      "adultAgePresentation": "adult",
+      "seed": 71020,
+      "accentLabel": "Brazilian Portuguese-influenced English",
+      "referenceSampleId": "race-argonian-male",
+      "voiceDesignInstruction": "Adult male with a very scratchy, dry, deep, throaty guttural croak with a strong smoky rasp. Use a Brazilian Portuguese-influenced English accent, preserving clear English articulation. Keep it clearly masculine. Keep the delivery natural and neutral. Make the scratchy texture clearly audible while retaining the established gender presentation."
+    }
+  ]
+}

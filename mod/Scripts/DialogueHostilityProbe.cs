@@ -8,10 +8,10 @@ using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
 using DaggerfallWorkshop.Game.UserInterface;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
-using LivingCities.Core;
+using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
-namespace LivingCities.DFU
+namespace PeopleOfTheIliacBay.DFU
 {
     // Native integration check. Run on a disposable exterior town save with its garrison loaded.
     public static class DialogueHostilityProbe
@@ -30,12 +30,12 @@ namespace LivingCities.DFU
         public static IEnumerator Run()
         {
             var game = GameManager.Instance;
-            var adapter = UnityEngine.Object.FindObjectOfType<LivingCitiesMod>();
+            var adapter = UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>();
             if (!adapter || game == null || !game.PlayerGPS.HasCurrentLocation)
                 throw new InvalidOperationException("Dialogue hostility probe requires a ready town save.");
             var streets = adapter.GetComponent<StreetPopulation>();
             var guards = adapter.GetComponent<GuardPopulation>();
-            var store = typeof(LivingCitiesMod).GetField("store", Private).GetValue(adapter) as WorldStateStore;
+            var store = typeof(PeopleOfTheIliacBayMod).GetField("store", Private).GetValue(adapter) as WorldStateStore;
             float readyDeadline = Time.realtimeSinceStartup + 90f;
             while (!ProbeReady(game, adapter, streets, guards, store) && Time.realtimeSinceStartup < readyDeadline)
                 yield return null;
@@ -68,7 +68,8 @@ namespace LivingCities.DFU
                 if (game.PlayerEnterExit.IsPlayerInside || !streets.Ready) continue;
                 foreach (var candidate in UnityEngine.Object.FindObjectsOfType<ResidentActor>())
                     if (candidate && candidate.Resident != null && candidate.Resident.IsAlive && !candidate.IsConversing &&
-                        !candidate.IsSleeping && store.GetDialogueComplaint(candidate.Resident.Id) == null)
+                        !candidate.IsSleeping && store.GetDialogueComplaint(candidate.Resident.Id) == null &&
+                        store.ReadNpcConversationBoundary(candidate.Resident.Id,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds())==null)
                     { actor = candidate; break; }
             }
             if (!actor) throw new InvalidOperationException("No live managed street resident is available for the complaint fixture.");
@@ -79,7 +80,25 @@ namespace LivingCities.DFU
             bool moved = false, completed = false;
             try
             {
-                if (!streets.StartDialogueComplaint(actor, personId))
+                if(streets.StartDialogueComplaint(actor,personId) || guards.TryReportLegacyDialogueComplaintAt(start) ||
+                    game.PlayerEntity.CrimeCommitted!=PlayerEntity.Crimes.None)
+                    throw new InvalidOperationException("Receiptless dialogue dislike manufactured a crime report.");
+                // Controlled native fixture: test physical reporting from an exact
+                // issued threat receipt, independently of language-model quality.
+                double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                const string threat="I will hurt you.";
+                object source=new object();
+                NpcObservedSpeechSession speechSession;NpcObservedSpeechTicket ticket;
+                NpcSpeechActClassification classification;NpcConversationBoundaryRecord boundary;
+                if(!store.TryBeginNpcObservedSpeechSession(personId,"native-hostility-probe:"+now,out speechSession) ||
+                    !store.TryIssueNpcObservedSpeech(speechSession,1,threat,now,out ticket) ||
+                    !NpcSpeechActClassification.TryAccept(NpcSpeechActRequest.Create(source,personId,"player",null,threat,""),
+                        "DirectThreat",out classification) ||
+                    !store.TryCommitNpcConversationBoundary(ticket,ticket.Receipt,source,classification,out boundary) ||
+                    store.TryAcceptNpcObservedSpeechAfterAppend(ticket,ticket.Receipt,NpcExperienceAppliedEffectsMask.None)==
+                        NpcObservedSpeechAcceptanceResult.Rejected)
+                    throw new InvalidOperationException("Could not issue the controlled native threat fixture.");
+                if (!streets.StartDialogueComplaint(actor, personId,boundary.ReceiptId))
                     throw new InvalidOperationException("Could not start the native exterior complaint route.");
                 var record = store.GetDialogueComplaint(personId);
                 if (record == null) throw new InvalidOperationException("Exterior complaint was not saved.");
@@ -107,8 +126,8 @@ namespace LivingCities.DFU
                 if (store.GetDialogueComplaint(personId) != null)
                     throw new InvalidOperationException("Exterior complaint did not arrive within the bounded probe window.");
                 if (!moved) throw new InvalidOperationException("Resident did not physically move along the outdoor complaint route.");
-                if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.Trespassing)
-                    throw new InvalidOperationException("Arrival did not report Trespassing or changed it to another charge.");
+                if (game.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.Assault)
+                    throw new InvalidOperationException("Arrival did not preserve the current direct-threat carrier charge.");
                 bool physicalReport = false;
                 foreach (var report in guards.Roster.Reports)
                     if (!oldReports.Contains(report.Id) && !report.BuildingKey.HasValue &&
@@ -118,7 +137,7 @@ namespace LivingCities.DFU
                 if (guards.Roster.Guards.Count != beforeRoster)
                     throw new InvalidOperationException("Dialogue complaint spawned extra guards.");
                 completed = true;
-                Debug.Log("LIVING_CITIES_DIALOGUE_HOSTILITY_PROBE_PASS: actual runner movement; delayed Trespassing; original crime position; finite guard response; no guard spawning.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_HOSTILITY_PROBE_PASS: receiptless dislike cannot report; controlled exact threat receipt; actual runner movement; delayed charge; original crime position; finite guard response; no guard spawning.");
             }
             finally
             {
@@ -157,14 +176,14 @@ namespace LivingCities.DFU
                 throw new InvalidOperationException("Exterior transition after indoor report timed out.");
         }
 
-        private static bool ProbeReady(GameManager game, LivingCitiesMod adapter, StreetPopulation streets,
+        private static bool ProbeReady(GameManager game, PeopleOfTheIliacBayMod adapter, StreetPopulation streets,
             GuardPopulation guards, WorldStateStore store)
         {
             if (!adapter || !streets || !streets.Ready || !guards || !guards.OwnsSettlement || guards.Roster == null ||
                 !guards.HasAvailableDialogueGuards() || store == null || !game || !game.IsReady || !game.PlayerGPS.HasCurrentLocation)
                 return false;
             int settlement = game.PlayerGPS.CurrentLocation.MapTableData.MapId;
-            var currentField = typeof(LivingCitiesMod).GetField("current", Private);
+            var currentField = typeof(PeopleOfTheIliacBayMod).GetField("current", Private);
             var current = currentField == null ? null : currentField.GetValue(adapter) as SettlementPopulation;
             return current != null && current.SettlementId == settlement && store.NativePeopleFor(settlement).Count > 0;
         }
@@ -203,7 +222,7 @@ namespace LivingCities.DFU
             return null;
         }
 
-        private static IEnumerator RunOwnedPlaceWarning(LivingCitiesMod adapter, GameManager game,
+        private static IEnumerator RunOwnedPlaceWarning(PeopleOfTheIliacBayMod adapter, GameManager game,
             WorldStateStore store, OwnedFixture fixture)
         {
             var keeper = FindFixtureKeeper(game, store, fixture);
@@ -222,27 +241,27 @@ namespace LivingCities.DFU
             click.Invoke(game.PlayerActivate, new object[] { keeper });
         }
 
-        private static IEnumerator WaitForOwnedTalk(LivingCitiesMod adapter)
+        private static IEnumerator WaitForOwnedTalk(PeopleOfTheIliacBayMod adapter)
         {
             float deadline = Time.realtimeSinceStartup + 15f;
-            while ((!adapter || !(bool)typeof(LivingCitiesMod).GetField("conversationSessionOpen", Private).GetValue(adapter) ||
+            while ((!adapter || !(bool)typeof(PeopleOfTheIliacBayMod).GetField("conversationSessionOpen", Private).GetValue(adapter) ||
                 !(DaggerfallUI.UIManager.TopWindow is DaggerfallTalkWindow)) && Time.realtimeSinceStartup < deadline)
                 yield return null;
-            if (!adapter || !(bool)typeof(LivingCitiesMod).GetField("conversationSessionOpen", Private).GetValue(adapter) ||
+            if (!adapter || !(bool)typeof(PeopleOfTheIliacBayMod).GetField("conversationSessionOpen", Private).GetValue(adapter) ||
                 !(DaggerfallUI.UIManager.TopWindow is DaggerfallTalkWindow))
                 throw new InvalidOperationException("Keeper Talk session did not initialize for exact-owner policy checks.");
         }
 
         // Call while Talk is open with the actual keeper in that keeper's own shop/inn.
         // It verifies runtime scene ownership and native-answer refusal without an LLM.
-        public static void RunOwnedPlaceWarning(LivingCitiesMod adapter)
+        public static void RunOwnedPlaceWarning(PeopleOfTheIliacBayMod adapter)
         {
             if (!adapter || !GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding)
                 throw new InvalidOperationException("Owned-place policy probe requires an open owned-building Talk session.");
-            var owns = typeof(LivingCitiesMod).GetMethod("IsConversationAtOwnedPlace", Private);
-            var answer = typeof(LivingCitiesMod).GetMethod("NativeConversationAnswerOverride", Private);
+            var owns = typeof(PeopleOfTheIliacBayMod).GetMethod("IsConversationAtOwnedPlace", Private);
+            var answer = typeof(PeopleOfTheIliacBayMod).GetMethod("NativeConversationAnswerOverride", Private);
             var reaction = typeof(TalkManager).GetField("reactionToPlayer", Private);
-            if (!(bool)typeof(LivingCitiesMod).GetField("conversationSessionOpen", Private).GetValue(adapter))
+            if (!(bool)typeof(PeopleOfTheIliacBayMod).GetField("conversationSessionOpen", Private).GetValue(adapter))
                 throw new InvalidOperationException("Owned-place warning probe requires an active Talk session.");
             var old = reaction.GetValue(GameManager.Instance.TalkManager);
             try
@@ -254,43 +273,39 @@ namespace LivingCities.DFU
                 string response = (string)answer.Invoke(adapter, null);
                 if (string.IsNullOrEmpty(response) || response.IndexOf("leave", StringComparison.OrdinalIgnoreCase) < 0)
                     throw new InvalidOperationException("Owned-place factual answer did not warn/refuse at -50.");
-                Debug.Log("LIVING_CITIES_DIALOGUE_HOSTILITY_OWNED_PLACE_PASS: exact home/work ownership; -50 native factual refusal.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_HOSTILITY_OWNED_PLACE_PASS: exact home/work ownership; -50 native factual refusal.");
             }
             finally { reaction.SetValue(GameManager.Instance.TalkManager, old); }
         }
 
-        public static void RunOwnedPlaceTerminal(LivingCitiesMod adapter)
+        public static void RunOwnedPlaceTerminal(PeopleOfTheIliacBayMod adapter)
         {
             if (!adapter || !GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding)
                 throw new InvalidOperationException("Owned-place terminal probe requires an open owned-building Talk session.");
-            var owns = typeof(LivingCitiesMod).GetMethod("IsConversationAtOwnedPlace", Private);
+            var owns = typeof(PeopleOfTheIliacBayMod).GetMethod("IsConversationAtOwnedPlace", Private);
             object[] args = { null };
             if (!(bool)owns.Invoke(adapter, args))
                 throw new InvalidOperationException("Current conversation identity is not the actual home/business owner.");
             var guards = adapter.GetComponent<GuardPopulation>();
             if (!guards || !guards.HasAvailableDialogueGuards())
                 throw new InvalidOperationException("Owned-place terminal probe needs a live garrison.");
-            var answer = typeof(LivingCitiesMod).GetMethod("NativeConversationAnswerOverride", Private);
+            var answer = typeof(PeopleOfTheIliacBayMod).GetMethod("NativeConversationAnswerOverride", Private);
             var reaction = typeof(TalkManager).GetField("reactionToPlayer", Private);
             var crime = GameManager.Instance.PlayerEntity.CrimeCommitted;
             var oldReaction = reaction.GetValue(GameManager.Instance.TalkManager);
-            int building = GameManager.Instance.PlayerEnterExit.Interior.EntryDoor.buildingKey;
+            int reportCount=guards.Roster.Reports.Count;
             try
             {
                 GameManager.Instance.PlayerEntity.CrimeCommitted = PlayerEntity.Crimes.Theft;
                 reaction.SetValue(GameManager.Instance.TalkManager, -100);
                 string response = (string)answer.Invoke(adapter, null);
-                if (response == null || response.IndexOf("guards have been alerted", StringComparison.OrdinalIgnoreCase) < 0)
-                    throw new InvalidOperationException("Terminal indoor hostility did not report to its available garrison.");
+                if (response == null || response.IndexOf("do not wish to speak", StringComparison.OrdinalIgnoreCase) < 0)
+                    throw new InvalidOperationException("Terminal indoor dislike did not refuse further conversation.");
                 if (GameManager.Instance.PlayerEntity.CrimeCommitted != PlayerEntity.Crimes.Theft)
                     throw new InvalidOperationException("Terminal indoor hostility replaced the stronger prior Theft charge.");
-                bool buildingResponse = false;
-                foreach (var report in guards.Roster.Reports)
-                    if (report.BuildingKey == building && report.GuardIds != null && report.GuardIds.Count > 0)
-                    { buildingResponse = true; break; }
-                if (!buildingResponse)
-                    throw new InvalidOperationException("Terminal indoor hostility did not dispatch finite guards to the current building.");
-                Debug.Log("LIVING_CITIES_DIALOGUE_HOSTILITY_INDOOR_PASS: -100 ended Talk; preserved Theft; finite indoor dispatch.");
+                if(guards.Roster.Reports.Count!=reportCount)
+                    throw new InvalidOperationException("Terminal indoor dislike dispatched an unsupported report.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DIALOGUE_HOSTILITY_INDOOR_PASS: -100 ended Talk; preserved Theft; no dislike-based dispatch.");
             }
             finally
             {

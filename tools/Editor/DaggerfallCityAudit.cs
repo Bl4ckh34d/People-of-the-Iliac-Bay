@@ -4,7 +4,7 @@ using System.IO;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Utility;
-using LivingCities.DFU;
+using PeopleOfTheIliacBay.DFU;
 using UnityEngine;
 
 // Read-only shipped-content census; deliberately does not enable runtime actors.
@@ -34,7 +34,7 @@ public static class DaggerfallCityAudit
                     int bx, by, record;
                     DaggerfallWorkshop.Game.BuildingDirectory.ReverseBuildingKey(building.buildingKey, out bx, out by, out record);
                     var interior = block.RmbBlock.SubRecords[record].Interior;
-                    Debug.Log("LIVING_CITIES_WALL_CANDIDATE: key=" + building.buildingKey + "; block=" + name +
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_WALL_CANDIDATE: key=" + building.buildingKey + "; block=" + name +
                         "; model=" + building.ModelID + "; interiorObjects=" +
                         (interior.Block3dObjectRecords == null ? 0 : interior.Block3dObjectRecords.Length));
                 }
@@ -48,9 +48,9 @@ public static class DaggerfallCityAudit
                 else tavernBeds += profile.BedCount;
             }
         }
-        Debug.Log("LIVING_CITIES_DAGGERFALL_CENSUS: map=" + location.MapTableData.MapId +
+        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAGGERFALL_CENSUS: map=" + location.MapTableData.MapId +
             "; type=" + location.MapTableData.LocationType + "; blocks=" + location.Exterior.ExteriorData.Width +
             "x" + location.Exterior.ExteriorData.Height + "; homes=" + homes + "; homeBeds=" + homeBeds + "; tavernBeds=" + tavernBeds);
-        foreach (var pair in counts) Debug.Log("LIVING_CITIES_DAGGERFALL_BUILDINGS: " + pair.Key + "=" + pair.Value);
+        foreach (var pair in counts) Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_DAGGERFALL_BUILDINGS: " + pair.Key + "=" + pair.Value);
     }
 }
