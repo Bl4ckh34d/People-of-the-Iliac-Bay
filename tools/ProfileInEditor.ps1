@@ -2,7 +2,7 @@ param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$Use
     [switch]$CountersOnly, [switch]$Overnight, [switch]$ValidatePlaytest, [switch]$ValidateArrival,
     [switch]$ValidateWardrobe, [switch]$ValidateCrowd, [switch]$ValidateShopping, [switch]$ValidateSpeech, [switch]$ShoppingBuyerOnly,
     [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport,
-    [switch]$ValidateStaticTrade)
+    [switch]$ValidateStaticTrade, [switch]$ValidateStreetEncounter)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
@@ -61,6 +61,7 @@ if($ValidateMorningShop){$arguments+=' -peopleoftheiliacbay-verify-morning-shop'
 if($ValidateInnDiversion){$arguments+=' -peopleoftheiliacbay-verify-inn-diversion'}
 if($ValidateMurderReport){$arguments+=' -peopleoftheiliacbay-verify-murder-report'}
 if($ValidateStaticTrade){$arguments+=' -peopleoftheiliacbay-verify-static-trade'}
+if($ValidateStreetEncounter){$arguments+=' -peopleoftheiliacbay-verify-street-encounter'}
 if($ValidateCrowd){$arguments+=' -peopleoftheiliacbay-verify-crowd'}
 if($ValidateShopping){$arguments+=' -peopleoftheiliacbay-verify-shopping'}
 if($ValidateSpeech){$arguments+=' -peopleoftheiliacbay-verify-return-voice'}

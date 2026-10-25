@@ -1,10 +1,12 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `37348187B72D`, um 06:04 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu ist der anonyme Mord-Meldeauftrag: Ein zustimmender erwachsener Bewohner läuft draußen zur erreichbaren Wache und übergibt den Bericht. Die Meldung bleibt Hörensagen; beide Beteiligten erinnern sich daran. Nativer Laufweg und lokale LLM-Auswahl bestehen getrennte Tests. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Ein vollständiger Gesprächsdurchlauf mit den normalen Bereitschaftseinstellungen bleibt offen.
+Spielbarer Zwischenbuild `827B27138D6D`, um 06:23 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu geprüft sind kurze Begegnungen mit einem stationären Markt-NPC: Blick zum Partner, Kontext und Erinnerung für beide sowie Weiterlaufen zum bisherigen Ziel. Die anfängliche Nähe wurde im Test arrangiert. Zusätzlich ist ein Zugriff auf ein bereits zerstörtes Inn-Vermessungsobjekt beim Beenden repariert.
+
+Der anonyme Mord-Meldeauftrag bleibt enthalten: Ein zustimmender erwachsener Bewohner läuft draußen zur erreichbaren Wache und übergibt den Bericht. Die Meldung bleibt Hörensagen; beide Beteiligten erinnern sich daran. Nativer Laufweg und lokale LLM-Auswahl bestehen getrennte Tests. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Ein vollständiger Gesprächsdurchlauf mit den normalen Bereitschaftseinstellungen bleibt offen.
 
 Der Inn-Fehler besteht den gezielten nativen Test: Tresen, stabiler Sitzplatz, Speicherstand und Spieler-Ausgang. Freie Fluchtbewegung erreicht im nativen Test 13,16 km/h statt zuvor 5,54 km/h. Vollständiger Hash und Prüfgrenzen stehen in [TESTING.md](TESTING.md); die [Arbeitsliste](WORKLIST-2026-10-26.md) enthält die übrigen offenen Punkte.
 
-Für diesen kurzen Test besonders hilfreich: um 09:10 beim Kleiderladen warten, später tatsächlichen Eintritt/Rückkehr beobachten; persönliche Trankpreise und Null-Gold-Pergamenthandel prüfen; stationäre Markt-NPCs nach wirklich beobachteten Ereignissen erneut ansprechen. Die neue stationäre Wahrnehmung und kurze Begegnungen sind noch nicht nativ abgenommen. Automatische Marktrollen sind noch nicht implementiert.
+Für diesen kurzen Test besonders hilfreich: um 09:10 beim Kleiderladen warten, später tatsächlichen Eintritt/Rückkehr beobachten; persönliche Trankpreise und Null-Gold-Pergamenthandel prüfen; stationäre Markt-NPCs nach wirklich beobachteten Ereignissen erneut ansprechen. Breitere stationäre Wahrnehmung und spontane Begegnungshäufigkeit sind noch nicht nativ abgenommen. Automatische Marktrollen sind noch nicht implementiert.
 
 ## Start
 

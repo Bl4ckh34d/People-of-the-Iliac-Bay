@@ -144,7 +144,13 @@ namespace PeopleOfTheIliacBay.DFU
             finally
             {
                 try { (operation as IDisposable)?.Dispose(); }
-                finally { owner.SetActive(false); UnityEngine.Object.Destroy(owner); remoteSurveyActive=false; }
+                finally
+                {
+                    // Scene teardown may destroy the hidden owner before the
+                    // planning coroutine is disposed by the mod's OnDestroy.
+                    if(owner){owner.SetActive(false);UnityEngine.Object.Destroy(owner);}
+                    remoteSurveyActive=false;
+                }
             }
         }
         private static void LayoutRemoteModels(DaggerfallInterior interior,Transform owner,StaticDoor door,ClimateBases climate,DFBlock? source)

@@ -1,5 +1,13 @@
 # Testing and verification status
 
+## Stationary street encounter acceptance — 26 October 2026, 06:23
+
+Installed and distribution SHA256 both equal **`827B27138D6D53B3955B998D36B95578352D0CA46281EF5ECA533F3DA9F91194`**. Unity build/integration completed with exit 0; Core **2121/2121**, RuntimeCompile, source policy, 70 PowerShell syntax checks, tooling protocols and whitespace checks pass. Owned test/build editors exited; Unity Hub remains untouched.
+
+The [native encounter audit](audits/2026-10-26-stationary-street-encounters.md) records controlled initial proximity to an actual market NPC, normal production selection and a naturally completed three-minute game-time conversation. Final `street-encounter-04` verifies partner-facing with the player nearby, both current contexts, a newly shared memory event, restored recall and actual resumption of the original native destination. Maximum frame step including the handoff is 7.3 cm. Ordinary one-view market art does not acquire a reciprocal turning animation from this test.
+
+Run `03` exposed a destroyed hidden owner accessed by remote Inn-survey teardown. The outer owner now receives the same Unity lifetime check as the temporary interior. Final run `04` has no exception entries, though the separate singleton-cleanup warning remains. Initial run `01` used a time jump and cannot establish continuous departure. Uncontrolled encounter frequency and full scene/save reload remain open.
+
 ## Installed static trade repair — 26 October 2026, 06:04
 
 Distribution and Player bundle SHA256 both equal **`37348187B72D59E52294C067404ACA645F72678306AD5797315788743E55D0CB`**. `Build.ps1 -InteractiveOnly -ReusePortraitExport` completed with Unity integration checks and owned editor exit 0. Core **2121/2121**, static-role/merchant-variety regression **1,247 assertions**, RuntimeCompile, 70 PowerShell syntax checks, tooling protocols and source policy pass. The first simultaneous offline test invocation collided over the shared Core output DLL; the sequential rerun completed successfully (`work/static-merchant-green.log`).
