@@ -147,10 +147,10 @@ namespace PeopleOfTheIliacBay.DFU
                 finally { owner.SetActive(false); UnityEngine.Object.Destroy(owner); remoteSurveyActive=false; }
             }
         }
-        private static void LayoutRemoteModels(DaggerfallInterior interior,Transform owner,StaticDoor door,ClimateBases climate,DFBlock block)
+        private static void LayoutRemoteModels(DaggerfallInterior interior,Transform owner,StaticDoor door,ClimateBases climate,DFBlock? source)
         {
-            if(block.Type!=DFBlock.BlockTypes.Rmb || block.Index!=door.blockIndex || block.RmbBlock.SubRecords==null ||
-                door.recordIndex<0 || door.recordIndex>=block.RmbBlock.SubRecords.Length)
+            if(source.HasValue && (source.Value.Type!=DFBlock.BlockTypes.Rmb || source.Value.Index!=door.blockIndex || source.Value.RmbBlock.SubRecords==null ||
+                door.recordIndex<0 || door.recordIndex>=source.Value.RmbBlock.SubRecords.Length))
                 throw new ArgumentException("Remote inn source block does not match entrance.");
             // DoLayoutAutomap privately resolves blocks from PlayerGPS. Supply
             // the destination records to the same model-only builder instead.
@@ -162,10 +162,21 @@ namespace PeopleOfTheIliacBay.DFU
                 field.SetValue(interior,value);
             };
             set("dfUnity",DaggerfallUnity.Instance);set("climateBase",climate);set("entryDoor",door);set("doorOwner",owner);
-            set("blockData",block);set("recordData",block.RmbBlock.SubRecords[door.recordIndex]);
+            if(source.HasValue)
+            {set("blockData",source.Value);set("recordData",source.Value.RmbBlock.SubRecords[door.recordIndex]);}
+            else
+            {
+                var assign=type.GetMethod("AssignBlockData",flags);
+                if(assign==null)throw new MissingMethodException(type.FullName,"AssignBlockData");
+                long assignStarted=RuntimeTiming.Start("interior-assign-block");
+                try { assign.Invoke(interior,new object[]{door}); }
+                finally { RuntimeTiming.End("interior-assign-block",assignStarted); }
+            }
             var models=type.GetMethod("AddModels",flags);
             if(models==null) throw new MissingMethodException(type.FullName,"AddModels");
-            models.Invoke(interior,new object[]{new PlayerGPS.DiscoveredBuilding {buildingType=DFLocation.BuildingTypes.AllValid},true});
+            long modelsStarted=RuntimeTiming.Start("interior-add-models");
+            try { models.Invoke(interior,new object[]{new PlayerGPS.DiscoveredBuilding {buildingType=DFLocation.BuildingTypes.AllValid},true}); }
+            finally { RuntimeTiming.End("interior-add-models",modelsStarted); }
         }
         private static System.Collections.IEnumerator ReadUnloadedSteps(Transform owner,StaticDoor door,Result result,ClimateBases climate,DFBlock? sourceBlock=null,bool reception=false,bool service=false,bool bank=false)
         {
@@ -177,9 +188,12 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 var shifted=door; shifted.ownerPosition+=Vector3.up*100;
                 var interior=temporary.AddComponent<DaggerfallInterior>();
-                if(sourceBlock.HasValue) LayoutRemoteModels(interior,owner,shifted,climate,sourceBlock.Value);
-                else if(!interior.DoLayoutAutomap(owner,shifted,climate))
-                    throw new InvalidOperationException("Tavern model survey failed.");
+                long modelStarted=RuntimeTiming.Start("interior-survey-model-layout");
+                try
+                {
+                    LayoutRemoteModels(interior,owner,shifted,climate,sourceBlock);
+                }
+                finally { RuntimeTiming.End("interior-survey-model-layout",modelStarted); }
                 temporary.transform.position=door.ownerPosition+(Vector3)door.buildingMatrix.GetColumn(3)+Vector3.up*100;
                 temporary.transform.rotation=GameObjectHelper.QuaternionFromMatrix(door.buildingMatrix);
                 var block=sourceBlock??dfu.ContentReader.BlockFileReader.GetBlock(door.blockIndex);

@@ -1,10 +1,12 @@
 # People of the Iliac Bay
 
-Updated 26 October 2026: personal trade now uses four individual slots, supports zero-value parchment, hides ineligible items, accepts whole-gold amounts in either payment field, and reuses animated dialogue portraits with offer reactions. The installed test bundle is `A4460B010E2C`; its Unity build and integration passed. Later source changes add bank-clerk visits, cash errands before unpaid outings, family rendezvous and the waiting partner's dialogue context. Those later changes are not yet installed or verified in game. Core 2087/2087 and focused trade/cash regressions pass; see [Testing](docs/TESTING.md) for exact evidence and limits. Start with the [short playtest guide](docs/PLAYTEST.md) and [roadmap](docs/ROADMAP.md). Normal play uses Gemma + Breeze.
+Updated 26 October 2026: the playtest follow-up removes repeated full-world copies during NPC inventory creation, separates overlapping bodies, checks fleeing detours against obstacles, completes native starting outfits, and connects ambient shop purchases to actual stock and wallets. Trade keeps the original **NPC ITEMS** heading, omits the name, and uses a larger centered animated portrait. Trade handoff preserves the actual conversation; returning greetings use the speech pipeline. Rhubarb uses two CPU threads. Core 2093/2093 and focused regressions pass. See [Testing](docs/TESTING.md) for native evidence, installed-package status and remaining acceptance; [performance measurements](docs/audits/2026-10-26-loiter-performance.md) distinguish improvements from remaining stalls. Start with the [short playtest guide](docs/PLAYTEST.md) and [roadmap](docs/ROADMAP.md). Normal play uses Gemma + Breeze.
 
 A Daggerfall Unity mod that brings NPCs to life through persistent households, daily itineraries, visitors, finite guards, crime reactions, and optional local LLM dialogue.
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
+
+Local test bundle **97484F8D8D8A** is built and installed; package integration and the focused native checks above pass. Whole-town closed-shop behavior and complete bank/family cash detours still need broader in-game acceptance.
 
 ## Project status
 
@@ -15,6 +17,8 @@ Start with the [TL;DR roadmap](docs/ROADMAP.md), [future design/backlog](docs/RO
 - Finite guards, patrols, building responses, crime scenes and pursuit are implemented across documented paths; broad compatibility remains under test.
 - Local dialogue includes world context, disposition, shared per-NPC conversation archives and trusted home map requests. Each save references its own memory timeline. [Backups must include the archive](docs/INSTALLATION.md#memory-backups). Dialogue is experimental and requires a separately configured local model server; unidentified/unadopted NPCs do not yet have persistent memory.
 - Managed residents use the same saved gold wallet for personal trade and corpse loot. Empty wallets trigger a bank visit, or a home withdrawal in settlements without banks. Shared outings pause for the errand; an already paid Inn visit can finish. Bank movement and family waiting remain pending native acceptance.
+- New adult inventories include native tops/dresses, suitable lower garments, footwear, varied colors and role-weighted jewelry. Equipped items stay out of personal barter. Existing saved possessions and losses remain authoritative.
+- Ordinary shopping plans skip stores that would still be closed on arrival. Existing waiting routines choose nearby clear standing/walking positions; native crowd recovery separates overlaps after reconstruction. Local shop buyers select actual available shelf items, pay at the counter, and keep purchases in their persistent inventory; nonbuyers leave without paying.
 - General main/side/mod quest compatibility is **not complete**. One tightly scoped native delivery quest has automatic household binding.
 - The game clock enforces 2× real time and migrates supported saved movement timing. A loaded-game check measured 8 game seconds over 4.01 real seconds. See [acceptance evidence](docs/TESTING.md#latest-acceptance) for scope and limits.
 

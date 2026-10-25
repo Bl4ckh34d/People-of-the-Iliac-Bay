@@ -163,7 +163,7 @@ namespace PeopleOfTheIliacBay.Core
         { return new ResidentVisitSnapshot {VisitIndex=stop.Index,Phase=phase,BuildingKey=phase==ResidentVisitPhase.Inside ? stop.Data.BuildingKey : -1,
             TargetBuildingKey=stop.Data.BuildingKey,Purpose=stop.Data.Purpose,Position=point,Destination=stop.Route.At(1),ArriveAt=stop.ArriveAt,EnterAt=stop.EnterAt,LeaveAt=stop.EndAt,
             RoomUntil=Math.Max(stop.EndAt,stop.Data.KeepRoomUntil)}; }
-        private static double Opening(double time,ResidentVisitStop stop)
+        internal static double Opening(double time,ResidentVisitStop stop)
         {
             if(stop.OpenMinute==stop.CloseMinute) return time;
             double day=Math.Floor(time/86400)*86400;

@@ -445,7 +445,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CITY_FIXTURE: "+citySave);
                 if (fixture < 0) throw new InvalidOperationException("Daggerfall preview fixture missing.");
                 loaded = false; game.SaveLoadManager.Load(fixture); DaggerfallUI.Instance.PopToHUD();
-                float limit = Time.realtimeSinceStartup + 60;
+                float limit = Time.realtimeSinceStartup + (Array.IndexOf(testArguments,"-peopleoftheiliacbay-editor-profile")>=0?240:60);
                 while ((!loaded || !streets.Ready) && Time.realtimeSinceStartup < limit) yield return null;
                 if (!loaded || !streets.Ready) throw new InvalidOperationException("Daggerfall preview load timed out.");
                 if(locationBlockProbe)
@@ -499,6 +499,27 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 else if(RuntimeTiming.Enabled)
                 {
+                    if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-profile-only")>=0)
+                    {
+                        if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-wardrobe")>=0)
+                            Debug.Log(NativeNpcOutfitProbe.Run());
+                        else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-crowd")>=0)
+                            yield return NativePopulationPlaytestProbe.Run(streets);
+                        else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-shopping")>=0)
+                            yield return ShopVisitProbe.RunLocal(Array.IndexOf(testArguments,"-peopleoftheiliacbay-shop-buyer-only")>=0);
+                        else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-arrival")>=0)
+                            yield return OutdoorArrivalContinuityProbe.Run(adapter,streets);
+                        else yield return LoiterPerformanceProbe.Run(streets);
+                        if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-playtest")>=0)
+                        {
+                            Debug.Log(NativeNpcOutfitProbe.Run());
+                            Debug.Log(NativeNpcInventoryOwnerProbe.Run());
+                            yield return PersonalTradeNativeProbe.Run(adapter,streets);
+                            yield return IncrementalLocationBlocksProbe.Run(character);
+                        }
+                        Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_EDITOR_PROFILE_COMPLETE");
+                        yield break;
+                    }
                     yield return PerformanceProbe.Run();
                     yield return DailyItineraryProbe.Run(adapter,streets);
                     yield return MurderWitnessProbe.Run(adapter,streets);

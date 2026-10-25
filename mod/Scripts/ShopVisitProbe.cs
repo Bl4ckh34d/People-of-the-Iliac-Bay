@@ -17,6 +17,40 @@ namespace PeopleOfTheIliacBay.DFU
             yield return RunVisit(true);
             yield return RunForeignVisit();
         }
+        public static IEnumerator RunLocal(bool buyerOnly=false)
+        {
+            var game=GameManager.Instance;
+            var streets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();
+            if(!game.PlayerEnterExit.IsPlayerInsideBuilding)
+            {
+                var clock=DaggerfallUnity.Instance.WorldTime.Now;
+                clock.RaiseTime((float)((12*3600-clock.ToSeconds()%86400+86400)%86400));
+                var directory=game.StreamingWorld.GetCurrentBuildingDirectory();
+                var shops=new HashSet<int>();
+                foreach(DaggerfallConnect.DFLocation.BuildingTypes type in Enum.GetValues(typeof(DaggerfallConnect.DFLocation.BuildingTypes)))
+                    if(DaggerfallWorkshop.Utility.RMBLayout.IsShop(type))
+                        foreach(var building in directory.GetBuildingsOfType(type))shops.Add(building.buildingKey);
+                DaggerfallStaticDoors selected=null;StaticDoor entry=default(StaticDoor);float nearest=float.MaxValue;
+                foreach(var owner in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
+                    for(int i=0;i<(owner.Doors==null?0:owner.Doors.Length);i++)
+                    {
+                        var door=owner.Doors[i];
+                        if(door.doorType!=DoorTypes.Building || !shops.Contains(door.buildingKey))continue;
+                        float distance=(owner.GetDoorPosition(i)-game.PlayerMotor.transform.position).sqrMagnitude;
+                        if(distance<nearest){nearest=distance;selected=owner;entry=door;}
+                    }
+                if(!selected)throw new InvalidOperationException("Shop entrance fixture has no native shop door.");
+                TownSmokeHarness.EnterInterior(selected.transform,entry);
+                yield return new WaitForSecondsRealtime(1);
+                DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
+                float deadline=Time.realtimeSinceStartup+45;
+                while((!game.PlayerEnterExit.IsPlayerInsideBuilding || !streets.Ready) && Time.realtimeSinceStartup<deadline)yield return null;
+                if(!game.PlayerEnterExit.IsPlayerInsideBuilding || !streets.Ready)
+                    throw new InvalidOperationException("Shop entrance fixture did not complete its native transition.");
+            }
+            if(!buyerOnly)yield return RunVisit(false);
+            yield return RunVisit(true);
+        }
         private static string ShopDepartureDiagnostics(StreetPopulation streets,string residentId,ResidentActor actor,
             DaggerfallInterior room,Vector3 doorway,double now)
         {
@@ -307,6 +341,12 @@ namespace PeopleOfTheIliacBay.DFU
             int buildingKey=room.EntryDoor.buildingKey;
             var mod=UnityEngine.Object.FindObjectOfType<PeopleOfTheIliacBayMod>(); var streets=mod.GetComponent<StreetPopulation>();
             var flags=BindingFlags.Instance|BindingFlags.NonPublic;
+            // The preceding visit restores its owned baseline in finally.
+            // Population/layout reconstruction completes on later frames.
+            float readyDeadline=Time.realtimeSinceStartup+45;
+            while((!streets.Ready || typeof(StreetPopulation).GetField("indoorGeometry",flags).GetValue(streets)==null) &&
+                Time.realtimeSinceStartup<readyDeadline)yield return null;
+            if(!streets.Ready)throw new InvalidOperationException("Shop fixture population did not rebuild after restore.");
             var baselineJson=SaveLoadManager.Serialize(typeof(WorldState),mod.GetSaveData());
             var baseline=(WorldState)SaveLoadManager.Deserialize(typeof(WorldState),baselineJson);
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
@@ -358,7 +398,10 @@ namespace PeopleOfTheIliacBay.DFU
             var destination=new ResidentDestination {ExitRoute=new List<SavedRoutePoint>
                 {new SavedRoutePoint {X=1,Z=0},new SavedRoutePoint {X=0,Z=0}},ExitWalkSeconds=walkSeconds};
             destination.Stops.Add(new ResidentVisitStop {BuildingKey=buildingKey,Purpose=ResidentVisitPurpose.Shop,
-                OpenMinute=opens,CloseMinute=closes,WalkSeconds=walkSeconds,DwellSeconds=24*60d,
+                // Three game minutes exercise all shelves at the current 2x
+                // clock inside the bounded physical test. The old 24-minute
+                // fixture alone needs twelve real minutes at this time scale.
+                OpenMinute=opens,CloseMinute=closes,WalkSeconds=walkSeconds,DwellSeconds=3*60d,
                 Route=new List<SavedRoutePoint> {new SavedRoutePoint {X=0,Z=0},new SavedRoutePoint {X=1,Z=0}}});
             PersistFixtureRoutine(liveStore,settlementId,residentId,destination,startOffset-walkSeconds);
             mod.RestoreSaveData(liveStore.Snapshot());
@@ -392,6 +435,19 @@ namespace PeopleOfTheIliacBay.DFU
                 var shopGeometry=(ShopVisitGeometry)typeof(StreetPopulation).GetField("shopGeometry",flags).GetValue(streets);
                 var browsingStops=new HashSet<string>();
                 var actor=streets.FindActor(person.Id);
+                var store=(WorldStateStore)typeof(StreetPopulation).GetField("worldStore",flags).GetValue(streets);
+                var buyerOwner=actor.GetComponent<NativeNpcInventoryOwner>();
+                if(!buyerOwner || buyerOwner.Binding==null)throw new InvalidOperationException("Ambient buyer has no native inventory.");
+                var beforePurchase=store.ReadNpcInventory(person.Id);
+                if(purchase)
+                {
+                    if(!store.CommitNpcInventoryTransaction("ambient-shop-fixture:"+Guid.NewGuid().ToString("N"),new[]{new NpcInventoryUpdate{
+                        PersonId=person.Id,ExpectedRevision=beforePurchase.Revision,WalletGold=100000,Items=beforePurchase.Items}}))
+                        throw new InvalidOperationException("Ambient buyer test funds failed.");
+                    string captureReason;
+                    if(!NativeNpcInventoryBridge.TryCapture(store,buyerOwner.Binding,out captureReason))throw new InvalidOperationException(captureReason);
+                    beforePurchase=store.ReadNpcInventory(person.Id);
+                }
                 var indoor=(InteriorGeometry)typeof(StreetPopulation).GetField("indoorGeometry",flags).GetValue(streets);
                 if(!indoor.EntryGround.HasValue) throw new InvalidOperationException("Shop traversal probe lacks surveyed entry ground.");
                 Vector3 doorway=indoor.EntryGround.Value+Vector3.up;
@@ -457,6 +513,19 @@ namespace PeopleOfTheIliacBay.DFU
                         expectedPosition=room.transform.TransformPoint(new Vector3((float)resumedExpected.Position.X,
                             (float)resumedExpected.Position.Y,(float)resumedExpected.Position.Z))+Vector3.up;
                         reloadError=Vector3.Distance(actor.transform.position,expectedPosition);
+                        // WorldTime exposes whole seconds. Between Update and
+                        // this rendered-frame observation the clock can cross a
+                        // second while the body still represents the prior tick.
+                        // Compare that one-second route interval, not an assumed
+                        // subsecond-exact timestamp; retain the spatial tolerance.
+                        float exactClockError=reloadError;
+                        double earliest=Math.Max(observed.ObservedAt,restoredTime-1);
+                        for(int sample=0;sample<=16;sample++)
+                        {
+                            var timed=observed.Evaluate(earliest+(restoredTime-earliest)*sample/16d);
+                            var position=room.transform.TransformPoint(new Vector3((float)timed.Position.X,(float)timed.Position.Y,(float)timed.Position.Z))+Vector3.up;
+                            reloadError=Mathf.Min(reloadError,Vector3.Distance(actor.transform.position,position));
+                        }
                         ShopVisitSnapshot resumed;
                         if(!streets.TryShopActivity(person.Id,out resumed) || resumed.Phase!=resumedExpected.Phase || reloadError>0.35f)
                             throw new InvalidOperationException("Shop checkpoint reload did not resume saved route at current bounded time: phase="+
@@ -464,7 +533,7 @@ namespace PeopleOfTheIliacBay.DFU
                         previous=actor.transform.position; lastPosition=previous; previousPhase=resumed.Phase;
                         Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SHOP_CHECKPOINT_PASS: serialized remaining route restored same resident and position; resident="+
                             person.Id+"; phase="+resumed.Phase+"; clockAdvance="+advanced.ToString("F2")+
-                            "; positionError="+reloadError.ToString("F3")+" m; remainingLegs="+observed.Legs.Count);
+                            "; positionError="+reloadError.ToString("F3")+" m; exactClockError="+exactClockError.ToString("F3")+" m; remainingLegs="+observed.Legs.Count);
 
                         game.PlayerEnterExit.TransitionExterior();
                         // DFU restores its scene cache on the next frame. Give the
@@ -581,8 +650,8 @@ namespace PeopleOfTheIliacBay.DFU
                     if(previousPhase==ShopVisitPhase.Haggling && state.Phase!=ShopVisitPhase.Haggling)
                     {
                         counterDuration=Time.realtimeSinceStartup-counterStarted;
-                        if(counterDuration<3 || counterDuration>7)
-                            throw new InvalidOperationException("Rendered purchase duration outside three to seven seconds: "+counterDuration.ToString("F2"));
+                        if(counterDuration<4.5 || counterDuration>16)
+                            throw new InvalidOperationException("Rendered purchase duration outside native five-to-fifteen-second dwell plus frame tolerance: "+counterDuration.ToString("F2"));
                     }
                     if(state.Phase==ShopVisitPhase.Leaving)
                     {
@@ -595,10 +664,21 @@ namespace PeopleOfTheIliacBay.DFU
                     ShopDepartureDiagnostics(streets,person.Id,actor,room,doorway,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds())+
                     "; physicalFailure="+(physical.ContainsKey(person.Id)?physical[person.Id].LastFailure:"missing")+
                     "; player="+game.PlayerMotor.transform.position);
+                store=(WorldStateStore)typeof(StreetPopulation).GetField("worldStore",flags).GetValue(streets);
+                var afterPurchase=store.ReadNpcInventory(person.Id);
+                if(purchase)
+                {
+                    if(afterPurchase.WalletGold>=beforePurchase.WalletGold || afterPurchase.Items.Count!=beforePurchase.Items.Count+1)
+                        throw new InvalidOperationException("Ambient buyer did not retain one real stock item and pay its own wallet.");
+                }
+                else if(afterPurchase.WalletGold!=beforePurchase.WalletGold || afterPurchase.Items.Count!=beforePurchase.Items.Count)
+                    throw new InvalidOperationException("A nonbuyer paid or acquired a shop item.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_AMBIENT_SHOP_INVENTORY_PASS: purchase="+purchase+"; walletBefore="+
+                    beforePurchase.WalletGold+"; walletAfter="+afterPurchase.WalletGold+"; itemsBefore="+beforePurchase.Items.Count+"; itemsAfter="+afterPurchase.Items.Count);
                 if(!checkpointed) throw new InvalidOperationException("Shop visitor completed without a stable walking/browsing checkpoint.");
                 if(browsingStops.Count<3) throw new InvalidOperationException("Shop visitor did not physically inspect at least three distinct shelf sections: "+browsingStops.Count);
-                if(purchase && (!counterSpacingChecked || counterDuration<3 || counterDuration>7))
-                    throw new InvalidOperationException("Purchase counter was not physically reached for three to seven seconds.");
+                if(purchase && (!counterSpacingChecked || counterDuration<4.5 || counterDuration>16))
+                    throw new InvalidOperationException("Purchase counter was not physically reached for the native five-to-fifteen-second dwell.");
                 if(!purchase && counterDuration>=0) throw new InvalidOperationException("Non-purchase visit unexpectedly used the keeper counter.");
                 if(!sawLeaving || departureStartDistance<0.75f || Vector3.Distance(lastPosition,doorway)>0.7f)
                     throw new InvalidOperationException("Shop visitor did not finish at the physical doorway: startDistance="+departureStartDistance+"; last="+lastPosition+"; doorway="+doorway);

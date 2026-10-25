@@ -35,10 +35,20 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 NavMeshHit start;
                 var current=hasTarget?transform.position-Vector3.up:initialGround;
+                var placement=GetComponent<CrowdMotion>();
+                if(placement && !placement.HasPlacement)
+                {
+                    Vector3 separated;
+                    if(!placement.Place(current,out separated,placementAllowed:permitted))return Fail("spawn-occupied");
+                    current=separated;
+                }
                 if(!NavMesh.SamplePosition(current,out start,2,NavMesh.AllAreas))return Fail("start-off-mesh "+current);
                 var adjustment=start.position-current;
                 if(new Vector2(adjustment.x,adjustment.z).magnitude>0.4f || Mathf.Abs(adjustment.y)>0.6f)
                     return Fail("start-requires-snap "+current);
+                // Projection onto the mesh must not undo crowd-safe placement
+                // by snapping several newly reconstructed bodies to one point.
+                if(Occupied(start.position))return Fail("start-occupied");
                 if(!proxy)
                 {
                     proxy=new GameObject("Native route "+name);proxy.transform.SetParent(transform.parent,true);
@@ -68,11 +78,25 @@ namespace PeopleOfTheIliacBay.DFU
             agent.isStopped=false;
             NativeNpcNavigationDoors.OpenAhead(transform.position-Vector3.up,agent.steeringTarget);
             var next=agent.transform.position;
+            var bodyGround=transform.position-Vector3.up;
+            if((next-bodyGround).sqrMagnitude>0.25f)
+            {
+                // Unity integrates the proxy during a long frame too. Keep the
+                // visible body within the same bounded step as CrowdMotion.
+                next=Vector3.MoveTowards(bodyGround,next,0.5f);
+                NavMeshHit edge;
+                if(NavMesh.Raycast(bodyGround,next,out edge,NavMesh.AllAreas))next=edge.position;
+                agent.Warp(next);pathInvalidated=true;
+            }
             bool permissionRejected=permitted!=null&&!permitted(next);
             bool occupied=!permissionRejected && Occupied(next);
             if(permissionRejected || occupied)
             {
                 FailureReason=permissionRejected?"permission-rejected":"occupied";
+                // Rejecting every occupied candidate also rejects escape from an
+                // existing overlap. Recover locally before resuming native avoidance.
+                var separation=GetComponent<CrowdMotion>();
+                if(!permissionRejected && separation)separation.TrySeparate(permitted);
                 agent.Warp(transform.position-Vector3.up);agent.isStopped=true;pathInvalidated=true;return true;
             }
             float moved=Vector3.Distance(transform.position-Vector3.up,next);

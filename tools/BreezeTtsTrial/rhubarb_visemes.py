@@ -140,8 +140,8 @@ def validate_rhubarb(dialog_text: str, raw: Any, audio: Dict[str, int],
 
 def run_rhubarb(cli_path: str, audio_path: str, dialog_text: str,
                 output_path: Optional[str] = None, *, recognizer: str = "pocketSphinx",
-                threads: int = 1, timeout_seconds: int = 90) -> Dict[str, Any]:
-    """Run offline CPU viseme estimation. Call from worker; never gate playback."""
+                threads: int = 2, timeout_seconds: int = 90) -> Dict[str, Any]:
+    """Run offline CPU viseme estimation in the speech worker with two threads."""
     cli = Path(cli_path).resolve()
     audio = Path(audio_path).resolve()
     output = (Path(output_path).resolve() if output_path is not None else
@@ -203,7 +203,7 @@ def main(argv: Optional[Iterable[str]] = None) -> int:
     parser.add_argument("--text", required=True, help="exact finalized dialog text; recognizer hint only")
     parser.add_argument("--output", help="new JSON output path; defaults beside WAV; existing files refused")
     parser.add_argument("--recognizer", choices=sorted(RECOGNIZERS), default="pocketSphinx")
-    parser.add_argument("--threads", type=int, default=1)
+    parser.add_argument("--threads", type=int, default=2)
     parser.add_argument("--timeout-seconds", type=int, default=90)
     args = parser.parse_args(argv)
     run_rhubarb(args.cli, args.audio, args.text, args.output,

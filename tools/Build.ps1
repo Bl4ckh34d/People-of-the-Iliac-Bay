@@ -5,17 +5,17 @@ $ErrorActionPreference = 'Stop'
 if (Get-Process DaggerfallUnity -ErrorAction SilentlyContinue) {
     throw 'Daggerfall Unity is running; build/install will not replace a loaded mod. Close the game first.'
 }
+$editor = 'C:/Program Files/Unity/Hub/Editor/2019.4.40f1/Editor/Unity.exe'
+if (Get-Process Unity -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq [System.IO.Path]::GetFullPath($editor) }) {
+    throw 'Unity editor is already running; build will not deploy into or compete with an open editor.'
+}
 dotnet build (Join-Path $PSScriptRoot '../src/PeopleOfTheIliacBay.QuestHooks/PeopleOfTheIliacBay.QuestHooks.csproj') -c Release --nologo
 if ($LASTEXITCODE -ne 0) { throw 'Quest offer hooks compilation failed.' }
 & (Join-Path $PSScriptRoot 'Deploy.ps1') -DfuRoot $DfuRoot -ReusePortraitExport:$ReusePortraitExport
-$editor = 'C:/Program Files/Unity/Hub/Editor/2019.4.40f1/Editor/Unity.exe'
 $project = Join-Path $DfuRoot 'daggerfall-unity'
 $log = Join-Path $DfuRoot 'work/peopleoftheiliacbay-build.log'
 $repo = Split-Path $PSScriptRoot -Parent
 $licenseReceiptPath = Join-Path $repo 'work/unity-batch-license-fallback-v1.json'
-if (Get-Process Unity -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq [System.IO.Path]::GetFullPath($editor) }) {
-    throw 'Unity editor is already running; build will not compete with an open editor.'
-}
 $method = 'PeopleOfTheIliacBayBuild.VerifyAndBuild'
 if ($QuestBindingProbe) {
     dotnet build (Join-Path $PSScriptRoot '../probes/quest-binding/QuestBindingProbe.csproj') -c Release --nologo

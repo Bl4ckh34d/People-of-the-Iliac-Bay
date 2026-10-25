@@ -77,7 +77,17 @@ namespace PeopleOfTheIliacBay.DFU
                     var owner=go.AddComponent<NativeNpcInventoryOwner>();
                     int expectedRandom=ExpectedNextUnityRandom();uint expectedDfSeed=DFRandom.Seed;
                     owner.Bind(entity,store,resident);
-                    Require(entity.Items.Count==plan.Count+(expectsPotion?1:0)+2,"Initial native inventory does not match planned utility, optional potion, home-key and clothing count.");
+                    Require(entity.Items.Count>=plan.Count+(expectsPotion?1:0)+3,"Initial native inventory must contain utility, optional potion, home key and a complete outfit.");
+                    bool wornClothing=false;
+                    for(int index=0;index<entity.Items.Count;index++)
+                    {
+                        var wearable=entity.Items.GetItem(index);
+                        if(wearable.ItemGroup!=ItemGroups.MensClothing && wearable.ItemGroup!=ItemGroups.WomensClothing)continue;
+                        Require(wearable.IsEquipped && ReferenceEquals(entity.ItemEquipTable.GetItem(wearable.EquipSlot),wearable),
+                            "Starting clothing must occupy its native equipment slot and be excluded from trade.");
+                        wornClothing=true;
+                    }
+                    Require(wornClothing,"Starting clothing regression requires an actual wearable.");
                     var uids=new System.Collections.Generic.HashSet<ulong>();
                     for(int i=0;i<plan.Count;i++)
                     {

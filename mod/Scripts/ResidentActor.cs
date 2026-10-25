@@ -93,7 +93,9 @@ namespace PeopleOfTheIliacBay.DFU
                 Person.raceToBeSet = resident.Race >= 0 && Enum.IsDefined(typeof(Races), resident.Race) ? (Races)resident.Race : Races.Breton;
                 Person.genderToBeSet = resident.Sex == ResidentSex.Male ? Genders.Male : Genders.Female;
                 Person.outfitVariantToBeSet = (int)((resident.AppearanceSeed >> 1) % 4);
-                Person.ApplyPersonSettingsViaInspector();
+                long appearanceStarted=RuntimeTiming.Start("resident-native-appearance");
+                try { Person.ApplyPersonSettingsViaInspector(); }
+                finally { RuntimeTiming.End("resident-native-appearance",appearanceStarted); }
                 // Family surname is persisted independently of transient actors.
                 var names = DaggerfallUnity.Instance.NameHelper;
                 DFRandom.Seed = resident.AppearanceSeed;
@@ -109,7 +111,11 @@ namespace PeopleOfTheIliacBay.DFU
             if(capsule) capsule.radius=CrowdMotion.BodyRadius;
             entity = GetComponent<DaggerfallEntityBehaviour>().Entity;
             if(inventoryStore!=null && !resident.IsQuestProtected)
-                gameObject.AddComponent<NativeNpcInventoryOwner>().Bind(entity,inventoryStore,resident);
+            {
+                long inventoryStarted=RuntimeTiming.Start("resident-inventory-bind");
+                try { gameObject.AddComponent<NativeNpcInventoryOwner>().Bind(entity,inventoryStore,resident); }
+                finally { RuntimeTiming.End("resident-inventory-bind",inventoryStarted); }
+            }
             NativeNpcVitalsBinding.BindTo(gameObject,entity,inventoryStore,resident);
             NativeNpcPoisonOnsetBinding.BindTo(gameObject,inventoryStore,resident);
             entity.OnDeath += Died;
@@ -295,7 +301,7 @@ namespace PeopleOfTheIliacBay.DFU
             // standing art supplies all bearings; unknown assets keep the fallback.
             if (!standingPose.Set(Person.Asset, atActivity || idle) && Person.Asset.IsIdle != idle)
                 Person.Asset.IsIdle = idle;
-            SetRunningPreview(fleeing && !standing && !atActivity);
+            SetRunningPreview(fleeing && !standing && !idle);
             if(seatTarget&&Vector3.Distance(transform.position-Vector3.up,seatAccess.Slot.Ground)<0.10f)
             {
                 transform.rotation=Quaternion.LookRotation(seatAccess.Slot.Facing);

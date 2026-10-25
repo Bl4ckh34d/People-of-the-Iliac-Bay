@@ -15,10 +15,13 @@ namespace PeopleOfTheIliacBay.DFU
         { return FlightSafety.SafeStep(from.x,from.z,to.x,to.z,danger.x,danger.z); }
         public Vector3 Target(Vector3 ground,Vector3 preferred,Vector3 danger,TownGeometry geometry,Transform origin)
         {
-            if(Safe(ground,preferred,danger)) {route.Clear();return preferred;}
+            Vector3 clearTarget;
+            if(Safe(ground,preferred,danger) && ClearTarget(ground,preferred,out clearTarget))
+            {route.Clear();return clearTarget;}
             while(next<route.Count && Vector3.Distance(ground,route[next])<0.2f) next++;
-            if(Time.unscaledTime<repathAt && Vector3.Distance(lastDanger,danger)<1 && next<route.Count && Safe(ground,route[next],danger))
-                return route[next];
+            if(Time.unscaledTime<repathAt && Vector3.Distance(lastDanger,danger)<1 && next<route.Count &&
+                Safe(ground,route[next],danger) && ClearTarget(ground,route[next],out clearTarget))
+                return clearTarget;
             if(Time.unscaledTime<repathAt && Vector3.Distance(lastDanger,danger)<1 && next>=route.Count) return ground;
             route.Clear(); next=1; repathAt=Time.unscaledTime+0.75f; lastDanger=danger;
             var away=ground-danger; away.y=0;
@@ -45,12 +48,19 @@ namespace PeopleOfTheIliacBay.DFU
                     if(!Safe(previous,world,danger)) {safe=false;break;}
                     length+=Vector3.Distance(previous,world); candidate.Add(world);
                 }
-                if(!safe || length>8 || length<0.25f) continue;
+                if(!safe || length>8 || length<0.25f || candidate.Count<2 ||
+                    !ClearTarget(ground,candidate[1],out clearTarget)) continue;
                 var last=candidate[candidate.Count-1]; var delta=last-danger;delta.y=0;
                 float score=delta.magnitude-length*0.05f;
                 if(score>best) {best=score;route.Clear();route.AddRange(candidate);}
             }
-            return next<route.Count ? route[next] : ground;
+            return next<route.Count && ClearTarget(ground,route[next],out clearTarget) ? clearTarget : ground;
+        }
+        private static bool ClearTarget(Vector3 from,Vector3 to,out Vector3 end)
+        {
+            // Inspect only the next local corridor of a longer homeward route.
+            // Re-evaluate it as the body moves, including cached detours.
+            return TryDirectRetreat(from,Vector3.MoveTowards(from,to,4),out end);
         }
         public static bool TryDirectRetreat(Vector3 from,Vector3 to,out Vector3 end)
         {

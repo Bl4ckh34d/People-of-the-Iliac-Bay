@@ -23,6 +23,7 @@ namespace PeopleOfTheIliacBay.DFU
             var actor = conversationActor;
             string person = conversationPersonId;
             bool pauseCurrentWork = PersonalTradeCurrentWorkCanPause(store, person);
+            personalCommerceBeforeClose?.Invoke();
             DaggerfallUI.Instance.PopToHUD();
             // The detached trade session already owns the live evidence. A
             // harmless Follow/Wait pauses physically without cancelling it.

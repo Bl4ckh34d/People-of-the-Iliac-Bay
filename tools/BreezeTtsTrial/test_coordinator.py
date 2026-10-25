@@ -64,7 +64,7 @@ class CoordinatorProtocolTests(unittest.TestCase):
             self.assertFalse(manifest_path.exists(), "WAV manifest appeared before viseme cues were ready")
             self.assertFalse(alignment_path.exists(), "word alignment must not delay viseme preparation")
             self.assertEqual(exact_text, text)
-            self.assertEqual(1, kwargs["threads"])
+            self.assertEqual(2, kwargs["threads"])
             self.assertGreaterEqual(kwargs["timeout_seconds"], 1)
             self.assertLessEqual(kwargs["timeout_seconds"], coordinator.PREPARED_PRESENTATION_VISEME_TIMEOUT_SECONDS)
             with wave.open(str(audio), "rb") as audio_file:

@@ -12,9 +12,16 @@ namespace PeopleOfTheIliacBay.DFU
         private sealed class Sample { public int Calls; public double Total,Maximum; }
         private static readonly Dictionary<string,Sample> samples=new Dictionary<string,Sample>();
         public static long Start() { return Enabled ? Stopwatch.GetTimestamp() : 0; }
+        public static long Start(string name)
+        {
+            if(!Enabled)return 0;
+            UnityEngine.Profiling.Profiler.BeginSample(name);
+            return -Stopwatch.GetTimestamp();
+        }
         public static void End(string name,long started)
         {
             if(!Enabled) return;
+            if(started<0){UnityEngine.Profiling.Profiler.EndSample();started=-started;}
             double elapsed=(Stopwatch.GetTimestamp()-started)*1000d/Stopwatch.Frequency;
             Sample sample;
             if(!samples.TryGetValue(name,out sample)) { sample=new Sample(); samples.Add(name,sample); }

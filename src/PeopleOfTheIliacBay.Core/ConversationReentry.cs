@@ -19,6 +19,8 @@ namespace PeopleOfTheIliacBay.Core
                 (elapsed<600 ? "This is a brief interruption: continue the last topic or give a very short familiar acknowledgement. Do not ask what brings them back, imply another day or long absence, restart introductions, or repeat a weather greeting. " :
                 "Give a brief familiar returning greeting that follows your shared history and actual elapsed time. ")+
                 "Use at most two sentences, shaped by current disposition and mood. Use the player's known name naturally. "+
+                "Refer to a prior question only if that question is present in the recorded conversation. "+
+                "Your current plans are not evidence that the player asked about them. If no prior exchange is recorded, give a short acknowledgement without guessing a previous topic. "+
                 "Do not invent player speech, treat them as a stranger, reapply old insults, or promise actions not confirmed by the schedule.]";
         }
     }

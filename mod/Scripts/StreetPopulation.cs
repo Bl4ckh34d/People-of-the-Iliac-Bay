@@ -625,7 +625,7 @@ namespace PeopleOfTheIliacBay.DFU
                                     while (GameManager.Instance.PlayerEnterExit.IsPlayerInside || GameManager.IsGamePaused)
                                         yield return null;
                                     if (!stillCurrent()) yield break;
-                                    long sliceStarted = RuntimeTiming.Start();
+                                    long sliceStarted = RuntimeTiming.Start("daily-route-slice");
                                     var budget = System.Diagnostics.Stopwatch.StartNew();
                                     try
                                     {
@@ -681,7 +681,7 @@ namespace PeopleOfTheIliacBay.DFU
                                     Options = options, Routes = routes };
                                 ResidentDestination itinerary;
                                 bool planned;
-                                long planStarted = RuntimeTiming.Start();
+                                long planStarted = RuntimeTiming.Start("daily-itinerary-plan");
                                 try
                                 {
                                     planned = AdultDailyItineraryPlanner.TryCreate(request, out itinerary);
@@ -723,7 +723,7 @@ namespace PeopleOfTheIliacBay.DFU
                 yield return null;
             }
             saved.ItineraryVersion = 1;
-            long commitStarted = RuntimeTiming.Start();
+            long commitStarted = RuntimeTiming.Start("daily-routine-commit");
             try { store.SetRoutines(saved); }
             finally { RuntimeTiming.End("daily-routine-commit", commitStarted); }
             var personalPreparation=PrepareSavedOutdoorRoutines(population,store,saved,wake,sleep);
@@ -829,7 +829,7 @@ namespace PeopleOfTheIliacBay.DFU
         private void Update()
         {
             UpdateCorpseInventory();
-            long started=RuntimeTiming.Start();
+            long started=RuntimeTiming.Start("street-population");
             try { UpdatePopulation(); }
             finally { RuntimeTiming.End("street-population",started); }
         }
@@ -856,7 +856,9 @@ namespace PeopleOfTheIliacBay.DFU
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_INDOOR_TIME_CATCHUP: from="+lastPopulationSeconds+"; to="+seconds);
             }
             lastPopulationSeconds=seconds;
-            UpdateHouseholdDays(seconds);
+            long phase=RuntimeTiming.Start("household-days");
+            try { UpdateHouseholdDays(seconds); }
+            finally { RuntimeTiming.End("household-days",phase); }
             if (ReactionsEnabled && worldStore != null && !GameManager.IsGamePaused)
             {
                 if (Time.unscaledTime >= nextSafetyReconciliation)
@@ -921,11 +923,21 @@ namespace PeopleOfTheIliacBay.DFU
                     "; anchors=" + indoorGeometry.LocalAnchors.Count);
             }
             SurveyKeeperIdentities();
-            UpdateInnServiceCatalog(seconds);
-            UpdateBankCounterSurvey();
-            PrepareHouseholdOwners(seconds);
-            UpdateTravelerActors(seconds);
-            UpdateDestinationActors(seconds);
+            phase=RuntimeTiming.Start("inn-service-catalog");
+            try { UpdateInnServiceCatalog(seconds); }
+            finally { RuntimeTiming.End("inn-service-catalog",phase); }
+            phase=RuntimeTiming.Start("bank-counter-survey");
+            try { UpdateBankCounterSurvey(); }
+            finally { RuntimeTiming.End("bank-counter-survey",phase); }
+            phase=RuntimeTiming.Start("household-owners");
+            try { PrepareHouseholdOwners(seconds); }
+            finally { RuntimeTiming.End("household-owners",phase); }
+            phase=RuntimeTiming.Start("traveler-actors");
+            try { UpdateTravelerActors(seconds); }
+            finally { RuntimeTiming.End("traveler-actors",phase); }
+            phase=RuntimeTiming.Start("destination-actors");
+            try { UpdateDestinationActors(seconds); }
+            finally { RuntimeTiming.End("destination-actors",phase); }
             ObserveAppointments(seconds);
             UpdateKeeperResponses(seconds);
             UpdateEntryReports(seconds);
@@ -1014,15 +1026,20 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     if (actors.Count >= 80 || !actorSpawnBudget.TryConsume(
                         (System.Diagnostics.Stopwatch.GetTimestamp()-actorSpawnStarted)*1000d/System.Diagnostics.Stopwatch.Frequency)) continue;
-                    var go = Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject, directory.transform);
-                    go.name = "People of the Iliac Bay " + plan.Resident.Id;
-                    actor = go.AddComponent<ResidentActor>();
-                    actor.Initialize(plan.Resident, plan.SurnameSeed, navigation,inventoryStore:worldStore);
-                    actor.SetRunningPilotAtlas(runningPilotAtlas);
-                    RestoreHouseholdJointBody(plan,actor);
-                    actors.Add(plan.Resident.Id, actor);
-                    go.SetActive(true);
-                    ObserveHomeSleep(plan,actor,seconds);
+                    phase=RuntimeTiming.Start("resident-spawn");
+                    try
+                    {
+                        var go = Instantiate(DaggerfallUnity.Instance.Option_MobileNPCPrefab.gameObject, directory.transform);
+                        go.name = "People of the Iliac Bay " + plan.Resident.Id;
+                        actor = go.AddComponent<ResidentActor>();
+                        actor.Initialize(plan.Resident, plan.SurnameSeed, navigation,inventoryStore:worldStore);
+                        actor.SetRunningPilotAtlas(runningPilotAtlas);
+                        RestoreHouseholdJointBody(plan,actor);
+                        actors.Add(plan.Resident.Id, actor);
+                        go.SetActive(true);
+                        ObserveHomeSleep(plan,actor,seconds);
+                    }
+                    finally { RuntimeTiming.End("resident-spawn",phase); }
                 }
                 if (reaction != null && reaction.HasPosition)
                 {
@@ -1065,6 +1082,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if (ApplyHaltBystander(actor, player, position, seconds)) continue;
                 if (PlaceStreetChat(actor,seconds)) continue;
                 if (DeferHouseholdJointBody(plan,actor)) continue;
+                if (PlaceClosedShopWait(plan,actor,state)) continue;
                 var next = worldStore.IsResidentAway(plan.Resident.Id,seconds+0.1) ? Scheduled(plan,seconds+0.1) :
                     EntryState(plan.Resident.Id, seconds + 0.1, Scheduled(plan,seconds + 0.1));
                 Vector3 direction = next.Activity == Activity.Travel || next.Activity==Activity.Meeting ? geometry.ScenePoint(next.Position) - position :
@@ -1293,8 +1311,12 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 physicalShopVisits[actor.Resident.Id]=physical;
             }
+            if(shopGeometry.IsShop && physical.Journey.Purchases && !physical.CounterPurchaseResolved &&
+                physical.PurchaseSelection==null && physical.Snapshot.Phase==ShopVisitPhase.Browsing)
+                PrepareAmbientShopPurchase(actor,physical);
             physical.Advance(actor,interior,indoorGeometry,shopGeometry,seconds,
-                () => TryCompleteInnPurchaseAtCounter(actor,physical,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()));
+                () => shopGeometry.IsTavern ? TryCompleteInnPurchaseAtCounter(actor,physical,DaggerfallUnity.Instance.WorldTime.Now.ToSeconds()) :
+                    TryCompleteAmbientShopPurchase(actor,physical,seconds));
             if(physical.Snapshot.Phase==ShopVisitPhase.Complete)
             {
                 var saved=physical.Capture(actor,interior,indoorGeometry,seconds,population.SettlementId);
@@ -1501,6 +1523,7 @@ namespace PeopleOfTheIliacBay.DFU
             bankVisitors.Clear();cashMotions.Clear();
             ClearInnChats();
             streetChats.Clear();nextStreetChat.Clear();nextChatScan=0;
+            closedShopWaits.Clear();
             partnerRetaliation.Clear();nextGrudgeCheck.Clear();
             foreach (var actor in actors.Values) if (actor) { actor.CaptureState(); actor.gameObject.SetActive(false); Destroy(actor.gameObject); }
             actors.Clear();

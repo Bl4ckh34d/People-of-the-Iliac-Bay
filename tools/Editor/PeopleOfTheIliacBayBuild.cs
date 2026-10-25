@@ -171,6 +171,9 @@ public static class PeopleOfTheIliacBayBuild
         string portraitManifestAsset = null;
         foreach (string source in info.Files)
         {
+            // Virtual mods list cached navigation assets too. Package only the
+            // validated set returned by BakeCaptured above, once each.
+            if(source.StartsWith("Assets/Game/Mods/PeopleOfTheIliacBay/Navigation/",StringComparison.Ordinal))continue;
             if (source.Contains("/Libraries/") && (source.EndsWith(".dll.bytes") || source.EndsWith("/Harmony-LICENSE.txt")))
             { assets.Add(source); continue; }
             if (source.EndsWith("/modsettings.json")) { assets.Add(source); continue; }

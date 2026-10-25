@@ -63,5 +63,11 @@ $manifest.Files += @(Get-ChildItem -LiteralPath "$destination/Textures" -Filter 
 $manifest.Files += @(Get-ChildItem -LiteralPath "$destination/Textures" -Filter 'sit-*.json' | Sort-Object Name | ForEach-Object { "Assets/Game/Mods/PeopleOfTheIliacBay/Textures/$($_.Name)" })
 $manifest.Files += @(Get-ChildItem -LiteralPath "$destination/Textures" -Filter 'idle-*.json' | Sort-Object Name | ForEach-Object { "Assets/Game/Mods/PeopleOfTheIliacBay/Textures/$($_.Name)" })
 $manifest.Files += @('Assets/Game/Mods/PeopleOfTheIliacBay/Libraries/0Harmony.dll.bytes', 'Assets/Game/Mods/PeopleOfTheIliacBay/Libraries/PeopleOfTheIliacBay.QuestHooks.dll.bytes', 'Assets/Game/Mods/PeopleOfTheIliacBay/Libraries/Harmony-LICENSE.txt')
+# Virtual editor mods need the same pre-baked navigation assets as the bundle.
+# Runtime validates their geometry profile; deployment never silently rebakes.
+if (Test-Path -LiteralPath "$destination/Navigation/navigation-manifest.json") {
+    $manifest.Files += 'Assets/Game/Mods/PeopleOfTheIliacBay/Navigation/navigation-manifest.json'
+    $manifest.Files += @(Get-ChildItem -LiteralPath "$destination/Navigation" -Filter '*.asset' | Sort-Object Name | ForEach-Object { "Assets/Game/Mods/PeopleOfTheIliacBay/Navigation/$($_.Name)" })
+}
 $manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath "$destination/PeopleOfTheIliacBay.dfmod.json" -Encoding utf8
 Write-Output "Deployed $($manifest.Files.Count) runtime assets to $destination"

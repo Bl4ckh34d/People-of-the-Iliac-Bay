@@ -8,6 +8,26 @@ namespace PeopleOfTheIliacBay.Tests
     {
         internal static void Add(List<(string, Action)> cases)
         {
+            cases.Add(("Coincident idle crowd separates without crossing walls or teleporting",()=>{
+                var positions=new List<GuardPoint3>();
+                for(int i=0;i<8;i++)positions.Add(new GuardPoint3());
+                for(int frame=0;frame<200;frame++)for(int i=0;i<positions.Count;i++)
+                {
+                    var others=new List<GuardPoint3>(positions);others.RemoveAt(i);
+                    var before=positions[i];
+                    positions[i]=CrowdSteering.Separate(before,others,0.52,0.05,i*0.7,p=>p.Z>=-0.01);
+                    double dx=positions[i].X-before.X,dz=positions[i].Z-before.Z;
+                    Check.True(dx*dx+dz*dz<=0.002501);
+                    Check.True(positions[i].Z>=-0.01);
+                }
+                for(int i=0;i<positions.Count;i++)for(int j=i+1;j<positions.Count;j++)
+                {
+                    double dx=positions[i].X-positions[j].X,dz=positions[i].Z-positions[j].Z;
+                    Check.True(dx*dx+dz*dz>=0.52*0.52-0.000001,"All eight restored bodies must separate.");
+                }
+                var blocked=CrowdSteering.Separate(new GuardPoint3(),new[]{new GuardPoint3()},0.52,0.05,0,p=>false);
+                Check.Equal(0d,blocked.X);Check.Equal(0d,blocked.Z);
+            }));
             cases.Add(("Renewed threat clears expired native response links before reacquiring witnesses",()=>{
                 var store=new WorldStateStore(42); store.GetOrCreate(99,new[] { 1 });
                 var native=store.RegisterNativePerson(99,1,123,"Sample Name",ResidentSex.Male,0,0,182,0);

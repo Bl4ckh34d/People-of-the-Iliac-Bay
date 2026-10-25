@@ -23,6 +23,17 @@ namespace PeopleOfTheIliacBay.DFU
         private int comfortPassingSide;
         private double comfortLateralOffset;
         private SelectedSeatAccess occupiedSeat;
+        public bool TrySeparate(Func<Vector3,bool> placementAllowed=null)
+        {
+            if(!placed || occupiedSeat!=null || GameManager.IsGamePaused)return false;
+            var from=Ground;
+            var result=CrowdSteering.Separate(Point(from),Neighbours(from,true),Separation,
+                Math.Min(0.08,walkingSpeed*Time.deltaTime),(GetInstanceID()&15)*Math.PI/8,
+                p=>(placementAllowed==null || placementAllowed(Vector(p))) && Clear(from,Vector(p)));
+            var next=Vector(result);
+            if((next-from).sqrMagnitude<0.00000001f)return false;
+            transform.position=next+Vector3.up*offset;return true;
+        }
         public void ResumeFromPause() { resumeWithoutReconstruction=true; }
         public void Configure(float groundOffset,double speed=ResidentMovement.WalkSpeed) { offset=groundOffset;walkingSpeed=speed; }
         public void ResetPlacement() { placed=false; comfortPassingSide=0; comfortLateralOffset=0; }
@@ -40,12 +51,12 @@ namespace PeopleOfTheIliacBay.DFU
         private Vector3 Ground { get { return transform.position-Vector3.up*offset; } }
         private static GuardPoint3 Point(Vector3 p) { return new GuardPoint3 { X=p.x,Y=p.y,Z=p.z }; }
         private static Vector3 Vector(GuardPoint3 p) { return new Vector3((float)p.X,(float)p.Y,(float)p.Z); }
-        private List<GuardPoint3> Neighbours(Vector3 center)
+        private List<GuardPoint3> Neighbours(Vector3 center,bool includePartner=false)
         {
             var result=new List<GuardPoint3>();
             foreach(var body in bodies)
             {
-                if(!body || body==this || body==WalkingPartner || !body.placed || !body.gameObject.activeInHierarchy) continue;
+                if(!body || body==this || !includePartner && body==WalkingPartner || !body.placed || !body.gameObject.activeInHierarchy) continue;
                 var resident=body.GetComponent<ResidentActor>();
                 if(resident && resident.IsSleeping) continue;
                 var ground=body.Ground;
@@ -123,6 +134,8 @@ namespace PeopleOfTheIliacBay.DFU
                 actual=Ground; return placed;
             }
             var from=Ground;
+            if(permission==null && TrySeparate(placementAllowed))
+            {actual=Ground;return true;}
             double maximum=physicalTarget ? walkingSpeed*Time.deltaTime :
                 Math.Max(walkingSpeed*Time.deltaTime,change.magnitude);
             // Long frame stalls must not sweep through a whole crowd in one step.

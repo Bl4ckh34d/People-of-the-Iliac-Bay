@@ -458,20 +458,30 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void Update()
         {
+            long frameStarted=RuntimeTiming.Start("mod-update");
+            try { UpdateMeasured(); }
+            finally { RuntimeTiming.End("mod-update",frameStarted); }
+        }
+        private void UpdateMeasured()
+        {
             ApplyGameplayTimeScale();
-            TickHouseholdSimulations();
+            long stage=RuntimeTiming.Start("household-simulations");
+            try { TickHouseholdSimulations(); }
+            finally { RuntimeTiming.End("household-simulations",stage); }
             UpdateEmbeddedDialogue();
             UpdateDecisionShadow();
             AdvanceConversationRecallWarmup();
-            AdvanceTravelPlanning();
-            long started=RuntimeTiming.Start();
+            stage=RuntimeTiming.Start("travel-planning");
+            try { AdvanceTravelPlanning(); }
+            finally { RuntimeTiming.End("travel-planning",stage); }
+            long started=RuntimeTiming.Start("population-refresh");
             try { UpdatePopulation(); }
             finally { RuntimeTiming.End("population-refresh",started); }
             TickNpcHealthExperienceEpisodes();
             TickNativeCombatRoles();
-            TickNpcExperienceAppraisals();
-            TickOperationalHistory();
-            TickConversationMemoryCompaction();
+            stage=RuntimeTiming.Start("experience-and-memory");
+            try { TickNpcExperienceAppraisals();TickOperationalHistory();TickConversationMemoryCompaction(); }
+            finally { RuntimeTiming.End("experience-and-memory",stage); }
         }
         private static void ApplyGameplayTimeScale()
         {

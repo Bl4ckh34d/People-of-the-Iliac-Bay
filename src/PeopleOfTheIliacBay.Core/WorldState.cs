@@ -195,6 +195,10 @@ namespace PeopleOfTheIliacBay.Core
             return created;
         }
         public WorldState Snapshot() { return CopyValidated(state); }
+        // Scalar read of current ownership; callers must not copy the entire
+        // world's routes, memories and inventories to materialize one key.
+        public bool TryResolveVerifiedResidentHome(Resident resident,out int settlementId)
+        { return NpcStartingBelongings.TryResolveVerifiedResidentHome(state,resident,out settlementId); }
         public Resident ResolveResident(string residentId)
         {
             if (string.IsNullOrWhiteSpace(residentId)) return null;

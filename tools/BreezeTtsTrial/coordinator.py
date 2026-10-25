@@ -968,7 +968,7 @@ def publish_preview_visemes(request: Any, wav_path: Path, wav_info: Dict[str, An
             timeline = run_rhubarb(str(rhubarb_cli), str(wav_path), text, str(staged_path))
         else:
             timeline = run_rhubarb(str(rhubarb_cli), str(wav_path), text, str(staged_path),
-                                   threads=1, timeout_seconds=timeout_seconds)
+                                   threads=2, timeout_seconds=timeout_seconds)
         if not staged_path.is_file():
             raise RequestError("Rhubarb preview returned without a staged sidecar")
         try:

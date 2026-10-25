@@ -33,7 +33,9 @@ namespace PeopleOfTheIliacBay.DFU
                 while(travelWork.Count>0) (travelWork.Pop() as IDisposable)?.Dispose();
                 travelValid=null; return;
             }
-            if(GameManager.IsGamePaused) return;
+            // Native loitering pauses rendered actors, but is an opportunity to
+            // prepare tomorrow's routes. Keep the same single bounded work step.
+            if(GameManager.IsGamePaused && !GameManager.Instance.PlayerEntity.IsLoitering) return;
             long started=RuntimeTiming.Start();
             string stepName=RuntimeTiming.Enabled ? "travel-step:"+travelWork.Peek().GetType().Name : null;
             try

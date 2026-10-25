@@ -180,8 +180,8 @@ namespace PeopleOfTheIliacBay.DFU
             returningGreetingPending=false;
             conversationBusy=true;
             string sharedActivity=CurrentConversationSharedActivityContext(memoryOpenedAt);
-            string prompt=string.IsNullOrWhiteSpace(sharedActivity)?
-                ConversationReentry.Prompt(memoryOpenedAt-returningGreetingElapsed,memoryOpenedAt):sharedActivity;
+            string prompt=ConversationReentry.Prompt(memoryOpenedAt-returningGreetingElapsed,memoryOpenedAt);
+            if(!string.IsNullOrWhiteSpace(sharedActivity))prompt+=" Current shared activity: "+sharedActivity;
             bool refuses=ListenerRefusesFurtherCommunication(conversationPersonId);
             if(refuses) prompt="The player approached again after you ended the previous conversation. " +
                 "They have not apologized or explained themselves. Clearly state that you do not want to speak with them. " +
@@ -204,11 +204,20 @@ namespace PeopleOfTheIliacBay.DFU
             var transcript=conversationListField.GetValue(window) as ListBox;
             if(transcript!=null)
             {
+                int firstRow=transcript.Count;
                 AppendPresentationLine(transcript,answer,false);
                 transcript.GetItem(transcript.Count-1).textLabel.Name="PeopleOfTheIliacBayReturnGreeting";
                 memoryCursor=conversationLastTranscriptCount=transcript.Count;
                 transcript.SelectedIndex=transcript.Count-1;
                 RefreshTranscriptScroll(window);
+                if(breezeTtsTrial && memoryWindow==window && !string.IsNullOrEmpty(memoryPersonId) &&
+                    !string.IsNullOrEmpty(conversationContextSessionId))
+                {
+                    string requestId;
+                    if(NotifyNpcSpeechWithPresentation(memoryPersonId,GameManager.Instance.TalkManager.NameNPC,
+                        answer,conversationContextSessionId,CurrentTrialVoiceGender(),CurrentTtsVoiceIdentity(),out requestId))
+                        AttachTrialReplayToAppendedAnswerRows(window,firstRow,requestId,conversationContextSessionId);
+                }
             }
         }
 

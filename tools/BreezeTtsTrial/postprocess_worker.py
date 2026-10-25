@@ -126,7 +126,7 @@ class BoundedPostprocessWorker:
                 except ModuleNotFoundError:
                     from rhubarb_visemes import run_rhubarb
                 timeline = run_rhubarb(str(self.settings.rhubarb_cli), str(job.audio_path), job.text,
-                    str(temp_dir / (base + ".visemes.json")), threads=1,
+                    str(temp_dir / (base + ".visemes.json")), threads=2,
                     timeout_seconds=min(self.timeout_seconds, 90))
                 timeline["streamBinding"] = self._binding(job, audio_hash, timeline)
                 outputs.append((timeline, job.output_dir / (base + ".visemes.json")))

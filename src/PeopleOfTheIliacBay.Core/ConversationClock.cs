@@ -7,10 +7,13 @@ namespace PeopleOfTheIliacBay.Core
         public static string Context(int hour,int minute,string date,int year,bool isNight)
         {
             if(hour<0 || hour>23 || minute<0 || minute>59) throw new System.ArgumentOutOfRangeException(nameof(hour));
+            // NPCs know the current half-hour, not a minute-precise watch.
+            // Floor keeps midnight on the same authoritative calendar date.
+            minute=minute<30?0:30;
             int twelveHour=hour%12;
             if(twelveHour==0)twelveHour=12;
             string clock=hour.ToString("00",CultureInfo.InvariantCulture)+":"+minute.ToString("00",CultureInfo.InvariantCulture);
-            return "Current authoritative game clock: "+twelveHour.ToString("0",CultureInfo.InvariantCulture)+":"+
+            return "Current game time, approximately: "+twelveHour.ToString("0",CultureInfo.InvariantCulture)+":"+
                 minute.ToString("00",CultureInfo.InvariantCulture)+(hour<12?" AM":" PM")+" (24-hour "+clock+") on "+
                 LocalDialogue.NormalizeContext(date,120)+", 3E"+year.ToString(CultureInfo.InvariantCulture)+". It is "+
                 (isNight?"nighttime now":"daytime now")+". Use this live clock for time-sensitive decisions. "+

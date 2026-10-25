@@ -45,12 +45,15 @@ namespace PeopleOfTheIliacBay.Tests
                 var openingWait = schedule.EvaluateSeconds(8.5 * 3600);
                 Check.Equal(Activity.Travel, openingWait.Activity);
                 Check.Equal(-1, openingWait.BuildingKey);
+                Check.Equal(20, openingWait.WaitingForBuildingKey.Value);
                 Check.Near(10, openingWait.Position.X);
                 var firstVisit = schedule.EvaluateSeconds(9 * 3600);
                 Check.Equal(Activity.Visit, firstVisit.Activity);
                 Check.Equal(20, firstVisit.BuildingKey);
+                Check.True(!firstVisit.WaitingForBuildingKey.HasValue);
                 var betweenVisits = schedule.EvaluateSeconds(10 * 3600 + 2 * 60);
                 Check.Equal(Activity.Travel, betweenVisits.Activity);
+                Check.True(!betweenVisits.WaitingForBuildingKey.HasValue);
                 Check.Near(14, betweenVisits.Position.X);
                 var secondVisit = schedule.EvaluateSeconds(10 * 3600 + 5 * 60);
                 Check.Equal(Activity.Visit, secondVisit.Activity);

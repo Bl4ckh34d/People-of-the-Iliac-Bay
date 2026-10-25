@@ -7,6 +7,18 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Resolved ambient purchase survives observed visit copies and save serialization",()=>{
+                var saved=Shared().Checkpoint("parent",2,10,1200);
+                var field=typeof(ObservedVisit).GetField("CounterPurchaseResolved");
+                Check.True(field!=null,"Observed visits must remember an already settled shop purchase.");
+                field.SetValue(saved,true);
+                var copy=ObservedVisit.Copy(saved);
+                Check.True((bool)field.GetValue(copy));
+                var serializer=new FullSerializer.fsSerializer();
+                FullSerializer.fsData data;serializer.TrySerialize(copy,out data).AssertSuccess();
+                ObservedVisit restored=null;serializer.TryDeserialize(data,ref restored).AssertSuccess();
+                Check.True((bool)field.GetValue(restored));
+            }));
             cases.Add(("Actual restore accepts only native-equivalent rounded observation times",()=>{
                 const double actual=12597868915.123456;
                 double persisted=double.Parse(actual.ToString("G15",System.Globalization.CultureInfo.InvariantCulture),System.Globalization.CultureInfo.InvariantCulture);

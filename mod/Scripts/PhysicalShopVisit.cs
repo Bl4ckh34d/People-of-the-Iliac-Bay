@@ -55,6 +55,8 @@ namespace PeopleOfTheIliacBay.DFU
         public double ResumeUntil { get; set; }
         public ShopVisitSnapshot Snapshot { get; private set; }
         public string LastFailure { get; private set; }
+        public bool CounterPurchaseResolved { get; internal set; }
+        internal AmbientShopPurchase PurchaseSelection;
         public void Pause(double seconds){progress.Pause(seconds);}
         public void BeginExit(double seconds)
         {
@@ -73,11 +75,11 @@ namespace PeopleOfTheIliacBay.DFU
             Snapshot=new ShopVisitSnapshot {Phase=ShopVisitPhase.Walking,Position=first[first.Count-1]};
         }
         public PhysicalShopVisit(ObservedVisit saved,double now) : this(ShopVisitJourney.Resume(saved,now),saved.HouseholdDayId,saved.HouseholdSourceFingerprint)
-        { OriginalEndAt=saved.PlannedEndAt;ResumeUntil=saved.ResumeUntil;HouseholdSeatId=saved.HouseholdSeatId; }
+        { OriginalEndAt=saved.PlannedEndAt;ResumeUntil=saved.ResumeUntil;HouseholdSeatId=saved.HouseholdSeatId;CounterPurchaseResolved=saved.CounterPurchaseResolved; }
         internal static PhysicalShopVisit RestoreAtActual(ObservedVisit saved,double now)
         {
             return new PhysicalShopVisit(ShopVisitJourney.ResumeAtActual(saved,now),saved.HouseholdDayId,saved.HouseholdSourceFingerprint)
-                {OriginalEndAt=saved.PlannedEndAt,ResumeUntil=saved.ResumeUntil,HouseholdSeatId=saved.HouseholdSeatId};
+                {OriginalEndAt=saved.PlannedEndAt,ResumeUntil=saved.ResumeUntil,HouseholdSeatId=saved.HouseholdSeatId,CounterPurchaseResolved=saved.CounterPurchaseResolved};
         }
         public ObservedVisit Capture(ResidentActor actor,DaggerfallInterior interior,InteriorGeometry geometry,double now,int settlement)
         {
@@ -86,6 +88,7 @@ namespace PeopleOfTheIliacBay.DFU
             var result=new ObservedVisit {ResidentId=actor.Resident.Id,SettlementId=settlement,BuildingKey=interior.EntryDoor.buildingKey,
                 HouseholdDayId=HouseholdDayId,HouseholdSourceFingerprint=HouseholdSourceFingerprint,
                 HouseholdSeatId=HouseholdSeatId,
+                CounterPurchaseResolved=CounterPurchaseResolved,
                 ObservedAt=now,PlannedEndAt=OriginalEndAt,ResumeUntil=Math.Max(OriginalEndAt,ResumeUntil),
                 SecondsPerMetre=DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed};
             if(progress.Phase==ShopVisitPhase.Complete)
@@ -262,8 +265,8 @@ namespace PeopleOfTheIliacBay.DFU
             }
             bool arrived=follower==null || follower.Advance(actor,interior,geometry,Time.unscaledTime);
             observedArrivalLeg=arrived?progress.Leg:-1;
-            if(NpcInnConsumption.ShouldRunCounterPurchaseCallback(activities.IsTavern,Journey.Purchases,
-                Journey.StopPhase(progress.Leg),arrived) && (counterPurchaseReady==null || !counterPurchaseReady()))
+            if((activities.IsTavern || activities.IsShop) && Journey.Purchases && Journey.StopPhase(progress.Leg)==ShopVisitPhase.Haggling && arrived &&
+                (counterPurchaseReady==null || !counterPurchaseReady()))
             {
                 if(arrived)
                 {

@@ -121,13 +121,29 @@ namespace PeopleOfTheIliacBay.Core
                 double dwell = option.MinimumDwellSeconds + random.Unit() * (option.MaximumDwellSeconds - option.MinimumDwellSeconds);
                 destination.Stops.Add(new ResidentVisitStop { BuildingKey = option.BuildingKey, Purpose = option.Purpose,
                     OpenMinute = option.OpenMinute, CloseMinute = option.CloseMinute, WalkSeconds = leg.WalkSeconds,
-                    DwellSeconds = dwell, Route = CopyPoints(leg.Route) });
+                    DwellSeconds = dwell, Route = leg.Route });
                 previous = option.BuildingKey;
             }
             var exit = routes[new LegKey { From = previous, To = request.HomeBuildingKey }];
-            destination.ExitRoute = CopyPoints(exit.Route); destination.ExitWalkSeconds = exit.WalkSeconds;
+            destination.ExitRoute = exit.Route; destination.ExitWalkSeconds = exit.WalkSeconds;
             try
             {
+                // Routes were validated and detached once at request admission.
+                // Reject impossible timing before allocating/copying route geometry
+                // for every search candidate. Keep the native journey's opening rule.
+                double at=request.DepartureAt;
+                foreach(var stop in destination.Stops)
+                {
+                    double arrived=at+stop.WalkSeconds;
+                    at=ResidentVisitJourney.Opening(arrived,stop);
+                    // Ordinary shopping has no appointment. Try another destination
+                    // instead of scheduling a crowd to wait for this shop to open.
+                    if(stop.Purpose==ResidentVisitPurpose.Shop && at>arrived+1)return null;
+                    if(stop.Purpose==ResidentVisitPurpose.Social && at%86400<16*3600)return null;
+                    at+=stop.DwellSeconds;
+                    if(at+destination.ExitWalkSeconds>request.LatestHomeAt)return null;
+                }
+                if(ActiveOutingSeconds(destination)<request.MinimumAwaySeconds)return null;
                 var journey = ResidentVisitJourney.Create(request.DepartureAt, destination);
                 if (journey.EndsAt <= request.LatestHomeAt && ActiveOutingSeconds(destination) >= request.MinimumAwaySeconds &&
                     VisitsMeetDwellBounds(journey, selected, destination)) return destination;

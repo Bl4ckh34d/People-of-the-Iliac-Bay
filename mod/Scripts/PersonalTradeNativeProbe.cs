@@ -111,6 +111,12 @@ namespace PeopleOfTheIliacBay.DFU
                 Call(window,"RequestQuote");quote=(PersonalTradeWindowQuote)Field(window,"quote");
                 Require(quote!=null && quote.CanSubmit,"Exact native sale quote was not accepted.");
                 int sellNet=quote.NetGoldToNpc;playerGold=game.PlayerEntity.GoldPieces;npcGold=store.ReadNpcInventory(selected.Resident.Id).WalletGold;
+                string captureRoot=Environment.GetEnvironmentVariable("POTIB_EDITOR_PROFILE_ROOT");
+                if(!string.IsNullOrEmpty(captureRoot))
+                {
+                    yield return new WaitForEndOfFrame();
+                    ScreenCapture.CaptureScreenshot(System.IO.Path.Combine(captureRoot,"personal-trade.png"));
+                }
                 yield return new WaitForSecondsRealtime(15);
                 Call(window,"SubmitOffer");yield return null;yield return null;
                 Require(game.PlayerEntity.Items.GetItem(received.UID)==null && owner.Binding.Items.GetItem(received.UID)==received &&
@@ -118,6 +124,8 @@ namespace PeopleOfTheIliacBay.DFU
                     "Confirmed sale did not transfer the real item and accepted net gold.");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_PERSONAL_TRADE_SELL_PASS: nativeWindow=true; exactItem=true; exactGold=true; net="+sellNet);
                 yield return FreeParchmentRoundTrip(host,game,selected,store,owner);
+                if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-return-voice")>=0)
+                    yield return ReturningGreetingVoiceProbe.Run(host,selected);
                 if(Environment.GetEnvironmentVariable("POTIB_TRADE_EXTENDED")=="1")
                 {
                     yield return PersonalTradeHagglingNativeProbe.Run(host,selected,store,selectedItem);
@@ -135,12 +143,22 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private static PersonalTradeWindow Open(PeopleOfTheIliacBayMod host,DaggerfallTalkWindow talk)
         {
-            CaptureTradeContext(host,talk,"May I trade with you?");
-            var args=new object[]{talk,null};
-            Require((bool)typeof(PeopleOfTheIliacBayMod).GetMethod("TryOpenPersonalTradeWindow",Private).Invoke(host,args),
-                "Actual Talk trade handoff refused: "+args[1]);
+            const string request="May I trade with you?";
+            CaptureTradeContext(host,talk,request);
+            var type=typeof(PeopleOfTheIliacBayMod);
+            var snapshot=type.GetField("conversationContextCurrentSnapshot",Private).GetValue(host);
+            string person=(string)type.GetField("conversationPersonId",Private).GetValue(host);
+            // Exercise the resolved trade intent through its production handoff,
+            // including immediate history publication before Talk is popped.
+            Require((bool)type.GetMethod("TryPersonalCommerceConversation",Private).Invoke(host,
+                new object[]{talk,request,"",snapshot,"trade"}),"Actual Talk trade intent was refused.");
             var window=DaggerfallUI.UIManager.TopWindow as PersonalTradeWindow;
-            Require(window!=null,"Talk handoff did not open the owned trade window.");return window;
+            Require(window!=null,"Talk handoff did not open the owned trade window.");
+            var store=(WorldStateStore)type.GetField("store",Private).GetValue(host);
+            var transcript=store.ConversationTranscript(person,DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now.ToSeconds());
+            Require(transcript.Exists(entry=>entry.PlayerText==request && entry.Source=="action" &&
+                entry.NpcText=="Let us see what we can trade."),"Closing Talk lost the actual trade request.");
+            return window;
         }
         private static IEnumerator FreeParchmentRoundTrip(PeopleOfTheIliacBayMod host,GameManager game,
             ResidentActor actor,WorldStateStore store,NativeNpcInventoryOwner owner)

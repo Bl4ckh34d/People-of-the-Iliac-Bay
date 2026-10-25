@@ -30,6 +30,8 @@ namespace PeopleOfTheIliacBay.Core
         {
             var copy = ObservedVisit.Copy(observed);
             var previous = IndexedObservedVisit(copy.ResidentId);
+            if(previous!=null && previous.CounterPurchaseResolved && NpcInnConsumption.SameVisit(copy,previous))
+                copy.CounterPurchaseResolved=true;
             if (copy.InnConsumption == null && previous != null && NpcInnConsumption.SameVisit(copy, previous))
                 copy.InnConsumption = NpcInnConsumption.CopyReceipt(previous.InnConsumption, copy);
             ValidateObservedVisitOwnerAndTarget(state, copy);

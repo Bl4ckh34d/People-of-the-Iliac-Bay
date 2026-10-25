@@ -4,6 +4,39 @@ namespace PeopleOfTheIliacBay.Core
 {
     public static class CrowdSteering
     {
+        // Recover even when the activity target equals the current position.
+        // Each step increases clearance without sweeping through another body.
+        public static GuardPoint3 Separate(GuardPoint3 from,IEnumerable<GuardPoint3> neighbours,
+            double separation,double maximumStep,double preferredAngle,Func<GuardPoint3,bool> clear)
+        {
+            if(!Valid(from) || clear==null || !Finite(separation) || separation<=0 ||
+                !Finite(maximumStep) || maximumStep<0 || !Finite(preferredAngle))
+                throw new ArgumentException("Invalid crowd separation.");
+            var others=ValidatedNeighbours(neighbours);
+            if(maximumStep==0 || !Occupied(from,others,separation))return Copy(from);
+            double step=Math.Min(maximumStep,separation);
+            GuardPoint3 best=from;double bestClearance=OverlapClearance(from,others,separation);
+            for(int i=0;i<16;i++)
+            {
+                double angle=preferredAngle+i*Math.PI/8;
+                var candidate=new GuardPoint3{X=from.X+Math.Cos(angle)*step,Y=from.Y,Z=from.Z+Math.Sin(angle)*step};
+                double clearance=OverlapClearance(candidate,others,separation);
+                if(clearance<=bestClearance+0.0000001 || !Safe(from,candidate,others,separation,true) || !clear(candidate))continue;
+                best=candidate;bestClearance=clearance;
+            }
+            return Copy(best);
+        }
+        private static double OverlapClearance(GuardPoint3 point,IList<GuardPoint3> others,double separation)
+        {
+            double result=0;
+            foreach(var other in others)
+            {
+                if(Math.Abs(other.Y-point.Y)>2.1)continue;
+                double dx=point.X-other.X,dz=point.Z-other.Z;
+                result+=Math.Min(separation*separation,dx*dx+dz*dz);
+            }
+            return result;
+        }
         public static GuardPoint3 MoveComfort(GuardPoint3 from,GuardPoint3 target,IEnumerable<GuardPoint3> neighbours,
             double separation,double comfortRadius,double lookAhead,double maximumStep,ref int passingSide,
             Func<GuardPoint3,bool> clear,bool continuePath=false)
@@ -131,7 +164,7 @@ namespace PeopleOfTheIliacBay.Core
             var others=ValidatedNeighbours(neighbours);
             return Safe(from,target,others,separation) && clear(target);
         }
-        private static bool Safe(GuardPoint3 from,GuardPoint3 candidate,IEnumerable<GuardPoint3> neighbours,double separation)
+        private static bool Safe(GuardPoint3 from,GuardPoint3 candidate,IEnumerable<GuardPoint3> neighbours,double separation,bool separating=false)
         {
             foreach(var other in neighbours)
             {
@@ -149,7 +182,15 @@ namespace PeopleOfTheIliacBay.Core
                     double radialMotion=initialX*vx+initialZ*vz;
                     double finalX=candidate.X-other.X,finalZ=candidate.Z-other.Z;
                     double finalSquare=finalX*finalX+finalZ*finalZ;
-                    if(radialMotion<-0.0000001 || finalSquare<initialSquare-0.0000001) return false;
+                    if(separating)
+                    {
+                        // A packed group can surround a body: requiring every
+                        // overlap to improve prevents all motion. The separation
+                        // caller requires total penetration to decrease. Still
+                        // forbid crossing a neighbour's center or any new overlap.
+                        if(initialX*finalX+initialZ*finalZ<-0.0000001)return false;
+                    }
+                    else if(radialMotion<-0.0000001 || finalSquare<initialSquare-0.0000001) return false;
                 }
                 else
                 {

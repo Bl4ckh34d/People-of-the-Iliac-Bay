@@ -27,6 +27,7 @@ namespace PeopleOfTheIliacBay.DFU
                     actor.SetConversationFacing(false);
             };
             if (!TryCreatePersonalItemLoanWindowSession(purpose, closed, out session, out reason)) return false;
+            personalCommerceBeforeClose?.Invoke();
             DaggerfallUI.Instance.PopToHUD();
             if (pauseCurrentWork && actor != null && actor.Resident != null && actor.Resident.Id == person)
                 actor.SetConversationFacing(true);

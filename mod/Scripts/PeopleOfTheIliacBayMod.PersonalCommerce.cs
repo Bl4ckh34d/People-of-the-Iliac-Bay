@@ -26,6 +26,15 @@ namespace PeopleOfTheIliacBay.DFU
         }
 
         private PersonalCommerceCatalog personalCommerceCatalog;
+        private Action personalCommerceBeforeClose;
+
+        private void RememberPersonalCommerceHandoff(DaggerfallTalkWindow window,string question,string answer)
+        {
+            // Immediate publication is required: PopToHUD cancels deferred audio
+            // and clears the speaker/session. Opening a window is not a completed sale.
+            AppendUnrecordedDialoguePair(window,question,answer,false);
+            if(memoryWindow==window)RememberDialogueExchange(question,answer,"action");
+        }
 
         private void InvalidatePersonalCommerceCatalog()
         { personalCommerceCatalog = null; }
@@ -66,18 +75,27 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 string loanReason;
                 var purpose = direction == PersonalCommerceCatalogDirection.BorrowFromNpc ? LoanPurpose.Lend : LoanPurpose.Return;
-                if (!TryOpenPersonalItemLoanWindow(window, purpose, out loanReason))
-                    AppendDialoguePair(window, text, string.IsNullOrWhiteSpace(loanReason) ? "I cannot lend an item now." : loanReason);
+                personalCommerceBeforeClose=()=>RememberPersonalCommerceHandoff(window,text,
+                    purpose==LoanPurpose.Lend?"Let us look at what I can lend you.":"Let us look at what you are returning.");
+                try
+                {
+                    if (!TryOpenPersonalItemLoanWindow(window, purpose, out loanReason))
+                        AppendDialoguePair(window, text, string.IsNullOrWhiteSpace(loanReason) ? "I cannot lend an item now." : loanReason);
+                }
+                finally { personalCommerceBeforeClose=null; }
                 return true;
             }
             // A request to trade or barter needs no direction clarification:
             // this window already supports both inventories in one exchange.
             string tradeReason;
-            if (!TryOpenConversationPersonalTradeWindow(window, out tradeReason))
+            personalCommerceBeforeClose=()=>RememberPersonalCommerceHandoff(window,text,"Let us see what we can trade.");
+            try
             {
-                AppendDialoguePair(window, text, string.IsNullOrWhiteSpace(tradeReason)
-                    ? "I cannot trade right now." : tradeReason);
+                if (!TryOpenConversationPersonalTradeWindow(window, out tradeReason))
+                    AppendDialoguePair(window, text, string.IsNullOrWhiteSpace(tradeReason)
+                        ? "I cannot trade right now." : tradeReason);
             }
+            finally { personalCommerceBeforeClose=null; }
             // Kept only as a source-compatible private fallback while old saves
             // may still hold a transient catalogue; it is never admitted.
             if (!LegacyPersonalCommerceSingleItemFlowEnabled()) return true;

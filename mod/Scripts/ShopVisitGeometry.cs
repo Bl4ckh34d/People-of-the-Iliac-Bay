@@ -31,6 +31,7 @@ namespace PeopleOfTheIliacBay.DFU
         private sealed class CounterWait {public Vector3 Position;public float Until;}
         private readonly Dictionary<string,CounterWait> counterWaiters=new Dictionary<string,CounterWait>();
         public bool IsTavern { get; private set; }
+        public bool IsShop { get { return DaggerfallWorkshop.Utility.RMBLayout.IsShop(room.BuildingData.BuildingType); } }
         public StaticNPC TavernKeeper { get { return tavernKeeper; } }
         public Vector3? CounterPosition { get { return counter; } }
         private readonly Dictionary<string,List<ShopOccupancy>> reserved=new Dictionary<string,List<ShopOccupancy>>();

@@ -160,10 +160,9 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void SetupLabels()
         {
-            AddLabel(new Rect(4,16,62,8),NativePanel).Text=Clip(session.NpcLabel,15);
             if(Portrait!=null && Portrait.NativeSource)
             {
-                PortraitPanel=DaggerfallUI.AddPanel(new Rect(19,24,32,32),NativePanel);
+                PortraitPanel=DaggerfallUI.AddPanel(new Rect(14,14,42,42),NativePanel);
                 PortraitPanel.BackgroundTexture=Portrait.NativeSource;
                 PortraitEmotion=Portrait.StartingEmotion??"neutral";
             }

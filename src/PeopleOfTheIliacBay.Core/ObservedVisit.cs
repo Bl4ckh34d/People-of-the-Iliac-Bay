@@ -35,6 +35,7 @@ namespace PeopleOfTheIliacBay.Core
         public double ObservedAt, PlannedEndAt, ResumeUntil, SecondsPerMetre;
         public List<ObservedVisitLeg> Legs = new List<ObservedVisitLeg>();
         public NpcInnConsumptionReceipt InnConsumption;
+        public bool CounterPurchaseResolved;
 
         public double EndsAt
         {
@@ -68,6 +69,7 @@ namespace PeopleOfTheIliacBay.Core
                 ResidentId = source.ResidentId,
                 HouseholdDayId=source.HouseholdDayId,HouseholdSourceFingerprint=source.HouseholdSourceFingerprint,
                 HouseholdSeatId=source.HouseholdSeatId,
+                CounterPurchaseResolved=source.CounterPurchaseResolved,
                 SettlementId = source.SettlementId,
                 BuildingKey = source.BuildingKey,
                 ObservedAt = source.ObservedAt,

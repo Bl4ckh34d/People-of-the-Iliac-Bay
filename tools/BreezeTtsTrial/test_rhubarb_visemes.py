@@ -72,7 +72,7 @@ class RhubarbVisemeTests(unittest.TestCase):
             validate_rhubarb(" ", self.raw, self.audio, self.audio_path, "request-1")
         self.assertTrue(('dialog text' in str(_raised_67.exception)), str(_raised_67.exception))
 
-    def test_runner_uses_one_cpu_thread_and_publishes_bound_output_atomically(self):
+    def test_runner_uses_two_cpu_threads_and_publishes_bound_output_atomically(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
             cli = root / "rhubarb.exe"
@@ -103,7 +103,7 @@ class RhubarbVisemeTests(unittest.TestCase):
             with patch("tools.BreezeTtsTrial.rhubarb_visemes.subprocess.run", side_effect=fake_run):
                 result = run_rhubarb(str(cli), str(audio), "Hello.")
             command = seen["command"]
-            self.assertEqual(command[command.index("--threads") + 1], "1")
+            self.assertEqual(command[command.index("--threads") + 1], "2")
             self.assertEqual(command[command.index("--recognizer") + 1], "pocketSphinx")
             self.assertEqual(command[-1], str(audio.resolve()))
             self.assertEqual(result["requestId"], "request-42")

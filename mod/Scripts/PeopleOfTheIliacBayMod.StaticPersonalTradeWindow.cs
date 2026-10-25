@@ -30,6 +30,7 @@ namespace PeopleOfTheIliacBay.DFU
             PersonalTradeWindowSession session;
             if (!TryCreateStaticPersonalTradeWindowSession(talk, out session, out reason)) return false;
             CapturePersonalTradePortrait(talk, session);
+            personalCommerceBeforeClose?.Invoke();
             DaggerfallUI.Instance.PopToHUD();
             PersonalTradeWindow.Open(DaggerfallUI.UIManager, null, session, mod);
             return true;

@@ -72,11 +72,15 @@ namespace PeopleOfTheIliacBay.Core
             int matches = 0;
             foreach (var town in state.Settlements)
                 foreach (var household in town.Households)
-                    if (household.BuildingKey == resident.HomeKey &&
-                        household.Residents.Exists(member => member.Id == resident.Id && member.HomeKey == resident.HomeKey))
+                    if (household.BuildingKey == resident.HomeKey)
                     {
-                        matches++;
-                        settlementId = town.SettlementId;
+                        foreach(var member in household.Residents)
+                            if(member.Id==resident.Id && member.HomeKey==resident.HomeKey)
+                            {
+                                matches++;
+                                settlementId=town.SettlementId;
+                                break;
+                            }
                     }
             if (matches == 1 && settlementId > 0) return true;
             settlementId = 0;

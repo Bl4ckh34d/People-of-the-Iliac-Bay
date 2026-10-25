@@ -16,8 +16,11 @@ namespace PeopleOfTheIliacBay.Core
         public readonly RoutePoint Position;
         public readonly double RouteProgress;
         public readonly RoutePoint? TravelDestination;
-        public ActivitySnapshot(Activity activity, int buildingKey, RoutePoint position, double progress, RoutePoint? travelDestination=null)
-        { Activity = activity; BuildingKey = buildingKey; Position = position; RouteProgress = progress; TravelDestination=travelDestination; }
+        public readonly int? WaitingForBuildingKey;
+        public ActivitySnapshot(Activity activity, int buildingKey, RoutePoint position, double progress, RoutePoint? travelDestination=null,
+            int? waitingForBuildingKey=null)
+        { Activity = activity; BuildingKey = buildingKey; Position = position; RouteProgress = progress; TravelDestination=travelDestination;
+            WaitingForBuildingKey=waitingForBuildingKey; }
     }
     public sealed partial class DailySchedule
     {
@@ -391,7 +394,8 @@ namespace PeopleOfTheIliacBay.Core
                 if (visit.Phase == ResidentVisitPhase.Inside)
                     return new ActivitySnapshot(Activity.Visit, visit.BuildingKey, visit.Position, 0);
                 bool walking=visit.Phase==ResidentVisitPhase.Walking||visit.Phase==ResidentVisitPhase.Leaving;
-                return new ActivitySnapshot(Activity.Travel, -1, visit.Position, 0,walking?visit.Destination:visit.Position);
+                return new ActivitySnapshot(Activity.Travel, -1, visit.Position, 0,walking?visit.Destination:visit.Position,
+                    visit.Phase==ResidentVisitPhase.WaitingForOpening?(int?)visit.TargetBuildingKey:null);
             }
             if(pointOuting!=null)
             {

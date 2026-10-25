@@ -58,8 +58,8 @@ namespace PeopleOfTheIliacBay.DFU
                     "; my partner is collecting money before joining me; our shared outing is paused, not cancelled";
             else if(cashVisit!=null)
                 plan=cashVisit.Returning?(cashVisit.WaitingPartnerId!=null?"returning to my waiting partner after a cash errand":"returning from a cash errand"):
-                    cashVisit.WaitingForBank?"waiting for an opportunity to collect money before shopping or visiting an Inn":
-                    "collecting money at "+ConversationBuildingName(cashVisit.ProviderKey)+
+                    cashVisit.WaitingForBank?"I have no spending money with me; waiting for the bank to open so I can collect money before shopping or visiting an Inn":
+                    "I have no spending money with me; collecting money "+(cashVisit.Bank?"at the bank ":"at home ")+ConversationBuildingName(cashVisit.ProviderKey)+
                         (cashVisit.WaitingPartnerId!=null?"; my partner is waiting for me":"; ordinary visits will resume afterwards");
             else
             {

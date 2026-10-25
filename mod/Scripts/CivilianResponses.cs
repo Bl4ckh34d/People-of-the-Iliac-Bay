@@ -242,7 +242,8 @@ namespace PeopleOfTheIliacBay.DFU
             actor.Place(ground, person.Reaction == CivilianReaction.Fight ? player - ground : deltaMove,
                 blocked || deltaMove.sqrMagnitude < 0.000001f,
                 person.Reaction == CivilianReaction.Flee && !blocked && deltaMove.sqrMagnitude > 0.000001f);
-            var saved = origin.InverseTransformPoint(ground); person.X = saved.x; person.Y = saved.y; person.Z = saved.z;
+            var saved = origin.InverseTransformPoint(actor.transform.position-Vector3.up);
+            person.X = saved.x; person.Y = saved.y; person.Z = saved.z;
         }
         private static Vector3 Point(SavedRoutePoint point) { return new Vector3((float)point.X, 0, (float)point.Z); }
     }

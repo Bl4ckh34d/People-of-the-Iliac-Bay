@@ -359,9 +359,11 @@ namespace PeopleOfTheIliacBay.Tests
                 var method=typeof(ConversationClock).GetMethod("Context");
                 Check.True(method!=null,"Social requests need an authoritative current clock, not only old transcript dates.");
                 string morning=(string)method.Invoke(null,new object[]{10,9,"Loredas the 7th of Morning Star",405,false});
-                Check.True(morning.Contains("10:09 AM") && morning.Contains("daytime now"));
+                Check.True(morning.Contains("10:00 AM") && !morning.Contains("10:09") && morning.Contains("daytime now"));
                 string night=(string)method.Invoke(null,new object[]{22,9,"Loredas the 7th of Morning Star",405,true});
-                Check.True(night.Contains("10:09 PM") && night.Contains("nighttime now"));
+                Check.True(night.Contains("10:00 PM") && night.Contains("nighttime now"));
+                string halfHour=ConversationClock.Context(23,59,"Loredas the 7th of Morning Star",405,true);
+                Check.True(halfHour.Contains("11:30 PM") && halfHour.Contains("3E405") && halfHour.Contains("7th of Morning Star"));
                 string midnight=(string)method.Invoke(null,new object[]{0,0,"Loredas the 7th of Morning Star",405,true});
                 Check.True(midnight.Contains("12:00 AM") && midnight.Contains("00:00"));
             }));

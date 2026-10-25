@@ -37,6 +37,8 @@ namespace PeopleOfTheIliacBay.DFU
     internal static class IncrementalLocationBlocks
     {
         private const int MaximumSlowDiagnosticsPerRead = 12;
+        private static readonly System.Reflection.FieldInfo nativeLocationCache=typeof(RMBLayout).GetField("locationCache",
+            System.Reflection.BindingFlags.Static|System.Reflection.BindingFlags.NonPublic);
 
         internal sealed class Result
         {
@@ -63,6 +65,26 @@ namespace PeopleOfTheIliacBay.DFU
             if (contentReader == null || !contentReader.IsReady || contentReader.BlockFileReader == null || contentReader.MapFileReader == null)
                 throw new InvalidOperationException("Incremental location load requires a ready ContentReader.");
 
+            // Reuse DFU's current enriched data when available. Keep cancellation
+            // and one-block-per-yield semantics, and detach mutable building rows.
+            // No private cache is retained across DFU's variant invalidation.
+            var nativeCache=nativeLocationCache==null?null:
+                nativeLocationCache.GetValue(null) as List<KeyValuePair<int,DFBlock[]>>;
+            DFBlock[] cached=null;
+            if(nativeCache!=null)foreach(var entry in nativeCache)
+                if(entry.Key==location.MapTableData.MapId){cached=entry.Value;break;}
+            if(cached!=null && cached.Length==width*height)
+            {
+                var detached=new DFBlock[cached.Length];
+                for(int i=0;i<cached.Length;i++)
+                {
+                    var block=cached[i];
+                    block.RmbBlock.FldHeader.BuildingDataList=(DFLocation.BuildingData[])block.RmbBlock.FldHeader.BuildingDataList.Clone();
+                    detached[i]=block;yield return null;
+                }
+                result.Blocks=detached;yield break;
+            }
+
             var namedBuildingPool = new List<NamedBuildingPoolItem>();
             for (int i = 0; i < location.Exterior.BuildingCount; i++)
             {
@@ -72,6 +94,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
 
             var blocks = new List<DFBlock>(width * height);
+            var sourceBlocks=new Dictionary<string,DFBlock>(StringComparer.OrdinalIgnoreCase);
             int slowDiagnosticCount = 0;
             int mapId = location.MapTableData.MapId;
             for (int y = 0; y < height; y++)
@@ -85,8 +108,12 @@ namespace PeopleOfTheIliacBay.DFU
 
                     long blockReadStarted = RuntimeTiming.Start();
                     DFBlock block;
-                    if (!contentReader.GetBlock(blockName, out block))
-                        throw new InvalidOperationException("Incremental location load could not read block " + blockName);
+                    if(!sourceBlocks.TryGetValue(blockName,out block))
+                    {
+                        if (!contentReader.GetBlock(blockName, out block))
+                            throw new InvalidOperationException("Incremental location load could not read block " + blockName);
+                        sourceBlocks.Add(blockName,block);
+                    }
                     slowDiagnosticCount = RecordTiming("block-read", mapId, x, y, blockName, block.Index, blockReadStarted, slowDiagnosticCount);
 
                     long enrichmentStarted = RuntimeTiming.Start();

@@ -7,6 +7,40 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
+            cases.Add(("Shopping plans choose an open alternative instead of an hour outside a closed shop",()=>{
+                for(uint seed=1;seed<=64;seed++)
+                {
+                    var request=Request(seed);
+                    request.DepartureAt=9*3600;request.LatestHomeAt=14*3600;
+                    request.MinimumAwaySeconds=1;request.MinimumStops=request.MaximumStops=1;
+                    var closed=Option(10,ResidentVisitPurpose.Shop);closed.OpenMinute=10*60;
+                    var open=Option(20,ResidentVisitPurpose.Shop);open.OpenMinute=8*60;
+                    request.Options=new List<AdultDailyItineraryOption>{closed,open};
+                    Check.True(AdultDailyItineraryPlanner.TryCreate(request,out var result));
+                    Check.Equal(20,result.Stops[0].BuildingKey);
+                }
+            }));
+            cases.Add(("Available shopping destinations vary across resident seeds",()=>{
+                var destinations=new HashSet<int>();
+                for(uint seed=1;seed<=64;seed++)
+                {
+                    var request=Request(seed);request.DepartureAt=12*3600;request.MinimumAwaySeconds=1;
+                    request.MinimumStops=request.MaximumStops=1;
+                    request.Options=new List<AdultDailyItineraryOption>{Option(10,ResidentVisitPurpose.Shop),Option(20,ResidentVisitPurpose.Shop),Option(30,ResidentVisitPurpose.Shop)};
+                    Check.True(AdultDailyItineraryPlanner.TryCreate(request,out var result));
+                    destinations.Add(result.Stops[0].BuildingKey);
+                }
+                Check.Equal(3,destinations.Count);
+            }));
+            cases.Add(("Accepted itinerary owns detached routes after timing-first candidate search",()=>{
+                var request=Request(1);
+                Check.True(AdultDailyItineraryPlanner.TryCreate(request,out var result));
+                double source=request.Routes[0].Route[0].X;
+                foreach(var stop in result.Stops)stop.Route[0].X=99999;
+                result.ExitRoute[0].X=99999;
+                Check.Equal(source,request.Routes[0].Route[0].X);
+                foreach(var route in request.Routes)foreach(var point in route.Route)Check.True(point.X!=99999);
+            }));
             cases.Add(("Bounded daily search reserves attempts for shorter valid itineraries", () =>
             {
                 var request = Request(13);

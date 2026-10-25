@@ -141,6 +141,27 @@ namespace PeopleOfTheIliacBay.Tests
                 Check.True(!NpcStartingBelongings.TryResolveVerifiedResidentHome(store.Snapshot(), noHome, out settlement),
                     "Resident without a home key resolved to a property key.");
             })));
+
+            cases.Add(("Home-key lookup does not copy unrelated world state", new Action(() =>
+            {
+                var store=new WorldStateStore(991);
+                var town=store.GetOrCreate(725,new[]{10,20},1);
+                var resident=town.Households[0].Residents[0];
+                for(int i=0;i<100;i++)store.GetOrCreate(1000+i,new[]{10,20,30,40},2);
+                int settlement;
+                Check.True(store.TryResolveVerifiedResidentHome(resident,out settlement));
+                long before=GC.GetAllocatedBytesForCurrentThread();
+                for(int i=0;i<100;i++)
+                {
+                    Check.True(store.TryResolveVerifiedResidentHome(resident,out settlement));
+                    Check.Equal(725,settlement);
+                }
+                Check.True(GC.GetAllocatedBytesForCurrentThread()-before<16384,
+                    "A scalar home lookup must not allocate a world snapshot.");
+                Check.True(!store.TryResolveVerifiedResidentHome(new Resident{Id=resident.Id,HomeKey=30},out settlement));
+                Check.True(!store.TryResolveVerifiedResidentHome(new Resident{Id="unowned",HomeKey=10},out settlement));
+                Check.True(!store.TryResolveVerifiedResidentHome(null,out settlement));
+            })));
         }
 
         private static bool Same(IReadOnlyList<NpcStartingBelonging> a, IReadOnlyList<NpcStartingBelonging> b)
