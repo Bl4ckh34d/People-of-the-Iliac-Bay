@@ -23,6 +23,15 @@ namespace PeopleOfTheIliacBay.DFU
         private readonly Dictionary<string,LawfulGuardFlight> lawfulGuardFlights=
             new Dictionary<string,LawfulGuardFlight>();
 
+        private CivilianIncident AlarmForReaction(string residentId,AlarmPerson reaction,double now)
+        {
+            var alarm=worldStore.ActiveAlarm(residentId,now);
+            // Lawful flight and partner retaliation own separate reactions. An
+            // incident for the same resident does not own their danger/arrival.
+            return reaction!=null && alarm!=null &&
+                ReferenceEquals(alarm.People.Find(person=>person.ResidentId==residentId),reaction) ? alarm : null;
+        }
+
         public Action<Exception> BeginLawfulGuardResidentAttack(ResidentActor victim,DaggerfallEntityBehaviour source)
         {
             var body=victim ? victim.GetComponent<DaggerfallEntityBehaviour>() : null;

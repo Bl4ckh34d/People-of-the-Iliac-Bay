@@ -229,6 +229,77 @@ namespace PeopleOfTheIliacBay.DFU
             throw new InvalidOperationException("Guard door probe: no accessible real primary doorway with clear supported staging and return routes.");
         }
 
+        private void ProbeDoorLogHold(string phase,ResidentActor actor,GuardPopulation guards,GuardActor guard,Vector3 start,Vector3 previous)
+        {
+            var game=GameManager.Instance;double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            var shelter=worldStore.ResidentDefenseShelter(actor.Resident.Id,population.SettlementId);
+            var reaction=shelter==null?null:shelter.Reaction;
+            var ground=actor.transform.position-Vector3.up;
+            var target=reaction==null?Vector3.zero:interior.transform.TransformPoint(new Vector3((float)reaction.X,(float)reaction.Y,(float)reaction.Z));
+            var alarm=worldStore.ActiveAlarm(actor.Resident.Id,now);var owned=AlarmForReaction(actor.Resident.Id,reaction,now);
+            Vector3 danger;bool sees=guards.TryVisibleResidentPursuer(actor,out danger);
+            var native=actor.GetComponent<NativeResidentNavigation>();var crowd=actor.GetComponent<CrowdMotion>();
+            var overlaps=new List<string>();
+            foreach(var collider in Physics.OverlapCapsule(ground+Vector3.up*.3f,ground+Vector3.up*1.65f,.25f,~0,QueryTriggerInteraction.Ignore))
+            {
+                if(collider.transform.IsChildOf(actor.transform))continue;
+                if(overlaps.Count<8)overlaps.Add(collider.name+":"+collider.GetType().Name+"@"+collider.transform.position.ToString("F3"));
+            }
+            string neighbours="none";
+            if(crowd)
+            {
+                var points=crowd.NeighbourPositions(ground);float nearest=float.PositiveInfinity;
+                foreach(var point in points)nearest=Mathf.Min(nearest,Vector3.Distance(ground,point));
+                neighbours=points.Count+"/nearest="+nearest;
+            }
+            var controller=game.PlayerMotor.GetComponent<CharacterController>();
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_HOLD: phase="+phase+"; frame="+Time.frameCount+"; dt="+Time.deltaTime+
+                "; world="+actor.transform.position.ToString("F3")+"; local="+interior.transform.InverseTransformPoint(ground).ToString("F3")+
+                "; step="+Vector3.Distance(previous,actor.transform.position)+"; total="+Vector3.Distance(start,actor.transform.position)+
+                "; heading="+actor.transform.forward.ToString("F3")+"; guard="+(guard?guard.transform.position.ToString("F3"):"none")+
+                "; guardAngle="+(guard?Vector3.Angle(actor.transform.forward,guard.transform.position-actor.transform.position):float.NaN)+
+                "; guardLOS="+(guard && CivilianResponses.Sees(actor.transform.position,guard.transform.position,20))+
+                "; visiblePursuer="+sees+"; danger="+danger.ToString("F3")+
+                "; guardCombat="+(guard && guard.CombatReady)+"; guardTargetsResident="+(guard && guard.DefenseTarget==actor.GetComponent<DaggerfallEntityBehaviour>())+
+                "; holdTarget="+target.ToString("F3")+"; holdTargetGap="+Vector3.Distance(ground,target)+
+                "; reaction="+(reaction==null?"none":reaction.Reaction+"/building="+reaction.BuildingKey+"/arrived="+reaction.ReachedRefuge+"/escape="+(reaction.Escape!=null))+
+                "; landing="+(shelter!=null && shelter.LandingObserved)+"; activeAlarm="+(alarm==null?"none":alarm.Id)+"; ownedAlarm="+(owned==null?"none":owned.Id)+
+                "; nativeReady="+(NativeNavigationWorld.Current && NativeNavigationWorld.Current.Ready)+
+                "; navigation="+(native?native.PathState+"/destination="+native.Destination.ToString("F3")+"/failure="+native.FailureReason:"none")+
+                "; crowdPlaced="+(crowd && crowd.HasPlacement)+"; neighbours="+neighbours+"; overlaps="+string.Join("|",overlaps.ToArray())+
+                "; player="+game.PlayerMotor.transform.position.ToString("F3")+"; playerController="+(controller && controller.enabled)+
+                "; streetEnabled="+enabled+"; reactions="+ReactionsEnabled+"; actorEnabled="+actor.enabled+"; active="+actor.gameObject.activeInHierarchy);
+        }
+
+        private IEnumerator ProbeDoorSettleHold(ResidentActor actor,GuardPopulation guards,GuardActor guard,DefenseShelter shelter)
+        {
+            var start=actor.transform.position;var previous=start;
+            var expected=interior.transform.TransformPoint(new Vector3((float)shelter.Reaction.X,(float)shelter.Reaction.Y,(float)shelter.Reaction.Z))+Vector3.up;
+            float until=Time.realtimeSinceStartup+2,stableSince=-1,nextLog=Time.realtimeSinceStartup+.25f;
+            bool moved=false,settled=false;
+            ProbeDoorLogHold("settle-start",actor,guards,guard,start,start);
+            while(Time.realtimeSinceStartup<until)
+            {
+                GuardDoorNativeProbe.Quiet(guard,true);yield return null;
+                var horizontal=actor.transform.position-start;horizontal.y=0;
+                Vector3 danger;bool sees=guards.TryVisibleResidentPursuer(actor,out danger);
+                bool firstMove=!moved && Vector3.Distance(start,actor.transform.position)>.001f;
+                if(firstMove || sees || horizontal.magnitude>=.05f || Time.realtimeSinceStartup>=nextLog)
+                {ProbeDoorLogHold(firstMove?"settle-first-movement":"settle-sample",actor,guards,guard,start,previous);nextLog=Time.realtimeSinceStartup+.25f;}
+                GuardDoorNativeProbe.Require(!sees && horizontal.magnitude<.05f,
+                    "landing settling gained a visible pursuer or horizontal movement; fixture hold baseline is invalid.");
+                // Keep native floor support active. The baseline starts only at
+                // the saved landing ground after 0.2 seconds of stable placement.
+                if(Vector3.Distance(actor.transform.position,expected)<.01f && Vector3.Distance(previous,actor.transform.position)<.001f)
+                {if(stableSince<0)stableSince=Time.realtimeSinceStartup;}
+                else stableSince=-1;
+                if(firstMove)moved=true;previous=actor.transform.position;
+                if(stableSince>=0 && Time.realtimeSinceStartup-stableSince>=.2f){settled=true;break;}
+            }
+            ProbeDoorLogHold("settle-end",actor,guards,guard,start,previous);
+            GuardDoorNativeProbe.Require(settled,"saved landing floor did not converge to a stable hold baseline within two real seconds.");
+        }
+
         internal IEnumerator ProbeGuardDoor(PeopleOfTheIliacBayMod host,GuardPopulation guards,bool witnessed)
         {
             var game=GameManager.Instance;var selected=new List<GuardActor>();ResidentActor candidate=null;
@@ -405,10 +476,22 @@ namespace PeopleOfTheIliacBay.DFU
                     TryGuardRefugeContext(id,key=>game.TalkManager.GetBuildingNameForBuildingKey(key),out context) &&
                     context==shelter.ActivityContext(fixture.Door.buildingKey,game.TalkManager.GetBuildingNameForBuildingKey(fixture.Door.buildingKey),false),
                     "actual resident context incorrectly claims a visible pursuer.");
-                var held=landed.transform.position;deadline=Time.realtimeSinceStartup+2;
+                yield return ProbeDoorSettleHold(landed,guards,indoorGuard,shelter);
+                var held=landed.transform.position;var previousHold=held;bool movedDuringHold=false,lastHoldSight=false;
+                deadline=Time.realtimeSinceStartup+2;float nextHoldLog=Time.realtimeSinceStartup+.25f;
+                ProbeDoorLogHold("start",landed,guards,indoorGuard,held,held);
                 while(Time.realtimeSinceStartup<deadline)
-                {GuardDoorNativeProbe.Quiet(indoorGuard,true);yield return null;}
-                GuardDoorNativeProbe.Require(Vector3.Distance(held,landed.transform.position)<.05f,"unthreatened sheltered resident fled the innocent player.");
+                {
+                    GuardDoorNativeProbe.Quiet(indoorGuard,true);yield return null;
+                    bool holdSight=guards.TryVisibleResidentPursuer(landed,out ignored);
+                    bool firstMove=!movedDuringHold && Vector3.Distance(held,landed.transform.position)>.001f;
+                    if(firstMove || holdSight!=lastHoldSight || Time.realtimeSinceStartup>=nextHoldLog)
+                    {ProbeDoorLogHold(firstMove?"first-movement":holdSight!=lastHoldSight?"visibility-change":"sample",landed,guards,indoorGuard,held,previousHold);nextHoldLog=Time.realtimeSinceStartup+.25f;}
+                    if(firstMove)movedDuringHold=true;previousHold=landed.transform.position;lastHoldSight=holdSight;
+                }
+                ProbeDoorLogHold("end",landed,guards,indoorGuard,held,previousHold);
+                GuardDoorNativeProbe.Require(Vector3.Distance(held,landed.transform.position)<.05f,
+                    "sheltered resident displaced more than 0.05m during hold control; inspect GUARD_DOOR_HOLD diagnostics.");
                 copied=GuardDoorNativeProbe.SaveCopy(host);
                 GuardDoorNativeProbe.Require(copied.ResidentDefenseShelter(id,settlement).LandingObserved &&
                     (copied.GetGuards(settlement).Guards.Find(item=>item.Id==first).Interior!=null)==witnessed,

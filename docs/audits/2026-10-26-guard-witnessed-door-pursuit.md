@@ -99,3 +99,101 @@ git diff --check -- mod/Scripts/GuardDoorNativeProbe.cs mod/Scripts/NativeNaviga
 ```
 
 Result: **0 warnings, 0 errors**; scoped whitespace check passes. No native probe execution by this worker. Outstanding beyond this bounded probe: naturally emerged pursuit and room movement, actual combat damage/death, physical occlusion/alternate-door rejection in Unity, Talk UI presentation, game disk reload, deadline return and later reacquisition. Native source freeze handed to the parent; no shared top-level documentation or Obsidian vault write. The reusable probe procedure is the capture candidate for parent-owned documentation/memory maintenance.
+
+### First native attempt and fixture-readiness correction
+
+Parent ran witnessed mode from package `E31822DEE3D6` against the real `People - Morning daily routines` fixture (SAVE82). It failed before any staging: `no unoccupied living ordinary resident with a nonlethal health margin`. The inspected native Player.log places this at line 1274, immediately after `GARRISON_READY`, while ordinary outdoor preparation/publication continued afterward. `StreetPopulation.Ready` deliberately permits interior simulation before exterior preparation and body admission; it is not a guarantee of an eligible loaded resident. The first probe incorrectly sampled eligibility only once. The original run did not log actor rejection counts, so it cannot prove that every rejected actor was absent rather than otherwise ineligible.
+
+The probe now waits up to 120 real seconds for two currently eligible posted guards and an actually eligible exterior resident, sampling every 0.5 seconds. It makes no fixture mutations during this wait. Existing eligibility restrictions remain; current scene, actual exterior parent and living native guard body are also checked. It revalidates immediately before staging. `GUARD_DOOR_WAIT` logs every five seconds with ready/entrance/preparation flags, plan/body counts, eligible count and first-rejection counters (inactive, wrong scene, posture, identity, missing plan, native body, low health, invisible, occupied), plus eligible guard count, pause state and game time. `GUARD_DOOR_READY` records the successful admission snapshot. Timeout includes the final counters rather than a generic missing-resident claim.
+
+This correction changes only `GuardDoorNativeProbe.cs` and this audit. Scoped `git diff --check` passes. Per parent instruction, this worker did not compile, launch or deploy the correction; parent owns compilation and the next native attempt. No crossing or pursuit acceptance is claimed from the failed first run.
+
+### Native witnessed03: separate lawful flight from normal alarm ownership
+
+Parent's subsequent diagnostic run found zero resident bodies even with routes prepared because the selected Morning SAVE82 was at 05:13. This was a fixture-time selection error; the probe did not relax admission or advance time. Parent then used daylight Gothway Garden SAVE0 (12:03), package `3202304039BC`. Preserved log: `work/native-guard-door-witnessed-03-player.log`.
+
+Witnessed03 staged the real resident and two existing guards, moved toward the real door, and logged exactly the observing guard: `guard=g:206728581:n:0; target=s:206728581:h:196614:r:0; door=door:206728581:131343:598:15:0`. It then failed at line 1077 with `Shelter lock requires a living fleeing arrival`, from `RecordShelterArrival` in the production population update. This is partial native crossing/individual-observation evidence; the run did not reach full acceptance.
+
+Cause: `Reaction()` gives lawful guard flight priority and returns its separate `AlarmPerson`. The movement code independently fetched any active alarm for that resident. When the lawful-flight object arrived, the normal alarm-lock call looked up the different object inside that unrelated incident; that object had not arrived. Its existing validation correctly rejected the false arrival. The same ownership mismatch could supply unrelated alarm danger to the resident's indoor refuge hold.
+
+Minimal production correction: `AlarmForReaction` in `StreetPopulation.LawfulGuardFlight.cs` returns an active incident only when its own resident entry is the exact reaction object currently being moved. The exterior and interior movement branches each use this resolver. Independent lawful flight/partner retaliation therefore cannot borrow another incident's danger, shelter filtering, lock or safety-goal completion. Normal alarm reactions retain their original incident. Core shelter-arrival validation and the existing sealed-arrival duplicate guard remain unchanged. The two `StreetPopulation.cs` hunks were coordinated with the dungeon-follow worker, who confirmed no conflicting edits.
+
+Meaningful RED/GREEN: the actual-source native-adapter fixture now structurally extracts the alarm declaration from both production movement blocks, plus the resolver when present. A resident with an active normal alarm and an independent, arrived lawful-flight reaction reproduced the **same `ArgumentException` before the fix**. After the fix, **22 adapter scenarios pass**, including no unrelated exterior lock mutation, no unrelated indoor danger, continued normal reaction ownership, one normal lock despite repeated arrival, same-ID/same-building foreign-object rejection, and expiry. Existing Core pursuit/refuge regression remains **63 assertions passing**. Scoped whitespace check passes. This worker did not launch, deploy or run shared RuntimeCompile; parent owns integrated compilation and native rerun. Source/test/audit changes are frozen for that handoff.
+
+### Native witnessed04 / unwitnessed01 and bounded hold diagnostics
+
+Parent verified the integrated package `A5524687F1FB` (Core 2151, RuntimeCompile 0/0, guard adapter 22) and ran both modes on daylight SAVE0. In `work/native-guard-door-witnessed-04-player.log`, the shelter-lock exception is gone. Exterior acceptance reports 2.240601 m actual resident travel and 0.1810608 m maximum sampled frame displacement, with only guard 0 receiving doorway evidence. The run subsequently passes the actual matching interior landing, controlled native reacquisition and initial no-visible-pursuer context assertions, but fails the unchanged 0.05 m displacement threshold during the two-second hold control. The original failure text called this flight from the player; that interpretation was unsupported because the log contained no start/end target, movement or changing perception data. The log also records missing native interior navigation template `GENRAM02.RMB:15`, so fallback crowd placement is relevant to investigation, not yet a proven cause.
+
+`work/native-guard-door-unwitnessed-01-player.log` passes the full **unwitnessed** native probe and outer TownTest. It reports 2.253632 m travel and 0.1895447 m maximum sampled frame displacement, no acquired guard doorway knowledge or indoor pursuer, actual refuge landing, truthful context, stable hold and live save-copy. This validates the bounded unseen-crossing path. It does not validate witnessed target-loss, natural combat or full game reload. The difference narrows the open witnessed issue to the presence/staging of the interior guard or subsequent perception/placement changes.
+
+Probe-only diagnostic follow-up adds `PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_HOLD` at start/end, first movement, every pursuer-visibility change and bounded 0.25-second samples. It reads actual world/local position, frame displacement, resident heading, guard position/angle/LOS/target, own pursuer sight, saved refuge target/gap, reaction and active-vs-owned alarm, native navigation state, crowd neighbours, overlapping colliders and player/controller state. It does not call movement or change state. The 0.05 m assertion is preserved; its message now reports displacement without assuming flight. No production behavior changed on this evidence. Scoped whitespace check passes; parent owns compilation and next native run.
+
+### Native witnessed05: vertical floor settling, fixture baseline corrected
+
+`work/native-guard-door-witnessed-05-player.log` resolves the displacement: start body `(448.575, 483.485, 418.550)`, local ground Y `-0.075`, saved-ground gap `0.07458496`, with a `CombinedModels` overlap. End body `(448.575, 483.560, 418.550)`, local ground Y `0`, target gap `0`, no overlaps. X/Z stay unchanged; the resident never sees the pursuing guard, owns no unrelated alarm and has no escape journey. Production floor support settles the body upward by 7.458 cm. This is not horizontal flight or a production refuge-hold defect.
+
+The fixture now allows at most two real seconds for the actual body to converge within 0.01 m of its saved landing and remain stable for 0.2 seconds, while checking every sampled frame for less than 0.05 m horizontal displacement and no visible pursuer. It leaves native floor support and production movement active. `settle-start`, first-movement/sample and `settle-end` diagnostics preserve the initial correction evidence. Only after this baseline is established does the original two-second, 0.05 m three-dimensional hold assertion begin. No global tolerance or gameplay behavior changed.
+
+Final isolated RuntimeCompile after this probe-only correction: **0 warnings, 0 errors**, using `obj/guard-door-probe/` and `bin/guard-door-probe/`. Scoped whitespace check passes. No native launch/deployment by this worker; parent owns the next witnessed run. Probe and audit frozen.
+
+Parent packaged the fixture-readiness correction with Unity verification and exit0; installed
+bundle `3202304039BC` at16:32 has matching distribution/Player hashes. Only the
+corrected probe was copied over the frozen16:22 deployed source; concurrent
+dungeon Follow/theft work is not in this package. Build log:
+`work/guard-door-ready-build-unity.log`.
+
+Native witnessed02 confirms zero resident bodies throughout the bounded wait,
+despite286 prepared plans and two eligible guards. SAVE82 starts around05:13;
+unlike the Bank fixture, this guard fixture does not advance to daytime. This is
+an unsuitable root-selected time, not proof that daytime residents or pursuit
+are broken. The run terminates at its availability deadline. Preserved evidence:
+`work/native-guard-door-witnessed-02-player.log` and its launch log. The next run
+uses the documented `People - Gothway Garden` SAVE0 at12:03. Do not relax resident
+eligibility or manufacture nighttime pedestrians to satisfy this test.
+
+## Native reaction-owner repair checkpoint
+
+The later `A5524687F1FB` package (26 October16:43) includes the production
+`AlarmForReaction` repair. Root Core2151/2151, RuntimeCompile0 warnings/errors,
+22 adapter cases and Unity package verification pass. Witnessed04 now physically
+crosses the door without the previous shelter exception:2.240601m resident travel,
+maximum sampled step0.1810608m, exact door observed by guard0 only, and exterior
+save-copy checks pass. Actual interior landing, target reacquisition and initial
+context checks also pass. The two-second stationary-hold assertion then fails.
+That displacement alone does not establish flight toward/away from the player;
+movement/visibility diagnostics are still required.
+
+Independent unwitnessed01 on the same package passes the complete controlled
+probe and outer TownTest:2.253632m travel, maximum step0.1895447m, no guard receives
+interior knowledge, actual resident landing, truthful context and stationary hold.
+This proves the no-witness branch within the staged fixture. It does not establish
+natural combat damage, full save-file reload or all building layouts.
+
+Preserved logs: `work/native-guard-door-witnessed-04-player.log`,
+`work/native-guard-door-unwitnessed-01-player.log` and their launch logs. Both
+owned processes terminated. Witnessed mode remained unaccepted at that checkpoint;
+the later run below supersedes it.
+
+## Native witnessed06 acceptance
+
+Root built the frozen source plus the floor-baseline probe correction with Unity
+verification and exit0. Distribution and Player SHA256 both equal
+`5AC70760315AC7E7A549D3E60567ED160AACC54A61FE66E0549B9E35A9938F5C`.
+Build evidence: `work/guard-settle-build-unity.log`, success line7483.
+
+`work/native-guard-door-witnessed-06-player.log` passes the complete witnessed
+probe at line1099 and outer TownTest exits0. Actual exterior travel is2.26593m,
+maximum observed frame step0.1785278m. Only the observing guard acquires the exact
+door `door:206728581:131343:598:15:0`; native crossing, matching interior landing,
+controlled native reacquisition, truthful resident context, live save-copy and
+release into last-seen search after actual target removal all pass.
+
+The baseline diagnostics confirm the earlier cause:7.458cm upward floor settling,
+no horizontal movement and no perceived pursuer. After convergence the two-second
+hold records exactly zero displacement. Native floor support remains enabled;
+the original0.05m hold threshold is unchanged.
+
+Together with unwitnessed01 this accepts both controlled doorway-evidence branches.
+It does not establish natural combat damage, unmodified room approach, full game
+disk reload or all building layouts. Interior guard placement and attack damage
+remain controlled as documented above. Both test processes are terminal.

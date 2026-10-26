@@ -84,6 +84,48 @@ public class StreetPopulation
         Vector3.Angle(resident.transform.forward,point-resident.transform.position)<90 && CivilianResponses.Sees(resident.transform.position,point,range);
     // DOOR_GROUND
     // SHELTER_HOLD
+    // REACTION_ALARM_HELPER
+    private sealed class Plan {public Resident Resident;}
+    private CivilianIncident ExteriorAlarm(string id,AlarmPerson reaction,double seconds)
+    {
+        var plan=new Plan{Resident=new Resident{Id=id}};
+        // EXTERIOR_ALARM
+        return alarm;
+    }
+    private CivilianIncident InteriorAlarm(string id,AlarmPerson reaction,double seconds)
+    {
+        var plan=new Plan{Resident=new Resident{Id=id}};
+        // INTERIOR_ALARM
+        return alarm;
+    }
+    public static void TestIndependentFlightArrival()
+    {
+        var f=new StreetPopulation{worldStore=new WorldStateStore(31)};
+        var person=f.worldStore.GetOrCreate(1,new[]{7},1).Households[0].Residents[0];
+        var incident=f.worldStore.RecordHostileThreat(1,"other-enemy",10);
+        var alarmReaction=f.worldStore.Witness(incident.Id,person.Id,10);
+        alarmReaction.Reaction=CivilianReaction.Flee;alarmReaction.HasPosition=true;alarmReaction.BuildingKey=-1;
+        var flight=new AlarmPerson{ResidentId=person.Id,Reaction=CivilianReaction.Flee,HasPosition=true,
+            ReachedRefuge=true,BuildingKey=7};
+        var wrong=f.ExteriorAlarm(person.Id,flight,11);
+        if(wrong!=null)f.worldStore.RecordShelterArrival(wrong.Id,person.Id,11);
+        if(f.worldStore.Snapshot().ShelterLocks.Count!=0 || alarmReaction.ReachedRefuge || alarmReaction.RefugeSealed)
+            throw new Exception("Independent guard flight mutated unrelated alarm arrival.");
+        if(f.InteriorAlarm(person.Id,flight,11)!=null)
+            throw new Exception("Independent indoor refuge inherited an unrelated alarm danger.");
+        if(!ReferenceEquals(f.ExteriorAlarm(person.Id,alarmReaction,11),incident) ||
+            !ReferenceEquals(f.InteriorAlarm(person.Id,alarmReaction,11),incident))
+            throw new Exception("Normal alarm lost its own reaction.");
+        alarmReaction.ReachedRefuge=true;alarmReaction.BuildingKey=7;
+        f.worldStore.RecordShelterArrival(f.ExteriorAlarm(person.Id,alarmReaction,12).Id,person.Id,12);
+        f.worldStore.RecordShelterArrival(incident.Id,person.Id,13);
+        if(!alarmReaction.RefugeSealed || f.worldStore.Snapshot().ShelterLocks.Count!=1 || alarmReaction.RefugeUntil!=3612)
+            throw new Exception("Normal arrival lost its lock or duplicate arrival extended it.");
+        if(f.ExteriorAlarm(person.Id,flight,13)!=null || f.InteriorAlarm(person.Id,flight,13)!=null)
+            throw new Exception("Same identity/building is not ownership of the original alarm reaction.");
+        if(f.ExteriorAlarm(person.Id,alarmReaction,3613)!=null)
+            throw new Exception("Expired incident remained an active movement owner.");
+    }
     public static void TestShelterHold()
     {
         var f=new StreetPopulation{worldStore=new WorldStateStore(31),interior=new Room{EntryDoor=new StaticDoor{buildingKey=7}}};
@@ -167,6 +209,7 @@ public class GuardPopulation
         foreach(var actor in f.actors.Values)actor.GetComponent<DaggerfallEntityBehaviour>().Entity.IsInvisible=true;
         Need(!f.TryVisibleResidentPursuer(resident,out seen),"Resident saw an invisible pursuing guard.");
         StreetPopulation.TestShelterHold();
+        StreetPopulation.TestIndependentFlightArrival();
         foreach(bool removed in new[]{false,true})
         {
             f=Create(out resident,out door);f.ObserveResidentBuildingEntry(resident,door,11);
@@ -180,6 +223,6 @@ public class GuardPopulation
             Need(!actor.CombatReady && actor.DefenseTarget==null && actor.Searched,"Dead or removed target kept combat pinned instead of bounded last-seen search.");
             Need(guard.Interior.LastSeenSuspect.X==3 && guard.SearchUntil==1821,"Losing native body invented a new position or extended search.");
         }
-        Console.WriteLine("Guard native adapter: 16 doorway, observer-direction, refuge-hold and target-loss scenarios passed.");return 0;
+        Console.WriteLine("Guard native adapter: 22 doorway, observer-direction, refuge-hold, reaction-owner/arrival and target-loss scenarios passed.");return 0;
     }
 }

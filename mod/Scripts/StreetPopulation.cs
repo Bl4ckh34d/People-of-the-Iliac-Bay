@@ -1069,7 +1069,7 @@ namespace PeopleOfTheIliacBay.DFU
                     }
                     Vector3? danger=null;
                     Vector3 lawfulGuard;
-                    var alarm=worldStore.ActiveAlarm(plan.Resident.Id,seconds);
+                    var alarm=AlarmForReaction(plan.Resident.Id,reaction,seconds);
                     if(TryLawfulGuardFlightDanger(actor,out lawfulGuard)) danger=lawfulGuard;
                     else if(alarm!=null && (alarm.ThreatId!=null || alarm.KillerThreatId!=null))
                     {
@@ -1275,7 +1275,7 @@ namespace PeopleOfTheIliacBay.DFU
                         RememberNpcCareAlarmPosition(plan,actor,seconds);
                         continue;
                     }
-                    var alarm=worldStore.ActiveAlarm(plan.Resident.Id,seconds);
+                    var alarm=AlarmForReaction(plan.Resident.Id,reaction,seconds);
                     Vector3? danger=null;
                     Vector3 lawfulGuard;
                     if(TryLawfulGuardFlightDanger(actor,out lawfulGuard)) danger=lawfulGuard;
