@@ -2,6 +2,7 @@ using System;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Game.UserInterfaceWindows;
 using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
@@ -15,7 +16,8 @@ namespace PeopleOfTheIliacBay.DFU
         private void InstallTheftHook()
         {
             var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativeTheftHooks, PeopleOfTheIliacBay.QuestHooks", true);
-            theftHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool?>(HasTheftWitness) });
+            theftHook = (IDisposable)Activator.CreateInstance(type, new object[] { new Func<bool?>(HasTheftWitness),
+                new Func<DaggerfallInventoryWindow, Action<string, int>>(CapturePrivateTheftMemory) });
         }
         public bool? HasTheftWitness()
         {

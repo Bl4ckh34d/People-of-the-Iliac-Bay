@@ -36,6 +36,8 @@ namespace PeopleOfTheIliacBay.DFU
                     yield return NpcGuardAssaultNativeProbe.RunFixture(host,streets,GameManager.Instance.PlayerEntity.Name);
                 else if(roadmapProbe=="guard-door")
                     yield return GuardDoorNativeProbe.Run(host,streets,GameManager.Instance.PlayerEntity.Name);
+                else if(roadmapProbe=="theft-memory")
+                    yield return streets.VerifyTheftMemories();
                 else if(roadmapProbe=="personal-trade")
                     yield return PersonalTradeNativeProbe.Run(host,streets);
                 else if(roadmapProbe=="static-personal-trade")

@@ -49,8 +49,8 @@ namespace PeopleOfTheIliacBay.DFU
         {return store!=null && store.IsNpcVitalsWriteEpochCurrent(epoch) && GameManager.Instance.IsReady &&
             (actor ? actor.Resident!=null && actor.Resident.IsAlive && !actor.IsSleeping :
             stationary && streets && streets.StaticObserverAwake(stationary,person));}
-        internal bool Sees(Vector3 target,float range)
-        {return isActiveAndEnabled && Current() && StreetPopulation.SeesSceneEvent(transform,target,range);}
+        internal bool Sees(Vector3 target,float range,Transform observedObject=null)
+        {return isActiveAndEnabled && Current() && StreetPopulation.SeesSceneEvent(transform,target,range,observedObject);}
         private void Update()
         {
             if(GameManager.IsGamePaused || Time.unscaledTime<nextSample)return;

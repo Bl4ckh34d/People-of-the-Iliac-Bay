@@ -54,13 +54,13 @@ namespace PeopleOfTheIliacBay.DFU
             if(!observer || observer.IsSleeping)return false;
             return SeesSceneEvent(observer.transform,target,range);
         }
-        internal static bool SeesSceneEvent(Transform observer,Vector3 target,float range)
+        internal static bool SeesSceneEvent(Transform observer,Vector3 target,float range,Transform observedObject=null)
         {
             if(!observer)return false;
             var delta=target-observer.position;
             var pose=observer.GetComponent<DirectionalKeeperPose>();
             return delta.sqrMagnitude<=range*range && Vector3.Dot(pose?pose.Heading:observer.forward,delta.normalized)>=0 &&
-                CivilianResponses.Sees(observer.position,target,range);
+                CivilianResponses.Sees(observer.position,target,range,observedObject);
         }
     }
     public sealed partial class GuardPopulation

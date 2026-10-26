@@ -15,6 +15,7 @@ namespace PeopleOfTheIliacBay.QuestHooks
         private static NativePlayerShopProvenanceHooks active;
         private readonly Harmony harmony = new Harmony(Owner);
         private readonly Action<string, string, ulong, int, int, int, int, int, bool> committed;
+        private readonly Func<Action<string, int>> captureTheft;
         private static readonly BindingFlags Instance = BindingFlags.Instance | BindingFlags.NonPublic;
         private static readonly PropertyInfo mode = typeof(DaggerfallTradeWindow).GetProperty("WindowMode", Instance);
         private static readonly FieldInfo basket = typeof(DaggerfallTradeWindow).GetField("basketItems", Instance);
@@ -26,6 +27,7 @@ namespace PeopleOfTheIliacBay.QuestHooks
             public DaggerfallUnityItem Source, Destination;
             public ulong DestinationUid;
             public int Count, DestinationCount;
+            public string Name;
         }
         private sealed class Observation
         {
@@ -33,12 +35,19 @@ namespace PeopleOfTheIliacBay.QuestHooks
             public ItemCollection Basket, PlayerItems;
             public int Price, GoldBefore;
             public List<ItemStamp> Items = new List<ItemStamp>();
+            public Action<string, int> RememberTheft;
+            public bool Published;
         }
 
         public NativePlayerShopProvenanceHooks(Action<string, string, ulong, int, int, int, int, int, bool> committed)
+            : this(committed, null) { }
+
+        public NativePlayerShopProvenanceHooks(Action<string, string, ulong, int, int, int, int, int, bool> committed,
+            Func<Action<string, int>> captureTheft)
         {
             if (active != null) throw new InvalidOperationException("Shop provenance hooks already installed.");
             this.committed = committed ?? throw new ArgumentNullException(nameof(committed));
+            this.captureTheft = captureTheft;
             if (mode == null || basket == null || price == null || stack == null ||
                 mode.PropertyType != typeof(DaggerfallTradeWindow.WindowModes) ||
                 basket.FieldType != typeof(ItemCollection) || price.ReturnType != typeof(int))
@@ -104,7 +113,15 @@ namespace PeopleOfTheIliacBay.QuestHooks
                     if (merged == null && player.Contains(item.UID)) continue;
                     observation.Items.Add(new ItemStamp { Source = item, Destination = merged,
                         DestinationUid = merged == null ? item.UID : merged.UID,
-                        Count = item.stackCount, DestinationCount = merged == null ? 0 : merged.stackCount });
+                        Count = item.stackCount, DestinationCount = merged == null ? 0 : merged.stackCount,
+                        Name = theft ? NativeItemName(item) : null });
+                }
+                if (theft && observation.Items.Count > 0 && active.captureTheft != null)
+                {
+                    // Memory presentation/perception is optional; it cannot remove
+                    // the independently verified native ownership receipt.
+                    try { observation.RememberTheft = active.captureTheft(); }
+                    catch { observation.RememberTheft = null; }
                 }
                 return observation.Items.Count > 0 ? observation : null;
             }
@@ -114,7 +131,8 @@ namespace PeopleOfTheIliacBay.QuestHooks
         private static void Publish(Observation observation, bool theft)
         {
             var self = active;
-            if (self == null || observation == null) return;
+            if (self == null || observation == null || observation.Published) return;
+            observation.Published = true;
             try
             {
                 var game = GameManager.Instance;
@@ -133,10 +151,21 @@ namespace PeopleOfTheIliacBay.QuestHooks
                     self.committed((theft ? "native-shop-theft:" : "native-shop-buy:") + item.DestinationUid,
                         observation.ShopId, item.DestinationUid, item.Count, item.DestinationCount,
                         observation.Price, observation.GoldBefore, goldAfter, theft);
+                    if (theft && observation.RememberTheft != null)
+                    {
+                        try { observation.RememberTheft(item.Name, item.Count); }
+                        catch { /* Continue recording the other native item receipts. */ }
+                    }
                 }
             }
             catch (Exception error)
             { UnityEngine.Debug.LogWarning("PEOPLE_OF_THE_ILIAC_BAY_SHOP_PROVENANCE_REJECTED: " + error); }
+        }
+
+        private static string NativeItemName(DaggerfallUnityItem item)
+        {
+            // Missing presentation data must not invalidate an exact transfer receipt.
+            try { return item.LongName; } catch { return null; }
         }
 
         public void Dispose()

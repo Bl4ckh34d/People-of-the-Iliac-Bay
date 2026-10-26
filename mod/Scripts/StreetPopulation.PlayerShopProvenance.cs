@@ -14,7 +14,8 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 var type = Type.GetType("PeopleOfTheIliacBay.QuestHooks.NativePlayerShopProvenanceHooks, PeopleOfTheIliacBay.QuestHooks", true);
                 playerShopProvenanceHook = (IDisposable)Activator.CreateInstance(type, new object[] {
-                    new Action<string, string, ulong, int, int, int, int, int, bool>(RecordNativeShopOutcome) });
+                    new Action<string, string, ulong, int, int, int, int, int, bool>(RecordNativeShopOutcome),
+                    new Func<Action<string, int>>(() => CaptureTheftMemory(null, "this shop")) });
             }
             catch (Exception error)
             {
@@ -35,21 +36,23 @@ namespace PeopleOfTheIliacBay.DFU
                 PlayerQuantityBefore = playerBefore, PlayerQuantityAfter = playerBefore + quantity,
                 Price = price, PlayerGoldBefore = goldBefore, PlayerGoldAfter = goldAfter,
                 NativeTransactionObserved = true }, stolen);
-            if(!recorded)return;
+            // Theft memory uses the separately captured pre-transfer witnesses. The
+            // provenance ledger still records the exact native receipt independently.
+            if(!recorded || stolen)return;
             var item=game.PlayerEntity.Items.GetItem(uid);
             foreach(var actor in actors.Values)
                 if(actor && actor.Resident.IsAlive && actor.gameObject.activeInHierarchy && !game.PlayerEntity.IsInvisible &&
                     SeesSceneEvent(actor,game.PlayerMotor.transform.position,20))
                     NativeSceneRecollection.Remember(worldStore,actor.Resident.Id,receiptId,
-                        stolen?NpcSceneEventKind.Theft:NpcSceneEventKind.Shopping,
-                        "I saw the player "+(stolen?"steal ":"buy ")+quantity+" "+item.LongName+" from this shop. I do not know the motive.",
-                        stolen?-2:0,NpcDirectedRelationship.PlayerTargetId,NpcDirectedRelationship.PlayerTargetId);
+                        NpcSceneEventKind.Shopping,
+                        "I saw the player buy "+quantity+" "+item.LongName+" from this shop. I do not know the motive.",
+                        0,NpcDirectedRelationship.PlayerTargetId,NpcDirectedRelationship.PlayerTargetId);
             if(!game.PlayerEntity.IsInvisible)foreach(var witness in stationaryParticipants.Values)
                 if(witness.Observer && witness.Observer.Sees(game.PlayerMotor.transform.position,20))
                     NativeSceneRecollection.Remember(worldStore,witness.Person.Id,receiptId,
-                        stolen?NpcSceneEventKind.Theft:NpcSceneEventKind.Shopping,
-                        "I saw the player "+(stolen?"steal ":"buy ")+quantity+" "+item.LongName+" from this shop. I do not know the motive.",
-                        stolen?-2:0,NpcDirectedRelationship.PlayerTargetId,NpcDirectedRelationship.PlayerTargetId);
+                        NpcSceneEventKind.Shopping,
+                        "I saw the player buy "+quantity+" "+item.LongName+" from this shop. I do not know the motive.",
+                        0,NpcDirectedRelationship.PlayerTargetId,NpcDirectedRelationship.PlayerTargetId);
         }
 
         private void DisposePlayerShopProvenanceHook()

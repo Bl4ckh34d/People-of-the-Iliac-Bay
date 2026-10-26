@@ -139,12 +139,17 @@ namespace PeopleOfTheIliacBay.DFU
             person.HasPosition = true; person.BuildingKey = building;
             person.X = local.x; person.Y = local.y; person.Z = local.z;
         }
-        public static bool Sees(Vector3 from, Vector3 to, float range)
+        public static bool Sees(Vector3 from, Vector3 to, float range, Transform observedObject = null)
         {
             Vector3 delta = to - from;
             if (delta.sqrMagnitude > range * range) return false;
             foreach (var hit in Physics.RaycastAll(from, delta.normalized, delta.magnitude, ~0, QueryTriggerInteraction.Ignore))
+            {
+                // The visible container is the target, not a wall. RaycastAll is
+                // unordered, so continue checking every other hit for obstruction.
+                if (observedObject && (hit.transform == observedObject || hit.transform.IsChildOf(observedObject))) continue;
                 if (Blocker(hit.collider)) return false;
+            }
             return true;
         }
         internal static bool Blocker(Collider collider)
