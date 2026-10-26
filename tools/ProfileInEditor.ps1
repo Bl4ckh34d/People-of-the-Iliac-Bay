@@ -4,7 +4,7 @@ param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$Use
     [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport,
     [switch]$ValidateStaticTrade, [switch]$ValidateStreetEncounter, [switch]$ValidateSceneObservers, [switch]$ValidateHousing,
     [switch]$ClimateDetails, [switch]$ValidateComplaint, [switch]$ValidateComplaintWait, [switch]$ValidateMurderReportChat, [switch]$ValidateBankCash,
-    [switch]$ValidateCashReturn)
+    [switch]$ValidateCashReturn, [switch]$ValidateFamilyCash)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
@@ -14,7 +14,7 @@ if($ValidateCashReturn -and -not $ValidateBankCash){throw '-ValidateCashReturn r
 if($ValidateStaticTrade -and $ValidatePlaytest){throw 'Run static and mobile personal trade as separate owned fixtures.'}
 if($ClimateDetails -and ($ValidateArrival -or $ValidateWardrobe -or $ValidateCrowd -or $ValidateShopping -or
     $ValidateLeisure -or $ValidateMorningShop -or $ValidateInnDiversion -or $ValidateMurderReport -or
-    $ValidateStaticTrade -or $ValidateStreetEncounter -or $ValidateSceneObservers -or $ValidateHousing -or $ValidateComplaint -or $ValidateBankCash)){
+    $ValidateStaticTrade -or $ValidateStreetEncounter -or $ValidateSceneObservers -or $ValidateHousing -or $ValidateComplaint -or $ValidateBankCash -or $ValidateFamilyCash)){
     throw '-ClimateDetails requires the normal loiter profile; focused fixtures bypass its timing hooks.'
 }
 $repo=Split-Path $PSScriptRoot -Parent
@@ -85,6 +85,7 @@ if($ValidateSceneObservers){$arguments+=' -peopleoftheiliacbay-verify-scene-obse
 if($ValidateHousing){$arguments+=' -peopleoftheiliacbay-verify-housing'}
 if($ValidateBankCash){$arguments+=' -peopleoftheiliacbay-verify-bank-cash'}
 if($ValidateCashReturn){$arguments+=' -peopleoftheiliacbay-verify-cash-return'}
+if($ValidateFamilyCash){$arguments+=' -peopleoftheiliacbay-verify-family-cash'}
 if($ValidateCrowd){$arguments+=' -peopleoftheiliacbay-verify-crowd'}
 if($ValidateShopping){$arguments+=' -peopleoftheiliacbay-verify-shopping'}
 if($ValidateSpeech){$arguments+=' -peopleoftheiliacbay-verify-return-voice'}
