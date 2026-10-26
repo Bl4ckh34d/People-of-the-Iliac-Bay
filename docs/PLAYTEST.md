@@ -1,6 +1,8 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `411485293F91`, um 08:44 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu: Bei Angriffen durch andere NPCs oder Gegner bleibt ein nicht gesehener Angreifer unbekannt. Mobile Zeugen müssen Opfer und Angreifer im Blick haben; Bewohnernamen stammen aus dem tatsächlichen NPC. Zwölf native Fälle mit Körpern, Sichtlinien und Gesundheitsänderungen bestehen. Vollständige Kampf- und Todesszenen bleiben separat offen; Details im [Testbericht](audits/2026-10-26-enemy-attack-knowledge.md).
+Spielbarer Zwischenbuild `7BB6C4BB878D`, um 08:57 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu: Auch der separate Spielerangriffs-Pfad prüft die Blickrichtung. Wer den Spieler nicht sieht, wird nicht automatisch Augenzeuge; bloßes Hören verrät den Täter nicht. Je neun native Fälle für mobile und stationäre Körper bestehen. Vollständige Kampf-/Todesszenen und tatsächliche Inn-Angriffe bleiben separat offen; Details im [Testbericht](audits/2026-10-26-player-attack-perception.md).
+
+Der vorherige Fix für NPC-/Gegnerangriffe bleibt enthalten: Nicht gesehene Angreifer bleiben unbekannt; tatsächliche NPC-Namen ersetzen leere Entity-Namen. Die zwölf zugehörigen Prüffälle bestehen auch im neuen Lauf.
 
 Der vorherige Gesprächsfix bleibt enthalten: „Wache suchen und Mord melden“ wird als ein Auftrag verstanden. Ein längeres Gespräch lässt den anschließenden Wachengang nicht mehr fälschlich als blockiert scheitern. Der native Test nutzt freie Texteingabe und das lokale Modell, wartet nach der Zusage weitere 25 Sekunden im Gespräch und beobachtet anschließend 18,63 m Laufweg sowie beide Erinnerungen. Freundliche Ausgangslage kontrolliert; andere Formulierungen und Ablehnungen bleiben mögliche Varianten.
 

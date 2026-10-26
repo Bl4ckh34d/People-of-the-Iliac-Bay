@@ -1,5 +1,11 @@
 # Testing and verification status
 
+## Player-violence perception — 26 October 2026, 08:57
+
+Installed and distribution SHA256 both equal **`7BB6C4BB878DD2947B5417C535D3F30E5B31F6264DBC70F5788A1DE64ED4AF0B`**. Unity package integration/build exits 0. Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, 70 PowerShell syntax checks, tooling protocols, source policy and whitespace checks pass.
+
+`player-observers-red` reproduces a mobile eyewitness with the player behind it. `player-observers-green` passes eighteen player-violence cases, including hearing without sight, plus the existing non-player/static/health checks. The test uses actual bodies and collider LOS; the indoor hearing contract is exercised with a controlled building incident, not a physically entered Inn. Actual damage/death and keeper encounters remain open. No exception entry occurs; the existing teardown cleanup warning remains. See the [audit](audits/2026-10-26-player-attack-perception.md).
+
 ## Attack knowledge — 26 October 2026, 08:44
 
 Installed and distribution SHA256 both equal **`411485293F91766CC002DB11CA2D9FD46975EB47EADE5294C8AFC46D9E83597A`**. Unity package integration/build exits 0. Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, 70 PowerShell syntax checks, tooling protocols, source policy and whitespace checks pass.

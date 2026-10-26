@@ -53,6 +53,7 @@ namespace PeopleOfTheIliacBay.DFU
                 yield return null;
             }
             VerifyEnemyAttackObservers();
+            VerifyPlayerAttackObservers();
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SCENE_OBSERVERS_PASS: mobile=true; stationary=true; nativeVisibility=true; epochBoundary=true");
         }
 

@@ -72,7 +72,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 if (!actor || actor == victim || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy ||
                     (building >= 0 && actor.transform.parent != victim.transform.parent)) continue;
-                var person = Observe(store, alarm, actor.Resident.Id, actor.transform.position,
+                var person = Observe(store, alarm, actor.Resident.Id, actor.transform,
                     victim.transform.position, sleeping(actor.Resident.Id) && Active(actor.Resident.Id, now) == null, now, building);
                 Locate(person, actor, building);
             }
@@ -105,9 +105,10 @@ namespace PeopleOfTheIliacBay.DFU
             }
         }
         public static AlarmPerson Observe(WorldStateStore world, CivilianIncident alarm, string id,
-            Vector3 from, Vector3 victim, bool sleeping, double now, int building)
+            Transform observer, Vector3 victim, bool sleeping, double now, int building)
         {
-            if (id == alarm.VictimId) return null;
+            if (!observer || !observer.gameObject.activeInHierarchy || id == alarm.VictimId) return null;
+            var from = observer.position;
             AlarmPerson person = null;
             if (building >= 0)
             {
@@ -118,8 +119,8 @@ namespace PeopleOfTheIliacBay.DFU
             }
             // A sleeper awakened by a lethal blow hears the disturbance; seeing
             // its aftermath alone does not establish the attacker's identity.
-            if (!sleeping && !GameManager.Instance.PlayerEntity.IsInvisible && Sees(from, victim, 20) &&
-                Sees(from, GameManager.Instance.PlayerMotor.transform.position, 20))
+            if (!sleeping && !GameManager.Instance.PlayerEntity.IsInvisible && StreetPopulation.SeesSceneEvent(observer, victim, 20) &&
+                StreetPopulation.SeesSceneEvent(observer, GameManager.Instance.PlayerMotor.transform.position, 20))
                 person = world.Witness(alarm.Id, id, now);
             return person;
         }

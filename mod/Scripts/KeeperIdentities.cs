@@ -161,7 +161,7 @@ namespace PeopleOfTheIliacBay.DFU
                 foreach (var actor in actors.Values)
                 {
                     if (!actor || !actor.Resident.IsAlive || !actor.gameObject.activeInHierarchy || actor.transform.parent != room.transform) continue;
-                    var witness = CivilianResponses.Observe(worldStore, alarm, actor.Resident.Id, actor.transform.position,
+                    var witness = CivilianResponses.Observe(worldStore, alarm, actor.Resident.Id, actor.transform,
                         npc.transform.position, GetState(actor.Resident.Id, now).Activity == Activity.Sleep && Reaction(actor.Resident.Id, now) == null, now, building);
                     if (witness == null || witness.HasPosition) continue;
                     var point = room.transform.InverseTransformPoint(actor.IsSleeping ? actor.transform.position : actor.transform.position - Vector3.up);
@@ -205,7 +205,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 var person = KeeperPerson(npc);
                 if (person == null || !person.IsAlive) continue;
-                var witness = CivilianResponses.Observe(worldStore, alarm, person.Id, npc.transform.position,
+                var witness = CivilianResponses.Observe(worldStore, alarm, person.Id, npc.transform,
                     victim, KeeperSleeping(person, now), now, interior.EntryDoor.buildingKey);
                 if (witness == null || witness.HasPosition) continue;
                 var billboard = npc.GetComponent<DaggerfallBillboard>();
