@@ -11,11 +11,13 @@ namespace PeopleOfTheIliacBay.Core
         public string PersonId { get; }
         public string Name { get; }
         public bool IsAlive { get; }
-        internal NpcKnownRelative(Resident resident)
+        public bool DeathKnown { get; }
+        internal NpcKnownRelative(Resident resident,Func<string,bool> knowsDeath)
         {
             PersonId = resident.Id;
             Name = resident.FullName ?? (resident.NativeIdentity == null ? null : resident.NativeIdentity.Name);
             IsAlive = resident.IsAlive;
+            DeathKnown = !resident.IsAlive && knowsDeath(resident.Id);
         }
     }
 
@@ -24,31 +26,33 @@ namespace PeopleOfTheIliacBay.Core
     {
         public string PersonId { get; }
         public int LivingHouseholdCount { get; }
+        public int AssignedHouseholdCount { get; }
         public NpcKnownRelative Partner { get; }
         public IReadOnlyList<NpcKnownRelative> Children { get; }
 
-        internal NpcHouseholdKnowledge(Resident self, Household home, IEnumerable<Resident> family)
+        internal NpcHouseholdKnowledge(Resident self, Household home, IEnumerable<Resident> family,Func<string,bool> knowsDeath)
         {
             PersonId = self.Id;
             LivingHouseholdCount = home.Residents.Count(r => r.IsAlive && r.HomeKey == self.HomeKey);
+            AssignedHouseholdCount = home.Residents.Count(r => r.HomeKey == self.HomeKey);
             var people = family.ToList();
             var partner = people.FirstOrDefault(r => r.Id == self.PartnerId);
-            Partner = partner == null ? null : new NpcKnownRelative(partner);
+            Partner = partner == null ? null : new NpcKnownRelative(partner,knowsDeath);
             Children = new ReadOnlyCollection<NpcKnownRelative>(people.Where(r => r.MotherId == self.Id || r.FatherId == self.Id)
-                .OrderBy(r => r.Id, StringComparer.Ordinal).Select(r => new NpcKnownRelative(r)).ToList());
+                .OrderBy(r => r.Id, StringComparer.Ordinal).Select(r => new NpcKnownRelative(r,knowsDeath)).ToList());
         }
 
         public string ToContext()
         {
             string partner = Partner == null ? "no recorded partner" :
-                "partner " + RelativeName(Partner) + (Partner.IsAlive ? " (living)" : " (deceased)");
-            int livingChildren = Children.Count(r => r.IsAlive);
-            return "Saved self-knowledge: " + LivingHouseholdCount.ToString(CultureInfo.InvariantCulture) +
-                " living residents assigned to your home, including you; this is household membership, not current presence. " + partner +
-                "; recorded children: " + livingChildren.ToString(CultureInfo.InvariantCulture) + " living, " +
-                (Children.Count - livingChildren).ToString(CultureInfo.InvariantCulture) + " deceased. " +
+                "partner " + RelativeName(Partner) + (Partner.DeathKnown ? " (known deceased)" : " (no known death)");
+            int knownDeaths = Children.Count(r => r.DeathKnown);
+            return "Saved self-knowledge: " + AssignedHouseholdCount.ToString(CultureInfo.InvariantCulture) +
+                " residents assigned to your home, including you; membership does not prove current presence or life state. " + partner +
+                "; recorded children: " + Children.Count.ToString(CultureInfo.InvariantCulture) + "; known child deaths: " +
+                knownDeaths.ToString(CultureInfo.InvariantCulture) + ". " +
                 (Children.Count == 0 ? "No recorded child links does not prove childlessness; legacy family data may be incomplete. " :
-                    "Recorded child names: " + string.Join(", ", Children.Take(8).Select(r => RelativeName(r) + (r.IsAlive ? "" : " (deceased)"))) +
+                    "Recorded child names: " + string.Join(", ", Children.Take(8).Select(r => RelativeName(r) + (r.DeathKnown ? " (known deceased)" : ""))) +
                     (Children.Count > 8 ? "; additional names omitted" : "") + ". ") +
                 "Marriage ceremony/status is not separately recorded. Disclosure is optional; withholding does not change these facts. " +
                 "Do not invent other relatives, names, ages, addresses or whereabouts.";
@@ -83,7 +87,7 @@ namespace PeopleOfTheIliacBay.Core
                 .Concat(state.HouseholdHistory.Where(h => h.Household != null).SelectMany(h => h.Household.Residents))
                 .Where(r => r.Id == self.PartnerId || r.MotherId == self.Id || r.FatherId == self.Id)
                 .GroupBy(r => r.Id, StringComparer.Ordinal).Select(g => g.First());
-            return new NpcHouseholdKnowledge(self, ownHome, people);
+            return new NpcHouseholdKnowledge(self, ownHome, people,subject=>KnowsResidentDeath(self.Id,subject));
         }
     }
 }

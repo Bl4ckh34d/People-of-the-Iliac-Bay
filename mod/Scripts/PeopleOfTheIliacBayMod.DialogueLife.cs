@@ -81,7 +81,7 @@ namespace PeopleOfTheIliacBay.DFU
             bool npcLocationKnown = TryReadCurrentNpcOutdoorWeather(out outdoors, out condition);
             outdoors = npcLocationKnown && outdoors;
             ActivitySnapshot? observed=null;
-            if(resident!=null && streets && npcLocationKnown)
+            if(resident!=null && streets && streets.Ready && npcLocationKnown && !game.PlayerEnterExit.IsPlayerInsideDungeon)
                 observed=ConversationLifeContext.ObservedActivity(streets.GetState(resident.Id,now),outdoors,
                     game.PlayerEnterExit.IsPlayerInsideBuilding ? game.PlayerEnterExit.BuildingDiscoveryData.buildingKey : -1);
             string activity = resident != null && streets

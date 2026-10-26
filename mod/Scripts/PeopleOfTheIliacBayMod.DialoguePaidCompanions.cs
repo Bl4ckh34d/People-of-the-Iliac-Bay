@@ -40,7 +40,7 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 string reason = "The local NPC scene is no longer available.";
                 bool committed = streets != null && streets.TryHirePaidCompanion(person,proposalId,decision,
-                    CommandTurnFor(snapshot),out reason);
+                    CommandTurnFor(snapshot),dailyGold,out reason);
                 if (committed)
                     conversationResponseCue += " ACTION ACCEPTED AND SAVED: paid Follow for 24 game hours at " +
                         dailyGold.ToString(CultureInfo.InvariantCulture) + " gold. " + reason +

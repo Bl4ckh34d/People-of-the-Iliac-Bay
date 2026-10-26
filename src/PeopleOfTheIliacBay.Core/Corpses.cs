@@ -182,6 +182,7 @@ namespace PeopleOfTheIliacBay.Core
             else if(!CivilianAlarms.PersonActive(alarm,person,now))
             { person.Escape=null; person.EscapeAdvancedAt=0; person.HasPosition=false; person.ReachedRefuge=false; }
             person.CorpseObserver=true; person.CorpseSeenAt=now; person.Reaction=CivilianReaction.Flee;
+            RememberKnownDeath(alarm,observerId,now,KnownDeathEvidence.Discovery);
             var native=state.NativePeople.Find(p=>p.Id==observerId);
             if(native!=null) native.ResponseIncidentId=alarm.Id;
             return person;
@@ -209,6 +210,7 @@ namespace PeopleOfTheIliacBay.Core
                 var person=alarm.People.Find(p=>p.ResidentId==observerId);
                 if(person==null) { person=new AlarmPerson {ResidentId=observerId,Reaction=CivilianReaction.Flee}; alarm.People.Add(person); }
                 if(person.OutdoorReport==null) person.OutdoorReport=new OutdoorBodyReport {SeenAt=now};
+                RememberKnownDeath(alarm,observerId,now,KnownDeathEvidence.Discovery);
             }
             if (body.Discovery == null && !body.Cleared)
                 body.Discovery = new OutdoorCorpseDiscovery { ObserverId = observerId, Guard = guard, SeenAt = now, PlayerPresent = playerPresent };
@@ -236,6 +238,7 @@ namespace PeopleOfTheIliacBay.Core
             Require(!AlarmResident(alarm.SettlementId, alarm.VictimId).IsAlive && alarm.HasLocation &&
                 ValidTime(now) && now >= alarm.StartedAt, "Corpse needs a confirmed positioned death.");
             if (alarm.Corpse == null) alarm.Corpse = new CorpseState { DiedAt = now, CleanupVersion = 1 };
+            RememberRecentDeathWitnesses(alarm);
         }
         public void ConfirmCorpse(string incidentId, double now, int buildingKey, double x, double y, double z)
         {

@@ -109,7 +109,7 @@ namespace PeopleOfTheIliacBay.DFU
             Require(enabled && expectedCharacter != null && expectedCharacter.StartsWith("PeopleOfTheIliacBayTest-", StringComparison.Ordinal) &&
                 GameManager.Instance.PlayerEntity.Name == expectedCharacter,
                 "Combat probe requires its opt-in flag and caller-owned disposable character.");
-            DaggerfallUnityItem weapon;
+            DaggerfallUnityItem weapon = null;
             Require(streets && streets.Ready && store != null && actor && actor.Resident != null &&
                 NativeNpcCombatAssist.TryWeapon(actor, out weapon),
                 "Combat probe needs an actual equipped managed fighter with native weapon skill.");
@@ -147,6 +147,11 @@ namespace PeopleOfTheIliacBay.DFU
                 Vector3 before = actor.transform.position;
                 string actionId = Accept(streets, store, actor, id, NpcActionKind.Attack);
                 int initial = target.Entity.CurrentHealth;
+                int skill = weapon.GetWeaponSkillIDAsShort();
+                var skillProgress = store.ReadNpcProgress(actor.Resident.Id);
+                var skillRow = skillProgress == null ? null : skillProgress.Skills.Find(row => row.Skill == skill);
+                long experienceBefore = skillRow == null ? 0 : skillRow.Experience;
+                int nativeSkillBefore = actorBody.Entity.Skills.GetPermanentSkillValue(skill);
                 float timeout = Time.realtimeSinceStartup + 50;
                 while (target && target.Entity.CurrentHealth == initial && Time.realtimeSinceStartup < timeout)
                 {
@@ -157,6 +162,21 @@ namespace PeopleOfTheIliacBay.DFU
                     "Actual equipped resident did not damage the native enemy through the native formula.");
                 Require(Vector3.Distance(before, actor.transform.position) > 1,
                     "Combat probe did not observe physical route approach by the real fighter.");
+                skillProgress = store.ReadNpcProgress(actor.Resident.Id);
+                skillRow = skillProgress == null ? null : skillProgress.Skills.Find(row => row.Skill == skill);
+                int derivedSkill = store.ReadNpcActor(actor.Resident.Id, store.ResolveNpcArchetype(actor.Resident.Id)).Skill(skill);
+                int observedHealthLoss = initial - target.Entity.CurrentHealth;
+                // Polling can observe more than one native swing. Every awarded hit must
+                // remove at least one HP; CPU adapter tests verify the per-hit exact tally.
+                Require(skillRow != null && skillRow.Experience > experienceBefore &&
+                    skillRow.Experience - experienceBefore <= observedHealthLoss * NativeNpcCompanionExperience.ExperiencePerSuccessfulUse &&
+                    actorBody.Entity.Skills.GetPermanentSkillValue(skill) == derivedSkill && derivedSkill >= nativeSkillBefore,
+                    "Observed admitted adventurer hits did not award bounded weapon experience to ledger and native body.");
+                NativeNpcCompanionCastProbe.VerifySkillPersistence(store, actor.Resident.Id, skill, skillRow.Experience, derivedSkill);
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMBAT_ASSIST_SKILL_PASS: admittedAttack=true; generatedAdventurer=true; skill=" +
+                    skill + "; rawExperience=" + experienceBefore + "->" + skillRow.Experience +
+                    "; nativeSkill=" + nativeSkillBefore + "->" + derivedSkill + "; observedHealthLoss=" + observedHealthLoss +
+                    "; persisted=true; rebuiltNativeSkills=true");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMBAT_ASSIST_HIT_PASS: actualManagedFighter=true; nativeFormula=true; hpBefore=" +
                     initial + "; hpAfter=" + target.Entity.CurrentHealth + "; target=" + id);
                 target.Entity.SetHealth(1, true);

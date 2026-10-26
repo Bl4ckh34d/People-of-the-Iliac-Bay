@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.UserInterfaceWindows;
@@ -8,7 +7,6 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class PeopleOfTheIliacBayMod
     {
-        private readonly Dictionary<string,int> bereavementGreetings=new Dictionary<string,int>();
         internal void ProbeBereavementGreeting(string residentId)
         {
             var original=store;
@@ -26,36 +24,36 @@ namespace PeopleOfTheIliacBay.DFU
                 double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
                 var incident=store.RecordViolence(settlement,partner.Id,now-10);
                 partner.IsAlive=false;store.LocateViolence(incident.Id,partner.HomeKey,0,0,0);store.ConfirmCorpse(incident.Id,now-9);
+                if(store.BereavementFor(person,now)!=null)throw new InvalidOperationException("Remote death leaked into grief.");
+                store.NoticeInteriorCorpse(incident.Id,person.Id,partner.HomeKey,now-8);
                 store.Restore((WorldState)DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Deserialize(typeof(WorldState),
                     DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
+                person=store.ResolveResident(residentId);
                 int day=(int)(now/86400);
                 while(StableSeed.Combine(person.AppearanceSeed,(uint)day,0x67726965,0)%10000>=5900) person.AppearanceSeed++;
-                bereavementGreetings.Remove(person.Id);ShowBereavementGreeting(person);
+                ShowBereavementGreeting(person);
                 if(!(DaggerfallUI.UIManager.TopWindow is DaggerfallMessageBox) || !DaggerfallUI.UIManager.ContainsWindow(DaggerfallUI.Instance.TalkWindow))
                     throw new InvalidOperationException("Mourning greeting replaced normal dialogue.");
                 DaggerfallUI.UIManager.PopWindow();
                 if(DaggerfallUI.UIManager.TopWindow!=DaggerfallUI.Instance.TalkWindow)
                     throw new InvalidOperationException("Closing mourning greeting did not restore normal topics.");
-                ShowBereavementGreeting(person);
+                store.Restore((WorldState)DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Deserialize(typeof(WorldState),
+                    DaggerfallWorkshop.Game.Serialization.SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
+                ShowBereavementGreeting(store.ResolveResident(residentId));
                 if(DaggerfallUI.UIManager.TopWindow!=DaggerfallUI.Instance.TalkWindow)
                     throw new InvalidOperationException("Mourning greeting repeated on the same day.");
-                UnityEngine.Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BEREAVEMENT_PASS: native death restore, mourning overlay, normal topics retained, no same-day repeat.");
+                UnityEngine.Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BEREAVEMENT_PASS: unknown remote death excluded, discovered death retained, mourning overlay, normal topics retained, no repeat after native restore.");
             }
-            finally {store=original;bereavementGreetings.Remove(residentId);}
+            finally {store=original;}
         }
         private void ShowBereavementGreeting(Resident resident)
         {
-            if(store==null || saveFault) return;
+            if(store==null || saveFault || resident==null) return;
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
-            int day=(int)(now/86400);int previous;
-            if(bereavementGreetings.TryGetValue(resident.Id,out previous) && previous==day) return;
-            var grief=store.BereavementFor(resident,now);
-            if(grief==null || grief.WitnessedPlayerKilling) return;
-            bereavementGreetings[resident.Id]=day;
-            // Stable daily choice prevents rerolling a conversation for a different response.
-            if(StableSeed.Combine(resident.AppearanceSeed,(uint)day,0x67726965,0)%10000>=grief.MentionChance*10000) return;
+            Bereavement grief;
+            if(!store.TryBereavementGreeting(resident,now,out grief))return;
             string line=now-grief.DiedAt<30*86400d
-                ? "I lost "+grief.Name+" recently. Our home feels so empty."
+                ? "I lost my "+grief.Relationship+", "+grief.Name+", recently. I miss them."
                 : "I still miss "+grief.Name+". Some days are harder than others.";
             var window=new DaggerfallMessageBox(DaggerfallUI.UIManager);
             window.SetText(new[]{resident.FullName,line});window.ClickAnywhereToClose=true;

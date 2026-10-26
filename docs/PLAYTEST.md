@@ -1,13 +1,30 @@
 # Spieltest — 26. Oktober 2026
 
-Aktuell installiert: **`3202304039BC`**, 16:32; Distribution und Player identisch.
-Unity-Paketprüfung und **2147 Core-Tests** bestehen. Neu enthalten: korrigierte
-Stuhlidentität und Tresenzahlung im Inn, genaue Türbindung bei Enter sowie
-Wachverfolgung durch individuell beobachtete Türen. Die Wachverfolgung ist noch
-nativ abzunehmen. Frühere Begleiter-, Tempel- und Dungeon-Ergänzungen bleiben enthalten.
-120 g buchen einen begonnenen 24-Stunden-Tag; frühe Kündigung erstattet keinen
+Aktuell installiert: **`D3CA68C3D919`**; Distribution und Player identisch.
+Unity-Paketprüfung besteht; die enthaltene Core-Basis besteht2162 Tests.
+Kontrollierte Wachtests bestehen beobachteten und unbeobachteten Türdurchgang,
+Wiedererkennung innen und Zielverlust.22 native Diebstahls-Erinnerungsfälle bestehen.
+Dungeon-Follow samt Kontext und Rundreiseprobe ist enthalten, aber noch nicht
+nativ abgenommen: der erste Lauf scheitert vor Eintritt an der Reisenden-Fixture.
+Frühere Begleiter-, Tempel- und Inn-Ergänzungen bleiben enthalten.
+10 g je tatsächlichem NPC-Level buchen einen begonnenen 24-Stunden-Tag
+(Level5:50g, Level12:120g). Frühe Kündigung erstattet keinen
 Teil des Tages, gescheiterte Aufnahme erstattet vollständig, keine automatische
-Verlängerung. Die native Prüfung dieser Konditionen steht noch aus.
+Verlängerung. Gewöhnliche generierte Begleiter haben derzeit meist das native
+Level1 und kosten damit10g; diese Änderung erzeugt keine neue Levelverteilung.
+Die native Prüfung dieser Konditionen steht noch aus.
+
+Neu enthalten: Erfolgreiche Kampf-/Zauberhilfe berechtigter Begleiter verbessert
+die tatsächlich genutzte Fertigkeit. Abgelaufene oder pausierte Verträge erlauben
+keinen Fortschritts-Umweg. Trauer um Partner, Eltern und Kinder benötigt jetzt
+wirkliche Kenntnis des Todes: Beobachtung, Leichenfund oder überbrachte Nachricht.
+Unbekannte Täter werden nicht automatisch dem Spieler gleichgesetzt. Erinnerungen
+und tägliche Begrüßungsversuche überstehen die Speicherung.49 gezielte Trauer-
+und22 Fertigkeitsprüfungen bestehen; vollständige Spielabnahme bleibt offen.
+
+Für den kurzen Test: Begleiterlohn im Angebot prüfen, tatsächliche Hilfe leisten
+lassen und Familien nach bekannten Ereignissen erneut ansprechen. Die jüngsten
+Ergänzungen sind Testfunktionen, keine vollständig abgenommene Veröffentlichung.
 
 Familien erreichen in zwei geprüften Inns ihre Plätze, zahlen und sitzen stabil;
 ihre tatsächlichen Käufe erscheinen korrekt in Erinnerungen. Im ursprünglichen

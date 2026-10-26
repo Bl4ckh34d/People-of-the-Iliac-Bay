@@ -18,6 +18,38 @@ namespace PeopleOfTheIliacBay.DFU
         private readonly HashSet<int> travelerDemandCompleted=new HashSet<int>();
         private readonly Dictionary<int,List<TownGeometry.TravelerAccess>> travelerDemandRoutes=
             new Dictionary<int,List<TownGeometry.TravelerAccess>>();
+        private static readonly bool travelerDemandProbeEnabled=
+            Environment.GetEnvironmentVariable("POTIB_ROADMAP_PROBE")=="dungeon-follow" &&
+            Environment.GetEnvironmentVariable("POTIB_DUNGEON_FOLLOW_PREPARE")=="1";
+        private sealed class TravelerDemandProbeCounts
+        {internal int GateDenials,RouteAttempts,EmptyRoutes;}
+        private readonly Dictionary<int,TravelerDemandProbeCounts> travelerDemandProbeCounts=
+            new Dictionary<int,TravelerDemandProbeCounts>();
+
+        // Observes only existing scheduled work. Entries are bounded by actual Inns
+        // and cleared with the demand owner; disabled outside explicit fixture prep.
+        private TravelerDemandProbeCounts ObserveTravelerDemand(int key)
+        {
+            if(!travelerDemandProbeEnabled)return null;
+            TravelerDemandProbeCounts counts;
+            if(!travelerDemandProbeCounts.TryGetValue(key,out counts))
+            {counts=new TravelerDemandProbeCounts();travelerDemandProbeCounts.Add(key,counts);}
+            return counts;
+        }
+
+        internal string TravelerDemandProbeStatus(int key)
+        {
+            int denied=0,attempted=0,empty=0;
+            foreach(var counts in travelerDemandProbeCounts.Values)
+            {denied+=counts.GateDenials;attempted+=counts.RouteAttempts;empty+=counts.EmptyRoutes;}
+            TravelerDemandProbeCounts target;
+            travelerDemandProbeCounts.TryGetValue(key,out target);
+            return "; demandCountersEnabled="+travelerDemandProbeEnabled+
+                "; gateDenials="+denied+"; routeAttempts="+attempted+"; emptyRoutes="+empty+
+                "; targetGateDenials="+(target==null ? 0 : target.GateDenials)+
+                "; targetRouteAttempts="+(target==null ? 0 : target.RouteAttempts)+
+                "; targetEmptyRoutes="+(target==null ? 0 : target.EmptyRoutes);
+        }
 
         private void EnsureInnTravelerDemand(double seconds)
         {
@@ -30,6 +62,7 @@ namespace PeopleOfTheIliacBay.DFU
                 travelerDemandStore=worldStore;travelerDemandDirectory=directory;
                 travelerDemandEpoch=worldStore.CaptureNpcVitalsWriteEpoch();travelerDemandDay=-1;travelerDemandNextInn=0;
                 travelerDemandInns.Clear();travelerDemandCompleted.Clear();travelerDemandRoutes.Clear();
+                travelerDemandProbeCounts.Clear();
                 foreach(var inn in directory.GetBuildingsOfType(DFLocation.BuildingTypes.Tavern))
                     travelerDemandInns.Add(inn.buildingKey);
                 travelerDemandInns.Sort();
@@ -43,11 +76,15 @@ namespace PeopleOfTheIliacBay.DFU
             List<TownGeometry.TravelerAccess> routes;
             if(!travelerDemandRoutes.TryGetValue(key,out routes))
             {
-                if(!BackgroundWork.TryStart())return;
+                var counts=ObserveTravelerDemand(key);
+                if(!BackgroundWork.TryStart())
+                {if(counts!=null)counts.GateDenials++;return;}
+                if(counts!=null)counts.RouteAttempts++;
                 routes=geometry.SurveyTravelerRoutes(key);
                 // Closed gates can temporarily remove native routes. Retry on
                 // later refreshes rather than save a fabricated approach.
-                if(routes.Count==0)return;
+                if(routes.Count==0)
+                {if(counts!=null)counts.EmptyRoutes++;return;}
                 travelerDemandRoutes.Add(key,routes);
             }
             try

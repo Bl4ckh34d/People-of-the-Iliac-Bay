@@ -1,11 +1,40 @@
 # Testing and verification status
 
-## Current installed checkpoint — 26 October 2026, 16:32
+## Current installed checkpoint — 26 October 2026
 
-Distribution and Player SHA256 both equal **`3202304039BC49F2050FBBEB681B5EBF033439A69BDCADFF4DB63B65ED02FCB2`**.
-This adds only bounded guard-probe fixture readiness to the16:22 package
-`E31822DEE3D6`; the new dungeon Follow/theft agent work is not included. Unity
-verification exits0 (`work/guard-door-ready-build-unity.log`).
+Distribution and Player SHA256 both equal **`D3CA68C3D919FC9845B2769661BEB5064318EF46E8BD856B3874C09D5F71741E`**.
+The normal full build exits0 (`work/pre-pause-build.log`); Unity package verification
+passes. This supersedes FD3392919E6D and the diagnostic-only 083EAE140780 snapshot.
+The package includes theft memory, corrected guard reaction ownership, dungeon
+Follow/context/probes, companion skill progress, known bereavement and the
+user-confirmed wage of10g per actual NPC level per begun24-hour block.
+Root Core2162/2162 and RuntimeCompile0 warnings/errors pass (`work/wage-core-root.log`,
+`work/wage-runtime-root.log`). Root focused regressions pass49 bereavement assertions
+and22 companion-skill cases. Those CPU/adapter checks do not establish native
+combat, spell, grief or hire acceptance for the latest additions.
+
+- Guard witnessed06 passes on preceding `5AC70760315A`: actual exterior crossing,
+  individual door evidence, native interior landing/reacquisition, truthful
+  context and target-loss search. Guard unwitnessed01 passes on `A5524687F1FB`.
+  The final package carries the same guard source. See the [guard audit](audits/2026-10-26-guard-witnessed-door-pursuit.md).
+- Theft native22 passes on `A5524687F1FB`; private containers are staged in a shop,
+  not an ordinary-home acceptance. See the [theft audit](audits/2026-10-26-theft-witness-memory.md).
+- Dungeon-follow01 terminates before entry: exact SAVE18 warmup does not produce
+  its expected natural traveler within90 real seconds. No dungeon behavior is
+  accepted from that failure. Source and test limits: [dungeon audit](audits/2026-10-26-dungeon-follow.md).
+- Dungeon-follow03 on the current package also terminates before entry after180s.
+  All129 actual route attempts return empty, including eight for the target Inn.
+  Shared-gate denials occur46 times but do not explain the successful attempts'
+  empty results. This is a measured navigation prerequisite failure, not a dungeon pass.
+- Source policy passes1419 C# and116 Python files. Full build evidence is retained
+  in `work/pre-pause-build-unity.log`; source hashes in `work/pre-pause-source-hashes.json`.
+- Native Inn timing runs01/02 pass in Inns197386/197127. Eight explicit refreshes
+  peak at0.92/0.72ms; occupant block reads peak at0.01ms. These warm, short samples
+  do not reproduce the earlier heavy family state or establish a performance fix.
+  See the [measurement audit](audits/2026-10-26-loiter-performance.md).
+
+### Earlier16:32 checkpoint evidence
+
 Unity package/integration verification exits 0. Root reruns pass Core **2147/2147**,
 RuntimeCompile with zero warnings/errors, source policy (1396 C# / 116 Python),
 exact-door resolver six checks plus three task lifecycle scenarios, guard pursuit

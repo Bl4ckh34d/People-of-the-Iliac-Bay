@@ -35,6 +35,8 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private void PrepareNpcFollowTransition(PlayerEnterExit.TransitionEventArgs args)
         {
+            var dungeonOwner=DungeonFollowOwner;
+            if(dungeonOwner && dungeonOwner.PrepareDungeonFollow(args))return;
             if(!Ready || worldStore==null || population==null || !directory)return;
             bool entering=args.TransitionType==PlayerEnterExit.TransitionType.ToBuildingInterior && !interior;
             bool leaving=args.TransitionType==PlayerEnterExit.TransitionType.ToBuildingExterior && interior;
@@ -147,7 +149,8 @@ namespace PeopleOfTheIliacBay.DFU
             if(!Ready || worldStore==null || population==null)return;
             double now=ActionNow();
             foreach(var job in worldStore.PendingNpcActions())
-                if(job.FollowTransition!=null && ActionSpaceMatches(job.LastPosition))
+                if(job.FollowTransition!=null && ActionSpaceMatches(job.LastPosition) &&
+                    !(roadTravelActors && roadTravelActors.OwnsDungeonFollow(job.ResidentId)))
                 {
                     // A failed synchronous native transition did not move this actor.
                     var actor=FindActor(job.ResidentId);

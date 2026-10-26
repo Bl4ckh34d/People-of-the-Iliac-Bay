@@ -30,16 +30,41 @@ namespace PeopleOfTheIliacBay.Core
         {
             if(string.IsNullOrWhiteSpace(personId))return false;
             var action=store.ActiveNpcAction(personId);
-            if(action!=null && !NpcActionExecutor.IsTerminal(action) && !action.ReturningToRoutine &&
-                now>=action.AcceptedAt && now>=action.UpdatedAt && now<action.DeadlineAt &&
+            // FinishAt ends service. DeadlineAt can include time to return to routine.
+            if(action!=null && (NpcActionExecutor.IsTerminal(action) || action.ReturningToRoutine ||
+                now<action.AcceptedAt || now<action.UpdatedAt || now>=action.DeadlineAt ||
+                action.FinishAt>0 && now>=action.FinishAt))return false;
+            string paidContractId=NpcPaidCompanionAction.ContractId(action);
+            if(action!=null && paidContractId==null &&
                 action.Kind==NpcActionKind.Follow && action.Target!=null &&
                 action.Target.Kind==NpcActionTargetKind.Person &&
                 action.Target.PersonId==NpcDirectedRelationship.PlayerTargetId)return true;
+            bool combat=action!=null && (action.Kind==NpcActionKind.Attack || action.Kind==NpcActionKind.Defend);
+            NpcServiceCoverage required=combat?NpcServiceCoverage.Combat:NpcServiceCoverage.Follow;
+            bool paidService=false;
             foreach(var contract in store.ReadNpcServiceContracts().Contracts)
                 if(contract.NpcId==personId && contract.PayerId==NpcDirectedRelationship.PlayerTargetId &&
-                    contract.Status==NpcServiceContractStatus.Active && now>=contract.BlockStartAt && now<contract.BlockEndAt &&
-                    (contract.Coverage & NpcServiceCoverage.Follow)!=0)return true;
-            return false;
+                    contract.Status!=NpcServiceContractStatus.Terminated)
+                {
+                    paidService=true;
+                    if(paidContractId!=null && contract.ContractId!=paidContractId ||
+                        contract.Status!=NpcServiceContractStatus.Active || now<contract.BlockStartAt || now>=contract.BlockEndAt ||
+                        now<contract.LastServiceUpdateAt || (contract.Coverage & required)==0)continue;
+                    // Dismissal is authoritative before a refused native wage transfer settles.
+                    // The terminal job may already have left the active-action index.
+                    foreach(var pending in store.PendingPaidFollowSettlements())
+                        if(NpcPaidCompanionAction.ContractId(pending)==contract.ContractId)return false;
+                    return true;
+                }
+            // Follow and assistance are exclusive physical actions. A genuine adventurer
+            // who accepts one exact player command is a companion for that action only.
+            // Ordinary households and ordinary travelers never become adventurers this way.
+            if(paidService || action==null || action.Admission==null ||
+                action.Admission.Kind!=NpcOperationAdmissionKind.Conversation ||
+                !(combat || action.Kind==NpcActionKind.CastSpell && action.CompanionCast!=null))return false;
+            var traveler=store.Traveler(personId);
+            return traveler!=null && traveler.IsAlive &&
+                TravelerAdventurerPolicy.IsAdventurer(store.ResolveNpcArchetype(personId));
         }
 
         private static bool Finite(double value) {return !double.IsNaN(value) && !double.IsInfinity(value);}

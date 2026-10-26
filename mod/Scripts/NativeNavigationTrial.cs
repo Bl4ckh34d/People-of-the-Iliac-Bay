@@ -44,6 +44,8 @@ namespace PeopleOfTheIliacBay.DFU
                     yield return StaticPersonalTradeNativeProbe.RunFixture(host,streets,GameManager.Instance.PlayerEntity.Name);
                 else if(roadmapProbe=="dungeon-modules")yield return NativeDungeonModuleProbe.Run();
                 else if(roadmapProbe=="dungeon-jump")yield return NativeDungeonJumpProbe.Run();
+                else if(roadmapProbe=="dungeon-follow")yield return NativeDungeonFollowProbe.Run(host,streets);
+                else if(roadmapProbe=="inn-refresh-cost")yield return NativeInnRefreshProbe.Run(host);
                 else if(roadmapProbe=="interior-module")yield return NativeInteriorModuleProbe.Run();
                 else if(roadmapProbe=="paid-companion")
                 {

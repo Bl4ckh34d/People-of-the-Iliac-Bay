@@ -947,6 +947,12 @@ namespace PeopleOfTheIliacBay.DFU
             Transform npc = speaker.Transform;
             DaggerfallInterior npcInterior = npc.GetComponentInParent<DaggerfallInterior>();
             ResidentActor managed = speaker.ManagedActor;
+            if(managed && roadActors && roadActors.IsLoadedDungeonCompanion(managed))
+            {
+                npcOutdoors=ConversationContextFact<bool>.Verified(false,
+                    ConversationContextFactSource.NpcSceneObservation,gameTime);
+                return;
+            }
             bool managedOwner = managed == null || streets && managed.Resident != null &&
                 !string.IsNullOrWhiteSpace(managed.Resident.Id) &&
                 streets.FindActor(managed.Resident.Id) == managed;

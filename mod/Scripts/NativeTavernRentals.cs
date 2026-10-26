@@ -239,6 +239,9 @@ namespace PeopleOfTheIliacBay.DFU
 
         private void Prepare(WorldStateStore store,BuildingDirectory directory,DaggerfallInterior interior)
         {
+            long started=RuntimeTiming.Start("inn-loaded-prepare");
+            try
+            {
             if(surveyed!=interior) { surveyed=interior; rooms=null; markers=null; lastFailure=null; }
             if(rooms==null)
             {
@@ -253,6 +256,8 @@ namespace PeopleOfTheIliacBay.DFU
             if(bedroomOccupants!=null) foreach(var person in bedroomOccupants)
                 if(rooms.Exists(r=>r.Id==person.Value && !r.NonRentable)) guests.Add(person.Key,person.Value);
             BedroomFlatReplacement.Apply(store,interior,DFLocation.BuildingTypes.Tavern,guests);
+            }
+            finally { RuntimeTiming.End("inn-loaded-prepare",started); }
         }
 
         private bool Rent(int building,int days,int price,Action close)
@@ -333,10 +338,15 @@ namespace PeopleOfTheIliacBay.DFU
 
         private static void AdvanceResidentInside(WorldStateStore store,int town,int building,double now)
         {
+            long started=RuntimeTiming.Start("inn-loaded-admissions");
+            try
+            {
             var streets=UnityEngine.Object.FindObjectOfType<StreetPopulation>();
             bool ready=streets && streets.PrepareResidentInnReceptions(store,town,building,now);
             if(!ready && store.HasUnpreparedResidentInnAdmission(town,building,now)) return;
             store.AdvanceInnAdmissions(town,now,8,building);
+            }
+            finally { RuntimeTiming.End("inn-loaded-admissions",started); }
         }
         public void Refresh(WorldStateStore store,BuildingDirectory directory)
         {

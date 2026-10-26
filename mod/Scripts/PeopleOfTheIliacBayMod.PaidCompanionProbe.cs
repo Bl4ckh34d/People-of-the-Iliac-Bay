@@ -81,6 +81,7 @@ namespace PeopleOfTheIliacBay.DFU
             PaidCompanionProbeRequire(decision != null,"No eligible paid companion candidate is available.");
             int fee; string reason;
             PaidCompanionProbeRequire(streets.TryQuotePaidCompanion(residentId,decision,out fee,out reason),reason);
+            PaidCompanionProbeRequire(fee==nativeBody.Entity.Level*10,"Native quote does not match the companion's actual level.");
             var player = game.PlayerEntity;
             int goldBefore = player.GetGoldAmount();
             int walletBefore = store.ReadNpcInventory(residentId).WalletGold;
@@ -91,7 +92,7 @@ namespace PeopleOfTheIliacBay.DFU
                 "Ordinary action acceptance bypassed paid consent or moved gold.");
             bool answered = false,accepted = false;
             var confirm = new PersonalCommerceConfirmBox(
-                "Native fixture: hire for 120 gold / 24 game hours, then dismiss immediately?",
+                "Native fixture: hire for "+fee+" gold / 24 game hours, then verify expiry?",
                 choice => { accepted = choice; answered = true; });
             DaggerfallUI.UIManager.PushWindow(confirm);
             while (!answered)
@@ -119,9 +120,14 @@ namespace PeopleOfTheIliacBay.DFU
                     sessionId,1,1,store.NpcFrameworkScopeId,"","native-paid-companion-probe",1);
                 NpcConversationCommandTurn turn;
                 PaidCompanionProbeRequire(store.TryCaptureNpcConversationCommandTurn(session,binding,
-                    "Hire you for 120 gold for one day.",out turn),"Native paid fixture command was not captured.");
+                    "Hire you for "+fee+" gold for one day.",out turn),"Native paid fixture command was not captured.");
+                int wrongFee=fee>10?fee-10:fee+10;
+                PaidCompanionProbeRequire(!streets.TryHirePaidCompanion(residentId,
+                    "paid-probe-stale:"+Guid.NewGuid().ToString("N"),decision,turn,wrongFee,out reason) &&
+                    player.GetGoldAmount()==goldBefore && store.ReadNpcServiceContracts().Revision==ledgerBefore,
+                    "Changed wage bypassed consent or moved gold.");
                 PaidCompanionProbeRequire(streets.TryHirePaidCompanion(residentId,
-                    "paid-probe:" + Guid.NewGuid().ToString("N"),decision,turn,out reason),reason);
+                    "paid-probe:" + Guid.NewGuid().ToString("N"),decision,turn,fee,out reason),reason);
                 PaidCompanionProbeRequire(streets.HasBoundTravelerActionPlan(residentId),
                     "The actual generated traveler is not bound to its managed runtime action plan.");
                 var job = store.ActiveNpcAction(residentId);

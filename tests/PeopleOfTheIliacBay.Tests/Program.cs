@@ -8,6 +8,7 @@ namespace PeopleOfTheIliacBay.Tests
         private static int Main()
         {
             var cases = new List<(string Name, Action Body)>();
+            NpcCompanionWageTests.Add(cases);
             ClosedShopLeisureTests.Add(cases);
             NpcSceneMemoryTests.Add(cases);
             NpcInnMemoryTests.Add(cases);

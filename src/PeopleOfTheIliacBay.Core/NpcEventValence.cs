@@ -32,7 +32,7 @@ namespace PeopleOfTheIliacBay.Core
                 case NpcSceneEventKind.GuardPursuit:case NpcSceneEventKind.Theft:return -2;
                 case NpcSceneEventKind.Healing:case NpcSceneEventKind.Recovery:case NpcSceneEventKind.Help:return 3;
                 case NpcSceneEventKind.Gift:return 2;
-                case NpcSceneEventKind.Murder:return -5;
+                case NpcSceneEventKind.Murder:case NpcSceneEventKind.Bereavement:return -5;
                 case NpcSceneEventKind.Corpse:return -4;
                 default:return 0;
             }

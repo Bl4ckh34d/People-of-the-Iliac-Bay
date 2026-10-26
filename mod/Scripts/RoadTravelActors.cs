@@ -29,8 +29,11 @@ namespace PeopleOfTheIliacBay.DFU
             var owner=new GameObject("Road actor navigation lifetime");
             owner.SetActive(false); owner.transform.SetParent(transform,false);
             navigation=owner.AddComponent<CityNavigation>();
+            PlayerEnterExit.OnTransitionDungeonInterior+=CompleteNativeDungeonEntry;
+            PlayerEnterExit.OnTransitionDungeonExterior+=CompleteNativeDungeonExit;
+            PlayerEnterExit.OnFailedTransition+=AbortNativeDungeonFollow;
         }
-        public ResidentActor Find(string id) { ResidentActor actor; actors.TryGetValue(id,out actor); return actor; }
+        public ResidentActor Find(string id) { ResidentActor actor; actors.TryGetValue(id,out actor); return actor?actor:FindDungeonCompanion(id); }
         public bool TryAdopt(ResidentActor actor,WorldStateStore store,double now)
         {
             if(!actor || !actor.Resident.IsAlive || source==null || !ReferenceEquals(source(),store) ||
@@ -57,7 +60,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public void Clear()
         {
-            ClearRoadActors(); ClearPaidCompanions();
+            ClearRoadActors(); ClearPaidCompanions(); ClearDungeonFollowers();
         }
         private void ClearRoadActors()
         {
@@ -68,8 +71,11 @@ namespace PeopleOfTheIliacBay.DFU
         {
             foreach(var actor in actors.Values) if(actor) actor.CaptureState();
             CapturePaidCompanionStates();
+            CaptureDungeonFollowers();
         }
-        private void OnDestroy() { Clear(); }
+        private void OnDestroy() { PlayerEnterExit.OnTransitionDungeonInterior-=CompleteNativeDungeonEntry;
+            PlayerEnterExit.OnTransitionDungeonExterior-=CompleteNativeDungeonExit;
+            PlayerEnterExit.OnFailedTransition-=AbortNativeDungeonFollow;Clear(); }
         public static bool Ground(RoutePoint position,out Vector3 ground,out Transform terrainParent)
         {
             ground=Vector3.zero; terrainParent=null;
@@ -96,12 +102,13 @@ namespace PeopleOfTheIliacBay.DFU
         private void Update()
         {
             if(source==null || !enabledForWorld())
-            { if(actors.Count>0 || HasPaidCompanions) Clear(); return; }
+            { if(actors.Count>0 || HasPaidCompanions || dungeonFollowers.Count>0) Clear(); return; }
             var store=source();
             if(!ReferenceEquals(current,store)) { Clear(); current=store; }
             var clock=DaggerfallUnity.Instance.WorldTime.Now;
             double now=(double)clock.ToSeconds()+clock.Second-Math.Floor(clock.Second);
             if(GameManager.IsGamePaused) return;
+            UpdateDungeonFollowers(store,now);
             if(GameManager.Instance.StreamingWorld.IsInit)
             { CapturePaidForUnobservedReload(store,now); return; }
             if(GameManager.Instance.IsPlayerInside)

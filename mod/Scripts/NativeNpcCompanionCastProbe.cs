@@ -143,8 +143,9 @@ namespace PeopleOfTheIliacBay.DFU
                 short nativeSkillAfter=body.Entity.Skills.GetPermanentSkillValue(healSkill);
                 Require(experienceAfter==experienceBefore+NativeNpcCompanionExperience.ExperiencePerSuccessfulUse,
                     "One verified Follow-bound native HealHealth cast did not add exactly one companion skill-use record.");
-                Require(coreSkillAfter>=coreSkillBefore && nativeSkillAfter>=nativeSkillBefore,
-                    "Verified companion casting reduced a core or native magic skill.");
+                Require(coreSkillAfter>=coreSkillBefore &&
+                    nativeSkillAfter==Math.Min(100,nativeSkillBefore+coreSkillAfter-coreSkillBefore),
+                    "Verified companion casting did not apply the exact persisted skill gain to its native body.");
                 VerifySkillPersistence(store,actor.Resident.Id,healSkill,experienceAfter,coreSkillAfter);
                 int replayMagicka=body.Entity.CurrentMagicka;
                 Require(!NativeNpcCompanionCast.TryExecute(actor.gameObject,store,selfSpec,
@@ -156,7 +157,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_COMPANION_CAST_SKILL_PASS: follow="+followId+"; effect="+
                     HealHealth.EffectKey+"; skill="+healSkill+"; rawExperience="+experienceBefore+"->"+experienceAfter+
                     "; coreSkill="+coreSkillBefore+"->"+coreSkillAfter+"; nativeSkill="+nativeSkillBefore+"->"+nativeSkillAfter+
-                    "; replayNoop=true; persisted=true");
+                    "; replayNoop=true; persisted=true; rebuiltNativeSkills=true");
                 var saved=store.ReadNpcVitals(actor.Resident.Id,Archetype(store,actor.Resident.Id));
                 Require(saved.CurrentHealth==body.Entity.CurrentHealth && saved.CurrentMagicka==body.Entity.CurrentMagicka,
                     "Self spell changed native vitals without saved vitals.");
@@ -402,6 +403,7 @@ namespace PeopleOfTheIliacBay.DFU
             double now=clock.ToSeconds()+(clock.Second-Math.Floor(clock.Second));
             return action!=null && action.Id==expectedActionId && !NpcActionExecutor.IsTerminal(action) &&
                 !action.ReturningToRoutine && now>=action.AcceptedAt && now>=action.UpdatedAt && now<action.DeadlineAt &&
+                (action.FinishAt<=0 || now<action.FinishAt) &&
                 action.Kind==NpcActionKind.Follow && action.Target!=null &&
                 action.Target.Kind==NpcActionTargetKind.Person &&
                 action.Target.PersonId==NpcDirectedRelationship.PlayerTargetId;
@@ -414,7 +416,7 @@ namespace PeopleOfTheIliacBay.DFU
             return recorded==null?0:recorded.Experience;
         }
 
-        private static void VerifySkillPersistence(WorldStateStore store,string residentId,int skill,
+        internal static void VerifySkillPersistence(WorldStateStore store,string residentId,int skill,
             long expectedExperience,int expectedSkill)
         {
             string saved=SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot(),false);
@@ -423,6 +425,20 @@ namespace PeopleOfTheIliacBay.DFU
             Require(RawExperience(restored,residentId,skill)==expectedExperience &&
                 restored.ReadNpcActor(residentId,restored.ResolveNpcArchetype(residentId)).Skill(skill)==expectedSkill,
                 "Native FullSerializer round trip lost verified companion skill progression.");
+            // Exercise the same materialization binding as a recreated resident.
+            // No scene actor or observer is needed for the native entity skill projection.
+            var owner=new GameObject("Companion skill persistence probe");
+            try
+            {
+                var native=new CivilianEntity(null);
+                var resident=restored.ResolveResident(residentId);
+                Require(resident!=null,"Restored companion identity was not found.");
+                NativeNpcVitalsBinding.BindTo(owner,native,restored,resident);
+                Require(owner.GetComponent<NativeNpcVitalsBinding>() &&
+                    native.Skills.GetPermanentSkillValue(skill)==expectedSkill,
+                    "Restored companion skill did not reach the rebuilt native entity.");
+            }
+            finally {UnityEngine.Object.DestroyImmediate(owner);}
         }
 
         private static NpcArchetype Archetype(WorldStateStore store,string id)

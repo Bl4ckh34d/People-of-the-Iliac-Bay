@@ -51,6 +51,10 @@ namespace PeopleOfTheIliacBay.DFU
 
         private string ConversationPlaceContext()
         {
+            if(conversationActor && roadActors && roadActors.IsLoadedDungeonCompanion(conversationActor))
+                return "You are physically inside the currently loaded dungeon with the player. This establishes your current location, not ownership or knowledge of unexplored rooms.";
+            if(GameManager.Instance.PlayerEnterExit.IsPlayerInsideDungeon)
+                return "The player's current scene is a dungeon. The NPC's own location has not been verified; do not claim an outdoor or owned place.";
             string owned;
             if (IsConversationAtOwnedPlace(out owned)) return "You are in " + owned + ".";
             if (!GameManager.Instance.PlayerEnterExit.IsPlayerInsideBuilding)

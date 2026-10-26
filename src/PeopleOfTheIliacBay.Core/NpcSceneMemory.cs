@@ -6,7 +6,7 @@ using System.Text;
 namespace PeopleOfTheIliacBay.Core
 {
     public enum NpcSceneEventKind { Company, Conversation, ClosedShop, Assault, Fight, Burglary, GuardPursuit, Murder, Corpse, Trade,
-        Injury, Healing, Illness, Recovery, Help, Gift, Appointment, Promise, Journey, Magic, Theft, Shopping, CashVisit }
+        Injury, Healing, Illness, Recovery, Help, Gift, Appointment, Promise, Journey, Magic, Theft, Shopping, CashVisit, Bereavement }
     [Serializable]
     public sealed class NpcSceneMemory
     {
@@ -26,6 +26,7 @@ namespace PeopleOfTheIliacBay.Core
                 unchecked {foreach(char c in (ObserverId??"")+"\n"+(EventId??"")+"\n"+(int)Kind){hash^=c;hash*=16777619;}
                     hash^=hash>>16;hash*=0x7feb352du;hash^=hash>>15;hash*=0x846ca68bu;hash^=hash>>16;}
                 double roll=(hash>>8)/16777215d;
+                if(Kind==NpcSceneEventKind.Bereavement)return At+Math.Floor((360+360*roll)*86400);
                 double duration;
                 if(Salience<=1)
                     duration=roll<0.05?6*3600+roll/0.05*18*3600:
@@ -57,6 +58,7 @@ namespace PeopleOfTheIliacBay.Core
         {
             switch(kind)
             {
+                case NpcSceneEventKind.Bereavement:return 5;
                 case NpcSceneEventKind.Murder:return 4;
                 case NpcSceneEventKind.Assault:case NpcSceneEventKind.Burglary:return 3;
                 case NpcSceneEventKind.Injury:case NpcSceneEventKind.Illness:case NpcSceneEventKind.Help:return 3;
@@ -113,6 +115,7 @@ namespace PeopleOfTheIliacBay.Core
             string victim=incident.VictimId==null?null:AlarmResident(incident.SettlementId,incident.VictimId).FullName;
             if(incident.Corpse!=null && Math.Abs(now-incident.Corpse.DiedAt)>1)
             {
+                RememberKnownDeath(incident,observer,now,KnownDeathEvidence.Discovery);
                 RememberSceneEvent(observer,occurrence,NpcSceneEventKind.Corpse,now,incident.SettlementId,incident.BuildingKey,
                     "I found "+(victim??"another person")+" dead. Finding the body does not identify who killed them.",subject:incident.VictimId);
                 return;
@@ -127,6 +130,7 @@ namespace PeopleOfTheIliacBay.Core
         private void RememberSceneDeath(CivilianIncident incident,string observer,double now)
         {
             if(incident.Corpse==null)return;
+            RememberKnownDeath(incident,observer,now,KnownDeathEvidence.Witness);
             string victim=AlarmResident(incident.SettlementId,incident.VictimId).FullName??"another person";
             string who=incident.PlayerAttributed?"The player killed them.":
                 incident.KillerThreatId!=null?"The attacker was not the player.":"I cannot identify the killer from this memory.";
@@ -145,7 +149,7 @@ namespace PeopleOfTheIliacBay.Core
             RememberSceneEvent(observer,occurrence,NpcSceneEventKind.Murder,now,incident.SettlementId,incident.BuildingKey,
                 observation,subject:incident.VictimId,responsible:responsible);
         }
-        private void RememberPlayerMurderWitnesses(CivilianIncident incident)
+        private void RememberRecentDeathWitnesses(CivilianIncident incident)
         {
             if(!ReferenceEquals(sceneWitnessOwner,state))return;
             foreach(var person in incident.People)

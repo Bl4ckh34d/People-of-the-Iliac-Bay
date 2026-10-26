@@ -9,6 +9,7 @@ namespace PeopleOfTheIliacBay.Tests
     {
         private static NpcActionTarget Outside(double x=0) => new NpcActionTarget {Kind=NpcActionTargetKind.WorldPoint,SettlementId=100,WorldSpaceId="settlement:100",X=x};
         private static NpcActionTarget Inside(int building=10) => new NpcActionTarget {Kind=NpcActionTargetKind.IndoorPoint,SettlementId=100,BuildingKey=building};
+        private static NpcActionTarget Dungeon(double x=0) => new NpcActionTarget {Kind=NpcActionTargetKind.WorldPoint,SettlementId=100,WorldSpaceId="dungeon:100",X=x};
         private static WorldStateStore Fixture(out NpcActionJob job)
         {
             var store=new WorldStateStore(42);var town=store.GetOrCreate(100,new[]{10},1);
@@ -25,8 +26,82 @@ namespace PeopleOfTheIliacBay.Tests
         }
         private static bool Begin(WorldStateStore store,NpcActionJob job,NpcActionTarget target=null,IList<NpcActionTarget> route=null)
         {return Call(store,"TryBeginNpcFollowTransition",job.Id,job.Revision,110d,target??Inside(),route??new List<NpcActionTarget>{Outside(),Outside(10)},2d);}
+        private static WorldStateStore PaidFixture(out NpcActionJob job)
+        {
+            var store=Fixture(out job);const string id="contract:dungeon-follow";NpcServiceContractTerms terms;
+            string residentId=job.ResidentId;
+            Check.True(NpcServiceContractTerms.TryCreate(id,"player",residentId,"home:100:10",NpcServiceRole.Fighter,
+                NpcServiceCoverage.Follow|NpcServiceCoverage.Travel,120,false,NpcServiceRiskScope.None,
+                new NpcServiceProtectedTarget[0],NpcServiceRestTreatment.RestNotIncluded,
+                NpcServiceResupplyResponsibility.SeparatelyNegotiated,new NpcServiceReservedObligation[0],
+                value=>value=="player" || value==residentId,value=>value=="home:100:10",
+                (value,category,revision)=>false,(value,revision,kind,start,end)=>false,out terms));
+            var funding=NpcServiceTransferReceipt.Create("fund:dungeon-follow",id,NpcServiceTransferKind.Funding,
+                "player","contract:"+id+":escrow",120,100);
+            var ticket=store.CaptureNpcServiceContractWriteTicket();NpcServiceContractLedger reserved;string reason;
+            Check.True(NpcServiceContractLedger.TryReserve(ticket.SourceLedger,ticket.ExpectedLedgerRevision,terms,funding,out reserved));
+            Check.True(store.TryCommitNpcServiceContracts(ticket,reserved,new[]{funding},new NpcServiceRenewalAuthorization[0],out reason));
+            Check.True(store.TryBindPaidFollowAction(job.Id,job.Revision,id,out reason));job=store.ReadNpcAction(job.Id);return store;
+        }
         public static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("FOLLOW dungeon paid expiry cannot resume its old exterior owner",()=>{
+                NpcActionJob job;var store=PaidFixture(out job);string contract=NpcPaidCompanionAction.ContractId(job);
+                Check.True(store.TryDeferPaidTravel(job.Id,job.Revision,105));job=store.ReadNpcAction(job.Id);
+                Check.True(Begin(store,job,Dungeon()));job=store.ReadNpcAction(job.Id);
+                Check.True(store.TryResumePaidTravel(job.Id,job.Revision,110));job=store.ReadNpcAction(job.Id);
+                Check.True(Call(store,"TryArriveNpcFollowTransition",job.Id,job.Revision,130d,Dungeon()));job=store.ReadNpcAction(job.Id);
+                Check.True(store.ObserveNpcAction(job.Id,job.Revision,job.FinishAt,NpcActionObservation.Interrupted("Agreed time ended.")));
+                job=store.ReadNpcAction(job.Id);string reason;
+                Check.True(store.TrySuspendPaidFollowSettlement(job.Id,job.Revision,out reason));
+                long revision=store.ReadNpcServiceContracts().Read(contract).Revision;
+                Check.True(store.TrySuspendPaidFollowSettlement(job.Id,job.Revision,out reason));
+                Check.Equal(revision,store.ReadNpcServiceContracts().Read(contract).Revision);
+                Check.True(!store.TryDeferPaidTravel(job.Id,job.Revision,job.FinishAt));
+                Check.True(!store.TryResumePaidTravel(job.Id,job.Revision,job.FinishAt));
+            }));
+            cases.Add(("FOLLOW dungeon door releases exterior handoff without changing paid contract or double suspension",()=>{
+                NpcActionJob job;var store=PaidFixture(out job);string contract=NpcPaidCompanionAction.ContractId(job);
+                Check.True(store.TryDeferPaidTravel(job.Id,job.Revision,105));job=store.ReadNpcAction(job.Id);
+                Check.True(Begin(store,job,Dungeon()));job=store.ReadNpcAction(job.Id);
+                Check.True(store.TryResumePaidTravel(job.Id,job.Revision,110));job=store.ReadNpcAction(job.Id);
+                Check.Equal(contract,NpcPaidCompanionAction.ContractId(job));Check.True(job.PaidTravelHandoff==null);
+                Check.Equal(NpcServiceContractStatus.Active,store.ReadNpcServiceContracts().Read(contract).Status);
+                Check.True(Call(store,"TryArriveNpcFollowTransition",job.Id,job.Revision,130d,Dungeon()));job=store.ReadNpcAction(job.Id);
+                Check.True(store.ObserveNpcAction(job.Id,job.Revision,140,NpcActionObservation.Cancelled("Stop.")));
+                job=store.ReadNpcAction(job.Id);string reason;
+                Check.True(store.TrySuspendPaidFollowSettlement(job.Id,job.Revision,out reason));
+                long revision=store.ReadNpcServiceContracts().Read(contract).Revision;
+                Check.True(store.TrySuspendPaidFollowSettlement(job.Id,job.Revision,out reason));
+                Check.Equal(revision,store.ReadNpcServiceContracts().Read(contract).Revision);
+                store.Restore(store.Snapshot());job=store.ReadNpcAction(job.Id);
+                Check.True(!Call(store,"TryArriveNpcFollowTransition",job.Id,job.Revision,150d,Dungeon()));
+                Check.True(!store.TryDeferPaidTravel(job.Id,job.Revision,150));
+            }));
+            cases.Add(("FOLLOW native dungeon round trip preserves identity and inventory",()=>{
+                NpcActionJob job;var store=Fixture(out job);
+                Check.True(store.InitializeNpcInventory(job.ResidentId,17,new[]{new NpcInventoryItem {Uid=77,NativePayload="native item"}}));
+                Check.True(Begin(store,job,Dungeon()));job=store.ReadNpcAction(job.Id);
+                Check.True(!Call(store,"TryArriveNpcFollowTransition",job.Id,job.Revision,129d,Dungeon()));
+                store.Restore(store.Snapshot());job=store.ReadNpcAction(job.Id);
+                Check.True(Call(store,"TryArriveNpcFollowTransition",job.Id,job.Revision,130d,Dungeon()));job=store.ReadNpcAction(job.Id);
+                Check.True(Call(store,"TryBeginNpcFollowTransition",job.Id,job.Revision,140d,Outside(10),new List<NpcActionTarget>{Dungeon(),Dungeon(10)},2d));
+                job=store.ReadNpcAction(job.Id);
+                Check.True(Call(store,"TryArriveNpcFollowTransition",job.Id,job.Revision,160d,Outside(10)));
+                var arrived=store.ReadNpcAction(job.Id);Check.Equal(job.ResidentId,arrived.ResidentId);
+                Check.Equal(250d,arrived.FinishAt);Check.Equal(300d,arrived.DeadlineAt);
+                Check.Equal(77ul,store.ReadNpcInventory(job.ResidentId).Items[0].Uid);
+                Check.Equal(17,store.ReadNpcInventory(job.ResidentId).WalletGold);
+            }));
+            cases.Add(("FOLLOW dungeon handoff refuses mismatched map and cancellation survives restore",()=>{
+                NpcActionJob job;var store=Fixture(out job);var wrong=Dungeon();wrong.WorldSpaceId="dungeon:101";
+                Check.True(!Begin(store,job,wrong));wrong=Dungeon();wrong.SettlementId=101;Check.True(!Begin(store,job,wrong));
+                Check.True(Begin(store,job,Dungeon()));job=store.ReadNpcAction(job.Id);
+                Check.True(store.ObserveNpcAction(job.Id,job.Revision,120,NpcActionObservation.Cancelled("Stop following.")));
+                store.Restore(store.Snapshot());job=store.ReadNpcAction(job.Id);
+                Check.Equal(NpcActionPhase.Cancelled,job.Phase);Check.Near(5,job.LastPosition.X);
+                Check.True(!Call(store,"TryArriveNpcFollowTransition",job.Id,job.Revision,130d,Dungeon()));
+            }));
             cases.Add(("FOLLOW doorway arrival waits for full verified route and keeps action identity",()=>{
                 NpcActionJob job;var store=Fixture(out job);Check.True(Begin(store,job));
                 var pending=store.ReadNpcAction(job.Id);Check.Equal(NpcActionPhase.Approaching,pending.Phase);

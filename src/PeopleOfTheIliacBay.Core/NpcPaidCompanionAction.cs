@@ -10,6 +10,14 @@ namespace PeopleOfTheIliacBay.Core
         public const int DurationSeconds = (int)NpcServiceContract.BillingPeriodSeconds;
         public const double ReturnAllowanceSeconds = 60;
 
+        public static bool TryDailyGold(int nativeLevel,out int gold)
+        {
+            gold=0;
+            if(nativeLevel<1 || nativeLevel>int.MaxValue/10)return false;
+            gold=nativeLevel*10;
+            return true;
+        }
+
         public static bool ValidDecisionDuration(NpcActionOption option,int seconds)
         { return option != null && (option.PaidCompanion ? seconds == DurationSeconds : seconds >= 10 && seconds <= 900); }
 

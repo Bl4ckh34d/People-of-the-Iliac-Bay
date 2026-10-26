@@ -50,7 +50,11 @@ namespace PeopleOfTheIliacBay.DFU
             }
         }
         public bool TryStopConversationAction(string residentId,out string reason)
-        {return StopConversationAction(residentId,out reason,"The player asked the NPC to stop.");}
+        {
+            var dungeonOwner=DungeonFollowOwner;
+            if(dungeonOwner && dungeonOwner.TryStopDungeonFollow(residentId,out reason))return true;
+            return StopConversationAction(residentId,out reason,"The player asked the NPC to stop.");
+        }
 
         public bool WithdrawConversationActionForBoundary(string residentId,string receiptId)
         {
@@ -164,13 +168,16 @@ namespace PeopleOfTheIliacBay.DFU
             OfferCompanionCastActions(actor,null,result,true);
             OfferCombatActions(actor,null,result,true);
             AddActionOption(result,NpcActionKind.Follow,new NpcActionTarget {Kind=NpcActionTargetKind.Person,PersonId="player"},
-                "follow the player locally, including reachable building doorways in this settlement",null,true);
+                "follow the player locally through reachable building or native dungeon entrances; dungeon movement requires a verified native path",null,true);
             var paidOption=new NpcActionOption {Id=result.Count+1,Kind=NpcActionKind.Follow,PaidCompanion=true,
                 Target=new NpcActionTarget {Kind=NpcActionTargetKind.Person,PersonId="player",Quantity=1},
-                Label="hire this adventurer for 120 gold / 24 game hours to follow locally; no automatic renewal"};
+                Label="hire this adventurer for one 24-game-hour day; wage depends on actual level"};
             int paidFee;string paidReason;
             if(TryQuotePaidCompanion(actor.Resident.Id,new NpcActionDecision {Option=paidOption,DurationSeconds=NpcPaidCompanionAction.DurationSeconds},out paidFee,out paidReason))
+            {
+                paidOption.Label="hire this adventurer for "+paidFee+" gold / 24 game hours to follow locally; no automatic renewal";
                 result.Add(paidOption);
+            }
             AddActionOption(result,NpcActionKind.Wait,ActionPosition(actor.transform.position-Vector3.up),"wait at this observed position",null,true);
             OfferBuildingExit(actor,result,null,true);
             AddActionOption(result,NpcActionKind.MoveTo,new NpcActionTarget {Kind=NpcActionTargetKind.Person,PersonId="player"},
@@ -549,6 +556,7 @@ namespace PeopleOfTheIliacBay.DFU
         // It owns only this existing actor; all movement still passes through CrowdMotion.
         private bool ApplyNpcActionOverlay(Plan plan,ref ResidentActor actor,double now,AlarmPerson nativeReaction)
         {
+            if(roadTravelActors && roadTravelActors.OwnsDungeonFollow(plan.Resident.Id))return true;
             RetryPaidCompanionSettlements();
             bool nativeOwnsMovement=nativeReaction!=null || IsAlarmed(plan.Resident.Id);
             if(!IsTravelerActionPlan(plan) && !IsPaidDoorActionPlan(plan))ObserveHomeSleep(plan,actor,now);

@@ -1,20 +1,28 @@
 using System;
 using PeopleOfTheIliacBay.Core;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Game.Entity;
 using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
-        public const int PaidCompanionDailyGold = 120;
         private float paidCompanionSettlementRetryAt;
+
+        public bool TryReadPaidCompanionWage(string residentId,out int dailyGold)
+        {
+            dailyGold=0;
+            var actor=FindActor(residentId);
+            var body=actor?actor.GetComponent<DaggerfallEntityBehaviour>():null;
+            return body && body.Entity!=null && NpcPaidCompanionAction.TryDailyGold(body.Entity.Level,out dailyGold);
+        }
 
         /// <summary>Read-only quote. Caller must obtain a separate explicit native yes/no before hiring.</summary>
         public bool TryQuotePaidCompanion(string residentId, NpcActionDecision decision,
             out int dailyGold, out string reason)
         {
-            dailyGold = PaidCompanionDailyGold;
+            dailyGold = 0;
             reason = "Only a willing, available adventurer can take this paid Follow contract.";
             if (!Ready || worldStore == null || population == null || decision == null ||
                 decision.Option == null || !decision.Option.PaidCompanion ||
@@ -34,6 +42,8 @@ namespace PeopleOfTheIliacBay.DFU
             var role = worldStore.ReadNpcRole(residentId);
             if (role != null && (role.ServiceBinding == NpcServiceBinding.NobleKingdom ||
                 role.CombatRole == NpcCombatRole.Guard || role.CombatRole == NpcCombatRole.PalaceGuard)) return false;
+            if(!TryReadPaidCompanionWage(residentId,out dailyGold))
+            {reason="The NPC's actual level is unavailable for a wage quote.";return false;}
             if (worldStore.ReadNpcInventory(residentId) == null)
             { reason = "The NPC wallet is not available for the agreed wage."; return false; }
             double now = ActionNow();
@@ -50,19 +60,21 @@ namespace PeopleOfTheIliacBay.DFU
                 { reason = "The NPC already has an active or reserved service contract."; return false; }
             var player = GameManager.Instance == null ? null : GameManager.Instance.PlayerEntity;
             if (player == null || player.GetGoldAmount() < dailyGold)
-            { reason = "The player lacks the 120 gold needed for one day of service."; return false; }
-            reason = "120 gold for one 24-game-hour day of Follow and travel from acceptance. No automatic renewal. " +
+            { reason = "The player lacks the "+dailyGold+" gold needed for one day of service."; return false; }
+            reason = dailyGold+" gold for one 24-game-hour day of Follow and travel from acceptance (10 gold per level). No automatic renewal. " +
                 "The started day is non-refundable; dismissal ends service immediately.";
             return true;
         }
 
         /// <summary>Call synchronously after explicit native player consent and the NPC's accepted Follow decision.</summary>
         public bool TryHirePaidCompanion(string residentId, string proposalId, NpcActionDecision decision,
-            NpcConversationCommandTurn commandTurn, out string reason)
+            NpcConversationCommandTurn commandTurn, int confirmedDailyGold, out string reason)
         {
             int fee;
             reason = "The player command is no longer current.";
             if (commandTurn == null || !TryQuotePaidCompanion(residentId, decision, out fee, out reason)) return false;
+            if(fee!=confirmedDailyGold)
+            {reason="The wage changed since the offer. Please confirm a new quote; no payment was taken.";return false;}
             var actor = FindActor(residentId);
             var player = GameManager.Instance.PlayerEntity;
             var archetype = worldStore.ResolveNpcArchetype(residentId,NpcArchetype.Citizen);
@@ -118,15 +130,18 @@ namespace PeopleOfTheIliacBay.DFU
 
         /// <summary>Idempotent terminal settlement. Caller maps physical action outcome to service end reason.</summary>
         public bool TrySettlePaidCompanionAction(NpcActionJob job,NpcServiceEndReason endReason,out string error)
+        {return SettlePaidCompanionAction(worldStore,job,endReason,out error);}
+
+        internal static bool SettlePaidCompanionAction(WorldStateStore settlementStore,NpcActionJob job,NpcServiceEndReason endReason,out string error)
         {
             error = null;
             string contractId = NpcPaidCompanionAction.ContractId(job);
             if (contractId == null) return true;
-            if (worldStore == null || !NpcActionExecutor.IsTerminal(job) ||
+            if (settlementStore == null || !NpcActionExecutor.IsTerminal(job) ||
                 !NpcPaidCompanionAction.IsPaidFollowJob(job))
             { error = "Only a terminal paid Follow action can settle its contract."; return false; }
-            if (!worldStore.TrySuspendPaidFollowSettlement(job.Id,job.Revision,out error)) return false;
-            var ticket = worldStore.CaptureNpcServiceContractWriteTicket();
+            if (!settlementStore.TrySuspendPaidFollowSettlement(job.Id,job.Revision,out error)) return false;
+            var ticket = settlementStore.CaptureNpcServiceContractWriteTicket();
             var contract = ticket.SourceLedger.Read(contractId);
             if (contract == null) { error = "Paid Follow contract is missing."; return false; }
             if (contract.Status == NpcServiceContractStatus.Terminated) return true;
@@ -139,7 +154,7 @@ namespace PeopleOfTheIliacBay.DFU
             NpcServiceTransferReceipt earnings,refund;
             Exception failure;
             var player = GameManager.Instance == null ? null : GameManager.Instance.PlayerEntity;
-            if (!NativeNpcServiceContractSettlement.TrySettle(worldStore,ticket,
+            if (!NativeNpcServiceContractSettlement.TrySettle(settlementStore,ticket,
                 player,contractId,contract.Revision,endReason,
                 out settled,out earnings,out refund,out failure))
             { error = "Paid Follow settlement failed: " + FailureText(failure); return false; }

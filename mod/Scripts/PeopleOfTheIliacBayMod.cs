@@ -381,7 +381,6 @@ namespace PeopleOfTheIliacBay.DFU
             EndDialogueMemory(false);
             if(localDialogue) localDialogue.Cancel();
             conversationSessionOpen=false; dialogueWasOpen=false;
-            bereavementGreetings.Clear();
             ResetTravelPlanning();
             if(roadActors) roadActors.Clear();
             if (guards) guards.Clear();
@@ -399,7 +398,6 @@ namespace PeopleOfTheIliacBay.DFU
             if(localDialogue) localDialogue.Cancel();
             conversationSessionOpen=false; dialogueWasOpen=false;
             ApplyGameplayTimeScale();
-            bereavementGreetings.Clear();
             ResetTravelPlanning();
             if(roadActors) roadActors.Clear();
             if (guards) guards.Clear();

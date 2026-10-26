@@ -23,8 +23,12 @@ namespace PeopleOfTheIliacBay.DFU
                 throw new System.ArgumentException("Invalid destination region.");
             var game=GameManager.Instance;
             var dfu=DaggerfallUnity.Instance;
-            var block=dfu.ContentReader.BlockFileReader.GetBlock(entry.blockIndex);
+            DFBlock block;
+            long blockStarted=RuntimeTiming.Start("inn-occupants-block-read");
+            try { block=dfu.ContentReader.BlockFileReader.GetBlock(entry.blockIndex); }
+            finally { RuntimeTiming.End("inn-occupants-block-read",blockStarted); }
             uint previous=DFRandom.Seed;
+            long claimStarted=RuntimeTiming.Start("inn-occupants-claim");
             try
             {
                 foreach(var record in block.RmbBlock.SubRecords[entry.recordIndex].Interior.BlockPeopleRecords)
@@ -57,7 +61,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if(person.IsAlive && bedroom) store.TryClaimLodgingBed(settlement,entry.buildingKey,person.Id,bed,now);
                 }
             }
-            finally { DFRandom.Seed=previous; }
+            finally { DFRandom.Seed=previous; RuntimeTiming.End("inn-occupants-claim",claimStarted); }
         }
     }
 }

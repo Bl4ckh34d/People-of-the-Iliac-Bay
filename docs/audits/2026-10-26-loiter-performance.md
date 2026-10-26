@@ -82,3 +82,28 @@ Artifacts are in `work/playtest-2026-10-26/editor/<run>/`: `editor.log`,
 owned fixtures; `tools/SummarizeEditorProfile.ps1` parses literal diagnostic
 fields and preserves failed-run status. See `tools/Editor/README.md` for the
 two local DFU host guards, profiler limits, and exact usage.
+
+## Loaded-Inn follow-up before the requested playtest pause
+
+Root added opt-in native Profiler/Stopwatch scopes around loaded-Inn preparation,
+native occupant block reads/claims and admission reconciliation. Normal play does
+not activate these measurements. The `inn-refresh-cost` trial calls the actual
+existing refresh eight times, after a two-real-second entry wait; ordinary
+refresh remains enabled. It neither inserts guests nor changes the clock.
+
+Both controlled Player runs on packageD3CA68C3D919 exit0:
+
+| Loaded Inn | Explicit refresh calls | Total / maximum (ms) | Block-read maximum (ms) | Admission maximum (ms) |
+| --- | ---: | ---: | ---: | ---: |
+|197386|8|6.86 / 0.92|0.01|0.80|
+|197127|8|5.17 / 0.72|0.01|0.71|
+
+Evidence: `work/native-inn-refresh-01-player.log` and
+`work/native-inn-refresh-02-player.log`, with corresponding launch logs.
+Each inner scope has ten calls because two automatic refreshes also occur.
+These short warm samples do not reproduce the earlier100–165ms family-run cost,
+and do not contain that run's same household/admission state. They disprove neither
+cold-entry cost nor state-dependent growth. No speculative block cache or
+performance improvement is claimed from this result. Reproduce the earlier heavy
+state using these scopes before choosing an optimization;4–6second Player freezes
+remain a separate open investigation.

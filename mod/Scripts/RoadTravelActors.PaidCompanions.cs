@@ -76,6 +76,8 @@ namespace PeopleOfTheIliacBay.DFU
         {
             foreach(var action in store.PendingNpcActions())
             {
+                if(OwnsDungeonFollow(action.ResidentId) || NpcFollowTransition.IsDungeonSpace(action.LastPosition) ||
+                    action.FollowTransition!=null && NpcFollowTransition.IsDungeonSpace(action.FollowTransition.Destination))continue;
                 var handoff=action.PaidTravelHandoff;
                 NpcServiceContract contract;
                 if(handoff!=null && handoff.ContractId==NpcPaidCompanionAction.ContractId(action) &&
@@ -85,6 +87,7 @@ namespace PeopleOfTheIliacBay.DFU
             foreach(var pair in new List<KeyValuePair<string,string>>(paidActions))
             {
                 string residentId=pair.Key;
+                if(OwnsDungeonFollow(residentId))continue;
                 var action=store.ReadNpcAction(pair.Value);
                 NpcServiceContract contract;
                 if(!NpcPaidCompanionTravel.TryReadActiveTravel(store,action,now,out contract))

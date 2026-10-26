@@ -13,6 +13,10 @@ namespace PeopleOfTheIliacBay.Core
         public bool InnAlarm;
         public bool CorpseObserver;
         public double CorpseSeenAt;
+        public KnownDeathEvidence DeathKnowledge;
+        public double DeathKnownAt;
+        public bool BereavementRecorded;
+        public int LastBereavementGreetingDay = -1;
         public CivilianReaction Reaction;
         public List<string> Warned = new List<string>();
         // Position belongs to the current town or interior origin, never the floating world origin.
@@ -151,7 +155,15 @@ namespace PeopleOfTheIliacBay.Core
             Require(incident.ThreatId == null && incident.VictimId != null && incident.Corpse != null,
                 "Only confirmed non-hostile deaths can be attributed to the player.");
             incident.PlayerAttributed = true;
-            RememberPlayerMurderWitnesses(incident);
+            RememberRecentDeathWitnesses(incident);
+            foreach(var witness in incident.People)
+                if(witness.DeathKnowledge==KnownDeathEvidence.Witness)
+                {
+                    var memories=SceneMemoriesFor(witness.ResidentId,false);
+                    if(memories!=null && memories.Exists(m=>m.Kind==NpcSceneEventKind.Murder && m.EventId==SceneIncidentKey(incident)))
+                        RememberSceneDeath(incident,witness.ResidentId,incident.Corpse.DiedAt);
+                    else RememberKnownDeath(incident,witness.ResidentId,incident.Corpse.DiedAt,KnownDeathEvidence.Witness);
+                }
             foreach (var person in incident.People)
                 if (CivilianAlarms.IsPersistentMurderWitness(incident, person.ResidentId)) person.Reaction = CivilianReaction.Flee;
         }
@@ -233,6 +245,8 @@ namespace PeopleOfTheIliacBay.Core
             from.Warned.Add(toId);
             incident.People.Add(new AlarmPerson { ResidentId = toId, Reaction = incident.ThreatId!=null || incident.PlayerAttributed && !incident.CrimeResolved ?
                 CivilianReaction.Flee : CivilianAlarms.ChooseReaction(target) });
+            if(from.DeathKnowledge!=KnownDeathEvidence.None && now>=from.DeathKnownAt)
+                RememberKnownDeath(incident,toId,now,KnownDeathEvidence.Notification);
             var native = state.NativePeople.Find(p => p.Id == toId);
             if (native != null) native.ResponseIncidentId = incident.Id;
             return true;
@@ -403,12 +417,27 @@ namespace PeopleOfTheIliacBay.Core
                     var copy = new AlarmPerson { ResidentId = person.ResidentId, DirectWitness = person.DirectWitness,
                         HeardViolence = person.HeardViolence, Awakened = person.Awakened, InnAlarm = person.InnAlarm,
                         CorpseObserver = person.CorpseObserver, CorpseSeenAt = person.CorpseSeenAt,
+                        DeathKnowledge=person.DeathKnowledge,DeathKnownAt=person.DeathKnownAt,
+                        BereavementRecorded=person.BereavementRecorded,LastBereavementGreetingDay=person.LastBereavementGreetingDay,
                         Reaction = person.Reaction, HasPosition = person.HasPosition, ReachedRefuge = person.ReachedRefuge,
                         RefugeSealed=person.RefugeSealed, RefugeUntil=person.RefugeUntil, OutdoorReport=OutdoorBodyReport.Copy(person.OutdoorReport),
                         StaticWitness=person.StaticWitness, StatementDelivered=person.StatementDelivered, InterviewGuardId=person.InterviewGuardId,
                         BuildingKey = person.BuildingKey, X = person.X, Y = person.Y, Z = person.Z,
                         Escape = CivilianEscape.Copy(person.Escape), EscapeAdvancedAt=person.EscapeAdvancedAt };
                     Require(ValidTime(copy.RefugeUntil) && (copy.RefugeUntil==0 || copy.RefugeSealed && copy.RefugeUntil>=alarm.StartedAt+3600), "Invalid refuge deadline.");
+                    Require(Enum.IsDefined(typeof(KnownDeathEvidence),copy.DeathKnowledge) && ValidTime(copy.DeathKnownAt) &&
+                        (copy.DeathKnowledge==KnownDeathEvidence.None ? copy.DeathKnownAt==0 && !copy.BereavementRecorded :
+                            copied.Corpse!=null && copy.DeathKnownAt>=copied.Corpse.DiedAt) &&
+                        (copy.DeathKnowledge!=KnownDeathEvidence.Witness || copy.DirectWitness) &&
+                        copy.LastBereavementGreetingDay>=-1 && (copy.LastBereavementGreetingDay<0 || copy.BereavementRecorded),
+                        "Invalid known-death receipt.");
+                    Require(copy.DeathKnowledge!=KnownDeathEvidence.Discovery ||
+                        copy.CorpseObserver || copy.OutdoorReport!=null || copy.DirectWitness,
+                        "Known death lacks discovery evidence.");
+                    Require(copy.DeathKnowledge!=KnownDeathEvidence.Notification || alarm.People.Exists(sender=>sender!=null &&
+                        sender.DirectWitness && sender.Warned!=null && sender.Warned.Contains(copy.ResidentId) &&
+                        sender.DeathKnowledge!=KnownDeathEvidence.None && sender.DeathKnownAt<=copy.DeathKnownAt),
+                        "Known death lacks a delivered witness notification.");
                     Require(!copy.StatementDelivered || copy.DirectWitness,"Statement lacks direct witness evidence.");
                     Require(!copy.StaticWitness || source.NativePeople.Exists(p=>p.Id==copy.ResidentId),"Static witness lacks native identity.");
                     Require(copy.InterviewGuardId==null || copy.StaticWitness && source.Garrisons.Exists(g=>g.SettlementId==alarm.SettlementId && g.Guards.Exists(p=>p.Id==copy.InterviewGuardId)),"Unknown interviewing guard.");

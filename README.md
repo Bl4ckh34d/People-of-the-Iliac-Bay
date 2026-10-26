@@ -6,12 +6,22 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Current local bundle **3202304039BC** is installed (26 October, 16:32), with matching
-distribution/Player hashes, Unity package verification and **2147/2147** Core
-checks. It includes exact Inn chair identity, payment at instantaneous counter
-arrival, exact-door Enter targets and individually witnessed guard door pursuit.
-Private resident refuge state stays separate from guard knowledge. Focused
-regressions pass; full native pursuit acceptance remains open.
+Current local bundle **D3CA68C3D919** is installed (26 October), with matching
+distribution/Player hashes and Unity package verification. Its Core source passed
+**2162/2162** checks. Companion pay now uses **10 gold per actual NPC level** for
+each begun 24-hour service block. Successful companion assistance can progress
+the relevant skill; expired or suspended service cannot bypass eligibility.
+Family grief now requires witnessed, discovered or delivered knowledge of a death,
+and preserves greeting suppression across restoration. Focused tests pass;
+native acceptance of these latest three changes remains open.
+Controlled native guard tests now pass observed and unobserved
+door crossings, interior reacquisition and target loss. Theft memory passes22
+native mobile/stationary witness cases; private containers were staged in a shop.
+Dungeon Follow source and its round-trip probe are included; the first native run
+stops at traveler-fixture readiness, before exercising dungeon entry. Diagnostic
+route attempts return no usable gate-to-Inn routes; increasing the wait did not
+resolve readiness. These scoped
+results do not establish all layouts, natural combat or full game reload.
 
 Native family tests confirm both purchases, stable seating and receipt memories
 in two Inn layouts. Controlled run15 completes the full outing and physical

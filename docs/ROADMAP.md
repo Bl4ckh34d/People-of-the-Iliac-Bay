@@ -2,14 +2,19 @@
 
 Stand: 25. Oktober 2026. Dieser Plan ersetzt die früheren Architektur- und Zwischenstandslisten.
 
-Zwischenstand 26. Oktober, 16:32: Bundle `3202304039BC` installiert; Core 2147/2147
+Zwischenstand 26. Oktober: Bundle `D3CA68C3D919` installiert; Core-Basis2162/2162
 und Unity-Paketprüfung bestehen. Stuhlidentität und Tresenzahlung sind korrigiert;
 zwei Inn-Layouts bestehen Bezahlung, Sitzen und Kauferinnerungen. Kontrollierter
 Familienlauf15 besteht auch den Ausgang und Heimweg; Ausgang im ursprünglichen
 Inn131841 bleibt offen. Reisezeitbudget, Reparaturverwahrung und benannte
 NPC-Übergabeerinnerungen sind installiert. Der native Banktest besteht mit erhaltenem
 Budget tatsächlichen Eintritt und anschließendes Warten bei Spieler draußen;
-echte Wachverfolgung durch Türen ist noch abzunehmen.
+kontrollierte beobachtete/unbeobachtete Wach-Türdurchgänge bestehen.22 native
+Diebstahls-Erinnerungsfälle bestehen. Dungeon-Follow-Quelle ist enthalten;
+die nativen Läufe scheitern vor Eintritt an fehlenden Reisenden-Routen.
+Wissensgebundene Familientrauer, Begleiter-Fertigkeitsfortschritt und Tageslohn
+von10g pro tatsächlichem NPC-Level sind integriert und gezielt CPU-geprüft;
+ihre native Abnahme bleibt offen. Der Nutzer wünscht anschließend eine Testpause.
 
 Aktive Ergänzungen vom 26. Oktober 2026 stehen in der [Implementierungs- und Abnahmecheckliste](WORKLIST-2026-10-26.md). Diese Fehlerbehebung und Spielabnahme haben Vorrang vor neuen späteren Roadmap-Systemen.
 
@@ -60,7 +65,7 @@ Das vereinfachte Handelsfenster zeigt NPC-Items links und Spieler-Items rechts, 
 5. **Navigation erweitern:** zusätzliche Innen-/Dungeonblöcke, Springen, Klettern und die Thronplattform in Privateer's Hold.
 6. **Erinnerung und Beziehung verbreitern:** weitere tatsächliche Erlebnisse und Zusagen im Gespräch; keine zusätzliche Hintergrundsimulation.
 
-Der Hauptagent integriert und prüft die elf am 26. Oktober ausdrücklich beauftragten Astra/High-Arbeitspakete. Die zwei neuesten Aufgaben betreffen Dungeon-Follow durch echte native Eingänge und Erinnerungen an tatsächlich beobachtete Diebstähle bei mobilen und stationären Personen. Die vorherige Zweiergruppe bearbeitet native Reparatur einschließlich Abholung und Gegenstandsübergaben an andere NPC-Empfänger. Beauftragung bedeutet keine bestandene Spielabnahme. Keine unbegrenzte oder verschachtelte Delegation. Je Schritt einen sichtbaren Ablauf abschließen; keine weiteren Debug-Kamera- oder Nebensysteme.
+Der Hauptagent integriert und prüft die dreizehn am 26. Oktober ursprünglich beauftragten Astra/High-Arbeitspakete allein. Der Nutzer hat weitere Agentenarbeit ausdrücklich beendet; keine neuen oder wiederaufgenommenen Agenten. Die letzten Pakete betreffen Begleiter-Fortschritt durch tatsächliche Skillnutzung und Trauer nach bekannten Todesfällen, zuvor Dungeon-Follow und Diebstahls-Erinnerungen. Vorhandene Quelländerungen bleiben erhalten. Beauftragung oder Kompilierung bedeutet keine bestandene Spielabnahme. Je Schritt einen sichtbaren Ablauf abschließen; keine weiteren Debug-Kamera- oder Nebensysteme.
 
 <a id="detailed-design"></a>
 ## Verbindlicher Funktionsumfang

@@ -22,7 +22,18 @@ namespace PeopleOfTheIliacBay.Core
         private static bool LocalSpace(NpcActionTarget p)
         {
             return p!=null && p.SettlementId>=0 && (p.Kind==NpcActionTargetKind.IndoorPoint ||
-                p.Kind==NpcActionTargetKind.WorldPoint && p.WorldSpaceId=="settlement:"+p.SettlementId.ToString(CultureInfo.InvariantCulture));
+                p.Kind==NpcActionTargetKind.WorldPoint && (p.WorldSpaceId=="settlement:"+p.SettlementId.ToString(CultureInfo.InvariantCulture) || IsDungeonSpace(p)));
+        }
+        public static bool IsDungeonSpace(NpcActionTarget point)
+        {return point!=null && point.Kind==NpcActionTargetKind.WorldPoint && point.SettlementId>=0 &&
+            point.WorldSpaceId=="dungeon:"+point.SettlementId.ToString(CultureInfo.InvariantCulture);}
+        private static bool DoorwayPair(NpcActionTarget source,NpcActionTarget destination)
+        {
+            if(source.SettlementId!=destination.SettlementId)return false;
+            if(IsDungeonSpace(source) || IsDungeonSpace(destination))
+                return source.Kind==NpcActionTargetKind.WorldPoint && destination.Kind==NpcActionTargetKind.WorldPoint &&
+                    IsDungeonSpace(source)!=IsDungeonSpace(destination);
+            return source.Kind!=destination.Kind;
         }
         internal static double Distance(NpcActionTarget a,NpcActionTarget b)
         {double x=a.X-b.X,y=a.Y-b.Y,z=a.Z-b.Z;return Math.Sqrt(x*x+y*y+z*z);}
@@ -34,7 +45,7 @@ namespace PeopleOfTheIliacBay.Core
             if(job.Kind!=NpcActionKind.Follow || job.Target.Kind!=NpcActionTargetKind.Person || job.Target.PersonId!="player" ||
                 NpcActionExecutor.IsTerminal(job) || job.Phase!=NpcActionPhase.Approaching || transit.SourceRoute==null ||
                 transit.SourceRoute.Count<2 || transit.SourceRoute.Count>128 || !LocalSpace(job.LastPosition) || !LocalSpace(transit.Destination) ||
-                transit.Destination.Kind==job.LastPosition.Kind || transit.Destination.SettlementId!=job.LastPosition.SettlementId ||
+                !DoorwayPair(job.LastPosition,transit.Destination) ||
                 double.IsNaN(transit.StartedAt) || double.IsNaN(transit.ArrivesAt) || transit.StartedAt<job.AcceptedAt ||
                 transit.StartedAt>job.UpdatedAt || transit.ArrivesAt<=transit.StartedAt || transit.ArrivesAt>=job.DeadlineAt ||
                 job.FinishAt>0 && transit.ArrivesAt>=job.FinishAt || transit.ArrivesAt-transit.StartedAt>120)
