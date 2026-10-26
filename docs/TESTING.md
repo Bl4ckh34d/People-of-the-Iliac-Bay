@@ -1,8 +1,11 @@
 # Testing and verification status
 
-## Current installed checkpoint — 26 October 2026, 16:22
+## Current installed checkpoint — 26 October 2026, 16:32
 
-Distribution and Player SHA256 both equal **`E31822DEE3D65452DC130A405CF47F3C01B2D6618BCBD2F505574405B2DBF3B4`**.
+Distribution and Player SHA256 both equal **`3202304039BC49F2050FBBEB681B5EBF033439A69BDCADFF4DB63B65ED02FCB2`**.
+This adds only bounded guard-probe fixture readiness to the16:22 package
+`E31822DEE3D6`; the new dungeon Follow/theft agent work is not included. Unity
+verification exits0 (`work/guard-door-ready-build-unity.log`).
 Unity package/integration verification exits 0. Root reruns pass Core **2147/2147**,
 RuntimeCompile with zero warnings/errors, source policy (1396 C# / 116 Python),
 exact-door resolver six checks plus three task lifecycle scenarios, guard pursuit

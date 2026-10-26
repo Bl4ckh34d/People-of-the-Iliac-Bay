@@ -6,7 +6,7 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Current local bundle **E31822DEE3D6** is installed (26 October, 16:22), with matching
+Current local bundle **3202304039BC** is installed (26 October, 16:32), with matching
 distribution/Player hashes, Unity package verification and **2147/2147** Core
 checks. It includes exact Inn chair identity, payment at instantaneous counter
 arrival, exact-door Enter targets and individually witnessed guard door pursuit.

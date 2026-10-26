@@ -1,6 +1,6 @@
 # Spieltest — 26. Oktober 2026
 
-Aktuell installiert: **`E31822DEE3D6`**, 16:22; Distribution und Player identisch.
+Aktuell installiert: **`3202304039BC`**, 16:32; Distribution und Player identisch.
 Unity-Paketprüfung und **2147 Core-Tests** bestehen. Neu enthalten: korrigierte
 Stuhlidentität und Tresenzahlung im Inn, genaue Türbindung bei Enter sowie
 Wachverfolgung durch individuell beobachtete Türen. Die Wachverfolgung ist noch

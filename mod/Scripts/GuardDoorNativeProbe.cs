@@ -80,12 +80,15 @@ namespace PeopleOfTheIliacBay.DFU
         internal List<GuardActor> ProbeDoorAvailableGuards()
         {
             var result=new List<GuardActor>();
+            if(!directory || Roster==null)return result;
             foreach(var record in Roster.Guards)
             {
                 GuardActor actor;
                 if(record.IsAlive && record.Duty==GuardDuty.Posted && record.Interior==null && record.Refuge==null &&
                     record.PostRecall==null && actors.TryGetValue(record.Id,out actor) && actor && actor.gameObject.activeInHierarchy &&
-                    !actor.IsInterior && !actor.CombatReady && !actor.DefenseTarget)result.Add(actor);
+                    actor.transform.parent==directory.transform && !actor.IsInterior && !actor.CombatReady && !actor.DefenseTarget &&
+                    actor.GetComponent<DaggerfallEntityBehaviour>() && actor.GetComponent<DaggerfallEntityBehaviour>().Entity!=null &&
+                    actor.GetComponent<DaggerfallEntityBehaviour>().Entity.CurrentHealth>0)result.Add(actor);
                 if(result.Count==2)break;
             }
             return result;
@@ -147,22 +150,41 @@ namespace PeopleOfTheIliacBay.DFU
                 if(CivilianResponses.Blocker(hit.collider) && hit.normal.y>.85f && Mathf.Abs(hit.point.y-ground.y)<.3f)return true;
             return false;
         }
-        private GuardDoorFixture ProbeDoorChoose(List<GuardActor> selected)
+        private ResidentActor ProbeDoorEligibleResident(out string diagnostic)
         {
             ResidentActor resident=null;double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+            var game=GameManager.Instance;
+            bool scene=Ready && isActiveAndEnabled && directory && geometry!=null && population!=null && worldStore!=null &&
+                !interior && !game.PlayerEnterExit.IsPlayerInside && !game.SaveLoadManager.LoadInProgress &&
+                game.PlayerGPS.HasCurrentLocation && game.PlayerGPS.CurrentLocation.MapTableData.MapId==directory.MapID;
+            int inactive=0,wrongScene=0,posture=0,identity=0,noPlan=0,nativeBody=0,health=0,invisible=0,occupied=0,eligible=0;
             foreach(var actor in actors.Values)
             {
+                if(!scene)break;
+                if(!actor || !actor.gameObject.activeInHierarchy){inactive++;continue;}
+                if(actor.transform.parent!=directory.transform){wrongScene++;continue;}
+                if(actor.IsSleeping || actor.IsSeated || actor.IsConversing){posture++;continue;}
+                if(actor.Resident==null || !actor.Resident.IsAlive || actor.Resident.IsQuestProtected){identity++;continue;}
+                if(!plans.Exists(plan=>plan.Resident.Id==actor.Resident.Id)){noPlan++;continue;}
                 var body=actor?actor.GetComponent<DaggerfallEntityBehaviour>():null;
-                if(actor && actor.gameObject.activeInHierarchy && !actor.IsSleeping && !actor.IsSeated && !actor.IsConversing &&
-                    actor.Resident!=null && actor.Resident.IsAlive && !actor.Resident.IsQuestProtected &&
-                    plans.Exists(plan=>plan.Resident.Id==actor.Resident.Id) && body && body.Entity is CivilianEntity &&
-                    body.Entity.CurrentHealth>1 && !body.Entity.IsInvisible && !body.GetComponent<GuardAttackEvidence>() &&
-                    worldStore.ActiveAlarm(actor.Resident.Id,now)==null && worldStore.ActiveNpcAction(actor.Resident.Id)==null &&
-                    worldStore.ActiveNpcTask(actor.Resident.Id)==null && !lawfulGuardFlights.ContainsKey(actor.Resident.Id) &&
-                    worldStore.ResidentDefenseShelter(actor.Resident.Id,population.SettlementId)==null)
-                {resident=actor;break;}
+                if(!body || !(body.Entity is CivilianEntity)){nativeBody++;continue;}
+                if(body.Entity.CurrentHealth<=1){health++;continue;}
+                if(body.Entity.IsInvisible){invisible++;continue;}
+                if(body.GetComponent<GuardAttackEvidence>() || worldStore.ActiveAlarm(actor.Resident.Id,now)!=null ||
+                    worldStore.ActiveNpcAction(actor.Resident.Id)!=null || worldStore.ActiveNpcTask(actor.Resident.Id)!=null ||
+                    lawfulGuardFlights.ContainsKey(actor.Resident.Id) || worldStore.ResidentDefenseShelter(actor.Resident.Id,population.SettlementId)!=null)
+                {occupied++;continue;}
+                eligible++;if(!resident)resident=actor;
             }
-            GuardDoorNativeProbe.Require(resident,"no unoccupied living ordinary resident with a nonlethal health margin.");
+            diagnostic="scene="+scene+"; ready="+Ready+"; entrancesReady="+EntranceSurveyReady+"; routesPrepared="+OutdoorRoutesPrepared+
+                "; plans="+plans.Count+"; bodies="+actors.Count+"; eligible="+eligible+"; inactive="+inactive+"; wrongScene="+wrongScene+
+                "; posture="+posture+"; identity="+identity+"; noPlan="+noPlan+"; nativeBody="+nativeBody+"; lowHealth="+health+
+                "; invisible="+invisible+"; occupied="+occupied+"; paused="+GameManager.IsGamePaused+"; gameSeconds="+now;
+            return resident;
+        }
+        private GuardDoorFixture ProbeDoorChoose(List<GuardActor> selected,ResidentActor resident)
+        {
+            double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var nearby=new List<TownGeometry.Entrance>(geometry.Entrances.Values);
             nearby.Sort((a,b)=>(geometry.SceneDoor(a)-resident.transform.position).sqrMagnitude.CompareTo(
                 (geometry.SceneDoor(b)-resident.transform.position).sqrMagnitude));
@@ -209,9 +231,27 @@ namespace PeopleOfTheIliacBay.DFU
 
         internal IEnumerator ProbeGuardDoor(PeopleOfTheIliacBayMod host,GuardPopulation guards,bool witnessed)
         {
-            var game=GameManager.Instance;var selected=guards.ProbeDoorAvailableGuards();
-            GuardDoorNativeProbe.Require(selected.Count==2,"requires two existing posted guards.");
-            var fixture=ProbeDoorChoose(selected);var originalResident=fixture.Resident;
+            var game=GameManager.Instance;var selected=new List<GuardActor>();ResidentActor candidate=null;
+            float availableUntil=Time.realtimeSinceStartup+120,nextAvailabilityLog=0,nextAvailabilitySample=0;
+            string availability="not sampled";
+            while(Time.realtimeSinceStartup<availableUntil)
+            {
+                if(Time.realtimeSinceStartup>=nextAvailabilitySample)
+                {
+                    nextAvailabilitySample=Time.realtimeSinceStartup+.5f;
+                    selected=guards.Roster==null?new List<GuardActor>():guards.ProbeDoorAvailableGuards();
+                    candidate=ProbeDoorEligibleResident(out availability);
+                    if(candidate && selected.Count==2 && EntranceSurveyReady && !GameManager.IsGamePaused)break;
+                    if(Time.realtimeSinceStartup>=nextAvailabilityLog)
+                    {nextAvailabilityLog=Time.realtimeSinceStartup+5;Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_WAIT: guards="+selected.Count+"; "+availability);}
+                }
+                yield return null;
+            }
+            selected=guards.ProbeDoorAvailableGuards();candidate=ProbeDoorEligibleResident(out availability);
+            GuardDoorNativeProbe.Require(candidate && selected.Count==2 && EntranceSurveyReady && !GameManager.IsGamePaused,
+                "eligible exterior fixture unavailable after 120 real seconds; guards="+selected.Count+"; "+availability);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_READY: guards="+selected.Count+"; "+availability);
+            var fixture=ProbeDoorChoose(selected,candidate);var originalResident=fixture.Resident;
             var residentState=originalResident.Resident;
             string id=originalResident.Resident.Id,first=selected[0].GuardId,second=selected[1].GuardId;
             int settlement=population.SettlementId;string doorId=BuildingActionDoorId(fixture.Door);

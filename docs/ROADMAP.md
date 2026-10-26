@@ -2,7 +2,7 @@
 
 Stand: 25. Oktober 2026. Dieser Plan ersetzt die früheren Architektur- und Zwischenstandslisten.
 
-Zwischenstand 26. Oktober, 16:22: Bundle `E31822DEE3D6` installiert; Core 2147/2147
+Zwischenstand 26. Oktober, 16:32: Bundle `3202304039BC` installiert; Core 2147/2147
 und Unity-Paketprüfung bestehen. Stuhlidentität und Tresenzahlung sind korrigiert;
 zwei Inn-Layouts bestehen Bezahlung, Sitzen und Kauferinnerungen. Kontrollierter
 Familienlauf15 besteht auch den Ausgang und Heimweg; Ausgang im ursprünglichen
