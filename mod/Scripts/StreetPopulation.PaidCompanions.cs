@@ -51,7 +51,8 @@ namespace PeopleOfTheIliacBay.DFU
             var player = GameManager.Instance == null ? null : GameManager.Instance.PlayerEntity;
             if (player == null || player.GetGoldAmount() < dailyGold)
             { reason = "The player lacks the 120 gold needed for one day of service."; return false; }
-            reason = "120 gold for 24 game hours of Follow and travel. No automatic renewal; dismissal settles unused time.";
+            reason = "120 gold for one 24-game-hour day of Follow and travel from acceptance. No automatic renewal. " +
+                "The started day is non-refundable; dismissal ends service immediately.";
             return true;
         }
 
@@ -106,19 +107,8 @@ namespace PeopleOfTheIliacBay.DFU
                 reason = "Accepted Follow action changed before service started.";
                 return RefundFailedHire(contractId,player,true,reason,out reason);
             }
-            var ticket = worldStore.CaptureNpcServiceContractWriteTicket();
-            var reserved = ticket.SourceLedger.Read(contractId);
-            NpcServiceContract started;
-            NpcServiceContractLedger candidate;
-            string commitError;
-            if (reserved == null || !reserved.TryStart(reserved.Revision,action.AcceptedAt,out started) ||
-                !NpcServiceContractLedger.TryReplace(ticket.SourceLedger,ticket.ExpectedLedgerRevision,started,out candidate) ||
-                !worldStore.TryCommitNpcServiceContracts(ticket,candidate,new NpcServiceTransferReceipt[0],
-                    new NpcServiceRenewalAuthorization[0],out commitError))
-            {
-                reason = "The prepaid service could not start at the accepted action time.";
-                return RefundFailedHire(contractId,player,true,reason,out reason);
-            }
+            // Starting the paid day and binding the physical job are one store operation.
+            // A failed binding leaves the reservation fully refundable.
             if (!worldStore.TryBindPaidFollowAction(action.Id,action.Revision,contractId,out reason))
                 return RefundFailedHire(contractId,player,true,
                     "The prepaid service could not bind its accepted Follow action.",out reason);

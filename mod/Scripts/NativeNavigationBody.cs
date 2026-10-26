@@ -24,7 +24,9 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if(!obstacle)return;
             var navigation=GetComponent<NativeResidentNavigation>();
-            obstacle.enabled=body&&body.enabled&&NativeNavigationWorld.Current&&NativeNavigationWorld.Current.Ready&&(!navigation||!navigation.Active);
+            var jump=GetComponent<NativeDungeonJumpTraversal>();
+            obstacle.enabled=body&&body.enabled&&NativeNavigationWorld.Current&&NativeNavigationWorld.Current.Ready&&
+                (!navigation||!navigation.Active)&&(!jump||!jump.Active);
         }
         private void OnDisable(){if(obstacle)obstacle.enabled=false;}
         private void OnDestroy(){if(obstacle)Destroy(obstacle);}

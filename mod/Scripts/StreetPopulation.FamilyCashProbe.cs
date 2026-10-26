@@ -19,12 +19,15 @@ namespace PeopleOfTheIliacBay.DFU
             double dawn=(Math.Floor(ActionNow()/86400d)+3)*86400d+5*3600;
             game.PlayerEntity.PreventEnemySpawns=true;
             DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(dawn-ActionNow()));
-            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_FIXTURE: day="+(int)(dawn/86400)+
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_FIXTURE: seed="+worldStore.WorldSeed+"; day="+(int)(dawn/86400)+
                 "; hour=5; nativeBankClose="+PlayerActivate.closeHours[(int)DFLocation.BuildingTypes.Bank]+
                 "; controlledWallet=true; controlledClockAndObserver=true; normalPlanning=true");
             // This source has 408 homes, admitted two per half-second. Allow
             // a full admission pass after the measured route preparation.
-            HouseholdDayPlan day=null;float deadline=Time.realtimeSinceStartup+240;double bankDistance=0;
+            // A fresh world also needs a complete admission pass after its
+            // newly generated routes become ready (two homes per half-second).
+            float freshPass=Environment.GetEnvironmentVariable("POTIB_EDITOR_FIXTURE_WORLD_SEED")==null?0:population.Households.Count*0.25f+5;
+            HouseholdDayPlan day=null;float deadline=Time.realtimeSinceStartup+240+freshPass;double bankDistance=0;
             while(day==null && Time.realtimeSinceStartup<deadline)
             {
                 if(Ready && EntranceSurveyReady && geometry!=null && geometry.UsesNativeNavigation)day=ChooseFamilyCashProbe(out bankDistance);
@@ -134,6 +137,8 @@ namespace PeopleOfTheIliacBay.DFU
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CASH_PASS: nativeBankHours=true; bothEmpty=true; onePayer=true; morningContext=true; bankService=true; gold="+
                 expectedGold+"; travelledMetres="+travelled+"; maxStep="+maxStep+"; firstDistance="+progress.First.Distance+
                 "; secondDistance="+progress.Second.Distance+"; bankInteriorUnobserved=true; innPaymentNotTested=true");
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-family-inn")>=0)
+                yield return VerifyFundedFamilyInn(day,payer,partner);
         }
 
         private void LogFamilyCashAdmission()

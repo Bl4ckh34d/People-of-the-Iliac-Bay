@@ -1,5 +1,26 @@
 # Testing and verification status
 
+## Parallel roadmap checkpoint — 26 October 2026, 13:45
+
+Installed and distribution SHA256 both equal **`D155EC1EE9F9D04AFB2CDBFA1A9A0AE37F34B4AC5E78A39A89510EC3898D50F5`**.
+Unity package verification exits 0. Integrated Core **2144/2144**, RuntimeCompile
+(zero warnings/errors), source policy (1387 C# / 116 Python), 70 PowerShell syntax
+checks and tooling protocols pass. Native jump collision/landing, non-first temple
+lesson, restored casting and revised paid-hire flows have not been run in game.
+
+- [Inn recollections](audits/2026-10-26-inn-purchase-memory.md): six expected missing-memory failures before the fix, Core 2138/2138 at that checkpoint; native serialization/Inn regression 20/20. Later combined Core includes all changes.
+- [Temple skill catalog](audits/2026-10-26-temple-training-catalog.md): linked-runtime regression 4/6 before, 6/6 after.
+- [Restored spell costs](audits/2026-10-26-companion-spell-cost-restore.md): three failing binding cases before, 3/3 after, including excluded hosts.
+- [Daily companion pay](audits/2026-10-26-companion-daily-pay.md): focused suites 22/22, 9/9, 10/10 and 8/8; atomic admission regression passes.
+- [Dungeon jump slice](audits/2026-10-26-dungeon-jump-traversal.md): six ballistic tests; runtime adapter compiles. No real dungeon geometry fixture has been accepted.
+
+The shared-door correction passes native exterior arrivals in `03`, `04` and
+fresh-state `06`. `06` also passes a 135 m bank round trip and reconstructs both
+Inn bodies, but then fails the second physical route checkpoint before payment.
+`07` fails earlier at setup. The revised fresh-state setup allowance and detailed
+checkpoint diagnostics still need rerunning. These are not complete family
+outings or Player performance passes; see [full evidence](audits/2026-10-26-family-cash-visit.md).
+
 ## Native family routes and morning funding — 26 October 2026, 12:21
 
 Installed and distribution SHA256 both equal **`7EC048CD49C7277839C07F97EBD8A2C25C5A8BBBB4842C09C318D4266C64401A`**. Unity package verification/build exits 0. Core 2131/2131, RuntimeCompile, source policy, tooling protocols and PowerShell syntax pass.

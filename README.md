@@ -6,7 +6,18 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Local test bundle **7EC048CD49C7** is installed (26 October, 12:21); Unity package integration and **2131/2131** core checks pass. It includes the street-plan expansion, controlled solitary-shop wait release, and the source implementation of planned family Inn funding. Native linked routes now admit planned family outings. A peaceful native fixture passes morning bank service, one payout, physical home return and subsequent paired departure; final Inn arrival/payment remains open. The earlier empty-wallet bank repair and verified return to the home door remain included. The separate player-violence observer now uses actual body facing: seeing the victim alone does not identify a player behind the observer, and hearing alone does not establish an eyewitness. Eighteen mobile/static native boundary cases pass; actual combat swings, deaths and physical interior encounters remain separate acceptance work. See the [player-violence audit](docs/audits/2026-10-26-player-attack-perception.md). Earlier [non-player attack knowledge](docs/audits/2026-10-26-enemy-attack-knowledge.md), [free-text report delivery](docs/audits/2026-10-26-murder-report-dialogue.md), arrival-hold, housing-cache, trade and urgent-movement repairs remain included. Other dialogue cases, spontaneous encounters, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
+Current local bundle **D155EC1EE9F9** is installed (26 October, 13:45), with matching
+distribution/Player hashes, Unity package verification and **2144/2144** Core
+checks. It adds receipt-based Inn memories, all eligible temple-training skill
+offers, restored NPC spell-cost ownership, simple one-day companion pay and a
+bounded dungeon-jump adapter. The pair doorway collision fix passes native
+exterior approaches. A fresh family outing reaches and reconstructs the Inn but
+fails its second physical checkpoint before payment; that defect remains open.
+Native acceptance of the five new slices, climbing, dungeon Follow and the
+moving throne platform also remain open. See the [current checklist](docs/WORKLIST-2026-10-26.md)
+and [verification boundaries](docs/TESTING.md).
+
+Earlier test bundle **7EC048CD49C7** was installed (26 October, 12:21); Unity package integration and **2131/2131** core checks pass. It includes the street-plan expansion, controlled solitary-shop wait release, and the source implementation of planned family Inn funding. Native linked routes now admit planned family outings. A peaceful native fixture passes morning bank service, one payout, physical home return and subsequent paired departure; final Inn arrival/payment remains open. The earlier empty-wallet bank repair and verified return to the home door remain included. The separate player-violence observer now uses actual body facing: seeing the victim alone does not identify a player behind the observer, and hearing alone does not establish an eyewitness. Eighteen mobile/static native boundary cases pass; actual combat swings, deaths and physical interior encounters remain separate acceptance work. See the [player-violence audit](docs/audits/2026-10-26-player-attack-perception.md). Earlier [non-player attack knowledge](docs/audits/2026-10-26-enemy-attack-knowledge.md), [free-text report delivery](docs/audits/2026-10-26-murder-report-dialogue.md), arrival-hold, housing-cache, trade and urgent-movement repairs remain included. Other dialogue cases, spontaneous encounters, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
 
 ## Project status
 
@@ -16,7 +27,7 @@ the spawn cap remains unused. Optional outings use a wider seeded departure
 window. Ordinary single-destination visits can now enter the full day planner
 instead of permanently excluding later activities. The afternoon sample improves
 from three to eleven outdoor residents, but broader outdoor activity and routine
-balance remain open. The installed 12:21 checkpoint passes 2131 Core tests and
+balance remain open. The earlier 12:21 checkpoint passed 2131 Core tests and
 Unity package verification. Native family routes and peaceful proactive bank trips
 through paired departure are verified; complete Inn arrival/payment remains open.
 

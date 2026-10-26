@@ -15,7 +15,7 @@ internal static class Program
     private static int Main()
     {
         Run("late expiry publishes ledger evidence and NPC wallet together", LateExpiryPublishesTogether);
-        Run("missing or altered refund proof and wrong wallet leave all state unchanged", InvalidProofOrWalletIsAtomic);
+        Run("missing or altered wage proof and wrong wallet leave all state unchanged", InvalidProofOrWalletIsAtomic);
         Run("service epoch inventory revision and receipt replay reject without partial write", StaleAndReplayAreAtomic);
         Run("stale service ledger revision rejects without partial write", StaleServiceLedgerRejects);
         Run("generic service commit cannot publish a wage or refund without wallet credit", GenericPayoutBypassRejects);
@@ -35,10 +35,10 @@ internal static class Program
     {
         WorldStateStore store = FundedStore(start: true, suspend: true, out string worker);
         PrepareLateSettlement(store, worker, out var ticket, out var candidate, out var wage,
-            out var refund, out var credit);
+            out var credit);
         string before = StateSignature(store);
         Assert(store.TryCommitNpcServiceSettlement(ticket, candidate, credit,
-            new[] { wage, refund }, out string error), "combined late settlement rejected: " + error);
+            new[] { wage }, out string error), "combined late settlement rejected: " + error);
         Assert(StateSignature(store) != before, "successful settlement changed no saved state");
         AssertSettled(store, worker);
 
@@ -52,23 +52,23 @@ internal static class Program
     {
         WorldStateStore store = FundedStore(start: true, suspend: true, out string worker);
         PrepareLateSettlement(store, worker, out var ticket, out var candidate, out var wage,
-            out var refund, out var credit);
+            out var credit);
         string before = StateSignature(store);
-        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage }, before,
-            "missing native refund proof");
-        var wrongRefund = Transfer("settle-refund", NpcServiceTransferKind.Refund,
-            NpcDirectedRelationship.PlayerTargetId, 59, 90000);
-        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage, wrongRefund }, before,
-            "altered native refund proof");
-        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage, wage, refund }, before,
+        AssertRejectedUnchanged(store, ticket, candidate, credit, Array.Empty<NpcServiceTransferReceipt>(), before,
+            "missing native wage proof");
+        var wrongWage = Transfer("settle-wage", NpcServiceTransferKind.Earnings,
+            worker, 119, 90000);
+        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wrongWage }, before,
+            "altered native wage proof");
+        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage, wage }, before,
             "duplicate native wage proof");
 
-        var wrongAmount = Credit(store, worker, 59);
-        AssertRejectedUnchanged(store, ticket, candidate, wrongAmount, new[] { wage, refund }, before,
+        var wrongAmount = Credit(store, worker, 119);
+        AssertRejectedUnchanged(store, ticket, candidate, wrongAmount, new[] { wage }, before,
             "wallet credit different from exact earnings");
-        var wrongItems = Credit(store, worker, 60);
+        var wrongItems = Credit(store, worker, 120);
         wrongItems.Items[0].NativePayload = "substituted-item-payload";
-        AssertRejectedUnchanged(store, ticket, candidate, wrongItems, new[] { wage, refund }, before,
+        AssertRejectedUnchanged(store, ticket, candidate, wrongItems, new[] { wage }, before,
             "wallet update changed owned item payload");
     }
 
@@ -76,30 +76,30 @@ internal static class Program
     {
         WorldStateStore store = FundedStore(start: true, suspend: true, out string worker);
         PrepareLateSettlement(store, worker, out var ticket, out var candidate, out var wage,
-            out var refund, out var credit);
+            out var credit);
         NpcInventoryState inventory = store.ReadNpcInventory(worker);
         Assert(store.CommitNpcInventoryTransaction("unrelated-inventory-revision", new[] {
             new NpcInventoryUpdate { PersonId = worker, ExpectedRevision = inventory.Revision,
                 WalletGold = inventory.WalletGold, Items = inventory.Items }
         }), "fixture could not advance inventory revision");
         string afterRevision = StateSignature(store);
-        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage, refund }, afterRevision,
+        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage }, afterRevision,
             "stale NPC inventory revision");
 
-        NpcInventoryUpdate refreshedCredit = Credit(store, worker, 60);
+        NpcInventoryUpdate refreshedCredit = Credit(store, worker, 120);
         WorldState saved = store.Snapshot();
         store.Restore(saved);
         string afterRestore = StateSignature(store);
-        AssertRejectedUnchanged(store, ticket, candidate, refreshedCredit, new[] { wage, refund }, afterRestore,
+        AssertRejectedUnchanged(store, ticket, candidate, refreshedCredit, new[] { wage }, afterRestore,
             "ticket from previous store epoch");
 
         PrepareLateSettlement(store, worker, out var freshTicket, out var freshCandidate,
-            out var freshWage, out var freshRefund, out var freshCredit);
+            out var freshWage, out var freshCredit);
         Assert(store.TryCommitNpcServiceSettlement(freshTicket, freshCandidate, freshCredit,
-            new[] { freshWage, freshRefund }, out string error), "fresh retry rejected: " + error);
+            new[] { freshWage }, out string error), "fresh retry rejected: " + error);
         string committed = StateSignature(store);
         AssertRejectedUnchanged(store, freshTicket, freshCandidate, freshCredit,
-            new[] { freshWage, freshRefund }, committed, "replayed committed receipts");
+            new[] { freshWage }, committed, "replayed committed receipts");
         AssertSettled(store, worker, expectedInventoryRevision: 2);
     }
 
@@ -107,11 +107,11 @@ internal static class Program
     {
         WorldStateStore store = FundedStore(start: true, suspend: true, out string worker);
         PrepareLateSettlement(store, worker, out var ticket, out var candidate, out var wage,
-            out var refund, out var credit);
+            out var credit);
         CommitContractTransition(store, current => current.TryResume(current.Revision, 50000, out var next)
             ? next : null);
         string afterRevision = StateSignature(store);
-        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage, refund }, afterRevision,
+        AssertRejectedUnchanged(store, ticket, candidate, credit, new[] { wage }, afterRevision,
             "stale service ledger revision");
     }
 
@@ -119,9 +119,9 @@ internal static class Program
     {
         WorldStateStore store = FundedStore(start: true, suspend: true, out string worker);
         PrepareLateSettlement(store, worker, out var ticket, out var candidate, out var wage,
-            out var refund, out _);
+            out _);
         string before = StateSignature(store);
-        Assert(!store.TryCommitNpcServiceContracts(ticket, candidate, new[] { wage, refund },
+        Assert(!store.TryCommitNpcServiceContracts(ticket, candidate, new[] { wage },
             new NpcServiceRenewalAuthorization[0], out _),
             "generic service commit published payout without the NPC wallet");
         Assert(StateSignature(store) == before, "generic payout rejection partly changed saved state");
@@ -159,21 +159,21 @@ internal static class Program
         WorldStateStore store = FundedStore(start: true, suspend: false, out string worker);
         var ticket = store.CaptureNpcServiceContractWriteTicket();
         NpcServiceContract active = ticket.SourceLedger.Read(ContractId);
-        var wage = Transfer("half-wage", NpcServiceTransferKind.Earnings, worker, 60, 43200);
+        var wage = Transfer("daily-wage", NpcServiceTransferKind.Earnings, worker, 120, 43200);
         Assert(active.TryReleaseEarnings(active.Revision, 43200, wage, out var paid),
-            "pure half-block earnings fixture rejected");
+            "pure daily earnings fixture rejected");
         Assert(NpcServiceContractLedger.TryReplace(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
             paid, out var candidate), "earnings ledger candidate rejected");
-        NpcInventoryUpdate credit = Credit(store, worker, 60);
+        NpcInventoryUpdate credit = Credit(store, worker, 120);
         string before = StateSignature(store);
         AssertRejectedUnchanged(store, ticket, candidate, null, new[] { wage }, before,
             "positive earnings without wallet credit");
         Assert(store.TryCommitNpcServiceSettlement(ticket, candidate, credit, new[] { wage }, out string error),
             "earnings-only commit rejected: " + error);
         var current = store.ReadNpcServiceContracts().Read(ContractId);
-        Assert(current.Status == NpcServiceContractStatus.Active && current.ReleasedGold == 60 &&
-            current.RefundedGold == 0 && current.EscrowGold == 60 &&
-            store.ReadNpcInventory(worker).WalletGold == 67,
+        Assert(current.Status == NpcServiceContractStatus.Active && current.ReleasedGold == 120 &&
+            current.RefundedGold == 0 && current.EscrowGold == 0 &&
+            store.ReadNpcInventory(worker).WalletGold == 127,
             "earnings release did not conserve escrow or credit exact wallet amount");
     }
 
@@ -185,13 +185,13 @@ internal static class Program
         var sibling = new WorldStateStore(2);
         first.Restore(saved); sibling.Restore(saved);
         PrepareLateSettlement(first, worker, out var firstTicket, out var firstCandidate,
-            out var wage, out var refund, out var firstCredit);
+            out var wage, out var firstCredit);
         var siblingTicket = sibling.CaptureNpcServiceContractWriteTicket();
         string before = StateSignature(sibling);
         AssertRejectedUnchanged(sibling, firstTicket, firstCandidate, firstCredit,
-            new[] { wage, refund }, before, "foreign owner ticket");
-        AssertRejectedUnchanged(sibling, siblingTicket, firstCandidate, Credit(sibling, worker, 60),
-            new[] { wage, refund }, before, "candidate derived from sibling ticket");
+            new[] { wage }, before, "foreign owner ticket");
+        AssertRejectedUnchanged(sibling, siblingTicket, firstCandidate, Credit(sibling, worker, 120),
+            new[] { wage }, before, "candidate derived from sibling ticket");
     }
 
     private static WorldStateStore FundedStore(bool start, bool suspend, out string worker)
@@ -239,24 +239,22 @@ internal static class Program
 
     private static void PrepareLateSettlement(WorldStateStore store, string worker,
         out NpcServiceContractWriteTicket ticket, out NpcServiceContractLedger candidate,
-        out NpcServiceTransferReceipt wage, out NpcServiceTransferReceipt refund,
+        out NpcServiceTransferReceipt wage,
         out NpcInventoryUpdate credit)
     {
         ticket = store.CaptureNpcServiceContractWriteTicket();
         var current = ticket.SourceLedger.Read(ContractId);
-        Assert(current.Status == NpcServiceContractStatus.Suspended && current.EarnedGold == 60 &&
+        Assert(current.Status == NpcServiceContractStatus.Suspended && current.EarnedGold == 120 &&
             current.EscrowGold == Rate && current.BlockEndAt == 86400,
-            "half-block suspended contract fixture has wrong accounting");
-        wage = Transfer("settle-wage", NpcServiceTransferKind.Earnings, worker, 60, 90000);
-        refund = Transfer("settle-refund", NpcServiceTransferKind.Refund,
-            NpcDirectedRelationship.PlayerTargetId, 60, 90000);
+            "started daily contract fixture has wrong accounting");
+        wage = Transfer("settle-wage", NpcServiceTransferKind.Earnings, worker, 120, 90000);
         Assert(current.TrySettle(current.Revision, 90000, NpcServiceEndReason.NaturalExpiry,
-            worker, wage, refund, out var closed), "pure late-expiry settlement fixture rejected");
+            worker, wage, null, out var closed), "pure late-expiry settlement fixture rejected");
         Assert(closed.SettlementRecordedAt == 90000 && closed.LastServiceUpdateAt == 43200,
             "late-expiry fixture backdated receipt or billed the pause");
         Assert(NpcServiceContractLedger.TryReplace(ticket.SourceLedger, ticket.ExpectedLedgerRevision,
             closed, out candidate), "settlement ledger candidate rejected");
-        credit = Credit(store, worker, 60);
+        credit = Credit(store, worker, 120);
     }
 
     private static NpcServiceTransferReceipt Transfer(string id, NpcServiceTransferKind kind,
@@ -291,19 +289,17 @@ internal static class Program
         var wallet = store.ReadNpcInventory(worker);
         Assert(contract.Status == NpcServiceContractStatus.Terminated &&
             contract.EndReason == NpcServiceEndReason.NaturalExpiry &&
-            contract.FundedGold == Rate && contract.ReleasedGold == 60 &&
-            contract.RefundedGold == 60 && contract.EscrowGold == 0 &&
+            contract.FundedGold == Rate && contract.ReleasedGold == 120 &&
+            contract.RefundedGold == 0 && contract.EscrowGold == 0 &&
             contract.SettlementRecordedAt == 90000 && contract.LastServiceUpdateAt == 43200,
             "late settlement ledger lost amount or actual transfer time");
-        Assert(wallet.WalletGold == 67 && wallet.Revision == expectedInventoryRevision && wallet.Items.Count == 1 &&
+        Assert(wallet.WalletGold == 127 && wallet.Revision == expectedInventoryRevision && wallet.Items.Count == 1 &&
             wallet.Items[0].Uid == 70001 && wallet.Items[0].NativePayload == "opaque-owned-item-fixture",
             "settlement wallet credit changed the original owned item");
-        Assert(saved.NpcServiceEvidence.CompletedTransfers.Count == 3 &&
+        Assert(saved.NpcServiceEvidence.CompletedTransfers.Count == 2 &&
             saved.NpcServiceEvidence.CompletedTransfers[1].ReceiptId == "settle-wage" &&
-            saved.NpcServiceEvidence.CompletedTransfers[2].ReceiptId == "settle-refund" &&
-            saved.NpcServiceEvidence.CompletedTransfers[1].Amount == 60 &&
-            saved.NpcServiceEvidence.CompletedTransfers[2].Amount == 60,
-            "exact earnings and refund proofs were not saved");
+            saved.NpcServiceEvidence.CompletedTransfers[1].Amount == 120,
+            "exact daily earnings proof was not saved");
     }
 
     private static string StateSignature(WorldStateStore store)

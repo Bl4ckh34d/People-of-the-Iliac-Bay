@@ -26,7 +26,14 @@ namespace PeopleOfTheIliacBay.DFU
             if (!actor || world == null || person == null || !person.IsAlive ||
                 person.AgeGroup != ResidentAgeGroup.Adult || person.IsQuestProtected) return null;
             var entity = actor.GetComponent<DaggerfallEntityBehaviour>();
-            if (!entity || entity.Entity == null) return null;
+            var resident = actor.GetComponent<ResidentActor>();
+            var manager = actor.GetComponent<EntityEffectManager>();
+            if (!entity || entity.Entity == null || !resident || resident.Resident == null ||
+                resident.Resident.Id != person.Id || !manager || manager.IsPlayerEntity ||
+                !ReferenceEquals(manager.EntityBehaviour, entity)) return null;
+            // A rebuilt manager defaults to player skill costs. Restored books bypass
+            // starting-spell initialization, so establish the resident's cost source here.
+            manager.UsePlayerCharacterSkillsForEnemyMagicCost = false;
             var binding = actor.GetComponent<NativeNpcKnownSpellBinding>();
             if (!binding) binding = actor.AddComponent<NativeNpcKnownSpellBinding>();
             binding.Bind(entity.Entity, world, person);

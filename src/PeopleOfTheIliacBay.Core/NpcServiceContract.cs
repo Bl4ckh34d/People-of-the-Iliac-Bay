@@ -25,7 +25,7 @@ namespace PeopleOfTheIliacBay.Core
     /// <summary>OrdinaryCombat never authorizes a clear suicidal order. BoundedExpedition only overrides routine schedule boundaries.</summary>
     [Flags]
     public enum NpcServiceRiskScope { None = 0, OrdinaryCombat = 1, BoundedExpedition = 2 }
-    /// <summary>When rest is not paid availability, the adapter must suspend and resume the ledger around rest.</summary>
+    /// <summary>Rest availability controls service suspension; it never prorates a started daily fee.</summary>
     public enum NpcServiceRestTreatment { RestNotIncluded = 1, CountsAsPaidAvailability = 2, SuspendBillingDuringRest = 3 }
     public enum NpcServiceResupplyResponsibility { PlayerProvides = 1, CompanionUsesExistingSupplies = 2, SeparatelyNegotiated = 3 }
     public enum NpcServiceReservedObligationKind { Appointment = 1, Family = 2, Quest = 3, Service = 4 }
@@ -406,6 +406,10 @@ namespace PeopleOfTheIliacBay.Core
                 HasAdmissionConflict(actualServiceStartAt, actualServiceStartAt + BillingPeriodSeconds)) return false;
             var copy = Copy(); copy.Status = NpcServiceContractStatus.Active;
             copy.BlockStartAt = actualServiceStartAt; copy.BlockEndAt = actualServiceStartAt + BillingPeriodSeconds;
+            // A started 24-hour block earns its agreed fee once. Calendar midnight,
+            // pauses and early dismissal do not create another charge or a partial refund.
+            copy.CurrentBlockEarnedGold = copy.RatePer24GameHours;
+            copy.EarnedGold = copy.FundedGold;
             copy.LastServiceUpdateAt = actualServiceStartAt; copy.Revision++; updated = copy; return true;
         }
 
@@ -478,7 +482,7 @@ namespace PeopleOfTheIliacBay.Core
             copy.Revision++; updated = copy; return true;
         }
 
-        /// <summary>Moves an existing unpaid pause to a later care episode without accruing service or moving gold.</summary>
+        /// <summary>Moves an existing service pause to a later care episode without changing the daily fee or moving gold.</summary>
         public bool TryTransferHealthCareSuspensionOwner(long expectedRevision,
             string expectedOldCareEpisodeId, string newCareEpisodeId, out NpcServiceContract updated)
         {
@@ -532,7 +536,9 @@ namespace PeopleOfTheIliacBay.Core
             if (refundDue > 0) { closed.AddReceipt(priorRefund); closed.RefundedGold += refundDue; closed.EscrowGold -= refundDue; }
             if (closed.EscrowGold != 0 || closed.FundedGold > int.MaxValue - RatePer24GameHours) return false;
             closed.AddReceipt(funding); closed.FundedGold += RatePer24GameHours; closed.EscrowGold = RatePer24GameHours;
-            closed.CurrentBlockEligibleSeconds = 0; closed.CurrentBlockEarnedGold = 0; closed.CurrentBlockReleasedGold = 0; closed.BlockStartAt = boundaryAt;
+            closed.CurrentBlockEligibleSeconds = 0; closed.CurrentBlockEarnedGold = RatePer24GameHours;
+            closed.EarnedGold = closed.FundedGold;
+            closed.CurrentBlockReleasedGold = 0; closed.BlockStartAt = boundaryAt;
             closed.BlockEndAt = boundaryAt + BillingPeriodSeconds; closed.LastServiceUpdateAt = boundaryAt;
             if (!Finite(closed.BlockEndAt)) return false;
             closed.Revision++; updated = closed; return true;
@@ -595,9 +601,6 @@ namespace PeopleOfTheIliacBay.Core
                 }
             }
             copy.LastServiceUpdateAt = through;
-            int target = (int)Math.Floor((double)copy.RatePer24GameHours * copy.CurrentBlockEligibleSeconds / BillingPeriodSeconds);
-            int increment = target - copy.CurrentBlockEarnedGold;
-            copy.CurrentBlockEarnedGold = target; copy.EarnedGold = checked(copy.EarnedGold + increment);
             return copy;
         }
 
@@ -729,7 +732,8 @@ namespace PeopleOfTheIliacBay.Core
                 CurrentBlockEligibleSeconds > BillingPeriodSeconds || CurrentBlockEarnedGold < 0 ||
                 CurrentBlockReleasedGold < 0 || CurrentBlockReleasedGold > CurrentBlockEarnedGold ||
                 EarnedGold < CurrentBlockEarnedGold || ReleasedGold < CurrentBlockReleasedGold ||
-                CurrentBlockEarnedGold != (int)Math.Floor((double)RatePer24GameHours * CurrentBlockEligibleSeconds / BillingPeriodSeconds))
+                CurrentBlockEarnedGold != (BlockStartAt < 0 ? 0 : RatePer24GameHours) ||
+                BlockStartAt >= 0 && (EarnedGold != FundedGold || RefundedGold != 0))
                 throw new ArgumentException("Invalid service contract state.");
             if (!Enum.IsDefined(typeof(NpcServiceSuspensionOwnerKind), SuspensionOwnerKind) ||
                 (Status != NpcServiceContractStatus.Suspended &&

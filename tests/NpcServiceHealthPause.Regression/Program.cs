@@ -11,7 +11,7 @@ internal static class Program
 
     private static int Main()
     {
-        Run("health owner pauses billing and only exact episode resumes", OwnerBoundPauseAndRounding);
+        Run("health owner pauses service without prorating day pay and only exact episode resumes", OwnerBoundPauseAndRounding);
         Run("health pause owner survives detached save and renewal permission", OwnerSurvivesCopyAndRestore);
         Run("new care episode transfers an unpaid pause without billing", NewCareTransfersPauseOwner);
         Run("legacy suspended contract cannot be resumed by health care", LegacySuspensionMigration);
@@ -44,11 +44,11 @@ internal static class Program
             resumed.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.None && resumed.SuspensionOwnerId == null &&
             resumed.BlockEndAt == 86400, "resume changed owner or fixed expiry");
         Check(resumed.TrySettle(resumed.Revision, 86400, NpcServiceEndReason.NaturalExpiry, "npc-1",
-            Transfer("earned-round", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 83, 86400),
-            Transfer("refund-round", NpcServiceTransferKind.Refund, Escrow, "player", 17, 86400), out var settled),
-            "rounded settlement failed");
-        Check(settled.EligibleServiceSeconds == 72000 && settled.EarnedGold == 83 &&
-            settled.ReleasedGold == 83 && settled.RefundedGold == 17 && settled.EscrowGold == 0,
+            Transfer("earned-round", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 100, 86400),
+            null, out var settled),
+            "daily settlement failed");
+        Check(settled.EligibleServiceSeconds == 72000 && settled.EarnedGold == 100 &&
+            settled.ReleasedGold == 100 && settled.RefundedGold == 0 && settled.EscrowGold == 0,
             "paused interval accrued or escrow not conserved");
     }
 
@@ -154,15 +154,15 @@ internal static class Program
         ledger = Replace(ledger, paused);
         paused = ledger.Read(Contract);
         Check(paused.TrySettle(paused.Revision, 90000, NpcServiceEndReason.NaturalExpiry, "npc-1",
-            Transfer("late-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 50, 90000),
-            Transfer("late-refund", NpcServiceTransferKind.Refund, Escrow, "player", 50, 90000), out var ended),
+            Transfer("late-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 100, 90000),
+            null, out var ended),
             "late paused expiry failed");
         Check(ended.LastServiceUpdateAt == 43200 && ended.SettlementRecordedAt == 90000 &&
             ended.BlockEndAt == 86400 && ended.EligibleServiceSeconds == 43200 &&
             ended.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.None && ended.SuspensionOwnerId == null,
             "effective end or actual settlement time wrong");
         Check(ended.FundedGold == ended.ReleasedGold + ended.RefundedGold + ended.EscrowGold &&
-            ended.ReleasedGold == 50 && ended.RefundedGold == 50 && ended.EscrowGold == 0,
+            ended.ReleasedGold == 100 && ended.RefundedGold == 0 && ended.EscrowGold == 0,
             "late settlement lost escrow conservation");
         ledger = Replace(ledger, ended);
         Check(Restore(ledger.ToSaveState("branch-health").Copy(), out var restored) &&
@@ -197,8 +197,8 @@ internal static class Program
         Check(!Restore(lateState, out _), "late non-expiry forged through save restore");
 
         Check(active.TrySettle(active.Revision, 43200, NpcServiceEndReason.PlayerDismissal, "npc-1",
-            Transfer("early-reason-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 50, 43200),
-            Transfer("early-reason-refund", NpcServiceTransferKind.Refund, Escrow, "player", 50, 43200),
+            Transfer("early-reason-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 100, 43200),
+            null,
             out var early), "early fixture failed");
         var earlyState = Replace(ledger, early).ToSaveState("branch-health");
         earlyState.Contracts[0].EndReason = NpcServiceEndReason.NaturalExpiry;
@@ -211,12 +211,11 @@ internal static class Program
     {
         var active = Started();
         Check(active.TrySuspendForHealthCare(active.Revision, 43200, CareA, out var paused), "pause failed");
-        var wage = Transfer("reject-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 50, 90000);
-        var refund = Transfer("reject-refund", NpcServiceTransferKind.Refund, Escrow, "player", 50, 90000);
+        var wage = Transfer("reject-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 100, 90000);
         Check(!paused.TrySettle(paused.Revision, 90000, NpcServiceEndReason.PlayerDismissal, "npc-1",
-            wage, refund, out _), "late dismissal accepted");
+            wage, null, out _), "late dismissal accepted");
         Check(!paused.TrySettle(paused.Revision, 90000, NpcServiceEndReason.NaturalExpiry, "npc-1",
-            Transfer("backdated-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 50, 86400), refund, out _),
+            Transfer("backdated-wage", NpcServiceTransferKind.Earnings, Escrow, "npc-1", 100, 86400), null, out _),
             "backdated native receipt accepted");
         Check(paused.Status == NpcServiceContractStatus.Suspended && paused.EscrowGold == 100 &&
             paused.SuspensionOwnerId == CareA, "failed settlement mutated source");

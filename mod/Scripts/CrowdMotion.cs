@@ -27,7 +27,10 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if(!placed || occupiedSeat!=null || GameManager.IsGamePaused)return false;
             var from=Ground;
-            var result=CrowdSteering.Separate(Point(from),Neighbours(from,true),Separation,
+            // The current paired movement frame explicitly permits its two
+            // bodies to converge at doors. Recovery must honour that same
+            // exception; otherwise it pushes an arriving partner back forever.
+            var result=CrowdSteering.Separate(Point(from),Neighbours(from),Separation,
                 Math.Min(0.08,walkingSpeed*Time.deltaTime),(GetInstanceID()&15)*Math.PI/8,
                 p=>(placementAllowed==null || placementAllowed(Vector(p))) && Clear(from,Vector(p)));
             var next=Vector(result);
@@ -51,12 +54,12 @@ namespace PeopleOfTheIliacBay.DFU
         private Vector3 Ground { get { return transform.position-Vector3.up*offset; } }
         private static GuardPoint3 Point(Vector3 p) { return new GuardPoint3 { X=p.x,Y=p.y,Z=p.z }; }
         private static Vector3 Vector(GuardPoint3 p) { return new Vector3((float)p.X,(float)p.Y,(float)p.Z); }
-        private List<GuardPoint3> Neighbours(Vector3 center,bool includePartner=false)
+        private List<GuardPoint3> Neighbours(Vector3 center)
         {
             var result=new List<GuardPoint3>();
             foreach(var body in bodies)
             {
-                if(!body || body==this || !includePartner && body==WalkingPartner || !body.placed || !body.gameObject.activeInHierarchy) continue;
+                if(!body || body==this || body==WalkingPartner || !body.placed || !body.gameObject.activeInHierarchy) continue;
                 var resident=body.GetComponent<ResidentActor>();
                 if(resident && resident.IsSleeping) continue;
                 var ground=body.Ground;

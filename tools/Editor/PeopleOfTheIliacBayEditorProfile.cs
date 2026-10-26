@@ -123,8 +123,11 @@ public static class PeopleOfTheIliacBayEditorProfile
                 activeCapture=null;
             }
         }
+        // Full family acceptance includes ordinary day preparation, a bank trip,
+        // two physically walked exterior legs and observed Inn service.
+        double limit=Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-family-inn")>=0?1200:600;
         if(SessionState.GetBool("potib-profile-running",false) &&
-            EditorApplication.timeSinceStartup-SessionState.GetFloat("potib-profile-start",0)>600)Finish("timeout");
+            EditorApplication.timeSinceStartup-SessionState.GetFloat("potib-profile-start",0)>limit)Finish("timeout");
     }
     private static void Finish(string result)
     {

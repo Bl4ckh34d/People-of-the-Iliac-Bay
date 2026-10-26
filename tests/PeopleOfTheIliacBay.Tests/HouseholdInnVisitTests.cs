@@ -86,11 +86,20 @@ namespace PeopleOfTheIliacBay.Tests
                 }
                 Check.Equal(10,f.Store.ReadNpcInventory("mother").WalletGold);
                 Check.Equal(0,f.Store.ReadNpcInventory("father").WalletGold);
+                var memories=f.Store.Snapshot().SceneMemories.FindAll(m=>m.Kind==NpcSceneEventKind.Shopping);
+                Check.Equal(5,memories.Count);
+                Check.Equal(2,memories.FindAll(m=>m.ObserverId=="mother").Count);
+                Check.Equal(1,memories.FindAll(m=>m.ObserverId=="father").Count);
+                Check.Equal(2,memories.FindAll(m=>m.ObserverId==f.Keeper.Id).Count);
+                Check.True(memories.Exists(m=>m.ObserverId=="mother" && m.SubjectId=="father" && m.Observation.Contains("I paid")));
+                Check.True(!memories.Exists(m=>m.ObserverId=="father" && m.SubjectId=="mother"),
+                    "Family membership alone must not reveal the partner's separate purchase.");
                 var restored=Reload(f.Store);
                 Check.Equal("mother",restored.ReadNpcInnConsumption("father").PayerId);
                 Check.True(!restored.TryBuyNpcInnConsumption("father",f.Keeper.Id,f.EnteredAt+2,
                     NpcInnConsumptionKind.Drink,1,"Beer",5,out var replay),"Settled observed purchase must reject a replay.");
                 Check.Equal(10,restored.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(5,restored.Snapshot().SceneMemories.FindAll(m=>m.Kind==NpcSceneEventKind.Shopping).Count);
             }));
             cases.Add(("Atomic family capture cannot publish only one parent's selected chair",()=>{
                 var f=Create();var first=Visit(f);var second=Visit(f,"father");Set(first,"HouseholdSeatId","chair-a");

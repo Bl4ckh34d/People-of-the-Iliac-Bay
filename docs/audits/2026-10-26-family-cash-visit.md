@@ -167,3 +167,99 @@ physical home return and subsequent paired departure in this peaceful fixture.
 The bank interior is simulated while unobserved. Final Inn arrival/payment,
 partner waiting during an already-started outing, danger recovery and ordinary
 continuous-day behavior remain separate checks.
+
+## Full funded outing acceptance plan
+
+The optional `-ValidateFamilyCash -ValidateFamilyInn` continuation must use that
+same published household day and the actual morning wallet. Observe both bodies
+on the full exterior approach, enter their real Inn, require two current native
+purchase receipts charged to the planned payer and matching both wallet deltas,
+then observe both actual seats. Advance only the seated dwell; require physical
+exit and the observed homeward leg with no repeated payment or body jumps.
+The dedicated process limit is 1200 seconds to cover native preparation plus both
+walked legs. Existing morning-only acceptance remains separately runnable.
+Results of this new continuation are not yet accepted.
+
+`funded-family-inn-01` was intentionally stopped during setup to strengthen the
+acceptance boundary before collecting results: both purchase cursors must come
+from physical service, not `world-time-projection`, and both bodies must remain
+seated without moving more than 0.1 m for five seconds before the dwell skip.
+It is not a completed run. `funded-family-inn-02` uses those stronger checks.
+
+### Full approach failure and scoped pair clearance
+
+`funded-family-inn-02` repeats the morning cash acceptance, then both visible
+bodies walk more than 300 m. The pair remains `Outbound`: the second cursor
+stops at 308.752 m, while the first oscillates around 308.25–308.33 m. Its actual
+sampled movement reaches 519.139 m without reaching the shared endpoint. The
+300-second leg ends with an exception; Inn service is not accepted.
+
+Code inspection finds inconsistent application of the existing frame-scoped
+walking-partner exception. Ordinary crowd steering excludes the partner, but
+`TrySeparate` explicitly adds it back. The native overlap query also ignores
+`Physics.IgnoreCollision` and treats the permitted partner as occupied space.
+The repair uses the same scoped partner exception in overlap recovery and the
+native query. Other residents, the player and action doors retain their existing
+collision checks. Native NavMesh avoidance remains enabled. `funded-family-inn-03`
+repeats the full approach and continuation to test that correction.
+
+The red run separately logs `Lodging layout change requires reconciliation` from
+`ResidentTripPlanner.PrepareLodgedTrip` via `NativeTavernRentals.RegisterInventory`.
+This is a distinct live travel-planning failure requiring investigation; it must
+not be hidden by a successful family completion marker.
+
+`funded-family-inn-03` verifies the repaired exterior endpoint: both parents
+reach `Visiting`, with sampled travel of 308.418 m and 358.375 m and a maximum
+sampled step of 0.500 m. This accepts the doorway convergence repair, not the
+entire outing. After entering Inn 263176, the continuation fails its 180-second
+payment/seating check. No Inn reconstruction marker appears. The separate
+lodging-layout error also remains. `funded-family-inn-04` adds test-only,
+20-second diagnostics for cash ownership, simulation/admission, actual bodies,
+projected seats and the room motion owner to distinguish the indoor failure.
+
+`funded-family-inn-04` again completes the exterior leg (309.153/340.766 m,
+maximum sampled step 0.500 m), then fails the same indoor requirement. Diagnostics
+show no cash deficit, both parents available, an active simulation but no service
+admission or projected bodies. The simulation proceeds to `Returning` while its
+physical anchor remains `Visiting`. The target Inn 263176 also logs the rental
+conflict: the copied SAVE82 mod state contains five rooms (319, 338, 343, 347,
+402), while the current native inventory reports three rooms and occupant room 9.
+The saved Inn service catalog therefore cannot be treated as evidence of the
+current furniture layout. No migration of this disposable state is attempted.
+
+`funded-family-inn-05-fresh` uses the new `-FreshModState` launcher option to
+archive only the copied mod state and regenerate it. The native character and
+source save remain intact. Its newly generated population seed makes this a
+fresh integration scenario, not an identical-population comparison. Additional
+fixture diagnostics count saved seat pairs matching and available in the live
+room, and report the planned visit deadline. Exterior acceptance now also fails
+if a previously observed body disappears before completing its leg.
+
+The fresh `05` run fails setup: no eligible shared outing is published within
+240 seconds. It does not reach the bank/Inn acceptance and is not a gameplay
+pass. It also reports a different current catalog rejection in Inn 66574:
+`Inn catalog routes do not connect the real entry, counter and selected seats`.
+The source seed is now retained for fresh-state runs through a profile-only
+environment override, avoiding an unrelated random population change. The
+native family fixture logs that seed. `06-fresh` repeats with this corrected
+reproducibility boundary; old rooms, catalogs and history are still regenerated.
+
+`06-fresh` confirms seed 2047674263 and naturally selects household 328712,
+Inn 131841. Morning funding passes: one 421 g payout, 134.963 m visible travel,
+maximum step 0.436 m and home distance 0.592 m. Both parents then complete the
+observed exterior leg (298.669/302.965 m; maximum step 0.500 m) without disappearing.
+The live room reconstructs both bodies. All three catalog pairs match live seat
+IDs; the visit still has more than 4,800 game seconds remaining. The shared room
+motion starts but immediately rejects its second physical checkpoint:
+`Shared Inn actual checkpoint route is unavailable: first=True/Walking; second=False/Walking`.
+It then latches recovery, and the 180-second payment/seating check fails. This is
+a current physical-route failure, distinct from the old fixture's room mismatch.
+No purchase, stable seating or return acceptance is claimed.
+
+`07-capture` uses the frozen deployed `06` source plus only checkpoint diagnostics,
+not the parallel roadmap changes. It fails the 240-second setup window before
+an eligible joint plan is published. Both parents at home 328712 have prepared
+routes, but the household admission pass has not returned to them. The fixture
+now budgets one additional complete pass for a fresh state: two homes per
+half-second, plus five seconds. Production scheduling is unchanged. That revised
+setup allowance and the detailed checkpoint diagnostics still require a repeat.

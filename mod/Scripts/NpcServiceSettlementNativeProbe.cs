@@ -22,7 +22,6 @@ namespace PeopleOfTheIliacBay.DFU
         private const string ContractId = "fixture-native-service-settlement";
         private const string FundingId = "fixture-native-service-funding";
         private const string WageId = "fixture-native-service-wage";
-        private const string RefundId = "fixture-native-service-refund";
 
         private sealed class CreditSnapshot
         {
@@ -134,9 +133,9 @@ namespace PeopleOfTheIliacBay.DFU
                 NpcServiceContract suspended = store.ReadNpcServiceContracts().Read(ContractId);
                 Require(suspended != null && suspended.Status == NpcServiceContractStatus.Suspended &&
                     suspended.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.HealthCare &&
-                    suspended.SuspensionOwnerId == care.Id && suspended.EarnedGold == 60 &&
+                    suspended.SuspensionOwnerId == care.Id && suspended.EarnedGold == 120 &&
                     suspended.EscrowGold == 120 && suspended.ReleasedGold == 0,
-                    "Half-period service did not pause billing under its saved health-care owner.");
+                    "Health pause changed the fixed day wage or its saved owner.");
 
                 double secondsToLateExpiry = suspended.BlockEndAt - liveClock.ToSeconds() + 1;
                 Require(secondsToLateExpiry > 0 && secondsToLateExpiry < 86400,
@@ -150,14 +149,14 @@ namespace PeopleOfTheIliacBay.DFU
                 WorldState beforeRestore = store.Snapshot();
                 store.Restore(beforeRestore);
                 AssertRejectedWithoutCurrencyChange(store, staleTicket, player, worker.Id,
-                    "fixture-stale-wage", "fixture-stale-refund", fixtureCredit, creditUid,
+                    "fixture-stale-wage", null, fixtureCredit, creditUid,
                     "Pre-restore service ticket");
                 var sibling = new WorldStateStore(Seed);
                 AssertRejectedWithoutCurrencyChange(store, sibling.CaptureNpcServiceContractWriteTicket(),
-                    player, worker.Id, "fixture-foreign-wage", "fixture-foreign-refund",
+                    player, worker.Id, "fixture-foreign-wage", null,
                     fixtureCredit, creditUid, "Foreign-owner service ticket");
                 AssertRejectedWithoutCurrencyChange(store, store.CaptureNpcServiceContractWriteTicket(),
-                    player, worker.Id, "fixture-duplicate-wage", FundingId,
+                    player, worker.Id, FundingId, null,
                     fixtureCredit, creditUid, "Reused funding receipt ID");
                 NpcServiceContractLedger rejectedLedger;
                 NpcServiceTransferReceipt rejectedWage, rejectedRefund;
@@ -169,65 +168,44 @@ namespace PeopleOfTheIliacBay.DFU
                     failure != null && player.GoldPieces == 10 && player.GetGoldAmount() == 90,
                     "Unproven estate settlement changed the actual player purse.");
 
-                int originalFixtureCoins = player.GoldPieces;
-                int originalFixtureCredit = fixtureCredit.value;
-                player.GoldPieces = int.MaxValue - 59;
-                fixtureCredit.value = 0;
-                try
-                {
-                    Require(!NativeNpcServiceContractSettlement.TrySettle(store,
-                        store.CaptureNpcServiceContractWriteTicket(), player, ContractId,
-                        suspended.Revision, NpcServiceEndReason.NaturalExpiry,
-                        "fixture-overflow-wage", "fixture-overflow-refund",
-                        out rejectedLedger, out rejectedWage, out rejectedRefund, out failure) &&
-                        failure != null && player.GoldPieces == int.MaxValue - 59 &&
-                        fixtureCredit.value == 0,
-                        "Native player refund overflow changed currency or settled contract.");
-                }
-                finally
-                {
-                    player.GoldPieces = originalFixtureCoins;
-                    fixtureCredit.value = originalFixtureCredit;
-                }
-
                 string beforeRejectedCommit = SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot());
-                bool refundReachedCommit = false;
-                NativeNpcServiceContractSettlement.CommitSettlement rejectAfterRefund =
+                bool dailyWageReachedCommit = false;
+                NativeNpcServiceContractSettlement.CommitSettlement rejectDailyWage =
                     delegate(WorldStateStore ignoredStore, NpcServiceContractWriteTicket ignoredTicket,
                         NpcServiceContractLedger ignoredCandidate, NpcInventoryUpdate ignoredCredit,
                         IList<NpcServiceTransferReceipt> ignoredReceipts, out string error)
                     {
-                        refundReachedCommit = player.GoldPieces == 70 && player.GetGoldAmount() == 150 &&
+                        dailyWageReachedCommit = player.GoldPieces == 10 && player.GetGoldAmount() == 90 &&
                             fixtureCredit.value == 80 && fixtureCredit.UID == creditUid &&
                             ContainsExactCredit(player, fixtureCredit);
-                        error = "controlled post-refund rejection";
+                        error = "controlled daily-wage commit rejection";
                         return false;
                     };
                 Require(!NativeNpcServiceContractSettlement.TrySettleWithCommitter(store,
                     store.CaptureNpcServiceContractWriteTicket(), player, ContractId,
                     suspended.Revision, NpcServiceEndReason.NaturalExpiry,
-                    "fixture-forced-wage", "fixture-forced-refund", rejectAfterRefund,
+                    "fixture-forced-wage", null, rejectDailyWage,
                     out rejectedLedger, out rejectedWage, out rejectedRefund, out failure) &&
-                    failure != null && refundReachedCommit,
-                    "Forced Core refusal did not occur after the actual 60-gold player refund.");
+                    failure != null && dailyWageReachedCommit,
+                    "Forced Core refusal did not reach the daily-wage commit with an unchanged player purse.");
                 Require(player.GoldPieces == 10 && player.GetGoldAmount() == 90 &&
                     fixtureCredit.value == 80 && fixtureCredit.UID == creditUid &&
                     ContainsExactCredit(player, fixtureCredit) &&
                     SaveLoadManager.Serialize(typeof(WorldState), store.Snapshot()) == beforeRejectedCommit,
-                    "Post-refund refusal did not restore exact player currency and all saved Core ledgers.");
+                    "Daily-wage refusal changed player currency or saved Core ledgers.");
 
                 NpcServiceContractWriteTicket finalTicket = store.CaptureNpcServiceContractWriteTicket();
                 NpcServiceContractLedger completed;
                 NpcServiceTransferReceipt wage, refund;
                 Require(NativeNpcServiceContractSettlement.TrySettle(store, finalTicket, player,
                     ContractId, suspended.Revision, NpcServiceEndReason.NaturalExpiry,
-                    WageId, RefundId, out completed, out wage, out refund, out failure),
+                    WageId, null, out completed, out wage, out refund, out failure),
                     "Actual native late settlement failed: " + Failure(failure));
                 VerifySettled(store, worker.Id, care.Id, settledAt, funding, wage, refund);
-                Require(player.GoldPieces == 70 && player.GetGoldAmount() == 150 &&
+                Require(player.GoldPieces == 10 && player.GetGoldAmount() == 90 &&
                     fixtureCredit.UID == creditUid && fixtureCredit.value == 80 &&
                     ContainsExactCredit(player, fixtureCredit),
-                    "Actual player refund changed LOC identity/value or credited the wrong amount.");
+                    "Daily settlement changed the player purse or LOC identity/value.");
 
                 WorldState saved = store.Snapshot();
                 File.WriteAllText(tempPath, SaveLoadManager.Serialize(typeof(WorldState), saved));
@@ -241,9 +219,9 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(!NativeNpcServiceContractSettlement.TrySettle(restored,
                     restored.CaptureNpcServiceContractWriteTicket(), player, ContractId,
                     suspended.Revision, NpcServiceEndReason.NaturalExpiry,
-                    WageId, RefundId, out rejectedLedger, out rejectedWage,
+                    WageId, null, out rejectedLedger, out rejectedWage,
                     out rejectedRefund, out failure) && failure != null &&
-                    player.GoldPieces == 70 && player.GetGoldAmount() == 150,
+                    player.GoldPieces == 10 && player.GetGoldAmount() == 90,
                     "Restored settled contract accepted replay or changed the actual player purse.");
 
             }
@@ -282,8 +260,8 @@ namespace PeopleOfTheIliacBay.DFU
             }
             Debug.Log("NPC_FRAMEWORK_SERVICE_SETTLEMENT_NATIVE_PASS: source=controlled-disposable-fixture; " +
                 "mixed-player-coins-and-LOC-funding=true; health-owned-half-period-pause=true; " +
-                "late-expiry-wage-to-NPC-wallet=60; late-expiry-player-refund=60; escrow=0; " +
-                "post-refund-Core-refusal-exact-rollback=true; FullSerializer-roundtrip=true; " +
+                "late-expiry-wage-to-NPC-wallet=120; late-expiry-player-refund=0; escrow=0; " +
+                "daily-wage-Core-refusal-unchanged=true; FullSerializer-roundtrip=true; " +
                 "stale-foreign-duplicate-overflow-death-rejected=true; gameplay-recruitment=false; human-save=false; " +
                 "original-player-currency-and-clock-restored=true");
         }
@@ -333,26 +311,23 @@ namespace PeopleOfTheIliacBay.DFU
                 contract.EndReason == NpcServiceEndReason.NaturalExpiry &&
                 contract.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.None &&
                 contract.SuspensionOwnerId == null && contract.FundedGold == 120 &&
-                contract.EarnedGold == 60 && contract.ReleasedGold == 60 &&
-                contract.RefundedGold == 60 && contract.EscrowGold == 0 &&
+                contract.EarnedGold == 120 && contract.ReleasedGold == 120 &&
+                contract.RefundedGold == 0 && contract.EscrowGold == 0 &&
                 contract.EligibleServiceSeconds >= 43200 &&
                 contract.EligibleServiceSeconds < 43920 &&
                 contract.LastServiceUpdateAt < contract.BlockEndAt &&
                 contract.SettlementRecordedAt == settledAt &&
-                contract.TransferReceipts.Count == 3 &&
+                contract.TransferReceipts.Count == 2 &&
                 SameReceipt(contract.TransferReceipts[0], funding) &&
                 SameReceipt(contract.TransferReceipts[1], wage) &&
-                SameReceipt(contract.TransferReceipts[2], refund) &&
-                wage != null && refund != null && wage.Amount == 60 && refund.Amount == 60 &&
-                wage.GameTime == settledAt && refund.GameTime == settledAt &&
+                wage != null && refund == null && wage.Amount == 120 &&
+                wage.GameTime == settledAt &&
                 wage.ToOwnerId == workerId &&
-                refund.ToOwnerId == NpcDirectedRelationship.PlayerTargetId &&
-                wallet != null && wallet.WalletGold == 67 && wallet.Revision == 1 &&
+                wallet != null && wallet.WalletGold == 127 && wallet.Revision == 1 &&
                 wallet.LastTransactionId == WageId &&
-                saved.NpcServiceEvidence.CompletedTransfers.Count == 3 &&
+                saved.NpcServiceEvidence.CompletedTransfers.Count == 2 &&
                 SameReceipt(saved.NpcServiceEvidence.CompletedTransfers[0], funding) &&
                 SameReceipt(saved.NpcServiceEvidence.CompletedTransfers[1], wage) &&
-                SameReceipt(saved.NpcServiceEvidence.CompletedTransfers[2], refund) &&
                 store.ReadNpcHealthCare(workerId).Id == careId,
                 "Native settlement lost exact wage, refund, wallet, pause, or receipt evidence.");
         }

@@ -4,13 +4,14 @@ param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$Use
     [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport,
     [switch]$ValidateStaticTrade, [switch]$ValidateStreetEncounter, [switch]$ValidateSceneObservers, [switch]$ValidateHousing,
     [switch]$ClimateDetails, [switch]$ValidateComplaint, [switch]$ValidateComplaintWait, [switch]$ValidateMurderReportChat, [switch]$ValidateBankCash,
-    [switch]$ValidateCashReturn, [switch]$ValidateFamilyCash, [switch]$MeasureStreetDensity)
+    [switch]$ValidateCashReturn, [switch]$ValidateFamilyCash, [switch]$ValidateFamilyInn, [switch]$MeasureStreetDensity, [switch]$FreshModState)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
 if($ValidateComplaintWait -and -not $ValidateComplaint){throw '-ValidateComplaintWait requires -ValidateComplaint.'}
 if($ValidateMurderReportChat -and -not $ValidateMurderReport){throw '-ValidateMurderReportChat requires -ValidateMurderReport.'}
 if($ValidateCashReturn -and -not $ValidateBankCash){throw '-ValidateCashReturn requires -ValidateBankCash.'}
+if($ValidateFamilyInn -and -not $ValidateFamilyCash){throw '-ValidateFamilyInn requires -ValidateFamilyCash.'}
 if($ValidateStaticTrade -and $ValidatePlaytest){throw 'Run static and mobile personal trade as separate owned fixtures.'}
 if($ClimateDetails -and ($ValidateArrival -or $ValidateWardrobe -or $ValidateCrowd -or $ValidateShopping -or
     $ValidateLeisure -or $ValidateMorningShop -or $ValidateInnDiversion -or $ValidateMurderReport -or
@@ -38,6 +39,20 @@ if(-not ([IO.File]::ReadAllText($layoutSource)).Contains('"-peopleoftheiliacbay-
 }
 New-Item -ItemType Directory -Path (Join-Path $runRoot 'data/Saves') -Force | Out-Null
 Copy-Item -LiteralPath $fixture -Destination (Join-Path $runRoot "data/Saves/$FixtureFolder") -Recurse
+$fixtureSeed=$null
+if($FreshModState){
+    # Only the disposable copy is reset; keep its original input as evidence.
+    $copiedState=[IO.Path]::GetFullPath((Join-Path $runRoot "data/Saves/$FixtureFolder/mod_peopleoftheiliacbay.txt"))
+    $ownedRoot=[IO.Path]::GetFullPath($runRoot)+[IO.Path]::DirectorySeparatorChar
+    if(-not $copiedState.StartsWith($ownedRoot,[StringComparison]::OrdinalIgnoreCase)){throw 'Copied mod state is outside the owned run directory.'}
+    if(Test-Path -LiteralPath $copiedState){
+        $sourceDocument=[System.Text.Json.JsonDocument]::Parse([IO.File]::ReadAllText($copiedState))
+        try{$fixtureSeed=$sourceDocument.RootElement.GetProperty('WorldSeed').GetUInt32().ToString([Globalization.CultureInfo]::InvariantCulture)}
+        finally{$sourceDocument.Dispose()}
+        Move-Item -LiteralPath $copiedState -Destination (Join-Path $runRoot 'original-mod-state.json')
+    }
+    Write-Output "Fresh mod state: archived only the copied fixture state; source world seed $fixtureSeed, native character and source save retained."
+}
 Copy-Item -LiteralPath (Join-Path $dfu 'Player/PortableAppdata/settings.ini') -Destination (Join-Path $runRoot 'data/settings.ini')
 $modData=Join-Path $dfu 'Player/PortableAppdata/Mods/GameData'
 $copiedModData=Join-Path $runRoot 'data/Mods/EditorData'
@@ -86,6 +101,7 @@ if($ValidateHousing){$arguments+=' -peopleoftheiliacbay-verify-housing'}
 if($ValidateBankCash){$arguments+=' -peopleoftheiliacbay-verify-bank-cash'}
 if($ValidateCashReturn){$arguments+=' -peopleoftheiliacbay-verify-cash-return'}
 if($ValidateFamilyCash){$arguments+=' -peopleoftheiliacbay-verify-family-cash'}
+if($ValidateFamilyInn){$arguments+=' -peopleoftheiliacbay-verify-family-inn'}
 if($MeasureStreetDensity){$arguments+=' -peopleoftheiliacbay-measure-street-density'}
 if($ValidateCrowd){$arguments+=' -peopleoftheiliacbay-verify-crowd'}
 if($ValidateShopping){$arguments+=' -peopleoftheiliacbay-verify-shopping'}
@@ -93,11 +109,13 @@ if($ValidateSpeech){$arguments+=' -peopleoftheiliacbay-verify-return-voice'}
 if($ShoppingBuyerOnly){$arguments+=' -peopleoftheiliacbay-shop-buyer-only'}
 $previousRoot=$env:POTIB_EDITOR_PROFILE_ROOT
 $previousProbe=$env:POTIB_ROADMAP_PROBE
+$previousSeed=$env:POTIB_EDITOR_FIXTURE_WORLD_SEED
 try{
     $env:POTIB_EDITOR_PROFILE_ROOT=$runRoot
+    $env:POTIB_EDITOR_FIXTURE_WORLD_SEED=$fixtureSeed
     if($ValidatePlaytest){$env:POTIB_ROADMAP_PROBE='personal-trade'}
     if($ValidateStaticTrade){$env:POTIB_ROADMAP_PROBE='static-personal-trade'}
     $owned=Start-Process -FilePath $editor -ArgumentList $arguments -WindowStyle Hidden -PassThru
     $owned.Id | Set-Content -LiteralPath (Join-Path $runRoot 'editor-pid.txt')
     Write-Output "Owned Unity profiling PID $($owned.Id); results: $runRoot"
-}finally{$env:POTIB_EDITOR_PROFILE_ROOT=$previousRoot;$env:POTIB_ROADMAP_PROBE=$previousProbe}
+}finally{$env:POTIB_EDITOR_PROFILE_ROOT=$previousRoot;$env:POTIB_ROADMAP_PROBE=$previousProbe;$env:POTIB_EDITOR_FIXTURE_WORLD_SEED=$previousSeed}

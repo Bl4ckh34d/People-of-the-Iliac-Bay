@@ -424,6 +424,7 @@ namespace PeopleOfTheIliacBay.Core
             NpcInnConsumptionCursor next = NpcInnConsumption.CreateCursor(visit, proposedReceipt);
             if (previous != null && state.NpcInnConsumptionCursors.IndexOf(previous) < 0) return false;
             NpcInnConsumptionReceipt detachedReceipt = NpcInnConsumption.CopyReceipt(proposedReceipt, visit);
+            var memories = PrepareInnPurchaseMemories(next);
             if (affordable)
             {
                 NpcInventoryState buyerCopy = CopyNpcInventory(payer);
@@ -438,6 +439,7 @@ namespace PeopleOfTheIliacBay.Core
             PublishInnConsumptionCursor(previous, next);
             visit.InnConsumption = proposedReceipt;
             receipt = detachedReceipt;
+            PublishInnPurchaseMemories(memories);
             return true;
         }
 

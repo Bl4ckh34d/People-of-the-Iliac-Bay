@@ -36,7 +36,7 @@ namespace PeopleOfTheIliacBay.Core
 
     public sealed partial class WorldStateStore
     {
-        /// <summary>Stop billing before native settlement, so a refused payout can retry without charging for stopped service.</summary>
+        /// <summary>Persist service termination before native settlement so a refused payout can retry safely.</summary>
         public bool TrySuspendPaidFollowSettlement(string actionId,long expectedActionRevision,out string reason)
         {
             reason = "The terminal paid Follow action is no longer current.";
@@ -75,7 +75,7 @@ namespace PeopleOfTheIliacBay.Core
             return result;
         }
 
-        /// <summary>Bind only the freshly accepted Follow job to the already funded and active first block.</summary>
+        /// <summary>Validate the fresh Follow job before starting and binding its funded daily block atomically.</summary>
         public bool TryBindPaidFollowAction(string actionId, long expectedActionRevision,
             string contractId, out string reason)
         {
@@ -90,12 +90,24 @@ namespace PeopleOfTheIliacBay.Core
                 current.Target.Kind != NpcActionTargetKind.Person ||
                 current.Target.PersonId != NpcDirectedRelationship.PlayerTargetId ||
                 current.UpdatedAt != current.AcceptedAt) return false;
-            NpcServiceContract contract = ReadNpcServiceContracts().Read(contractId);
-            if (contract == null || contract.Status != NpcServiceContractStatus.Active ||
+            var ticket = CaptureNpcServiceContractWriteTicket();
+            NpcServiceContract contract = ticket.SourceLedger.Read(contractId);
+            if (contract == null ||
                 contract.NpcId != current.ResidentId ||
                 contract.PayerId != NpcDirectedRelationship.PlayerTargetId ||
                 (contract.Coverage & NpcServiceCoverage.Follow) == 0 ||
-                contract.StandingRenewalPermission || contract.BlockStartAt != current.AcceptedAt ||
+                contract.StandingRenewalPermission ||
+                contract.FundedGold != contract.RatePer24GameHours) return false;
+            NpcServiceContractLedger startedLedger = null;
+            if (contract.Status == NpcServiceContractStatus.Reserved)
+            {
+                NpcServiceContract started;
+                if (!contract.TryStart(contract.Revision,current.AcceptedAt,out started) ||
+                    !NpcServiceContractLedger.TryReplace(ticket.SourceLedger,ticket.ExpectedLedgerRevision,
+                        started,out startedLedger)) return false;
+                contract = started;
+            }
+            if (contract.Status != NpcServiceContractStatus.Active || contract.BlockStartAt != current.AcceptedAt ||
                 contract.BlockEndAt != contract.BlockStartAt + NpcServiceContract.BillingPeriodSeconds ||
                 contract.FundedGold != contract.RatePer24GameHours) return false;
             NpcActionJob bound = NpcActionExecutor.Copy(current);
@@ -105,6 +117,10 @@ namespace PeopleOfTheIliacBay.Core
             bound.Revision++;
             try { NpcActionExecutor.Validate(bound); }
             catch (ArgumentException) { return false; }
+            // No asynchronous/native call occurs between the ledger commit and action
+            // assignment. Every fallible admission check precedes either saved mutation.
+            if (startedLedger != null && !TryCommitNpcServiceContracts(ticket,startedLedger,
+                new NpcServiceTransferReceipt[0],new NpcServiceRenewalAuthorization[0],out reason)) return false;
             state.NpcActions[index] = bound;
             IndexNpcAction(bound);
             reason = "Paid Follow accepted for one 24-game-hour block.";

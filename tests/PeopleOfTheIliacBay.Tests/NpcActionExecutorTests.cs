@@ -47,7 +47,7 @@ namespace PeopleOfTheIliacBay.Tests
                 try {NpcActionExecutor.Validate(ordinary);} catch(ArgumentException) {rejected=true;}
                 Check.True(rejected,"Paid Follow marker must not extend another action kind.");
             }));
-            cases.Add(("Funded active service binds only its own accepted Follow",()=>{
+            cases.Add(("Funded reservation starts only while binding its own accepted Follow",()=>{
                 var store=new WorldStateStore(42);
                 var resident=store.GetOrCreate(100,new[]{10},1).Households[0].Residents[0];
                 const string contractId="contract:paid-test";
@@ -72,16 +72,10 @@ namespace PeopleOfTheIliacBay.Tests
                 action.FinishAt=200;action.DeadlineAt=260;
                 string reason;
                 Check.True(ClassifiedAdmissionFixture.TryAcceptAction(store,action,true,true,true,out reason),reason);
-                Check.True(!store.TryBindPaidFollowAction(action.Id,1,contractId,out reason),
-                    "Reserved contract cannot extend Follow.");
-                ticket=store.CaptureNpcServiceContractWriteTicket();
-                NpcServiceContract started;
-                Check.True(ticket.SourceLedger.Read(contractId).TryStart(1,100,out started));
-                NpcServiceContractLedger active;
-                Check.True(NpcServiceContractLedger.TryReplace(ticket.SourceLedger,ticket.ExpectedLedgerRevision,
-                    started,out active));
-                Check.True(store.TryCommitNpcServiceContracts(ticket,active,new NpcServiceTransferReceipt[0],
-                    new NpcServiceRenewalAuthorization[0],out error),error);
+                Check.True(!store.TryBindPaidFollowAction(action.Id,2,contractId,out reason),
+                    "Stale action cannot start the paid day.");
+                Check.Equal(NpcServiceContractStatus.Reserved,store.ReadNpcServiceContracts().Read(contractId).Status);
+                Check.Equal(0,store.ReadNpcServiceContracts().Read(contractId).EarnedGold);
                 Check.True(store.TryBindPaidFollowAction(action.Id,1,contractId,out reason),reason);
                 var bound=store.ReadNpcAction(action.Id);
                 Check.Equal(86500d,bound.FinishAt);
@@ -108,7 +102,7 @@ namespace PeopleOfTheIliacBay.Tests
                 var activeContract=store.ReadNpcServiceContracts().Read(contractId);
                 Check.Equal(NpcServiceContractStatus.Suspended,activeContract.Status);
                 Check.Equal(43300d,activeContract.LastServiceUpdateAt);
-                Check.Equal(60,activeContract.EarnedGold);
+                Check.Equal(120,activeContract.EarnedGold);
                 Check.True(store.TrySuspendPaidFollowSettlement(dismissed.Id,dismissed.Revision,out reason),
                     "Settlement suspension must be idempotent after a native payout refusal.");
                 Check.True(store.SaveNpcActionPosition(dismissed.Id,dismissed.Revision,dismissed.LastPosition,false,44000));
@@ -119,16 +113,14 @@ namespace PeopleOfTheIliacBay.Tests
                 activeContract=retryStore.ReadNpcServiceContracts().Read(contractId);
                 Check.Equal(43300d,activeContract.LastServiceUpdateAt);
                 var wage=NpcServiceTransferReceipt.Create("wage:paid-test",contractId,
-                    NpcServiceTransferKind.Earnings,"contract:"+contractId+":escrow",resident.Id,60,90000);
-                var refund=NpcServiceTransferReceipt.Create("refund:paid-test",contractId,
-                    NpcServiceTransferKind.Refund,"contract:"+contractId+":escrow","player",60,90000);
+                    NpcServiceTransferKind.Earnings,"contract:"+contractId+":escrow",resident.Id,120,90000);
                 NpcServiceContract terminated;
                 Check.True(activeContract.TrySettle(activeContract.Revision,90000,
-                    NpcServiceEndReason.NaturalExpiry,resident.Id,wage,refund,out terminated));
+                    NpcServiceEndReason.NaturalExpiry,resident.Id,wage,null,out terminated));
                 Check.Equal(NpcServiceContractStatus.Terminated,terminated.Status);
                 Check.Equal(NpcServiceEndReason.NaturalExpiry,terminated.EndReason.Value);
-                Check.Equal(60,terminated.EarnedGold);
-                Check.Equal(60,terminated.RefundedGold);
+                Check.Equal(120,terminated.EarnedGold);
+                Check.Equal(0,terminated.RefundedGold);
             }));
             cases.Add(("Terminal action memory follows the native result, actor, time, and save branch",()=>{
                 var store=new WorldStateStore(42);

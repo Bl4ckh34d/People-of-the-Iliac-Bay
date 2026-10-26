@@ -23,6 +23,7 @@ namespace PeopleOfTheIliacBay.DFU
         public string HouseholdSourceFingerprint {get;private set;}
         public string HouseholdSeatId {get;private set;}
         public string SelectedSeatId {get{return selectedSeat==null?null:selectedSeat.Slot.Id;}}
+        internal string CaptureFailure {get;private set;}
         internal SelectedSeatAccess TakeSeatForDeparture(ResidentActor actor)
         {
             var access=selectedSeat;selectedSeat=null;
@@ -83,6 +84,7 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public ObservedVisit Capture(ResidentActor actor,DaggerfallInterior interior,InteriorGeometry geometry,double now,int settlement)
         {
+            CaptureFailure=null;
             var actual=interior.transform.InverseTransformPoint(actor.transform.position-Vector3.up);
             var egressAccess=selectedSeat!=null && Journey.SeatId(progress.Leg)!=selectedSeat.Slot.Id?selectedSeat:null;
             var result=new ObservedVisit {ResidentId=actor.Resident.Id,SettlementId=settlement,BuildingKey=interior.EntryDoor.buildingKey,
@@ -109,7 +111,8 @@ namespace PeopleOfTheIliacBay.DFU
                     else if(followingLeg==leg && follower!=null && !follower.Arrived) route=follower.RemainingRoute(actual);
                     else if(Vector3.Distance(actual,target)<0.15f) route=new List<GuardPoint3>{new GuardPoint3 {X=actual.x,Y=actual.y,Z=actual.z}};
                     else route=activityGeometry==null?geometry.RouteBetween(actual,target):activityGeometry.ActivityRouteBetween(actual,target,egressAccess);
-                    if(route.Count==0) return null;
+                    if(route.Count==0)
+                    {CaptureFailure="current leg="+leg+"; from="+actual.ToString("R")+"; to="+target.ToString("R")+"; movement="+LastFailure;return null;}
                     // Preserve the exact shared endpoint between consecutive legs.
                     var last=route[route.Count-1];
                     if(!counterArrival && Math.Abs(last.X-end.X)+Math.Abs(last.Y-end.Y)+Math.Abs(last.Z-end.Z)>0.0001) route.Add(end);
@@ -119,7 +122,13 @@ namespace PeopleOfTheIliacBay.DFU
                     var end=route[route.Count-1];
                     var from=new Vector3((float)previousEnd.X,(float)previousEnd.Y,(float)previousEnd.Z);var to=new Vector3((float)end.X,(float)end.Y,(float)end.Z);
                     route=activityGeometry==null?geometry.RouteBetween(from,to):activityGeometry.ActivityRouteBetween(from,to);
-                    if(route.Count<2) return null;
+                    if(route.Count<2)
+                    {
+                        var live=activityGeometry?.Seating?.Find(Journey.SeatId(leg));
+                        CaptureFailure="connection leg="+leg+"; from="+from.ToString("R")+"; to="+to.ToString("R")+
+                            "; seat="+Journey.SeatId(leg)+"; liveSeat="+(live==null?"missing":interior.transform.InverseTransformPoint(live.Ground).ToString("R"));
+                        return null;
+                    }
                 }
                 previousEnd=route[route.Count-1];
                 result.Legs.Add(new ObservedVisitLeg {Route=route,DwellSeconds=leg==progress.Leg ? progress.RemainingDwell(now) : Journey.DwellSeconds(leg),AfterPhase=Journey.StopPhase(leg),SeatId=Journey.SeatId(leg)});

@@ -1,6 +1,21 @@
 # Spieltest — 26. Oktober 2026
 
-Neuer Zwischenbuild `7EC048CD49C7`, um 12:21 installiert; Distribution und Player identisch. Unity-Paketprüfung und 2131 Core-Tests bestehen. Korrigierte native Paarwege erlauben gemeinsame Familienausflüge. Der isolierte friedliche Test besteht morgendlichen Bankservice, einmalige Auszahlung, echte Heimkehr und anschließenden gemeinsamen Aufbruch. Vollständige Inn-Ankunft/Bezahlung und allgemeine Straßendichte bleiben offen. Details: [Familien-Banktest](audits/2026-10-26-family-cash-visit.md). Der folgende 11:05-Stand ist damit ersetzt.
+Aktuell installiert: **`D155EC1EE9F9`**, 13:45; Distribution und Player identisch.
+Unity-Paketprüfung und **2144 Core-Tests** bestehen. Neu enthalten: Erinnerungen
+an bezahlten Inn-Service, sämtliche angebotenen Tempel-Skills, NPC-eigene
+Zauberkosten nach Wiederherstellung, tageweise Begleiterbezahlung und ein
+begrenzter Dungeon-Sprungadapter. Diese neuen Abläufe sind noch nativ abzunehmen.
+120 g buchen einen begonnenen 24-Stunden-Tag; frühe Kündigung erstattet keinen
+Teil des Tages, gescheiterte Aufnahme erstattet vollständig, keine automatische
+Verlängerung. Die native Prüfung dieser Konditionen steht noch aus.
+
+Der Familien-Türstau ist auf den geprüften Außenwegen behoben. Der frische
+Kompletttest erreicht den Inn-Innenraum, bleibt dort jedoch beim zweiten
+gesicherten Laufweg hängen. Bezahlung, Sitzen und Rückweg sind deshalb noch nicht
+abgenommen. Dungeon-Follow, Klettern und Thronplattform bleiben ebenfalls offen.
+Details und weitere offene Punkte: [Arbeitsliste](WORKLIST-2026-10-26.md).
+
+Vorheriger Zwischenbuild `7EC048CD49C7`, um 12:21 installiert; Distribution und Player identisch. Unity-Paketprüfung und 2131 Core-Tests bestehen. Korrigierte native Paarwege erlauben gemeinsame Familienausflüge. Der isolierte friedliche Test besteht morgendlichen Bankservice, einmalige Auszahlung, echte Heimkehr und anschließenden gemeinsamen Aufbruch. Vollständige Inn-Ankunft/Bezahlung und allgemeine Straßendichte bleiben offen. Details: [Familien-Banktest](audits/2026-10-26-family-cash-visit.md). Der folgende 11:05-Stand ist damit ersetzt.
 
 Aktueller Zwischenbuild `4F4349E44CF4`, um 11:05 installiert. Unity-Paketprüfung und 2131 Core-Tests bestehen. Einzelne Kurzbesuche blockieren weitere Tagesziele nicht mehr. Die native Nachmittagsstichprobe steigt von drei auf elf Bewohner draußen; die Stadt bleibt stellenweise noch zu leer. Allein untätige Ladenwartende geben nach Öffnung binnen einer Spielminute frei. Geplante gemeinsame Inn-Finanzierung ist enthalten, der morgendliche Familien-Bankgang aber noch nicht nativ abgenommen. Details: [Dichtemessung](audits/2026-10-26-street-density.md).
 

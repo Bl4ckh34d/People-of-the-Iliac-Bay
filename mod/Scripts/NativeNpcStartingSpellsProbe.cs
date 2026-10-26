@@ -51,6 +51,12 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(progress!=null && progress.NativeSpellbook==book,
                     "Exact native known spellbook was not stored on the actor progress record.");
                 body.Entity.DeserializeSpellbook(null);
+                // Simulate the fresh manager's native default, which the former
+                // clear-book-only fixture never reset during reconstruction.
+                manager.UsePlayerCharacterSkillsForEnemyMagicCost=true;
+                Require(NativeNpcKnownSpellBinding.BindTo(actor.gameObject,world,actor.Resident)==spellbook &&
+                    !manager.UsePlayerCharacterSkillsForEnemyMagicCost,
+                    "Known spell binding did not restore the resident's own native skill cost source.");
                 Require(spellbook.Restore() && SaveLoadManager.Serialize(typeof(EffectBundleSettings[]),
                     body.Entity.SerializeSpellbook(),false)==book,
                     "Exact native known spellbook did not survive a cleared-body reconstruction.");
@@ -81,7 +87,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(body.Entity.CurrentHealth==health && body.Entity.CurrentMagicka==magicka,
                     "Known spell materialization changed remaining native health or magicka.");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_STARTING_SPELLS_NATIVE_PASS: actualTraveler=true; role="+role+
-                    "; nativeTemplates=true; ownSkillCosts=true; savedBookRestore=true; authoredBookPreserved=true; "+
+                    "; nativeTemplates=true; ownSkillCosts=true; ownSkillCostRestored=true; savedBookRestore=true; authoredBookPreserved=true; "+
                     "emptyNoncasterSparse=true; questExcluded=true; stableRebuild=true; resourcesUnchanged=true");
             }
             finally{body.Entity.DeserializeSpellbook(original);spellbook.Capture();}

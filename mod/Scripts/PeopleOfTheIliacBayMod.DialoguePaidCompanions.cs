@@ -26,8 +26,9 @@ namespace PeopleOfTheIliacBay.DFU
                 return true;
             }
             string offer = "Hire this companion for " + dailyGold.ToString(CultureInfo.InvariantCulture) +
-                " gold for 24 game hours of Follow and travel? No automatic renewal. " +
-                "Dismissal settles earned pay and refunds unused time.";
+                " gold for 24 game hours of Follow and travel from acceptance? No automatic renewal. " +
+                "The started day is non-refundable, including early dismissal or withdrawal. " +
+                "Dismissal ends service immediately. A failed hire is fully refunded.";
             var confirm = new PersonalCommerceConfirmBox(offer, accepted =>
             {
                 if (!CurrentMemorySession(window,session) || conversationPersonId != person) return;

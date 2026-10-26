@@ -157,6 +157,8 @@ namespace PeopleOfTheIliacBay.Core
                 NpcInnConsumption.CreateProjectedCursor(current.FirstIdentity,current.FirstReceipt):null;
             var secondCursor=b==null && HouseholdPaymentCanAdvance(current.SecondIdentity,null)?
                 NpcInnConsumption.CreateProjectedCursor(current.SecondIdentity,current.SecondReceipt):null;
+            var firstMemories=PrepareInnPurchaseMemories(firstCursor);
+            var secondMemories=PrepareInnPurchaseMemories(secondCursor);
             if(affordable && needed>0)
             {
                 var updates=new List<NpcInventoryUpdate>();
@@ -176,6 +178,8 @@ namespace PeopleOfTheIliacBay.Core
             state.HouseholdInnServices[state.HouseholdInnServices.IndexOf(existing)]=validated;
             state.HouseholdInnServices.RemoveAll(s=>s.Id!=validated.Id && s.ReleasedAt.HasValue &&
                 !state.NpcInnConsumptionCursors.Exists(c=>c.HouseholdDayId==s.HouseholdDayId && c.SourceKind=="world-time-projection"));
+            PublishInnPurchaseMemories(firstMemories);
+            PublishInnPurchaseMemories(secondMemories);
             return HouseholdInnServiceAdmission.Copy(validated);
         }
 

@@ -170,7 +170,7 @@ namespace PeopleOfTheIliacBay.DFU
             var a=FirstVisit.Capture(first,room,geometry,now,source.SettlementId);
             var b=SecondVisit.Capture(second,room,geometry,now,source.SettlementId);
             if(a==null || b==null)throw new InvalidOperationException("Shared Inn actual checkpoint route is unavailable: first="+
-                (a!=null)+"/"+FirstVisit.Snapshot.Phase+"; second="+(b!=null)+"/"+SecondVisit.Snapshot.Phase);
+                (a!=null)+"/"+FirstVisit.Snapshot.Phase+"/"+FirstVisit.CaptureFailure+"; second="+(b!=null)+"/"+SecondVisit.Snapshot.Phase+"/"+SecondVisit.CaptureFailure);
             store.StoreHouseholdInnVisits(a,b);
         }
         internal void Release()

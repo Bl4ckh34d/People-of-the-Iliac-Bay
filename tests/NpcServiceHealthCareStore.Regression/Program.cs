@@ -42,7 +42,7 @@ internal static class Program
         Check(contract.Status == NpcServiceContractStatus.Suspended &&
             contract.SuspensionOwnerKind == NpcServiceSuspensionOwnerKind.HealthCare &&
             contract.SuspensionOwnerId == fixture.Care.Id && contract.EligibleServiceSeconds == 100 &&
-            contract.EarnedGold == 0 && contract.EscrowGold == 100,
+            contract.EarnedGold == 100 && contract.EscrowGold == 100,
             "service owner, accrual or escrow wrong");
         Check(fixture.Store.Snapshot().NpcServiceEvidence.CompletedTransfers.Count == 1,
             "no-transfer pause appended native evidence");

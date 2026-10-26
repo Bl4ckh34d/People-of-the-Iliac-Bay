@@ -409,7 +409,19 @@ namespace PeopleOfTheIliacBay.DFU
             // suspended until a valid restore so one character cannot inherit another's state.
             saveFault = true; current = null;
         }
-        private static uint NewSeed() { return BitConverter.ToUInt32(Guid.NewGuid().ToByteArray(), 0); }
+        private static uint NewSeed()
+        {
+            if(Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-editor-profile")>=0)
+            {
+                string fixture=Environment.GetEnvironmentVariable("POTIB_EDITOR_FIXTURE_WORLD_SEED");
+                if(fixture!=null)
+                {
+                    uint seed;if(!uint.TryParse(fixture,out seed))throw new InvalidOperationException("Invalid editor fixture world seed.");
+                    return seed;
+                }
+            }
+            return BitConverter.ToUInt32(Guid.NewGuid().ToByteArray(), 0);
+        }
         internal static string ConversationArchiveRoot()
         {
             var manager=SaveLoadManager.Instance;

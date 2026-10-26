@@ -10,6 +10,7 @@ namespace PeopleOfTheIliacBay.Tests
             var cases = new List<(string Name, Action Body)>();
             ClosedShopLeisureTests.Add(cases);
             NpcSceneMemoryTests.Add(cases);
+            NpcInnMemoryTests.Add(cases);
             AgenticDialogueUiPolicyTests.Add(cases);
             NpcAcuteFearTests.Add(cases);
             ConversationContextAcuteFearTests.Add(cases);
@@ -48,6 +49,7 @@ namespace PeopleOfTheIliacBay.Tests
             NpcGoalBindingTests.Add(cases);
             NpcGoalCompletionTests.Add(cases);
             SharedNavigationTests.Add(cases);
+            NpcJumpTrajectoryTests.Add(cases);
             PopulationTests.Add(cases);
             PopulationSpawnBudgetTests.Add(cases);
             NpcProfileTests.Add(cases);

@@ -30,6 +30,8 @@ namespace PeopleOfTheIliacBay.DFU
         {
             var world=NativeNavigationWorld.Current;
             if(!world || !world.Ready || GameManager.IsGamePaused)return Fail("world-unavailable-or-paused");
+            var airborne=GetComponent<NativeDungeonJumpTraversal>();
+            if(airborne && airborne.Active){airborne.Advance();return true;}
             if(agent && (scene!=world.Scene || (agent.transform.position-(transform.position-Vector3.up)).sqrMagnitude>9))Pause();
             if(!Active)
             {
@@ -72,7 +74,13 @@ namespace PeopleOfTheIliacBay.DFU
                 // Preserve the caller's exact endpoint identity. Sampling is only
                 // for a reachable native standing position near a door/activity.
                 var path=new NavMeshPath();
-                if(!agent.CalculatePath(end.position,path)||path.status!=NavMeshPathStatus.PathComplete||!agent.SetPath(path))return Fail("path-incomplete "+requested);
+                if(!agent.CalculatePath(end.position,path)||path.status!=NavMeshPathStatus.PathComplete)
+                {
+                    if(NativeDungeonJumpTraversal.TryStart(this,end.position,speed,permitted))
+                    {target=requested;hasTarget=true;pathInvalidated=true;FailureReason=null;return true;}
+                    return Fail("path-incomplete "+requested);
+                }
+                if(!agent.SetPath(path))return Fail("path-incomplete "+requested);
                 target=requested;hasTarget=true;pathInvalidated=false;
             }
             agent.isStopped=false;
@@ -107,11 +115,15 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private bool Occupied(Vector3 ground)
         {
+            var crowd=GetComponent<CrowdMotion>();var partner=crowd?crowd.WalkingPartner:null;
             int count=Physics.OverlapCapsuleNonAlloc(ground+Vector3.up*0.8f,ground+Vector3.up*1.6f,0.24f,nearby,~0,QueryTriggerInteraction.Ignore);
             for(int i=0;i<count;i++)
             {
                 var collider=nearby[i];
                 if(!collider || collider.transform.IsChildOf(transform))continue;
+                // Physics.IgnoreCollision does not filter overlap queries.
+                // Match the active pair's scoped permission in CrowdMotion.
+                if(partner && collider.transform.IsChildOf(partner.transform))continue;
                 if(collider.GetComponentInParent<DaggerfallWorkshop.Game.Entity.DaggerfallEntityBehaviour>() ||
                     collider.GetComponentInParent<PlayerMotor>() || collider.GetComponentInParent<DaggerfallWorkshop.DaggerfallActionDoor>())return true;
             }

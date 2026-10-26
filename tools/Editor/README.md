@@ -33,6 +33,22 @@ after their ownership in the observed town is confirmed. This peaceful fixture
 does not test a bank trip during combat. The probe reports admission failures
 separately; it does not manufacture a shared plan or prove final Inn payment.
 
+Add `-ValidateFamilyInn` to continue that same naturally planned and morning-funded
+outing through observed exterior travel, real Inn entry, both native purchases,
+shared seating, physical exit and the homeward leg. Only the seated dwell is
+skipped after both purchases and seats have been observed. No shared plan,
+receipt or movement controller is injected. This longer fixture has a 20-minute
+process limit rather than the normal 10 minutes, because it includes both walked
+exterior legs in addition to normal day preparation and the morning bank trip.
+
+Use `-FreshModState` when the disposable fixture contains obsolete mod geometry.
+The launcher archives only the copied `mod_peopleoftheiliacbay.txt` as
+`original-mod-state.json` in the run directory. DFU creates a new mod world; the
+native character, other mods and original source save are retained. The source
+world seed is retained through an editor-profile-only environment override and
+logged by the family fixture. Persisted routes, bookings and other prior history
+are regenerated, so it is not a paired performance comparison with the old state.
+
 `-ValidateComplaint` starts an exterior direct-threat complaint from a controlled
 issued speech receipt, then observes actual travel, saved body position, a
 mid-route snapshot round trip and finite guard dispatch. The incident position

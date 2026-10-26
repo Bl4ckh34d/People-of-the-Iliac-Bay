@@ -4,6 +4,13 @@ Stand: 25. Oktober 2026. Dieser Plan ersetzt die früheren Architektur- und Zwis
 
 Aktive Ergänzungen vom 26. Oktober 2026 stehen in der [Implementierungs- und Abnahmecheckliste](WORKLIST-2026-10-26.md). Diese Fehlerbehebung und Spielabnahme haben Vorrang vor neuen späteren Roadmap-Systemen.
 
+Zwischenstand 26. Oktober, 13:45: Fünf ausdrücklich beauftragte Astra/High-Agenten
+ergänzten Inn-Kauferinnerungen, den vollständigen Tempel-Skillkatalog, restaurierte
+NPC-Zauberkosten, tageweise Begleiterbezahlung und einen begrenzten Dungeon-Sprungadapter.
+Gemeinsamer Build und 2144 Core-Tests bestehen. Native Abnahme dieser Ergänzungen
+bleibt offen; Dungeon-Follow, Klettern und Thronplattform sind damit nicht erledigt.
+Die [Checkliste](WORKLIST-2026-10-26.md) enthält Einzelbelege und Grenzen.
+
 ## Leitlinie
 
 Sichtbare Kernsysteme zuerst. Bestehende DFU-Mechaniken verwenden. Nur Zustand speichern und berechnen, der Verhalten, Begegnungen, Gespräche oder tatsächlichen Besitz beeinflusst. Kein Zusatzsystem als Voraussetzung für ein einfaches sichtbares Verhalten.
@@ -44,7 +51,7 @@ Das vereinfachte Handelsfenster zeigt NPC-Items links und Spieler-Items rechts, 
 5. **Navigation erweitern:** zusätzliche Innen-/Dungeonblöcke, Springen, Klettern und die Thronplattform in Privateer's Hold.
 6. **Erinnerung und Beziehung verbreitern:** weitere tatsächliche Erlebnisse und Zusagen im Gespräch; keine zusätzliche Hintergrundsimulation.
 
-Der Hauptagent arbeitet allein. Subagenten sind auf Nutzeranweisung gestoppt. Je Schritt einen sichtbaren Ablauf abschließen; keine weiteren Debug-Kamera- oder Nebensysteme.
+Der Hauptagent integriert und prüft die fünf am 26. Oktober ausdrücklich beauftragten Astra/High-Arbeitspakete. Keine unbegrenzte oder verschachtelte Delegation. Je Schritt einen sichtbaren Ablauf abschließen; keine weiteren Debug-Kamera- oder Nebensysteme.
 
 <a id="detailed-design"></a>
 ## Verbindlicher Funktionsumfang

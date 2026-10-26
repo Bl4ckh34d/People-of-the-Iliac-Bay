@@ -136,8 +136,9 @@ namespace PeopleOfTheIliacBay.DFU
                 new NpcActionDecision { Option = choice, DurationSeconds = (int)NativeNpcTempleTraining.DurationSeconds + 600 }, out acceptReason),
                 "Native temple training action was not accepted: " + acceptReason);
             var accepted = store.ActiveNpcAction(traineeId);
-            Require(accepted != null && accepted.ServiceCode == NativeNpcTempleTraining.ServiceCode && accepted.Target.PersonId == offer.Trainer.Id,
-                "Accepted training action lost the real trainer identity.");
+            Require(accepted != null && accepted.ServiceCode == NativeNpcTempleTraining.ServiceCode && accepted.Target.PersonId == offer.Trainer.Id &&
+                accepted.Target.ItemId == choice.Target.ItemId,
+                "Accepted training action lost the exact native trainer or selected skill.");
             deadline = Time.realtimeSinceStartup + 120; NpcActionJob running = null;
             while (Time.realtimeSinceStartup < deadline)
             {
@@ -289,9 +290,20 @@ namespace PeopleOfTheIliacBay.DFU
                     actor.gameObject.scene != room.gameObject.scene) continue;
                 active++;
                 if (actor.IsSleeping || actor.IsConversing) { reasons.Add(actor.IsSleeping ? "resident sleeping" : "resident conversing"); continue; }
+                int offeredLessons = 0;
                 foreach (var option in streets.ConversationActionOptions(actor.Resident.Id, "Train me."))
                     if (option.Kind == NpcActionKind.Purchase && option.Target != null && option.Target.ContainerId == NativeNpcTempleTraining.TargetContainerId)
-                    { trainee = actor; choice = option; diagnostic = "resident=" + actor.Resident.Id + "; trainer=" + option.Target.PersonId + "; offer ready"; return true; }
+                    { offeredLessons++; choice = option; }
+                if (choice != null)
+                {
+                    // Exercise a non-first native lesson whenever this trainer
+                    // offers more than one eligible skill to the actual resident.
+                    trainee = actor;
+                    diagnostic = "resident=" + actor.Resident.Id + "; trainer=" + choice.Target.PersonId +
+                        "; offeredLessons=" + offeredLessons + "; selectedSkill=" + choice.Target.ItemId + "; offer ready";
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_TEMPLE_TRAINING_CATALOG: " + diagnostic);
+                    return true;
+                }
                 foreach (var trainer in trainers)
                 for (int skill = 0; skill < 35; skill++)
                 {

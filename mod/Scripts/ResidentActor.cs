@@ -247,6 +247,8 @@ namespace PeopleOfTheIliacBay.DFU
         }
         public void Place(Vector3 ground, Vector3 direction, bool standing = false, bool fleeing = false,bool waitAtOccupiedTarget=false,SelectedSeatAccess seatAccess=null,bool freeStanding=false,bool comfortWalking=true,Func<Vector3,bool> placementAllowed=null,Vector3? navigationDestination=null,bool preferNative=true)
         {
+            var jump=GetComponent<NativeDungeonJumpTraversal>();
+            if(jump && jump.Active){jump.Advance();return;}
             bool seatTarget=seatAccess!=null&&seatAccess.Valid&&standing&&(ground-seatAccess.Slot.Ground).sqrMagnitude<0.0001f;
             if(!seatTarget)EndSitting();
             if(seatAccess!=null && seatAccess.Valid && seatAccess.Permits(transform.position-Vector3.up,ground))SeatBodyCollision.Set(this,true);

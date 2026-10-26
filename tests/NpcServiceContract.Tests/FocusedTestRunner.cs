@@ -12,13 +12,14 @@ internal static class FocusedTestRunner
         Run("funding receipt reserves exact escrow once", FundingIsReceiptBound);
         Run("ledger replacement is revision bound and receipt ids are global", LedgerReplacementIsAtomic);
         Run("service starts at actual ready time", StartUsesActualServiceTime);
-        Run("cumulative floor releases only unreleased wage", CumulativeReleaseRounding);
-        Run("suspension pauses earning without extending expiry", SuspensionKeepsFixedExpiry);
+        Run("started day earns its fixed fee once across midnight and dismissal", StartedDayIsNotProrated);
+        Run("daily fee releases once without fractional installments", DailyFeeReleasesOnce);
+        Run("suspension preserves day fee and fixed expiry", SuspensionKeepsFixedExpiry);
         Run("renewal requires permission and exact boundary", RenewalBoundary);
         Run("renewal permission can be revoked prospectively", RenewalPermissionRevocation);
         Run("late active updates cannot bypass exact expiry settlement", ExactExpiryBoundary);
         Run("pre-service cancellation refunds entire reservation", PreServiceCancellation);
-        Run("death settles wage to estate and refunds unused escrow once", DeathSettlement);
+        Run("death settles started day wage to estate once", DeathSettlement);
         Run("versioned save DTO round-trips detached ledger state", SaveStateRoundTrip);
         Run("save DTO rejects branch, version, receipt and accounting corruption", SaveStateRejectsCorruption);
         Run("historical restore keeps valid old references without current authority", HistoricalReferencesRestore);
@@ -98,6 +99,10 @@ internal static class FocusedTestRunner
         var wrong = Transfer("fund-1", NpcServiceTransferKind.Funding, "player", "contract:contract-1:escrow", 99, 10);
         NpcServiceContractLedger ledger;
         Assert(!NpcServiceContractLedger.TryReserve(NpcServiceContractLedger.Create(), 0, terms, wrong, out ledger), "partial funding accepted");
+        var futureDays = Transfer("fund-future", NpcServiceTransferKind.Funding,
+            "player", "contract:contract-1:escrow", 200, 10);
+        Assert(!NpcServiceContractLedger.TryReserve(NpcServiceContractLedger.Create(), 0, terms, futureDays, out ledger),
+            "unsupported future prepaid days were admitted");
         var funding = Transfer("fund-1", NpcServiceTransferKind.Funding, "player", "contract:contract-1:escrow", 100, 10);
         Assert(NpcServiceContractLedger.TryReserve(NpcServiceContractLedger.Create(), 0, terms, funding, out ledger), "valid funding rejected");
         var contract = ledger.Read("contract-1");
@@ -129,7 +134,7 @@ internal static class FocusedTestRunner
         NpcServiceContract rejected;
         Assert(!current.TryReleaseEarnings(current.Revision, 43200, wrong, out rejected) && rejected == null,
             "incorrect receipt created a candidate");
-        var wage = Transfer("global-wage", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 50, 43200);
+        var wage = Transfer("global-wage", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 100, 43200);
         NpcServiceContract paid;
         Assert(current.TryReleaseEarnings(current.Revision, 43200, wage, out paid), "valid wage release failed");
         Assert(!NpcServiceContractLedger.TryReplace(ledger, ledger.Revision - 1, paid, out nextLedger),
@@ -144,21 +149,44 @@ internal static class FocusedTestRunner
         Assert(!NpcServiceContractLedger.TryReserve(nextLedger, nextLedger.Revision, otherTerms,
             Transfer("global-wage", NpcServiceTransferKind.Funding, "player", "contract:contract-2:escrow", 100, 0), out ledger),
             "receipt id reused across contracts");
-        Assert(nextLedger.Read("contract-1").ReleasedGold == 50 && nextLedger.Read("contract-2") == null,
+        Assert(nextLedger.Read("contract-1").ReleasedGold == 100 && nextLedger.Read("contract-2") == null,
             "failed ledger operation changed prior state");
     }
 
-    private static void CumulativeReleaseRounding()
+    private static void DailyFeeReleasesOnce()
     {
         var contract = Started(100, 0);
         NpcServiceContract next;
-        var first = Transfer("wage-1", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 33, 28800);
-        Assert(contract.TryReleaseEarnings(contract.Revision, 28800, first, out next), "first cumulative release rejected");
-        Assert(next.EarnedGold == 33 && next.ReleasedGold == 33 && next.EscrowGold == 67, "first cumulative values wrong");
-        var second = Transfer("wage-2", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 17, 43200);
-        Assert(next.TryReleaseEarnings(next.Revision, 43200, second, out contract), "incremental release rejected");
-        Assert(contract.EarnedGold == 50 && contract.ReleasedGold == 50 && contract.EscrowGold == 50, "second release double-rounded or double-paid");
-        Assert(!contract.TryReleaseEarnings(contract.Revision, 43200, second, out next), "wage receipt replay accepted");
+        var fractional = Transfer("fractional-wage", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 33, 28800);
+        Assert(!contract.TryReleaseEarnings(contract.Revision, 28800, fractional, out next), "fractional wage accepted");
+        var first = Transfer("wage-1", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 100, 28800);
+        Assert(contract.TryReleaseEarnings(contract.Revision, 28800, first, out next), "daily release rejected");
+        Assert(next.EarnedGold == 100 && next.ReleasedGold == 100 && next.EscrowGold == 0, "daily release amount wrong");
+        Assert(!next.TryReleaseEarnings(next.Revision, 43200, first, out contract), "wage receipt replay accepted");
+        Assert(next.TryReleaseEarnings(next.Revision, 43200, null, out contract) && contract.ReleasedGold == 100,
+            "later observation paid the daily wage twice");
+    }
+
+    private static void StartedDayIsNotProrated()
+    {
+        var active = Started(120, 86399);
+        Assert(active.EarnedGold == 120 && active.BlockEndAt == 172799,
+            "accepted daily fee must be earned at service start, not prorated by seconds");
+        NpcServiceContract afterMidnight;
+        Assert(active.TryAccrue(active.Revision, 86401, out afterMidnight) &&
+            afterMidnight.EarnedGold == 120 && afterMidnight.FundedGold == 120,
+            "calendar midnight charged a second day");
+        NpcServiceContract dismissed;
+        Assert(afterMidnight.TrySettle(afterMidnight.Revision, 86401,
+            NpcServiceEndReason.PlayerDismissal, "npc-1",
+            Transfer("daily-dismiss-wage", NpcServiceTransferKind.Earnings,
+                "contract:contract-1:escrow", "npc-1", 120, 86401), null, out dismissed),
+            "early dismissal did not pay the complete started day");
+        Assert(dismissed.ReleasedGold == 120 && dismissed.RefundedGold == 0 && dismissed.EscrowGold == 0,
+            "started day was refunded or paid twice");
+        Assert(!dismissed.TrySettle(dismissed.Revision, 86402,
+            NpcServiceEndReason.PlayerDismissal, "npc-1", null, null, out _),
+            "dismissal replay settled twice");
     }
 
     private static void SuspensionKeepsFixedExpiry()
@@ -168,11 +196,11 @@ internal static class FocusedTestRunner
         Assert(next.TryResume(next.Revision, 57600, out contract), "resume rejected");
         Assert(contract.BlockEndAt == 86400, "suspension extended funded expiry");
         Assert(contract.TrySettle(contract.Revision, 86400, NpcServiceEndReason.NaturalExpiry, "npc-1",
-            Transfer("wage-final", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 83, 86400),
-            Transfer("refund", NpcServiceTransferKind.Refund, "contract:contract-1:escrow", "player", 17, 86400), out next),
+            Transfer("wage-final", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", 100, 86400),
+            null, out next),
             "expiry settlement rejected");
-        Assert(next.EligibleServiceSeconds == 72000 && next.EarnedGold == 83 && next.EscrowGold == 0,
-            "suspended time was earned or escrow remained");
+        Assert(next.EligibleServiceSeconds == 72000 && next.EarnedGold == 100 && next.EscrowGold == 0,
+            "suspension changed fixed day pay or escrow remained");
     }
 
     private static void RenewalBoundary()
@@ -236,10 +264,10 @@ internal static class FocusedTestRunner
     {
         var contract = Started(100, 0); NpcServiceContract next;
         Assert(contract.TrySettle(contract.Revision, 43200, NpcServiceEndReason.Death, "estate:npc-1",
-            Transfer("death-wage", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "estate:npc-1", 50, 43200),
-            Transfer("death-refund", NpcServiceTransferKind.Refund, "contract:contract-1:escrow", "player", 50, 43200), out next),
+            Transfer("death-wage", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "estate:npc-1", 100, 43200),
+            null, out next),
             "death settlement rejected");
-        Assert(next.Status == NpcServiceContractStatus.Terminated && next.EscrowGold == 0 && next.ReleasedGold == 50 && next.RefundedGold == 50,
+        Assert(next.Status == NpcServiceContractStatus.Terminated && next.EscrowGold == 0 && next.ReleasedGold == 100 && next.RefundedGold == 0,
             "death settlement conservation failed");
         Assert(!next.TrySettle(next.Revision, 43200, NpcServiceEndReason.Death, "estate:npc-1", null, null, out contract),
             "terminal settlement replay accepted");
@@ -254,8 +282,8 @@ internal static class FocusedTestRunner
             KnownProtectedTarget, KnownObligation, NativeReceiptExists, RenewalAuthorizationExists, out restored),
             "valid save state did not restore");
         Assert(restored.Revision == ledger.Revision && restored.Read("contract-1").BlockEndAt == 86400 &&
-            restored.Read("contract-1").EscrowGold == 50 && restored.Read("contract-1").EarnedGold == 50 &&
-            restored.Read("contract-1").ReleasedGold == 50, "round-trip changed ledger accounting");
+            restored.Read("contract-1").EscrowGold == 0 && restored.Read("contract-1").EarnedGold == 100 &&
+            restored.Read("contract-1").ReleasedGold == 100, "round-trip changed ledger accounting");
         Assert(restored.Read("contract-1").ReservedObligations.Count == 1 &&
             restored.Read("contract-1").ReservedObligations[0].Treatment == NpcServiceObligationTreatment.MayInterruptService,
             "typed obligation reference was not restored");
@@ -560,7 +588,7 @@ internal static class FocusedTestRunner
         NpcServiceContractLedger updated;
         Assert(NpcServiceContractLedger.TryReplace(ledger, ledger.Revision, started, out updated), "save fixture ledger update failed");
         var active = updated.Read("contract-1");
-        var wage = Transfer("save-wage", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", rate / 2, at + 43200);
+        var wage = Transfer("save-wage", NpcServiceTransferKind.Earnings, "contract:contract-1:escrow", "npc-1", rate, at + 43200);
         NpcServiceContract paid;
         Assert(active.TryReleaseEarnings(active.Revision, at + 43200, wage, out paid), "save fixture wage release failed");
         NpcServiceContractLedger settled;
@@ -577,7 +605,7 @@ internal static class FocusedTestRunner
     { return id == "appointment-1" && revision == 1 && kind == NpcServiceReservedObligationKind.Appointment && starts == 20000 && ends == 25000; }
     private static bool NativeReceiptExists(NpcServiceTransferReceiptState receipt)
     { return receipt != null && (receipt.ReceiptId == "fund-initial" && receipt.Amount == 100 ||
-        receipt.ReceiptId == "save-wage" && receipt.Amount == 50); }
+        receipt.ReceiptId == "save-wage" && receipt.Amount == 100); }
     private static bool RenewalAuthorizationExists(string contractId, string receiptId)
     { return contractId == "contract-1" && receiptId == "revoke-1"; }
 

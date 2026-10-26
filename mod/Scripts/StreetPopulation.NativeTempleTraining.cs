@@ -13,16 +13,22 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private void OfferNativeTempleTrainingAction(ResidentActor actor, string text, List<NpcActionOption> options, bool semantic)
         {
-            if (options.Count >= (semantic ? NpcActionCandidateCatalog.MaximumCandidates : 24)) return;
-            StaticNPC trainer; NativeNpcTempleTrainingOffer offer; Vector3 approach; string ignored;
-            if (!TryFindTempleTrainingOffer(actor, -1, null, true, out trainer, out offer, out approach, out ignored)) return;
-            var target = ActionPosition(approach);
-            target.PersonId = offer.Trainer.Id; target.ContainerId = NativeNpcTempleTraining.TargetContainerId;
-            target.ItemId = offer.Skill.ToString(CultureInfo.InvariantCulture); target.Quantity = 1; target.QuotedGold = offer.Price;
-            AddActionOption(options, NpcActionKind.Purchase, target,
-                "buy one native temple training lesson in " + DaggerfallUnity.Instance.TextProvider.GetSkillName((DFCareer.Skills)offer.Skill) +
-                " for " + offer.Price.ToString(CultureInfo.InvariantCulture) + " gold from my own wallet; it advances only my saved skill and costs three game hours",
-                text, semantic);
+            if (options == null) return;
+            int maximum = semantic ? NpcActionCandidateCatalog.MaximumCandidates : 24;
+            // Publish each eligible native skill so semantic selection can bind
+            // the requested lesson, not just the first skill in the native enum.
+            for (int skill = 0; skill < 35 && options.Count < maximum; skill++)
+            {
+                StaticNPC trainer; NativeNpcTempleTrainingOffer offer; Vector3 approach; string ignored;
+                if (!TryFindTempleTrainingOffer(actor, skill, null, true, out trainer, out offer, out approach, out ignored)) continue;
+                var target = ActionPosition(approach);
+                target.PersonId = offer.Trainer.Id; target.ContainerId = NativeNpcTempleTraining.TargetContainerId;
+                target.ItemId = offer.Skill.ToString(CultureInfo.InvariantCulture); target.Quantity = 1; target.QuotedGold = offer.Price;
+                AddActionOption(options, NpcActionKind.Purchase, target,
+                    "buy one native temple training lesson in " + DaggerfallUnity.Instance.TextProvider.GetSkillName((DFCareer.Skills)offer.Skill) +
+                    " for " + offer.Price.ToString(CultureInfo.InvariantCulture) + " gold from my own wallet; it advances only my saved skill and costs three game hours",
+                    text, semantic);
+            }
         }
 
         private bool IsNativeTempleTrainingTarget(NpcActionTarget target)
@@ -81,7 +87,7 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 if (!trainer || !trainer.gameObject.activeInHierarchy || trainer.gameObject.scene != interior.gameObject.scene ||
                     trainer.GetComponentInParent<DaggerfallInterior>() != interior) continue;
-                for (int skill = requestedSkill < 0 ? 0 : requestedSkill; skill < 35; skill++)
+                for (int skill = requestedSkill < 0 ? 0 : requestedSkill; skill < (requestedSkill < 0 ? 35 : requestedSkill + 1); skill++)
                 {
                     NativeNpcTempleTrainingOffer offer; string candidateReason;
                     if (!NativeNpcTempleTraining.TryPrepareOffer(worldStore, actor, trainer, KeeperPerson, buildingFactionId,
