@@ -1,6 +1,6 @@
 param([string]$DfuRoot = (Split-Path $PSScriptRoot -Parent | Split-Path -Parent),
     [switch]$Headless,
-    [ValidateScript({ $_.Length -eq 30 -and $_.StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::Ordinal) -and @($_.Substring(22).ToCharArray() | Where-Object { '0123456789abcdef'.IndexOf($_) -lt 0 }).Count -eq 0 })][string]$FixtureCharacter,
+    [ValidateScript({ $prefix='PeopleOfTheIliacBayTest-'; $_.Length -eq ($prefix.Length+8) -and $_.StartsWith($prefix,[StringComparison]::Ordinal) -and @($_.Substring($prefix.Length).ToCharArray() | Where-Object { '0123456789abcdef'.IndexOf($_) -lt 0 }).Count -eq 0 })][string]$FixtureCharacter,
     [ValidateScript({ $_.Length -gt 0 -and @($_.ToCharArray() | Where-Object { 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 _-'.IndexOf($_) -lt 0 }).Count -eq 0 })][string]$FixtureSaveName,
     [switch]$QuestProbe,
     [switch]$FreshPreviews,
@@ -309,7 +309,7 @@ if ($ActionWordingProbe) {
     $unexpectedActionWordingOptions = @($PSBoundParameters.Keys | Where-Object { $_ -notin @('ActionWordingProbe','FixtureCharacter','FixtureSaveName','DfuRoot') })
     if ($unexpectedActionWordingOptions.Count -gt 0) { throw 'ActionWordingProbe runs alone with only the owned fixture character/save and optional DfuRoot.' }
 }
-if ($DialogueAvailabilityProbe -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::Ordinal) -and ([string]$FixtureCharacter).Length -eq 30 -and (Test-HexValue ([string]$FixtureCharacter).Substring(22) 8 -Lowercase))) -or -not $FixtureSaveName)) { throw 'Dialogue availability probe requires an owned disposable fixture character and an explicit city save.' }
+if ($DialogueAvailabilityProbe -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::Ordinal) -and ([string]$FixtureCharacter).Length -eq ('PeopleOfTheIliacBayTest-'.Length+8) -and (Test-HexValue ([string]$FixtureCharacter).Substring('PeopleOfTheIliacBayTest-'.Length) 8 -Lowercase))) -or -not $FixtureSaveName)) { throw 'Dialogue availability probe requires an owned disposable fixture character and an explicit city save.' }
 if ($MoveToWaitProbe -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::OrdinalIgnoreCase))))) { throw 'MoveTo/Wait probe requires an owned disposable fixture character.' }
 if (($NpcInteractionProbe -or $NpcVitalsProbe) -and (-not $FixtureCharacter -or (-not (([string]$FixtureCharacter).StartsWith('PeopleOfTheIliacBayTest-',[StringComparison]::OrdinalIgnoreCase))))) { throw 'NPC interaction and vitals probes require an owned disposable fixture character.' }
 if ($RoutineRecoverySceneChangeProbe -and -not $FixtureCharacter) { throw 'Routine recovery scene-change probe requires an owned disposable fixture character.' }

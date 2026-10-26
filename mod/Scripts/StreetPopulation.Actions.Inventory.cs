@@ -96,7 +96,8 @@ namespace PeopleOfTheIliacBay.DFU
         }
         private bool EligibleNpcItemRecipient(ResidentActor source,ResidentActor recipient)
         {
-            return source && recipient && source!=recipient && EligibleNpcTransferReceiver(recipient);
+            return source && recipient && source!=recipient && source.gameObject.scene==recipient.gameObject.scene &&
+                EligibleNpcTransferReceiver(recipient);
         }
         // Bind only a unique actor already active in this scene. Display text never
         // becomes an identity: PersonId comes from that verified actor.
@@ -276,7 +277,8 @@ namespace PeopleOfTheIliacBay.DFU
                         Vector3.Distance(actor.transform.position,GameManager.Instance.PlayerMotor.transform.position)<=1.5f &&
                         player.CarriedWeight+item.EffectiveUnitWeightInKg()*job.Target.Quantity<=player.MaxEncumbrance;
                 if(!recipientOwner || recipientOwner.Binding==null || !EligibleNpcItemRecipient(actor,recipient) ||
-                    Vector3.Distance(actor.transform.position,recipient.transform.position)>1.5f) return false;
+                    Vector3.Distance(actor.transform.position,recipient.transform.position)>1.5f ||
+                    !CivilianResponses.Sees(actor.transform.position,recipient.transform.position,1.5f)) return false;
                 var entity=recipient.GetComponent<DaggerfallEntityBehaviour>().Entity;
                 return entity!=null && entity.Items.GetWeight()+item.EffectiveUnitWeightInKg()*job.Target.Quantity<=entity.MaxEncumbrance;
             },out reason);

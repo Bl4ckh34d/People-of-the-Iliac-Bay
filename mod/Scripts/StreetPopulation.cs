@@ -1082,9 +1082,11 @@ namespace PeopleOfTheIliacBay.DFU
                     bool hasShelter=reaction.Reaction==CivilianReaction.Flee && !reaction.ReachedRefuge &&
                         TryShelterTarget(actor,reaction,alarm,danger ?? player,seconds,out shelter,out shelterBuilding);
                     if(!hasShelter) {shelter=Vector3.zero;shelterBuilding=-1;}
+                    bool wasSheltered=reaction.ReachedRefuge;
                     CivilianResponses.Move(actor, reaction, plan.Routine, directory.transform, geometry, null,danger,
                         hasShelter ? (Vector3?)shelter : null,shelterBuilding,
                         ShelterAccessible(actor.Resident.HomeKey,actor.Resident.HomeKey,alarm,seconds));
+                    if(!wasSheltered && reaction.ReachedRefuge)ObserveResidentShelterEntry(actor,reaction,seconds);
                     RememberNpcCareAlarmPosition(plan,actor,seconds);
                     if(reaction.ReachedRefuge && !reaction.RefugeSealed && alarm!=null)
                     {
@@ -1134,7 +1136,8 @@ namespace PeopleOfTheIliacBay.DFU
                 else if(ApplyProactiveContactApproach(plan,ref actor,seconds)) continue;
                 bool atHome = reaction != null && reaction.HasPosition ? reaction.BuildingKey == interior.EntryDoor.buildingKey :
                     state.Activity != Activity.Travel && state.BuildingKey == interior.EntryDoor.buildingKey;
-                bool present = plan.Resident.IsAlive && !worldStore.IsResidentAway(plan.Resident.Id,seconds) && !QuestOwned(plan.Resident) && atHome;
+                bool present = plan.Resident.IsAlive && !worldStore.IsResidentAway(plan.Resident.Id,seconds) && !QuestOwned(plan.Resident) && atHome &&
+                    !HasUnmappedDefenseShelter(plan.Resident.Id);
                 if (!present)
                 {
                     PhysicalShopVisit unfinished;
@@ -1286,6 +1289,7 @@ namespace PeopleOfTheIliacBay.DFU
                             alarm.HasLocation && alarm.BuildingKey==interior.EntryDoor.buildingKey ?
                             interior.transform.TransformPoint(new Vector3((float)alarm.X,(float)alarm.Y,(float)alarm.Z)) : actor.transform.position;
                     }
+                    if(HoldLawfulGuardShelter(actor,reaction,danger.HasValue))continue;
                     CivilianResponses.Move(actor, reaction, plan.Routine, interior.transform, geometry, indoorGeometry,danger);
                     RememberNpcCareAlarmPosition(plan,actor,seconds);
                     continue;

@@ -408,9 +408,24 @@ namespace PeopleOfTheIliacBay.DFU
             Require(NativeNpcInventoryBridge.TryCompleteActionTransfer(store,job,102,source,recipient,null,()=>true,out reason),reason);
             Require(sourceItem.stackCount==sourceBefore-3 && recipientItem.stackCount==recipientBefore+3 &&
                 source.Revision==1 && recipient.Revision==1 && store.ReadNpcAction(job.Id).Phase==NpcActionPhase.Completed &&
-                store.ReadNpcAction(job.Id).ItemTransferReceipt==null,
+                store.ReadNpcAction(job.Id).ItemTransferReceipt!=null,
                 "NPC transfer did not move exact partial quantity and commit both owner revisions.");
+            var receipt=store.ReadNpcAction(job.Id).ItemTransferReceipt;
+            Require(receipt.RecipientId==recipientId && receipt.CounterpartyId==sourceId &&
+                receipt.SourceItemUid==sourceItem.UID && receipt.RetainedDestinationItemUid==recipientItem.UID &&
+                receipt.NativeItemName==NativeItemReceiptLabel.Capture(sourceItem.LongName) &&
+                receipt.Quantity==3 && store.DrainNpcItemTransferReceipts(32)==1 && store.DrainNpcItemTransferReceipts(32)==0,
+                "NPC recipient did not receive exact merged-UID evidence once.");
+            Require(store.TryRememberNpcActionOutcome(job.Id,store.ReadNpcAction(job.Id).Revision,"day 1","shop",null) &&
+                store.Snapshot().ConversationMemories.Find(x=>x.PersonId==sourceId).Entries.Exists(x=>x.SourceActionId==job.Id) &&
+                store.Snapshot().ConversationMemories.Find(x=>x.PersonId==recipientId).Entries.Exists(x=>x.SourceActionId==job.Id),
+                "NPC delivery did not produce both participants' receipt-backed memories.");
             store.Restore((WorldState)SaveLoadManager.Deserialize(typeof(WorldState),SaveLoadManager.Serialize(typeof(WorldState),store.Snapshot())));
+            Require(store.DrainNpcItemTransferReceipts(32)==0 &&
+                store.ReadNpcAction(job.Id).ItemTransferReceipt.NativeItemName==NativeItemReceiptLabel.Capture(sourceItem.LongName) &&
+                store.ReadNpcAction(job.Id).ProjectedItemTransferReceipt.NativeItemName==NativeItemReceiptLabel.Capture(sourceItem.LongName) &&
+                !store.TryRememberNpcActionOutcome(job.Id,store.ReadNpcAction(job.Id).Revision,"day 1","shop",null),
+                "NPC delivery receipt or memory replayed after native serialization.");
             Require(!NativeNpcInventoryBridge.TryCompleteActionTransfer(store,job,103,source,recipient,null,()=>true,out reason),
                 "Restored NPC transfer replay duplicated items.");
             NativeNpcInventoryBinding reopened;

@@ -166,9 +166,14 @@ namespace PeopleOfTheIliacBay.DFU
         private HouseholdDayPlan ChooseFamilyCashProbe(out double bankDistance)
         {
             bankDistance=double.PositiveInfinity;HouseholdDayPlan selected=null;double now=ActionNow();
+            string requestedHome=Environment.GetEnvironmentVariable("POTIB_EDITOR_FAMILY_HOME_KEY");
+            int homeKey=-1;
+            if(!string.IsNullOrEmpty(requestedHome) && (!int.TryParse(requestedHome,out homeKey) || homeKey<0))
+                throw new InvalidOperationException("Invalid controlled family home key.");
             int active=0,waiting=0,funded=0,eligible=0,routes=0;var banks=directory.GetBuildingsOfType(DFLocation.BuildingTypes.Bank);
             foreach(var progress in worldStore.ReadActiveHouseholdJoints(population.SettlementId))
             {
+                if(homeKey>=0 && progress.HomeKey!=homeKey)continue;
                 active++;if(progress.Phase!=HouseholdJointPhase.Waiting)continue;waiting++;
                 var day=worldStore.ReadHouseholdDay(progress.SettlementId,progress.HomeKey,progress.AbsoluteDay);
                 if(day?.JointInn?.PayerId==null || day.AbsoluteDay!=(int)(now/86400))continue;funded++;
@@ -184,7 +189,7 @@ namespace PeopleOfTheIliacBay.DFU
                     selected=day;bankDistance=distance;
                 }
             }
-            familyCashSelectionStatus="active="+active+"; waiting="+waiting+"; funded="+funded+"; eligible="+eligible+"; bankRoutes="+routes+"; banks="+banks.Count;
+            familyCashSelectionStatus="home="+homeKey+"; active="+active+"; waiting="+waiting+"; funded="+funded+"; eligible="+eligible+"; bankRoutes="+routes+"; banks="+banks.Count;
             return selected;
         }
     }

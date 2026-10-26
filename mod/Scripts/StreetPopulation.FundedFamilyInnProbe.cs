@@ -148,10 +148,16 @@ namespace PeopleOfTheIliacBay.DFU
                     "; exactCounts=true; participantKnowledge=true; lifetimeStable=true");
                 double leave=Math.Max(worldStore.GetObservedVisit(day.First.ResidentId).PlannedEndAt,
                     worldStore.GetObservedVisit(day.Second.ResidentId).PlannedEndAt)+1;
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_LEAVE_REQUEST: now="+ActionNow()+"; leave="+leave);
                 if(leave>ActionNow()){game.PlayerEntity.PreventEnemySpawns=true;DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(leave-ActionNow()));}
-                deadline=Time.realtimeSinceStartup+120;
+                deadline=Time.realtimeSinceStartup+120;reportAt=0;
                 while(worldStore.ReadHouseholdJointProgress(day.SettlementId,day.HomeKey).Phase!=HouseholdJointPhase.Returning &&
-                    Time.realtimeSinceStartup<deadline)yield return null;
+                    Time.realtimeSinceStartup<deadline)
+                {
+                    if(Time.realtimeSinceStartup>=reportAt)
+                    {ReportFundedFamilyInn(day);reportAt=Time.realtimeSinceStartup+20;}
+                    yield return null;
+                }
                 if(worldStore.ReadHouseholdJointProgress(day.SettlementId,day.HomeKey).Phase!=HouseholdJointPhase.Returning)
                     throw new InvalidOperationException("Funded family did not physically leave the Inn.");
                 game.PlayerMotor.enabled=motorEnabled;game.PlayerEnterExit.TransitionExterior();
@@ -249,6 +255,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var actor=FindActor(id);PhysicalShopVisit visit;physicalShopVisits.TryGetValue(id,out visit);
                 var projection=worldStore.ProjectHouseholdInnMember(day.Id,id,now);
                 var saved=worldStore.GetObservedVisit(id);
+                var seat=visit?.SelectedSeatId==null?null:shopGeometry?.Seating?.Find(visit.SelectedSeatId);
                 var canSettle=typeof(WorldStateStore).GetMethod("CanSettleHouseholdInn",
                     System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
                 bool eligible=saved!=null && canSettle!=null && actor &&
@@ -260,7 +267,10 @@ namespace PeopleOfTheIliacBay.DFU
                     "; purchaseFailure="+visit?.PurchaseFailure+"; captureFailure="+visit?.CaptureFailure+
                     "; savedPhase="+(saved==null || now<saved.ObservedAt?"unavailable":saved.Evaluate(now).Phase.ToString())+
                     "; routePoints="+saved?.Legs[0].Route.Count+"; dwell="+saved?.Legs[0].DwellSeconds+
-                    "; firstPhase="+saved?.Legs[0].AfterPhase+"; canSettle="+eligible);
+                    "; firstPhase="+saved?.Legs[0].AfterPhase+"; canSettle="+eligible+
+                    "; movementFailure="+visit?.LastFailure+"; bodyGround="+(actor?(actor.transform.position-Vector3.up).ToString("R"):"absent")+
+                    "; selectedSeat="+visit?.SelectedSeatId+"; seatGround="+seat?.Ground.ToString("R")+"; seatApproach="+seat?.Approach.ToString("R")+
+                    "; paused="+GameManager.IsGamePaused+"; window="+DaggerfallUI.UIManager.TopWindow?.GetType().Name);
             }
         }
 

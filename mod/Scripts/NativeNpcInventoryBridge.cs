@@ -231,7 +231,8 @@ namespace PeopleOfTheIliacBay.DFU
                 NpcActionTransferReceipt receipt;
                 bool applied=Execute(store,source==null?externalSource:source.Items,targetBinding==null?externalTarget:targetBinding.Items,
                     source,targetBinding,null,0,0,uid,job.Target.Quantity,accessIsValid,job.Id+":transfer",
-                    containerDeposit || homeContainerRetrieval || observedLoot,incoming?job:null,now,out receipt,out failure);
+                    containerDeposit || homeContainerRetrieval || observedLoot,
+                    (incoming || source!=null && targetBinding!=null)?job:null,now,out receipt,out failure);
                 return applied?NpcActionEffectResult.Success(receipt):NpcActionEffectResult.Failure();
             });
             if(failure!=null) reason=failure;else if(completed) reason=null;
@@ -323,9 +324,12 @@ namespace PeopleOfTheIliacBay.DFU
                         }
                         catch(ArgumentException) { /* Outside the existing impact bounds stays unknown. */ }
                     }
-                    transferReceipt=NpcActionTransferReceipt.CreatePlayerToNpc(receiptJob,transactionId,uid,moved.UID,
-                        retainedUid,count,receiptJob.ResidentId,"player",observedGameTime,
-                        valuation,nativeValue);
+                    string itemName=NativeItemReceiptLabel.Capture(moved.LongName);
+                    transferReceipt=sourceBinding==null?
+                        NpcActionTransferReceipt.CreatePlayerToNpc(receiptJob,transactionId,uid,moved.UID,
+                            retainedUid,count,targetBinding.PersonId,"player",observedGameTime,valuation,nativeValue,itemName):
+                        NpcActionTransferReceipt.CreateNpcToNpc(receiptJob,transactionId,uid,moved.UID,
+                            retainedUid,count,targetBinding.PersonId,sourceBinding.PersonId,observedGameTime,valuation,nativeValue,itemName);
                 }
                 var updates=new List<NpcInventoryUpdate>();
                 if(from!=null)updates.Add(new NpcInventoryUpdate{PersonId=from.PersonId,ExpectedRevision=from.Revision,WalletGold=from.WalletGold,Items=CaptureItems(source)});

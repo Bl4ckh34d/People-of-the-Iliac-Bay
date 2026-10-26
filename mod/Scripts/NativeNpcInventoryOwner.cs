@@ -89,7 +89,7 @@ namespace PeopleOfTheIliacBay.DFU
             for(int i=0;i<entity.Items.Count;i++)
             {
                 var item=entity.Items.GetItem(i);
-                if(item==null || item.IsEquipped)continue;
+                if(item==null || item.IsEquipped || item.RepairData.IsBeingRepaired())continue;
                 // EquipSlot describes an existing assignment, not eligibility.
                 // Newly created clothing has None until the native table equips it.
                 var slot=entity.ItemEquipTable.GetEquipSlot(item);

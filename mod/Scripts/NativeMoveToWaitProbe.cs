@@ -320,7 +320,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Label=source.Label,ItemSourceStep=source.ItemSourceStep,MaximumQuantity=source.MaximumQuantity};
         }
 
-        private static bool TryObserverGround(TownGeometry geometry,BuildingDirectory directory,Vector3 actorGround,out Vector3 observerGround)
+        internal static bool TryObserverGround(TownGeometry geometry,BuildingDirectory directory,Vector3 actorGround,out Vector3 observerGround)
         {
             observerGround=Vector3.zero;
             Vector3 local=directory.transform.InverseTransformPoint(actorGround);
@@ -373,7 +373,7 @@ namespace PeopleOfTheIliacBay.DFU
             return clock.ToSeconds()+(clock.Second-Math.Floor(clock.Second));
         }
 
-        private static string DescribeActionMotion(StreetPopulation streets,string residentId,ResidentActor actor)
+        internal static string DescribeActionMotion(StreetPopulation streets,string residentId,ResidentActor actor)
         {
             var motionsField=typeof(StreetPopulation).GetField("actionMotions",Private);
             var motions=motionsField==null?null:motionsField.GetValue(streets) as IDictionary;
@@ -384,6 +384,8 @@ namespace PeopleOfTheIliacBay.DFU
             var nextField=type.GetField("Next",AnyInstance);
             var progressField=type.GetField("ProgressAt",AnyInstance);
             var repathField=type.GetField("RepathAt",AnyInstance);
+            var waypointField=type.GetField("WaypointProgress",AnyInstance);
+            var waypoint=waypointField==null?null:waypointField.GetValue(motion) as NpcActionWaypointProgress;
             var outdoor=outdoorField==null?null:outdoorField.GetValue(motion) as IList<SavedRoutePoint>;
             int next=nextField==null?-1:(int)nextField.GetValue(motion);
             string nextPoint=outdoor!=null && next>=0 && next<outdoor.Count?
@@ -410,6 +412,12 @@ namespace PeopleOfTheIliacBay.DFU
             }
             return "routeCount="+(outdoor==null?"null":outdoor.Count.ToString(CultureInfo.InvariantCulture))+"; next="+next+
                 "; nextPoint="+nextPoint+"; nextNextPoint="+nextNextPoint+"; progressAt="+progress+"; repathAt="+repath+
+                "; nativeOutdoor="+type.GetField("NativeOutdoor",AnyInstance).GetValue(motion)+
+                "; nativeFailed="+type.GetField("NativeFailed",AnyInstance).GetValue(motion)+
+                "; movementPaused="+type.GetField("MovementPaused",AnyInstance).GetValue(motion)+
+                "; waypointBest="+(waypoint==null?"missing":waypoint.BestDistance.ToString("F3",CultureInfo.InvariantCulture))+
+                "; waypointProgressAt="+(waypoint==null?"missing":waypoint.ProgressAt.ToString("F3",CultureInfo.InvariantCulture))+
+                "; waypointStalled20="+(waypoint!=null && waypoint.IsStalled(Time.unscaledTime,20))+
                 "; unscaledNow="+Time.unscaledTime.ToString("F3",CultureInfo.InvariantCulture)+
                 "; steering="+steering;
         }

@@ -40,6 +40,9 @@ namespace PeopleOfTheIliacBay.DFU
             string social;
             if(streets && streets.TryStreetChatContext(speaker.PersonId,now,out social))
                 return ConversationContextFact<string>.Verified(social,ConversationContextFactSource.LiveObservation,now);
+            string refuge;
+            if(speaker.ManagedActor && streets && streets.TryGuardRefugeContext(speaker.PersonId,ConversationBuildingName,out refuge))
+                return ConversationContextFact<string>.Verified(refuge,ConversationContextFactSource.LiveObservation,now);
             if(!speaker.ManagedActor || speaker.ManagedActor.Resident==null || !streets || !streets.Ready ||
                 !game.PlayerGPS.HasCurrentLocation || !outdoorsFact.TryGetVerified(out outdoors) ||
                 streets.IsAlarmed(speaker.PersonId))return null;

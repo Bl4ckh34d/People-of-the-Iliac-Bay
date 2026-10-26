@@ -106,7 +106,8 @@ namespace PeopleOfTheIliacBay.DFU
                     {
                         Name = item.LongName,
                         Category = item.ItemGroup.ToString(),
-                        Quantity = item.stackCount
+                        Quantity = item.stackCount,
+                        Properties = NativeNpcRepairContext.Describe(item)
                     });
                 }
                 return ConversationContextTools.PageInventory(conversationPersonId, binding.Revision, items, request);

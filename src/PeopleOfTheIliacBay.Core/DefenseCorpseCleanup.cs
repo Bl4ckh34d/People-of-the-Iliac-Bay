@@ -114,7 +114,7 @@ namespace PeopleOfTheIliacBay.Core
             double rate=timeScale/speed,arrival=now+Length(path)*rate;
             Require(Time(arrival+3600+Length(back)*rate),"Cleanup handoff time overflow.");
             Reports.Add(new GuardReport {Id=reportId,CleanupCorpseId=corpseId,GuardIds=new List<string>{guardId}});
-            guard.IncidentId=reportId;guard.Route=path;guard.ResponseOrigin=CopyPoint(path[0]);
+            guard.IncidentId=reportId;guard.DoorPursuit=null;guard.Route=path;guard.ResponseOrigin=CopyPoint(path[0]);
             guard.ReturnPath=back;guard.ReturnRate=rate;guard.DepartedAt=now;guard.ArrivesAt=arrival;
             guard.SearchUntil=arrival+300;guard.EngagementPosition=null;guard.LastSeenSuspect=null;guard.Duty=GuardDuty.Responding;
         }

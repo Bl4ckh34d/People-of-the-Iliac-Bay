@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
+using System.Text;
 using DaggerfallConnect;
 using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
+using DaggerfallWorkshop.Utility;
 using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
@@ -16,12 +19,14 @@ namespace PeopleOfTheIliacBay.DFU
     {
         private const BindingFlags Private=BindingFlags.Instance|BindingFlags.NonPublic;
         private const int WaitSeconds=10;
+        private const int EnterSeconds=900;
 
         private sealed class Fixture
         {
             internal ResidentActor Actor;
             internal NpcActionOption Enter,Wait;
             internal List<NpcActionDecision> Decisions;
+            internal string BuildingName;
         }
 
         internal static IEnumerator Run(PeopleOfTheIliacBayMod host,StreetPopulation streets,string character)
@@ -68,7 +73,8 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new InvalidOperationException("Native Enter/Wait task did not retain the exact public doorway.");
                 taskId=accepted.Id;
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTER_WAIT_ACCEPTED: resident="+residentId+"; task="+taskId+
-                    "; door="+fixture.Enter.Target.DoorId+"; building="+fixture.Enter.Target.BuildingKey+".");
+                    "; door="+fixture.Enter.Target.DoorId+"; building="+fixture.Enter.Target.BuildingKey+
+                    "; buildingType=Bank; buildingName="+fixture.BuildingName+".");
                 var enter=store.ReadNpcAction(taskId+":step:0");
                 if(enter==null || enter.Kind!=NpcActionKind.Enter || !NpcTaskContract.TargetMatches(enter.Target,fixture.Enter.Target))
                     throw new InvalidOperationException("Native Enter action was not dispatched with the selected exact doorway.");
@@ -76,17 +82,30 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!Resolve(streets,enter,out door,out arrival,out resolveReason))
                     throw new InvalidOperationException("Native Enter doorway could not be resolved: "+resolveReason);
                 float nearestDoor=float.PositiveInfinity;NpcActionJob completedWait=null;NpcActionJob completedEnter=null;bool receiptLogged=false;
-                float deadline=Time.realtimeSinceStartup+180f;
+                float started=Time.realtimeSinceStartup,deadline=started+480f,nextProgress=started;
+                Vector3 lastGround=fixture.Actor.transform.position-Vector3.up;
+                float walked=0,maximumStep=0;
                 while(Time.realtimeSinceStartup<deadline)
                 {
                     if(game.PlayerEnterExit.IsPlayerInsideBuilding)
                         throw new InvalidOperationException("Enter/Wait probe player entered the building; offscreen evidence is invalid.");
                     var actor=FindActor(streets,residentId);
                     if(actor && actor.gameObject.activeInHierarchy)
+                    {
+                        var ground=actor.transform.position-Vector3.up;
+                        float step=Vector3.Distance(lastGround,ground);walked+=step;maximumStep=Mathf.Max(maximumStep,step);lastGround=ground;
                         nearestDoor=Mathf.Min(nearestDoor,Vector3.Distance(actor.transform.position-Vector3.up,door));
+                    }
                     var task=store.ReadNpcTask(taskId);
                     var observedEnter=store.ReadNpcAction(taskId+":step:0");
                     var observedWait=store.ReadNpcAction(taskId+":step:1");
+                    bool failed=task==null || task.Phase==NpcTaskPhase.Failed || task.Phase==NpcTaskPhase.Cancelled;
+                    if(Time.realtimeSinceStartup>=nextProgress || failed)
+                    {
+                        LogProgress(streets,game,actor,observedEnter,residentId,door,arrival,nearestDoor,walked,maximumStep,
+                            Time.realtimeSinceStartup-started,failed?"failure":"progress");
+                        nextProgress=Time.realtimeSinceStartup+5f;
+                    }
                     if(observedEnter!=null && observedEnter.Phase==NpcActionPhase.Completed)
                     {
                         var receipt=observedEnter.BuildingTransitionReceipt;
@@ -107,7 +126,7 @@ namespace PeopleOfTheIliacBay.DFU
                         if(observedWait.Phase!=NpcActionPhase.Completed)throw new InvalidOperationException("Offscreen building Wait did not complete normally.");
                         completedWait=observedWait;break;
                     }
-                    if(task==null || task.Phase==NpcTaskPhase.Failed || task.Phase==NpcTaskPhase.Cancelled)
+                    if(failed)
                     {
                         string taskFailure=task==null?"missing":string.IsNullOrWhiteSpace(task.FailureReason)?"<none>":task.FailureReason;
                         string enterFailure=observedEnter==null?"missing":string.IsNullOrWhiteSpace(observedEnter.FailureReason)?"<none>":observedEnter.FailureReason;
@@ -125,6 +144,9 @@ namespace PeopleOfTheIliacBay.DFU
                     }
                     yield return null;
                 }
+                if(completedWait==null)
+                    LogProgress(streets,game,FindActor(streets,residentId),store.ReadNpcAction(taskId+":step:0"),residentId,
+                        door,arrival,nearestDoor,walked,maximumStep,Time.realtimeSinceStartup-started,"timeout");
                 if(completedEnter==null || completedWait==null || nearestDoor>arrival+0.05f ||
                     completedWait.AcceptedAt+0.001d<completedEnter.BuildingTransitionReceipt.ObservedGameTime ||
                     completedWait.FinishAt-completedWait.AcceptedAt<WaitSeconds-0.001d ||
@@ -138,7 +160,9 @@ namespace PeopleOfTheIliacBay.DFU
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTER_WAIT_NATIVE_PASS: resident="+residentId+"; door="+
                     fixture.Enter.Target.DoorId+"; nearestDoor="+nearestDoor.ToString("F3")+"; arrival="+arrival.ToString("F3")+
                     "; enteredAt="+completedEnter.BuildingTransitionReceipt.ObservedGameTime.ToString("F3")+"; waitElapsed="+
-                    (completedWait.UpdatedAt-completedWait.AcceptedAt).ToString("F3")+"; playerOutside=true; inventoryUnchanged=true; identityUnchanged=true; vitalsUnchanged=true.");
+                    (completedWait.UpdatedAt-completedWait.AcceptedAt).ToString("F3")+
+                    "; buildingType=Bank; building="+fixture.Enter.Target.BuildingKey+
+                    "; playerOutside=true; inventoryUnchanged=true; identityUnchanged=true; vitalsUnchanged=true.");
                 taskId=null;
             }
             finally
@@ -148,9 +172,57 @@ namespace PeopleOfTheIliacBay.DFU
             }
         }
 
+        // Read-only, opt-in diagnostics. Preserve the same player/body positions
+        // and movement rules so the next run can distinguish fixture overlap,
+        // waypoint blockage, missing support and native-navigation failure.
+        private static void LogProgress(StreetPopulation streets,GameManager game,ResidentActor actor,NpcActionJob enter,
+            string residentId,Vector3 acceptedDoor,float acceptedArrival,float nearestDoor,float walked,float maximumStep,
+            float elapsed,string stage)
+        {
+            Vector3 target=acceptedDoor;float arrival=acceptedArrival;string reason="missing action";
+            bool resolved=enter!=null && Resolve(streets,enter,out target,out arrival,out reason);
+            var native=actor?actor.GetComponent<NativeResidentNavigation>():null;
+            var actual=actor?actor.transform.position-Vector3.up:Vector3.zero;
+            var player=game.PlayerMotor.transform.position;
+            var delta=player-(actor?actor.transform.position:player);delta.y=0;
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_ENTER_WAIT_PROGRESS: stage="+stage+"; resident="+residentId+
+                "; elapsedReal="+elapsed.ToString("F3",CultureInfo.InvariantCulture)+
+                "; phase="+(enter==null?"missing":enter.Phase.ToString())+"; actor="+(actor?"active":"absent")+
+                "; actualFoot="+actual.ToString("F3")+"; targetResolved="+resolved+"; target="+target.ToString("F3")+
+                "; acceptedTarget="+acceptedDoor.ToString("F3")+"; gap="+(actor?Vector3.Distance(actual,target):float.PositiveInfinity).ToString("F3",CultureInfo.InvariantCulture)+
+                "; nearestGap="+nearestDoor.ToString("F3",CultureInfo.InvariantCulture)+"; arrival="+arrival.ToString("F3",CultureInfo.InvariantCulture)+
+                "; resolveReason="+(reason??"none")+"; walked="+walked.ToString("F3",CultureInfo.InvariantCulture)+
+                "; maximumStep="+maximumStep.ToString("F3",CultureInfo.InvariantCulture)+
+                "; player="+player.ToString("F3")+"; playerHorizontalGap="+delta.magnitude.ToString("F3",CultureInfo.InvariantCulture)+
+                "; paused="+GameManager.IsGamePaused+"; conversing="+(actor && actor.IsConversing)+
+                "; nativeActive="+(native && native.Active)+"; nativeTarget="+(native && native.HasDestination?native.Destination.ToString("F3"):"none")+
+                "; nativeFailure="+(native?native.FailureReason??"none":"missing")+"; nativePath="+(native?native.PathState:"missing")+
+                "; bodyOverlaps="+DescribeBodyOverlaps(actor,actual)+
+                "; motion="+NativeMoveToWaitProbe.DescribeActionMotion(streets,residentId,actor));
+        }
+
+        private static string DescribeBodyOverlaps(ResidentActor actor,Vector3 ground)
+        {
+            if(!actor)return "actor-absent";
+            var text=new StringBuilder();int count=0;
+            foreach(var collider in Physics.OverlapCapsule(ground+Vector3.up*0.8f,ground+Vector3.up*1.6f,0.24f,~0,QueryTriggerInteraction.Ignore))
+            {
+                if(!collider || collider.transform.IsChildOf(actor.transform))continue;
+                count++;
+                if(count>8)continue;
+                if(text.Length>0)text.Append(" | ");
+                text.Append(collider.name).Append('<').Append(collider.GetType().Name).Append('>')
+                    .Append(" player=").Append((bool)collider.GetComponentInParent<PlayerMotor>())
+                    .Append(" resident=").Append((bool)collider.GetComponentInParent<ResidentActor>())
+                    .Append(" bounds=").Append(collider.bounds.center.ToString("F3")).Append('/').Append(collider.bounds.size.ToString("F3"));
+            }
+            return count.ToString(CultureInfo.InvariantCulture)+" ["+text+"]";
+        }
+
         private static Fixture FindFixture(StreetPopulation streets,GameManager game,out string reason)
         {
             var geometry=typeof(StreetPopulation).GetField("geometry",Private).GetValue(streets) as TownGeometry;
+            var directory=typeof(StreetPopulation).GetField("directory",Private).GetValue(streets) as BuildingDirectory;
             int eligibleAdults=0,semanticWaits=0,semanticEnters=0,namedRequests=0,namedEnters=0,boundWaits=0,invalidPlans=0;
             foreach(var actor in UnityEngine.Object.FindObjectsOfType<ResidentActor>())
             {
@@ -158,25 +230,35 @@ namespace PeopleOfTheIliacBay.DFU
                     actor.Resident.IsQuestProtected || actor.Resident.NativeIdentity!=null || actor.Resident.AgeGroup!=ResidentAgeGroup.Adult ||
                     actor.IsSleeping || actor.IsConversing || streets.IsAlarmed(actor.Resident.Id))continue;
                 eligibleAdults++;
-                game.PlayerMotor.transform.position=actor.transform.position;Physics.SyncTransforms();
+                Vector3 observerGround;
+                if(geometry==null || !directory || !NativeMoveToWaitProbe.TryObserverGround(geometry,directory,
+                    actor.transform.position-Vector3.up,out observerGround))continue;
+                // Candidate lookup needs a nearby player, not an overlapping
+                // player collider that prevents the accepted actor from moving.
+                game.PlayerMotor.transform.position=observerGround+Vector3.up;Physics.SyncTransforms();
                 var semanticOptions=streets.ConversationActionCandidates(actor.Resident.Id);NpcActionOption enter=null;
                 foreach(var option in semanticOptions)
                 {
                     if(option!=null && option.Kind==NpcActionKind.Wait && option.Target!=null)semanticWaits++;
                     if(option!=null && option.Kind==NpcActionKind.Enter && option.Target!=null &&
-                        option.Target.Kind==NpcActionTargetKind.Building){enter=option;semanticEnters++;break;}
+                        option.Target.Kind==NpcActionTargetKind.Building &&
+                        IsBank(directory,option.Target.BuildingKey,actor.Resident.HomeKey))
+                        {enter=option;semanticEnters++;}
                 }
-                // Semantic candidates deliberately cap public buildings. For this
-                // doorway probe, ask the same production offer builder for each
-                // exact surveyed name so a farther open public door is not hidden
-                // behind that general candidate cap.
-                if(enter==null && geometry!=null)
+                // This controlled adapter probe selects an exact native bank,
+                // including banks outside the bounded semantic catalogue. It
+                // does not infer intent from the building name or bypass task
+                // admission, the unlocked-door check, or physical movement.
+                if(enter==null && geometry!=null && directory)
                     foreach(var pair in geometry.Entrances)
                     {
+                        if(!IsBank(directory,pair.Key,actor.Resident.HomeKey))continue;
                         string name=game.TalkManager.GetBuildingNameForBuildingKey(pair.Key);
                         if(string.IsNullOrWhiteSpace(name))continue;
                         namedRequests++;
-                        var named=streets.ConversationActionOptions(actor.Resident.Id,"Please enter "+name+".");
+                        var named=new List<NpcActionOption>();
+                        var offer=typeof(StreetPopulation).GetMethod("OfferBuildingEntry",Private);
+                        offer.Invoke(streets,new object[] {actor,named,pair.Key,name,null,true});
                         foreach(var option in named)
                             if(option!=null && option.Kind==NpcActionKind.Enter && option.Target!=null &&
                                 option.Target.Kind==NpcActionTargetKind.Building && option.Target.BuildingKey==pair.Key)
@@ -186,7 +268,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(enter==null)continue;
                 int semanticMaximum=0;foreach(var option in semanticOptions)if(option!=null && option.Id>semanticMaximum)semanticMaximum=option.Id;
                 int uniqueMaximum=Math.Max(semanticMaximum,enter.Id);
-                var waits=NpcActionSequenceChat.BindWaitOptionsAfterMoveTo(new NpcActionDecision {Option=enter,DurationSeconds=300},semanticOptions);
+                var waits=NpcActionSequenceChat.BindWaitOptionsAfterMoveTo(new NpcActionDecision {Option=enter,DurationSeconds=EnterSeconds},semanticOptions);
                 NpcActionOption wait=null;
                 foreach(var option in waits)
                     if(option!=null && option.Kind==NpcActionKind.Wait && option.Id>semanticMaximum &&
@@ -208,16 +290,24 @@ namespace PeopleOfTheIliacBay.DFU
                 plan.Steps.Add(new NpcTaskStep {Kind=NpcActionKind.Wait,Target=NpcActionExecutor.CopyTarget(wait.Target),DurationSeconds=WaitSeconds});
                 try {NpcTaskContract.Validate(plan);}catch(ArgumentException){invalidPlans++;continue;}
                 reason="Fixture selected with exact Enter and semantic Wait source.";
-                return new Fixture {Actor=actor,Enter=enter,Wait=wait,Decisions=new List<NpcActionDecision> {
-                    new NpcActionDecision {Option=Copy(enter),DurationSeconds=300},new NpcActionDecision {Option=Copy(wait),DurationSeconds=WaitSeconds}}};
+                return new Fixture {Actor=actor,Enter=enter,Wait=wait,
+                    BuildingName=game.TalkManager.GetBuildingNameForBuildingKey(enter.Target.BuildingKey),Decisions=new List<NpcActionDecision> {
+                    new NpcActionDecision {Option=Copy(enter),DurationSeconds=EnterSeconds},new NpcActionDecision {Option=Copy(wait),DurationSeconds=WaitSeconds}}};
             }
             if(eligibleAdults==0)reason="No active ordinary adult is available at noon.";
             else if(semanticWaits==0)reason="Active ordinary adults offered no current native Wait option at noon.";
-            else if(semanticEnters==0 && namedRequests==0)reason="No surveyed building name was available for a native public-door request.";
-            else if(semanticEnters==0 && namedEnters==0)reason="Native public-door requests found no currently unlocked exact Enter option; adults="+eligibleAdults+"; semanticWaits="+semanticWaits+"; namedRequests="+namedRequests+".";
+            else if(semanticEnters==0 && namedRequests==0)reason="No surveyed non-home native Bank was available; an Inn or other building cannot substitute.";
+            else if(semanticEnters==0 && namedEnters==0)reason="Native Bank requests found no currently unlocked exact Enter option; adults="+eligibleAdults+"; semanticWaits="+semanticWaits+"; namedRequests="+namedRequests+".";
             else if(boundWaits==0)reason="Exact Enter options existed, but semantic Wait options produced no exact bound doorway Wait; semanticEnters="+semanticEnters+"; namedEnters="+namedEnters+"; semanticWaits="+semanticWaits+".";
             else reason="Exact Enter/Wait task plan was rejected; boundWaits="+boundWaits+"; invalidPlans="+invalidPlans+".";
             return null;
+        }
+
+        private static bool IsBank(BuildingDirectory directory,int buildingKey,int homeKey)
+        {
+            BuildingSummary summary;
+            return directory && buildingKey!=homeKey && directory.GetBuildingSummary(buildingKey,out summary) &&
+                summary.BuildingType==DFLocation.BuildingTypes.Bank;
         }
 
         private static void SetTimeOfDay(double seconds)

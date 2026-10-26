@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FullSerializer - Unity"><HintPath>../../../Player/DaggerfallUnity_Data/Managed/FullSerializer - Unity.dll</HintPath></Reference>
+    <Compile Include="../../src/PeopleOfTheIliacBay.Core/*.cs" Link="Core/%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

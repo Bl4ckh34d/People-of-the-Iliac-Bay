@@ -52,7 +52,7 @@ namespace PeopleOfTheIliacBay.Core
                 else patrol.FollowerDetached=true;
             }
             guard=Find(id); guard.Refuge=plan; guard.Duty=GuardDuty.Refuge;
-            guard.IncidentId=null; guard.Route.Clear(); guard.ReturnPath=null; guard.ReturnRate=0;
+            guard.IncidentId=null; guard.DoorPursuit=null; guard.Route.Clear(); guard.ReturnPath=null; guard.ReturnRate=0;
             guard.ResponseOrigin=null; guard.EngagementPosition=null; guard.LastSeenSuspect=null;
         }
         private static SavedRoutePoint RefugeExteriorPosition(GuardRecord guard,double now)

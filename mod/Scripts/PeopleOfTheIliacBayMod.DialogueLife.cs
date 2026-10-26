@@ -128,6 +128,9 @@ namespace PeopleOfTheIliacBay.DFU
                     " for "+(medical.EffectKey==DaggerfallWorkshop.Game.MagicAndEffects.MagicEffects.CurePoison.EffectKey?"poisoning":"disease")+
                     ". Your ordinary visits are interrupted. You have not yet completed treatment.";
             }
+            string refuge;
+            if(resident!=null && streets && streets.TryGuardRefugeContext(resident.Id,ConversationBuildingName,out refuge))
+            {activity="sheltering";plan=refuge;}
             string actionAwareness=resident!=null && streets && streets.Ready?
                 streets.ActionAwarenessContext(resident.Id,now,ConversationBuildingName):string.Empty;
             string sharedActivityContext=CurrentConversationSharedActivityContext(now);

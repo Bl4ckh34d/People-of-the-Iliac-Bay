@@ -81,6 +81,9 @@ namespace PeopleOfTheIliacBay.DFU
                 throw new InvalidOperationException("Native repair collection became available before the native repair duration completed.");
 
             ulong dueAt = live.RepairData.GetTimeDone();
+            VerifyDetachedRestore(store, residentId, itemUid, fixture.DamagedCondition, walletBefore - fixture.Price, dueAt, true);
+            if (NativeNpcRepairContext.Describe(live) == null)
+                throw new InvalidOperationException("Pending native repair lost its inventory custody context.");
             double now = Now();
             if (dueAt <= now) throw new InvalidOperationException("Native repair duration was not future-dated after drop-off.");
             DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(dueAt - now + 1));
@@ -109,9 +112,30 @@ namespace PeopleOfTheIliacBay.DFU
                 live.RepairData.IsBeingRepaired() || live.currentCondition != live.maxCondition ||
                 store.ReadNpcInventory(residentId).WalletGold != walletAfterDropoff)
                 throw new InvalidOperationException("Native repair collection did not restore the exact owned item only after completion or charged twice.");
+            VerifyDetachedRestore(store, residentId, itemUid, live.maxCondition, walletAfterDropoff, 0, false);
+            if (NativeNpcRepairContext.Describe(live) != null)
+                throw new InvalidOperationException("Collected native repair still reports unavailable custody.");
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NATIVE_REPAIR_PASS: resident=" + residentId + "; keeper=" + dropped.Target.PersonId +
                 "; itemUid=" + itemUid + "; price=" + fixture.Price + "; duration=" + fixture.Duration +
-                "; onePayment=true; pendingCondition=true; collectedCondition=full; sameKeeper=true.");
+                "; onePayment=true; pendingCondition=true; collectedCondition=full; sameKeeper=true; detachedNativeRestore=true.");
+        }
+
+        // Exercise the real native payload decoder on a detached save branch.
+        // This does not replace the live game or claim a full SaveLoadManager reload.
+        private static void VerifyDetachedRestore(WorldStateStore source, string residentId, ulong uid,
+            int condition, int wallet, ulong dueAt, bool pending)
+        {
+            var restored = new WorldStateStore(1);
+            restored.Restore(source.Snapshot());
+            NativeNpcInventoryBinding binding;
+            string reason;
+            if (!NativeNpcInventoryBridge.TryOpen(restored, residentId, null, 0, out binding, out reason))
+                throw new InvalidOperationException("Native repair inventory restore failed: " + reason);
+            var item = binding.Items.GetItem(uid);
+            if (item == null || item.UID != uid || item.stackCount != 1 || item.currentCondition != condition ||
+                restored.ReadNpcInventory(residentId).WalletGold != wallet || item.RepairData.IsBeingRepaired() != pending ||
+                pending && (item.RepairData.GetTimeDone() != dueAt || !item.RepairData.IsBeingRepairedHere()))
+                throw new InvalidOperationException("Native repair restore changed its exact item, condition, wallet, due time or shop.");
         }
 
         private static Fixture FindFixture(StreetPopulation streets, WorldStateStore store)

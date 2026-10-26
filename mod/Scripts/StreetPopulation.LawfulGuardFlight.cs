@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
+using DaggerfallWorkshop;
 using DaggerfallWorkshop.Game;
 using DaggerfallWorkshop.Game.Entity;
+using DaggerfallWorkshop.Utility;
 using PeopleOfTheIliacBay.Core;
 using UnityEngine;
 
 namespace PeopleOfTheIliacBay.DFU
 {
-    // Transient physical response to an observed lawful guard hit. It owns no
-    // crime, alarm, threat, custody, persistence or combat state.
+    // Physical response to an observed lawful guard hit. A real refuge arrival
+    // uses the existing defense ledger; it creates no crime against the guard.
     public sealed partial class StreetPopulation
     {
         private sealed class LawfulGuardFlight
@@ -52,14 +54,74 @@ namespace PeopleOfTheIliacBay.DFU
 
         private AlarmPerson ActiveLawfulGuardFlight(string residentId)
         {
+            var sheltered=worldStore==null || population==null ? null :
+                worldStore.ResidentDefenseShelter(residentId,population.SettlementId);
+            if(sheltered!=null)
+            {
+                double now=DaggerfallWorkshop.DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
+                // Do not visibly replace a sheltered body with its schedule.
+                // Offscreen release uses the ordinary existing routine projection.
+                if(now>=sheltered.Until && (!interior || sheltered.Reaction.BuildingKey!=interior.EntryDoor.buildingKey))
+                {worldStore.ReleaseDefenseShelter(residentId,now);lawfulGuardFlights.Remove(residentId);return null;}
+                if(!sheltered.LandingObserved && interior && sheltered.Reaction.BuildingKey==interior.EntryDoor.buildingKey &&
+                    BuildingActionDoorId(interior.EntryDoor)==sheltered.DoorId && indoorGeometry!=null && indoorGeometry.EntryGround.HasValue)
+                {
+                    var point=interior.transform.InverseTransformPoint(indoorGeometry.EntryGround.Value);
+                    worldStore.ObserveDefenseShelterLanding(residentId,population.SettlementId,interior.EntryDoor.buildingKey,
+                        BuildingActionDoorId(interior.EntryDoor),point.x,point.y,point.z,now);
+                }
+                return sheltered.Reaction;
+            }
             ResidentActor actor=FindActor(residentId);Vector3 ignored;
             return actor && TryLawfulGuardFlightDanger(actor,out ignored) ? lawfulGuardFlights[residentId].Reaction : null;
+        }
+
+        private void RememberLawfulGuardShelterEntry(ResidentActor actor,StaticDoor door,double now)
+        {
+            LawfulGuardFlight flight;
+            if(!lawfulGuardFlights.TryGetValue(actor.Resident.Id,out flight))return;
+            worldStore.RecordDefenseShelter(actor.Resident.Id,population.SettlementId,BuildingActionDoorId(door),flight.Reaction,now);
+        }
+
+        private bool HasUnmappedDefenseShelter(string residentId)
+        {
+            var shelter=worldStore.ResidentDefenseShelter(residentId,population.SettlementId);
+            return shelter!=null && !shelter.LandingObserved;
+        }
+
+        private bool HoldLawfulGuardShelter(ResidentActor actor,AlarmPerson reaction,bool hasKnownDanger)
+        {
+            if(!interior || !actor || hasKnownDanger)return false;
+            var shelter=worldStore.ResidentDefenseShelter(actor.Resident.Id,population.SettlementId);
+            if(shelter==null || !shelter.LandingObserved || !ReferenceEquals(shelter.Reaction,reaction) ||
+                reaction.BuildingKey!=interior.EntryDoor.buildingKey)return false;
+            var ground=interior.transform.TransformPoint(new Vector3((float)reaction.X,(float)reaction.Y,(float)reaction.Z));
+            actor.Place(ground,actor.transform.forward,true);
+            return true;
+        }
+
+        public bool TryGuardRefugeContext(string residentId,Func<int,string> buildingName,out string context)
+        {
+            context=null;
+            if(!Ready || !interior || buildingName==null)return false;
+            var actor=FindActor(residentId);
+            var shelter=worldStore.ResidentDefenseShelter(residentId,population.SettlementId);
+            if(!actor || !actor.gameObject.activeInHierarchy || actor.transform.parent!=interior.transform || shelter==null)return false;
+            Vector3 ignored;var guards=GetComponent<GuardPopulation>();
+            context=shelter.ActivityContext(interior.EntryDoor.buildingKey,buildingName(interior.EntryDoor.buildingKey),
+                guards && guards.TryVisibleResidentPursuer(actor,out ignored));
+            return context!=null;
         }
 
         private bool TryLawfulGuardFlightDanger(ResidentActor actor,out Vector3 danger)
         {
             danger=Vector3.zero;
             if(!actor || actor.Resident==null)return false;
+            if(worldStore.ResidentDefenseShelter(actor.Resident.Id,population.SettlementId)!=null)
+            {
+                var guards=GetComponent<GuardPopulation>();
+                return guards && guards.TryVisibleResidentPursuer(actor,out danger);
+            }
             LawfulGuardFlight flight;
             if(!lawfulGuardFlights.TryGetValue(actor.Resident.Id,out flight))return false;
             var guard=flight.Guard;var body=actor.GetComponent<DaggerfallEntityBehaviour>();

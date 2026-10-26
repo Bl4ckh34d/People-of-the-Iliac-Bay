@@ -14,9 +14,8 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
-        // Native ItemRepairData owns completion timing and save payload. This
-        // adapter only drops off one exact NPC-owned item; pickup stays native
-        // and deliberately requires a later explicit workflow.
+        // Native ItemRepairData owns completion timing, shop identity and save
+        // payload. Drop-off and later explicit collection keep the same NPC UID.
         private bool IsNativeRepairTarget(NpcActionTarget target)
         {
             return target != null && target.Kind == NpcActionTargetKind.IndoorPoint &&
@@ -88,7 +87,7 @@ namespace PeopleOfTheIliacBay.DFU
 
         private static bool CollectableNativeRepairItem(DaggerfallUnityItem item)
         {
-            return item != null && item.UID != 0 && item.RepairData.IsBeingRepaired() &&
+            return item != null && item.UID != 0 && item.stackCount == 1 && item.RepairData.IsBeingRepaired() &&
                 item.RepairData.IsRepairFinished() && item.RepairData.IsBeingRepairedHere();
         }
 

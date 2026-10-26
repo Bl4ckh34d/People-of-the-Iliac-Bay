@@ -35,6 +35,7 @@ namespace PeopleOfTheIliacBay.Core
         public double FirstProvokedAt = -1, FirstPlayerHitAt = -1, LastPlayerHitAt = -1;
         public List<DefenseWitness> Witnesses = new List<DefenseWitness>();
         public DefenseDeath Death;
+        public DefenseShelter Shelter;
     }
     public sealed class WelfareResult
     {
@@ -100,7 +101,7 @@ namespace PeopleOfTheIliacBay.Core
             d.PotionOffered=d.WelfareEligible && DefensePotion(state.WorldSeed,c.Id,potionPercent);
             foreach(var w in c.Witnesses)
                 if(w.Guard && RecentDefenseWitness(c,d,w) && DefenseObserver(state,c.SettlementId,w.ObserverId,true,true)) d.InformedGuards.Add(w.ObserverId);
-            c.Death=d; return c;
+            c.Death=d;c.Shelter=null; return c;
         }
         public void BindDefenseCorpse(string id,string corpseId)
         {

@@ -364,3 +364,22 @@ fixture explicitly if no clear anchor exists. It changes neither player collisio
 nor NPC navigation. RuntimeCompile passes. The run reuses run 12's deployed
 production source with only this fixture file refreshed; concurrent agent changes
 are deliberately excluded from this causal repeat. Complete outing still pending.
+
+`13-clear-observer` selects the original household 328712 / Inn 131841 again.
+Both bodies walk 299.689/302.790 m to the Inn (maximum step 0.500 m). The new
+observer anchor is `(284.1753, 319.684479, 403.550659)`, clear of both visit routes.
+All three chair checks, both purchases for 4 g total, stable seating and five
+receipt-memory perspectives now pass in this layout too. The subsequent physical
+departure does not finish within 120 seconds after skipping the seated dwell.
+No full exit/return acceptance is claimed. Unlike the earlier obstruction, there
+is no post-seating room-route stall diagnostic identifying the player as blocker.
+
+`14-departure` uses the installed 15:27 source and selects this same naturally
+planned household via `POTIB_EDITOR_FAMILY_HOME_KEY=328712`. This optional fixture
+input filters existing plans; it creates no family or synthetic trip. Diagnostics
+now report both bodies, selected chair/approach, visit phase, movement failure,
+clock and pause state during departure, not only before seating. This run failed
+before the trip: that household had no admitted natural outing in this fresh
+fixture. Another household (327940) had a prepared plan. This result does not
+diagnose the original Inn departure. A subsequent run must use a currently
+eligible natural family rather than fabricate the requested household's trip.

@@ -21,6 +21,10 @@ namespace PeopleOfTheIliacBay.Core
                     job.Admission.Kind == NpcOperationAdmissionKind.TaskStep)
                 return false;
 
+            if(job.Phase==NpcActionPhase.Completed && job.Kind==NpcActionKind.Transfer &&
+                job.ItemTransferReceipt!=null && job.Target.TransferDirection==NpcActionTransferDirection.NpcToCounterparty)
+                return TryRememberNpcItemDelivery(job,date,place);
+
             string outcome;
             if (job.Phase == NpcActionPhase.Completed)
             {

@@ -101,9 +101,14 @@ namespace PeopleOfTheIliacBay.DFU
             if(job.Kind==NpcActionKind.Exit)target=indoorGeometry.EntryGround.Value;
             else
             {
-                TownGeometry.Entrance entrance;
-                if(!geometry.Entrances.TryGetValue(job.Target.BuildingKey,out entrance))return false;
-                target=geometry.ScenePoint(new RoutePoint(entrance.LocalDoor.x,entrance.LocalDoor.z));
+                // The building's default entrance can change after this action
+                // was accepted. Resolve the same physical door as the receipt.
+                StaticDoor door;
+                if(geometry==null || !ReadBuildingActionDoor(job.Target.BuildingKey,job.Target.DoorId,out door))return false;
+                var ground=FollowExteriorDoorGround(door);
+                var local=directory.transform.InverseTransformPoint(ground);
+                target=geometry.ScenePoint(new RoutePoint(local.x,local.z));
+                if(Vector3.Distance(ground,target)>0.4f)return false;
             }
             reason=null;return true;
         }
@@ -121,6 +126,12 @@ namespace PeopleOfTheIliacBay.DFU
             // Keep the observed source position until the destination scene supplies its real landing.
             // The existing typed receipt records which side of this exact door now owns the NPC.
             if(!worldStore.SaveNpcActionPosition(job.Id,job.Revision,ActionPosition(actor.transform.position-Vector3.up),true,now))return false;
+            StaticDoor actualDoor;
+            if(job.Kind==NpcActionKind.Enter && ReadBuildingActionDoor(job.Target.BuildingKey,job.Target.DoorId,out actualDoor))
+            {
+                var guards=GetComponent<GuardPopulation>();
+                if(guards)guards.ObserveResidentBuildingEntry(actor,actualDoor,now);
+            }
             string id=job.ResidentId;actor.gameObject.SetActive(false);Destroy(actor.gameObject);actors.Remove(id);actor=null;
             actionMotions.Remove(id);RemovePhysicalShopVisit(id);worldStore.RemoveObservedVisit(id);
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BUILDING_ACTION_CROSSED: action="+job.Id+"; kind="+job.Kind+"; door="+receipt.DoorId);

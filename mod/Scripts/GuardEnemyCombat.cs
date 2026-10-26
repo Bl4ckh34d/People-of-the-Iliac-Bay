@@ -80,6 +80,7 @@ namespace PeopleOfTheIliacBay.DFU
             if (guard.Duty != GuardDuty.Engaged) return;
             var local = transform.parent.InverseTransformPoint(transform.position);
             bool sees = DefenseTarget && DefenseTarget.Entity.CurrentHealth > 0 && !DefenseTarget.Entity.IsInvisible &&
+                (guard.DoorPursuit==null || GuardPopulation.SeesDoorTarget(this,DefenseTarget)) &&
                 CivilianResponses.Sees(transform.position,DefenseTarget.transform.position,20);
             var seen = sees ? transform.parent.InverseTransformPoint(DefenseTarget.transform.position) : Vector3.zero;
             if (IsInterior)

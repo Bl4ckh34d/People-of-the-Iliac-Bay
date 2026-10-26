@@ -6,23 +6,28 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Current local bundle **D155EC1EE9F9** is installed (26 October, 13:45), with matching
-distribution/Player hashes, Unity package verification and **2144/2144** Core
-checks. It adds receipt-based Inn memories, all eligible temple-training skill
-offers, restored NPC spell-cost ownership, simple one-day companion pay and a
-bounded dungeon-jump adapter. The pair doorway collision fix passes native
-exterior approaches. A fresh family outing reaches and reconstructs the Inn but
-fails its second physical checkpoint before payment; that defect remains open.
-Native acceptance of the five new slices, climbing, dungeon Follow and the
-moving throne platform also remain open. See the [current checklist](docs/WORKLIST-2026-10-26.md)
-and [verification boundaries](docs/TESTING.md).
+Current local bundle **509FB25B9EEA** is installed (26 October, 15:51), with matching
+distribution/Player hashes, Unity package verification and **2147/2147** Core
+checks. It includes exact Inn chair identity, payment at instantaneous counter
+arrival, exact-door Enter targets and individually witnessed guard door pursuit.
+Private resident refuge state stays separate from guard knowledge. Focused
+regressions pass; full native pursuit acceptance remains open.
 
-Newer source, not yet installed: restored chair destinations resolve their exact
-seat identity, and actual counter arrivals can pay even with zero remaining dwell.
-Core **2147/2147** passes. Native tests confirm both purchases in two Inn layouts;
-one layout also passes stable seating and receipt memories. Full homeward acceptance
-is still running after removing two fixture interferences: a quest popup and the
-observer standing in a chair aisle. See the [family Inn audit](docs/audits/2026-10-26-family-cash-visit.md).
+Native family tests confirm both purchases, stable seating and receipt memories
+in two Inn layouts. The original Inn still fails physical departure after the
+seated time skip; full homeward acceptance remains open. The native Bank Enter→Wait
+test exposed two fixture defects: its observer blocked the NPC, then its time
+budget expired during a long walk. The next run proves task dispatch silently
+replaces the longer requested budget with five minutes. That production timing
+gap remains under repair. These are not completed roadmap items. See the
+[current checklist](docs/WORKLIST-2026-10-26.md), [family Inn audit](docs/audits/2026-10-26-family-cash-visit.md)
+and [verification boundaries](docs/TESTING.md). Earlier companion, training and
+dungeon slices remain included; their stated native acceptance limits still apply.
+
+Source changes awaiting the next package add repair custody to inventory context,
+prevent repair-held wearables being equipped after restoration, and record named
+NPC-to-NPC handoffs in both participants' memories. Focused regressions pass;
+their native movement, dialogue and game-reload acceptance remain open.
 
 Earlier test bundle **7EC048CD49C7** was installed (26 October, 12:21); Unity package integration and **2131/2131** core checks pass. It includes the street-plan expansion, controlled solitary-shop wait release, and the source implementation of planned family Inn funding. Native linked routes now admit planned family outings. A peaceful native fixture passes morning bank service, one payout, physical home return and subsequent paired departure; final Inn arrival/payment remains open. The earlier empty-wallet bank repair and verified return to the home door remain included. The separate player-violence observer now uses actual body facing: seeing the victim alone does not identify a player behind the observer, and hearing alone does not establish an eyewitness. Eighteen mobile/static native boundary cases pass; actual combat swings, deaths and physical interior encounters remain separate acceptance work. See the [player-violence audit](docs/audits/2026-10-26-player-attack-perception.md). Earlier [non-player attack knowledge](docs/audits/2026-10-26-enemy-attack-knowledge.md), [free-text report delivery](docs/audits/2026-10-26-murder-report-dialogue.md), arrival-hold, housing-cache, trade and urgent-movement repairs remain included. Other dialogue cases, spontaneous encounters, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
 

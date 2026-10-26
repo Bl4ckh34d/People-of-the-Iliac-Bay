@@ -45,11 +45,13 @@ namespace PeopleOfTheIliacBay.Core
         public NpcBuildingTransitionReceipt BuildingTransitionReceipt;
     }
 
-    /// <summary>Validated native ownership evidence for one completed player-to-NPC item transfer.</summary>
+    /// <summary>Validated native ownership evidence for one completed transfer into an NPC's inventory.</summary>
     [Serializable]
     public sealed class NpcActionTransferReceipt
     {
         public string TransactionId, RecipientId, CounterpartyId;
+        // Captured from the actual native item at handoff; independent of later inventory ownership.
+        public string NativeItemName;
         public ulong SourceItemUid, MovedItemUid, RetainedDestinationItemUid;
         public int Quantity;
         public double ObservedGameTime;
@@ -61,14 +63,37 @@ namespace PeopleOfTheIliacBay.Core
         public static NpcActionTransferReceipt CreatePlayerToNpc(NpcActionJob job, string transactionId,
             ulong sourceItemUid, ulong movedItemUid, ulong retainedDestinationItemUid, int quantity,
             string recipientId, string counterpartyId, double observedGameTime,
-            NpcExperienceNativeValuationStatus nativeValuationStatus, long nativeGoldValue)
+            NpcExperienceNativeValuationStatus nativeValuationStatus, long nativeGoldValue, string nativeItemName=null)
+        {
+            if(job==null || job.Target==null || job.Target.TransferDirection!=NpcActionTransferDirection.PlayerToNpc)
+                throw new ArgumentException("Invalid player-to-NPC item transfer receipt.");
+            return Create(job,transactionId,sourceItemUid,movedItemUid,retainedDestinationItemUid,quantity,
+                recipientId,counterpartyId,observedGameTime,nativeValuationStatus,nativeGoldValue,nativeItemName);
+        }
+
+        public static NpcActionTransferReceipt CreateNpcToNpc(NpcActionJob job, string transactionId,
+            ulong sourceItemUid, ulong movedItemUid, ulong retainedDestinationItemUid, int quantity,
+            string recipientId, string counterpartyId, double observedGameTime,
+            NpcExperienceNativeValuationStatus nativeValuationStatus, long nativeGoldValue, string nativeItemName)
+        {
+            if(job==null || job.Target==null || job.Target.TransferDirection!=NpcActionTransferDirection.NpcToCounterparty)
+                throw new ArgumentException("Invalid NPC-to-NPC item transfer receipt.");
+            return Create(job,transactionId,sourceItemUid,movedItemUid,retainedDestinationItemUid,quantity,
+                recipientId,counterpartyId,observedGameTime,nativeValuationStatus,nativeGoldValue,nativeItemName);
+        }
+
+        private static NpcActionTransferReceipt Create(NpcActionJob job, string transactionId,
+            ulong sourceItemUid, ulong movedItemUid, ulong retainedDestinationItemUid, int quantity,
+            string recipientId, string counterpartyId, double observedGameTime,
+            NpcExperienceNativeValuationStatus nativeValuationStatus, long nativeGoldValue, string nativeItemName)
         {
             Validate(job, transactionId, sourceItemUid, movedItemUid, retainedDestinationItemUid,
                 quantity, recipientId, counterpartyId, observedGameTime, nativeValuationStatus, nativeGoldValue,
-                beforeCommit: true);
+                nativeItemName, beforeCommit: true);
             return new NpcActionTransferReceipt
             {
                 TransactionId = transactionId,
+                NativeItemName = nativeItemName,
                 SourceItemUid = sourceItemUid,
                 MovedItemUid = movedItemUid,
                 RetainedDestinationItemUid = retainedDestinationItemUid,
@@ -87,7 +112,7 @@ namespace PeopleOfTheIliacBay.Core
             Validate(job, source.TransactionId, source.SourceItemUid, source.MovedItemUid,
                 source.RetainedDestinationItemUid, source.Quantity, source.RecipientId,
                 source.CounterpartyId, source.ObservedGameTime, source.NativeValuationStatus,
-                source.NativeGoldValue, beforeCommit: false);
+                source.NativeGoldValue, source.NativeItemName, beforeCommit: false);
             return CopyFields(source);
         }
 
@@ -97,6 +122,7 @@ namespace PeopleOfTheIliacBay.Core
             return new NpcActionTransferReceipt
             {
                 TransactionId = source.TransactionId,
+                NativeItemName = source.NativeItemName,
                 SourceItemUid = source.SourceItemUid,
                 MovedItemUid = source.MovedItemUid,
                 RetainedDestinationItemUid = source.RetainedDestinationItemUid,
@@ -115,6 +141,7 @@ namespace PeopleOfTheIliacBay.Core
                 string.Equals(first.TransactionId, second.TransactionId, StringComparison.Ordinal) &&
                 string.Equals(first.RecipientId, second.RecipientId, StringComparison.Ordinal) &&
                 string.Equals(first.CounterpartyId, second.CounterpartyId, StringComparison.Ordinal) &&
+                string.Equals(first.NativeItemName, second.NativeItemName, StringComparison.Ordinal) &&
                 first.SourceItemUid == second.SourceItemUid && first.MovedItemUid == second.MovedItemUid &&
                 first.RetainedDestinationItemUid == second.RetainedDestinationItemUid && first.Quantity == second.Quantity &&
                 BitConverter.DoubleToInt64Bits(first.ObservedGameTime) == BitConverter.DoubleToInt64Bits(second.ObservedGameTime) &&
@@ -133,18 +160,27 @@ namespace PeopleOfTheIliacBay.Core
         private static void Validate(NpcActionJob job, string transactionId, ulong sourceItemUid,
             ulong movedItemUid, ulong retainedDestinationItemUid, int quantity, string recipientId,
             string counterpartyId, double observedGameTime,
-            NpcExperienceNativeValuationStatus nativeValuationStatus, long nativeGoldValue, bool beforeCommit)
+            NpcExperienceNativeValuationStatus nativeValuationStatus, long nativeGoldValue, string nativeItemName, bool beforeCommit)
         {
             ulong requestedUid;
+            bool playerToNpc=job!=null && job.Target!=null &&
+                job.Target.TransferDirection==NpcActionTransferDirection.PlayerToNpc && job.Target.PersonId=="player" &&
+                recipientId==job.ResidentId && counterpartyId=="player";
+            bool npcToNpc=job!=null && job.Target!=null &&
+                job.Target.TransferDirection==NpcActionTransferDirection.NpcToCounterparty &&
+                recipientId==job.Target.PersonId && counterpartyId==job.ResidentId &&
+                recipientId!="player" && counterpartyId!="player" && recipientId!=counterpartyId;
             if (job == null || job.Kind != NpcActionKind.Transfer || job.Target == null ||
                 beforeCommit && job.Phase != NpcActionPhase.Executing ||
                 !beforeCommit && job.Phase != NpcActionPhase.Completed ||
-                job.Target.TransferDirection != NpcActionTransferDirection.PlayerToNpc ||
-                job.Target.Kind != NpcActionTargetKind.Person || job.Target.PersonId != "player" ||
+                !playerToNpc && !npcToNpc || job.Target.Kind != NpcActionTargetKind.Person ||
                 !ulong.TryParse(job.Target.ItemId, NumberStyles.None, CultureInfo.InvariantCulture, out requestedUid) ||
                 requestedUid != sourceItemUid || sourceItemUid == 0 || movedItemUid == 0 || retainedDestinationItemUid == 0 ||
                 string.IsNullOrWhiteSpace(job.Id) || transactionId != job.Id + ":transfer" ||
-                string.IsNullOrWhiteSpace(recipientId) || recipientId != job.ResidentId || counterpartyId != "player" ||
+                string.IsNullOrWhiteSpace(recipientId) || string.IsNullOrWhiteSpace(counterpartyId) ||
+                npcToNpc && string.IsNullOrWhiteSpace(nativeItemName) ||
+                nativeItemName!=null && (string.IsNullOrWhiteSpace(nativeItemName) || nativeItemName.Length>240 ||
+                    nativeItemName!=nativeItemName.Trim() || HasItemNameControlCharacter(nativeItemName)) ||
                 quantity < 1 || quantity > 1000000 || quantity != job.Target.Quantity ||
                 double.IsNaN(observedGameTime) || double.IsInfinity(observedGameTime) ||
                 observedGameTime < job.AcceptedAt || observedGameTime >= job.DeadlineAt ||
@@ -154,7 +190,13 @@ namespace PeopleOfTheIliacBay.Core
                  nativeValuationStatus != NpcExperienceNativeValuationStatus.Known) || nativeGoldValue < 0 ||
                 nativeGoldValue > 1000000000000L ||
                 nativeValuationStatus == NpcExperienceNativeValuationStatus.Unknown && nativeGoldValue != 0)
-                throw new ArgumentException("Invalid player-to-NPC item transfer receipt.");
+                throw new ArgumentException("Invalid received item transfer receipt.");
+        }
+
+        private static bool HasItemNameControlCharacter(string value)
+        {
+            foreach(char character in value)if(char.IsControl(character))return true;
+            return false;
         }
     }
 
@@ -622,7 +664,7 @@ namespace PeopleOfTheIliacBay.Core
 
         private int itemTransferReceiptDrainCursor;
 
-        /// <summary>Projects at most 32 durable player-to-NPC transfer receipts into the optional appraisal inbox.</summary>
+        /// <summary>Projects at most 32 durable incoming NPC transfer receipts into the optional appraisal inbox.</summary>
         public int DrainNpcItemTransferReceipts(int maxAttempts)
         {
             if (maxAttempts < 1 || maxAttempts > 32) throw new ArgumentOutOfRangeException(nameof(maxAttempts));

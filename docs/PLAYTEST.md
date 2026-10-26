@@ -1,18 +1,21 @@
 # Spieltest — 26. Oktober 2026
 
-Aktuell installiert: **`D155EC1EE9F9`**, 13:45; Distribution und Player identisch.
-Unity-Paketprüfung und **2144 Core-Tests** bestehen. Neu enthalten: Erinnerungen
-an bezahlten Inn-Service, sämtliche angebotenen Tempel-Skills, NPC-eigene
-Zauberkosten nach Wiederherstellung, tageweise Begleiterbezahlung und ein
-begrenzter Dungeon-Sprungadapter. Diese neuen Abläufe sind noch nativ abzunehmen.
+Aktuell installiert: **`509FB25B9EEA`**, 15:51; Distribution und Player identisch.
+Unity-Paketprüfung und **2147 Core-Tests** bestehen. Neu enthalten: korrigierte
+Stuhlidentität und Tresenzahlung im Inn, genaue Türbindung bei Enter sowie
+Wachverfolgung durch individuell beobachtete Türen. Die Wachverfolgung ist noch
+nativ abzunehmen. Frühere Begleiter-, Tempel- und Dungeon-Ergänzungen bleiben enthalten.
 120 g buchen einen begonnenen 24-Stunden-Tag; frühe Kündigung erstattet keinen
 Teil des Tages, gescheiterte Aufnahme erstattet vollständig, keine automatische
 Verlängerung. Die native Prüfung dieser Konditionen steht noch aus.
 
-Der Familien-Türstau ist auf den geprüften Außenwegen behoben. Der frische
-Kompletttest erreicht den Inn-Innenraum, bleibt dort jedoch beim zweiten
-gesicherten Laufweg hängen. Bezahlung, Sitzen und Rückweg sind deshalb noch nicht
-abgenommen. Dungeon-Follow, Klettern und Thronplattform bleiben ebenfalls offen.
+Familien erreichen in zwei geprüften Inns ihre Plätze, zahlen und sitzen stabil;
+ihre tatsächlichen Käufe erscheinen korrekt in Erinnerungen. Im ursprünglichen
+Inn klappt der anschließende Ausgang noch nicht; vollständige Heimkehr bleibt offen.
+Der Bank-Enter→Wait-Test bindet die richtige Tür. Blockierende Testposition und
+zu kurzes Testbudget sind korrigiert. Der Folgelauf zeigt aber, dass die
+Aufgabensteuerung das längere Budget verwirft; dieser Fehler ist noch in Arbeit.
+Dungeon-Follow, Klettern und Thronplattform bleiben ebenfalls offen.
 Details und weitere offene Punkte: [Arbeitsliste](WORKLIST-2026-10-26.md).
 
 Vorheriger Zwischenbuild `7EC048CD49C7`, um 12:21 installiert; Distribution und Player identisch. Unity-Paketprüfung und 2131 Core-Tests bestehen. Korrigierte native Paarwege erlauben gemeinsame Familienausflüge. Der isolierte friedliche Test besteht morgendlichen Bankservice, einmalige Auszahlung, echte Heimkehr und anschließenden gemeinsamen Aufbruch. Vollständige Inn-Ankunft/Bezahlung und allgemeine Straßendichte bleiben offen. Details: [Familien-Banktest](audits/2026-10-26-family-cash-visit.md). Der folgende 11:05-Stand ist damit ersetzt.

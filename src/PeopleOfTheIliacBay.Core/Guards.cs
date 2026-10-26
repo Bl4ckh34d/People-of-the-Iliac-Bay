@@ -28,6 +28,7 @@ namespace PeopleOfTheIliacBay.Core
         public List<SavedRoutePoint> ReturnPath;
         public double ReturnRate;
         public GuardInteriorState Interior;
+        public GuardDoorPursuit DoorPursuit;
         public GuardRefugeJourney Refuge;
         public GuardPostRecall PostRecall;
         public double HealthFraction = 1;
@@ -285,7 +286,7 @@ namespace PeopleOfTheIliacBay.Core
                 {
                     guard.Duty = GuardDuty.Searching;
                     var report = Reports.Find(r => r.Id == guard.IncidentId);
-                    if (report != null && report.OccupiesScene)
+                    if (report != null && report.OccupiesScene && guard.DoorPursuit==null)
                     {
                         report.Arrivals.Find(a => a.GuardId == guard.Id).Arrived = true;
                         if (!report.HasArrival || guard.ArrivesAt < report.FirstArrivalAt)
@@ -294,12 +295,13 @@ namespace PeopleOfTheIliacBay.Core
                 }
                 if (guard.Duty == GuardDuty.Searching && now >= guard.SearchUntil)
                 {
-                    var departureReturn=DepartureSearchReturn(guard,guard.SearchUntil);
+                    var departureReturn=guard.DoorPursuit==null ? DepartureSearchReturn(guard,guard.SearchUntil) : null;
                     if(departureReturn!=null)guard.ReturnPath=departureReturn;
                     BeginReturn(guard, guard.SearchUntil);
                 }
                 if (guard.Duty == GuardDuty.Returning && now >= guard.ArrivesAt)
                 { guard.Duty = GuardDuty.Posted; guard.Route.Clear(); guard.IncidentId = null;
+                    guard.DoorPursuit=null;
                     guard.ResponseOrigin = null; guard.ReturnPath = null; guard.ReturnRate = 0; }
                 AdvancePostRecall(guard,now);
                 if (guard.DayRestUntil > 0 && now >= guard.DayRestUntil && guard.Refuge == null)
@@ -317,6 +319,7 @@ namespace PeopleOfTheIliacBay.Core
             if (!guard.IsAlive) return CopyPoint(guard.DeathPosition);
             if (guard.Refuge != null) return RefugeExteriorPosition(guard, now);
             if (guard.Duty == GuardDuty.Engaged) return CopyPoint(guard.EngagementPosition);
+            if (guard.Duty==GuardDuty.Searching && guard.DoorPursuit!=null) return CopyPoint(guard.Route[guard.Route.Count-1]);
             if (guard.Route.Count < 2 || guard.Duty == GuardDuty.Posted) return PostedPosition(guard, now);
             if (guard.Duty == GuardDuty.Searching) return SearchPosition(Reports.Find(r => r.Id == guard.IncidentId), guard, now);
             double duration = guard.ArrivesAt - guard.DepartedAt;
@@ -363,6 +366,7 @@ namespace PeopleOfTheIliacBay.Core
             Require(Time(arrival+3600+Length(back)*rate),"Defense redirection time overflow.");
             guard.Route=path;guard.ResponseOrigin=CopyPoint(path[0]);guard.ReturnPath=back;guard.ReturnRate=rate;
             guard.DepartedAt=now;guard.ArrivesAt=arrival;guard.SearchUntil=arrival+300;
+            guard.DoorPursuit=null;
             guard.EngagementPosition=null;guard.LastSeenSuspect=null;guard.Duty=GuardDuty.Responding;
         }
         public void Engage(string id, double now)
@@ -456,7 +460,8 @@ namespace PeopleOfTheIliacBay.Core
                 Require((guard.Duty == GuardDuty.Engaged) == (guard.EngagementPosition != null), "Invalid engagement position.");
                 Require((guard.Duty == GuardDuty.Engaged) == (guard.LastSeenSuspect != null), "Invalid last-seen position.");
                 Require(guard.Interior == null || source.Reports.Exists(r => r != null && r.Id == guard.IncidentId &&
-                    r.BuildingKey == guard.Interior.BuildingKey), "Indoor guard has no matching building report.");
+                    (r.BuildingKey == guard.Interior.BuildingKey || guard.DoorPursuit!=null &&
+                    guard.DoorPursuit.BuildingKey==guard.Interior.BuildingKey)), "Indoor guard has no matching building report.");
                 Require(guard.Interior==null || guard.Interior.ExteriorPursuit==null ||
                     guard.IsAlive && source.Reports.Exists(r=>r!=null && r.Id==guard.IncidentId && r.ThreatId==null &&
                         r.Entrance!=null && Distance(r.Entrance,CopyPoint(guard.Interior.ExteriorPursuit))<0.05),
@@ -473,7 +478,9 @@ namespace PeopleOfTheIliacBay.Core
                         source.Reports.Exists(r => r != null && r.Id == guard.IncidentId && r.GuardIds != null && r.GuardIds.Contains(guard.Id)), "Invalid responding guard.");
                 double searchUntil = guard.SearchUntil;
                 var assignedReport = source.Reports.Find(r => r != null && r.Id == guard.IncidentId);
-                bool investigation = assignedReport != null && assignedReport.OccupiesScene;
+                Require(guard.DoorPursuit==null || DoorTargetMatches(assignedReport,guard.DoorPursuit.ThreatId),
+                    "Witnessed door target differs from the assigned suspect.");
+                bool investigation = guard.DoorPursuit==null && assignedReport != null && assignedReport.OccupiesScene;
                 double investigationUntil = investigation ? InvestigationDeadline(assignedReport, guard.ArrivesAt) : 0;
                 // The unpublished discovery preview used six hours. Normalize only
                 // that exact occupation floor; preserve active pursuit and history.
@@ -483,7 +490,7 @@ namespace PeopleOfTheIliacBay.Core
                     (searchUntil == guard.ArrivesAt + 21600 || assignedReport.InvestigationUntil == 0))
                     searchUntil = investigationUntil;
                 if (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching)
-                    Require(searchUntil == (investigation ? investigationUntil : guard.ArrivesAt + 300) &&
+                    Require(searchUntil == (guard.DoorPursuit!=null ? guard.DoorPursuit.SearchUntil : investigation ? investigationUntil : guard.ArrivesAt + 300) &&
                         Distance(CopyPoint(guard.ResponseOrigin ?? guard.Post), route[0]) < 0.05 &&
                         (returnPath == null || Distance(returnPath[0], route[route.Count - 1]) < 0.05), "Invalid guard search deadline or route origin.");
                 if (guard.Duty == GuardDuty.Returning)
@@ -504,6 +511,7 @@ namespace PeopleOfTheIliacBay.Core
                     Effects = guard.Effects==null ? null : new GuardEffectSnapshot { Json=guard.Effects.Json,MagicMinute=guard.Effects.MagicMinute },
                     Refuge = refuge, PostRecall=CopyPostRecall(guard.PostRecall),
                     Interior = CopyInterior(guard),
+                    DoorPursuit = CopyDoorPursuit(guard),
                     AppearanceSeed = guard.AppearanceSeed, IsAlive = guard.IsAlive, Post = CopyPoint(guard.Post), Duty = guard.Duty,
                     DeathPosition = guard.DeathPosition == null ? null : CopyPoint(guard.DeathPosition),
                     HealthFraction = guard.HealthFraction,
@@ -602,7 +610,7 @@ namespace PeopleOfTheIliacBay.Core
                     Require(arrival != null && report.OccupiesScene && responders.Contains(arrival.GuardId) &&
                         arrivalIds.Add(arrival.GuardId) && Time(arrival.ScheduledAt), "Invalid responder arrival evidence.");
                     var guard = copy.Find(arrival.GuardId);
-                    if (guard.IncidentId == report.Id && (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching))
+                    if (guard.DoorPursuit==null && guard.IncidentId == report.Id && (guard.Duty == GuardDuty.Responding || guard.Duty == GuardDuty.Searching))
                         Require(arrival.ScheduledAt == guard.ArrivesAt && arrival.Arrived == (guard.Duty == GuardDuty.Searching),
                             "Arrival evidence disagrees with responder travel.");
                     Require(!arrival.Arrived || guard.IsAlive || guard.DiedAt >= arrival.ScheduledAt,
@@ -631,9 +639,10 @@ namespace PeopleOfTheIliacBay.Core
                     foreach (var guard in copy.Guards)
                         if (guard.IsAlive && guard.IncidentId == saved.Id && guard.Duty != GuardDuty.Returning)
                         {
-                            Require(guard.Interior == null || guard.Interior.BuildingKey == saved.BuildingKey,
+                            Require(guard.Interior == null || guard.Interior.BuildingKey ==
+                                (guard.DoorPursuit==null ? saved.BuildingKey : guard.DoorPursuit.BuildingKey),
                                 "Indoor guard occupies another report building.");
-                            Require(Distance(guard.Route[guard.Route.Count - 1], saved.Entrance) < 0.05,
+                            Require(Distance(guard.Route[guard.Route.Count - 1], guard.DoorPursuit==null ? saved.Entrance : guard.DoorPursuit.Entrance) < 0.05,
                                 "Response does not reach its reported destination.");
                         }
                 copy.Reports.Add(saved);

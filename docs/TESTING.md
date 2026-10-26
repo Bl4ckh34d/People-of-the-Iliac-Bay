@@ -1,5 +1,47 @@
 # Testing and verification status
 
+## Current installed checkpoint — 26 October 2026, 15:51
+
+Distribution and Player SHA256 both equal **`509FB25B9EEA89EA35324E40FD0CD7BA404199B4B24A9FEB39F51BBB395447C3`**.
+Unity package/integration verification exits 0. Root reruns pass Core **2147/2147**,
+RuntimeCompile with zero warnings/errors, source policy (1396 C# / 116 Python),
+exact-door resolver six checks plus three task lifecycle scenarios, guard pursuit
+63 Core/serialization assertions and 16 extracted runtime-adapter scenarios.
+These adapter tests do not prove actual Unity collision, animation or pursuit.
+
+- Native family `11-zero-dwell` and `13-clear-observer` confirm two purchases,
+  five-second stable seating and five factual receipt-memory perspectives in
+  different Inns. Run 13 removes the known observer obstruction but fails physical
+  departure after the seated time skip. Full outing/return remains open. Diagnostic
+  run 14 finds no admitted natural outing for the requested household and fails
+  setup, so it provides no new departure evidence.
+- Native Bank `native-bank-enter-wait-02` binds the exact Bank door, then fails
+  with `The walking route remained blocked.` before entry. No Wait acceptance.
+  The first launch was rejected by a stale fixed-length fixture-name validator;
+  its repair passes actual-validator RED/GREEN tests without relaxing ownership.
+- Bank run `03` proves that the fixture's overlapping player blocks the NPC.
+  Run `04` moves the observer aside and walks 257.322 m, then the five-game-minute
+  accepted deadline expires. The current fixture allows fifteen game minutes
+  and eight real minutes of observation; native movement rules are unchanged.
+  Run `05` still fails after 150.5 real seconds: task admission and dispatch
+  discard the requested untimed-step budget and hard-code 300 game seconds.
+  Production timing repair is pending. These probe-only changes are included in the
+  current package; the new repair and NPC-delivery source changes are not yet packaged.
+- [Witnessed-door pursuit](audits/2026-10-26-guard-witnessed-door-pursuit.md) has
+  source and regression evidence only. Full door crossing, combat, reload and
+  Talk-context acceptance remain open. An observed expired refuge holds safely;
+  a new visible refuge-exit journey is not included.
+
+Evidence: `work/roadmap-seven-{core,runtime,build}.log`, `work/guard-door-root-*.log`,
+`work/enter-wait-root-final.log`, `work/town-fixture-owner-{red,green}.log`,
+`work/native-bank-enter-wait-02-player.log` and the [family audit](audits/2026-10-26-family-cash-visit.md).
+
+Latest integrated source verification: `work/roadmap-nine-core.log` **2147/2147**,
+`work/roadmap-nine-runtime.log` zero warnings/errors, delivery **8/8**, existing
+receipt projection **6/6**, repair **6/6**, guard Core **63**, extracted guard
+adapter **16**, exact-door **6 + 3**, and source policy **1402 C# / 116 Python**.
+The new repair/receipt changes are source-verified only, not in the installed bundle.
+
 ## Parallel roadmap checkpoint — 26 October 2026, 13:45
 
 Installed and distribution SHA256 both equal **`D155EC1EE9F9D04AFB2CDBFA1A9A0AE37F34B4AC5E78A39A89510EC3898D50F5`**.

@@ -20,6 +20,8 @@ namespace PeopleOfTheIliacBay.Core
     public sealed partial class GuardRoster
     {
         public void EnterBuilding(string id, int buildingKey, double now, GuardPoint3 entrance)
+        { EnterBuildingCore(id,buildingKey,now,entrance,false); }
+        private void EnterBuildingCore(string id,int buildingKey,double now,GuardPoint3 entrance,bool witnessedDoor)
         {
             var landing = Point3(entrance);
             Require(Time(now), "Invalid entry time.");
@@ -27,7 +29,8 @@ namespace PeopleOfTheIliacBay.Core
             var candidate = preview.Find(id);
             var report = preview.Reports.Find(r => r.Id == candidate.IncidentId);
             Require(candidate.IsAlive && candidate.Duty == GuardDuty.Searching && candidate.Interior == null &&
-                report != null && report.BuildingKey == buildingKey, "Guard has not arrived at this building.");
+                report != null && (candidate.DoorPursuit==null && report.BuildingKey == buildingKey || witnessedDoor && candidate.DoorPursuit!=null &&
+                candidate.DoorPursuit.BuildingKey==buildingKey), "Guard has not arrived at this building.");
             double searchUntil = candidate.SearchUntil;
             Engage(id, now);
             var guard = Find(id);
@@ -52,7 +55,7 @@ namespace PeopleOfTheIliacBay.Core
                 var report = Reports.Find(r => r.Id == guard.IncidentId);
                 double occupation = report != null && report.OccupiesScene ?
                     (report.InvestigationUntil > 0 ? report.InvestigationUntil : guard.ArrivesAt + UnwitnessedScene.OccupationSeconds) : 0;
-                guard.SearchUntil = Math.Max(now + 300, occupation);
+                guard.SearchUntil = guard.DoorPursuit!=null ? now+1800 : Math.Max(now + 300, occupation);
             }
         }
         public GuardPoint3 InteriorPosition(string id, double now)

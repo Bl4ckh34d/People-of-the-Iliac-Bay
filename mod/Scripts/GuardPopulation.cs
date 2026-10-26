@@ -742,6 +742,8 @@ namespace PeopleOfTheIliacBay.DFU
                 if (actor.GetComponent<EnemyMotor>().IsHostile && (actor.DefenseTarget ||
                     guard.Duty != GuardDuty.Engaged && actor.GetComponent<EnemySenses>().Target == game.PlayerEntityBehaviour))
                 {
+                    if(guard.DoorPursuit!=null)
+                    {DetachWitnessedDoorForPlayerAssault(guard,actor,now);continue;}
                     if (guard.IncidentId == null)
                     {
                         string assault = "assault:" + guard.Id + ":" + now.ToString("R", System.Globalization.CultureInfo.InvariantCulture);
@@ -755,6 +757,7 @@ namespace PeopleOfTheIliacBay.DFU
                     actor.BeginCombat(now);
                 }
                 if(UpdateNativeCorpseCleanup(guard,actor,now))continue;
+                if(UpdateWitnessedDoorApproach(guard,actor,now))continue;
                 if(UpdateCorpseSuspectSearch(guard,actor,now,routeTick))continue;
                 if (UpdateEnemyDefense(guard,actor,now,routeTick)) continue;
                 if (guard.Duty == GuardDuty.Engaged)
@@ -827,8 +830,9 @@ namespace PeopleOfTheIliacBay.DFU
                     continue;
                 }
                 var report = Roster.Reports.Find(r => r.Id == guard.IncidentId);
+                if(guard.Interior==null && guard.DoorPursuit!=null)TryEnterWitnessedDoor(guard,now);
                 if (guard.Interior == null && guard.Duty == GuardDuty.Searching && entryGround.HasValue &&
-                    report != null && report.BuildingKey == interior.EntryDoor.buildingKey)
+                    guard.DoorPursuit==null && report != null && report.BuildingKey == interior.EntryDoor.buildingKey)
                 {
                     var point = interior.transform.InverseTransformPoint(entryGround.Value + Vector3.up);
                     Roster.EnterBuilding(guard.Id, interior.EntryDoor.buildingKey, now,
@@ -844,6 +848,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if (guard.Interior == null || guard.Interior.BuildingKey != interior.EntryDoor.buildingKey) continue;
                 var actor = View(guard, now); actor.gameObject.SetActive(true);
                 if (guard.Interior.Returning) { actor.EndCombat(); actor.Place(now); continue; }
+                if(UpdateWitnessedDoorInterior(guard,actor,now))continue;
                 if(UpdateInteriorEnemyDefense(guard,actor,report,now)) continue;
                 if (game.PlayerEntity.CrimeCommitted == PlayerEntity.Crimes.None && (report == null || !report.OccupiesScene))
                 {

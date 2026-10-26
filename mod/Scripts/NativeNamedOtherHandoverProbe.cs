@@ -48,6 +48,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Require(sourceOwner && sourceOwner.Binding!=null,"Purchase source lacks its native inventory binding.");
                 var sourceBefore=store.ReadNpcInventory(source.Resident.Id);
                 var recipientBefore=store.ReadNpcInventory(recipient.Resident.Id);
+                var sellerBefore=store.ReadNpcInventory(purchase.Target.PersonId);
                 int playerGold=GameManager.Instance.PlayerEntity.GetGoldAmount();
                 int recipientItems=MatchingItems(recipientOwner.Binding.Items,shopItem);
                 string proposal="native-named-other-handover:"+Guid.NewGuid().ToString("N");
@@ -73,19 +74,42 @@ namespace PeopleOfTheIliacBay.DFU
                     transferred!=null && transferred.Phase==NpcActionPhase.Completed &&
                     transferred.Target.ItemId==bought.AcquiredItemId && transferred.Target.PersonId==recipient.Resident.Id &&
                     transferred.Target.TransferDirection==NpcActionTransferDirection.NpcToCounterparty &&
-                    transferred.ItemTransferReceipt==null,
-                    "Named-other task lost acquired UID, source step, recipient, or created a player receipt.");
+                    transferred.ItemTransferReceipt!=null,
+                    "Named-other task lost acquired UID, source step, recipient, or its committed receipt.");
+                var receipt=transferred.ItemTransferReceipt;
+                Require(receipt.RecipientId==recipient.Resident.Id && receipt.CounterpartyId==source.Resident.Id &&
+                    receipt.SourceItemUid==acquired && receipt.Quantity==purchase.Target.Quantity &&
+                    receipt.NativeItemName==NativeItemReceiptLabel.Capture(shopItem.LongName) &&
+                    recipientOwner.Binding.Items.GetItem(receipt.RetainedDestinationItemUid)!=null,
+                    "Named-other receipt does not identify the actual giver, recipient and retained item.");
                 var sourceAfter=store.ReadNpcInventory(source.Resident.Id);
                 var recipientAfter=store.ReadNpcInventory(recipient.Resident.Id);
+                var sellerAfter=store.ReadNpcInventory(purchase.Target.PersonId);
                 Require(sourceOwner.Binding.Items.GetItem(acquired)==null &&
                     MatchingItems(recipientOwner.Binding.Items,shopItem)==recipientItems+purchase.Target.Quantity &&
                     sourceAfter.WalletGold==sourceBefore.WalletGold-purchase.Target.QuotedGold &&
                     recipientAfter.WalletGold==recipientBefore.WalletGold &&
+                    sellerBefore!=null && sellerAfter!=null && sellerAfter.WalletGold==sellerBefore.WalletGold+purchase.Target.QuotedGold &&
                     sourceAfter.Revision==sourceBefore.Revision+2 && recipientAfter.Revision==recipientBefore.Revision+1 &&
                     GameManager.Instance.PlayerEntity.GetGoldAmount()==playerGold,
                     "Named-other handover changed wrong inventory, revision, or wallet.");
+                store.DrainNpcItemTransferReceipts(32);
+                var snapshot=store.Snapshot();
+                var giverMemory=snapshot.ConversationMemories.Find(x=>x.PersonId==source.Resident.Id);
+                var recipientMemory=snapshot.ConversationMemories.Find(x=>x.PersonId==recipient.Resident.Id);
+                Require(giverMemory!=null && recipientMemory!=null &&
+                    giverMemory.Entries.Exists(x=>x.SourceActionId==transferred.Id && x.Observation.Contains(receipt.NativeItemName)) &&
+                    recipientMemory.Entries.Exists(x=>x.SourceActionId==transferred.Id && x.Observation.Contains(receipt.NativeItemName)) &&
+                    snapshot.NpcExperienceInbox.Entries.Exists(x=>x.ObserverId==recipient.Resident.Id &&
+                        x.ReceiptId==receipt.TransactionId && x.ResponsibleActorId==source.Resident.Id &&
+                        x.ReceivedItemUid==receipt.RetainedDestinationItemUid && x.TransferQuantity==receipt.Quantity),
+                    "Named-other delivery lacks participant memory or neutral recipient evidence.");
+                Require(!NativeNpcInventoryBridge.TryCompleteActionTransfer(store,transferred,
+                    DaggerfallUnity.Instance.WorldTime.Now.ToSeconds(),sourceOwner.Binding,recipientOwner.Binding,null,()=>true,out reason),
+                    "Completed named-other delivery replayed.");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NAMED_OTHER_HANDOVER_PASS source="+source.Resident.Id+"; recipient="+
-                    recipient.Resident.Id+"; acquiredUid="+bought.AcquiredItemId+"; price="+purchase.Target.QuotedGold+"; task="+taskId);
+                    recipient.Resident.Id+"; acquiredUid="+bought.AcquiredItemId+"; retainedUid="+receipt.RetainedDestinationItemUid+
+                    "; price="+purchase.Target.QuotedGold+"; participantMemories=true; recipientReceipt=true; replayRejected=true; task="+taskId);
                 yield break;
             }
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_NAMED_OTHER_HANDOVER_SKIP: no unique visible eligible recipient with native capacity.");

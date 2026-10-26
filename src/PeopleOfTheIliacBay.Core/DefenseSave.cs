@@ -21,7 +21,11 @@ namespace PeopleOfTheIliacBay.Core
                     c.FirstPlayerHitAt>=0 && c.FirstProvokedAt<=c.LastPlayerHitAt : c.FirstProvokedAt==-1,"Invalid saved provocation.");
                 Require(c.UnprovokedAttackAt==-1 || c.Origin!=CombatOrigin.Civilian && DefenseTime(c.UnprovokedAttackAt) &&
                     c.UnprovokedAttackAt>=c.ObservedAt,"Invalid saved unprovoked attack.");
+                var shelteredResident=c.Shelter==null ? null : ResolveResident(validated,c.SettlementId,c.Id);
+                Require(c.Shelter==null || shelteredResident!=null && shelteredResident.IsAlive && !shelteredResident.IsQuestProtected,
+                    "Defense shelter lacks its living settlement resident.");
                 var clone=new DefenseCombatant { Id=c.Id,SettlementId=c.SettlementId,Origin=c.Origin,ObservedAt=c.ObservedAt,
+                    Shelter=CopyDefenseShelter(c.Shelter,c),
                     UnprovokedAttackAt=c.UnprovokedAttackAt,PlayerProvoked=c.PlayerProvoked,FirstProvokedAt=c.FirstProvokedAt,FirstPlayerHitAt=c.FirstPlayerHitAt,LastPlayerHitAt=c.LastPlayerHitAt };
                 var witnesses=new HashSet<string>(StringComparer.Ordinal);
                 foreach(var w in c.Witnesses)
