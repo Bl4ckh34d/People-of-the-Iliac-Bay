@@ -1,6 +1,8 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `7BB6C4BB878D`, um 08:57 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu: Auch der separate Spielerangriffs-Pfad prüft die Blickrichtung. Wer den Spieler nicht sieht, wird nicht automatisch Augenzeuge; bloßes Hören verrät den Täter nicht. Je neun native Fälle für mobile und stationäre Körper bestehen. Vollständige Kampf-/Todesszenen und tatsächliche Inn-Angriffe bleiben separat offen; Details im [Testbericht](audits/2026-10-26-player-attack-perception.md).
+Aktueller Zwischenbuild `4F4349E44CF4`, um 11:05 installiert. Unity-Paketprüfung und 2131 Core-Tests bestehen. Einzelne Kurzbesuche blockieren weitere Tagesziele nicht mehr. Die native Nachmittagsstichprobe steigt von drei auf elf Bewohner draußen; die Stadt bleibt stellenweise noch zu leer. Allein untätige Ladenwartende geben nach Öffnung binnen einer Spielminute frei. Geplante gemeinsame Inn-Finanzierung ist enthalten, der morgendliche Familien-Bankgang aber noch nicht nativ abgenommen. Details: [Dichtemessung](audits/2026-10-26-street-density.md).
+
+Früherer Zwischenbuild `7BB6C4BB878D`, um 08:57 installiert (vom aktuellen Build ersetzt). Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu: Auch der separate Spielerangriffs-Pfad prüft die Blickrichtung. Wer den Spieler nicht sieht, wird nicht automatisch Augenzeuge; bloßes Hören verrät den Täter nicht. Je neun native Fälle für mobile und stationäre Körper bestehen. Vollständige Kampf-/Todesszenen und tatsächliche Inn-Angriffe bleiben separat offen; Details im [Testbericht](audits/2026-10-26-player-attack-perception.md).
 
 Der vorherige Fix für NPC-/Gegnerangriffe bleibt enthalten: Nicht gesehene Angreifer bleiben unbekannt; tatsächliche NPC-Namen ersetzen leere Entity-Namen. Die zwölf zugehörigen Prüffälle bestehen auch im neuen Lauf.
 

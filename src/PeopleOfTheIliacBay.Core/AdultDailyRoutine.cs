@@ -22,6 +22,36 @@ namespace PeopleOfTheIliacBay.Core
     // windows, physical routes and slots that fit the resident's obligations.
     public static class AdultDailyRoutinePlanner
     {
+        // Ordinary fallback visits need an explicit first outing before later
+        // activities can be appended. The caller supplies a verified native
+        // destination, personal route, service hours and physical walk duration.
+        public static bool TrySingleDestination(ResidentRoutine source,int home,ResidentVisitPurpose purpose,
+            double departure,double latestHome,double walkSeconds,double dwellSeconds,uint seed,out ResidentRoutine routine)
+        {
+            routine=null;
+            if(source==null || home<0 || !Finite(departure) || !Finite(latestHome) ||
+                !Finite(walkSeconds) || walkSeconds<=0 || !Finite(dwellSeconds) || dwellSeconds<=0)
+                throw new ArgumentException("Invalid single-destination outing source.");
+            if(source.Itinerary!=null || source.Route==null || source.Route.Count<2 || source.DestinationKey<0 ||
+                source.DestinationKey==home || source.AdditionalOutings!=null && source.AdditionalOutings.Count>0)return false;
+            departure=Math.Max(departure,source.OpenMinute*60d-walkSeconds);
+            if(purpose==ResidentVisitPurpose.Social)departure=Math.Max(departure,16*3600);
+            if(departure>=latestHome)return false;
+            var outbound=CopyRoute(source.Route);var inbound=CopyRoute(source.Route);inbound.Reverse();
+            var request=new AdultDailyItineraryRequest{HomeBuildingKey=home,DepartureAt=departure,LatestHomeAt=latestHome,
+                MinimumAwaySeconds=1,MinimumStops=1,MaximumStops=1,Seed=seed,
+                Options=new List<AdultDailyItineraryOption>{new AdultDailyItineraryOption{BuildingKey=source.DestinationKey,
+                    Purpose=purpose,OpenMinute=source.OpenMinute,CloseMinute=source.CloseMinute,
+                    MinimumDwellSeconds=dwellSeconds,MaximumDwellSeconds=dwellSeconds}},
+                Routes=new List<AdultDailyItineraryLeg>{
+                    new AdultDailyItineraryLeg{FromBuildingKey=home,ToBuildingKey=source.DestinationKey,WalkSeconds=walkSeconds,Route=outbound},
+                    new AdultDailyItineraryLeg{FromBuildingKey=source.DestinationKey,ToBuildingKey=home,WalkSeconds=walkSeconds,Route=inbound}}};
+            ResidentDestination itinerary;
+            if(!AdultDailyItineraryPlanner.TryCreate(request,out itinerary))return false;
+            routine=Copy(source);routine.Itinerary=itinerary;routine.ItineraryDepartureSeconds=departure;
+            return true;
+        }
+
         public static bool TryCreate(AdultDailyRoutineRequest request,out ResidentRoutine routine)
         {
             routine=null;

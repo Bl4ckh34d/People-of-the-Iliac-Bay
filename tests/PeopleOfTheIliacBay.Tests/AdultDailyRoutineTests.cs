@@ -7,6 +7,33 @@ namespace PeopleOfTheIliacBay.Tests
     {
         internal static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Single destination can become an explicit expandable outing using its actual route",()=>{
+                var source=new ResidentRoutine{ResidentId="daily-resident",DestinationKey=100,OpenMinute=540,CloseMinute=1140,
+                    PersonalLaneVersion=OutdoorRoutineMigration.CurrentPersonalLaneVersion,RouteGeometryVersion=OutdoorRoutineMigration.CurrentVersion,
+                    Route=new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=20}}};
+                Check.True(AdultDailyRoutinePlanner.TrySingleDestination(source,20,ResidentVisitPurpose.Shop,
+                    8*3600,18*3600,300,1200,73,out var planned));
+                Check.True(source.Itinerary==null);Check.Equal(0,source.AdditionalOutings.Count);
+                var visits=ResidentRoutineDay.ScheduledVisits(planned);Check.Equal(1,visits.Count);
+                Check.True(visits[0].ArriveAt>=9*3600 && visits[0].LeaveAt<=19*3600);
+                Check.Equal(ResidentVisitPurpose.Shop,visits[0].Purpose);
+                Check.Equal(source.PersonalLaneVersion,planned.PersonalLaneVersion);
+                Check.Near(20,planned.Itinerary.ExitRoute[0].X);Check.Near(0,planned.Itinerary.ExitRoute[1].X);
+                var request=Request();request.Source=planned;request.Slots.RemoveAt(0);
+                Check.True(AdultDailyRoutinePlanner.TryCreate(request,out var expanded));
+                Check.True(expanded.AdditionalOutings.Count>0);
+                planned.Itinerary.Stops[0].Route[0].X=99;Check.Near(0,source.Route[0].X);
+            }));
+            cases.Add(("Single destination planning retains social daypart and rejects insufficient time",()=>{
+                var source=new ResidentRoutine{ResidentId="daily-resident",DestinationKey=100,OpenMinute=0,CloseMinute=1439,
+                    Route=new List<SavedRoutePoint>{new SavedRoutePoint(),new SavedRoutePoint{X=20}}};
+                Check.True(AdultDailyRoutinePlanner.TrySingleDestination(source,20,ResidentVisitPurpose.Social,
+                    8*3600,19*3600,300,1200,73,out var planned));
+                Check.True(planned.ItineraryDepartureSeconds>=16*3600);
+                Check.True(!AdultDailyRoutinePlanner.TrySingleDestination(source,20,ResidentVisitPurpose.Social,
+                    8*3600,16*3600+100,300,1200,73,out var rejected));
+                Check.True(rejected==null && source.Itinerary==null);
+            }));
             cases.Add(("Daily departures use the available window without synchronized quarter-hour waves",()=>{
                 double earliest=double.MaxValue,latest=0;int afterQuarterHour=0;
                 for(uint seed=0;seed<512;seed++)

@@ -145,6 +145,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if(outdoorMigrationStats!=null) outdoorMigrationStats.CurrentVersionSkips++;
                     candidate=RefreshDailyServiceHours(source);
                     if(candidate==null){preparedHouseholdRoutineSources.Add(source);continue;}
+                    candidate=PlanSingleDestinationOuting(plan,candidate,wake,sleep);
                     candidate=DailyOutingDistribution.Spread(candidate,plan.Resident.AppearanceSeed,wake,sleep,DailyReturnDeadline(sleep));
                     var baseline=candidate;
                     var expansion=new PreparedOutdoorRoutine {Plan=plan};
@@ -237,6 +238,7 @@ namespace PeopleOfTheIliacBay.DFU
                 }
                 candidate=RefreshDailyServiceHours(candidate);
                 if(candidate==null)continue;
+                candidate=PlanSingleDestinationOuting(plan,candidate,wake,sleep);
                 candidate=DailyOutingDistribution.Spread(candidate,plan.Resident.AppearanceSeed,wake,sleep,DailyReturnDeadline(sleep));
                 var preparedBaseline=candidate;
                 var expanded=new PreparedOutdoorRoutine {Plan=plan};

@@ -10,6 +10,23 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
+        private ResidentRoutine PlanSingleDestinationOuting(Plan plan,ResidentRoutine source,int wake,int sleep)
+        {
+            var resident=plan.Resident;BuildingSummary building;ResidentVisitPurpose purpose;
+            if(source.Itinerary!=null || source.Route.Count<2 || !resident.IsAlive ||
+                resident.AgeGroup!=ResidentAgeGroup.Adult || resident.NativeIdentity!=null || QuestOwned(resident) ||
+                source.PersonalLaneVersion!=OutdoorRoutineMigration.CurrentPersonalLaneVersion ||
+                !geometry.Entrances.ContainsKey(resident.HomeKey) || !geometry.Entrances.ContainsKey(source.DestinationKey) ||
+                !directory.GetBuildingSummary(source.DestinationKey,out building) || !TryGetDailyPurpose(building.BuildingType,out purpose))return source;
+            double walk=RouteLength(source.Route)*DaggerfallUnity.Instance.WorldTime.TimeScale/ResidentMovement.WalkSpeedFor(resident.AppearanceSeed);
+            ResidentRoutine planned;
+            if(!AdultDailyRoutinePlanner.TrySingleDestination(source,resident.HomeKey,purpose,DailyDepartureSeconds(resident,wake,sleep),
+                DailyReturnDeadline(sleep),walk,(20+resident.AppearanceSeed%41)*60,resident.AppearanceSeed,out planned))return source;
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SINGLE_DESTINATION_PLANNED: resident="+resident.Id+"; destination="+source.DestinationKey+
+                "; purpose="+purpose+"; publication=pending-home");
+            return planned;
+        }
+
         private bool FamilyAllowsOptionalOuting(Resident resident,double starts,double ends)
         {
             var household=population.Households.Find(h=>h.BuildingKey==resident.HomeKey &&

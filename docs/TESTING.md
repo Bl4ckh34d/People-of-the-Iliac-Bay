@@ -1,5 +1,15 @@
 # Testing and verification status
 
+## Street density and expandable daily visits — 26 October 2026, 11:05
+
+Installed and distribution SHA256 both equal **`4F4349E44CF4D677C0B5FD632E468B4885D414E40879EEDC624ADF4ADCD85D90`**. Unity package verification/build exits 0. Core 2131/2131, RuntimeCompile and QuestHooks without errors/warnings, source policy, PowerShell syntax and whitespace checks pass.
+
+`street-density-02` through `04` compare the same location at four daytime points. Spawn limits are unused after settling. Ordinary single-destination adult visits now become explicit itineraries and can receive later outings, while native/protected people and active travel remain protected. The 15:00 outdoor count improves from three to eleven; nearby bodies rise from zero to four. The final native probe completes without exception entries. This does not establish dense streets throughout the day or resolve Player freezes. See the [density audit](audits/2026-10-26-street-density.md).
+
+The bundle also includes `solitary-shop-opening-01`'s controlled wait release: actual conversations continue after opening; inactive solitary waiting releases within one game minute. Full subsequent shop entry remains open. That separate run logs the existing missing-Player shutdown exception after its successful completion marker. Planned shared Inn funding passes Core/cash regressions but still needs a native morning bank journey and continuation test.
+
+`street-density-05-perf` also completes native 1h/3h loitering without exception entries. Post-3h p50/p95 rise from 20.68/48.60 to 24.68/56.99 ms, while maximum falls from 246.98 to 219.15 ms; gen0 collections rise from eight to fourteen. The skip itself still peaks at 1720.89 ms. These single Editor runs do not establish performance equivalence; profiling and Player-freeze acceptance remain open. Existing Expanded Textures startup material errors remain.
+
 ## Player-violence perception — 26 October 2026, 08:57
 
 Installed and distribution SHA256 both equal **`7BB6C4BB878DD2947B5417C535D3F30E5B31F6264DBC70F5788A1DE64ED4AF0B`**. Unity package integration/build exits 0. Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, 70 PowerShell syntax checks, tooling protocols, source policy and whitespace checks pass.
