@@ -14,7 +14,8 @@ ihre tatsächlichen Käufe erscheinen korrekt in Erinnerungen. Im ursprüngliche
 Inn klappt der anschließende Ausgang noch nicht; vollständige Heimkehr bleibt offen.
 Der Bank-Enter→Wait-Test bindet die richtige Tür. Blockierende Testposition und
 zu kurzes Testbudget sind korrigiert. Der Folgelauf zeigt aber, dass die
-Aufgabensteuerung das längere Budget verwirft; dieser Fehler ist noch in Arbeit.
+Aufgabensteuerung das längere Budget verwirft. Der Quellfix besteht gezielte
+Prüfungen; Installation und erneuter Banklauf stehen noch aus.
 Dungeon-Follow, Klettern und Thronplattform bleiben ebenfalls offen.
 Details und weitere offene Punkte: [Arbeitsliste](WORKLIST-2026-10-26.md).
 

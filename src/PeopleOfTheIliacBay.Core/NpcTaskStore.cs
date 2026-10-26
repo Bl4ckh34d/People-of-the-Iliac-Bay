@@ -160,6 +160,7 @@ namespace PeopleOfTheIliacBay.Core
             var step=task.Steps[task.CurrentStepIndex];
             if(job.Id!=NpcTaskContract.ActionId(task) || job.ProposalId!=job.Id || job.ResidentId!=task.ResidentId || job.Kind!=step.Kind ||
                 !NpcTaskContract.TargetMatches(ResolveNpcTaskTarget(task,task.CurrentStepIndex),job.Target) || job.AcceptedAt!=now || job.DeadlineAt>task.DeadlineAt ||
+                step.ExecutionBudgetSeconds>0 && job.DeadlineAt!=Math.Min(now+step.ExecutionBudgetSeconds,task.DeadlineAt) ||
                 job.FinishAt!=(step.Kind==NpcActionKind.RestToHeal?0:step.DurationSeconds>0?now+step.DurationSeconds:0) ||
                 job.RestDurationSeconds!=(step.Kind==NpcActionKind.RestToHeal?step.DurationSeconds:0) || job.RestStartedAt!=0 ||
                 (step.MagicHealing==null ? job.MagicHealing!=null : !NpcMagicHealingSpec.Same(step.MagicHealing,job.MagicHealing)) ||
@@ -286,6 +287,7 @@ namespace PeopleOfTheIliacBay.Core
                         }
                         Require(exists && action.ResidentId==task.ResidentId && action.ProposalId==action.Id && action.Kind==step.Kind &&
                             NpcTaskContract.TargetMatches(action.Target,target) && action.AcceptedAt>=task.AcceptedAt && action.DeadlineAt<=task.DeadlineAt &&
+                            (step.ExecutionBudgetSeconds==0 || action.DeadlineAt==Math.Min(action.AcceptedAt+step.ExecutionBudgetSeconds,task.DeadlineAt)) &&
                             action.ServiceCode==(step.Kind==NpcActionKind.Purchase?NpcShopCommerce.ServiceCodeForPurchaseTarget(step.Target):null) &&
                             action.RestDurationSeconds==(step.Kind==NpcActionKind.RestToHeal?step.DurationSeconds:0) &&
                             (step.MagicHealing==null ? action.MagicHealing==null : NpcMagicHealingSpec.Same(step.MagicHealing,action.MagicHealing)) &&

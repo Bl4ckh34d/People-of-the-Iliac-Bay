@@ -67,6 +67,25 @@ Source review identifies two existing paths to that error: more than 20 seconds 
 
 The diagnostic follow-up adds a read-only snapshot every five real seconds and at failure/timeout. Each snapshot includes actual foot and resolved/accepted target, current/nearest distance, total movement and maximum sampled step, player position and horizontal distance, pause/conversation state, native target/path/failure, nearby body colliders, and existing waypoint/crowd/support/clearance diagnostics. The existing MoveTo probe's diagnostic helper is reused, with native/graph flags and waypoint progress added. No actor, player, route, collision rule or arrival tolerance is changed. The coordinator must compile and rerun these diagnostic sources; they were not built or launched by this subagent during this follow-up.
 
+## Explicit movement budget preservation
+
+The coordinator's subsequent native runs separated two failures. Run03 demonstrated fixture-owned player overlap; the coordinator corrected observer placement using the existing `TryObserverGround`. Run04 then walked 257.322 m before its 300-game-second action deadline expired. Run05 requested 900 seconds for Enter in installed bundle `509FB25B9EEA`, but still failed at 150.502 real seconds after walking 258.157 m, 89.325 m short of the Bank. `work/native-bank-enter-wait-05-player.log` preserves that run. Its final progress snapshot shows no body overlap, active native navigation and no native failure. Wait never started.
+
+The production task adapter discarded the requested budget in two places: task construction allocated 300 seconds for every untimed step, and dispatch reconstructed every untimed action with `DurationSeconds=300`. Changing only the probe's requested duration could therefore never extend the actual Enter action.
+
+The bounded repair stores an optional `NpcTaskStep.ExecutionBudgetSeconds` for `MoveTo`, `Enter`, `Exit`, `Lead`, `Interact` and `ReportMurder`. Explicit values must be 10–900 seconds. Zero retains the existing 300-second adapter default. This field is separate from `DurationSeconds`, which continues to mean timed waiting, following, sitting or rest. Purchase, transfer, health and native-service timing remain unchanged. The task envelope now includes the selected movement budget, and dispatch preserves it. The existing eight-step and 86,400-second task caps remain in force.
+
+Core copy and validation preserve the field. Dispatch and snapshot restoration require an explicitly budgeted movement action's deadline to equal `min(action.AcceptedAt + ExecutionBudgetSeconds, task.DeadlineAt)`. The existing conversation capability digest reflects public fields and therefore already binds the new budget; changing it after issuance invalidates admission. No new authority source, route estimator, universal timeout or save migration was added. The existing native action path still applies `ActionReturnFitsFixedCommitments` to the resulting action deadline before admission, so longer movement budgets remain subject to fixed appointments and protected sleep.
+
+The isolated regression now extracts and executes the actual production `TryAcceptConversationTaskCore` and `DispatchConversationTaskStep` methods through Roslyn, alongside actual Core source. Only the final native action boundary, actor and geometry are controlled fixtures. RED reproduced Enter900 becoming300, acceptance of an invalid movement budget, and absence of the saved budget. GREEN passes six resolver checks, three lifecycle scenarios and four runtime timing scenarios. These verify:
+
+- Enter900 dispatches with a 900-second deadline and no timed completion; a later Wait30 retains its own 30-second duration and existing grace.
+- A physical crossing after 500 game seconds can complete within the accepted 900-second budget, then dispatch the observed Wait.
+- Invalid explicit budgets are refused; zero retains the previous default; timed/service steps cannot acquire a movement budget; the overall task cap remains unchanged.
+- Copy/restore preserve the budget; capability mutation fails; mismatched action deadlines fail both dispatch and restore.
+
+Command: `dotnet run --project tests/NativeBuildingActionTarget.Regression/NativeBuildingActionTarget.Regression.csproj`. The isolated test passes. No shared Core build, runtime build, bundle, installation or Unity/native run was performed by this subagent for this timing change. Integrated compilation and native Bank acceptance remain with the coordinator.
+
 ### Observer obstruction confirmed
 
 Native run `03` used installed diagnostic bundle `B15621A2C8AE`. Its preserved log, `work/native-bank-enter-wait-03-player.log`, shows the player and resident at the same horizontal position, zero movement throughout, `nativeFailure=occupied`, and `PlayerAdvanced<CharacterController>` as the overlapping body. This confirms that the fixture itself blocked the route before any Bank crossing.

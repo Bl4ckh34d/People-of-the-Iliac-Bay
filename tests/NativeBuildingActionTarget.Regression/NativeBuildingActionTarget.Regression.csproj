@@ -6,6 +6,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="Fixture.cs" />
+    <Compile Remove="TaskTimingFixture.cs" />
     <Compile Include="../../src/PeopleOfTheIliacBay.Core/*.cs" Link="Core/%(Filename)%(Extension)" />
     <Compile Include="../PeopleOfTheIliacBay.Tests/ClassifiedAdmissionFixture.cs" Link="ClassifiedAdmissionFixture.cs" />
     <Reference Include="Microsoft.CodeAnalysis" HintPath="$(MSBuildSDKsPath)/../Roslyn/bincore/Microsoft.CodeAnalysis.dll" />

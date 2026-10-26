@@ -10,6 +10,9 @@ namespace PeopleOfTheIliacBay.Core
         public NpcActionKind Kind;
         public NpcActionTarget Target;
         public double DurationSeconds;
+        // Optional bound for an untimed movement step. Zero retains the existing
+        // 300-second adapter default; this is not a dwell or service duration.
+        public int ExecutionBudgetSeconds;
         public string CompletedEffectId;
         // One-based earlier acquired-item step; zero means an ordinary exact item target.
         public int ItemSourceStep;
@@ -104,6 +107,9 @@ namespace PeopleOfTheIliacBay.Core
         public static string ActionId(NpcTaskPlan task) { return task.Id+":step:"+task.CurrentStepIndex; }
         public static bool Supported(NpcActionKind kind)
         { return kind==NpcActionKind.Wait || kind==NpcActionKind.MoveTo || kind==NpcActionKind.Follow || kind==NpcActionKind.TakeSeat || kind==NpcActionKind.Interact || kind==NpcActionKind.ReportMurder || kind==NpcActionKind.Transfer || kind==NpcActionKind.Purchase || kind==NpcActionKind.UseHealingItem || kind==NpcActionKind.RestToHeal || kind==NpcActionKind.CastSpell || kind==NpcActionKind.Lead || kind==NpcActionKind.Enter || kind==NpcActionKind.Exit; }
+        public static bool SupportsExecutionBudget(NpcActionKind kind)
+        { return kind==NpcActionKind.MoveTo || kind==NpcActionKind.Enter || kind==NpcActionKind.Exit ||
+            kind==NpcActionKind.Lead || kind==NpcActionKind.Interact || kind==NpcActionKind.ReportMurder; }
         public static bool CanSourceAcquiredItem(NpcTaskStep step)
         {
             return step!=null && (step.Kind==NpcActionKind.Purchase || step.Kind==NpcActionKind.Transfer && step.Target!=null &&
@@ -147,6 +153,8 @@ namespace PeopleOfTheIliacBay.Core
             {
                 var step=task.Steps[i];
                 if(step==null || !Supported(step.Kind) || !Number(step.DurationSeconds) || step.DurationSeconds<0 ||
+                    step.ExecutionBudgetSeconds!=0 && (!SupportsExecutionBudget(step.Kind) ||
+                        step.ExecutionBudgetSeconds<10 || step.ExecutionBudgetSeconds>900) ||
                     step.DurationSeconds>=task.DeadlineAt-task.AcceptedAt ||
                     ((step.Kind==NpcActionKind.Wait || step.Kind==NpcActionKind.Follow || step.Kind==NpcActionKind.TakeSeat || step.Kind==NpcActionKind.RestToHeal) ? step.DurationSeconds<=0 : step.DurationSeconds!=0) ||
                     (i<task.CurrentStepIndex ? !Id(step.CompletedEffectId) : step.CompletedEffectId!=null))
@@ -195,7 +203,8 @@ namespace PeopleOfTheIliacBay.Core
                 Message=value.FailureReceipt.Message,Observation=value.FailureReceipt.Observation,CreatedAt=value.FailureReceipt.CreatedAt,
                 Delivered=value.FailureReceipt.Delivered};
             foreach(var step in value.Steps) copy.Steps.Add(new NpcTaskStep {Kind=step.Kind,Target=NpcActionExecutor.CopyTarget(step.Target),
-                DurationSeconds=step.DurationSeconds,CompletedEffectId=step.CompletedEffectId,ItemSourceStep=step.ItemSourceStep,
+                DurationSeconds=step.DurationSeconds,ExecutionBudgetSeconds=step.ExecutionBudgetSeconds,
+                CompletedEffectId=step.CompletedEffectId,ItemSourceStep=step.ItemSourceStep,
                 MagicHealing=step.MagicHealing==null?null:NpcMagicHealingSpec.CopyValidated(step.MagicHealing)});
             return copy;
         }

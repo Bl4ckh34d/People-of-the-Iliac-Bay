@@ -25,7 +25,10 @@ These adapter tests do not prove actual Unity collision, animation or pursuit.
   and eight real minutes of observation; native movement rules are unchanged.
   Run `05` still fails after 150.5 real seconds: task admission and dispatch
   discard the requested untimed-step budget and hard-code 300 game seconds.
-  Production timing repair is pending. These probe-only changes are included in the
+  The source timing repair now passes four additional actual admission/dispatch
+  scenarios, including budget persistence and capability binding. Root Core
+  remains 2147/2147 and RuntimeCompile is clean (`work/task-timing-*.log`).
+  That production fix is not yet packaged. These probe-only changes are included in the
   current package; the new repair and NPC-delivery source changes are not yet packaged.
 - [Witnessed-door pursuit](audits/2026-10-26-guard-witnessed-door-pursuit.md) has
   source and regression evidence only. Full door crossing, combat, reload and

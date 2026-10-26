@@ -38,12 +38,15 @@ namespace PeopleOfTheIliacBay.DFU
                 if(decision==null || decision.Option==null || !NpcTaskContract.Supported(decision.Option.Kind))return false;
                 bool timed=decision.Option.Kind==NpcActionKind.Wait || decision.Option.Kind==NpcActionKind.Follow ||
                     decision.Option.Kind==NpcActionKind.TakeSeat;
-                if(timed && (decision.DurationSeconds<10 || decision.DurationSeconds>900))return false;
+                bool movement=NpcTaskContract.SupportsExecutionBudget(decision.Option.Kind);
+                if((timed || movement) && (decision.DurationSeconds<10 || decision.DurationSeconds>900))return false;
                 double duration=timed?decision.DurationSeconds:0;
+                int executionBudget=movement?decision.DurationSeconds:0;
                 bool templeTraining=decision.Option.Kind==NpcActionKind.Purchase && decision.Option.Target!=null &&
                     decision.Option.Target.ContainerId==NativeNpcTempleTraining.TargetContainerId;
-                budget+=timed?duration+60:templeTraining?NativeNpcTempleTraining.DurationSeconds+600:300;
-                task.Steps.Add(new NpcTaskStep {Kind=decision.Option.Kind,Target=NpcActionExecutor.CopyTarget(decision.Option.Target),DurationSeconds=duration,ItemSourceStep=decision.Option.ItemSourceStep});
+                budget+=timed?duration+60:templeTraining?NativeNpcTempleTraining.DurationSeconds+600:executionBudget>0?executionBudget:300;
+                task.Steps.Add(new NpcTaskStep {Kind=decision.Option.Kind,Target=NpcActionExecutor.CopyTarget(decision.Option.Target),
+                    DurationSeconds=duration,ExecutionBudgetSeconds=executionBudget,ItemSourceStep=decision.Option.ItemSourceStep});
             }
             task.DeadlineAt=now+budget;
             if(legacyAdmission)
@@ -89,7 +92,8 @@ namespace PeopleOfTheIliacBay.DFU
             }
             var target=worldStore.ResolveNpcTaskTarget(task,task.CurrentStepIndex);
             if(target==null){reason="The earlier purchase produced no verified item for this handover.";return false;}
-            var decision=new NpcActionDecision {DurationSeconds=step.DurationSeconds>0?(int)step.DurationSeconds:300,
+            var decision=new NpcActionDecision {DurationSeconds=step.DurationSeconds>0?(int)step.DurationSeconds:
+                    step.ExecutionBudgetSeconds>0?step.ExecutionBudgetSeconds:300,
                 Option=new NpcActionOption {Kind=step.Kind,Target=target}};
             return TryAcceptConversationAction(task.ResidentId,NpcTaskContract.ActionId(task),decision,task,null,out reason);
         }

@@ -18,8 +18,9 @@ in two Inn layouts. The original Inn still fails physical departure after the
 seated time skip; full homeward acceptance remains open. The native Bank Enter→Wait
 test exposed two fixture defects: its observer blocked the NPC, then its time
 budget expired during a long walk. The next run proves task dispatch silently
-replaces the longer requested budget with five minutes. That production timing
-gap remains under repair. These are not completed roadmap items. See the
+replaces the longer requested budget with five minutes. The source now preserves
+the bounded per-step travel budget; package and native repeat remain pending.
+These are not completed roadmap items. See the
 [current checklist](docs/WORKLIST-2026-10-26.md), [family Inn audit](docs/audits/2026-10-26-family-cash-visit.md)
 and [verification boundaries](docs/TESTING.md). Earlier companion, training and
 dungeon slices remain included; their stated native acceptance limits still apply.
