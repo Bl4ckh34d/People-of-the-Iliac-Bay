@@ -23,6 +23,16 @@ the configured voice service and checks completed nonzero mixer output; it does
 not validate a language model's spontaneous wording.
 Do not interpret a fixture setup failure or timeout as gameplay acceptance.
 
+`-ValidateFamilyCash` exercises proactive funding for a naturally planned shared
+Inn visit. It selects the third following morning in the disposable source,
+retains native bank opening hours, empties both wallets after payer selection,
+and checks one morning cash journey followed by actual paired departure. Clock,
+observer and wallets are controlled; native random spawns are suppressed for the
+clock jumps, and pending native foe spawners are disabled. Existing hostile enemies are disabled only
+after their ownership in the observed town is confirmed. This peaceful fixture
+does not test a bank trip during combat. The probe reports admission failures
+separately; it does not manufacture a shared plan or prove final Inn payment.
+
 `-ValidateComplaint` starts an exterior direct-threat complaint from a controlled
 issued speech receipt, then observes actual travel, saved body position, a
 mid-route snapshot round trip and finite guard dispatch. The incident position

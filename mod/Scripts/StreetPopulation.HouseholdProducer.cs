@@ -32,6 +32,8 @@ namespace PeopleOfTheIliacBay.DFU
         {
             householdJointSurvey=true;var sourceGeometry=geometry;var sourceStore=worldStore;var sourcePopulation=population;
             object sourceEpoch=sourceStore.CaptureNpcVitalsWriteEpoch();
+            bool probe=Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-verify-family-cash")>=0;
+            int catalogCount=0,routeCount=0,laneCount=0,timeCount=0;
             var firstRoutine=first.Routine;var secondRoutine=second.Routine;
             Func<bool> valid=()=>this && Ready && geometry==sourceGeometry && worldStore==sourceStore && population==sourcePopulation &&
                 first.Routine==firstRoutine && second.Routine==secondRoutine && sourceStore.IsNpcVitalsWriteEpochCurrent(sourceEpoch) &&
@@ -52,6 +54,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if(!valid())yield break;
                     // Payment and pair routes must already have a real native source.
                     if(worldStore.ReadNpcInnServiceCatalog(population.SettlementId,inn)==null)continue;
+                    catalogCount++;
                     var path=GetDailyRoute(home.BuildingKey,inn);
                     if(path==null)
                     {
@@ -60,9 +63,11 @@ namespace PeopleOfTheIliacBay.DFU
                         if(!valid())yield break;path=SurveyDailyRoute(home.BuildingKey,inn,found.Points);
                     }
                     if(path.Points.Count<2)continue;
+                    routeCount++;
                     var lanes=new TownGeometry.HouseholdLaneResult();var prepare=geometry.PrepareHouseholdLanes(path.Points,lanes,valid);
                     try{while(valid() && prepare.MoveNext())yield return null;}finally{(prepare as IDisposable)?.Dispose();}
                     if(!valid())yield break;if(lanes.First==null || lanes.Second==null)continue;
+                    laneCount++;
                     DailyServiceWindow hours;
                     if(!DailyServiceHours.TryFromNativeHours(PlayerActivate.openHours[(int)DFLocation.BuildingTypes.Tavern],
                         PlayerActivate.closeHours[(int)DFLocation.BuildingTypes.Tavern],out hours))continue;
@@ -70,14 +75,25 @@ namespace PeopleOfTheIliacBay.DFU
                     var a=FamilyJointOuting(first,inn,lanes.First,departure,dwell,hours);
                     var b=FamilyJointOuting(second,inn,lanes.Second,departure,dwell,hours);
                     double deadline=Math.Min(sleepHour*3600d,restricted?19*3600d:hours.CloseMinute*60d);
+                    if(probe)Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_TIME: home="+home.BuildingKey+"; inn="+inn+
+                        "; departure="+departure+"; dwell="+dwell+"; firstWalk="+a.Itinerary.Stops[0].WalkSeconds+
+                        "; secondWalk="+b.Itinerary.Stops[0].WalkSeconds+"; deadline="+deadline);
                     if(ResidentVisitJourney.Create(departure,a.Itinerary).EndsAt>=deadline ||
                         ResidentVisitJourney.Create(departure,b.Itinerary).EndsAt>=deadline)continue;
+                    timeCount++;
                     var outing=new HouseholdJointInn{InnKey=inn,First=a,Second=b};
                     if(!PrepareSharedInnBudget(outing,first,second,result.Day))continue;
                     result.Inn=outing;yield break;
                 }
             }
-            finally{result.Ready=result.RetryAt==0;householdJointSurvey=false;}
+            finally
+            {
+                if(probe)
+                    Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FAMILY_CANDIDATE: home="+home.BuildingKey+"; valid="+valid()+
+                        "; inn="+result.Inn?.InnKey+"; retry="+result.RetryAt+"; restricted="+restricted+
+                        "; catalogs="+catalogCount+"; routes="+routeCount+"; lanes="+laneCount+"; fitsTime="+timeCount);
+                result.Ready=result.RetryAt==0;householdJointSurvey=false;
+            }
         }
         private ResidentDailyOuting FamilyJointOuting(Plan parent,int inn,List<SavedRoutePoint> route,double departure,double dwell,DailyServiceWindow hours)
         {

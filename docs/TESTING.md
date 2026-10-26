@@ -1,5 +1,13 @@
 # Testing and verification status
 
+## Native family routes and morning funding — 26 October 2026, 12:21
+
+Installed and distribution SHA256 both equal **`7EC048CD49C7277839C07F97EBD8A2C25C5A8BBBB4842C09C318D4266C64401A`**. Unity package verification/build exits 0. Core 2131/2131, RuntimeCompile, source policy, tooling protocols and PowerShell syntax pass.
+
+The old pair-lane validation rejected complete native paths across linked city modules. Native surface/path corridor validation restores ordinary shared-plan publication while retaining the existing 0.4 m movement tolerance and rejecting distant detours. `family-morning-12` completes a peaceful morning bank trip with both wallets empty, one payer, one 489 g withdrawal, purpose context, 38.624 m visible travel, physical return within 0.589 m of home and actual subsequent paired departure. Its terminal receipt is `complete`, with no exception entries. Random encounters are explicitly isolated in this disposable fixture; earlier unisolated runs correctly cancel for a hostile Burglar. See [evidence and controls](audits/2026-10-26-family-cash-visit.md).
+
+The bank interior is unobserved. Final Inn arrival/payment, mid-outing partner waiting, continuous-day behavior, broader street density and Player performance remain open. The measurements below retain their original build identities.
+
 ## Street density and expandable daily visits — 26 October 2026, 11:05
 
 Installed and distribution SHA256 both equal **`4F4349E44CF4D677C0B5FD632E468B4885D414E40879EEDC624ADF4ADCD85D90`**. Unity package verification/build exits 0. Core 2131/2131, RuntimeCompile and QuestHooks without errors/warnings, source policy, PowerShell syntax and whitespace checks pass.
