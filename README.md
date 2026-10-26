@@ -6,7 +6,7 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Current local bundle **509FB25B9EEA** is installed (26 October, 15:51), with matching
+Current local bundle **E31822DEE3D6** is installed (26 October, 16:22), with matching
 distribution/Player hashes, Unity package verification and **2147/2147** Core
 checks. It includes exact Inn chair identity, payment at instantaneous counter
 arrival, exact-door Enter targets and individually witnessed guard door pursuit.
@@ -14,18 +14,20 @@ Private resident refuge state stays separate from guard knowledge. Focused
 regressions pass; full native pursuit acceptance remains open.
 
 Native family tests confirm both purchases, stable seating and receipt memories
-in two Inn layouts. The original Inn still fails physical departure after the
-seated time skip; full homeward acceptance remains open. The native Bank Enter→Wait
+in two Inn layouts. Controlled run15 completes the full outing and physical
+homeward journey for household327940 / Inn197127. The original Inn131841 still
+fails departure after the seated time skip. The native Bank Enter→Wait
 test exposed two fixture defects: its observer blocked the NPC, then its time
 budget expired during a long walk. The next run proves task dispatch silently
 replaces the longer requested budget with five minutes. The source now preserves
-the bounded per-step travel budget; package and native repeat remain pending.
+the bounded per-step travel budget; this fix is installed and its native repeat
+is pending acceptance.
 These are not completed roadmap items. See the
 [current checklist](docs/WORKLIST-2026-10-26.md), [family Inn audit](docs/audits/2026-10-26-family-cash-visit.md)
 and [verification boundaries](docs/TESTING.md). Earlier companion, training and
 dungeon slices remain included; their stated native acceptance limits still apply.
 
-Source changes awaiting the next package add repair custody to inventory context,
+The current package also adds repair custody to inventory context,
 prevent repair-held wearables being equipped after restoration, and record named
 NPC-to-NPC handoffs in both participants' memories. Focused regressions pass;
 their native movement, dialogue and game-reload acceptance remain open.

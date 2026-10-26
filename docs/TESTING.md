@@ -1,8 +1,8 @@
 # Testing and verification status
 
-## Current installed checkpoint — 26 October 2026, 15:51
+## Current installed checkpoint — 26 October 2026, 16:22
 
-Distribution and Player SHA256 both equal **`509FB25B9EEA89EA35324E40FD0CD7BA404199B4B24A9FEB39F51BBB395447C3`**.
+Distribution and Player SHA256 both equal **`E31822DEE3D65452DC130A405CF47F3C01B2D6618BCBD2F505574405B2DBF3B4`**.
 Unity package/integration verification exits 0. Root reruns pass Core **2147/2147**,
 RuntimeCompile with zero warnings/errors, source policy (1396 C# / 116 Python),
 exact-door resolver six checks plus three task lifecycle scenarios, guard pursuit
@@ -12,9 +12,13 @@ These adapter tests do not prove actual Unity collision, animation or pursuit.
 - Native family `11-zero-dwell` and `13-clear-observer` confirm two purchases,
   five-second stable seating and five factual receipt-memory perspectives in
   different Inns. Run 13 removes the known observer obstruction but fails physical
-  departure after the seated time skip. Full outing/return remains open. Diagnostic
+  departure after the seated time skip. Original-layout return remains open. Diagnostic
   run 14 finds no admitted natural outing for the requested household and fails
-  setup, so it provides no new departure evidence.
+  setup, so it provides no new departure evidence. Run15 completes morning bank
+  service, paired travel, both purchases for4g, seating, five receipt-memory
+  perspectives, physical exit and homeward travel for household327940 / Inn197127.
+  It uses the earlier509FB25B9EEA package with a controlled seated time skip and
+  isolated hostile spawns/quest ticks; it does not cover an unskipped normal day.
 - Native Bank `native-bank-enter-wait-02` binds the exact Bank door, then fails
   with `The walking route remained blocked.` before entry. No Wait acceptance.
   The first launch was rejected by a stale fixed-length fixture-name validator;
@@ -28,8 +32,9 @@ These adapter tests do not prove actual Unity collision, animation or pursuit.
   The source timing repair now passes four additional actual admission/dispatch
   scenarios, including budget persistence and capability binding. Root Core
   remains 2147/2147 and RuntimeCompile is clean (`work/task-timing-*.log`).
-  That production fix is not yet packaged. These probe-only changes are included in the
-  current package; the new repair and NPC-delivery source changes are not yet packaged.
+  That production fix, repair custody and named NPC-delivery memories are now
+  packaged. Unity native inventory checks and package verification pass in
+  `work/guard-door-budget-build-unity.log`; the Bank repeat remains pending acceptance.
 - [Witnessed-door pursuit](audits/2026-10-26-guard-witnessed-door-pursuit.md) has
   source and regression evidence only. Full door crossing, combat, reload and
   Talk-context acceptance remain open. An observed expired refuge holds safely;

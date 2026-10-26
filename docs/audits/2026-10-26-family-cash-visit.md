@@ -383,3 +383,26 @@ before the trip: that household had no admitted natural outing in this fresh
 fixture. Another household (327940) had a prepared plan. This result does not
 diagnose the original Inn departure. A subsequent run must use a currently
 eligible natural family rather than fabricate the requested household's trip.
+
+## Complete native outing — run 15
+
+`work/playtest-2026-10-26/editor/funded-family-inn-15-departure/result.txt`
+is `complete`; owned Editor PID 28532 exited normally. This fresh fixture uses
+the frozen installed source `509FB25B9EEA`, ordinary available household 327940
+and its naturally planned Inn 197127. It does not force the unavailable household
+from run 14 or prove the original Inn 131841 departure.
+
+- Both wallets start empty. One payer obtains 489 g once at 08:32 game time;
+  bank service, purpose context and home return pass. Collector travel is
+  41.818 m, final home distance 0.564 m, maximum sampled step 0.500 m.
+- Both actual exterior paths reach the Inn: 160.670 and 161.947 m.
+- Both buy for 4 g total, sit stably for five real seconds and produce exactly
+  five entitled receipt-memory perspectives. Wallet and receipt replay checks pass.
+- After the explicit seated-time skip, both physically leave the Inn and walk
+  home: 166.669 and 164.579 m, maximum sampled step 0.500 m.
+- `PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_INN_PASS` confirms natural plan, morning
+  cash, observed outward/indoor/return travel, payment and seating in the same run.
+
+This is one complete controlled peaceful family scenario. It isolates native
+hostile spawns and unrelated quest ticks, and stages the observer; it does not
+prove every Inn layout, spontaneous danger interruptions or an unskipped day.

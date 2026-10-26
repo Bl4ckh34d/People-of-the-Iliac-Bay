@@ -1,6 +1,6 @@
 # Spieltest — 26. Oktober 2026
 
-Aktuell installiert: **`509FB25B9EEA`**, 15:51; Distribution und Player identisch.
+Aktuell installiert: **`E31822DEE3D6`**, 16:22; Distribution und Player identisch.
 Unity-Paketprüfung und **2147 Core-Tests** bestehen. Neu enthalten: korrigierte
 Stuhlidentität und Tresenzahlung im Inn, genaue Türbindung bei Enter sowie
 Wachverfolgung durch individuell beobachtete Türen. Die Wachverfolgung ist noch
@@ -11,11 +11,14 @@ Verlängerung. Die native Prüfung dieser Konditionen steht noch aus.
 
 Familien erreichen in zwei geprüften Inns ihre Plätze, zahlen und sitzen stabil;
 ihre tatsächlichen Käufe erscheinen korrekt in Erinnerungen. Im ursprünglichen
-Inn klappt der anschließende Ausgang noch nicht; vollständige Heimkehr bleibt offen.
+Inn131841 klappt der anschließende Ausgang noch nicht. Im kontrollierten Lauf15
+mit Inn197127 ist der gesamte Familienausflug einschließlich Heimkehr bestanden.
 Der Bank-Enter→Wait-Test bindet die richtige Tür. Blockierende Testposition und
 zu kurzes Testbudget sind korrigiert. Der Folgelauf zeigt aber, dass die
 Aufgabensteuerung das längere Budget verwirft. Der Quellfix besteht gezielte
-Prüfungen; Installation und erneuter Banklauf stehen noch aus.
+Prüfungen und ist installiert; der erneute Banklauf ist noch nicht abgenommen.
+Reparaturverwahrung und benannte Übergabeerinnerungen beider NPC-Teilnehmer sind
+ebenfalls enthalten; ihre vollständige Spielabnahme steht noch aus.
 Dungeon-Follow, Klettern und Thronplattform bleiben ebenfalls offen.
 Details und weitere offene Punkte: [Arbeitsliste](WORKLIST-2026-10-26.md).
 

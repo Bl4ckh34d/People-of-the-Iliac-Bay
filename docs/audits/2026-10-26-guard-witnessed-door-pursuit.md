@@ -63,3 +63,39 @@ Use a disposable `PeopleOfTheIliacBayTest-*` character and a loaded settlement w
 8. Lose the trail for 30 game minutes. Check active search returns/ends while wanted identity survives; a later actual sighting may use the existing reacquisition adapter. While the refuge is watched after its window expires, check it holds safely. Leave the room and verify ordinary offscreen recovery. A new visible refuge-exit journey is outside this slice.
 
 Required remaining evidence: native streamed doorway entry, actual loaded landing/spacing, real collision/FOV/occlusion, natural pursuit timing, native attack/death release, native disk reload, context in Talk, and search return/reacquisition. No such full native acceptance is claimed here.
+
+## Opt-in native probe prepared — execution pending
+
+Follow-up source: `mod/Scripts/GuardDoorNativeProbe.cs`, plus the two-line `guard-door` dispatch in `NativeNavigationTrial.cs`. Production pursuit behavior is unchanged. The probe is gated to the exact environment mode and an owned `PeopleOfTheIliacBayTest-*` character. The main agent owns all native runs and deployment.
+
+The fixture requires a loaded exterior, two existing posted guards and an unoccupied living ordinary resident. It selects an existing surveyed primary shop, Tavern or Guild Hall door accessible at the current game time. It validates actual door floor/owner transform, native supported collision-clear staging points, LOS and surveyed exterior approach/return routes. It does not invent a door, force open a business, alter game time or spawn a replacement identity. If these prerequisites are missing, it fails rather than silently changing the scenario.
+
+Controlled setup places the existing bodies, assigns the two guards to one shared exact-target report, and delivers a native resident-to-player 1 HP sourced hit followed by a native guard-to-resident 1 HP sourced hit. Both victims require actual health greater than one. These are staged source events, not naturally emergent aggression. Ordinary lawful-flight movement and the production shelter-arrival callback must produce the crossing. The probe never calls the doorway observation or Core pursuit admission methods directly. An early-update fixture-only safety component suppresses guard damage, archery and motor movement, including on the new streamed guard body; production exterior route placement and native senses remain in use. This proves native target assignment, not a subsequent native combat hit.
+
+`witnessed` faces one assigned guard toward the entrant and the other away. `unwitnessed` faces both away. Each checks the actual native FOV/LOS condition before movement. The probe requires multiple moving samples, over one metre of resident travel, actual door-floor proximity, disappearance of the exterior body, exact individual evidence, unchanged shared-report room knowledge, and exactly one or zero following guards. In witnessed mode the guard's actual body must advance to the same doorway and become hidden only at arrival. Native door height, travel, largest sampled frame displacement, identities and the door ID are logged.
+
+The fixture then uses the existing native player building transition. It checks actual matching resident/guard entry ground and absence of the other guard. To isolate indoor reacquisition from coincident entry bodies, the witnessed guard is explicitly staged on a collision-clear, visible, reachable native room anchor. Actual native sensing must reacquire the resident identity. A controlled resident-facing-away check verifies truthful refuge context and two seconds of stationary hold without fleeing the innocent player. Finally, deactivating the actual resident body must release native combat while preserving the bounded deadline and last seen point. These controlled indoor checks are not evidence of naturally emerged room positioning.
+
+At the exterior and loaded-room stages, the probe calls the actual mod save capture, FullSerializer JSON round-trip, and restore into a detached `WorldStateStore`. It checks per-guard entry evidence and the resident's private refuge/landing. It never replaces the live world with that snapshot. This is **live save-copy evidence, not game disk save/reload**. Cleanup restores surviving health and changed player/controller/component settings, removes fixture flight/shelter and the fixture report, and restores only the two fixture guard records. It never resurrects a dead body. Actual sourced-event history can remain in this disposable run. Ordinary world records are not replaced wholesale.
+
+Run through the existing launcher, once per mode, after the parent packages the frozen source. Use a daylight exterior fixture with at least two available guards; the fixture below is an existing launcher-supported disposable character/save pair, not a promise its current snapshot satisfies the prerequisites:
+
+```powershell
+$env:POTIB_NAVMESH_TRIAL = '1'
+$env:POTIB_ROADMAP_PROBE = 'guard-door'
+$env:POTIB_GUARD_DOOR_MODE = 'witnessed'
+Remove-Item Env:POTIB_NAVMESH_INTERIOR -ErrorAction SilentlyContinue
+& 'C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/tools/TownTest.ps1' -OutdoorNavigationProbe -FixtureCharacter 'PeopleOfTheIliacBayTest-9a5f197b' -FixtureSaveName 'People - Gothway Garden'
+# Separate fresh run with POTIB_GUARD_DOOR_MODE='unwitnessed'.
+```
+
+Required markers: `PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_EXTERIOR_PASS`, `PEOPLE_OF_THE_ILIAC_BAY_GUARD_DOOR_NATIVE_PASS` with the requested mode, cleanup marker, and outer `PEOPLE_OF_THE_ILIAC_BAY_NAVMESH_TRIAL_PASS: roadmap=guard-door`. Preserve each run's full log separately. A stage or generic startup marker is insufficient.
+
+Source verification after final probe edits:
+
+```powershell
+dotnet build tools/RuntimeCompile/RuntimeCompile.csproj --no-restore -p:BaseIntermediateOutputPath=obj/guard-door-probe/ -p:OutputPath=bin/guard-door-probe/ -v minimal
+git diff --check -- mod/Scripts/GuardDoorNativeProbe.cs mod/Scripts/NativeNavigationTrial.cs
+```
+
+Result: **0 warnings, 0 errors**; scoped whitespace check passes. No native probe execution by this worker. Outstanding beyond this bounded probe: naturally emerged pursuit and room movement, actual combat damage/death, physical occlusion/alternate-door rejection in Unity, Talk UI presentation, game disk reload, deadline return and later reacquisition. Native source freeze handed to the parent; no shared top-level documentation or Obsidian vault write. The reusable probe procedure is the capture candidate for parent-owned documentation/memory maintenance.
