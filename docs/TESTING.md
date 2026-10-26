@@ -34,7 +34,11 @@ These adapter tests do not prove actual Unity collision, animation or pursuit.
   remains 2147/2147 and RuntimeCompile is clean (`work/task-timing-*.log`).
   That production fix, repair custody and named NPC-delivery memories are now
   packaged. Unity native inventory checks and package verification pass in
-  `work/guard-door-budget-build-unity.log`; the Bank repeat remains pending acceptance.
+  `work/guard-door-budget-build-unity.log`. Native Bank run06 now passes actual
+  exact-door approach/crossing and subsequent10.006-game-second offscreen Wait;
+  player stays outside, identity/inventory/vitals unchanged. Preserved evidence:
+  `work/native-bank-enter-wait-06-player.log` and its launch log. Interior walking,
+  other buildings and full game reload are outside this test.
 - [Witnessed-door pursuit](audits/2026-10-26-guard-witnessed-door-pursuit.md) has
   source and regression evidence only. Full door crossing, combat, reload and
   Talk-context acceptance remain open. An observed expired refuge holds safely;

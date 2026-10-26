@@ -7,8 +7,9 @@ und Unity-Paketprüfung bestehen. Stuhlidentität und Tresenzahlung sind korrigi
 zwei Inn-Layouts bestehen Bezahlung, Sitzen und Kauferinnerungen. Kontrollierter
 Familienlauf15 besteht auch den Ausgang und Heimweg; Ausgang im ursprünglichen
 Inn131841 bleibt offen. Reisezeitbudget, Reparaturverwahrung und benannte
-NPC-Übergabeerinnerungen sind installiert. Der native Banktest wird mit erhaltenem
-Budget wiederholt; echte Wachverfolgung durch Türen ist noch abzunehmen.
+NPC-Übergabeerinnerungen sind installiert. Der native Banktest besteht mit erhaltenem
+Budget tatsächlichen Eintritt und anschließendes Warten bei Spieler draußen;
+echte Wachverfolgung durch Türen ist noch abzunehmen.
 
 Aktive Ergänzungen vom 26. Oktober 2026 stehen in der [Implementierungs- und Abnahmecheckliste](WORKLIST-2026-10-26.md). Diese Fehlerbehebung und Spielabnahme haben Vorrang vor neuen späteren Roadmap-Systemen.
 

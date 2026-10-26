@@ -16,7 +16,9 @@ mit Inn197127 ist der gesamte Familienausflug einschließlich Heimkehr bestanden
 Der Bank-Enter→Wait-Test bindet die richtige Tür. Blockierende Testposition und
 zu kurzes Testbudget sind korrigiert. Der Folgelauf zeigt aber, dass die
 Aufgabensteuerung das längere Budget verwirft. Der Quellfix besteht gezielte
-Prüfungen und ist installiert; der erneute Banklauf ist noch nicht abgenommen.
+Prüfungen und ist installiert. Der erneute Banklauf besteht den tatsächlichen
+Eintritt und anschließendes Warten bei draußen gebliebenem Spieler. Identität,
+Inventar und Vitalwerte bleiben unverändert; Innenwege sind damit nicht geprüft.
 Reparaturverwahrung und benannte Übergabeerinnerungen beider NPC-Teilnehmer sind
 ebenfalls enthalten; ihre vollständige Spielabnahme steht noch aus.
 Dungeon-Follow, Klettern und Thronplattform bleiben ebenfalls offen.

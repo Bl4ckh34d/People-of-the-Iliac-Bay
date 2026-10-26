@@ -93,3 +93,21 @@ Native run `03` used installed diagnostic bundle `B15621A2C8AE`. Its preserved l
 The fixture now reuses the existing MoveTo probe's reachable observer point, 2–4 metres from the actual resident. Native collision and movement rules are unchanged. Bundle `FCE340795270` passed Unity compilation and package checks on 26 October at 15:46. Native run `04` starts 2.5 metres apart and walks 257.322 metres before its 300-game-second deadline expires, still 90.851 metres from the door. The complete log is `work/native-bank-enter-wait-04-player.log`.
 
 The next diagnostic bundle, `509FB25B9EEA` at 15:51, requests 900 game seconds for Enter and allows 480 real seconds of observation. Run `05` nevertheless fails after 150.5 real seconds and 258.157 metres. `StreetPopulation.Actions.Tasks.cs` discards untimed `DurationSeconds` both when budgeting the task and when reconstructing its action, always using 300. This is a production task-timing gap, not another observer obstruction. Its repair and full Bank acceptance remain open. The complete log is `work/native-bank-enter-wait-05-player.log`.
+
+## Native Bank acceptance after the budget repair
+
+Root run `06` completes on installed bundle `E31822DEE3D6` (26 October16:22),
+using the same owned character and `People - Morning daily routines` fixture.
+The resident `s:1291010263:h:328960:r:0` physically reaches exact Bank door
+`door:1291010263:262414:769:14:0`; closest sampled distance is0.212m, inside the
+accepted0.250m arrival threshold. The actual crossing receipt completes Enter,
+then the task runs Wait for10.006 game seconds. The player remains outside.
+Identity, inventory and vitals are unchanged. Both native PASS and outer
+TownTest PASS markers are present; the owned process and launcher terminate.
+
+Evidence: `work/native-bank-enter-wait-06-player.log` (entry line1912 and final
+pass line1914) and `work/native-bank-enter-wait-06-launch.log`. This proves the
+same long native approach now survives the earlier five-minute task deadline,
+crosses its bound Bank door and performs the subsequent offscreen Wait. It is
+not an observed interior walking/Talk test, all-building acceptance, or a game
+disk reload. The separate guard pursuit probe remains unaccepted.
