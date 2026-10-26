@@ -24,6 +24,9 @@ namespace PeopleOfTheIliacBay.DFU
         public static int InitialWalletGold(WorldStateStore store,string personId)
         {return store.StartingNpcGold(personId,HomeLocationType,IsNobleFaction);}
 
+        public static int CashWithdrawalGold(WorldStateStore store,string personId)
+        {return store.NpcCashWithdrawalGold(personId,HomeLocationType,IsNobleFaction);}
+
         private static int HomeLocationType(int mapId)
         {
             var unity=DaggerfallWorkshop.DaggerfallUnity.Instance;

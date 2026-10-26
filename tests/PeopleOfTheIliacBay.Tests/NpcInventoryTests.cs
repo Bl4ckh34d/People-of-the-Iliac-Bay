@@ -31,6 +31,28 @@ namespace PeopleOfTheIliacBay.Tests
                 var restored=new WorldStateStore(42);restored.Restore(world.Snapshot());
                 Check.Equal(7,restored.StartingNpcGold("traveler:test",t=>throw new Exception("Must not reroll saved wallet"),f=>false));
             }));
+            cases.Add(("Cash withdrawal uses personal allowance instead of the exhausted saved wallet",()=>{
+                string id,other;var world=Create(out id,out other);
+                int expected=world.StartingNpcGold(id,t=>0,f=>false);
+                Check.True(world.InitializeNpcInventory(id,0,new[]{Item(71234)}));
+                var before=world.ReadNpcInventory(id);
+                Check.Equal(0,world.StartingNpcGold(id,t=>throw new Exception("Saved balance must remain zero"),f=>false));
+                Check.Equal(expected,world.NpcCashWithdrawalGold(id,t=>0,f=>false));
+                Check.Equal(0,world.ReadNpcInventory(id).WalletGold);
+                Check.Equal(before.Revision,world.ReadNpcInventory(id).Revision);
+                Check.Equal(before.Items[0].NativePayload,world.ReadNpcInventory(id).Items[0].NativePayload);
+                var restored=new WorldStateStore(1);restored.Restore(world.Snapshot());
+                Check.Equal(expected,restored.NpcCashWithdrawalGold(id,t=>0,f=>false));
+                Check.Equal(0,restored.ReadNpcInventory(id).WalletGold);
+                bool sawZero=false;
+                for(uint seed=0;seed<100 && !sawZero;seed++) {
+                    var farm=new WorldStateStore(seed);var person=farm.GetOrCreate(100,new[]{10},1).Households[0].Residents[0];
+                    if(farm.StartingNpcGold(person.Id,t=>3,f=>false)!=0)continue;
+                    sawZero=true;farm.InitializeNpcInventory(person.Id,0,new NpcInventoryItem[0]);
+                    Check.Equal(1,farm.NpcCashWithdrawalGold(person.Id,t=>3,f=>false));
+                }
+                Check.True(sawZero);
+            }));
             cases.Add(("Nobility overrides farm wallet; genuine native farm workers get farm funds",()=>{
                 var s=new WorldStateStore(5);
                 s.GetOrCreate(100,new[]{10},1);

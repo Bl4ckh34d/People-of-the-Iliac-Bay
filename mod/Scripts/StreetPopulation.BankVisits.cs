@@ -94,7 +94,7 @@ namespace PeopleOfTheIliacBay.DFU
                 visit.ServiceAt=now;SaveCashVisit(id,visit);
                 var inventory=worldStore.ReadNpcInventory(id);
                 if(inventory!=null && worldStore.TryCompleteNpcCashVisit(worldStore.CaptureNpcVitalsWriteEpoch(),id,inventory.Revision,
-                    visit.ProviderKey,NativeNpcInventoryBridge.InitialWalletGold(worldStore,id),now))
+                    visit.ProviderKey,NativeNpcInventoryBridge.CashWithdrawalGold(worldStore,id),now))
                 {
                     if(actor){var owner=actor.GetComponent<NativeNpcInventoryOwner>();if(owner && owner.Binding!=null)owner.Binding.Revision++;}
                     visit=worldStore.ReadNpcCashVisit(id);

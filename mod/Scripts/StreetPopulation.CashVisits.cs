@@ -46,7 +46,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
             if(visit==null)
             {
-                if(geometry==null || !EntranceSurveyReady || NativeNpcInventoryBridge.InitialWalletGold(worldStore,id)<1)return false;
+                if(geometry==null || !EntranceSurveyReady || NativeNpcInventoryBridge.CashWithdrawalGold(worldStore,id)<1)return false;
                 visit=ChooseCashVisit(plan,actor);if(visit==null)return false;
                 BindCashRendezvous(plan,actor,visit);if(!SaveCashVisit(id,visit))return false;
                 RemovePhysicalShopVisit(id);shopJourneys.Remove(id);shopDepartures.Remove(id);
@@ -102,7 +102,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var owner=actor.GetComponent<NativeNpcInventoryOwner>();
                 if(owner && owner.Binding!=null && CashProviderAvailable(plan,actor,visit) &&
                     worldStore.TryCompleteNpcCashVisit(worldStore.CaptureNpcVitalsWriteEpoch(),id,owner.Binding.Revision,
-                        visit.ProviderKey,NativeNpcInventoryBridge.InitialWalletGold(worldStore,id),now))
+                        visit.ProviderKey,NativeNpcInventoryBridge.CashWithdrawalGold(worldStore,id),now))
                     owner.Binding.Revision++;
                 visit=worldStore.ReadNpcCashVisit(id);visit.ServiceAt=0;visit.Returning=true;SaveCashVisit(id,visit);
                 if(interior && interior.EntryDoor.buildingKey==plan.Resident.HomeKey && visit.Rendezvous==null)

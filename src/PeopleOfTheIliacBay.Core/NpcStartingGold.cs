@@ -8,6 +8,19 @@ namespace PeopleOfTheIliacBay.Core
             if(string.IsNullOrWhiteSpace(personId))throw new ArgumentException("Missing NPC identity.");
             var saved=IndexedNpcInventory(personId);
             if(saved!=null)return saved.WalletGold;
+            return CalculateNpcWalletAllowance(personId,locationType,nobleFaction);
+        }
+
+        public int NpcCashWithdrawalGold(string personId,Func<int,int> locationType,Func<int,bool> nobleFaction)
+        {
+            if(string.IsNullOrWhiteSpace(personId))throw new ArgumentException("Missing NPC identity.");
+            // An empty purse is the reason for the errand, not its payout.
+            // Even residents whose initial pocket money was zero can collect a coin.
+            return Math.Max(1,CalculateNpcWalletAllowance(personId,locationType,nobleFaction));
+        }
+
+        private int CalculateNpcWalletAllowance(string personId,Func<int,int> locationType,Func<int,bool> nobleFaction)
+        {
             // Resolve permanent identity, never current visit/routine destination.
             int home=-1;
             var native=state.NativePeople.Find(p=>p.Id==personId);

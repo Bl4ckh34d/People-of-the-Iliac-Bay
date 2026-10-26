@@ -3,7 +3,7 @@ param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$Use
     [switch]$ValidateWardrobe, [switch]$ValidateCrowd, [switch]$ValidateShopping, [switch]$ValidateSpeech, [switch]$ShoppingBuyerOnly,
     [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport,
     [switch]$ValidateStaticTrade, [switch]$ValidateStreetEncounter, [switch]$ValidateSceneObservers, [switch]$ValidateHousing,
-    [switch]$ClimateDetails, [switch]$ValidateComplaint, [switch]$ValidateComplaintWait, [switch]$ValidateMurderReportChat)
+    [switch]$ClimateDetails, [switch]$ValidateComplaint, [switch]$ValidateComplaintWait, [switch]$ValidateMurderReportChat, [switch]$ValidateBankCash)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
@@ -12,7 +12,7 @@ if($ValidateMurderReportChat -and -not $ValidateMurderReport){throw '-ValidateMu
 if($ValidateStaticTrade -and $ValidatePlaytest){throw 'Run static and mobile personal trade as separate owned fixtures.'}
 if($ClimateDetails -and ($ValidateArrival -or $ValidateWardrobe -or $ValidateCrowd -or $ValidateShopping -or
     $ValidateLeisure -or $ValidateMorningShop -or $ValidateInnDiversion -or $ValidateMurderReport -or
-    $ValidateStaticTrade -or $ValidateStreetEncounter -or $ValidateSceneObservers -or $ValidateHousing -or $ValidateComplaint)){
+    $ValidateStaticTrade -or $ValidateStreetEncounter -or $ValidateSceneObservers -or $ValidateHousing -or $ValidateComplaint -or $ValidateBankCash)){
     throw '-ClimateDetails requires the normal loiter profile; focused fixtures bypass its timing hooks.'
 }
 $repo=Split-Path $PSScriptRoot -Parent
@@ -81,6 +81,7 @@ if($ValidateStaticTrade){$arguments+=' -peopleoftheiliacbay-verify-static-trade'
 if($ValidateStreetEncounter){$arguments+=' -peopleoftheiliacbay-verify-street-encounter'}
 if($ValidateSceneObservers){$arguments+=' -peopleoftheiliacbay-verify-scene-observers'}
 if($ValidateHousing){$arguments+=' -peopleoftheiliacbay-verify-housing'}
+if($ValidateBankCash){$arguments+=' -peopleoftheiliacbay-verify-bank-cash'}
 if($ValidateCrowd){$arguments+=' -peopleoftheiliacbay-verify-crowd'}
 if($ValidateShopping){$arguments+=' -peopleoftheiliacbay-verify-shopping'}
 if($ValidateSpeech){$arguments+=' -peopleoftheiliacbay-verify-return-voice'}
