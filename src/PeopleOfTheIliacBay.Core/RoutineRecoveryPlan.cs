@@ -219,6 +219,11 @@ namespace PeopleOfTheIliacBay.Core
             }
             Add(text,plan.ChildIds.Count);foreach(var child in plan.ChildIds)Add(text,child);
             Add(text,plan.JointInn==null?-1:plan.JointInn.InnKey);
+            if(plan.JointInn?.PayerId!=null)
+            {
+                Add(text,plan.JointInn.PayerId);Add(text,plan.JointInn.FirstMenuIndex);Add(text,plan.JointInn.SecondMenuIndex);
+                Add(text,plan.JointInn.FirstPriceGold);Add(text,plan.JointInn.SecondPriceGold);
+            }
             if(plan.JointInn!=null)foreach(var outing in new[]{plan.JointInn.First,plan.JointInn.Second})
                 Add(text,Fingerprint(new ResidentRoutine{ResidentId="joint",Itinerary=outing.Itinerary,
                     ItineraryDepartureSeconds=outing.DepartureSeconds},plan.HomeKey,plan.WakeMinute,plan.SleepMinute));

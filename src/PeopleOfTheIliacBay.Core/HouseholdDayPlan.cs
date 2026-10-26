@@ -21,6 +21,8 @@ namespace PeopleOfTheIliacBay.Core
     {
         public int InnKey;
         public ResidentDailyOuting First,Second;
+        public string PayerId;
+        public int FirstMenuIndex=-1,SecondMenuIndex=-1,FirstPriceGold,SecondPriceGold;
     }
     [Serializable]
     public sealed class HouseholdDayPlan
@@ -45,6 +47,8 @@ namespace PeopleOfTheIliacBay.Core
                 throw new ArgumentException("Invalid dated household plan.");
             var first=CopyMember(source.First);var second=CopyMember(source.Second);
             if(first.ResidentId==second.ResidentId)throw new ArgumentException("A household day requires two different parents.");
+            if(source.JointInn?.PayerId!=null && source.JointInn.PayerId!=first.ResidentId && source.JointInn.PayerId!=second.ResidentId)
+                throw new ArgumentException("Shared Inn payer must be one of the participating parents.");
             var ids=new HashSet<string>(StringComparer.Ordinal);var children=new List<string>();
             foreach(var child in source.ChildIds)
             {if(!IdentityText(child) || child==first.ResidentId || child==second.ResidentId || !ids.Add(child))
@@ -62,6 +66,9 @@ namespace PeopleOfTheIliacBay.Core
             for(int i=0;i<left.ChildIds.Count;i++)if(left.ChildIds[i]!=right.ChildIds[i])return false;
             if(left.JointInn==null || right.JointInn==null)return left.JointInn==right.JointInn;
             return left.JointInn.InnKey==right.JointInn.InnKey &&
+                left.JointInn.PayerId==right.JointInn.PayerId && left.JointInn.FirstMenuIndex==right.JointInn.FirstMenuIndex &&
+                left.JointInn.SecondMenuIndex==right.JointInn.SecondMenuIndex && left.JointInn.FirstPriceGold==right.JointInn.FirstPriceGold &&
+                left.JointInn.SecondPriceGold==right.JointInn.SecondPriceGold &&
                 JointFingerprint(left,left.JointInn.First)==JointFingerprint(right,right.JointInn.First) &&
                 JointFingerprint(left,left.JointInn.Second)==JointFingerprint(right,right.JointInn.Second);
         }
@@ -97,6 +104,9 @@ namespace PeopleOfTheIliacBay.Core
         internal static HouseholdJointInn CopyJoint(HouseholdJointInn source)
         {
             if(source==null)return null;
+            if(source.PayerId!=null && (!IdentityText(source.PayerId) || source.FirstMenuIndex<0 || source.FirstMenuIndex>10 ||
+                source.SecondMenuIndex<0 || source.SecondMenuIndex>10 || source.FirstPriceGold<1 || source.FirstPriceGold>255 ||
+                source.SecondPriceGold<1 || source.SecondPriceGold>255))throw new ArgumentException("Invalid shared Inn spending plan.");
             var first=CopyJointOuting(source.First,source.InnKey);var second=CopyJointOuting(source.Second,source.InnKey);
             var a=ResidentVisitJourney.Create(first.DepartureSeconds,first.Itinerary);
             var b=ResidentVisitJourney.Create(second.DepartureSeconds,second.Itinerary);
@@ -105,7 +115,9 @@ namespace PeopleOfTheIliacBay.Core
             var ad=first.Itinerary.ExitRoute[0];var bd=second.Itinerary.ExitRoute[0];
             if(!Same(ah,bh) || !Same(ad,bd) || Math.Min(av.LeaveAt,bv.LeaveAt)-Math.Max(av.EnterAt,bv.EnterAt)<900)
                 throw new ArgumentException("Joint Inn routes need the same real home, Inn entrance and shared visit window.");
-            return new HouseholdJointInn{InnKey=source.InnKey,First=first,Second=second};
+            return new HouseholdJointInn{InnKey=source.InnKey,First=first,Second=second,PayerId=source.PayerId,
+                FirstMenuIndex=source.FirstMenuIndex,SecondMenuIndex=source.SecondMenuIndex,
+                FirstPriceGold=source.FirstPriceGold,SecondPriceGold=source.SecondPriceGold};
         }
         private static ResidentDailyOuting CopyJointOuting(ResidentDailyOuting source,int inn)
         {

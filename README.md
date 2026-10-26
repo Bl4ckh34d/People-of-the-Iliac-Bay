@@ -6,9 +6,16 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Local test bundle **7BB6C4BB878D** is built and installed (26 October, 08:57); Unity package integration and **2121/2121** core checks pass. The separate player-violence observer now uses actual body facing: seeing the victim alone does not identify a player behind the observer, and hearing alone does not establish an eyewitness. Eighteen mobile/static native boundary cases pass; actual combat swings, deaths and physical interior encounters remain separate acceptance work. See the [player-violence audit](docs/audits/2026-10-26-player-attack-perception.md). Earlier [non-player attack knowledge](docs/audits/2026-10-26-enemy-attack-knowledge.md), [free-text report delivery](docs/audits/2026-10-26-murder-report-dialogue.md), arrival-hold, housing-cache, trade and urgent-movement repairs remain included. Other dialogue cases, spontaneous encounters, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
+Local test bundle **34CDA5300CC21** remains installed (26 October, 09:27); its Unity package integration and **2122/2122** core checks pass. It includes the empty-wallet bank repair and verified return to the home door. The separate player-violence observer now uses actual body facing: seeing the victim alone does not identify a player behind the observer, and hearing alone does not establish an eyewitness. Eighteen mobile/static native boundary cases pass; actual combat swings, deaths and physical interior encounters remain separate acceptance work. See the [player-violence audit](docs/audits/2026-10-26-player-attack-perception.md). Earlier [non-player attack knowledge](docs/audits/2026-10-26-enemy-attack-knowledge.md), [free-text report delivery](docs/audits/2026-10-26-murder-report-dialogue.md), arrival-hold, housing-cache, trade and urgent-movement repairs remain included. Other dialogue cases, spontaneous encounters, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
 
 ## Project status
+
+The [street-density investigation](docs/audits/2026-10-26-street-density.md) reproduces
+very sparse daytime streets: schedules send most residents home or indoors while
+the spawn cap remains unused. New optional outings now use a wider seeded
+departure window. The native comparison shows only a small improvement; broader
+outdoor activity and existing-plan distribution remain open. Source checks pass
+2129 Core tests; this source checkpoint is not yet installed as a new bundle.
 
 Controlled direct-threat reporting now passes an actual outdoor journey and
 delayed dispatch of four existing guards: 10.94 m travelled at an average

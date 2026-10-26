@@ -12,9 +12,20 @@ namespace PeopleOfTheIliacBay.Tests
         {
             internal WorldStateStore Store;internal HouseholdDayPlan Plan;internal NativePerson Keeper;internal double Departure;
         }
-        internal static Fixture Prepared(int firstGold=20,int secondGold=20)
+        internal static Fixture Prepared(int firstGold=20,int secondGold=20,string payer=null,bool arrive=true)
         {
-            var request=HouseholdDayAppointmentTests.SharedRequest();var plan=HouseholdDayPlanTests.Create(request);
+            var request=HouseholdDayAppointmentTests.SharedRequest();
+            if(payer!=null)
+            {
+                var payerField=typeof(HouseholdJointInn).GetField("PayerId");
+                Check.True(payerField!=null,"Shared Inn outing needs one explicit payer.");
+                payerField.SetValue(request.JointInn,payer);
+                typeof(HouseholdJointInn).GetField("FirstMenuIndex").SetValue(request.JointInn,4);
+                typeof(HouseholdJointInn).GetField("SecondMenuIndex").SetValue(request.JointInn,5);
+                typeof(HouseholdJointInn).GetField("FirstPriceGold").SetValue(request.JointInn,2);
+                typeof(HouseholdJointInn).GetField("SecondPriceGold").SetValue(request.JointInn,2);
+            }
+            var plan=HouseholdDayPlanTests.Create(request);
             var store=HouseholdDayPlanTests.Store(request);Check.True(store.TryPublishHouseholdDay(plan,request.PlannedAt,out var why),why);
             var motion=HouseholdJointMovement.Create(plan,request.PlannedAt);store.SaveHouseholdJointProgress(motion.Snapshot());
             var keeper=store.RegisterNativePerson(2,10,900,"Inn keeper",ResidentSex.Female,0,0,182,0);
@@ -32,9 +43,12 @@ namespace PeopleOfTheIliacBay.Tests
                 ProductName="native-item-"+i,BasePriceGold=2});
             store.RegisterNpcInnServiceCatalog(NpcInnServiceCatalog.Seal(catalog));
             double start=plan.AbsoluteDay*86400d+plan.JointInn.First.DepartureSeconds;
-            store.BeginHouseholdJointSimulation(plan.Id,motion.Snapshot().Sequence,start);
-            store.AdvanceHouseholdJointSimulation(plan.Id,start+300);
-            Check.Equal(HouseholdJointPhase.AtInn,store.ReadHouseholdJointSimulation(2,7).Phase);
+            if(arrive)
+            {
+                store.BeginHouseholdJointSimulation(plan.Id,motion.Snapshot().Sequence,start);
+                store.AdvanceHouseholdJointSimulation(plan.Id,start+300);
+                Check.Equal(HouseholdJointPhase.AtInn,store.ReadHouseholdJointSimulation(2,7).Phase);
+            }
             return new Fixture{Store=store,Plan=plan,Keeper=keeper,Departure=start};
         }
         private static GuardPoint3 P(double x){return new GuardPoint3{X=x};}
@@ -49,6 +63,52 @@ namespace PeopleOfTheIliacBay.Tests
         }
         internal static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Planned withdrawal preserves existing gold and completes the shared budget once",()=>{
+                var f=Prepared(1,0,"mother",false);double now=f.Plan.AbsoluteDay*86400d+9*3600;
+                var epoch=f.Store.CaptureNpcVitalsWriteEpoch();
+                Check.True(f.Store.SaveNpcCashVisit(epoch,"mother",new NpcCashVisit {ProviderKey=7,ReturnKey=7,
+                    PlannedHouseholdDayId=f.Plan.Id,RequiredGold=4,ServiceAt=now+10,
+                    Position=new NpcActionTarget {Kind=NpcActionTargetKind.WorldPoint,SettlementId=2,BuildingKey=-1,WorldSpaceId="outdoors:2"}}));
+                var wallet=f.Store.ReadNpcInventory("mother");
+                Check.True(!f.Store.TryCompleteNpcCashVisit(epoch,"mother",wallet.Revision,7,5,now));
+                Check.True(!f.Store.TryCompleteNpcCashVisit(epoch,"mother",wallet.Revision,7,2,now+10),"Insufficient withdrawal must not finish the errand.");
+                var restored=new WorldStateStore(0);restored.Restore(f.Store.Snapshot());epoch=restored.CaptureNpcVitalsWriteEpoch();
+                Check.Equal(f.Plan.Id,restored.ReadNpcCashVisit("mother").PlannedHouseholdDayId);
+                Check.True(restored.TryCompleteNpcCashVisit(epoch,"mother",wallet.Revision,7,5,now+10));
+                Check.Equal(6,restored.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(0,restored.ReadNpcInventory("father").WalletGold);
+                Check.True(!restored.TryCompleteNpcCashVisit(epoch,"mother",wallet.Revision+1,7,5,now+11));
+            }));
+            cases.Add(("Shared Inn payer funds both actual meals from one wallet",()=>{
+                var f=Prepared(4,0,"mother");
+                var service=(HouseholdInnServiceAdmission)Advance(f,f.Departure+700);
+                Check.Equal("purchased",service.Outcome);
+                Check.Equal(0,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(0,f.Store.ReadNpcInventory("father").WalletGold);
+                Check.Equal(4,service.FirstReceipt.MenuIndex);Check.Equal(5,service.SecondReceipt.MenuIndex);
+                Check.Equal("mother",Field<string>(service.FirstReceipt,"PayerId"));
+                Check.Equal("mother",Field<string>(service.SecondReceipt,"PayerId"));
+                var restored=new WorldStateStore(0);restored.Restore(f.Store.Snapshot());
+                Check.Equal("mother",Field<string>(restored.ReadHouseholdInnServiceAdmission(f.Plan.Id).SecondReceipt,"PayerId"));
+                Advance(f,f.Departure+701);Check.Equal(0,f.Store.ReadNpcInventory("mother").WalletGold);
+            }));
+            cases.Add(("Shared Inn cannot silently debit an unselected partner",()=>{
+                var f=Prepared(4,100,"mother");var wallet=f.Store.ReadNpcInventory("mother");
+                Check.True(f.Store.CommitNpcInventoryTransaction("spent-before-counter",new[]{new NpcInventoryUpdate{
+                    PersonId="mother",ExpectedRevision=wallet.Revision,WalletGold=3,Items=wallet.Items}}));
+                Check.True(Advance(f,f.Departure+700)==null);
+                Check.True(f.Store.NeedsNpcCashErrand("mother",f.Departure+700));
+                Check.Equal(3,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(100,f.Store.ReadNpcInventory("father").WalletGold);
+            }));
+            cases.Add(("Shared Inn budget requests cash before departure even with a nonempty wallet",()=>{
+                var f=Prepared(3,0,"mother",false);double now=f.Plan.AbsoluteDay*86400d+9*3600;
+                Check.True(f.Store.NeedsNpcCashErrand("mother",now));
+                Check.True(!f.Store.NeedsNpcCashErrand("father",now),"Partner must not duplicate the planned bank errand.");
+                var ready=Prepared(4,0,"mother",false);
+                Check.True(!ready.Store.NeedsNpcCashErrand("mother",now));
+                Check.True(!ready.Store.NeedsNpcCashErrand("father",now));
+            }));
             cases.Add(("Native Inn service needs buyer gold but no keeper inventory",()=>{
                 var f=Prepared();var state=f.Store.Snapshot();state.NpcInventories.RemoveAll(i=>i.PersonId==f.Keeper.Id);f.Store.Restore(state);
                 var service=(HouseholdInnServiceAdmission)Advance(f,f.Departure+700);

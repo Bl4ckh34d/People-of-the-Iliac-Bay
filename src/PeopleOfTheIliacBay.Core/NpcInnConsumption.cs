@@ -12,7 +12,7 @@ namespace PeopleOfTheIliacBay.Core
     [Serializable]
     public sealed class NpcInnConsumptionReceipt
     {
-        public string VisitId, BuyerId, KeeperId, ProductName, Reason;
+        public string VisitId, BuyerId, PayerId, KeeperId, ProductName, Reason;
         public NpcInnConsumptionKind Kind;
         public NpcInnConsumptionOutcome Outcome;
         public int MenuIndex = -1, QuotedPriceGold, ChargedGold;
@@ -146,7 +146,7 @@ namespace PeopleOfTheIliacBay.Core
         internal static bool SameReceipt(NpcInnConsumptionReceipt a, NpcInnConsumptionReceipt b)
         {
             return a != null && b != null && a.VisitId == b.VisitId && a.BuyerId == b.BuyerId &&
-                a.KeeperId == b.KeeperId && a.ProductName == b.ProductName && a.Reason == b.Reason &&
+                a.PayerId == b.PayerId && a.KeeperId == b.KeeperId && a.ProductName == b.ProductName && a.Reason == b.Reason &&
                 a.Kind == b.Kind && a.Outcome == b.Outcome && a.MenuIndex == b.MenuIndex &&
                 a.QuotedPriceGold == b.QuotedPriceGold && a.ChargedGold == b.ChargedGold &&
                 a.CompletedAt == b.CompletedAt && a.FoodFulfilled == b.FoodFulfilled &&
@@ -160,6 +160,9 @@ namespace PeopleOfTheIliacBay.Core
         {
             if (source == null) return null;
             var visit=NpcInnServiceIdentity.Copy(identity);
+            if(source.PayerId!=null && (string.IsNullOrWhiteSpace(source.PayerId) || source.PayerId.Length>256 ||
+                source.Outcome!=NpcInnConsumptionOutcome.Purchased || visit.HouseholdDayId==null))
+                throw new ArgumentException("Invalid shared Inn payer receipt.");
             if (source.VisitId != ServiceVisitIdValidated(visit) || source.BuyerId != visit.BuyerId ||
                 source.VisitId.Length > 80 || string.IsNullOrWhiteSpace(source.VisitId) ||
                 string.IsNullOrWhiteSpace(source.BuyerId) || source.BuyerId.Length > 256 ||
@@ -199,6 +202,7 @@ namespace PeopleOfTheIliacBay.Core
             {
                 VisitId = source.VisitId,
                 BuyerId = source.BuyerId,
+                PayerId = source.PayerId,
                 KeeperId = source.KeeperId,
                 ProductName = source.ProductName,
                 Reason = source.Reason,
@@ -408,21 +412,26 @@ namespace PeopleOfTheIliacBay.Core
                 !IsVisitKeeper(visit, keeperId)) return false;
             NpcInventoryState buyer = IndexedNpcInventory(buyerId);
             if (buyer == null) return false;
-
-            bool affordable = buyer.WalletGold >= priceGold;
+            var family=FundedHouseholdInn(visit.HouseholdDayId,buyerId);
+            string payerId=family?.JointInn.PayerId;
+            var payer=payerId==null?buyer:IndexedNpcInventory(payerId);
+            bool payerAlive;
+            if(payer==null || !KnownNpcIdentity(state,payer.PersonId,out payerAlive) || !payerAlive)return false;
+            bool affordable = payer.WalletGold >= priceGold;
             var proposedReceipt = NpcInnConsumption.CreatePurchase(visit, keeperId, now, kind,
                 menuIndex, productName, priceGold, affordable);
+            if(affordable && payerId!=null)proposedReceipt.PayerId=payerId;
             NpcInnConsumptionCursor next = NpcInnConsumption.CreateCursor(visit, proposedReceipt);
             if (previous != null && state.NpcInnConsumptionCursors.IndexOf(previous) < 0) return false;
             NpcInnConsumptionReceipt detachedReceipt = NpcInnConsumption.CopyReceipt(proposedReceipt, visit);
             if (affordable)
             {
-                NpcInventoryState buyerCopy = CopyNpcInventory(buyer);
+                NpcInventoryState buyerCopy = CopyNpcInventory(payer);
                 string transactionId = "inn-consumption:" + proposedReceipt.VisitId;
                 if (!CommitNpcInventoryTransaction(transactionId, new[]
                 {
-                    new NpcInventoryUpdate { PersonId = buyerId, ExpectedRevision = buyer.Revision,
-                        WalletGold = buyer.WalletGold - priceGold, Items = buyerCopy.Items },
+                    new NpcInventoryUpdate { PersonId = payer.PersonId, ExpectedRevision = payer.Revision,
+                        WalletGold = payer.WalletGold - priceGold, Items = buyerCopy.Items },
                 })) return false;
             }
 

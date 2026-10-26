@@ -69,6 +69,29 @@ namespace PeopleOfTheIliacBay.Tests
         }
         internal static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Observed shared Inn purchases charge the planned payer and retain both receipts",()=>{
+                var f=Create(prepare:r=>{
+                    r.JointInn.PayerId="mother";r.JointInn.FirstMenuIndex=1;r.JointInn.SecondMenuIndex=1;
+                    r.JointInn.FirstPriceGold=5;r.JointInn.SecondPriceGold=5;
+                });
+                var wallet=f.Store.ReadNpcInventory("father");
+                Check.True(f.Store.CommitNpcInventoryTransaction("empty-partner",new[]{new NpcInventoryUpdate{
+                    PersonId="father",ExpectedRevision=wallet.Revision,WalletGold=0,Items=wallet.Items}}));
+                f.Store.StoreObservedVisit(Visit(f));f.Store.StoreObservedVisit(Visit(f,"father"));
+                foreach(string buyer in new[]{"mother","father"})
+                {
+                    Check.True(f.Store.TryBuyNpcInnConsumption(buyer,f.Keeper.Id,f.EnteredAt+2,
+                        NpcInnConsumptionKind.Drink,1,"Beer",5,out var receipt),"Shared payer purchase failed for "+buyer);
+                    Check.Equal("mother",receipt.PayerId);Check.Equal(NpcInnConsumptionOutcome.Purchased,receipt.Outcome);
+                }
+                Check.Equal(10,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.Equal(0,f.Store.ReadNpcInventory("father").WalletGold);
+                var restored=Reload(f.Store);
+                Check.Equal("mother",restored.ReadNpcInnConsumption("father").PayerId);
+                Check.True(!restored.TryBuyNpcInnConsumption("father",f.Keeper.Id,f.EnteredAt+2,
+                    NpcInnConsumptionKind.Drink,1,"Beer",5,out var replay),"Settled observed purchase must reject a replay.");
+                Check.Equal(10,restored.ReadNpcInventory("mother").WalletGold);
+            }));
             cases.Add(("Atomic family capture cannot publish only one parent's selected chair",()=>{
                 var f=Create();var first=Visit(f);var second=Visit(f,"father");Set(first,"HouseholdSeatId","chair-a");
                 var method=typeof(WorldStateStore).GetMethod("StoreHouseholdInnVisits");

@@ -985,14 +985,16 @@ namespace PeopleOfTheIliacBay.DFU
                 return;
             }
             Vector3 player = game.PlayerMotor.transform.position;
+            var density=BeginStreetDensity(seconds);
             PrepareClosedShopLeisure(seconds);
             BeginHouseholdJointFrame();
             var actorSpawnBudget = new PopulationSpawnBudget(4,2);
             long actorSpawnStarted=System.Diagnostics.Stopwatch.GetTimestamp();
             foreach (var plan in RuntimePlansWithPaidDoor(seconds))
             {
-                if(simulatedFamilyFrame.Contains(plan.Resident.Id))continue;
-                if(pendingHouseholdInitialization.Contains(plan.Resident.Id))continue;
+                if(density!=null)density.Considered++;
+                if(simulatedFamilyFrame.Contains(plan.Resident.Id)){if(density!=null)density.SimulatedFamily++;continue;}
+                if(pendingHouseholdInitialization.Contains(plan.Resident.Id)){if(density!=null)density.FamilyPreparing++;continue;}
                 if(roadTravelActors && roadTravelActors.OwnsPaidCompanion(plan.Resident.Id))continue;
                 var state = worldStore.IsResidentAway(plan.Resident.Id,seconds) ? Scheduled(plan,seconds) :
                     EntryState(plan.Resident.Id, seconds, Scheduled(plan,seconds));
@@ -1005,7 +1007,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(reaction!=null || !plan.Resident.IsAlive || QuestOwned(plan.Resident))
                 { worldStore.RemoveObservedVisit(plan.Resident.Id);RemovePhysicalShopVisit(plan.Resident.Id); }
                 if (!interior && ApplyOutdoorBodyReport(plan,ref actor,seconds,reaction)) continue;
-                if(ApplyNpcActionOverlay(plan,ref actor,seconds,reaction)) continue;
+                if(ApplyNpcActionOverlay(plan,ref actor,seconds,reaction)){if(density!=null)density.ActionOwned++;continue;}
                 if(reaction!=null) ClearProactiveContactMotion(plan.Resident.Id);
                 else if(ApplyProactiveContactApproach(plan,ref actor,seconds)) continue;
                 bool outsideSchedule=state.Activity==Activity.Travel || state.Activity==Activity.Meeting;
@@ -1019,6 +1021,7 @@ namespace PeopleOfTheIliacBay.DFU
                     (position - player).sqrMagnitude <= limit * limit;
                 if (HasDialogueComplaint(plan.Resident.Id))
                     visible = true;
+                if(density!=null){density.Count(state.Activity);if(outside)density.Outside++;else density.Inside++;if(visible)density.NearEligible++;}
                 if (!visible)
                 {
                     if (!skipped && reaction == null && actor && !worldStore.IsResidentAway(plan.Resident.Id, seconds) &&
@@ -1037,7 +1040,8 @@ namespace PeopleOfTheIliacBay.DFU
                 if (!actor)
                 {
                     if (actors.Count >= 80 || !actorSpawnBudget.TryConsume(
-                        (System.Diagnostics.Stopwatch.GetTimestamp()-actorSpawnStarted)*1000d/System.Diagnostics.Stopwatch.Frequency)) continue;
+                        (System.Diagnostics.Stopwatch.GetTimestamp()-actorSpawnStarted)*1000d/System.Diagnostics.Stopwatch.Frequency))
+                    {if(density!=null){if(actors.Count>=80)density.CapDeferred++;else density.SpawnDeferred++;}continue;}
                     phase=RuntimeTiming.Start("resident-spawn");
                     try
                     {
@@ -1106,6 +1110,7 @@ namespace PeopleOfTheIliacBay.DFU
                 RecognizePartnerKiller(actor,seconds,directory.transform,-1);
             }
             TickHouseholdJointBodies(seconds);
+            ReportStreetDensity(density);
         }
         private void UpdateInterior(double seconds)
         {

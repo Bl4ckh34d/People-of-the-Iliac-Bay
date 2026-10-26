@@ -127,14 +127,21 @@ namespace PeopleOfTheIliacBay.Core
             var a=ReadNpcInnServiceConsumption(current.FirstIdentity);var b=ReadNpcInnServiceConsumption(current.SecondIdentity);
             var firstQuote=QuoteHouseholdMenu(current,current.FirstIdentity,first,a);
             var secondQuote=QuoteHouseholdMenu(current,current.SecondIdentity,second,b);
+            string payerId=plan.JointInn.PayerId;
+            var payer=payerId==null?null:IndexedNpcInventory(payerId);
             int needed=(a==null?firstQuote.PriceGold:0)+(b==null?secondQuote.PriceGold:0);
             bool available=HouseholdPaymentCanAdvance(current.FirstIdentity,a) && HouseholdPaymentCanAdvance(current.SecondIdentity,b) &&
                 (a==null || a.Outcome==NpcInnConsumptionOutcome.Purchased) && (b==null || b.Outcome==NpcInnConsumptionOutcome.Purchased);
-            bool affordable=available && (a!=null || first.WalletGold>=firstQuote.PriceGold) && (b!=null || second.WalletGold>=secondQuote.PriceGold);
+            bool affordable=available && (payerId!=null?payer!=null && payer.WalletGold>=needed:
+                (a!=null || first.WalletGold>=firstQuote.PriceGold) && (b!=null || second.WalletGold>=secondQuote.PriceGold));
             current.FirstReceipt=a??ProposeHouseholdMember(current.FirstIdentity,current.Catalog.KeeperId,current.CounterAt,firstQuote,
                 affordable,available && first.WalletGold<firstQuote.PriceGold);
             current.SecondReceipt=b??ProposeHouseholdMember(current.SecondIdentity,current.Catalog.KeeperId,current.CounterAt,secondQuote,
                 affordable,available && second.WalletGold<secondQuote.PriceGold);
+            if(affordable && payerId!=null)
+            {
+                current.FirstReceipt.PayerId=payerId;current.SecondReceipt.PayerId=payerId;
+            }
             bool purchased=current.FirstReceipt.Outcome==NpcInnConsumptionOutcome.Purchased && current.SecondReceipt.Outcome==NpcInnConsumptionOutcome.Purchased;
             current.Outcome=purchased?"purchased":"refused";current.Revision++;
             if(!purchased)
@@ -153,10 +160,15 @@ namespace PeopleOfTheIliacBay.Core
             if(affordable && needed>0)
             {
                 var updates=new List<NpcInventoryUpdate>();
-                if(a==null)updates.Add(new NpcInventoryUpdate{PersonId=first.PersonId,ExpectedRevision=first.Revision,
-                    WalletGold=first.WalletGold-firstQuote.PriceGold,Items=CopyNpcInventory(first).Items});
-                if(b==null)updates.Add(new NpcInventoryUpdate{PersonId=second.PersonId,ExpectedRevision=second.Revision,
-                    WalletGold=second.WalletGold-secondQuote.PriceGold,Items=CopyNpcInventory(second).Items});
+                if(payerId!=null)updates.Add(new NpcInventoryUpdate{PersonId=payerId,ExpectedRevision=payer.Revision,
+                    WalletGold=payer.WalletGold-needed,Items=CopyNpcInventory(payer).Items});
+                else
+                {
+                    if(a==null)updates.Add(new NpcInventoryUpdate{PersonId=first.PersonId,ExpectedRevision=first.Revision,
+                        WalletGold=first.WalletGold-firstQuote.PriceGold,Items=CopyNpcInventory(first).Items});
+                    if(b==null)updates.Add(new NpcInventoryUpdate{PersonId=second.PersonId,ExpectedRevision=second.Revision,
+                        WalletGold=second.WalletGold-secondQuote.PriceGold,Items=CopyNpcInventory(second).Items});
+                }
                 if(!CommitNpcInventoryTransaction("household-service:"+current.HouseholdDayId,updates))return HouseholdInnServiceAdmission.Copy(existing);
             }
             if(firstCursor!=null)PublishInnConsumptionCursor(IndexedInnConsumptionCursor(firstCursor.BuyerId),firstCursor);
@@ -230,7 +242,9 @@ namespace PeopleOfTheIliacBay.Core
         {
             var prices=new List<int>();for(int i=0;i<11;i++)prices.Add(NpcInnServiceCatalog.Quote(service.Catalog,i,service.CounterAt,service.Tariff).PriceGold);
             var resident=ResolveResident(identity.BuyerId);
-            int index=prior!=null && prior.MenuIndex>=0?prior.MenuIndex:NpcInnConsumption.SelectMenuIndex(prices,wallet.WalletGold,resident.AppearanceSeed);
+            int planned=PlannedHouseholdInnMenu(identity.HouseholdDayId,identity.BuyerId);
+            int index=prior!=null && prior.MenuIndex>=0?prior.MenuIndex:planned>=0?planned:
+                NpcInnConsumption.SelectMenuIndex(prices,wallet.WalletGold,resident.AppearanceSeed);
             return NpcInnServiceCatalog.Quote(service.Catalog,index,service.CounterAt,service.Tariff);
         }
         private static NpcInnConsumptionReceipt ProposeHouseholdMember(NpcInnServiceIdentity identity,string keeper,double now,

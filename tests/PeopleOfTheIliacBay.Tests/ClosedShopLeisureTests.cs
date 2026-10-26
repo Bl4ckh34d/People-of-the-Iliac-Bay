@@ -8,6 +8,18 @@ namespace PeopleOfTheIliacBay.Tests
     {
         public static void Add(List<(string Name, Action Body)> cases)
         {
+            cases.Add(("Alone inactive shop waiters leave within one minute of opening",()=>{
+                var method=typeof(ClosedShopLeisure).GetMethod("ObservedReturnAt");
+                Check.True(method!=null,"Missing actual-activity boundary for closed-shop waiting.");
+                double opens=10*3600,planned=opens+40*60;
+                for(uint seed=0;seed<100;seed++)
+                {
+                    double solo=(double)method.Invoke(null,new object[]{seed,20,opens,planned,opens+15*60,false});
+                    Check.True(solo>=opens && solo<=opens+60);
+                    Check.Equal(planned,(double)method.Invoke(null,new object[]{seed,20,opens,planned,opens+15*60,true}));
+                    Check.Equal(planned,(double)method.Invoke(null,new object[]{seed,20,opens,planned,opens-60,false}));
+                }
+            }));
             cases.Add(("A later open visit moves ahead of a closed shop without duplication or a missed return",()=>
             {
                 var source=TwoStops();double departure=9*3600,now=departure+60,opening=10*3600;

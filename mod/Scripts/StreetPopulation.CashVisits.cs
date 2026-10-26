@@ -34,7 +34,7 @@ namespace PeopleOfTheIliacBay.DFU
                 if(scheduled.Activity==Activity.Sleep || scheduled.Activity==Activity.Work)return false;
             }
             var inventory=worldStore.ReadNpcInventory(id);
-            if(visit==null && (inventory==null || inventory.WalletGold!=0))return false;
+            if(visit==null && inventory==null)return false;
             if(GameManager.IsGamePaused || actor && actor.IsConversing)
             {PhysicalShopVisit paused;if(bankVisitors.TryGetValue(id,out paused))paused.Pause(now);return visit!=null;}
             if(!MedicalPriorityAvailable(plan,now,danger) || HasActiveNpcHealthCare(id))
@@ -47,8 +47,26 @@ namespace PeopleOfTheIliacBay.DFU
             if(visit==null)
             {
                 if(geometry==null || !EntranceSurveyReady || NativeNpcInventoryBridge.CashWithdrawalGold(worldStore,id)<1)return false;
+                var funding=worldStore.ReadPlannedHouseholdInnFunding(id,now);
+                if(!PlannedCashWindowOpen(plan,funding,now))return false;
+                if(funding!=null)
+                {
+                    float retry;if(cashChecks.TryGetValue(id,out retry) && Time.unscaledTime<retry)return false;
+                    cashChecks[id]=Time.unscaledTime+10;
+                }
                 visit=ChooseCashVisit(plan,actor);if(visit==null)return false;
+                if(funding!=null)
+                {
+                    // Keep the morning schedule while a closed bank cannot yet
+                    // serve this planned errand; do not make the partner wait.
+                    if(visit.WaitingForBank && now<funding.DepartureAt)return false;
+                    if(!PlannedBankTripFits(plan,visit,funding,now))return false;
+                    visit.PlannedHouseholdDayId=funding.HouseholdDayId;visit.RequiredGold=funding.RequiredGold;
+                }
                 BindCashRendezvous(plan,actor,visit);if(!SaveCashVisit(id,visit))return false;
+                if(funding!=null)worldStore.RememberSceneEvent(id,"planned-inn-cash:"+funding.HouseholdDayId,
+                    NpcSceneEventKind.CashVisit,now,population.SettlementId,visit.ProviderKey,
+                    "I set off to collect enough money to pay for my partner and me at our planned Inn visit; I have not collected it yet.",0,id);
                 RemovePhysicalShopVisit(id);shopJourneys.Remove(id);shopDepartures.Remove(id);
                 if(visit.WaitingPartnerId==null)worldStore.RemoveObservedVisit(id);
                 if(actor && interior && interior.EntryDoor.buildingKey==visit.ProviderKey && !visit.WaitingForBank)
@@ -58,7 +76,7 @@ namespace PeopleOfTheIliacBay.DFU
                 }
             }
             if(visit.CounterJourney!=null)return ApplyBankCounterVisit(plan,ref actor,visit,now);
-            if(inventory!=null && inventory.WalletGold>0 && !visit.Returning)
+            if(CashGoalMet(visit,inventory) && !visit.Returning)
             {visit.WaitingForBank=false;visit.Returning=true;visit.ServiceAt=0;visit.OutsideJourney=null;SaveCashVisit(id,visit);cashMotions.Remove(id);}
             if(visit.WaitingForBank)
             {
@@ -93,7 +111,7 @@ namespace PeopleOfTheIliacBay.DFU
             }
             if(visit.Bank && !visit.Returning && interior && interior.EntryDoor.buildingKey==visit.ProviderKey)
             {BeginBankCounterVisit(plan,actor,visit,now);return true;}
-            if(!visit.Returning && inventory!=null && inventory.WalletGold>0)
+            if(!visit.Returning && CashGoalMet(visit,inventory))
             {visit.Returning=true;visit.ServiceAt=0;SaveCashVisit(id,visit);cashMotions.Remove(id);}
             if(visit.ServiceAt>0)
             {
@@ -102,7 +120,7 @@ namespace PeopleOfTheIliacBay.DFU
                 var owner=actor.GetComponent<NativeNpcInventoryOwner>();
                 if(owner && owner.Binding!=null && CashProviderAvailable(plan,actor,visit) &&
                     worldStore.TryCompleteNpcCashVisit(worldStore.CaptureNpcVitalsWriteEpoch(),id,owner.Binding.Revision,
-                        visit.ProviderKey,NativeNpcInventoryBridge.CashWithdrawalGold(worldStore,id),now))
+                        visit.ProviderKey,CashWithdrawalAmount(id,visit),now))
                     owner.Binding.Revision++;
                 visit=worldStore.ReadNpcCashVisit(id);visit.ServiceAt=0;visit.Returning=true;SaveCashVisit(id,visit);
                 if(interior && interior.EntryDoor.buildingKey==plan.Resident.HomeKey && visit.Rendezvous==null)

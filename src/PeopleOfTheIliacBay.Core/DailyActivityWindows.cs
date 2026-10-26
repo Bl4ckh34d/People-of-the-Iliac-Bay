@@ -19,7 +19,10 @@ namespace PeopleOfTheIliacBay.Core
             for(int i=0;i<count;i++)
             {
                 uint rank=StableSeed.Combine(seed,(uint)i,0x74696d65u,0);
-                double start=first+i*(length+gap),jitter=Math.Min(15*60,length/10)*(rank/4294967296d);
+                // Use the available slot instead of sending every household out
+                // in the same quarter hour. Keep at least 45 minutes for travel
+                // and the actual visit; the planner still checks native hours.
+                double start=first+i*(length+gap),jitter=Math.Max(0,length-minimum)*(rank/4294967296d);
                 result.Add(new AdultDailyOutingSlot{DepartureAt=start+Math.Floor(jitter),LatestHomeAt=start+length});
             }
             return result;

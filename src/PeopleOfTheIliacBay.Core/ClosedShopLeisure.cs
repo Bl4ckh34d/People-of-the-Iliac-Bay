@@ -32,6 +32,11 @@ namespace PeopleOfTheIliacBay.Core
             if(choice==1 && display)return ClosedShopPastime.Browse;
             return choice<4?ClosedShopPastime.Conversation:ClosedShopPastime.Stroll;
         }
+        public static double ObservedReturnAt(uint resident,int building,double opening,double plannedReturn,double now,bool occupied)
+        {
+            if(now<opening || occupied)return plannedReturn;
+            return Math.Min(plannedReturn,opening+1+Seed(resident,building,opening)%60);
+        }
         public static string Context(string shop,double opening,double returnAt,double now,string activity)
         {
             string status=now<opening?"is still closed":"is now open";

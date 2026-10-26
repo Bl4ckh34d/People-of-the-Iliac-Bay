@@ -53,6 +53,16 @@ continue, and a single large frame can overshoot that limit. `-Overnight` adds
 12 hours as native-limit-sized chunks; native encounters/popups can interrupt it.
 An interrupted run is not a successful overnight test.
 
+`-MeasureStreetDensity -CountersOnly` keeps the observer at the copied save's
+location and samples 09:10, 10:15, 12:00 and 15:00. Each phase records an immediate
+sample and another after 30 real seconds. `STREET_DENSITY` separates scheduled
+outdoor/indoor activities, home/visit counts, nearby eligible residents, actual
+active bodies, standing bodies, family/action ownership and deferred spawns.
+`activeBodies` means loaded managed residents, not camera-visible people or
+native guards. Initial spawn deferrals after a jump are expected; compare the
+settled samples. This is a clock-jump population probe, not a native loiter or
+Player performance benchmark. See the [density audit](../../docs/audits/2026-10-26-street-density.md).
+
 `tools/SummarizeEditorProfile.ps1 -RunDirectory <directory>` exports phase and
 section counters as JSON/CSV, preserving the completion/error status. To inspect
 existing raw captures without running the game, set `POTIB_EDITOR_PROFILE_ROOT`

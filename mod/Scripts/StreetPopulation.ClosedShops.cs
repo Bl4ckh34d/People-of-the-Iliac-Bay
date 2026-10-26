@@ -102,14 +102,18 @@ namespace PeopleOfTheIliacBay.DFU
         private ActivitySnapshot ClosedShopState(Plan plan,double now,ActivitySnapshot source)
         {
             ClosedShopWait wait;
-            if(!closedShopWaits.TryGetValue(plan.Resident.Id,out wait) || wait.Schedule!=null || now<wait.StartedAt || now>=wait.ReturnAt)return source;
+            if(!closedShopWaits.TryGetValue(plan.Resident.Id,out wait))return source;
+            RefreshInactiveShopWait(plan,wait,now);
+            if(wait.Schedule!=null || now<wait.StartedAt || now>=wait.ReturnAt)return source;
             var point=wait.HasTarget?wait.LocalTarget:wait.LocalDoor;var position=new RoutePoint(point.x,point.z);
             return new ActivitySnapshot(Activity.Travel,-1,position,0,position,wait.Building);
         }
         private bool PlaceClosedShopWait(Plan plan,ResidentActor actor,ActivitySnapshot state,double now)
         {
             ClosedShopWait wait;
-            if(!closedShopWaits.TryGetValue(plan.Resident.Id,out wait) || wait.Schedule!=null || now>=wait.ReturnAt)return false;
+            if(!closedShopWaits.TryGetValue(plan.Resident.Id,out wait))return false;
+            RefreshInactiveShopWait(plan,wait,now);
+            if(wait.Schedule!=null || now>=wait.ReturnAt)return false;
             if(GameManager.IsGamePaused || actor.IsConversing)return true;
             if(!NativeNavigationWorld.Current || !NativeNavigationWorld.Current.Ready)return false;
             if((!wait.HasTarget || now>=wait.NextMove) && BackgroundWork.TryStart())ChooseClosedShopTarget(plan,wait,now);
@@ -133,6 +137,30 @@ namespace PeopleOfTheIliacBay.DFU
             // Occupied activities own attention, not free-standing player watching.
             actor.Place(target,look-(actor.transform.position-Vector3.up),standing:arrived,navigationDestination:target);
             return true;
+        }
+        private void RefreshInactiveShopWait(Plan plan,ClosedShopWait wait,double now)
+        {
+            if(wait.Schedule!=null || now<wait.Opening || now>=wait.ReturnAt)return;
+            var actor=FindActor(plan.Resident.Id);bool occupied=false;
+            if(actor && actor.gameObject.activeInHierarchy)
+            {
+                occupied=actor.IsConversing || wait.HasTarget && !actor.IsStandingStill &&
+                    Vector3.Distance(actor.transform.position-Vector3.up,directory.transform.TransformPoint(wait.LocalTarget))>0.6f;
+                bool arrived=wait.HasTarget && Vector3.Distance(actor.transform.position-Vector3.up,
+                    directory.transform.TransformPoint(wait.LocalTarget))<=0.6f;
+                if(!occupied && arrived && wait.Group!=null)foreach(string id in wait.Group.Members)
+                {
+                    var other=FindActor(id);ClosedShopWait otherWait;
+                    if(id==plan.Resident.Id || !other || !other.gameObject.activeInHierarchy || other.IsConversing ||
+                        !closedShopWaits.TryGetValue(id,out otherWait) || otherWait.Group!=wait.Group || !otherWait.HasTarget ||
+                        now>=otherWait.ReturnAt || Vector3.Distance(other.transform.position,actor.transform.position)>3 ||
+                        Vector3.Distance(other.transform.position-Vector3.up,directory.transform.TransformPoint(otherWait.LocalTarget))>0.6f)continue;
+                    occupied=true;break;
+                }
+            }
+            double end=ClosedShopLeisure.ObservedReturnAt(plan.Resident.AppearanceSeed,wait.Building,wait.Opening,wait.ReturnAt,now,occupied);
+            if(end>=wait.ReturnAt)return;
+            wait.ReturnAt=end;SaveClosedShopWait(plan.Resident.Id,wait);
         }
         private void ChooseClosedShopTarget(Plan plan,ClosedShopWait wait,double now)
         {

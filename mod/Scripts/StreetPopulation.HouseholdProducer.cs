@@ -72,7 +72,9 @@ namespace PeopleOfTheIliacBay.DFU
                     double deadline=Math.Min(sleepHour*3600d,restricted?19*3600d:hours.CloseMinute*60d);
                     if(ResidentVisitJourney.Create(departure,a.Itinerary).EndsAt>=deadline ||
                         ResidentVisitJourney.Create(departure,b.Itinerary).EndsAt>=deadline)continue;
-                    result.Inn=new HouseholdJointInn{InnKey=inn,First=a,Second=b};yield break;
+                    var outing=new HouseholdJointInn{InnKey=inn,First=a,Second=b};
+                    if(!PrepareSharedInnBudget(outing,first,second,result.Day))continue;
+                    result.Inn=outing;yield break;
                 }
             }
             finally{result.Ready=result.RetryAt==0;householdJointSurvey=false;}

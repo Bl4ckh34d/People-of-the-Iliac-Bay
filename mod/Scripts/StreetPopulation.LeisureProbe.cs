@@ -121,6 +121,19 @@ namespace PeopleOfTheIliacBay.DFU
                         throw new InvalidOperationException("Active group context omitted its real partners.");
                 }
                 if(minimum<1 || alignment<0.8f)throw new InvalidOperationException("Group facing/spacing failed: gap="+minimum+"; alignment="+alignment);
+                // Opening does not interrupt an actual conversation. Merely
+                // belonging to a group without a present partner is not enough.
+                double afterOpening=first.Opening+61;
+                double originalReturn=first.ReturnAt;
+                RefreshInactiveShopWait(firstPlan,first,afterOpening);
+                if(first.ReturnAt!=originalReturn)
+                    throw new InvalidOperationException("Shop opening interrupted an occupied conversation group.");
+                var groupMembers=new List<string>(first.Group.Members);
+                first.Group.Members.Clear();first.Group.Members.Add(firstPlan.Resident.Id);
+                RefreshInactiveShopWait(firstPlan,first,afterOpening);
+                if(first.ReturnAt>first.Opening+60 || PlaceClosedShopWait(firstPlan,chosen[0],default(ActivitySnapshot),afterOpening))
+                    throw new InvalidOperationException("Solitary inactive waiter retained movement beyond one minute after opening.");
+                first.Group.Members.Clear();first.Group.Members.AddRange(groupMembers);first.ReturnAt=originalReturn;
                 var middle=closedShopWaits[chosen[1].Resident.Id];first.Group.Members.Remove(chosen[1].Resident.Id);
                 if(!TryClosedShopGroupSlot(middle,first.Group,chosen[1].Resident.Id))throw new InvalidOperationException("Released middle group slot was not reusable.");
                 // A due return releases activity ownership and removes the
@@ -134,7 +147,8 @@ namespace PeopleOfTheIliacBay.DFU
                     throw new InvalidOperationException("Remaining speakers still claim the departed partner is in their conversation.");
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_LEISURE_PASS: group=3; minimumGap="+minimum+"; partnerAlignment="+alignment+
                     "; closePlayerIgnored=true; realPartnerContext=true; releasedSlotReusable=true; physicalApproach=true; maximumStep="+
-                    maximumStep+"; bodyTravel="+string.Join(",",Array.ConvertAll(travelled,x=>x.ToString("F3")))+"; idleAnimation=true; expiredWaitReleased=true");
+                    maximumStep+"; bodyTravel="+string.Join(",",Array.ConvertAll(travelled,x=>x.ToString("F3")))+
+                    "; idleAnimation=true; expiredWaitReleased=true; occupiedOpeningPreserved=true; solitaryOpeningReleasedWithinMinute=true");
             }
             finally
             {

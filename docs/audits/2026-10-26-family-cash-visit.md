@@ -46,3 +46,28 @@ feature or proof that increasing the timeout would solve it.
 The fixture compiles without errors or warnings. Core 2122/2122, source policy,
 70 PowerShell syntax checks and tooling protocols pass. Only the opt-in test
 and its launcher are changed; the installed player bundle is unchanged.
+
+## Subsequent proactive funding source checkpoint
+
+The current source quotes both intended menu purchases from a real native Inn
+catalog and assigns one payer. That payer can need a bank visit while still
+holding some gold; the other partner does not start a duplicate withdrawal.
+Morning bank admission respects native hours and estimated travel/service/return
+time. After actual return, ordinary physical routine recovery still applies.
+Existing gold is retained, receipt payer identity survives copying, and both
+observed and unloaded purchases charge the same designated wallet. Context and
+the departure event explain the planned shared Inn cost.
+
+Core checks cover insufficient planned balances, partner funds not silently
+substituting for the designated payer, exact menus, physical/projected payment,
+partial-wallet top-up, early/insufficient/repeated withdrawal and reload. The
+working source suite passes 2129/2129 with the concurrent street-timing checks.
+This is not native acceptance of the new morning journey or a new installed mod.
+
+Read-only evaluation of the actual SAVE82 seed and native `SharedDay` selector
+shows day145809 selects homes327943,327944,328709. Each has a missing or legacy
+parent itinerary. Day145811 selects four families with both itinerary sources.
+The next fixture should select a naturally eligible day, retain normal bank
+hours, reduce the designated payer below the combined budget before departure,
+and require real admission, payment and continuation. The older emergency
+fixture must not be claimed to validate that proactive behavior.

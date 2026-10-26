@@ -34,6 +34,7 @@ namespace PeopleOfTheIliacBay.DFU
             if(!NativeNavigationWorld.Current || !NativeNavigationWorld.Current.Ready)
                 throw new InvalidOperationException("Native navigation is unavailable; refusing a fallback-motion benchmark.");
             yield return Sample("morning-before-loiter",20);
+            streets.RequestStreetDensitySample();yield return null;
             bool overnight=Array.IndexOf(Environment.GetCommandLineArgs(),"-peopleoftheiliacbay-profile-overnight")>=0;
             foreach(int hours in overnight?new[]{1,3,12}:new[]{1,3})
             {
@@ -72,6 +73,7 @@ namespace PeopleOfTheIliacBay.DFU
                 Report("loiter-"+hours+"h",frames,gc);
                 DaggerfallUI.Instance.PopToHUD();game.PauseGame(false);
                 yield return Sample("after-loiter-"+hours+"h",20);
+                streets.RequestStreetDensitySample();yield return null;
             }
         }
         private static IEnumerator Sample(string phase,float seconds)

@@ -51,6 +51,9 @@ namespace PeopleOfTheIliacBay.DFU
             var care=activeStore.ReadNpcHealthCare(resident.Id);
             var cashWait=activeStore.ReadNpcCashWait(resident.Id);
             var cashVisit=activeStore.ReadNpcCashVisit(resident.Id);
+            string cashReason=cashVisit?.PlannedHouseholdDayId!=null?
+                "I need enough money to pay for my partner and me at our planned Inn visit":
+                "I have no spending money with me";
             if(medical!=null)
                 plan=medical.Returning?"medical visit ended; returning to the ordinary routine":
                     "seeking treatment at "+ConversationBuildingName(medical.ProviderKey)+"; treatment not yet completed";
@@ -61,8 +64,8 @@ namespace PeopleOfTheIliacBay.DFU
                     "; my partner is collecting money before joining me; our shared outing is paused, not cancelled";
             else if(cashVisit!=null)
                 plan=cashVisit.Returning?(cashVisit.WaitingPartnerId!=null?"returning to my waiting partner after a cash errand":"returning from a cash errand"):
-                    cashVisit.WaitingForBank?"I have no spending money with me; waiting for the bank to open so I can collect money before shopping or visiting an Inn":
-                    "I have no spending money with me; collecting money "+(cashVisit.Bank?"at the bank ":"at home ")+ConversationBuildingName(cashVisit.ProviderKey)+
+                    cashVisit.WaitingForBank?cashReason+"; waiting for the bank to open so I can collect money before shopping or visiting an Inn":
+                    cashReason+"; collecting money "+(cashVisit.Bank?"at the bank ":"at home ")+ConversationBuildingName(cashVisit.ProviderKey)+
                         (cashVisit.WaitingPartnerId!=null?"; my partner is waiting for me":"; ordinary visits will resume afterwards");
             else
             {
@@ -85,6 +88,14 @@ namespace PeopleOfTheIliacBay.DFU
                 }
             }
             if(string.IsNullOrWhiteSpace(plan))return null;
+            var funding=activeStore.ReadPlannedHouseholdInnFunding(resident.Id,now);
+            if(funding!=null && now<funding.DepartureAt && cashVisit==null && cashWait==null)
+            {
+                var wallet=activeStore.ReadNpcInventory(funding.PayerId);
+                if(wallet!=null && wallet.WalletGold<funding.RequiredGold)
+                    plan+="; "+(funding.PayerId==resident.Id?"I plan to collect money before the bank closes to pay for us both at ":
+                        "my partner plans to collect money before the bank closes to pay for us both at ")+ConversationBuildingName(funding.InnKey);
+            }
             if(plan.Length>384)plan=plan.Substring(0,384);
             return ConversationContextFact<string>.Verified(plan,ConversationContextFactSource.LiveObservation,now);
         }

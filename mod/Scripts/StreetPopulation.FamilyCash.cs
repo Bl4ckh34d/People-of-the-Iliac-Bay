@@ -47,6 +47,8 @@ namespace PeopleOfTheIliacBay.DFU
         {
             string partnerId=plan.Resident.PartnerId;
             if(partnerId==null || !worldStore.HasActiveHouseholdJoint(population.SettlementId,plan.Resident.Id))return;
+            var shared=worldStore.ReadHouseholdJointProgress(population.SettlementId,plan.Resident.HomeKey);
+            if(shared==null || shared.Phase==HouseholdJointPhase.Waiting)return;
             var partner=plans.Find(p=>p.Resident.Id==partnerId);
             if(partner==null || !partner.Resident.IsAlive)return;
             var other=FindActor(partnerId);
@@ -69,6 +71,7 @@ namespace PeopleOfTheIliacBay.DFU
         {
             next.WaitingPartnerId=previous.WaitingPartnerId;next.Rendezvous=NpcActionExecutor.CopyTarget(previous.Rendezvous);
             next.PartnerWaitPosition=NpcActionExecutor.CopyTarget(previous.PartnerWaitPosition);next.ReturnKey=previous.ReturnKey;
+            next.PlannedHouseholdDayId=previous.PlannedHouseholdDayId;next.RequiredGold=previous.RequiredGold;
         }
 
         private bool CompleteCashRendezvous(Plan plan,NpcCashVisit visit)

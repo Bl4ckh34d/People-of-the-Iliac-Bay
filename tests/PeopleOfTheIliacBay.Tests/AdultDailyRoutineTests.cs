@@ -7,6 +7,23 @@ namespace PeopleOfTheIliacBay.Tests
     {
         internal static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Daily departures use the available window without synchronized quarter-hour waves",()=>{
+                double earliest=double.MaxValue,latest=0;int afterQuarterHour=0;
+                for(uint seed=0;seed<512;seed++)
+                {
+                    var slots=DailyActivityWindows.Create(360,1380,18*3600+45*60,seed);
+                    earliest=Math.Min(earliest,slots[0].DepartureAt);latest=Math.Max(latest,slots[0].DepartureAt);
+                    if(slots[0].DepartureAt>8*3600+15*60)afterQuarterHour++;
+                    double previous=0;
+                    foreach(var slot in slots)
+                    {
+                        Check.True(slot.LatestHomeAt-slot.DepartureAt>=45*60,"Every departure retains a usable outing window.");
+                        Check.True(slot.DepartureAt>=previous);previous=slot.LatestHomeAt+20*60;
+                    }
+                }
+                Check.True(latest-earliest>45*60,"Resident departures still cluster within a short shared wave.");
+                Check.True(afterQuarterHour>256,"Most residents still leave in the same quarter hour.");
+            }));
             cases.Add(("Personal expansion preserves old route timing while measuring only the added outings",(Action)(()=>{
                 var initial=Request();initial.Slots.RemoveRange(1,4);
                 Check.True(AdultDailyRoutinePlanner.TryCreate(initial,out var first));
