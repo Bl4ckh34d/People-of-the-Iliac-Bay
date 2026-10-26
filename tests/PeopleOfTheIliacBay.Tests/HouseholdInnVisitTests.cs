@@ -69,6 +69,38 @@ namespace PeopleOfTheIliacBay.Tests
         }
         internal static void Add(List<(string Name,Action Body)> cases)
         {
+            cases.Add(("Arrived shared Inn counter can settle once with zero remaining dwell",()=>{
+                var f=Create();var visit=ZeroDwellCounterVisit(f);f.Store.StoreObservedVisit(visit);
+                Check.Equal(ShopVisitPhase.Walking,visit.Evaluate(visit.ObservedAt).Phase);
+                Check.True(f.Store.TryBuyNpcInnConsumption("mother",f.Keeper.Id,visit.ObservedAt,
+                    NpcInnConsumptionKind.Drink,1,"Beer",5,out var receipt),"Actual counter arrival must not require an artificial dwell interval.");
+                Check.Equal(NpcInnConsumptionOutcome.Purchased,receipt.Outcome);
+                Check.Equal(15,f.Store.ReadNpcInventory("mother").WalletGold);
+                Check.True(!f.Store.TryBuyNpcInnConsumption("mother",f.Keeper.Id,visit.ObservedAt,
+                    NpcInnConsumptionKind.Drink,1,"Beer",5,out _));
+                Check.Equal(15,f.Store.ReadNpcInventory("mother").WalletGold);
+            }));
+            cases.Add(("Arrived shared Inn counter can record refusal with zero remaining dwell",()=>{
+                var f=Create();var visit=ZeroDwellCounterVisit(f);f.Store.StoreObservedVisit(visit);
+                Check.True(f.Store.TryRecordNpcInnNoPurchase("mother",f.Keeper.Id,visit.ObservedAt,
+                    NpcInnConsumptionOutcome.Unavailable,"keeper unavailable",out var receipt));
+                Check.Equal(NpcInnConsumptionOutcome.Unavailable,receipt.Outcome);
+                Check.Equal(20,f.Store.ReadNpcInventory("mother").WalletGold);
+            }));
+            cases.Add(("Zero dwell counter cannot settle before arrival or later on the table route",()=>{
+                var f=Create();var visit=ZeroDwellCounterVisit(f);f.Store.StoreObservedVisit(visit);
+                foreach(double at in new[]{visit.ObservedAt-0.1,visit.ObservedAt+0.1})
+                    Check.True(!f.Store.TryBuyNpcInnConsumption("mother",f.Keeper.Id,at,
+                        NpcInnConsumptionKind.Drink,1,"Beer",5,out _));
+                visit.Legs[0].Route.Insert(0,new GuardPoint3{X=-1});f.Store.StoreObservedVisit(visit);
+                Check.True(!f.Store.TryBuyNpcInnConsumption("mother",f.Keeper.Id,visit.ObservedAt,
+                    NpcInnConsumptionKind.Drink,1,"Beer",5,out _));
+                visit=ZeroDwellCounterVisit(f);visit.Legs[0].AfterPhase=ShopVisitPhase.Browsing;
+                f.Store.StoreObservedVisit(visit);
+                Check.True(!f.Store.TryBuyNpcInnConsumption("mother",f.Keeper.Id,visit.ObservedAt,
+                    NpcInnConsumptionKind.Drink,1,"Beer",5,out _));
+                Check.Equal(20,f.Store.ReadNpcInventory("mother").WalletGold);
+            }));
             cases.Add(("Observed shared Inn purchases charge the planned payer and retain both receipts",()=>{
                 var f=Create(prepare:r=>{
                     r.JointInn.PayerId="mother";r.JointInn.FirstMenuIndex=1;r.JointInn.SecondMenuIndex=1;
@@ -356,6 +388,15 @@ namespace PeopleOfTheIliacBay.Tests
             }));
         }
         private static double WireTime(double value){return double.Parse(value.ToString("G15",CultureInfo.InvariantCulture),CultureInfo.InvariantCulture);}
+        private static ObservedVisit ZeroDwellCounterVisit(Fixture f)
+        {
+            var visit=Visit(f);visit.Legs[0].DwellSeconds=0;
+            visit.Legs[1].Route=new List<GuardPoint3>{new GuardPoint3{X=1},new GuardPoint3()};
+            visit.Legs.Insert(1,new ObservedVisitLeg{
+                Route=new List<GuardPoint3>{new GuardPoint3(),new GuardPoint3{X=1}},
+                AfterPhase=ShopVisitPhase.Browsing,DwellSeconds=60});
+            return visit;
+        }
         private static string Service(Fixture f,double now)
         {
             var method=typeof(WorldStateStore).GetMethod("ReadHouseholdInnService");

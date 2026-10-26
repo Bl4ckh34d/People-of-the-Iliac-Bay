@@ -51,7 +51,7 @@ Das vereinfachte Handelsfenster zeigt NPC-Items links und Spieler-Items rechts, 
 5. **Navigation erweitern:** zusätzliche Innen-/Dungeonblöcke, Springen, Klettern und die Thronplattform in Privateer's Hold.
 6. **Erinnerung und Beziehung verbreitern:** weitere tatsächliche Erlebnisse und Zusagen im Gespräch; keine zusätzliche Hintergrundsimulation.
 
-Der Hauptagent integriert und prüft die fünf am 26. Oktober ausdrücklich beauftragten Astra/High-Arbeitspakete. Keine unbegrenzte oder verschachtelte Delegation. Je Schritt einen sichtbaren Ablauf abschließen; keine weiteren Debug-Kamera- oder Nebensysteme.
+Der Hauptagent integriert und prüft die sieben am 26. Oktober ausdrücklich beauftragten Astra/High-Arbeitspakete. Die zwei zuletzt beauftragten Aufgaben betreffen Enter→Wait in weiteren öffentlichen Gebäuden und Wachverfolgung durch tatsächlich beobachtete Türen. Keine unbegrenzte oder verschachtelte Delegation. Je Schritt einen sichtbaren Ablauf abschließen; keine weiteren Debug-Kamera- oder Nebensysteme.
 
 <a id="detailed-design"></a>
 ## Verbindlicher Funktionsumfang

@@ -14,10 +14,51 @@ namespace PeopleOfTheIliacBay.DFU
         private IEnumerator VerifyFundedFamilyInn(HouseholdDayPlan day,string payer,string partner)
         {
             var game=GameManager.Instance;bool motorEnabled=game.PlayerMotor.enabled;
+            // This owned routine fixture advances time past native quest-letter
+            // deadlines. Isolate unrelated quest popups, which pause all actors.
+            var quests=DaggerfallWorkshop.Game.Questing.QuestMachine.Instance;
+            bool questsEnabled=quests && quests.enabled;
             int balance=worldStore.ReadNpcInventory(payer).WalletGold,otherBalance=worldStore.ReadNpcInventory(partner).WalletGold;
             int playerGold=game.PlayerEntity.GoldPieces;
+            // Inspect only each participant's bounded memory index. A whole-world
+            // snapshot on every frame would distort this native movement test.
+            var sceneRows=typeof(WorldStateStore).GetMethod("SceneMemoriesFor",
+                System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+            if(sceneRows==null)throw new InvalidOperationException("Missing bounded scene-memory index.");
+            var memoryExpiry=new System.Collections.Generic.Dictionary<string,double>();
+            NpcInnConsumptionReceipt[] paidMemoryReceipts=null;
+            void AssertInnMemories(NpcInnConsumptionReceipt[] receipts)
+            {
+                foreach(var receipt in receipts)
+                {
+                    string actualPayer=receipt.PayerId??receipt.BuyerId,eventId="inn-purchase:"+receipt.VisitId;
+                    var observers=new System.Collections.Generic.HashSet<string>{
+                        day.First.ResidentId,day.Second.ResidentId,receipt.KeeperId,actualPayer};
+                    foreach(string observerId in observers)
+                    {
+                        var rows=(System.Collections.Generic.List<NpcSceneMemory>)sceneRows.Invoke(worldStore,new object[]{observerId,false});
+                        int count=0;NpcSceneMemory match=null;
+                        if(rows!=null)foreach(var row in rows)if(row.EventId==eventId){count++;match=row;}
+                        bool entitled=observerId==receipt.BuyerId || observerId==receipt.KeeperId || observerId==actualPayer;
+                        if(count!=(entitled?1:0))throw new InvalidOperationException(
+                            "Inn memory participant/count mismatch: "+observerId+"; event="+eventId+"; count="+count);
+                        if(!entitled)continue;
+                        string responsible=observerId==receipt.KeeperId?actualPayer:receipt.KeeperId;
+                        if(match.Kind!=NpcSceneEventKind.Shopping || match.SubjectId!=receipt.BuyerId ||
+                            match.ResponsibleId!=responsible || match.At!=Math.Floor(receipt.CompletedAt) ||
+                            match.SettlementId!=day.SettlementId || match.BuildingKey!=day.JointInn.InnKey)
+                            throw new InvalidOperationException("Inn memory receipt facts differ.");
+                        string key=observerId+"\n"+eventId;double previousExpiry;
+                        if(memoryExpiry.TryGetValue(key,out previousExpiry) && previousExpiry!=match.ExpiresAt)
+                            throw new InvalidOperationException("Inn memory lifetime renewed.");
+                        memoryExpiry[key]=match.ExpiresAt;
+                    }
+                }
+            }
             try
             {
+                if(quests)quests.enabled=false;
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_FIXTURE: questTicksIsolated=true");
                 yield return ObserveFundedFamilyExterior(day,false);
                 DaggerfallStaticDoors owner=null;StaticDoor entrance=default(StaticDoor);
                 foreach(var doors in directory.GetComponentsInChildren<DaggerfallStaticDoors>())
@@ -31,19 +72,27 @@ namespace PeopleOfTheIliacBay.DFU
                 if(!interior || interior.EntryDoor.buildingKey!=day.JointInn.InnKey || indoorGeometry==null || shopGeometry==null)
                     throw new InvalidOperationException("Funded family's live Inn did not bind.");
                 yield return new WaitForSecondsRealtime(2);DaggerfallUI.Instance.PopToHUD();
+                var observerRoutes=new[]{worldStore.GetObservedVisit(day.First.ResidentId),worldStore.GetObservedVisit(day.Second.ResidentId)};
+                if(observerRoutes[0]==null || observerRoutes[1]==null)
+                    throw new InvalidOperationException("Family observer placement has no actual visit routes.");
                 Vector3 observer=indoorGeometry.EntryGround.Value;bool found=false;
                 foreach(var anchor in indoorGeometry.LocalAnchors)
                 {
                     var point=interior.transform.TransformPoint(anchor);
                     if(FurnitureSeatCatalog.Blocks(point,point,CrowdMotion.BodyRadius) || indoorGeometry.RouteToExit(point).Count<2)continue;
+                    // A clear floor point can still be the family's chair aisle.
+                    // Keep the controlled player clear of every remaining leg.
+                    if(!FamilyObserverClearOfRoutes(point,observerRoutes))continue;
                     bool occupied=false;
                     foreach(var nearby in ShopDepartureNeighbours(point,null))if(Vector3.Distance(nearby,point)<1.2f){occupied=true;break;}
                     if(!occupied && (point-indoorGeometry.EntryGround.Value).sqrMagnitude>(observer-indoorGeometry.EntryGround.Value).sqrMagnitude)
                     {observer=point;found=true;}
                 }
                 if(!found)throw new InvalidOperationException("Funded family has no clear Inn observer floor.");
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_OBSERVER: ground="+observer.ToString("R")+"; routeClearance=1.2");
                 game.PlayerMotor.enabled=false;game.PlayerMotor.transform.position=observer+Vector3.up;Physics.SyncTransforms();
                 ReportFundedFamilyInnCatalog(day);
+                VerifyFundedFamilySeatRoutes(day);
                 bool seated=false,physicalReceipts=false;int cost=0;deadline=Time.realtimeSinceStartup+180;
                 float reportAt=0;
                 while(Time.realtimeSinceStartup<deadline)
@@ -74,6 +123,7 @@ namespace PeopleOfTheIliacBay.DFU
                         if(cost!=day.JointInn.FirstPriceGold+day.JointInn.SecondPriceGold || worldStore.ReadNpcInventory(payer).WalletGold!=balance-cost ||
                             worldStore.ReadNpcInventory(partner).WalletGold!=otherBalance || game.PlayerEntity.GoldPieces!=playerGold)
                             throw new InvalidOperationException("Funded family's native payment differs from its two receipts.");
+                        paidMemoryReceipts=new[]{a,b};AssertInnMemories(paidMemoryReceipts);
                         if(first && second && first.IsSeated && second.IsSeated){seated=true;break;}
                     }
                     yield return null;
@@ -91,8 +141,11 @@ namespace PeopleOfTheIliacBay.DFU
                     if(!seatedFirst || !seatedSecond || !seatedFirst.IsSeated || !seatedSecond.IsSeated ||
                         Vector3.Distance(firstSeat,seatedFirst.transform.position)>0.1f || Vector3.Distance(secondSeat,seatedSecond.transform.position)>0.1f)
                         throw new InvalidOperationException("Family stopped sitting or moved in its chairs before the time skip.");
+                    AssertInnMemories(paidMemoryReceipts);
                     yield return null;
                 }
+                Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_MEMORY_PASS: receipts=2; perspectives="+memoryExpiry.Count+
+                    "; exactCounts=true; participantKnowledge=true; lifetimeStable=true");
                 double leave=Math.Max(worldStore.GetObservedVisit(day.First.ResidentId).PlannedEndAt,
                     worldStore.GetObservedVisit(day.Second.ResidentId).PlannedEndAt)+1;
                 if(leave>ActionNow()){game.PlayerEntity.PreventEnemySpawns=true;DaggerfallUnity.Instance.WorldTime.Now.RaiseTime((float)(leave-ActionNow()));}
@@ -112,7 +165,27 @@ namespace PeopleOfTheIliacBay.DFU
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_INN_PASS: naturalPlan=true; morningCash=true; observedOutward=true; observedInn=true; "+
                     "bothPaid=true; bothSeated=true; observedReturn=true; chargedGold="+cost+"; seatedDwellSkipped=true");
             }
-            finally{if(game && game.PlayerMotor)game.PlayerMotor.enabled=motorEnabled;}
+            finally
+            {
+                if(quests)quests.enabled=questsEnabled;
+                if(game && game.PlayerMotor)game.PlayerMotor.enabled=motorEnabled;
+            }
+        }
+
+        private bool FamilyObserverClearOfRoutes(Vector3 candidate,ObservedVisit[] visits)
+        {
+            foreach(var visit in visits)foreach(var leg in visit.Legs)
+                for(int i=0;i<leg.Route.Count;i++)
+                {
+                    var p=leg.Route[i];var q=leg.Route[Math.Max(0,i-1)];
+                    var a=interior.transform.TransformPoint(new Vector3((float)p.X,(float)p.Y,(float)p.Z));
+                    var b=interior.transform.TransformPoint(new Vector3((float)q.X,(float)q.Y,(float)q.Z));
+                    if(Mathf.Abs(candidate.y-a.y)>2.1f && Mathf.Abs(candidate.y-b.y)>2.1f)continue;
+                    a.y=b.y=candidate.y;var delta=b-a;
+                    float t=delta.sqrMagnitude<0.000001f?0:Mathf.Clamp01(Vector3.Dot(candidate-a,delta)/delta.sqrMagnitude);
+                    if((candidate-(a+delta*t)).sqrMagnitude<1.44f)return false;
+                }
+            return true;
         }
 
         private void ReportFundedFamilyInnCatalog(HouseholdDayPlan day)
@@ -133,6 +206,34 @@ namespace PeopleOfTheIliacBay.DFU
                     Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_WINDOW: now="+ActionNow()+"; plannedLeave="+(day.AbsoluteDay*86400d+visit.LeaveAt));
         }
 
+        private void VerifyFundedFamilySeatRoutes(HouseholdDayPlan day)
+        {
+            var catalog=worldStore.ReadNpcInnServiceCatalog(day.SettlementId,day.JointInn.InnKey);
+            if(catalog==null || shopGeometry?.Seating==null)throw new InvalidOperationException("Missing live Inn seat-route fixture.");
+            var counter=catalog.EntryToCounter[catalog.EntryToCounter.Count-1];
+            var from=new Vector3((float)counter.X,(float)counter.Y,(float)counter.Z);
+            var checkedIds=new System.Collections.Generic.HashSet<string>();
+            foreach(var pair in catalog.Pairs)foreach(var intent in new[]{pair.First,pair.Second})
+            {
+                if(!checkedIds.Add(intent.Id))continue;
+                var seat=shopGeometry.Seating.Find(intent.Id);
+                if(seat==null)throw new InvalidOperationException("Saved family chair has no live identity.");
+                var target=interior.transform.InverseTransformPoint(seat.Ground);
+                // Reproduce the native restored/world-local rounding mismatch.
+                var rounded=target+new Vector3(0.0001f,0.0001f,0);
+                var route=shopGeometry.ActivityRouteBetween(from,rounded,null,intent.Id);
+                if(route.Count<2)throw new InvalidOperationException("Assigned chair route lost its native approach after coordinate rounding: "+intent.Id);
+                var last=route[route.Count-1];
+                if(Vector3.Distance(target,new Vector3((float)last.X,(float)last.Y,(float)last.Z))>0.00001f)
+                    throw new InvalidOperationException("Assigned chair route did not end at its live seat.");
+                if(shopGeometry.ActivityRouteBetween(from,target,null,intent.Id+":missing").Count!=0)
+                    throw new InvalidOperationException("Unknown chair identity inherited another chair's route.");
+            }
+            if(checkedIds.Count<2)throw new InvalidOperationException("No live family seat pair checked.");
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_SEAT_ROUTES_PASS: chairs="+checkedIds.Count+
+                "; roundedCoordinates=true; exactIdentity=true; unknownIdentityRejected=true");
+        }
+
         private void ReportFundedFamilyInn(HouseholdDayPlan day)
         {
             double now=ActionNow();var progress=worldStore.ReadHouseholdJointProgress(day.SettlementId,day.HomeKey);
@@ -147,10 +248,19 @@ namespace PeopleOfTheIliacBay.DFU
             {
                 var actor=FindActor(id);PhysicalShopVisit visit;physicalShopVisits.TryGetValue(id,out visit);
                 var projection=worldStore.ProjectHouseholdInnMember(day.Id,id,now);
+                var saved=worldStore.GetObservedVisit(id);
+                var canSettle=typeof(WorldStateStore).GetMethod("CanSettleHouseholdInn",
+                    System.Reflection.BindingFlags.Instance|System.Reflection.BindingFlags.NonPublic);
+                bool eligible=saved!=null && canSettle!=null && actor &&
+                    (bool)canSettle.Invoke(worldStore,new object[]{saved,now,HouseholdInnPointRoutes(actor)});
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_MEMBER: id="+id+"; body="+(bool)actor+"; active="+(actor && actor.gameObject.activeInHierarchy)+
                     "; seated="+(actor && actor.IsSeated)+"; available="+HouseholdParentAvailable(id,now)+"; needsCash="+worldStore.NeedsNpcCashErrand(id,now)+
                     "; cashVisit="+(worldStore.ReadNpcCashVisit(id)!=null)+"; projection="+(projection!=null)+"; seat="+projection?.SeatId+
-                    "; visit="+visit?.Snapshot.Phase+"; receipt="+worldStore.ReadNpcInnConsumption(id)?.Outcome);
+                    "; visit="+visit?.Snapshot.Phase+"; receipt="+worldStore.ReadNpcInnConsumption(id)?.Outcome+
+                    "; purchaseFailure="+visit?.PurchaseFailure+"; captureFailure="+visit?.CaptureFailure+
+                    "; savedPhase="+(saved==null || now<saved.ObservedAt?"unavailable":saved.Evaluate(now).Phase.ToString())+
+                    "; routePoints="+saved?.Legs[0].Route.Count+"; dwell="+saved?.Legs[0].DwellSeconds+
+                    "; firstPhase="+saved?.Legs[0].AfterPhase+"; canSettle="+eligible);
             }
         }
 
@@ -188,7 +298,8 @@ namespace PeopleOfTheIliacBay.DFU
                 Physics.SyncTransforms();
                 if(Time.realtimeSinceStartup>=nextLog)
                 {nextLog=Time.realtimeSinceStartup+20;Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_FUNDED_FAMILY_PROGRESS: returning="+returning+"; phase="+progress.Phase+
-                    "; first="+progress.First.Distance+"; second="+progress.Second.Distance+"; firstVisible="+visible[0]+"; secondVisible="+visible[1]);}
+                    "; first="+progress.First.Distance+"; second="+progress.Second.Distance+"; firstVisible="+visible[0]+"; secondVisible="+visible[1]+
+                    "; paused="+GameManager.IsGamePaused+"; window="+DaggerfallUI.UIManager.TopWindow?.GetType().Name);}
                 yield return null;
             }
             throw new InvalidOperationException("Funded family's exterior leg did not finish: returning="+returning+"; phase="+

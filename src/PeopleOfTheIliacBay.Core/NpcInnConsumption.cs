@@ -495,6 +495,12 @@ namespace PeopleOfTheIliacBay.Core
         private static bool AtInnCounter(ObservedVisit visit, double now)
         {
             if (visit == null || now < visit.ObservedAt || now > visit.EndsAt) return false;
+            // A reconstructed pending service can have no timed counter dwell.
+            // The native arrival callback captures a one-point counter leg at
+            // this exact instant, before Evaluate advances to the table route.
+            var first=visit.Legs[0];
+            if(now==visit.ObservedAt && first.AfterPhase==ShopVisitPhase.Haggling &&
+                first.Route.Count==1 && first.DwellSeconds==0)return true;
             ObservedVisitSnapshot snapshot;
             try { snapshot = visit.Evaluate(now); }
             catch (ArgumentOutOfRangeException) { return false; }

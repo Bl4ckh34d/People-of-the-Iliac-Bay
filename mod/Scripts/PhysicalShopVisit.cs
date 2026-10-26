@@ -24,6 +24,7 @@ namespace PeopleOfTheIliacBay.DFU
         public string HouseholdSeatId {get;private set;}
         public string SelectedSeatId {get{return selectedSeat==null?null:selectedSeat.Slot.Id;}}
         internal string CaptureFailure {get;private set;}
+        internal string PurchaseFailure {get;set;}
         internal SelectedSeatAccess TakeSeatForDeparture(ResidentActor actor)
         {
             var access=selectedSeat;selectedSeat=null;
@@ -110,7 +111,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if(counterArrival) route=new List<GuardPoint3>{new GuardPoint3 {X=actual.x,Y=actual.y,Z=actual.z}};
                     else if(followingLeg==leg && follower!=null && !follower.Arrived) route=follower.RemainingRoute(actual);
                     else if(Vector3.Distance(actual,target)<0.15f) route=new List<GuardPoint3>{new GuardPoint3 {X=actual.x,Y=actual.y,Z=actual.z}};
-                    else route=activityGeometry==null?geometry.RouteBetween(actual,target):activityGeometry.ActivityRouteBetween(actual,target,egressAccess);
+                    else route=activityGeometry==null?geometry.RouteBetween(actual,target):activityGeometry.ActivityRouteBetween(actual,target,egressAccess,Journey.SeatId(leg));
                     if(route.Count==0)
                     {CaptureFailure="current leg="+leg+"; from="+actual.ToString("R")+"; to="+target.ToString("R")+"; movement="+LastFailure;return null;}
                     // Preserve the exact shared endpoint between consecutive legs.
@@ -121,7 +122,7 @@ namespace PeopleOfTheIliacBay.DFU
                 {
                     var end=route[route.Count-1];
                     var from=new Vector3((float)previousEnd.X,(float)previousEnd.Y,(float)previousEnd.Z);var to=new Vector3((float)end.X,(float)end.Y,(float)end.Z);
-                    route=activityGeometry==null?geometry.RouteBetween(from,to):activityGeometry.ActivityRouteBetween(from,to);
+                    route=activityGeometry==null?geometry.RouteBetween(from,to):activityGeometry.ActivityRouteBetween(from,to,null,Journey.SeatId(leg));
                     if(route.Count<2)
                     {
                         var live=activityGeometry?.Seating?.Find(Journey.SeatId(leg));
@@ -263,7 +264,7 @@ namespace PeopleOfTheIliacBay.DFU
                 else
                 {
                     route=activities.IsTavern && Journey.StopPhase(progress.Leg)==ShopVisitPhase.Haggling ?
-                        activities.CounterRouteBetween(actual,activityGround) : activities.ActivityRouteBetween(actual,activityGround);
+                        activities.CounterRouteBetween(actual,activityGround) : activities.ActivityRouteBetween(actual,activityGround,null,Journey.SeatId(progress.Leg));
                     if(route.Count<2) { LastFailure="no route from actual body to activity"; return; }
                     try { follower=new InteriorRoomFollower(route,DaggerfallUnity.Instance.WorldTime.TimeScale/actor.WalkingSpeed,
                         progress.Leg==Journey.LegCount-1 ? 0.55f : selectedSeat==null?0.15f:0.10f,selectedSeat); }

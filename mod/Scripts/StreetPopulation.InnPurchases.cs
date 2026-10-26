@@ -34,17 +34,19 @@ namespace PeopleOfTheIliacBay.DFU
 
             bool Unavailable(NativePerson declinedKeeper,string reason)
             {
+                physical.PurchaseFailure=reason;
                 NpcInnConsumptionReceipt declined;
                 bool recorded=worldStore.TryRecordNpcInnNoPurchase(actor.Resident.Id,declinedKeeper==null?null:declinedKeeper.Id,
                     now,NpcInnConsumptionOutcome.Unavailable,reason,out declined,pointRoutes);
                 if(recorded && receiptApplied!=null)receiptApplied(declined);return recorded;
             }
             ObservedVisit checkpoint = physical.Capture(actor, interior, indoorGeometry, now, settlement);
-            if (checkpoint == null) return false;
+            if (checkpoint == null){physical.PurchaseFailure="counter checkpoint: "+physical.CaptureFailure;return false;}
             worldStore.StoreObservedVisit(checkpoint);
             NpcInnConsumptionReceipt settled = worldStore.ReadNpcInnConsumption(actor.Resident.Id);
             if (settled != null)
             {
+                physical.PurchaseFailure=null;
                 if(receiptApplied!=null)receiptApplied(settled);
                 return true;
             }
@@ -91,6 +93,7 @@ namespace PeopleOfTheIliacBay.DFU
             if (worldStore.TryBuyNpcInnConsumption(actor.Resident.Id, keeper.Id, now, kind, menuIndex,
                 menu[menuIndex], price, out receipt,pointRoutes))
             {
+                physical.PurchaseFailure=null;
                 if(receiptApplied!=null)receiptApplied(receipt);
                 return true;
             }

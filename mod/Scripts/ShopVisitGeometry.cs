@@ -331,9 +331,18 @@ namespace PeopleOfTheIliacBay.DFU
             {var delta=other-slot.Ground;delta.y=0;if(Math.Abs(other.y-slot.Ground.y)<2.1f&&delta.sqrMagnitude<CrowdMotion.Separation*CrowdMotion.Separation)return false;}
             return Seating.Available(actor.Resident.Id,id,Time.unscaledTime);
         }
-        public List<GuardPoint3> ActivityRouteBetween(Vector3 actual,Vector3 target,SelectedSeatAccess egressAccess=null)
+        public List<GuardPoint3> ActivityRouteBetween(Vector3 actual,Vector3 target,SelectedSeatAccess egressAccess=null,string targetSeatId=null)
         {
             FurnitureSeatSlot startSeat,endSeat;seatStops.TryGetValue(actual,out startSeat);seatStops.TryGetValue(target,out endSeat);
+            if(targetSeatId!=null)
+            {
+                // Restored local coordinates can differ by a few float units
+                // after world/local transforms. The assigned chair identity,
+                // not bit-identical coordinates, owns this destination.
+                endSeat=Seating?.Find(targetSeatId);
+                if(endSeat==null || !seatStops.ContainsValue(endSeat))return new List<GuardPoint3>();
+                target=room.transform.InverseTransformPoint(endSeat.Ground);
+            }
             var worldActual=room.transform.TransformPoint(actual);
             // During observed chair egress the body can be beyond the seat
             // center lookup while its capsule is still inside that chair's

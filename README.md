@@ -17,6 +17,13 @@ Native acceptance of the five new slices, climbing, dungeon Follow and the
 moving throne platform also remain open. See the [current checklist](docs/WORKLIST-2026-10-26.md)
 and [verification boundaries](docs/TESTING.md).
 
+Newer source, not yet installed: restored chair destinations resolve their exact
+seat identity, and actual counter arrivals can pay even with zero remaining dwell.
+Core **2147/2147** passes. Native tests confirm both purchases in two Inn layouts;
+one layout also passes stable seating and receipt memories. Full homeward acceptance
+is still running after removing two fixture interferences: a quest popup and the
+observer standing in a chair aisle. See the [family Inn audit](docs/audits/2026-10-26-family-cash-visit.md).
+
 Earlier test bundle **7EC048CD49C7** was installed (26 October, 12:21); Unity package integration and **2131/2131** core checks pass. It includes the street-plan expansion, controlled solitary-shop wait release, and the source implementation of planned family Inn funding. Native linked routes now admit planned family outings. A peaceful native fixture passes morning bank service, one payout, physical home return and subsequent paired departure; final Inn arrival/payment remains open. The earlier empty-wallet bank repair and verified return to the home door remain included. The separate player-violence observer now uses actual body facing: seeing the victim alone does not identify a player behind the observer, and hearing alone does not establish an eyewitness. Eighteen mobile/static native boundary cases pass; actual combat swings, deaths and physical interior encounters remain separate acceptance work. See the [player-violence audit](docs/audits/2026-10-26-player-attack-perception.md). Earlier [non-player attack knowledge](docs/audits/2026-10-26-enemy-attack-knowledge.md), [free-text report delivery](docs/audits/2026-10-26-murder-report-dialogue.md), arrival-hold, housing-cache, trade and urgent-movement repairs remain included. Other dialogue cases, spontaneous encounters, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
 
 ## Project status

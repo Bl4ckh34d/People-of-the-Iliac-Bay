@@ -263,3 +263,104 @@ routes, but the household admission pass has not returned to them. The fixture
 now budgets one additional complete pass for a fresh state: two homes per
 half-second, plus five seconds. Production scheduling is unchanged. That revised
 setup allowance and the detailed checkpoint diagnostics still require a repeat.
+
+### Restored chair coordinates lose their semantic destination
+
+`08-capture` passes fresh setup with the retained seed. The morning trip pays
+421 g once and walks 135.279 m home (maximum step 0.417 m, home distance 0.552 m).
+Both actual bodies then reach the Inn after 298.074/302.356 m; maximum step 0.500 m.
+The indoor failure is now localized to the second member's saved connection leg 1:
+
+- Target `(0.2249527, 0.00009918213, 8.675049)`.
+- Live chair ground `(0.224945068, 0.0000915527344, 8.675049)`.
+- Both identify chair `inn:131841:41105:225,275,8275/0`.
+
+`ActivityRouteBetween` previously identified destination chairs only by an exact
+Vector3 dictionary key. The restored world/local float rounding loses that lookup,
+so ordinary geometry tries to route into the chair rather than through its known
+approach. No general movement tolerance or furniture collision relaxation is needed.
+
+Physical visit capture and movement now pass their existing assigned seat ID.
+The route resolves that exact live chair and its approach; missing or excluded
+chair IDs reject. Unassigned public destinations retain ordinary geometry checks.
+RuntimeCompile passes with zero warnings/errors. Native repeat `09-seat-identity`
+is pending; this is not yet a full Inn acceptance.
+
+The repeat also checks perturbed local chair coordinates, canonical live endpoints
+and rejection of unknown chair IDs. After actual purchases it verifies exact
+participant memories, receipt facts and stable expiry through the five-second
+seated hold. These checks read bounded existing indexes, not per-frame world snapshots.
+
+`09-seat-identity` naturally selects household 327940 and Inn 197127 instead of
+the earlier pair; this is additional-room coverage, not an identical-scenario
+comparison. The morning trip pays 489 g once and returns home. Both exterior
+bodies complete their approach (163.781/161.292 m; maximum step 0.500 m).
+Three native chairs pass the perturbed-coordinate and unknown-ID checks. Both
+parents reach `Haggling` without the former checkpoint recovery error. Payment
+still never occurs, so the 180-second payment/seating requirement fails. Neither
+the memory assertions nor full return are accepted yet.
+
+### Pending reconstruction has an instantaneous counter stage
+
+The pending-service reconstruction in `HouseholdInnReconstruction` intentionally
+creates a counter leg with zero dwell. On physical arrival the runtime captures
+a one-point Haggling leg, then calls the payment callback. `ObservedVisit.Evaluate`
+correctly skips zero-duration intervals, so `AtInnCounter` previously saw the next
+walking/table phase and rejected both payment and a no-purchase receipt. The
+runtime kept waiting for payment before advancing: a stable deadlock.
+
+Two new failing Core cases reproduce payment and refusal at that exact observed
+arrival; a third covers earlier/later time, remaining travel and table stage.
+`AtInnCounter` now additionally accepts only a first, one-point Haggling leg with
+zero dwell at exactly `ObservedAt`. All household, keeper, wallet, identity and
+replay checks remain. No artificial dwell or global time-projection change.
+RED: 2145/2147; GREEN: 2147/2147. Existing Inn-consumption regressions and
+RuntimeCompile pass. Native `10-purchase` retains the pre-fix payment code to
+check the diagnostic prediction; native acceptance of this fix remains pending.
+
+`10-purchase` confirms the exact prediction for both actual bodies at Inn 197127:
+`visit=Haggling`, `savedPhase=Walking`, `routePoints=1`, `dwell=0`,
+`canSettle=True`, and `purchaseFailure=purchase could not be recorded`.
+The diagnostic editor was deliberately stopped after repeated identical evidence;
+it is not a completed acceptance run. `11-zero-dwell` runs the corrected source
+with the complete payment, memory, seating, exit and homeward checks.
+
+`11-zero-dwell` verifies the same household 327940 / Inn 197127 as runs 09–10.
+The morning cash trip pays 489 g once and returns home; both parents physically
+reach the Inn. Both purchases succeed for a total of 4 g, both parents remain
+seated for the five-second observed hold, and five entitled receipt-memory
+perspectives pass exact count, known participant, factual and stable-expiry checks.
+All three native chair identity checks pass. Both parents physically leave the Inn.
+
+The return test is not accepted: it times out after about 100.09/98.87 m.
+Direct inspection of the Unity game view during the stall shows a native quest
+letter popup addressed to the disposable test character. This pauses gameplay;
+the stationary return counters are not evidence of an NPC navigation defect.
+The Editor then terminates with the fixture's exterior-leg timeout.
+
+For repeat `12-quest-isolated`, the owned family-Inn fixture temporarily disables
+native QuestMachine ticks, restoring its previous enabled state in `finally`.
+This isolates unrelated scheduled quest popups during its time skips without
+changing production movement or quest behavior. Exterior diagnostics now include
+pause state and current UI window. RuntimeCompile has zero warnings/errors and
+the current Core run passes 2147/2147. Full return acceptance remains pending.
+
+`12-quest-isolated` returns to the original household 328712 / Inn 131841.
+The cash trip pays 421 g once, walks 138.055 m and reaches 0.570 m from home;
+the pair then walks 298.483/304.127 m to the Inn. All three native chair checks
+pass and both actual purchases complete. One parent sits; the other never
+reaches its chair before the 180-second limit. This is not full acceptance.
+
+Existing `ROOM_ROUTE_STALL` diagnostics identify the controlled test observer,
+`PlayerAdvanced`, directly on the blocked waypoint: player ground near
+`(279.775, 319.760, 405.151)`, target `(279.775, 319.660, 404.951)`.
+The chosen free floor point was in the chair access aisle. The fixture had checked
+furniture and current bodies, but not future visit routes. The Unity window shows
+normal gameplay without a popup, so this is distinct from run 11's paused quest.
+
+Repeat `13-clear-observer` adds a 1.2 m clearance from both parents' remaining
+visit segments when selecting the existing observer floor anchor. It fails the
+fixture explicitly if no clear anchor exists. It changes neither player collision
+nor NPC navigation. RuntimeCompile passes. The run reuses run 12's deployed
+production source with only this fixture file refreshed; concurrent agent changes
+are deliberately excluded from this causal repeat. Complete outing still pending.
