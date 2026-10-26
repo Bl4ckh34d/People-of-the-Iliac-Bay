@@ -10,28 +10,37 @@ namespace PeopleOfTheIliacBay.DFU
     {
         public Action<Exception> BeginEnemyResidentAttack(ResidentActor victim,DaggerfallEntityBehaviour source)
         {
-            if(!Ready||!ReactionsEnabled||!victim||!source||interior||worldStore==null||FindActor(victim.Resident.Id)!=victim)return null;
+            if(!Ready||!ReactionsEnabled||!victim||!source||source.Entity==null||interior||worldStore==null||FindActor(victim.Resident.Id)!=victim)return null;
             var guards=GetComponent<GuardPopulation>();if(!guards)return null;
             double now=DaggerfallUnity.Instance.WorldTime.Now.ToSeconds();
             var store=worldStore;var local=directory.transform.InverseTransformPoint(victim.transform.position-Vector3.up);
             var alarm=store.RecordViolence(population.SettlementId,victim.Resident.Id,now);
             if(!alarm.HasLocation)store.LocateViolence(alarm.Id,-1,local.x,local.y,local.z);
+            // Capture knowledge before native damage can turn or remove a body.
+            // CivilianEntity.Name can be empty; the mobile person owns its name.
+            var attackingResident=source.GetComponent<ResidentActor>();
+            string attackerName=attackingResident && attackingResident.Person?attackingResident.Person.NameNPC:source.Entity.Name;
+            bool sourceVisible=source.gameObject.activeInHierarchy && !source.Entity.IsInvisible;
+            bool identifiesAttacker=!string.IsNullOrWhiteSpace(attackerName) && sourceVisible &&
+                SeesSceneEvent(victim,source.transform.position,20);
+            if(string.IsNullOrWhiteSpace(attackerName))attackerName="an unidentified attacker";
             var witnesses=new System.Collections.Generic.List<ResidentActor>();
             foreach(var actor in actors.Values)
-                if(!source.Entity.IsInvisible&&actor&&actor!=victim&&actor.Resident.IsAlive&&actor.gameObject.activeInHierarchy&&!actor.IsSleeping&&
-                    CivilianResponses.Sees(actor.transform.position,victim.transform.position,20)&&CivilianResponses.Sees(actor.transform.position,source.transform.position,20))witnesses.Add(actor);
+                if(sourceVisible&&actor&&actor!=victim&&actor!=attackingResident&&actor.Resident.IsAlive&&actor.gameObject.activeInHierarchy&&
+                    SeesSceneEvent(actor,victim.transform.position,20)&&SeesSceneEvent(actor,source.transform.position,20))witnesses.Add(actor);
             ObserveExteriorStaticWitnesses(alarm,victim.transform.position,now,source);
             var body=victim.GetComponent<DaggerfallEntityBehaviour>();int healthBefore=body && body.Entity!=null?body.Entity.CurrentHealth:0;
             return error=>{
                 if(error!=null||store!=worldStore||!victim)return;
-                if(body && body.Entity!=null && body.Entity.CurrentHealth<healthBefore && source && source.Entity!=null)
+                if(body && body.Entity!=null && body.Entity.CurrentHealth<healthBefore)
                 {
                     string occurrence="attack:"+Guid.NewGuid().ToString("N");
                     NativeSceneRecollection.Remember(store,victim.Resident.Id,occurrence,NpcSceneEventKind.Assault,
-                        "I was attacked by "+source.Entity.Name+". I do not know why.",-3,victim.Resident.Id);
+                        identifiesAttacker?"I was attacked by "+attackerName+". I do not know why.":
+                        "I was attacked, but I could not identify my attacker. I do not know why.",-3,victim.Resident.Id);
                     foreach(var witness in witnesses)if(witness)
                         NativeSceneRecollection.Remember(store,witness.Resident.Id,occurrence,NpcSceneEventKind.Assault,
-                            "I saw "+source.Entity.Name+" attack "+victim.Person.NameNPC+". I do not know why.",subject:victim.Resident.Id);
+                            "I saw "+attackerName+" attack "+victim.Person.NameNPC+". I do not know why.",subject:victim.Resident.Id);
                 }
                 if(victim.Resident.IsAlive)return;
                 if(!source)return;

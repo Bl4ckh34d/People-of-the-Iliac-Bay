@@ -14,7 +14,7 @@ This extends the existing native experience/appraisal pipeline and conversation 
 | Native money/item/gift receipt | Actual transferred quantity and known giver | Existing source admission remains mandatory; model claims cannot mint a transfer. |
 | Native appointment/obligation/combat-help receipt | Attended/missed agreement, fulfilled/broken obligation, received combat assistance | Only producers that already confirm these outcomes feed the bridge. Declaring an event kind does not create a new game action. |
 | Direct civilian perception | Assault, hostile threat, witnessed killing, unauthorized building entry | A reported crime or later corpse discovery is not proof that the NPC saw the killer. |
-| Confirmed enemy attack on a resident | Native attacker name/type, victim and location | Motive remains unknown. Existing exterior attack callback supplies the witnesses. |
+| Confirmed enemy attack on a resident | Visible attacker name/type, victim and location; otherwise the victim remembers an unidentified attacker | Exterior mobile witnesses must face and see both bodies. Identity is captured before damage, not inferred after turning around. Resident labels use the actual mobile name. Motive remains unknown. See the [native boundary tests](audits/2026-10-26-enemy-attack-knowledge.md). |
 | Guard pursuit | Visible guard chasing the visible player | Pursuit is not proof of the underlying offense. |
 | Native shop receipt | Witnessed purchase/theft; personally completed ambient purchase or browsing without purchase | Witnesses do not learn prices merely by seeing a customer. |
 | Actual street conversation | Partner identity and location | Mere nearby presence does not establish a conversation. |

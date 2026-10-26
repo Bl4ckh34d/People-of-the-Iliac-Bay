@@ -42,6 +42,17 @@ namespace PeopleOfTheIliacBay.DFU
                 if(StaticChatEligible(entry,clock.ToSeconds()) && VerifyStationaryViolenceObserver(entry))
                 {violence=true;break;}
             if(!violence)throw new InvalidOperationException("No stationary attack witness has a clear view in this fixture.");
+            deadline=Time.realtimeSinceStartup+75;
+            while(Time.realtimeSinceStartup<deadline)
+            {
+                int available=0;
+                foreach(var actor in actors.Values)
+                    if(actor && actor.gameObject.activeInHierarchy && actor.Resident.IsAlive && !actor.IsSleeping &&
+                        actor.GetComponent<DaggerfallEntityBehaviour>().Entity.CurrentHealth>2)available++;
+                if(available>=3)break;
+                yield return null;
+            }
+            VerifyEnemyAttackObservers();
             Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_SCENE_OBSERVERS_PASS: mobile=true; stationary=true; nativeVisibility=true; epochBoundary=true");
         }
 

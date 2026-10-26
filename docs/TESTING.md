@@ -1,5 +1,11 @@
 # Testing and verification status
 
+## Attack knowledge — 26 October 2026, 08:44
+
+Installed and distribution SHA256 both equal **`411485293F91766CC002DB11CA2D9FD46975EB47EADE5294C8AFC46D9E83597A`**. Unity package integration/build exits 0. Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, 70 PowerShell syntax checks, tooling protocols, source policy and whitespace checks pass.
+
+Two native red runs independently reproduce victim knowledge without facing and a backward-facing mobile witness. `enemy-observers-green` passes twelve cases with existing resident bodies, native health changes and real collider LOS, plus the previous stationary/health/restore tests. It completes with no exception entries; the existing teardown object-cleanup warning remains. The fixture invokes attack callbacks, not actual melee swings or lethal damage. Player-attack producers and complete combat/death remain open. See the [audit and scope](audits/2026-10-26-enemy-attack-knowledge.md).
+
 ## Free-text murder report — 26 October 2026, 08:23
 
 Installed and distribution SHA256 both equal **`51AFECAA1991B751A02E4E996A9BBEE2FB5B8119A16D61D1DA5B90838418B26B`**. Unity package integration/build exits 0. Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, 70 PowerShell syntax checks, tooling protocols, source policy and whitespace checks pass.
