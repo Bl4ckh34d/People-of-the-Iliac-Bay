@@ -28,7 +28,7 @@ to isolate this visitor, while its actor and the production movement code run.
 
 The fixture checks counter dwell, exactly one wallet credit, actual journey
 context before and after payment, cash memory, detached snapshot restoration,
-NPC exit, native player exit and physical return movement. It does not establish
+NPC exit, native player exit and physical return movement. The base fixture does not establish
 the initial outdoor trip, a complete journey home, family rendezvous, actual
 corpse looting, a spoken LLM response or native disk save/load.
 
@@ -61,3 +61,33 @@ the counter. It completes with 8.80 seconds dwell, 0.807 m maximum planar
 distance, minimum facing dot 1, one 419 g credit and 2.20 m return movement.
 This independently sampled dwell also remains inside the requested 8–15 seconds.
 The run completes without an `Exception:` entry.
+
+## Complete outdoor return fixture
+
+`-ValidateBankCash -ValidateCashReturn` additionally selects an eligible resident
+with a verified daily route and a bank-to-home route of 5–120 m. It follows the
+actual body until the cash overlay clears at home, checks the nearest distance
+to the home door and rejects any sampled displacement above 2 m. It then reads
+the continuing daily routine. The initial trip to the bank, execution of every
+remaining outing and family rendezvous are still separate acceptance work.
+
+`cash-return-01` through `03` reach the home door but fail the final assertion.
+Run `02` records 41.11 m return movement, 0.558 m nearest home distance and
+0.500 m maximum step. Run `03` confirms that the plan object is unchanged, a
+recovery is saved and cached, and neither family ownership nor a closed-shop
+diversion explains the rejected read. The fixture used DFU's `ToSeconds()`, which
+returns an integer. Population updates include `Second - Floor(Second)` and
+therefore publish a fractional `CreatedAt` later than that truncated timestamp.
+The fixture now uses the existing `ActionNow()` for its completion read. The
+production future-plan guard is unchanged; these failures do not establish a
+gameplay defect or a lost routine.
+
+`cash-return-04` completes after that clock correction. Following the earlier
+2.01 m exit/resumption check, the resident walks another 41.05 m to within 0.551 m
+of the actual home door; maximum sampled step is 0.500 m. The cash overlay clears
+and the continuing routine has four valid legs. The plan object was not replaced.
+The same run passes counter approach/facing, 13.55 seconds clerk dwell, one 439 g
+credit, context, memory, detached restoration and native player exit. Its result
+is `complete`, without an `Exception:` entry. The pre-existing scene-cleanup
+warning remains. No production behavior changed in this return-test follow-up;
+the installed `e95086a` bundle is unchanged.

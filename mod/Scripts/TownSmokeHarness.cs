@@ -502,7 +502,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-profile-only")>=0)
                     {
                         if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-bank-cash")>=0)
-                            yield return streets.VerifyBankCashVisit();
+                            yield return streets.VerifyBankCashVisit(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-cash-return")>=0);
                         else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-complaint")>=0)
                             yield return streets.VerifyDialogueComplaint();
                         else if(Array.IndexOf(testArguments,"-peopleoftheiliacbay-verify-housing")>=0)

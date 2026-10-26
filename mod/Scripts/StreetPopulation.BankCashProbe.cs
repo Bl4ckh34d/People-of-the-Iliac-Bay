@@ -10,7 +10,7 @@ namespace PeopleOfTheIliacBay.DFU
 {
     public sealed partial class StreetPopulation
     {
-        internal IEnumerator VerifyBankCashVisit()
+        internal IEnumerator VerifyBankCashVisit(bool fullReturn=false)
         {
             var game=GameManager.Instance;var clock=DaggerfallUnity.Instance.WorldTime.Now;
             clock.RaiseTime((float)((43200-clock.ToSeconds()%86400+86400)%86400));
@@ -32,7 +32,7 @@ namespace PeopleOfTheIliacBay.DFU
                     if(distance<nearest){nearest=distance;owner=doors;selected=door;}
                 }
             if(!owner)throw new InvalidOperationException("Bank fixture has no open native bank entrance.");
-            Plan selectedPlan=null;int outdoorHomePoints=0;
+            Plan selectedPlan=null;int outdoorHomePoints=0;double shortestHomeRoute=double.PositiveInfinity;
             var bankStart=MedicalDoorPosition(geometry.Entrances[selected.buildingKey]);
             foreach(var candidate in plans)
             {
@@ -42,14 +42,23 @@ namespace PeopleOfTheIliacBay.DFU
                     HasActiveNpcHealthCare(candidate.Resident.Id) || worldStore.ReadNpcCashWait(candidate.Resident.Id)!=null)continue;
                 var activity=ActiveSchedule(candidate).EvaluateSeconds(clock.ToSeconds()).Activity;
                 if(activity==Activity.Work || activity==Activity.Sleep || NativeNpcInventoryBridge.CashWithdrawalGold(worldStore,candidate.Resident.Id)<1)continue;
+                if(fullReturn && IsHomeOnlyWithoutVerifiedRoute(candidate))continue;
                 var choice=ChooseCashVisit(candidate,null,bankStart);
                 if(choice==null || !choice.Bank || choice.ProviderKey!=selected.buildingKey)continue;
                 SavedRoutePoint home;TryRoutineRecoveryDoor(candidate,candidate.Resident.HomeKey,out home);
-                outdoorHomePoints=geometry.RouteBetweenPoints(new SavedRoutePoint{X=bankStart.X,Z=bankStart.Z},home).Count;
-                selectedPlan=candidate;break;
+                var homeRoute=geometry.RouteBetweenPoints(new SavedRoutePoint{X=bankStart.X,Z=bankStart.Z},home);
+                double routeLength=0;
+                for(int p=1;p<homeRoute.Count;p++) {
+                    double dx=homeRoute[p].X-homeRoute[p-1].X,dz=homeRoute[p].Z-homeRoute[p-1].Z;
+                    routeLength+=Math.Sqrt(dx*dx+dz*dz);
+                }
+                if(fullReturn && (routeLength<5 || routeLength>120 || routeLength>=shortestHomeRoute))continue;
+                shortestHomeRoute=routeLength;outdoorHomePoints=homeRoute.Count;
+                selectedPlan=candidate;if(!fullReturn)break;
             }
             if(selectedPlan==null)throw new InvalidOperationException("No eligible visitor can select this bank while outdoors.");
-            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BANK_CASH_START: resident="+selectedPlan.Resident.Id+"; bank="+selected.buildingKey+"; outdoorHomeRoutePoints="+outdoorHomePoints);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BANK_CASH_START: resident="+selectedPlan.Resident.Id+"; bank="+selected.buildingKey+
+                "; outdoorHomeRoutePoints="+outdoorHomePoints+"; homeOnly="+IsHomeOnlyWithoutVerifiedRoute(selectedPlan)+"; homeRouteMetres="+shortestHomeRoute);
             TownSmokeHarness.EnterInterior(owner.transform,selected);
             deadline=Time.realtimeSinceStartup+90;
             while((!interior || interior.EntryDoor.buildingKey!=selected.buildingKey || indoorGeometry==null ||
@@ -171,12 +180,63 @@ namespace PeopleOfTheIliacBay.DFU
                     yield return null;
                 }
                 if(moved<2)throw new InvalidOperationException("Bank visitor did not physically resume after exit: metres="+moved);
+                if(fullReturn)yield return VerifyCashReturnHome(id,expectedGold);
                 Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_BANK_CASH_PASS: nativeBank=true; clerkDwellSeconds="+(paidAt-counterAt)+
                     "; paidGold="+expectedGold+"; context=true; memory=true; snapshotRestore=true; playerFadedExit=true; returnMetres="+moved+
                     "; counterMetres="+counterDistance+"; minimumClerkFacing="+minimumClerkFacing+
-                    "; completeHomeJourneyNotTested=true; familyNotTested=true");
+                    "; completeHomeJourneyNotTested="+(!fullReturn)+"; familyNotTested=true");
             }
             finally{enabled=wasEnabled;}
+        }
+
+        private IEnumerator VerifyCashReturnHome(string id,int expectedGold)
+        {
+            var plan=plans.Find(p=>p.Resident.Id==id);var visit=worldStore.ReadNpcCashVisit(id);
+            if(plan==null || visit==null || !visit.Returning || visit.ReturnKey!=plan.Resident.HomeKey)
+                throw new InvalidOperationException("Cash return fixture lost its home destination.");
+            TownGeometry.Entrance home;
+            if(!geometry.Entrances.TryGetValue(visit.ReturnKey,out home))throw new InvalidOperationException("Cash return home door is unavailable.");
+            var door=geometry.ScenePoint(new RoutePoint(home.LocalDoor.x,home.LocalDoor.z));
+            var actor=FindActor(id);if(!actor)throw new InvalidOperationException("Returning cash collector has no body.");
+            Vector3 previous=actor.transform.position;float distanceToHome=float.MaxValue,maxStep=0;double walked=0;
+            double finishedAt=-1;float deadline=Time.realtimeSinceStartup+180;
+            while(Time.realtimeSinceStartup<deadline)
+            {
+                actor=FindActor(id);
+                if(actor && actor.gameObject.activeInHierarchy)
+                {
+                    float step=Vector3.Distance(previous,actor.transform.position);maxStep=Mathf.Max(maxStep,step);walked+=step;
+                    previous=actor.transform.position;
+                    distanceToHome=Mathf.Min(distanceToHome,Vector3.Distance(actor.transform.position-Vector3.up,door));
+                    if(step>2)throw new InvalidOperationException("Cash return body jumped: metres="+step);
+                }
+                var saved=worldStore.ReadNpcCashVisit(id);
+                if(saved==null)
+                {
+                    // UpdatePopulation publishes recovery using fractional game
+                    // seconds. ToSeconds() truncates and can predate that plan.
+                    finishedAt=ActionNow();break;
+                }
+                if(!actor || !actor.gameObject.activeInHierarchy)throw new InvalidOperationException("Cash return body vanished before home arrival.");
+                if(worldStore.ReadNpcInventory(id).WalletGold!=expectedGold)throw new InvalidOperationException("Cash return changed the paid wallet.");
+                yield return null;
+            }
+            if(finishedAt<0 || distanceToHome>1.2f || walked<2)
+                throw new InvalidOperationException("Cash return incomplete: cleared="+(finishedAt>=0)+"; homeDistance="+distanceToHome+"; walked="+walked);
+            var originalPlan=plan;plan=plans.Find(p=>p.Resident.Id==id);
+            var recovery=CurrentRoutineRecovery(plan,finishedAt);
+            RoutineRecoveryScheduleCache cache;routineRecoverySchedules.TryGetValue(id,out cache);
+            var savedRecovery=worldStore.Snapshot().RoutineRecoveries.Find(p=>p.ResidentId==id);
+            if(recovery==null)throw new InvalidOperationException("Cash return did not publish the continuing daily routine: homeOnly="+
+                IsHomeOnlyWithoutVerifiedRoute(plan)+"; hasSavedRecovery="+worldStore.HasRoutineRecovery(id)+
+                "; planReplaced="+(!ReferenceEquals(plan,originalPlan))+"; cachedPlan="+(cache?.Plan!=null)+
+                "; storedFamily="+savedRecovery?.HouseholdDayId+"; runtimeFamily="+(RuntimeFamily(plan,finishedAt)!=null)+
+                "; closedShopWait="+closedShopWaits.ContainsKey(id)+"; activity="+Scheduled(plan,finishedAt).Activity+
+                "; homeDistance="+distanceToHome+"; walked="+walked+"; maxStep="+maxStep);
+            Debug.Log("PEOPLE_OF_THE_ILIAC_BAY_CASH_RETURN_PASS: actualHomeArrival=true; walkedMetres="+walked+
+                "; nearestHomeMetres="+distanceToHome+"; maxStep="+maxStep+"; recoveryLegs="+recovery.Legs.Count+
+                "; planReplaced="+(!ReferenceEquals(plan,originalPlan))+
+                "; remainingOutingNotTested=true; familyNotTested=true");
         }
     }
 
