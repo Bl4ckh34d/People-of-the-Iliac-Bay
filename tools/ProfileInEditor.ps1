@@ -3,11 +3,12 @@ param([string]$RunName='baseline', [string]$FixtureFolder='SAVE82', [switch]$Use
     [switch]$ValidateWardrobe, [switch]$ValidateCrowd, [switch]$ValidateShopping, [switch]$ValidateSpeech, [switch]$ShoppingBuyerOnly,
     [switch]$ValidateLeisure, [switch]$ValidateMorningShop, [switch]$ValidateInnDiversion, [switch]$ValidateMurderReport,
     [switch]$ValidateStaticTrade, [switch]$ValidateStreetEncounter, [switch]$ValidateSceneObservers, [switch]$ValidateHousing,
-    [switch]$ClimateDetails, [switch]$ValidateComplaint, [switch]$ValidateComplaintWait)
+    [switch]$ClimateDetails, [switch]$ValidateComplaint, [switch]$ValidateComplaintWait, [switch]$ValidateMurderReportChat)
 $ErrorActionPreference='Stop'
 if($ValidateSpeech -and -not $ValidatePlaytest){throw '-ValidateSpeech requires -ValidatePlaytest so a real trade conversation precedes reopening.'}
 if($ShoppingBuyerOnly -and -not $ValidateShopping){throw '-ShoppingBuyerOnly requires -ValidateShopping.'}
 if($ValidateComplaintWait -and -not $ValidateComplaint){throw '-ValidateComplaintWait requires -ValidateComplaint.'}
+if($ValidateMurderReportChat -and -not $ValidateMurderReport){throw '-ValidateMurderReportChat requires -ValidateMurderReport.'}
 if($ValidateStaticTrade -and $ValidatePlaytest){throw 'Run static and mobile personal trade as separate owned fixtures.'}
 if($ClimateDetails -and ($ValidateArrival -or $ValidateWardrobe -or $ValidateCrowd -or $ValidateShopping -or
     $ValidateLeisure -or $ValidateMorningShop -or $ValidateInnDiversion -or $ValidateMurderReport -or
@@ -70,6 +71,12 @@ if($ValidateLeisure){$arguments+=' -peopleoftheiliacbay-verify-leisure'}
 if($ValidateMorningShop){$arguments+=' -peopleoftheiliacbay-verify-morning-shop'}
 if($ValidateInnDiversion){$arguments+=' -peopleoftheiliacbay-verify-inn-diversion'}
 if($ValidateMurderReport){$arguments+=' -peopleoftheiliacbay-verify-murder-report'}
+if($ValidateMurderReportChat){
+    $captureRoot=Join-Path $runRoot 'work'
+    New-Item -ItemType Directory -Path $captureRoot -Force | Out-Null
+    $arguments+=' -peopleoftheiliacbay-verify-murder-report-chat -peopleoftheiliacbay-semantic-action-model-capture "'+
+        (Join-Path $captureRoot 'semantic-action-model-capture.jsonl')+'"'
+}
 if($ValidateStaticTrade){$arguments+=' -peopleoftheiliacbay-verify-static-trade'}
 if($ValidateStreetEncounter){$arguments+=' -peopleoftheiliacbay-verify-street-encounter'}
 if($ValidateSceneObservers){$arguments+=' -peopleoftheiliacbay-verify-scene-observers'}

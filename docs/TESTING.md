@@ -1,5 +1,11 @@
 # Testing and verification status
 
+## Free-text murder report — 26 October 2026, 08:23
+
+Installed and distribution SHA256 both equal **`51AFECAA1991B751A02E4E996A9BBEE2FB5B8119A16D61D1DA5B90838418B26B`**. Unity package integration/build exits 0. Core 2121/2121, RuntimeCompile and QuestHooks without warnings/errors, 70 PowerShell syntax checks, tooling protocols, source policy and whitespace checks pass.
+
+`murder-report-chat-05` uses native Talk, Gemma and the run's isolated Breeze services. Exactly one report is accepted, remains stationary through a further 25-second conversation hold, then travels 18.63097 m and records both memories without changing player crime. Earlier runs reproduce duplicate decomposition and a walking watchdog that incorrectly counted paused Talk time. The local model script now uses the actual classifier framing; eight intent cases and two separate-effect controls pass. No exception is logged in the successful run; the existing teardown object-cleanup warning remains. See the [audit and limits](audits/2026-10-26-murder-report-dialogue.md).
+
 ## Complaint routine resumption — 26 October 2026, 07:58
 
 `complaint-resume-02` passes ten seconds of physical movement after delivery and

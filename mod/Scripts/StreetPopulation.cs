@@ -837,7 +837,15 @@ namespace PeopleOfTheIliacBay.DFU
         {
             if (!directory) { if (plans.Count > 0) Clear(); return; }
             var game = GameManager.Instance;
-            if (!Ready || game == null || !game.IsReady || !game.IsPlayingGame()) return;
+            if (!Ready || game == null || !game.IsReady) return;
+            if(!game.IsPlayingGame())
+            {
+                // Native Talk and other pausing windows bypass actor updates.
+                // Remember the pause here so their walking watchdogs can resume
+                // from fresh observations instead of counting UI time as a stall.
+                foreach(var motion in actionMotions.Values)motion.MovementPaused=true;
+                return;
+            }
             var now = DaggerfallUnity.Instance.WorldTime.Now;
             double seconds = now.ToSeconds() + (now.Second - Math.Floor(now.Second));
             reconstructInteriorVisits=false;

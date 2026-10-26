@@ -38,6 +38,13 @@ incident and verify delivery. This option requires `-ValidateComplaint`; it does
 not claim a naturally blocked door or path was reproduced.
 See the [physical complaint audit](../../docs/audits/2026-10-26-physical-dialogue-complaint.md).
 
+`-ValidateMurderReport -ValidateMurderReportChat` uses the real local model and
+native Talk handler instead of controlled acceptance, holds the accepted request
+in Talk for 25 seconds, then requires physical report delivery. Start the owned
+speech coordinator against that run's isolated `data` directory during editor
+loading. Exact opt-in classifier traces are written below its `work` directory.
+See [setup and verification boundaries](../../docs/audits/2026-10-26-murder-report-dialogue.md).
+
 Each 20-second observation phase and native 1/3-hour loiter records its own CPU
 `.raw` under `work/playtest-2026-10-26/editor/<RunName>`. Deep Profiling stays off.
 `-CountersOnly` disables binary profiling for a second comparison without capture

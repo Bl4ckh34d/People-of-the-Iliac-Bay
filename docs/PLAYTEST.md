@@ -1,6 +1,6 @@
 # Spieltest — 26. Oktober 2026
 
-Spielbarer Zwischenbuild `A31A6036B1AF`, um 07:47 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu: Ein meldender NPC bleibt bei der Wache stehen und schaut zu ihr, wenn die Meldung noch nicht verarbeitet werden kann. Der native Test prüft fünf Sekunden stabilen Stand, keine vorzeitige Strafanzeige und erfolgreiche Übergabe nach Wiederherstellung des Wegs. Freier Dialog und Rückkehr zur Tagesroutine bleiben separat offen.
+Spielbarer Zwischenbuild `51AFECAA1991`, um 08:23 installiert. Paket: `dist/peopleoftheiliacbay.dfmod`. Unity-Paketprüfung und 2121 Core-Tests bestehen. Neu: „Wache suchen und Mord melden“ wird als ein Auftrag verstanden. Ein längeres Gespräch lässt den anschließenden Wachengang nicht mehr fälschlich als blockiert scheitern. Der vollständige native Test nutzt freie Texteingabe und das lokale Modell, wartet nach der Zusage weitere 25 Sekunden im Gespräch und beobachtet anschließend 18,63 m Laufweg sowie beide Erinnerungen. Freundliche Ausgangslage kontrolliert; andere Formulierungen und Ablehnungen bleiben mögliche Varianten.
 
 Der vorherige Ladefix bleibt enthalten: Die Wohnraumerfassung verwendet DFUs vorhandene Gebäudedaten; der gemessene Ladeblock sinkt von 3.097 ms auf 8,92 ms. Alle 408 Hausprofile stimmen exakt überein. Der separate Editor-Zeitsprung-Hänger stammt überwiegend aus virtueller Asset-Suche; die Ursache sämtlicher gemeldeter Player-Freezes ist damit nicht geklärt.
 
@@ -8,7 +8,7 @@ Der vorherige Zeugenfix bleibt enthalten: Stationäre Außen-NPCs werden bei Ang
 
 Kurze Begegnungen mit einem stationären Markt-NPC bestehen den kontrollierten Test: Blick zum Partner, Kontext und Erinnerung für beide sowie Weiterlaufen zum bisherigen Ziel. Die anfängliche Nähe wurde dabei arrangiert. Der vorherige Fix für ein bereits zerstörtes Inn-Vermessungsobjekt bleibt enthalten.
 
-Der anonyme Mord-Meldeauftrag bleibt enthalten: Ein zustimmender erwachsener Bewohner läuft draußen zur erreichbaren Wache und übergibt den Bericht. Die Meldung bleibt Hörensagen; beide Beteiligten erinnern sich daran. Nativer Laufweg und lokale LLM-Auswahl bestehen getrennte Tests. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Ein vollständiger Gesprächsdurchlauf mit den normalen Bereitschaftseinstellungen bleibt offen.
+Der anonyme Mord-Meldeauftrag bleibt Hörensagen; die Wache erhält weder eine erfundene Täteridentität noch einen erfundenen Tatort. Das endliche Wachsystem muss aktiviert sein; die Paket-Vorgabe ist bereits eingeschaltet. Der vollständige freundliche Gesprächsdurchlauf besteht jetzt mit Gemma und passenden Breeze-Sprachdiensten. Details und Grenzen stehen im [Dialogtest](audits/2026-10-26-murder-report-dialogue.md).
 
 Der Inn-Fehler besteht den gezielten nativen Test: Tresen, stabiler Sitzplatz, Speicherstand und Spieler-Ausgang. Freie Fluchtbewegung erreicht im nativen Test 13,16 km/h statt zuvor 5,54 km/h. Vollständiger Hash und Prüfgrenzen stehen in [TESTING.md](TESTING.md); die [Arbeitsliste](WORKLIST-2026-10-26.md) enthält die übrigen offenen Punkte.
 

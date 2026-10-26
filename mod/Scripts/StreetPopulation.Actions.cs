@@ -22,6 +22,7 @@ namespace PeopleOfTheIliacBay.DFU
             public Vector3 NativeDestination;
             public bool NativeOutdoor,NativeFailed;
             public float RepathAt,CheckAt,SaveAt,ProgressAt;
+            public bool MovementPaused;
             public float NextWaypointRejoinAt;
             public NpcActionWaypointProgress WaypointProgress=new NpcActionWaypointProgress();
             public bool RecoveryWaiting;
@@ -612,10 +613,19 @@ namespace PeopleOfTheIliacBay.DFU
             }
             if(actor.IsConversing && job.Kind==NpcActionKind.RestToHeal && job.Phase==NpcActionPhase.Executing)
             {EndAction(job,now,"Conversation interrupted the continuous rest period.",false);return true;}
-            if(GameManager.IsGamePaused || actor.IsConversing) return true;
             ActionMotion motion;
             if(!actionMotions.TryGetValue(plan.Resident.Id,out motion) || motion.JobId!=job.Id)
             {motion=new ActionMotion {JobId=job.Id,LastProgress=actor.transform.position,ProgressAt=Time.unscaledTime};actionMotions[plan.Resident.Id]=motion;}
+            if(GameManager.IsGamePaused || actor.IsConversing)
+            {motion.MovementPaused=true;return true;}
+            if(motion.MovementPaused)
+            {
+                // Conversation and game pauses are not blocked movement. Keep the
+                // route and waypoint, but start fresh progress observation on resume.
+                motion.MovementPaused=false;motion.ProgressAt=Time.unscaledTime;
+                motion.LastProgress=actor.transform.position;motion.CheckAt=0;
+                motion.WaypointProgress=new NpcActionWaypointProgress();
+            }
             motion.Urgent=job.Kind==NpcActionKind.ReportMurder && !NpcActionExecutor.IsTerminal(job);
             if(motion.DepartureSeat!=null)
             {

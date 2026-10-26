@@ -6,13 +6,14 @@ A Daggerfall Unity mod that brings NPCs to life through persistent households, d
 
 **Development snapshot, not a finished release.** Several NPC categories and quest interactions remain incomplete. Start with the [NPC integration audit](docs/NPC-SYSTEMS.md#inventory) for verified coverage and limitations, rather than assuming every authored NPC is already simulated.
 
-Local test bundle **A31A6036B1AF** is built and installed (26 October, 07:47); Unity package integration and **2121/2121** core checks pass. A reporting NPC now stops and faces the guard while dispatch is unavailable, instead of circling. The native regression verifies five seconds of stable standing, no premature charge and successful delivery when the response route becomes available; see the [complaint audit](docs/audits/2026-10-26-physical-dialogue-complaint.md#arrival-hold-and-recovery). Previous housing-cache, stationary-witness, health/restore, market-encounter, trade, anonymous-report and urgent-movement repairs remain included. Spontaneous encounters, free dialogue acceptance, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
+Local test bundle **51AFECAA1991** is built and installed (26 October, 08:23); Unity package integration and **2121/2121** core checks pass. Asking a friendly resident to find a guard and report a murder now passes the full native free-text conversation and physical delivery test. Finding the listener is part of one report, and time spent talking no longer triggers a false walking-stall failure. The test holds Talk open for 25 seconds, then observes 18.63 m of movement and both saved memories; see the [dialogue audit](docs/audits/2026-10-26-murder-report-dialogue.md). Earlier arrival-hold, housing-cache, stationary-witness, trade and urgent-movement repairs remain included. Other dialogue cases, spontaneous encounters, Player performance and full diversion journeys remain open in the [active checklist](docs/WORKLIST-2026-10-26.md).
 
 ## Project status
 
 Controlled direct-threat reporting now passes an actual outdoor journey and
 delayed dispatch of four existing guards: 10.94 m travelled at an average
-8.00 km/h. Free-text initiation and post-delivery routine resumption remain open;
+8.00 km/h. Routine resumption passes after explicitly clearing the test crime;
+free-text threat initiation and naturally resolved guard confrontations remain open;
 see the [physical complaint audit](docs/audits/2026-10-26-physical-dialogue-complaint.md).
 
 Native CPU profiling attributes the remaining editor time-skip spike to repeated

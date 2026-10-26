@@ -96,6 +96,10 @@ namespace PeopleOfTheIliacBay.Core
                 "Following a person for a duration is one action. Moving to a place then waiting there is two actions. " +
                 "Buying an item then giving it to someone is two actions. Do not invent steps for arrival or completion. " +
                 "Finding a guard in order to relay an anonymous murder report is one ReportMurder action: approach is included in delivery. Reporting and then doing a separate errand remains two actions. " +
+                "Count requested outcomes, not verbs. In a report request, finding or approaching the listener and telling them the report are components of the SAME outcome, even when joined by 'and'. " +
+                "Examples: 'Find a guard and tell them about the murder anonymously.' => SINGLE; " +
+                "'I witnessed a killing. Seek the nearest guard and pass on my report.' => SINGLE; " +
+                "'Report the murder, then wait there for 30 seconds.' => CHAIN|Report the murder|wait there for 30 seconds. " +
                 "Quoted, reported, negated, hypothetical or conditional actions are not current requests. " +
                 "A polite question asking this NPC to act is a current request, not a hypothetical or conditional statement. " +
                 "Classify the whole current message, not individual keywords. This only identifies steps; willingness and native targets are checked later.\n" +

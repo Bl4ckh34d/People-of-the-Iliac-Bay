@@ -57,7 +57,8 @@ namespace PeopleOfTheIliacBay.DFU
                 pathResolved=true;
                 string[] args=Environment.GetCommandLineArgs();
                 bool existingChatFixture=Array.IndexOf(args,"-peopleoftheiliacbay-shop-commerce-chat-probe")>=0 ||
-                    Array.IndexOf(args,"-peopleoftheiliacbay-action-chat-probe")>=0;
+                    Array.IndexOf(args,"-peopleoftheiliacbay-action-chat-probe")>=0 ||
+                    Array.IndexOf(args,"-peopleoftheiliacbay-verify-murder-report-chat")>=0;
                 bool ownedSemanticFixture=Array.IndexOf(args,"-peopleoftheiliacbay-semantic-conversation-probe")>=0 &&
                     string.Equals(ArgumentValue(args,"-peopleoftheiliacbay-fixture-character"),"PeopleOfTheIliacBayTest-9a5f197b",StringComparison.Ordinal) &&
                     string.Equals(ArgumentValue(args,"-peopleoftheiliacbay-fixture-save"),"People - Gothway Garden",StringComparison.Ordinal);
