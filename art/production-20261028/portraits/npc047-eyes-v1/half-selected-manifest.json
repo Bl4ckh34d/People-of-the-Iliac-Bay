@@ -1,0 +1,47 @@
+{
+  "frames": [
+    {
+      "mood": "neutral",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-eyes-v1\\neutral-half-selected.png",
+      "sha256": "442893ac82b9f603094cddfeef64f4e953174760a5fb3f7c855ffa8a4bf9db76",
+      "lidRow26From": "happy-half-native.png"
+    },
+    {
+      "mood": "happy",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-eyes-v1\\happy-half-selected.png",
+      "sha256": "69aa321fd5a21ba8027a7f78716f9423f49dfeb21715d57615626017e75da482",
+      "lidRow26From": "happy-half-native.png"
+    },
+    {
+      "mood": "angry",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-eyes-v1\\angry-half-selected.png",
+      "sha256": "dfe6d04d801344dc075d679327e0577be2858ad6189059f0e6e3629bdce8945c",
+      "lidRow26From": "happy-half-native.png"
+    },
+    {
+      "mood": "sad",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-eyes-v1\\sad-half-selected.png",
+      "sha256": "3c5cf855c1df021da53f6254aab14c36be4daf59127f22a9911569c5136b16ff",
+      "lidRow26From": "happy-half-native.png"
+    },
+    {
+      "mood": "afraid",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-eyes-v1\\afraid-half-selected.png",
+      "sha256": "bbe38527721c89d3667d7294fff2adca736d53e3f1ff21f393954aeaa384bd5f",
+      "lidRow26From": "happy-half-native.png"
+    },
+    {
+      "mood": "guarded",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-eyes-v1\\guarded-half-selected.png",
+      "sha256": "9c61d73ed4c635ff8dc23809dba11733737d42757c6ad35f14957ba7a15a057b",
+      "lidRow26From": "guarded-half-native.png"
+    }
+  ],
+  "policy": "Bounded same-face generated lid-row26 selection for insufficient original HALF; every mood OPEN aperture26..27 exact; own row25 retained, exposed iris27 fixed.",
+  "rejectedInsufficientRawMoods": [
+    "neutral",
+    "angry",
+    "sad",
+    "afraid"
+  ]
+}

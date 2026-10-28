@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-28T05:08:50.4567601Z",
+    "portraitRecord":  197,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Produce a sad speech-mouth atlas for this EXACT bearded Daggerfall NPC197. FIRST image is selected geometry/phoneme template: preserve exact3x3 grid, whole64x29 lower-half cells and all nine distinct poses. SECOND image is same face\u0027s selected closed sad lips: gently lowered corners, quiet sadness. Adapt only subtle lip tension/corners, preserve beard/moustache, native pixel scale, palette, jaw/neck/clothing/background. Row-major A B C / D E F / G H X. A pressuredclosedP/B/M. B narrowEE/consonants. C medium UNROUNDED EH/AE. D tallestAA openingdownward. E slightlyROUNDED AO/ER clearly NARROWER thanC; retain template\u0027s corrected round E. F smallpuckeredUW/OW/W, no toothbite. G upper front teeth resting on inward lowerlipF/V, visible lipcontact, almostclosed; NOT broad grittedtoothblock, no second row of lowerteeth. H muted raisedtongue touching behind upperfrontteethL, openingbetweenC/D. X relaxed CLOSED emotionalidle. A/X closed, neveragape. Upperteeth stay at SAME fixed native lower-half row6 across shapes; lowerjaw opens DOWN. Preserve narrowB, mediumC, tallD, roundednarrowE, smallF, Gcontact and Htongue. Subduedivory teeth, opaque darkcavity, no whitebanner, no framing/zoom drift. Output only same3x3 lower-half atlas, no labels.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-05c0b2c4-498a-487e-98ad-80daccb9d073.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-05c0b2c4-498a-487e-98ad-80daccb9d073.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "ee14de7826b94945b47051d14d75d8b7eabee15893ce767033027ea6ced645a4",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "25cc2c2f520caad177d30cb82164813b2c100e6fed7808da1156a675079d8f1d",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-05c0b2c4-498a-487e-98ad-80daccb9d073.png",
+                      "sha256":  "e83c10ff45a4bae7eae82e375838c441ff9a6e11d5c955df26331abca545bb95",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "e83c10ff45a4bae7eae82e375838c441ff9a6e11d5c955df26331abca545bb95",
+                "width":  1863,
+                "height":  844
+            }
+}

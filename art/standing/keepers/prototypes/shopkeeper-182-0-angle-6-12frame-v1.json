@@ -1,0 +1,92 @@
+{
+  "date": "2026-10-18",
+  "status": "art-review-ready-prototype",
+  "archive": 182,
+  "record": 0,
+  "orientation": 6,
+  "angle": "right-profile",
+  "noseDirection": "image-right",
+  "nativeTiming": {
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "phase": "0-2 rest; 3 initial gesture; 4 farther reach; 5-10 hold; 11 partial retraction",
+    "poseMap": [
+      null,
+      null,
+      null,
+      1,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      5
+    ]
+  },
+  "layout": {
+    "columns": 4,
+    "rows": 3,
+    "cellSize": [
+      96,
+      96
+    ],
+    "frameCount": 12
+  },
+  "baseGenerated": "shopkeeper-182-0-angle-6-base-generated.png",
+  "keyposesGenerated": "shopkeeper-182-0-angle-6-keyposes-generated.png",
+  "file": "shopkeeper-182-0-angle-6-12frame-v1.png",
+  "sheetDimensions": [
+    384,
+    288
+  ],
+  "baseCell": [
+    96,
+    96
+  ],
+  "characterHeightPx": 76,
+  "normalization": {
+    "nearestNeighbor": true,
+    "cellTopPx": 10,
+    "footBaselinePx": 86,
+    "headCenterX": 48
+  },
+  "imageTool": "built-in image_gen",
+  "activeArm": "anatomical LEFT",
+  "staticSide": "anatomical RIGHT pouch/rest hand",
+  "sweptArmMaskPolygon": [
+    [
+      50,
+      27
+    ],
+    [
+      96,
+      27
+    ],
+    [
+      96,
+      60
+    ],
+    [
+      72,
+      62
+    ],
+    [
+      52,
+      53
+    ]
+  ],
+  "maskPixelCount": 1477,
+  "visualQA": {
+    "exactRestFrames0to2": true,
+    "holdFrames5to10Identical": true,
+    "outsideMaskChanges": 0,
+    "allFrames96x96": true
+  },
+  "sourceHashes": {
+    "generatedBaseSha256": "5db0e3efe916d707961072891bf1085f26ead0ce4a69af852cdd562e2b6d460b",
+    "generatedKeyposeSha256": "24a7e6b9175d52530a88b1ccdd0509bf266b0f23890a7dc2f5580dc3341f7a29"
+  },
+  "sheetSha256": "54b956fecea6f0a1d7d86e4af4d8b2d4c62b0a193c085a4b6d9a2fe01fc333da"
+}

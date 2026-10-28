@@ -1,0 +1,102 @@
+{
+  "portraitRecord": 276,
+  "bank": "TFAC00I0.RCI",
+  "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-276.png",
+  "sourceSha256": "50bc5c8dfa87e5a500accd266b05df3e6d2b8d65d8924d812248af283cd3521c",
+  "nativeSize": [
+    64,
+    64
+  ],
+  "browPolygon": [
+    [
+      25,
+      16
+    ],
+    [
+      28,
+      14
+    ],
+    [
+      31,
+      14
+    ],
+    [
+      31,
+      20
+    ],
+    [
+      20,
+      20
+    ],
+    [
+      22,
+      18
+    ]
+  ],
+  "nativeEyeApertureRows": [
+    21,
+    22
+  ],
+  "occlusion": "Right side x32 onward original-exact; hood partly covers right eye. Left brow fitted to diagonal opening. Native eyes retained because raw sad/fear brighten/enlarge iris.",
+  "masters": [
+    {
+      "mood": "neutral",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\neutral-master.png",
+      "sha256": "50bc5c8dfa87e5a500accd266b05df3e6d2b8d65d8924d812248af283cd3521c",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-276.png",
+      "rawSha256": "50bc5c8dfa87e5a500accd266b05df3e6d2b8d65d8924d812248af283cd3521c",
+      "outsideBrowMaskExact": true,
+      "nativeApertureAndGoldIrisExact": true
+    },
+    {
+      "mood": "happy",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\happy-master.png",
+      "sha256": "d088ecdaedfc7432c49e286a370ca8a242c7ab7c69816b508637ba8c457445bc",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\happy-raw.png",
+      "rawSha256": "8e6fa62eeb5f62fb31be2623eb828dc44843ffa983e48d813ef598d15b50bd65",
+      "outsideBrowMaskExact": true,
+      "nativeApertureAndGoldIrisExact": true
+    },
+    {
+      "mood": "angry",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\angry-master.png",
+      "sha256": "4211715bea8e65c0b99a0f3274d42f518ac0965084cc7187079d4dbde744abee",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\angry-raw.png",
+      "rawSha256": "f6a153bde9c626eac850cc48b1117db4f13b5e91b695e95103406e160b3c42d0",
+      "outsideBrowMaskExact": true,
+      "nativeApertureAndGoldIrisExact": true
+    },
+    {
+      "mood": "sad",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\sad-master.png",
+      "sha256": "d1535b64683bd38c28d2bfc07e3aa0126ba6be644c6a4cc1ac643ddbc015cb01",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\sad-raw.png",
+      "rawSha256": "0f4eaeb8f4253440c19c11a2025bd4e17c1e79f28eeb3aa311135b265965e0e9",
+      "outsideBrowMaskExact": true,
+      "nativeApertureAndGoldIrisExact": true
+    },
+    {
+      "mood": "afraid",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\afraid-master.png",
+      "sha256": "7438bbf8d46340e9cf164ebcf987a503a07e6ccf7d6dcfd3e8c58d59a9d6d7e5",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\afraid-raw.png",
+      "rawSha256": "cc46714c6f48abda3f8b5a44b63040fa84230dd1247aa17bb5ad30bb7fb4dfdd",
+      "outsideBrowMaskExact": true,
+      "nativeApertureAndGoldIrisExact": true
+    },
+    {
+      "mood": "guarded",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\guarded-master.png",
+      "sha256": "9445aec7d152129aada9af00df0a1fe93b32d3f1dcdbd47fd9a03ae6d07f60a9",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc276-masters-v1\\guarded-raw.png",
+      "rawSha256": "d411fa5742fce9cdb7630673fe65fd9191ba488ea72f1736d6f22038857cc735",
+      "outsideBrowMaskExact": true,
+      "nativeApertureAndGoldIrisExact": true
+    }
+  ],
+  "visualAcceptance": null,
+  "limitations": [
+    "Masters only. No blink/gaze or temporal acceptance.",
+    "Expressions limited by hood and source-exact open apertures."
+  ]
+}

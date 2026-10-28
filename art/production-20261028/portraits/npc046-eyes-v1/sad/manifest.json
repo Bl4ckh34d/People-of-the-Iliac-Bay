@@ -1,0 +1,88 @@
+{
+  "record": 46,
+  "mood": "sad",
+  "frames": [
+    {
+      "mood": "sad",
+      "gaze": "front",
+      "phase": "open",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\front-open.png",
+      "sha256": "91073d7d7401f1113089bfa5f92b3a460c49698bebb0087ead65980e447ad357"
+    },
+    {
+      "mood": "sad",
+      "gaze": "front",
+      "phase": "half",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\front-half.png",
+      "sha256": "8de71fa121c2829e437871cf5e470f2c6d3a997439762a12b0baf6b605246759"
+    },
+    {
+      "mood": "sad",
+      "gaze": "front",
+      "phase": "closed",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\front-closed.png",
+      "sha256": "f11a9998f6da00b5736f871260be6356309a735f7834789aeda1bfa9406b503f"
+    },
+    {
+      "mood": "sad",
+      "gaze": "left",
+      "phase": "open",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\left-open.png",
+      "sha256": "9b03d4f871aef858cf81f477f6d84f609821aa17907befc9f2c2389998a7db3a"
+    },
+    {
+      "mood": "sad",
+      "gaze": "left",
+      "phase": "half",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\left-half.png",
+      "sha256": "87de53c95a251c5b1c39e5880a77861035a9f11602965d0b05209c5a4494e576"
+    },
+    {
+      "mood": "sad",
+      "gaze": "left",
+      "phase": "closed",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\left-closed.png",
+      "sha256": "f11a9998f6da00b5736f871260be6356309a735f7834789aeda1bfa9406b503f"
+    },
+    {
+      "mood": "sad",
+      "gaze": "right",
+      "phase": "open",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\right-open.png",
+      "sha256": "3a46f8541a7dd72cab2878ad30c2b0dde87b84353b70b5293aafe42350a3039d"
+    },
+    {
+      "mood": "sad",
+      "gaze": "right",
+      "phase": "half",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\right-half.png",
+      "sha256": "9c23888d4c29a1684cec818f697f7cd62b360a1378e93539c57d9904ff77a7d8"
+    },
+    {
+      "mood": "sad",
+      "gaze": "right",
+      "phase": "closed",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-eyes-v1\\sad\\right-closed.png",
+      "sha256": "f11a9998f6da00b5736f871260be6356309a735f7834789aeda1bfa9406b503f"
+    }
+  ],
+  "gazeApertureBox": [
+    21,
+    22,
+    28,
+    24
+  ],
+  "halfLidBox": [
+    19,
+    21,
+    30,
+    23
+  ],
+  "exposedIrisRow": 23,
+  "sameFaceCompatibility": "Every mood FRONT aperture exactly source22..23 before same-face lateral aperture transfer.",
+  "limits": [
+    "Only image-left eye visible; occluded side exact.",
+    "Sclera brightness and HALF readability require native inspection.",
+    "No temporal/AV/user acceptance."
+  ]
+}

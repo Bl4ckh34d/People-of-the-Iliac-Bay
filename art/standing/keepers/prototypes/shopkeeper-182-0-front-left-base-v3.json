@@ -1,0 +1,23 @@
+{
+  "status": "user-approved base for front-left full animation; art only, not runtime-integrated",
+  "asset": "shopkeeper-182-0-front-left-base-v3.png",
+  "reference": "work/keeper-native-idle/182-0-frame-00.png",
+  "referencePreparation": "isolated native 47x76 frame nearest-neighbor enlarged 8x to shopkeeper-182-0-native-reference-nn8x.png; this was the sole imagegen reference",
+  "bearing": "front-left quarter; nose image-left, both eyes visible",
+  "pose": "static; right hand at right pouch; left arm relaxed",
+  "generatorCanvas": [986, 1595],
+  "comparison": "shopkeeper-native-vs-generated-style-v3.png; generated alpha crop nearest-neighbor resized to 76px tall and compared beside native frames 0 and 5",
+  "paletteEvidence": {
+    "nativeFrame0DistinctOpaqueRGB": 84,
+    "generatedAt76pxDistinctOpaqueRGB": 1355,
+    "generatedCropDimensionsAt76px": [36, 76]
+  },
+  "qa": [
+    "Bearing reads as a moderate front-left quarter.",
+    "Generated image remains much more color-dense than native after nearest-neighbor scale (1355 vs 84 distinct opaque RGB values).",
+    "Generated vest, sleeves, face and trouser shading still have many additional tones; proportions and contour differ from native source.",
+    "Do not use as final art or integration input."
+  ],
+  "tool": "built-in image_gen"
+}
+

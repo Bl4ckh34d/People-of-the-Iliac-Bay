@@ -1,0 +1,47 @@
+{
+  "status": "single-anatomical-repair-keyframe-review-candidate",
+  "appearance": 381,
+  "state": "swimming",
+  "bearing": 6,
+  "phase": "glide",
+  "generatedSource": "381-swim-right-glide-repair-generated-v1.png",
+  "generatedSha256": "712bb641fca6fd81e0117ad25553a79d9b8cdeb664ffa2f767ea510049d4c09a",
+  "file": "glide-native.png",
+  "sha256": "e2eea5ff485c523115d92b31f041987648d1c66bc7a72151a65f92e0e877eef3",
+  "pixelCanvas": [
+    256,
+    128
+  ],
+  "pixelScale": 0.10194174757281553,
+  "pixelScaleBasis": "one206px head cross-section becomes21px; body was regenerated longer, not stretched",
+  "alpha128Bounds": [
+    14,
+    28,
+    208,
+    71
+  ],
+  "medianCutoutAlpha": 253.0,
+  "nativeWorldScaleEvidence": {
+    "formula": "size + int(size*scale/256), before MeshReader.GlobalScale",
+    "nativeWalking": {
+      "pixelHeight": 110,
+      "scaleY": -70,
+      "computedHeight": 80
+    },
+    "nativeIdle": {
+      "pixelHeight": 165,
+      "scaleY": -134,
+      "computedHeight": 79
+    },
+    "source": "MobilePersonBillboard.cs CacheRecordSizesAndFrames; native-idle.csv and parent native walking record inspection"
+  },
+  "intendedActorWorldHeightBeforeGlobalScale": 79,
+  "worldScaleApplied": false,
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "knownLimits": [
+    "Only glide repaired; pull/recovery/kick still use compact proportions until this repair is accepted.",
+    "Intended actor world height is not the sprite bounding-box height or canvas height. Runtime integration must preserve record-adjusted native world height.",
+    "Generated exact palette and anatomy remain under visual review."
+  ]
+}

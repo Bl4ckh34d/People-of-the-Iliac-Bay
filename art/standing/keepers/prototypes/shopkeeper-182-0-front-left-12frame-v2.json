@@ -1,0 +1,46 @@
+{
+  "status": "provisional masked animation prototype; not runtime-integrated",
+  "asset": "shopkeeper-182-0-front-left-12frame-v2.png",
+  "preview": "shopkeeper-182-0-front-left-12frame-v2-preview-4x.png",
+  "orientation": 1,
+  "bearing": "true front-left quarter; nose image-left; do not mirror",
+  "base": "shopkeeper-182-0-front-left-base-v3-96cell.png; derived from user-approved shopkeeper-182-0-front-left-base-v3.png",
+  "cellDimensions": [96, 96],
+  "sheetDimensions": [384, 288],
+  "effectiveCharacterHeight": 76,
+  "frameRateFps": 5,
+  "cycleSeconds": 2.4,
+  "animationMap": {
+    "frames0to2": "exact rest pose; exact duplicate base cells",
+    "frame3": "beginning arm lift; phase3 atlas pose",
+    "frame4": "farther reach; phase4 atlas pose",
+    "frames5to10": "exact repeated offer hold; one identical pose for every cell",
+    "frame11": "partial retraction between full offer and rest; phase11 atlas pose"
+  },
+  "anatomy": "Only anatomical LEFT offer arm/sleeve/hand animates on image-right for this bearing. Anatomical RIGHT hand at RIGHT pouch remains static on image-left. Never mirror.",
+  "sourceReferences": {
+    "approvedBase": "shopkeeper-182-0-front-left-base-v3.png",
+    "nativeTiming": "work/keeper-native-idle/182-0-all-native-frames.png",
+    "rawKeyposeAtlas": "shopkeeper-182-0-front-left-keypose-atlas-raw-v1.png",
+    "normalizedKeyposeInspection": "shopkeeper-182-0-front-left-keyposes-normalized-inspection-4x.png"
+  },
+  "compositing": {
+    "method": "Copy approved base cell unchanged, then overlay only candidate turquoise sleeve/skin pixels plus adjacent dark outline pixels from the generated keypose, clipped to the following top-down logical cell polygon.",
+    "polygon": [[50,25],[57,26],[63,31],[67,37],[78,36],[80,49],[74,55],[68,58],[64,62],[57,61],[53,56],[52,49],[51,41]],
+    "regionCoordinates": "96x96 cell; origin top-left; integer pixels",
+    "keyposeMapping": [0,0,0,1,2,3,3,3,3,3,3,5]
+  },
+  "qa": {
+    "restFrames0to2ExactDuplicates": true,
+    "holdFrames5to10ExactDuplicates": true,
+    "changedPixelsOutsideArmPolygon": 0,
+    "baseGreenPixelsChanged": 0,
+    "baseRedPixelsChanged": 0,
+    "changedArmPixelsByFrame": [0,0,0,187,268,294,294,294,294,294,294,210],
+    "limitations": [
+      "The arm pose source atlas was image-generated; compositing kept every pixel outside the arm mask identical to the approved base.",
+      "Review limb attachment and partial-return pose in the preview before any runtime use."
+    ]
+  },
+  "tool": "built-in image_gen for keypose atlas; deterministic nearest-neighbor normalization and alpha/color-masked pixel compositing for fixed-body sheet"
+}

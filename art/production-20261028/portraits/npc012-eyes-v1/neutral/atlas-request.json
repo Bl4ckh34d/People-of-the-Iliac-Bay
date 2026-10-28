@@ -1,0 +1,8 @@
+{
+  "referenced_image_paths": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc012-eyes-v1/neutral/open-reference.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc012-eyes-v1/neutral/closed-reference.png"
+  ],
+  "transparent_background": false,
+  "prompt": "Create a precisely aligned 3-column by 3-row blink and gaze sprite atlas from the two provided references of the SAME neutral pixel-art woman. Reference1 is selected FRONT OPEN; reference2 is selected fully CLOSED. Nine equal edge-to-edge cells, each same64:35 upper-face aspect ratio; whole atlas64:35 too. No gaps, labels, border or text. Preserve hood, framing, eyebrows, nose, cheeks, eye corners and lighting at identical coordinates in every cell. Layout: TOP ROW front OPEN, front HALF, CLOSED. MIDDLE ROW looking to IMAGE-LEFT OPEN, looking to IMAGE-LEFT HALF, CLOSED. BOTTOM ROW looking to IMAGE-RIGHT OPEN, looking to IMAGE-RIGHT HALF, CLOSED. LEFT means both pupils shift toward the left side of their own eyes on the image; RIGHT means both pupils shift toward the right side of their own eyes. Head does not turn. Preserve subdued olive-brown iris color and small native highlights. HALF has an upper lid descending halfway across the SAME stationary iris: leave a narrow visible iris strip directly above the unchanged lower eyelid. Never move iris down, never raise lower lid, never move brows to blink. CLOSED has no white or iris. The source is coarse 64x35 native pixel art: preserve stepped clusters and modest contrast. Keep these neutral brows fixed in all cells. Do not repaint or relight skin; do not smooth; do not enlarge eyes. Exact nine-cell sheet only."
+}

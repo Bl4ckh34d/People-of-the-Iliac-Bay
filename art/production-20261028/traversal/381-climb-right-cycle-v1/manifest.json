@@ -1,0 +1,129 @@
+{
+  "status": "generated-profile-climb-review-candidate",
+  "appearance": 381,
+  "state": "climbing",
+  "bearing": 6,
+  "bearingName": "right-profile",
+  "frameCount": 4,
+  "canvas": [
+    160,
+    224
+  ],
+  "frames": [
+    {
+      "phase": 0,
+      "name": "near-reach",
+      "file": "phase-0-near-reach.png",
+      "sha256": "28a4e02077852ae6cdb510b4f4ebc2ba3fe0db9cb5f82048bdffff5471a28ec2",
+      "generatedSource": "381-climb-right-near-reach-generated-v1.png",
+      "generatedSha256": "ee4e3a4d4d71692604fe7c9e98459ab63cf799bdb4f07b4d82d6170fdb9fc694",
+      "scale": 0.105,
+      "scaleBasis": "21px head-width target from source-scaled directional identity, not per-pose height fitting",
+      "placement": [
+        43,
+        26
+      ],
+      "headTopTarget": 44,
+      "approximateHandPlaneX": 128,
+      "alpha128Bounds": [
+        68,
+        33,
+        139,
+        179
+      ],
+      "medianCutoutAlpha": 253
+    },
+    {
+      "phase": 1,
+      "name": "near-pull",
+      "file": "phase-1-near-pull.png",
+      "sha256": "8d8f7d51a29e47c479b75a2684077e969bee8f74a44d6818c0c05877ad174a76",
+      "generatedSource": "381-climb-right-near-pull-generated-v1.png",
+      "generatedSha256": "dbc7fda3549df2cef34666fb29cab3caa58d1ebfd3fcd56636f6b29d41d68908",
+      "scale": 0.10552763819095477,
+      "scaleBasis": "21px head-width target from source-scaled directional identity, not per-pose height fitting",
+      "placement": [
+        46,
+        29
+      ],
+      "headTopTarget": 44,
+      "approximateHandPlaneX": 128,
+      "alpha128Bounds": [
+        81,
+        44,
+        134,
+        178
+      ],
+      "medianCutoutAlpha": 253
+    },
+    {
+      "phase": 2,
+      "name": "far-reach",
+      "file": "phase-2-far-reach.png",
+      "sha256": "c4bda0cc0940a476bbc09953ab1309869661d2d9a582018e00f874075be078ea",
+      "generatedSource": "381-climb-right-far-reach-generated-v1.png",
+      "generatedSha256": "98ac7e52f9feab372b3d63283b6af2db5af81de5adb13dc4939c448c21c77ef9",
+      "scale": 0.0995260663507109,
+      "scaleBasis": "21px head-width target from source-scaled directional identity, not per-pose height fitting",
+      "placement": [
+        46,
+        27
+      ],
+      "headTopTarget": 44,
+      "approximateHandPlaneX": 128,
+      "alpha128Bounds": [
+        64,
+        29,
+        135,
+        175
+      ],
+      "medianCutoutAlpha": 253.0
+    },
+    {
+      "phase": 3,
+      "name": "far-pull",
+      "file": "phase-3-far-pull.png",
+      "sha256": "c1500199396bb2fc83580fbbe618c84468d6c90f59400271a8396a726572898d",
+      "generatedSource": "381-climb-right-far-pull-generated-v1.png",
+      "generatedSha256": "3ad7f35a27bfdc5dac68e0821b3dbda685862d669d6ada55761bbdc500f38b7c",
+      "scale": 0.09545454545454546,
+      "scaleBasis": "21px head-width target from source-scaled directional identity, not per-pose height fitting",
+      "placement": [
+        48,
+        30
+      ],
+      "headTopTarget": 44,
+      "approximateHandPlaneX": 128,
+      "alpha128Bounds": [
+        65,
+        44,
+        136,
+        172
+      ],
+      "medianCutoutAlpha": 253.0
+    }
+  ],
+  "technicalChecks": {
+    "rgba": true,
+    "distinctPhases": 4,
+    "noAlpha128Clipping": true,
+    "atlasExact": true
+  },
+  "visualReview": "Fourpackedframes inspected. Near/far arm reach differs and pull poses exist. Leg-side alternation is not proven in profile; far-pull rear elbow and exact wall contacts remain unresolved. Do not scale this candidate yet.",
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "knownLimits": [
+    "Hands follow an approximate common plane; real wall-contact registration not validated.",
+    "Leg alternation is difficult to prove from strict profile because near/far legs overlap; compare rear pilot before acceptance.",
+    "Generated complexion and cloth pixels differ from native source; exact palette not claimed.",
+    "Only right profile is packed; raw rear four-phase pilot is separate."
+  ],
+  "visuallyReviewed": true,
+  "pixelCanvas": [
+    160,
+    224
+  ],
+  "worldScaleContract": "../native-scale-contract.json",
+  "intendedActorWorldHeightBeforeGlobalScale": 79,
+  "worldScaleApplied": false
+}

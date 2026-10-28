@@ -1,0 +1,58 @@
+{
+  "archive": 454,
+  "motion_template": 397,
+  "raw_output_directory": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v1",
+    "view-1-v1",
+    "view-2-v1",
+    "view-3-v1",
+    "view-4-v1"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "9409502d-5266-4b93-a793-fd786faeb44e"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "2ab1141d-5ef2-4b69-bce2-ca5a9c8ec5f8"
+    },
+    {
+      "name": "view-2-v1",
+      "id": "494c63b9-724b-40b8-a763-a077696e7903"
+    },
+    {
+      "name": "view-3-v1",
+      "id": "d778b949-8936-4f76-abab-a82dd0f579e6"
+    },
+    {
+      "name": "view-4-v1",
+      "id": "2733f897-b216-4e81-a4bd-26be8de89a5c"
+    },
+    {
+      "name": "view-1-phase-2-v2",
+      "id": "4b5e4b22-9161-40cb-84ee-6af40674d131",
+      "references": [
+        "../453/view-1-phase-2-v2.png",
+        "native-reference/view-1.png"
+      ]
+    }
+  ],
+  "source_overrides": [
+    {
+      "bearing": 1,
+      "phase": 2,
+      "file": "view-1-phase-2-v2.png",
+      "resolution_ratio": 1.9038461538461537,
+      "normalization": "Uniform alpha128 body-height matching to contact0."
+    }
+  ],
+  "reference_policy": "397 motion only, repaired453 contact2 supplies single forward-arm contact. Native454 compact blonde wrapped updo/rust short blouse/blue laced bodice/plain blue skirt thin yellow hem/brown shoes/tan front pouch. No rear/profile pouch. Native renderer opposite-view mirrors.",
+  "known_limits": [
+    "Candidate only: hairstyle interpretation and wrapping detail, face/skin/arm definition, skirt folds and bodice lacing differ from original pixels. Repaired front-left contact2 slightly more profile-like and brighter with larger hair bun.",
+    "Hidden leg depth approximate, four phases omit passing intermediates.",
+    "Twelve mirror derivatives are not independent generations.",
+    "No runtime integration, temporal game acceptance or user approval."
+  ]
+}

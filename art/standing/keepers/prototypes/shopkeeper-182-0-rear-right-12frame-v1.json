@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-18",
+  "status": "provisional-angle-prototype",
+  "archive": 182,
+  "record": 0,
+  "orientation": 5,
+  "angle": "rear-right three-quarter; back and anatomical-right side visible",
+  "nativeSource": {
+    "frameCount": 12,
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "phase": "Frames 0-2 rest; frame 3 starts anatomical-left-arm offer; frame 4 reaches farther; frames 5-10 hold; frame 11 is a distinct partial retraction, not rest.",
+    "frame11Reference": "work/keeper-native-idle/182-0-frame-11.png",
+    "front": "Original native frontal animation remains unchanged."
+  },
+  "file": "art/standing/keepers/prototypes/shopkeeper-182-0-rear-right-12frame-v1.png",
+  "dimensions": [1446, 1087],
+  "sha256": "76f2e9a1fd8e8499ef13e58d82d66a12ec709fe5d57d1d16cecfbacc1a18b38f",
+  "layout": { "columns": 4, "rows": 3, "cellOrder": "left-to-right, top-to-bottom" },
+  "frameMapping": [
+    { "sourceFrame": 0, "cell": 0, "row": 0, "column": 0 },
+    { "sourceFrame": 1, "cell": 1, "row": 0, "column": 1 },
+    { "sourceFrame": 2, "cell": 2, "row": 0, "column": 2 },
+    { "sourceFrame": 3, "cell": 3, "row": 0, "column": 3 },
+    { "sourceFrame": 4, "cell": 4, "row": 1, "column": 0 },
+    { "sourceFrame": 5, "cell": 5, "row": 1, "column": 1 },
+    { "sourceFrame": 6, "cell": 6, "row": 1, "column": 2 },
+    { "sourceFrame": 7, "cell": 7, "row": 1, "column": 3 },
+    { "sourceFrame": 8, "cell": 8, "row": 2, "column": 0 },
+    { "sourceFrame": 9, "cell": 9, "row": 2, "column": 1 },
+    { "sourceFrame": 10, "cell": 10, "row": 2, "column": 2 },
+    { "sourceFrame": 11, "cell": 11, "row": 2, "column": 3 }
+  ],
+  "visualQA": {
+    "cellCount": 12,
+    "angleConsistent": true,
+    "anatomy": "Fail: gesture arm appears on image-right with the anatomical-right pouch in this rear view; it must be anatomical left, opposite the pouch.",
+    "phaseProgression": "Frame 11 appears shorter than full extension, but does not clearly match native intermediate hand geometry; verify/correct before use.",
+    "pixelStyle": "Softened pixels and colored stray edge noise remain.",
+    "integration": "Prototype only; anatomy and frame 11 need correction."
+  }
+}

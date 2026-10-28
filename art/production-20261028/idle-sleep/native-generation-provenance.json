@@ -1,0 +1,10 @@
+{
+  "date": "2026-10-28",
+  "native182_9_v2": {
+    "prompt": "Use case: identity-preserve. Make a production Daggerfall Unity standing idle sprite atlas derived ONLY from attached native182_9 reference. This exact adult woman has tan skin, short wavy blond hair, small gold necklace/choker, a floor-length cool gray pleated dress with gold trim at its neckline and waist, bare arms, and a narrow gold/yellow shawl held between her hands behind hips with two long hanging gold ends. Preserve her actual identity, hair, palette, dress silhouette and the relaxed standing posture. Do not invent a hood, robe or any alternate character. Eight orthographic views of SAME woman, 4 columns by2 rows, equal cells. Order: top row FRONT, FRONT-LEFT45 (face points toward image-left), strict LEFTPROFILE90 (nose image-left), REAR-LEFT135. Bottom row BACK180 (no face visible), REAR-RIGHT225, strict RIGHTPROFILE270 (nose image-right), FRONT-RIGHT315. Her back dress and hairstyle must be plausible same garment. Rotate body and shawl with her, no mirrored duplicates; shawl held low behind hips, not an object held in front. Feet stationary hidden under long dress, no steps/walk cycle. Original is coarse1996Daggerfall pixel art at about127pixels spriteheight: match source coarse hard pixel clusters and limited gray/gold/tan palette, no modern smooth painterly rendering, no new black cartoon outlines. Complete figures with transparent margins inside each equal cell, uniform apparent bodyheight/baseline, no cropped hair or shawl. Actual transparent background. No scenery, floor shadows, grid, labels or text. Reference front is retained byteexact separately; generated7alternate bearings must preserve same character.",
+    "reference": "../sources/native/182_9-0.png",
+    "file": "native-182-9-idle-eight-v2.png",
+    "replacesRejected": "native-182-9-idle-eight-v1.png",
+    "rejectionReason": "Wrong character generated from erroneous descriptive premise. Hooded art excluded, not reassigned."
+  }
+}

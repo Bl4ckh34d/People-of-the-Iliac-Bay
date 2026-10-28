@@ -1,0 +1,268 @@
+{
+  "archive": 384,
+  "status": "Generated source art; individual user acceptance pending; pilot 391 style accepted",
+  "generator": "built-in imagegen",
+  "native_source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\384-0.png",
+  "native_source_sha256": "8a87a3c9bb682fb013aeedc3ee7d7a35d63f318033ecdab37aac9a6d37ab7b9a",
+  "native_source_size": [
+    78,
+    167
+  ],
+  "generated_sheet_size": [
+    1536,
+    1024
+  ],
+  "atlas": "384-idle-native-atlas-v1.png",
+  "atlas_cell_size": [
+    82,
+    167
+  ],
+  "bearing_convention": "0 front; 1 front-left; 2 left profile; 3 rear-left; 4 back; 5 rear-right; 6 right profile; 7 front-right. Left/right describes nose projection in the image.",
+  "processing": "Alpha>=128 crop measurement; proportional nearest-neighbor reduction to original native idle height; natural per-view widths; transparent atlas padding; generated alpha retained. View0 copied byte-for-byte. No mirroring, palette substitution or hand-painted repairs.",
+  "frames": [
+    {
+      "view": 0,
+      "bearing": "front-native",
+      "file": "384-idle-view-0-front-native.png",
+      "native_size": [
+        78,
+        167
+      ],
+      "generated_cell": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "generated_alpha_bbox_in_cell": [
+        142,
+        19,
+        350,
+        499
+      ],
+      "generation_override": null
+    },
+    {
+      "view": 1,
+      "bearing": "front-left",
+      "file": "384-idle-view-1-front-left.png",
+      "native_size": [
+        65,
+        167
+      ],
+      "generated_cell": [
+        384,
+        0,
+        768,
+        512
+      ],
+      "generated_alpha_bbox_in_cell": [
+        118,
+        18,
+        309,
+        506
+      ],
+      "generation_override": null
+    },
+    {
+      "view": 2,
+      "bearing": "left-profile",
+      "file": "384-idle-view-2-left-profile.png",
+      "native_size": [
+        40,
+        167
+      ],
+      "generated_cell": [
+        768,
+        0,
+        1152,
+        512
+      ],
+      "generated_alpha_bbox_in_cell": [
+        122,
+        19,
+        238,
+        502
+      ],
+      "generation_override": null
+    },
+    {
+      "view": 3,
+      "bearing": "rear-left",
+      "file": "384-idle-view-3-rear-left.png",
+      "native_size": [
+        62,
+        167
+      ],
+      "generated_cell": [
+        1152,
+        0,
+        1536,
+        512
+      ],
+      "generated_alpha_bbox_in_cell": [
+        50,
+        20,
+        229,
+        503
+      ],
+      "generation_override": null
+    },
+    {
+      "view": 4,
+      "bearing": "back",
+      "file": "384-idle-view-4-back.png",
+      "native_size": [
+        74,
+        167
+      ],
+      "generated_cell": [
+        0,
+        512,
+        384,
+        1024
+      ],
+      "generated_alpha_bbox_in_cell": [
+        135,
+        8,
+        350,
+        493
+      ],
+      "generation_override": null
+    },
+    {
+      "view": 5,
+      "bearing": "rear-right",
+      "file": "384-idle-view-5-rear-right.png",
+      "native_size": [
+        67,
+        167
+      ],
+      "generated_cell": [
+        384,
+        512,
+        768,
+        1024
+      ],
+      "generated_alpha_bbox_in_cell": [
+        121,
+        6,
+        314,
+        490
+      ],
+      "generation_override": null
+    },
+    {
+      "view": 6,
+      "bearing": "right-profile",
+      "file": "384-idle-view-6-right-profile.png",
+      "native_size": [
+        39,
+        167
+      ],
+      "generated_cell": [
+        768,
+        512,
+        1152,
+        1024
+      ],
+      "generated_alpha_bbox_in_cell": [
+        105,
+        6,
+        218,
+        493
+      ],
+      "generation_override": null
+    },
+    {
+      "view": 7,
+      "bearing": "front-right",
+      "file": "384-idle-view-7-front-right.png",
+      "native_size": [
+        66,
+        167
+      ],
+      "generated_cell": [
+        1152,
+        512,
+        1536,
+        1024
+      ],
+      "generated_alpha_bbox_in_cell": [
+        57,
+        9,
+        249,
+        493
+      ],
+      "generation_override": null
+    }
+  ],
+  "outline_color_repair": {
+    "status": "All angles reviewed at 2x; selected sensitive profiles compared at 4x. User final visual acceptance pending.",
+    "method": "nearest interior material color; alpha and silhouette unchanged",
+    "frames": [
+      {
+        "view": 0,
+        "source_sha256": "8a87a3c9bb682fb013aeedc3ee7d7a35d63f318033ecdab37aac9a6d37ab7b9a",
+        "native_front_byte_identical": true
+      },
+      {
+        "view": 1,
+        "source_sha256": "1bb0c8394d1c83ca8d84cef53d90eb1de689053b9b7ad8c673f93877ee8d525d",
+        "alpha_byte_identical": true,
+        "silhouette_byte_identical": true,
+        "protected_interior_unchanged": true,
+        "recolored_rim_pixels": 258
+      },
+      {
+        "view": 2,
+        "source_sha256": "f012d69e0360dee65c46a9415304272aee91ce16cde5a9185df804b93544a714",
+        "alpha_byte_identical": true,
+        "silhouette_byte_identical": true,
+        "protected_interior_unchanged": true,
+        "recolored_rim_pixels": 231
+      },
+      {
+        "view": 3,
+        "source_sha256": "cc57fe6e0d513ffbd46fc8322d5b1d5d6ea9c0d950d1e9b6b536941c034da055",
+        "alpha_byte_identical": true,
+        "silhouette_byte_identical": true,
+        "protected_interior_unchanged": true,
+        "recolored_rim_pixels": 198
+      },
+      {
+        "view": 4,
+        "source_sha256": "1ab351b593f2ea90e299638ca7289793d6173bbdf1caeb484e9ae9e6b299711b",
+        "alpha_byte_identical": true,
+        "silhouette_byte_identical": true,
+        "protected_interior_unchanged": true,
+        "recolored_rim_pixels": 319
+      },
+      {
+        "view": 5,
+        "source_sha256": "b7d8319cd5a0bd185e1518b4da7ed7f72164a6c898dc9fa337e7b6b9a57e1d9f",
+        "alpha_byte_identical": true,
+        "silhouette_byte_identical": true,
+        "protected_interior_unchanged": true,
+        "recolored_rim_pixels": 227
+      },
+      {
+        "view": 6,
+        "source_sha256": "e291b22e5777bab3ba7c8d9487c30d95489e8da2ead591cfe83fdf12962e94df",
+        "alpha_byte_identical": true,
+        "silhouette_byte_identical": true,
+        "protected_interior_unchanged": true,
+        "recolored_rim_pixels": 209
+      },
+      {
+        "view": 7,
+        "source_sha256": "241ae93be893988fc9669f24ef2644272227466838a160ccdfdf26b9b3c58cdc",
+        "alpha_byte_identical": true,
+        "silhouette_byte_identical": true,
+        "protected_interior_unchanged": true,
+        "recolored_rim_pixels": 323
+      }
+    ],
+    "original_backup": "work\\standing-edge-originals\\idle-384"
+  }
+}

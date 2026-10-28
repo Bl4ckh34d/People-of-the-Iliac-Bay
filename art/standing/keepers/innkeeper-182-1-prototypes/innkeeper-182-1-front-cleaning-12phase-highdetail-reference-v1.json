@@ -1,0 +1,53 @@
+{
+  "date": "2026-10-18",
+  "status": "superseded prototype; mug-visibility edit retained as v2; not runtime-integrated",
+  "archive": 182,
+  "record": 1,
+  "nativeSource": {
+    "file": "work/keeper-native-idle/182-1-frame-00.png",
+    "dimensions": [61, 117],
+    "frameCount": 1,
+    "uniquePixelFrames": 1,
+    "framesPerSecondDefault": 5,
+    "cycleSecondsNative": 0.2,
+    "installedPlayerDataPath": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/GameFiles (from Player/PortableAppdata/settings.ini)",
+    "installedModConfig": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/Player/PortableAppdata/Mods/GameData/Mods.json",
+    "looseReplacementCheck": "No loose TEXTURE.182 or keeper-named flat replacement found under installed Player StreamingAssets. Active mod bundles were listed but their internal assets were not exhaustively unpacked."
+  },
+  "output": "innkeeper-182-1-front-cleaning-12phase-highdetail-reference-v1.png",
+  "outputDimensions": [1448, 1086],
+  "layout": {
+    "columns": 4,
+    "rows": 3,
+    "cellOrder": "row-major, left-to-right then top-to-bottom",
+    "logicalTarget": "96x96 per frame, 76px effective character height to match shopkeeper import; main agent will point-sample and standardize. Source generation canvas dimensions are not the runtime target."
+  },
+  "animation": {
+    "frameCount": 12,
+    "fps": 5,
+    "cycleSeconds": 2.4,
+    "phaseProposal": "0 native-rest reference; 1-2 settle and begin; 3-5 short wipe; 6-8 small rub/hold; 9-10 retract; 11 settle/blend to rest.",
+    "nativeStatus": "182/1 has no native animation. Any cycle is newly created and must not be described as recovered source motion."
+  },
+  "handPropFindings": {
+    "nativeVisual": "Front source has the pale towel and hands; no visible cleaning object is present in the native frame.",
+    "anatomy": "Anatomical right is viewer-left and supports the mug; anatomical left is viewer-right and wipes it with the towel.",
+    "userFeedback": "User clarified a mug/object must be visibly cleaned by the towel. This v1 sheet hides the mug in initial cells and is superseded by the v2 visibility edit."
+  },
+  "floorProps": "Exactly three bottles: tall green at image-left foot, squat green jug foreground center, turquoise-necked red bottle image-right foot. Native front is source; keep bottle positions fixed, not attached to feet.",
+  "qa": {
+    "cell0": "Generated cell 0 approximates source; it is not exact native pixels. Runtime frame 0 must use work/keeper-native-idle/182-1-frame-00.png unchanged.",
+    "style": "Raw image has finer soft shading and colored edge fringe than native. Review after main's 96x96 point-sampling import; do not claim exact native-pixel fidelity from raw canvas.",
+    "sequence": "Front pose and bottle positions vary slightly across generated cells; inspect after point sampling. The current sheet is only a visual timing prototype.",
+    "blockingIssue": "Mug visibility/hand contact are inadequate in some early cells. One targeted v2 edit addresses visibility; review mug grip and towel contact after point-sampling."
+  },
+  "prototypes": [
+    { "file": "innkeeper-182-1-front-left-v1.png", "status": "static view reference only; high-resolution" },
+    { "file": "innkeeper-182-1-left-profile-static-reference-v1.png", "status": "static view reference only; high-resolution" },
+    { "file": "innkeeper-182-1-front-left-4phase-reference-v1.png", "status": "four-phase reference only; front-left, not accepted" },
+    { "file": "innkeeper-182-1-front-cleaning-12phase-v1-cup-error.png", "status": "first 12-frame prototype; mug partly occluded in early cells" },
+    { "file": "innkeeper-182-1-front-cleaning-12phase-highdetail-reference-v1.png", "status": "duplicate pre-edit 12-frame reference; superseded by v2" },
+    { "file": "innkeeper-182-1-front-cleaning-12phase-v2-visible-mug.png", "status": "current review prototype; mug visible all 12 cells" }
+  ],
+  "runtimeIntegration": "None. Do not generate other directions or integrate until frontal 12-frame loop and prop interpretation are reviewed. Original front source remains untouched."
+}

@@ -1,0 +1,137 @@
+{
+  "status": "generated-profile-swim-review-candidate",
+  "appearance": 381,
+  "state": "swimming",
+  "bearing": 6,
+  "bearingName": "right-profile",
+  "frameCount": 4,
+  "canvas": [
+    224,
+    128
+  ],
+  "generatedSource": "381-swim-view-6-generated-v3.png",
+  "generatedSha256": "7d448750ed144133bfaa070aece20b6586f02c51795b2737c99f38e7a214cb1f",
+  "scaleBasis": "single shared21px head-width target; no phase-specific fitting",
+  "frames": [
+    {
+      "phase": 0,
+      "name": "glide",
+      "file": "phase-0-glide.png",
+      "sha256": "98e465b7ad02d56e617e4ec3f1b9c74e5d05502ec24a870cf0ac89a74824e4d8",
+      "sourceCrop": [
+        0,
+        180,
+        728,
+        570
+      ],
+      "scale": 0.19811320754716982,
+      "placement": [
+        53,
+        15
+      ],
+      "alpha128Bounds": [
+        59,
+        28,
+        195,
+        77
+      ],
+      "medianCutoutAlpha": 253.0
+    },
+    {
+      "phase": 1,
+      "name": "pull",
+      "file": "phase-1-pull.png",
+      "sha256": "12fcbb0b8d21058172d024c0361f2a7e51f351626459f9630001fb4610597f05",
+      "sourceCrop": [
+        730,
+        180,
+        1254,
+        570
+      ],
+      "scale": 0.19811320754716982,
+      "placement": [
+        82,
+        18
+      ],
+      "alpha128Bounds": [
+        84,
+        28,
+        165,
+        87
+      ],
+      "medianCutoutAlpha": 253
+    },
+    {
+      "phase": 2,
+      "name": "recovery",
+      "file": "phase-2-recovery.png",
+      "sha256": "2da9dbc7345f0a1db7882d2049f141c128bb7696b46b49ed5f816472c3f73d62",
+      "sourceCrop": [
+        0,
+        730,
+        525,
+        1130
+      ],
+      "scale": 0.19811320754716982,
+      "placement": [
+        75,
+        19
+      ],
+      "alpha128Bounds": [
+        96,
+        28,
+        167,
+        90
+      ],
+      "medianCutoutAlpha": 253.0
+    },
+    {
+      "phase": 3,
+      "name": "kick",
+      "file": "phase-3-kick.png",
+      "sha256": "a804791366f87e8aa7072f914f637dc7ae369d885daf946dd655ad7543c786c9",
+      "sourceCrop": [
+        550,
+        730,
+        1254,
+        1130
+      ],
+      "scale": 0.19811320754716982,
+      "placement": [
+        55,
+        13
+      ],
+      "alpha128Bounds": [
+        61,
+        28,
+        189,
+        83
+      ],
+      "medianCutoutAlpha": 253.0
+    }
+  ],
+  "technicalChecks": {
+    "rgba": true,
+    "distinctPhases": 4,
+    "noAlpha128Clipping": true,
+    "atlasExact": true
+  },
+  "visualReview": "Fourpackedframes and unchanged native references inspected at the same2x scale. Stroke phases are readable; torso and legs are too short relative to head. Proportions not accepted; no further bearings produced before parent review.",
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "nativeSourceFinding": "MobilePersonBillboard supports onlyIdle/Move; no native NPC-swim waterline renderer found. Fullbody art has no waterline baked in.",
+  "knownLimits": [
+    "Generated body proportions are more compact than native standing source; not accepted as exact native scale.",
+    "Full swimming physics/contact/waterline integration is outside this asset pilot.",
+    "Only right profile packed; other bearings remain missing.",
+    "Imagegen source grid was irregular; crops are recorded explicitly."
+  ],
+  "visuallyReviewed": true,
+  "pixelCanvas": [
+    224,
+    128
+  ],
+  "worldScaleContract": "../native-scale-contract.json",
+  "intendedActorWorldHeightBeforeGlobalScale": 79,
+  "worldScaleApplied": false
+}

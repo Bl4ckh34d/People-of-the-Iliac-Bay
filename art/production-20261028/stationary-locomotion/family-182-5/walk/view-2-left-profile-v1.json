@@ -1,0 +1,20 @@
+{
+  "prompt": "Use case: identity-preserve. Create one horizontal FOUR-frame WALK sprite strip for the exact Daggerfall jester in Image1 (native86x131). Image1 is appearance authority; Image2 is LEFT PROFILE camera and four walking phases ONLY. Replace the elderly merchant in every cell with the original slender jester, keeping exact source face, proportions, costume, shoes, cap bells and carried marotte. NO merchant green vest, cyan sleeves, gray hair, boots or pouch.\nCritical anatomical asymmetric colors from Image1: RIGHT half of torso and RIGHT sleeve are GOLD/YELLOW; LEFT half and LEFT sleeve are RED-ORANGE. Tights are counterchanged: RIGHT LEG is RED-ORANGE, LEFT LEG is GOLD/YELLOW. RIGHT cap tip yellow, LEFT cap tip red-orange, small olive-gold bells. Long pointed shoes follow their own leg colors. Smiling brown-toned face framed by tight two-color hood; no beard, no bald head.\nThe small jester-head baton/marotte stays in anatomical RIGHT hand in all frames. Its striped dark olive shaft and miniature matching two-tip head remain visible. Carry it upright with a controlled right arm; left arm can counter-swing freely. Do not erase, duplicate or hand-swap the prop.\nFixed strict LEFT PROFILE, nose and travel point imageLEFT, so near anatomicalLEFT leg is YELLOW and nearLEFT sleeve is RED. Exactly4 chronological walk phases:\n0 near LEFT yellow leg contacts forward imageLEFT, far RIGHT red leg behind; near LEFT red arm swings back.\n1 LEFT yellow leg straight under hips supports; far RIGHT red knee passes forward bent; left red arm moves toward neutral. No flight.\n2 far RIGHT red leg contacts forward, near LEFT yellow leg behind; near LEFT red arm forward.\n3 far RIGHT red leg straight under hips supports; near LEFT yellow knee passes forward bent; left arm toward neutral. No flight.\nEach phase must visibly change which COLOR leg leads/supports. One foot on ground throughout walking. Same skull/cap/body size, camera, common baseline and coarse native pixel scale across all cells. Preserve native131pixel logical full height including cap. Full bodies and entire batons with margins, evenly spaced4cells. Opaque bodies on fully transparent outside. No text, ground/shadow/grid or extra people.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-ae40edf4-8f8d-4287-bf68-f4744dd1fd74.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_5-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/cycle-review-atlas-native.png"
+  ],
+  "view": 2,
+  "action": "walk",
+  "referencePins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_5-0.png",
+      "sha256": "c1da1f3aaaff5b40720e6238caaf17c828c800dcfa618f51f9da36bde84c16be"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/cycle-review-atlas-native.png",
+      "sha256": "855d3a09d4a9fb163b0a7d0b7d3b134d5589bc3079b04cc374a55d762ec2561b"
+    }
+  ]
+}

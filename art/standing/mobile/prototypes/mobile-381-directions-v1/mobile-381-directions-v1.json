@@ -1,0 +1,159 @@
+{
+  "status": "review-only prototype; not integrated",
+  "source": {
+    "archive": 381,
+    "walkingRecords": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "walkFramesPerRecord": 4,
+    "nativeIdleRecord": 5,
+    "nativeIdleFrames": 2,
+    "nativeIdleFrameSize": [
+      73,
+      165
+    ],
+    "nativeIdleScale": [
+      -134,
+      -134
+    ],
+    "walkRecordFrameDimensions": {
+      "0": [
+        50,
+        111
+      ],
+      "1": [
+        62,
+        110
+      ],
+      "2": [
+        67,
+        110
+      ],
+      "3": [
+        61,
+        110
+      ],
+      "4": [
+        49,
+        109
+      ]
+    }
+  },
+  "sourceIdentity": "dark-skinned adult man; short black hair; light tunic with red-orange zigzag hem; brown trousers; sandals; small green belt pouch on anatomical right hip",
+  "nativeCoverage": "front idle only, frames 0 and 1; include frame 0 as existing native front pose. No accepted generated idle directions found in repository inventory.",
+  "generatedSheet": {
+    "path": "mobile-381-eight-direction-sheet-v1.png",
+    "size": [
+      1536,
+      1024
+    ],
+    "layout": "4 columns x 2 rows; 384x512 cells",
+    "mode": "RGB; checkerboard background is baked, not alpha"
+  },
+  "generatedViews": {
+    "0": {
+      "file": "generated-view-0-front-generated-duplicate.png",
+      "bearing": "front-generated-duplicate",
+      "crop": [
+        0,
+        0,
+        384,
+        512
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    },
+    "1": {
+      "file": "generated-view-1-front-left.png",
+      "bearing": "front-left",
+      "crop": [
+        384,
+        0,
+        768,
+        512
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    },
+    "2": {
+      "file": "generated-view-2-left-profile.png",
+      "bearing": "left-profile",
+      "crop": [
+        768,
+        0,
+        1152,
+        512
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    },
+    "3": {
+      "file": "generated-view-3-rear-left.png",
+      "bearing": "rear-left",
+      "crop": [
+        1152,
+        0,
+        1536,
+        512
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    },
+    "4": {
+      "file": "generated-view-4-back.png",
+      "bearing": "back",
+      "crop": [
+        0,
+        512,
+        384,
+        1024
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    },
+    "5": {
+      "file": "generated-view-5-rear-right.png",
+      "bearing": "rear-right",
+      "crop": [
+        384,
+        512,
+        768,
+        1024
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    },
+    "6": {
+      "file": "generated-view-6-right-profile.png",
+      "bearing": "right-profile",
+      "crop": [
+        768,
+        512,
+        1152,
+        1024
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    },
+    "7": {
+      "file": "generated-view-7-front-right.png",
+      "bearing": "front-right",
+      "crop": [
+        1152,
+        512,
+        1536,
+        1024
+      ],
+      "note": "crop retains baked checkerboard; review crop only"
+    }
+  },
+  "nativeFrontFiles": [
+    "native-front-idle-frame-0.png",
+    "native-front-idle-frame-1.png"
+  ],
+  "limitations": [
+    "Generated rendering remains much smoother and more detailed than native pixel art after attempted style correction.",
+    "All generated cells are high-resolution crops, not game-resolution sprites.",
+    "Generated front duplicates existing native front coverage; use native frame 0 instead.",
+    "Crop background is a baked checkerboard. These files are not ready for runtime import.",
+    "Direction layout follows front, front-left, left, rear-left, back, rear-right, right, front-right; review direction semantics against actual game camera before integration."
+  ],
+  "tool": "built-in image_gen; one targeted style correction from initial sheet"
+}

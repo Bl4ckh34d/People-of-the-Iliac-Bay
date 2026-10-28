@@ -1,0 +1,76 @@
+{
+  "status": "corrected provisional view2 animation; staged for Unity build/review",
+  "asset": "shopkeeper-182-0-angle-2-12frame-v8-forward-partial11.png",
+  "preview": "shopkeeper-182-0-angle-2-12frame-v8-forward-partial11-preview-4x.png",
+  "orientation": 2,
+  "bearing": "left profile; nose and forward direction image-left",
+  "base": "shopkeeper-182-0-angle-2-base-96cell.png",
+  "cellDimensions": [
+    96,
+    96
+  ],
+  "sheetDimensions": [
+    384,
+    288
+  ],
+  "effectiveCharacterHeight": 76,
+  "frameRateFps": 5,
+  "animationMap": [
+    0,
+    0,
+    0,
+    1,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    6
+  ],
+  "anatomy": "Anatomical LEFT offer arm reaches forward/image-left. Anatomical RIGHT pouch and resting hand preserved in base cutout.",
+  "compositing": {
+    "method": "Base copied exact outside swept arm/occlusion mask; aligned generated keypose pixels copied inside mask; pouch/right resting hand protected by fixed cutout. Frame11 uses dedicated partial-return pose.",
+    "regions": [
+      "Forward arm and revealed vest: x20-60,y29-40 plus x20-40,y41-47",
+      "Rest sleeve/occlusion: x53-65,y30-57",
+      "Protected pouch/right-hand cutout: x36-51,y37-52"
+    ],
+    "coordinates": "96x96 cell, origin top-left",
+    "keyposeMapping": [
+      -1,
+      -1,
+      -1,
+      1,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      6
+    ]
+  },
+  "qa": {
+    "sheetDimensionsVerified": "384x288",
+    "restFrames0to2ExactBase": true,
+    "holdFrames5to10Exact": true,
+    "frame11PixelsDifferentFromHold": 377,
+    "frame11ChangedPixelsFromBase": 257,
+    "changedPixelsOutsideSweptMask": 0,
+    "pouchRightHandChangedPixels": 0,
+    "visualReview": "Unity contact showed earlier arm pointed behind on image-right. Corrected sheet now reaches forward/image-left in profile. Frame11 is visibly partial return; pouch/right hand remain fixed.",
+    "limitations": [
+      "View2 remains provisional until new fixed-heading Unity arrow capture is reviewed.",
+      "No build or Player install performed by art agent."
+    ]
+  },
+  "sourceReferences": {
+    "approvedBase": "shopkeeper-182-0-front-left-base-v3.png",
+    "nativeTiming": "work/keeper-native-idle/182-0-all-native-frames.png",
+    "forwardPoseAtlas": "shopkeeper-182-0-angle-2-forward-keyposes-normalized.png",
+    "dedicatedFrame11": "shopkeeper-182-0-angle-2-forward-phase11-96cell.png"
+  }
+}

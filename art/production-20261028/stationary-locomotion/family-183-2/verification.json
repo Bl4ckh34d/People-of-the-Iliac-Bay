@@ -1,0 +1,87 @@
+{
+  "mechanicalChecks": "PASS",
+  "checkedFrames": 16,
+  "generationRecordsPinned": 9,
+  "acceptedProductionFrames": 0,
+  "limitation": "Hashes, geometry, alpha and distinctness only. Visual gait, camera and original fidelity remain separate review decisions.",
+  "views": [
+    {
+      "action": "walk",
+      "view": 0,
+      "status": "review-candidate",
+      "frames": 4,
+      "fullSpriteHeights": [
+        155,
+        158,
+        158,
+        156
+      ],
+      "baselineGaps": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "atlasSha256": "e157d094d5b90726663408f278c614499bb16dfff34a548144154211de5a3789"
+    },
+    {
+      "action": "walk",
+      "view": 1,
+      "status": "needs-pose-scale-review",
+      "frames": 4,
+      "fullSpriteHeights": [
+        159,
+        152,
+        152,
+        152
+      ],
+      "baselineGaps": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "atlasSha256": "97fa3267e58f4811ed042d7c7199d77bb1f6391a221b458ef2041e461be80fa1"
+    },
+    {
+      "action": "walk",
+      "view": 2,
+      "status": "review-candidate",
+      "frames": 4,
+      "fullSpriteHeights": [
+        158,
+        158,
+        158,
+        157
+      ],
+      "baselineGaps": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "atlasSha256": "ce8fad6dc9a9b6d62dbd628a6c7e6f31cc3dc1d0bfbfeb6f7f1a3b262a9296f1"
+    },
+    {
+      "action": "walk",
+      "view": 6,
+      "status": "review-candidate",
+      "frames": 4,
+      "fullSpriteHeights": [
+        158,
+        159,
+        159,
+        157
+      ],
+      "baselineGaps": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "atlasSha256": "a1a3866ec41c24c56196d887184fcf522a1c6f1992130e2ea2f5fd61ec1f78a1"
+    }
+  ],
+  "manifestSha256": "b1e490b056a4d1bb119add164b89effc5253481494d2d5a51b35f8bf7db2416e",
+  "selectionFileSha256": "cd067790c39d7c634ac1e2140d704f584822dd4e4651d5c424dc383c84a476e0"
+}

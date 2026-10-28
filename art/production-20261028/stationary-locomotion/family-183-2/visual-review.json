@@ -1,0 +1,97 @@
+{
+  "reviewer": "stationary_locomotion",
+  "kind": "static image inspection only",
+  "productionAcceptedFrames": 0,
+  "originalInspected": "original-review-6x.png",
+  "originalReviewSha256": "1f1187c09fea335f81995b79c06af20fb33cb947d29cb61e4e7db09a19883835",
+  "attempts": [
+    {
+      "source": "walk/view-2-left-profile-v1.png",
+      "finding": "Contact0/2 repeat near leading leg; spear switches between far and near arms. Held."
+    },
+    {
+      "source": "walk/view-2-left-profile-ownership-v2.png",
+      "finding": "Contact2 now visibly darker far lead and near trailing leg. Near spear ownership corrected in 2; contact0 floating spear remains. Both passing poses differ. Held pending single-keyframe grip correction."
+    },
+    {
+      "source": "walk/view-2-phase-0-spear-v3.png",
+      "finding": "Near LEFT backward glove now grips the spear; far RIGHT forward glove stays empty. This replaces only phase0."
+    },
+    {
+      "source": "walk/view-1-front-left-v1.png",
+      "finding": "Contacts0/2 repeat same visible leading leg; free right arm2 forward instead of backward. Passing poses differ and spear stays in left hand. Held pending bounded contact0/arm2 repair."
+    },
+    {
+      "source": "walk/view-1-front-left-contact-v2.png",
+      "finding": "Right emptyarm2 corrected backward, but contact0 only brighter; thigh connection remains same-side and does not establish opposite near-left contact. Held. One direct native plus selected Jester0 keyframe follows."
+    },
+    {
+      "source": "walk/view-1-phase-0-native-motion-v3.png",
+      "finding": "Direct native plus selected Jester contact restores foreground crossing thigh, but camera more frontal, face/armor/width changed and spear longer. Selected for traceable review but entire view held needs-pose-scale-review; no candidate credit."
+    },
+    {
+      "source": "walk/view-6-right-profile-v1.png",
+      "finding": "Opposite contact leg shading and passing leg overlap visible, far LEFT spear hand retained. Phase2 has a third arm. Held until individual repair."
+    },
+    {
+      "source": "walk/view-6-phase-2-arm-v2.png",
+      "finding": "Extra arm removed and foreground empty RIGHT arm moved backward; far LEFT spear grip and opposite leading leg retained."
+    }
+  ],
+  "authoringBoundary": "All anatomical repairs use ImageGen; raw images and exact prompt receipts retained. Packaging only NN scale, alpha cutoff128 and rigid whole-frame ground registration. No pixel painting or invented gait frames.",
+  "currentWalk2": {
+    "status": "review-candidate",
+    "artifact": "walk/view-2-review-2x.png",
+    "sha256": "3737615f41bcf9fda13c75e66ffd7b2845ab69f2c801ce73821ef4363399b9e4",
+    "nativeAtlasSha256": "ce8fad6dc9a9b6d62dbd628a6c7e6f31cc3dc1d0bfbfeb6f7f1a3b262a9296f1",
+    "findings": [
+      "Contact0 near lighter lead; contact2 far darker lead with near leg trailing.",
+      "Passing1 near support/far raised leg; passing3 far support/near raised leg.",
+      "Left spear hand ownership now persists."
+    ],
+    "limitations": [
+      "Spear shaft0 ends visibly near knee/behind trailing leg; other phases show longer visible shaft.",
+      "Face and beard brighter than native; tabard and armor reinterpreted.",
+      "Small width/head registration differences remain.",
+      "Static review only; no temporal or production acceptance."
+    ]
+  },
+  "currentWalk0": {
+    "status": "review-candidate",
+    "artifact": "walk/view-0-review-2x.png",
+    "sha256": "c075fc0b1041ea3175a6d78695d694fc784185471b317223e7baeb7c56a0e038",
+    "nativeAtlasSha256": "e157d094d5b90726663408f278c614499bb16dfff34a548144154211de5a3789",
+    "findings": [
+      "Contact0 left planted leg at screenRIGHT; contact2 right planted leg at screenLEFT.",
+      "Passing1 raises right knee/sole; passing3 raises left knee/sole.",
+      "Empty right arm forward0/3 and backward1/2; left spear hand remains fixed."
+    ],
+    "limitations": [
+      "Slight head tilt/face rendition differences, and native palette/proportions interpreted.",
+      "Static review only; no temporal or production acceptance."
+    ]
+  },
+  "currentWalk1": {
+    "status": "needs-pose-scale-review",
+    "artifact": "walk/view-1-review-2x.png",
+    "sha256": "04fcdc2d13fdd3f941cdea035cdde59797cec1c2460cdeb3a0dbd6a6f8066831",
+    "nativeAtlasSha256": "97fa3267e58f4811ed042d7c7199d77bb1f6391a221b458ef2041e461be80fa1",
+    "heldFrames": 4
+  },
+  "currentWalk6": {
+    "status": "review-candidate",
+    "artifact": "walk/view-6-review-2x.png",
+    "sha256": "bee415eed062aa67a35e0e410b31e19cd0b0cb9e57f0f5a886e2fa42e7b7f1f5",
+    "nativeAtlasSha256": "a1a3866ec41c24c56196d887184fcf522a1c6f1992130e2ea2f5fd61ec1f78a1",
+    "findings": [
+      "Contact0 far darker leading leg; contact2 near lighter leading leg.",
+      "Passing1 near knee forward, passing3 far darker knee forward.",
+      "Far left spear ownership retained; near right emptyarm forward0/3 and backward2."
+    ],
+    "limitations": [
+      "Pose0 extended leading heel sits slightly above trailing support toe; pre-contact rather than simultaneous double support.",
+      "Phase2 repair is slightly narrower and brighter; native palette/scabbard reinterpretation remains.",
+      "Static review only, no temporal or production acceptance."
+    ]
+  }
+}

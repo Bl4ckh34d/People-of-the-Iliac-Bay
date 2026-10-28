@@ -1,0 +1,13 @@
+{
+  "arguments": {
+    "prompt": "Precise Daggerfall NPC195 neutral HALF blink. Image1 is selected original OPEN upper-half, image2 is its CLOSED endpoint. Create just ONE intermediate frame with EXACT image1 framing, scale and eye positions. Original small eyes; upper eyelid descends about one native pixel below original OPEN upper lash. Both eyes visibly partly closed; one narrow strip of original iris still visible at unchanged coordinates. Upper lash contour thin and continuous. Do not move eyeballs or lower lids downward or upward. Do not preserve the original bright highlight if upper lid now covers it. Eyebrows, eye corners, cheeks, nose, forehead, hair and light remain absolutely unchanged. Keep source low contrast and soft brown/gray eye whites, no new bright pixels. The eyelid occludes the same iris: no iris resizing, translation or yellow recoloring. Output single whole upper-half image, exact64:35 aspect, enlarged native pixels. No sheet/grid/text/borders. Intermediate should be recognizably between the two supplied endpoints, not OPEN and not CLOSED.",
+    "referenced_image_paths": [
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc195-eyes-v1/neutral-open-reference.png",
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc195-eyes-v1/neutral-closed-reference.png"
+    ],
+    "transparent_background": false
+  },
+  "output_hint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-0674b6a6-c588-445e-b249-25e93009e33d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "provider": "built-in image_gen",
+  "rawSourcePath": "C:/Users/Daniel/.codex/generated_images/01a1807d-d8cf-78d0-bd35-9799085fcd8d/exec-0674b6a6-c588-445e-b249-25e93009e33d.png"
+}

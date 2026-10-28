@@ -1,0 +1,161 @@
+{
+  "date": "2026-10-18",
+  "status": "prototype-awaiting-user-review",
+  "scope": "Shopkeeper182/0 only. Four missing idle standing views; original front remains unchanged. No walking animation or runtime integration.",
+  "source": {
+    "provider": "vanilla",
+    "archive": 182,
+    "record": 0,
+    "reference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-182-0.png",
+    "sourcePNGHash": "899cdee5d171c83397e0ef8ab8cefe7c3ac16733166f9aeeda24f1e293aae65e",
+    "front": "Reuse original native bitmap; do not regenerate or replace."
+  },
+  "nativeDirections": [
+    {
+      "orientation": 0,
+      "source": "original182/0",
+      "mirror": false
+    },
+    {
+      "orientation": 1,
+      "cell": 0,
+      "name": "front-left",
+      "mirror": false
+    },
+    {
+      "orientation": 2,
+      "cell": 1,
+      "name": "left",
+      "mirror": false
+    },
+    {
+      "orientation": 3,
+      "cell": 2,
+      "name": "rear-left",
+      "mirror": false
+    },
+    {
+      "orientation": 4,
+      "cell": 3,
+      "name": "back",
+      "mirror": false
+    },
+    {
+      "orientation": 5,
+      "cell": 2,
+      "name": "rear-right",
+      "mirror": true
+    },
+    {
+      "orientation": 6,
+      "cell": 1,
+      "name": "right",
+      "mirror": true
+    },
+    {
+      "orientation": 7,
+      "cell": 0,
+      "name": "front-right",
+      "mirror": true
+    }
+  ],
+  "layout": {
+    "columns": 2,
+    "rows": 2,
+    "order": [
+      "front-left",
+      "left",
+      "rear-left",
+      "back"
+    ],
+    "animationFramesPerView": 1
+  },
+  "installedProviderFinding": "Current installed bundle asset inventory has no182/0PNG replacement; originalfront is the effective source. No resource barkeep appearance is assumed to be an actual keeper override.",
+  "rejectedWalking": "One182/0walkingcall was already in flight when the user stopped walking generation. Its20cells are rejected, not a valid cycle, and have no runtime mapping.",
+  "innkeeper": "One182/1standingcall was already in flight when user narrowed priority to shopkeeper-only. It remains optional unintegrated prototype; no further innkeeper work before shopkeeper review.",
+  "tool": "built-in image_gen",
+  "file": "art\\standing\\keepers\\prototypes\\shopkeeper-182-0-standing-v1.png",
+  "imageDimensions": [
+    986,
+    1595
+  ],
+  "PNGHash": "4d20a8345d8c92deeff507d9c11637e7eaf6cd4ff8c8693ef92bb8b54874acac",
+  "structuralQA": [
+    {
+      "cell": 0,
+      "localAlphaBounds": [
+        90,
+        27,
+        458,
+        792
+      ],
+      "width": 368,
+      "height": 765,
+      "cellDimensions": [
+        493,
+        797
+      ]
+    },
+    {
+      "cell": 1,
+      "localAlphaBounds": [
+        131,
+        27,
+        334,
+        792
+      ],
+      "width": 203,
+      "height": 765,
+      "cellDimensions": [
+        493,
+        797
+      ]
+    },
+    {
+      "cell": 2,
+      "localAlphaBounds": [
+        134,
+        15,
+        450,
+        752
+      ],
+      "width": 316,
+      "height": 737,
+      "cellDimensions": [
+        493,
+        798
+      ]
+    },
+    {
+      "cell": 3,
+      "localAlphaBounds": [
+        50,
+        15,
+        418,
+        743
+      ],
+      "width": 368,
+      "height": 728,
+      "cellDimensions": [
+        493,
+        798
+      ]
+    }
+  ],
+  "visualQA": {
+    "allFourBodiesComplete": true,
+    "noWalkingFrames": true,
+    "originalFrontUntouched": true,
+    "paletteAndOutfit": "Bald crown and grey side hair, green waistcoat, cyan sleeves, rust trousers, brown boots and belt pouch match the source themes. Exact source-pixel fidelity is not claimed.",
+    "directionReview": "Left profile and back are distinct. The front-left view is a shallow three-quarter turn and needs user review for the requested45degreebearing. Rear-left retains a visible side face.",
+    "nativeResolution": "Generated PNG remains larger than native source. No bitmap resampling or manual raster editing was used."
+  },
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-6ac7d89b-9a3e-4d23-98b3-588965851042.png",
+  "prompt": "Use case: identity-preserve. Asset: REVIEW PROTOTYPE of four missing STANDING directions for classic Daggerfall NPC182/0, exact source identity/style in reference. ORIGINAL FRONT ALREADY EXISTS AND WILL BE REUSED; do NOT generate another frontal view. Output ONLY four stationary full-body sprites in exactly2columns2rows, equal cells and generous transparent gutters. Cell order:top-left FRONT-LEFT45degree three-quarter;top-right strict LEFT PROFILE90degrees;bottom-left REAR-LEFT135degree three-quarter;bottom-right straight BACK180degrees. Same person in every cell: source older light-skinned stocky male shopkeeper, BALD TOP with short grey-white SIDE HAIR, thick pale brows and exact source face; green buttoned waistcoat with brown waistbelt, CYAN loose long sleeves, rust-brown knee-length trousers, tall folded brown boots, small brown belt pouch. Preserve exact native face, skin, hair, clothing design, colors, stocky body proportions and original coarse pixel-art density. Same quiet resting stance as source: upright straight torso; both feet firmly planted under body at equal depth with only natural small lateral gap; knees straight; no step, stride, leg passing, raised foot, leaning or walking pose. Hands rest at belt/waist like original source, no arm swing. Source belt pouch remains attached. Directions show actual side/back surfaces of SAME outfit, never merely mirror the original frontal bitmap. Left-profile nose pointsLEFT; rear-left shows mostly back and only side face; back shows back of bald scalp/grey sidehair with NO face. Match original logical silhouette about38x77pixels; coarse hard pixel clusters enlarged uniformly, limited source palette, no antialiasing, smoothing, modern high-resolution details, thick cartoon outline, new accessories or redesign. Full head/hands/boots always inside each cell, stable apparent bodyheight and same baseline within rows. No extra frames, front view, animation, text, labels, gridlines, scenery, floor, cast shadow or checkerboard. Genuine alpha transparency. This is STANDING art only, not walking.",
+  "optionalInnkeeper": {
+    "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-f3926510-4f43-4297-9504-5fe608c376bc.png",
+    "prompt": "Use case: identity-preserve. Asset: REVIEW PROTOTYPE of four missing STANDING directions for classic Daggerfall NPC182/1, exact source identity/style in reference. ORIGINAL FRONT ALREADY EXISTS AND WILL BE REUSED; do NOT generate another frontal view. Output ONLY four stationary full-body sprites in exactly2columns2rows, equal cells and generous transparent gutters. Cell order:top-left FRONT-LEFT45degree three-quarter;top-right strict LEFT PROFILE90degrees;bottom-left REAR-LEFT135degree three-quarter;bottom-right straight BACK180degrees. Same person in every cell: source dark-brown-skinned, very stocky BALD adult male innkeeper, broad round face, white/pale-grey short sleeves, tan/beige long apron with neckstrap and original folds, brown trousers and dark plain shoes. His hands keep the original quiet working/resting gesture at lowerchest, wiping/holding the same grey metal drinking vessel with pale cloth; no new props. Preserve exact face, skin tone, bald head, belly/shoulder/body proportions, clothes, source palette and coarse classic pixel density. Original3small bottles rest as separate floor props near feet; keep original bottle shapes/colors and static ground placement in each view, not carried in hands. Person stands still: upright torso,both feet firmly planted under body at equaldepth with smallnatural lateral gap,knees straight; no step,stride,raisedfoot,leaning,walking or arm swing. Left-profile nosepointsLEFT; rear-left showsbackofapron straps and sideofhead; back showsbaldscalp,white sleeves andapron ties withNOface. Actual side/backviews ofsameoutfit,neverfrontalbitmapflips. Match original logical silhouette about61x117pixels, with coarse hard pixelclusters enlarged uniformly; limitedsourcecolors, no smoothing/antialiasing/modernpainting/detail, no cartoonredesign. Allbody,head,shoes,bottles fitinside owncell; stableapparentbodyheight. No extra frames,frontview,animation,text,labels,grid,scenery,floorplane,castshadow orcheckerboard. Genuine alpha transparency. STANDINGonly,notwalking.",
+    "status": "Rejected/pending correction; generated before the user narrowed scope to shopkeeper-only. No integration or further generation.",
+    "userFeedback": "Bottles at the feet incorrectly remain in the foreground from every view. Preserve their physical position relative to the body: rear views place bottles behind feet, with boot/body occlusion; side views retain consistent depth and side. The wiping vessel remains in front of the chest and is occluded from the rear. Prefer a separate floor-prop layer/export for future moving actors; never attach floor props to walking feet. Batch all QA feedback before any eventual revision."
+  }
+}

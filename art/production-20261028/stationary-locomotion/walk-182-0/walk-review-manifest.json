@@ -1,0 +1,1118 @@
+{
+  "identity": "vanilla:stationary:182:0",
+  "action": "walk",
+  "status": "directional-review-candidates-not-production-acceptance",
+  "source": {
+    "path": "sources/native/182_0-0.png",
+    "fileSha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a",
+    "dimensions": [
+      47,
+      76
+    ]
+  },
+  "viewConvention": {
+    "0": "front",
+    "1": "front-left",
+    "2": "left-profile",
+    "3": "rear-left",
+    "4": "back",
+    "5": "rear-right",
+    "6": "right-profile",
+    "7": "front-right"
+  },
+  "completeCandidateViews": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "missingViews": [],
+  "candidateFrameCount": 32,
+  "acceptedProductionViews": 0,
+  "reviewFps": 4,
+  "alphaCutoff": 128,
+  "cellSize": [
+    96,
+    96
+  ],
+  "registration": "One common scale and vertical anchor per generated direction; per-frame head-region horizontal registration only. Source pixels unchanged; no limb warping, mirroring, interpolation or duplicate-frame synthesis.",
+  "frontRepair": "Only phase1 uses the generated repaired sheet. Other three front phases retain original source pixels; repair changed support-leg ownership.",
+  "views": [
+    {
+      "view": 0,
+      "name": "front",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "walk-182-0/view-0-front-v1.png",
+          "sourceSha256": "3265cdc22552e388556f66a8fc552c1757e57c45e0de162087227c8412a547b7",
+          "sourceCell": 0,
+          "sourceBox": [
+            0,
+            0,
+            492,
+            799
+          ],
+          "rawCutoffBounds": [
+            55,
+            27,
+            455,
+            774
+          ],
+          "rawHeadAnchorX": 245.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.10160427807486631,
+          "commonRawBottom": 774.0,
+          "placement": [
+            23,
+            9
+          ],
+          "nativeCutoffBounds": [
+            29,
+            12,
+            69,
+            87
+          ]
+        },
+        {
+          "source": "walk-182-0/view-0-front-v2-passing-repair.png",
+          "sourceSha256": "9edca066f5a4424beaf976d3878949c744cf4fc91cc632e956092c5dd8f1bae0",
+          "sourceCell": 1,
+          "sourceBox": [
+            492,
+            0,
+            984,
+            799
+          ],
+          "rawCutoffBounds": [
+            4,
+            26,
+            408,
+            759
+          ],
+          "rawHeadAnchorX": 204.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.10160427807486631,
+          "commonRawBottom": 774.0,
+          "placement": [
+            27,
+            9
+          ],
+          "nativeCutoffBounds": [
+            27,
+            12,
+            68,
+            86
+          ]
+        },
+        {
+          "source": "walk-182-0/view-0-front-v1.png",
+          "sourceSha256": "3265cdc22552e388556f66a8fc552c1757e57c45e0de162087227c8412a547b7",
+          "sourceCell": 2,
+          "sourceBox": [
+            984,
+            0,
+            1475,
+            799
+          ],
+          "rawCutoffBounds": [
+            50,
+            27,
+            446,
+            773
+          ],
+          "rawHeadAnchorX": 244.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.10160427807486631,
+          "commonRawBottom": 774.0,
+          "placement": [
+            23,
+            9
+          ],
+          "nativeCutoffBounds": [
+            28,
+            12,
+            68,
+            87
+          ]
+        },
+        {
+          "source": "walk-182-0/view-0-front-v1.png",
+          "sourceSha256": "3265cdc22552e388556f66a8fc552c1757e57c45e0de162087227c8412a547b7",
+          "sourceCell": 3,
+          "sourceBox": [
+            1475,
+            0,
+            1967,
+            799
+          ],
+          "rawCutoffBounds": [
+            50,
+            27,
+            447,
+            758
+          ],
+          "rawHeadAnchorX": 247.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.10160427807486631,
+          "commonRawBottom": 774.0,
+          "placement": [
+            23,
+            9
+          ],
+          "nativeCutoffBounds": [
+            28,
+            12,
+            68,
+            86
+          ]
+        }
+      ]
+    },
+    {
+      "view": 1,
+      "name": "front-left",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "walk-182-0/view-1-front-left-v1.png",
+          "sourceSha256": "47727b39b0a8d25a9a0dd84a823e87039ccdf29c03aad8c552df2a8060945bd4",
+          "sourceCell": 0,
+          "sourceBox": [
+            0,
+            0,
+            543,
+            724
+          ],
+          "rawCutoffBounds": [
+            169,
+            119,
+            448,
+            624
+          ],
+          "rawHeadAnchorX": 288.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.14800389483933787,
+          "commonRawBottom": 628.0,
+          "placement": [
+            5,
+            -5
+          ],
+          "nativeCutoffBounds": [
+            30,
+            13,
+            71,
+            87
+          ]
+        },
+        {
+          "source": "walk-182-0/view-1-phase-1-repair-v1.png",
+          "sourceSha256": "9360e653c70cbe89d99f883a9c2bd3af2b125b29da84139a318c155ff3776d57",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            386,
+            229,
+            774,
+            1231
+          ],
+          "rawHeadAnchorX": 529.5,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.14800389483933787,
+          "commonRawBottom": 628.0,
+          "placement": [
+            9,
+            -5
+          ],
+          "nativeCutoffBounds": [
+            37,
+            12,
+            66,
+            86
+          ]
+        },
+        {
+          "source": "walk-182-0/view-1-phase-2-repair-v1.png",
+          "sourceSha256": "75eb7cc134036e62ebf1193aac8e777f1fd17bf4cf00845d2ecd2e9e5054b5b5",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            340,
+            235,
+            918,
+            1233
+          ],
+          "rawHeadAnchorX": 577.0,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.14800389483933787,
+          "commonRawBottom": 628.0,
+          "placement": [
+            5,
+            -5
+          ],
+          "nativeCutoffBounds": [
+            30,
+            12,
+            73,
+            86
+          ]
+        },
+        {
+          "source": "walk-182-0/view-1-front-left-v1.png",
+          "sourceSha256": "47727b39b0a8d25a9a0dd84a823e87039ccdf29c03aad8c552df2a8060945bd4",
+          "sourceCell": 3,
+          "sourceBox": [
+            1629,
+            0,
+            2172,
+            724
+          ],
+          "rawCutoffBounds": [
+            147,
+            119,
+            353,
+            628
+          ],
+          "rawHeadAnchorX": 230.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.14800389483933787,
+          "commonRawBottom": 628.0,
+          "placement": [
+            14,
+            -5
+          ],
+          "nativeCutoffBounds": [
+            36,
+            13,
+            66,
+            88
+          ]
+        }
+      ]
+    },
+    {
+      "view": 2,
+      "name": "left-profile",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "cycle-review-atlas-native.png",
+          "sourceSha256": "855d3a09d4a9fb163b0a7d0b7d3b134d5589bc3079b04cc374a55d762ec2561b",
+          "sourceCell": 0,
+          "sourceBox": [
+            0,
+            0,
+            96,
+            96
+          ],
+          "rawCutoffBounds": [
+            29,
+            12,
+            69,
+            89
+          ],
+          "rawHeadAnchorX": 43.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 1,
+          "commonRawBottom": 89.0,
+          "placement": [
+            4,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            33,
+            11,
+            73,
+            88
+          ]
+        },
+        {
+          "source": "cycle-review-atlas-native.png",
+          "sourceSha256": "855d3a09d4a9fb163b0a7d0b7d3b134d5589bc3079b04cc374a55d762ec2561b",
+          "sourceCell": 1,
+          "sourceBox": [
+            96,
+            0,
+            192,
+            96
+          ],
+          "rawCutoffBounds": [
+            33,
+            12,
+            60,
+            89
+          ],
+          "rawHeadAnchorX": 43.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 1,
+          "commonRawBottom": 89.0,
+          "placement": [
+            4,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            37,
+            11,
+            64,
+            88
+          ]
+        },
+        {
+          "source": "cycle-review-atlas-native.png",
+          "sourceSha256": "855d3a09d4a9fb163b0a7d0b7d3b134d5589bc3079b04cc374a55d762ec2561b",
+          "sourceCell": 2,
+          "sourceBox": [
+            192,
+            0,
+            288,
+            96
+          ],
+          "rawCutoffBounds": [
+            31,
+            12,
+            66,
+            88
+          ],
+          "rawHeadAnchorX": 43.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 1,
+          "commonRawBottom": 89.0,
+          "placement": [
+            4,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            35,
+            11,
+            70,
+            87
+          ]
+        },
+        {
+          "source": "cycle-review-atlas-native.png",
+          "sourceSha256": "855d3a09d4a9fb163b0a7d0b7d3b134d5589bc3079b04cc374a55d762ec2561b",
+          "sourceCell": 3,
+          "sourceBox": [
+            288,
+            0,
+            384,
+            96
+          ],
+          "rawCutoffBounds": [
+            31,
+            12,
+            60,
+            89
+          ],
+          "rawHeadAnchorX": 44.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 1,
+          "commonRawBottom": 89.0,
+          "placement": [
+            4,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            35,
+            11,
+            64,
+            88
+          ]
+        }
+      ]
+    },
+    {
+      "view": 3,
+      "name": "rear-left",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "walk-182-0/view-3-phase-0-repair-v1.png",
+          "sourceSha256": "87eed2015e3354d6daa01933cef85d97ab18e458581b28e6d03f24857c5084fc",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            205,
+            141,
+            832,
+            1322
+          ],
+          "rawHeadAnchorX": 440.0,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.1267723102585488,
+          "commonRawBottom": 670.0,
+          "placement": [
+            20,
+            3
+          ],
+          "nativeCutoffBounds": [
+            33,
+            12,
+            73,
+            87
+          ]
+        },
+        {
+          "source": "walk-182-0/view-3-rear-left-v1.png",
+          "sourceSha256": "64bc3f9c9e15e639ea5ff9557a50f3f1e4722aa7dc0662f0f5c6cbc1fd81d74e",
+          "sourceCell": 1,
+          "sourceBox": [
+            543,
+            0,
+            1086,
+            724
+          ],
+          "rawCutoffBounds": [
+            149,
+            71,
+            431,
+            670
+          ],
+          "rawHeadAnchorX": 242.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.1267723102585488,
+          "commonRawBottom": 670.0,
+          "placement": [
+            17,
+            3
+          ],
+          "nativeCutoffBounds": [
+            36,
+            12,
+            72,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-3-rear-left-v1.png",
+          "sourceSha256": "64bc3f9c9e15e639ea5ff9557a50f3f1e4722aa7dc0662f0f5c6cbc1fd81d74e",
+          "sourceCell": 2,
+          "sourceBox": [
+            1086,
+            0,
+            1629,
+            724
+          ],
+          "rawCutoffBounds": [
+            96,
+            72,
+            444,
+            670
+          ],
+          "rawHeadAnchorX": 244.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.1267723102585488,
+          "commonRawBottom": 670.0,
+          "placement": [
+            17,
+            3
+          ],
+          "nativeCutoffBounds": [
+            29,
+            12,
+            73,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-3-rear-left-v1.png",
+          "sourceSha256": "64bc3f9c9e15e639ea5ff9557a50f3f1e4722aa7dc0662f0f5c6cbc1fd81d74e",
+          "sourceCell": 3,
+          "sourceBox": [
+            1629,
+            0,
+            2172,
+            724
+          ],
+          "rawCutoffBounds": [
+            174,
+            71,
+            465,
+            670
+          ],
+          "rawHeadAnchorX": 284.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.1267723102585488,
+          "commonRawBottom": 670.0,
+          "placement": [
+            12,
+            3
+          ],
+          "nativeCutoffBounds": [
+            34,
+            12,
+            71,
+            88
+          ]
+        }
+      ]
+    },
+    {
+      "view": 4,
+      "name": "back",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "walk-182-0/view-4-phase-0-repair-v1.png",
+          "sourceSha256": "ecbed30c6c5a1fbf2abace481e2a8654a967c1cfe49a0dbbfa2125ce006af0d8",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            261,
+            273,
+            792,
+            1244
+          ],
+          "rawHeadAnchorX": 542.5,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.1527638190954774,
+          "commonRawBottom": 634.0,
+          "placement": [
+            7,
+            -9
+          ],
+          "nativeCutoffBounds": [
+            27,
+            12,
+            68,
+            86
+          ]
+        },
+        {
+          "source": "walk-182-0/view-4-back-v1.png",
+          "sourceSha256": "c103f24820d3f1d90da55e73fb4ac794cd9d277042ba637bf4dae8f9e91c9aba",
+          "sourceCell": 1,
+          "sourceBox": [
+            543,
+            0,
+            1086,
+            724
+          ],
+          "rawCutoffBounds": [
+            138,
+            137,
+            407,
+            633
+          ],
+          "rawHeadAnchorX": 269.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.1527638190954774,
+          "commonRawBottom": 634.0,
+          "placement": [
+            7,
+            -9
+          ],
+          "nativeCutoffBounds": [
+            28,
+            12,
+            69,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-4-back-v1.png",
+          "sourceSha256": "c103f24820d3f1d90da55e73fb4ac794cd9d277042ba637bf4dae8f9e91c9aba",
+          "sourceCell": 2,
+          "sourceBox": [
+            1086,
+            0,
+            1629,
+            724
+          ],
+          "rawCutoffBounds": [
+            122,
+            137,
+            408,
+            634
+          ],
+          "rawHeadAnchorX": 270.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.1527638190954774,
+          "commonRawBottom": 634.0,
+          "placement": [
+            7,
+            -9
+          ],
+          "nativeCutoffBounds": [
+            26,
+            12,
+            69,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-4-back-v1.png",
+          "sourceSha256": "c103f24820d3f1d90da55e73fb4ac794cd9d277042ba637bf4dae8f9e91c9aba",
+          "sourceCell": 3,
+          "sourceBox": [
+            1629,
+            0,
+            2172,
+            724
+          ],
+          "rawCutoffBounds": [
+            137,
+            137,
+            407,
+            633
+          ],
+          "rawHeadAnchorX": 270.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.1527638190954774,
+          "commonRawBottom": 634.0,
+          "placement": [
+            7,
+            -9
+          ],
+          "nativeCutoffBounds": [
+            28,
+            12,
+            69,
+            88
+          ]
+        }
+      ]
+    },
+    {
+      "view": 5,
+      "name": "rear-right",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "walk-182-0/view-5-rear-right-v1.png",
+          "sourceSha256": "0baf2e6ccae936437fa7805e87484a061d91c77508727a802ff78a135faa3e76",
+          "sourceCell": 0,
+          "sourceBox": [
+            0,
+            0,
+            543,
+            724
+          ],
+          "rawCutoffBounds": [
+            131,
+            108,
+            425,
+            633
+          ],
+          "rawHeadAnchorX": 278.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.14476190476190476,
+          "commonRawBottom": 633.0,
+          "placement": [
+            8,
+            -4
+          ],
+          "nativeCutoffBounds": [
+            27,
+            12,
+            70,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-5-phase-1-repair-v1.png",
+          "sourceSha256": "43b7185a2318905bdd8920d77c5bca498c817ebc2b1d3a464e703a4108f33c7d",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            329,
+            228,
+            841,
+            1243
+          ],
+          "rawHeadAnchorX": 604.5,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.14476190476190476,
+          "commonRawBottom": 633.0,
+          "placement": [
+            4,
+            -4
+          ],
+          "nativeCutoffBounds": [
+            28,
+            13,
+            65,
+            86
+          ]
+        },
+        {
+          "source": "walk-182-0/view-5-phase-2-repair-v1.png",
+          "sourceSha256": "fd13f482f6bb3a45cc223607f956a1b6f19a4a6a6210092114bb05490fe41eaa",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            276,
+            222,
+            825,
+            1238
+          ],
+          "rawHeadAnchorX": 566.0,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.14476190476190476,
+          "commonRawBottom": 633.0,
+          "placement": [
+            7,
+            -4
+          ],
+          "nativeCutoffBounds": [
+            27,
+            12,
+            67,
+            86
+          ]
+        },
+        {
+          "source": "walk-182-0/view-5-rear-right-v1.png",
+          "sourceSha256": "0baf2e6ccae936437fa7805e87484a061d91c77508727a802ff78a135faa3e76",
+          "sourceCell": 3,
+          "sourceBox": [
+            1629,
+            0,
+            2172,
+            724
+          ],
+          "rawCutoffBounds": [
+            159,
+            108,
+            412,
+            633
+          ],
+          "rawHeadAnchorX": 296.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.14476190476190476,
+          "commonRawBottom": 633.0,
+          "placement": [
+            5,
+            -4
+          ],
+          "nativeCutoffBounds": [
+            28,
+            12,
+            65,
+            88
+          ]
+        }
+      ]
+    },
+    {
+      "view": 6,
+      "name": "right-profile",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "walk-182-0/view-6-right-profile-v1.png",
+          "sourceSha256": "06642bb57c0a4882f6ddd89f5cca2f27ac9ce7592b0b9ee4f5ee8b773280dcdc",
+          "sourceCell": 0,
+          "sourceBox": [
+            0,
+            0,
+            543,
+            724
+          ],
+          "rawCutoffBounds": [
+            123,
+            97,
+            412,
+            636
+          ],
+          "rawHeadAnchorX": 291.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.14048059149722736,
+          "commonRawBottom": 637.0,
+          "placement": [
+            7,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            24,
+            13,
+            65,
+            89
+          ]
+        },
+        {
+          "source": "walk-182-0/view-6-phase-1-repair-v1.png",
+          "sourceSha256": "6e26dd7f03d15eeafcf59808e53b4ac5bea3825aa1066b0e3f91ed9b04148988",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            339,
+            192,
+            729,
+            1267
+          ],
+          "rawHeadAnchorX": 525.5,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.14048059149722736,
+          "commonRawBottom": 637.0,
+          "placement": [
+            11,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            35,
+            13,
+            62,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-6-right-profile-v1.png",
+          "sourceSha256": "06642bb57c0a4882f6ddd89f5cca2f27ac9ce7592b0b9ee4f5ee8b773280dcdc",
+          "sourceCell": 2,
+          "sourceBox": [
+            1086,
+            0,
+            1629,
+            724
+          ],
+          "rawCutoffBounds": [
+            109,
+            102,
+            414,
+            637
+          ],
+          "rawHeadAnchorX": 282.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.14048059149722736,
+          "commonRawBottom": 637.0,
+          "placement": [
+            8,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            23,
+            13,
+            66,
+            89
+          ]
+        },
+        {
+          "source": "walk-182-0/view-6-right-profile-v1.png",
+          "sourceSha256": "06642bb57c0a4882f6ddd89f5cca2f27ac9ce7592b0b9ee4f5ee8b773280dcdc",
+          "sourceCell": 3,
+          "sourceBox": [
+            1629,
+            0,
+            2172,
+            724
+          ],
+          "rawCutoffBounds": [
+            187,
+            103,
+            363,
+            637
+          ],
+          "rawHeadAnchorX": 286.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.14048059149722736,
+          "commonRawBottom": 637.0,
+          "placement": [
+            8,
+            -1
+          ],
+          "nativeCutoffBounds": [
+            34,
+            14,
+            59,
+            89
+          ]
+        }
+      ]
+    },
+    {
+      "view": 7,
+      "name": "front-right",
+      "status": "review-candidate",
+      "frameCount": 4,
+      "frames": [
+        {
+          "source": "walk-182-0/view-7-front-right-v1.png",
+          "sourceSha256": "e2f522e87f5284ecf964600334d0d9ccae6cee577caf0c9949a8a207f1866773",
+          "sourceCell": 0,
+          "sourceBox": [
+            0,
+            0,
+            543,
+            724
+          ],
+          "rawCutoffBounds": [
+            132,
+            110,
+            434,
+            662
+          ],
+          "rawHeadAnchorX": 295.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.13768115942028986,
+          "commonRawBottom": 662.0,
+          "placement": [
+            7,
+            -3
+          ],
+          "nativeCutoffBounds": [
+            25,
+            12,
+            67,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-7-phase-1-repair-v1.png",
+          "sourceSha256": "03612773708810fd0d0782b9017ddae70a274189561493f6e3b5db6b8f9ca651",
+          "sourceCell": null,
+          "sourceBox": [
+            0,
+            0,
+            1086,
+            1448
+          ],
+          "referenceCanvasHeight": 724,
+          "replacementReason": "Individually generated opposite gait phase replaces collapsed sheet pose.",
+          "rawCutoffBounds": [
+            350,
+            222,
+            786,
+            1286
+          ],
+          "rawHeadAnchorX": 609.0,
+          "referenceCanvasScale": 0.5,
+          "uniformViewScale": 0.13768115942028986,
+          "commonRawBottom": 662.0,
+          "placement": [
+            6,
+            -3
+          ],
+          "nativeCutoffBounds": [
+            30,
+            12,
+            60,
+            86
+          ]
+        },
+        {
+          "source": "walk-182-0/view-7-front-right-v1.png",
+          "sourceSha256": "e2f522e87f5284ecf964600334d0d9ccae6cee577caf0c9949a8a207f1866773",
+          "sourceCell": 2,
+          "sourceBox": [
+            1086,
+            0,
+            1629,
+            724
+          ],
+          "rawCutoffBounds": [
+            131,
+            114,
+            455,
+            661
+          ],
+          "rawHeadAnchorX": 309.5,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.13768115942028986,
+          "commonRawBottom": 662.0,
+          "placement": [
+            5,
+            -3
+          ],
+          "nativeCutoffBounds": [
+            23,
+            13,
+            68,
+            88
+          ]
+        },
+        {
+          "source": "walk-182-0/view-7-front-right-v1.png",
+          "sourceSha256": "e2f522e87f5284ecf964600334d0d9ccae6cee577caf0c9949a8a207f1866773",
+          "sourceCell": 3,
+          "sourceBox": [
+            1629,
+            0,
+            2172,
+            724
+          ],
+          "rawCutoffBounds": [
+            170,
+            113,
+            392,
+            659
+          ],
+          "rawHeadAnchorX": 306.0,
+          "referenceCanvasScale": 1.0,
+          "uniformViewScale": 0.13768115942028986,
+          "commonRawBottom": 662.0,
+          "placement": [
+            6,
+            -3
+          ],
+          "nativeCutoffBounds": [
+            29,
+            13,
+            60,
+            88
+          ]
+        }
+      ]
+    }
+  ]
+}

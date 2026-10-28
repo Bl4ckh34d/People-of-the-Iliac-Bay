@@ -1,0 +1,63 @@
+{
+  "portraitRecord": 47,
+  "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-047.png",
+  "sourceSha256": "9da6af69754fc76fdf12b59dba2bbb83a3575bbc179d7938a5570131fa4417e1",
+  "masters": [
+    {
+      "mood": "neutral",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\neutral-master.png",
+      "sha256": "01b344366b9f9cabd479a720b3e7100cfed5294fc08cb0c89e2ca1079643e177",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-047.png",
+      "rawSha256": "9da6af69754fc76fdf12b59dba2bbb83a3575bbc179d7938a5570131fa4417e1"
+    },
+    {
+      "mood": "happy",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\happy-master.png",
+      "sha256": "c5c9df1557a63bbca1f58458befbb5e844403a7197dba9a97e901350cb92b84c",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\happy-raw.png",
+      "rawSha256": "e0a2ecb35ce0745aeff60817faac6ac65b76ba882a2484b602e5d1b1504ec7e2"
+    },
+    {
+      "mood": "angry",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\angry-master.png",
+      "sha256": "c48a0fae0d7072bb47fc4fda1c53b23d36a033dbfa99cdd05a6ddbddd07bebe7",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\angry-raw.png",
+      "rawSha256": "add7f817e8d33ce55e5edb43d99d7fb46f756f6b87b6e28ac030bfa67f0310cc"
+    },
+    {
+      "mood": "sad",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\sad-master.png",
+      "sha256": "308c8826d78a4ed3952c66e32cf7ae9a8cd4169b5a9713ca4b791b0e5b56742d",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\sad-raw.png",
+      "rawSha256": "03ae37be99f08b36d04fd118f98c7c680d46078a5c9357d671ae0853904dee4f"
+    },
+    {
+      "mood": "afraid",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\afraid-master.png",
+      "sha256": "ff34f9f2851c4451d8e4ed9a898c12cff797ec5bb9b6fb684e29fda2212b2ac7",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\afraid-raw.png",
+      "rawSha256": "0554fdcd61582d7a630a204279a27991a1f9a5e66bf06d6389069573ed533952"
+    },
+    {
+      "mood": "guarded",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\guarded-master.png",
+      "sha256": "8e150873f76801e37f41a9f3f9d2967a744382e71d45a0cfcaa15966c9c127d8",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\guarded-raw.png",
+      "rawSha256": "a7021280cc9f4362026ec17a9ce706c51dca794fcfd202d53c686c11e790abe2"
+    }
+  ],
+  "browMask": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc047-masters-v1\\brow-mask.png",
+  "browMaskSha256": "b3685c4b5aeea970643684a4c12b7bfdff8a20b3b5a4f9905ad8e82bddb236ba",
+  "nativeApertureRows": [
+    26,
+    27
+  ],
+  "stationaryHoodRightFromX": 44,
+  "policy": "Original-conditioned generated brows in hood-limited exposed skin only. Both source iris apertures26..27 and gold hood remain exact.",
+  "status": "static-candidate-review-pending",
+  "limitations": [
+    "Emotion readability limited by hood and outer eyebrow occlusion.",
+    "No widening of outer image-right eye into gold hood.",
+    "No temporal/audio/published/user acceptance."
+  ]
+}

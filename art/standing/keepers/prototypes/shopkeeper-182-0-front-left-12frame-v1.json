@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-18",
+  "status": "provisional-angle-prototype",
+  "archive": 182,
+  "record": 0,
+  "orientation": 1,
+  "angle": "front-left three-quarter; nose points image-left",
+  "nativeSource": {
+    "frameCount": 12,
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "phase": "Frames 0-2 rest; frame 3 starts anatomical-left-arm offer; frame 4 reaches farther; frames 5-10 hold; frame 11 retracts.",
+    "identityReference": "work/keeper-native-idle/182-0-all-native-frames.png",
+    "front": "Original native frontal animation remains unchanged."
+  },
+  "file": "art/standing/keepers/prototypes/shopkeeper-182-0-front-left-12frame-v1.png",
+  "dimensions": [1446, 1087],
+  "sha256": "0a040279b756cf4f2b8b7b927d743ba904013f83cc9d9adf5aa6d2d94a26ff41",
+  "layout": { "columns": 4, "rows": 3, "cellOrder": "left-to-right, top-to-bottom" },
+  "frameMapping": [
+    { "sourceFrame": 0, "cell": 0, "row": 0, "column": 0 },
+    { "sourceFrame": 1, "cell": 1, "row": 0, "column": 1 },
+    { "sourceFrame": 2, "cell": 2, "row": 0, "column": 2 },
+    { "sourceFrame": 3, "cell": 3, "row": 0, "column": 3 },
+    { "sourceFrame": 4, "cell": 4, "row": 1, "column": 0 },
+    { "sourceFrame": 5, "cell": 5, "row": 1, "column": 1 },
+    { "sourceFrame": 6, "cell": 6, "row": 1, "column": 2 },
+    { "sourceFrame": 7, "cell": 7, "row": 1, "column": 3 },
+    { "sourceFrame": 8, "cell": 8, "row": 2, "column": 0 },
+    { "sourceFrame": 9, "cell": 9, "row": 2, "column": 1 },
+    { "sourceFrame": 10, "cell": 10, "row": 2, "column": 2 },
+    { "sourceFrame": 11, "cell": 11, "row": 2, "column": 3 }
+  ],
+  "visualQA": {
+    "cellCount": 12,
+    "angleConsistent": true,
+    "pouchAndGestureSides": "Pass by appearance: right hand rests on pouch at rest; left arm gestures on opposite side in this front view.",
+    "phaseProgression": "Partial: cells 0-2 rest, cell 3 jumps to full extension, cells 4-10 hold with small differences, cell 11 retracts to rest.",
+    "pixelStyle": "Softened pixels and stray red edge pixels remain, matching limitations documented on user-approved visual reference.",
+    "integration": "Prototype only; not runtime-ready."
+  }
+}

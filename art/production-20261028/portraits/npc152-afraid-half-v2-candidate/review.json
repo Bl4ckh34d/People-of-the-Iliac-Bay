@@ -1,0 +1,58 @@
+{
+  "sourceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\npc152-keyframe-v2\\manifest.json",
+  "sourceManifestSha256": "f8aee568b9357ccd5e90b40aca9d4386b8ff418aab1f4e0d8bd0d55f078f023c",
+  "rawSource": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc152-afraid-half-v2-raw.png",
+  "rawSha256": "df1fb47bf19ad549f975fc5fabf8e499fc3400a9708e4cfb7ca11bb5f13c6502",
+  "rawDimensions": [
+    1695,
+    928
+  ],
+  "sampling": "whole upper half resized nearest-neighbour to64x35; no local eye/pupil scaling",
+  "opaqueNativeBoxes": [
+    [
+      16,
+      23,
+      29,
+      26
+    ],
+    [
+      36,
+      23,
+      50,
+      26
+    ]
+  ],
+  "retainedExposedRows": "26..34 from same-gaze OPEN",
+  "frames": [
+    {
+      "gaze": "front",
+      "sourceOpenSha256": "c3868e870d4eb7ab2ec653582b0503d8693da229c9c0d0f00e9fd5e4cfc2b6b9",
+      "baselineHalfSha256": "9ce084c72af78a292abefaab005f6c396695600e9df8a629affd6a3c2271371f",
+      "candidateSha256": "79176dc966c5ba0912f5b74d30c1dbd9c84eb509f41fd12b7e61ac56efc1f154",
+      "changedFromOldHalf": 131,
+      "changedFromOpen": 81,
+      "outsideEnvelopeEqualsOwnOpen": true,
+      "exposedEyeballRows26OnwardEqualsOwnOpen": true
+    },
+    {
+      "gaze": "left",
+      "sourceOpenSha256": "b1fa6cc584ff26700ad173522d08dc7b9dd84e4ad2c855b90953f88f86936756",
+      "baselineHalfSha256": "2fd6fed92a28c066783b6d7126ae3ef82a0ba451b5e018590d84d00180d677f6",
+      "candidateSha256": "91d46f5e1e030352cb32e1f15088572d6053a1dae4859271faea643e344b6cca",
+      "changedFromOldHalf": 130,
+      "changedFromOpen": 81,
+      "outsideEnvelopeEqualsOwnOpen": true,
+      "exposedEyeballRows26OnwardEqualsOwnOpen": true
+    },
+    {
+      "gaze": "right",
+      "sourceOpenSha256": "861b363a137656f61e10b0633b7759d857d9fd1ab37974ce9bf0318a616ae73f",
+      "baselineHalfSha256": "84fb732b0e9c8db2d75898f64cab603ecaa874e96f54d50d86a4f25fa5e5e1b0",
+      "candidateSha256": "d38b29c15bf3e49c88573b04aad04b7fc0e9c847afb3240f2e7c02fa2ae8995c",
+      "changedFromOldHalf": 128,
+      "changedFromOpen": 81,
+      "outsideEnvelopeEqualsOwnOpen": true,
+      "exposedEyeballRows26OnwardEqualsOwnOpen": true
+    }
+  ]
+}

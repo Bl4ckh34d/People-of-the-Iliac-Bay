@@ -1,0 +1,230 @@
+{
+  "archive": 396,
+  "status": "exported and visually checked; pilot style user-approved; native runtime alignment pending",
+  "nativeIdleSize": [
+    62,
+    176
+  ],
+  "cellSize": [
+    62,
+    176
+  ],
+  "atlasSize": [
+    248,
+    352
+  ],
+  "atlas": "atlas.png",
+  "framesPerDirection": 1,
+  "animationLoop": false,
+  "alpha": "binary threshold128; transparent RGB cleared",
+  "resampling": "nearest-neighbour; uniform scale across views",
+  "seatPivotStatus": "estimated from silhouette; runtime seat alignment unverified",
+  "frames": [
+    {
+      "orientation": 0,
+      "view": "front",
+      "file": "view-0-front.png",
+      "rect": [
+        0,
+        0,
+        62,
+        176
+      ],
+      "content": [
+        9,
+        60,
+        44,
+        115
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        31,
+        127
+      ]
+    },
+    {
+      "orientation": 1,
+      "view": "front-left",
+      "file": "view-1-front-left.png",
+      "rect": [
+        62,
+        0,
+        62,
+        176
+      ],
+      "content": [
+        4,
+        58,
+        54,
+        117
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        36,
+        126
+      ]
+    },
+    {
+      "orientation": 2,
+      "view": "left",
+      "file": "view-2-left.png",
+      "rect": [
+        124,
+        0,
+        62,
+        176
+      ],
+      "content": [
+        4,
+        59,
+        53,
+        116
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        47,
+        126
+      ]
+    },
+    {
+      "orientation": 3,
+      "view": "rear-left",
+      "file": "view-3-rear-left.png",
+      "rect": [
+        186,
+        0,
+        62,
+        176
+      ],
+      "content": [
+        3,
+        60,
+        55,
+        115
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        39,
+        127
+      ]
+    },
+    {
+      "orientation": 4,
+      "view": "rear",
+      "file": "view-4-rear.png",
+      "rect": [
+        0,
+        176,
+        62,
+        176
+      ],
+      "content": [
+        8,
+        61,
+        45,
+        114
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        30,
+        127
+      ]
+    },
+    {
+      "orientation": 5,
+      "view": "rear-right",
+      "file": "view-5-rear-right.png",
+      "rect": [
+        62,
+        176,
+        62,
+        176
+      ],
+      "content": [
+        3,
+        61,
+        55,
+        114
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        22,
+        127
+      ]
+    },
+    {
+      "orientation": 6,
+      "view": "right",
+      "file": "view-6-right.png",
+      "rect": [
+        124,
+        176,
+        62,
+        176
+      ],
+      "content": [
+        6,
+        60,
+        50,
+        115
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        15,
+        127
+      ]
+    },
+    {
+      "orientation": 7,
+      "view": "front-right",
+      "file": "view-7-front-right.png",
+      "rect": [
+        186,
+        176,
+        62,
+        176
+      ],
+      "content": [
+        1,
+        57,
+        60,
+        118
+      ],
+      "groundPivot": [
+        31.0,
+        175
+      ],
+      "seatPivotEstimate": [
+        25,
+        125
+      ]
+    }
+  ],
+  "generatedSHA256": "2f6eff120a0636bdbaebed122cee5705da56db5208b76eac805c9fa56cf745a3",
+  "nativeIdleScale": [
+    -134,
+    -134
+  ],
+  "clothingCorrection": "User flagged invented uncovered buttocks. Native walking side/rear confirm orange fabric coverage. Regenerated with continuous orange skirt over hips and buttocks; visually checked native and3x."
+}

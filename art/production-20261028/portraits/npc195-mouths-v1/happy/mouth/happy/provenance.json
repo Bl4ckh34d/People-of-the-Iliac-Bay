@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-28T04:14:02.7422921Z",
+    "portraitRecord":  195,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "happy",
+    "prompt":  "Produce a happy speech-mouth atlas for this EXACT bearded Daggerfall portrait. FIRST image is the geometry/phoneme template: preserve its exact3x3 grid and nine lower-half64x29 cell crops. SECOND image is this same person\u0027s selected closed happy mouth, use its restrained lip expression: warm restrained happiness; subtle raised mouth corners, not an enormous grin. Change only lip tension/corners subtly while preserving original identity, moustache/beard, native pixel scale, low contrast, jaw/neck/clothing/background. Do not redraw full faces. OUTPUT ONLY the3x3 lower-half grid matching firstimage aspect, no labels. Row-majorA B C / D E F / G H X: A closed pressuredP/B/M; B narrow opening nearly together teethEE/consonants; C medium unroundedEH/AE visibly more open thanB; D tall verticalAA widest opening downward; E slightly roundedAO/ER no widerC; F small puckeredUW/OW/W no teethbite; G upper teeth touching lowerlipF/V; H raised tongue behind upperteethL openingbetweenC/D; X relaxed CLOSED emotionalidle. Keep A/X closed and expressive, never agape. Upper teeth in B/C/D/E/G/H must remain attached at template\u0027s same fixed vertical height (native lower-half y6), lower jaw opens DOWN, never lift upperteeth inD/H. Preserve the template\u0027s distinctions, especially tallD, mediumC, smallF, Gcontact and Htongue. Oral interior opaque, subdued ivory teeth, no white banner. No zoom or shifted cell framing.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-22dddfd1-39d1-4ea3-9664-decb61878ffb.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-22dddfd1-39d1-4ea3-9664-decb61878ffb.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "5794a38d2ae500b85916a60156c4eafa47ec65264439aa5b327b4f2b9e2d22e5",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9e4acca405acca6d9877c29a22b1cf2d47de73a0c55d0e17889489777b1a9f61",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-22dddfd1-39d1-4ea3-9664-decb61878ffb.png",
+                      "sha256":  "90a85e492f19e5059c9a2bbb13eb95533eb9d3dad76f913430eb5188bf56bb8d",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/happy/raw.png",
+                "sha256":  "90a85e492f19e5059c9a2bbb13eb95533eb9d3dad76f913430eb5188bf56bb8d",
+                "width":  1863,
+                "height":  844
+            }
+}

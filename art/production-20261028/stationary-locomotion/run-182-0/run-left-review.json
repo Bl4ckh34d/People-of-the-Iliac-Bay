@@ -1,0 +1,120 @@
+{
+  "status": "run-left-review-candidate-not-production",
+  "identity": "vanilla:stationary:182:0",
+  "sourceDimensions": [
+    47,
+    76
+  ],
+  "view": 2,
+  "scale": 0.05128205128205128,
+  "commonRawBaseline": 1549,
+  "nativeBaseline": 88,
+  "alphaCutoff": 128,
+  "frames": [
+    {
+      "phase": 0,
+      "source": "run-view-2-phase-0-v2.png",
+      "sha256": "e3e8832320dfcd2b2c730ee1ddfb38d9626ce55c34f74c0d8c726b57e98be55f",
+      "size": [
+        986,
+        1595
+      ],
+      "rawBounds": [
+        81,
+        82,
+        825,
+        1531
+      ],
+      "headAnchorX": 380.5,
+      "placement": [
+        28,
+        9
+      ],
+      "nativeBounds": [
+        32,
+        13,
+        71,
+        88
+      ]
+    },
+    {
+      "phase": 1,
+      "source": "run-view-2-phase-1-v1.png",
+      "sha256": "380a49b59b0d75523e8a799ec0cdd77262c1402fd470000c385b0f4fdb5917d8",
+      "size": [
+        987,
+        1593
+      ],
+      "rawBounds": [
+        147,
+        97,
+        946,
+        1463
+      ],
+      "headAnchorX": 369.0,
+      "placement": [
+        29,
+        9
+      ],
+      "nativeBounds": [
+        37,
+        14,
+        78,
+        84
+      ]
+    },
+    {
+      "phase": 2,
+      "source": "run-view-2-phase-2-v1.png",
+      "sha256": "8cc2a8bf236afd95f565697162fd6cbe3c65e3059d76b73650ed28b75460dd56",
+      "size": [
+        987,
+        1593
+      ],
+      "rawBounds": [
+        81,
+        86,
+        958,
+        1533
+      ],
+      "headAnchorX": 380.5,
+      "placement": [
+        28,
+        9
+      ],
+      "nativeBounds": [
+        32,
+        13,
+        78,
+        88
+      ]
+    },
+    {
+      "phase": 3,
+      "source": "run-view-2-phase-3-v1.png",
+      "sha256": "d651cab4fcfe80be247c7df93923d51326768b1f550e5cc55dcea912b397911b",
+      "size": [
+        987,
+        1593
+      ],
+      "rawBounds": [
+        101,
+        80,
+        939,
+        1425
+      ],
+      "headAnchorX": 353.0,
+      "placement": [
+        30,
+        9
+      ],
+      "nativeBounds": [
+        35,
+        13,
+        79,
+        82
+      ]
+    }
+  ],
+  "transform": "Common nearest-neighbor scale and vertical anchor; horizontal head registration. No per-frame foot grounding, pose warping, mirroring or motion interpolation."
+}

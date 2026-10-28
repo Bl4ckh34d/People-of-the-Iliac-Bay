@@ -1,0 +1,61 @@
+{
+  "status": "locally-inspected-motion-review-candidate-not-production",
+  "reviewedActions": {
+    "walk": {
+      "views": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "sheet": "walk\\selected-views-review-sheet.png",
+      "sha256": "acc371be5fb42eac6524b9135311920c76aa6ee94dab476f753335be13f5a3d8",
+      "method": "Each native-sized four-phase strip and combined sheet inspected using local view_image; GIF files provided, no user playback approval claimed."
+    },
+    "run": {
+      "views": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "sheet": "run\\selected-views-review-sheet.png",
+      "sha256": "333a5399c043cc63a47c1f22a1b6605950c5be57f167e46457885910341c86a8",
+      "method": "Each native-sized four-phase strip and combined sheet inspected using local view_image; GIF files provided, no user playback approval claimed."
+    }
+  },
+  "sourceIdentityCount": 3,
+  "uniqueAppearanceCount": 1,
+  "authoredSelectedFrames": 64,
+  "providerQualifiedFrameSlotsIfAliasReuseApproved": 192,
+  "acceptedProductionFrames": 0,
+  "parentReview": "Parent reviewed initial left walking cycle; no blanket parent or user production acceptance is claimed.",
+  "knownLimits": [
+    "Palette is brighter than native original; face and cap details are reinterpreted.",
+    "Profile bodies sometimes expose more frontal chest than exact side-on anatomy.",
+    "Marotte head size varies, especially left-running phase1 single-frame repair.",
+    "Rear-left running flight knees are more strongly folded and have greater foot clearance than other bearings.",
+    "Coarse detail scale and limb depth vary between directions; gameplay playback and runtime integration were not performed."
+  ],
+  "mechanicalVerification": {
+    "path": "verification.json",
+    "sha256": "6eeff67d7602ceb61d13733d2e1a1a4a7ac5ca9325a6ecba1f530d8b09af6a03",
+    "checkedFrames": 64,
+    "status": "PASS"
+  },
+  "parentStaticReview": {
+    "reviewer": "root",
+    "scope": "Full 32-frame run sheet",
+    "artifact": "run/selected-views-review-sheet.png",
+    "sha256": "333a5399c043cc63a47c1f22a1b6605950c5be57f167e46457885910341c86a8",
+    "finding": "Colors and hand ownership preserved; face, marotte and palette vary. Review candidate only, no temporal/gameplay/production acceptance."
+  }
+}

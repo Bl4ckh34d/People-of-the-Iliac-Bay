@@ -1,0 +1,135 @@
+{
+  "appearance": 385,
+  "bearing": 2,
+  "view": "left profile",
+  "phase_order": [
+    "near-contact",
+    "far-flight",
+    "far-contact",
+    "near-flight"
+  ],
+  "frame_count": 4,
+  "fps": 8,
+  "canvas": [
+    144,
+    152
+  ],
+  "atlas": "atlas.png",
+  "frames": [
+    {
+      "index": 0,
+      "phase": "near-contact",
+      "file": "00-near-contact.png",
+      "source": "385-left-near-contact-v1.png",
+      "source_sha256": "38f5a14c808a1ae1be4912b3c41523e27f7fd7be317fa21e3829071f1ec0da97",
+      "anatomical_intent": "near foot supports, near arm back",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        20
+      ],
+      "cutout_source_bounds": [
+        254,
+        90,
+        977,
+        1231
+      ],
+      "ground_y": 138,
+      "flight_clearance": 0,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "index": 1,
+      "phase": "far-flight",
+      "file": "01-far-flight.png",
+      "source": "385-left-far-flight-v1.png",
+      "source_sha256": "1d350a8604e5c72717ea826852f2874583476999be9a2bd982e633b5182e4ff7",
+      "anatomical_intent": "far knee rising, near arm forward",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        16
+      ],
+      "cutout_source_bounds": [
+        285,
+        85,
+        1002,
+        1228
+      ],
+      "ground_y": 138,
+      "flight_clearance": 4,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "index": 2,
+      "phase": "far-contact",
+      "file": "02-far-contact.png",
+      "source": "385-left-far-contact-v1.png",
+      "source_sha256": "4e6051ec31d3f0c176f4535351d9726eb5856cf8f3237cee5379cae5d81057d2",
+      "anatomical_intent": "far foot supports, near arm forward",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        17
+      ],
+      "cutout_source_bounds": [
+        241,
+        86,
+        954,
+        1264
+      ],
+      "ground_y": 138,
+      "flight_clearance": 0,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "index": 3,
+      "phase": "near-flight",
+      "file": "03-near-flight.png",
+      "source": "385-run-opposite-keyframe-v1.png",
+      "source_sha256": "78476577556fbf3ba837c4dc13481ac53bd796a333c4a51aaebaa70e6d9b2962",
+      "anatomical_intent": "near knee rising, near arm back",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        10
+      ],
+      "cutout_source_bounds": [
+        283,
+        87,
+        961,
+        1290
+      ],
+      "ground_y": 138,
+      "flight_clearance": 4,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    }
+  ],
+  "method": "Separate source-conditioned imagegen keyframes, then common nearest-neighbor scale and head anchor. No mirroring, no duplicate frame substitution, no palette edits.",
+  "generated": true,
+  "technical_checked": true,
+  "visual_reviewed": false,
+  "integrated": false,
+  "user_approved": false,
+  "limits": [
+    "Only bearing2 has this candidate cycle.",
+    "Source palette differs slightly across generations.",
+    "Head vertical travel differs between flight phases; inspect temporal bob."
+  ]
+}

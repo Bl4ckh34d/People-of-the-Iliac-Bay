@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-28",
+  "checks": {
+    "nativeAliasHashAndDimensions": 58,
+    "nativeFrameHashAndSize": 328,
+    "nativeOriginalBytePreserved": 39,
+    "nativeOriginalSeparateSourceVerified": 2,
+    "sleepSourceAndOutputHashSize": 75,
+    "detPilotFrameHashes": 8
+  },
+  "nativeIdleSets": 41,
+  "nativeIdleIdentities": 58,
+  "detIdleSets": 1,
+  "sleepCandidates": 75,
+  "sleepStatus": {
+    "review-with-limits": 7,
+    "reviewable-candidate": 68
+  },
+  "integrated": false,
+  "userApproved": false,
+  "limitations": [
+    "Existing24 mobile192view checks are file/atlas/native-front technical checks only; generated native-resolution backs are not decoded original artwork or identity proof.",
+    "Native 182/35 gold ear hoop omitted; guard183/2 beard and armor detail inconsistent; all generated alternate angles show smoother/broader art than sources.",
+    "Seven sleep identities retain explicit source ambiguity/detail limits.",
+    "This package does not claim complete idle coverage. See scope-reconciliation.json for remaining provider-qualified identities.",
+    "183/13 back proportions still need repair; its two aliases are not complete eight-view candidates despite having eight exported frames and a recorded visual inspection."
+  ],
+  "nativeIdleCandidateStatus": {
+    "reviewed-with-rendering-limits": 40,
+    "needs-proportion-repair": 1
+  },
+  "nativeIdleNotCompleteIdentities": [
+    "vanilla:stationary:183:13",
+    "vanilla:stationary:334:19"
+  ]
+}

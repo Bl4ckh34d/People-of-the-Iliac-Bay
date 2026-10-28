@@ -1,0 +1,24 @@
+{
+  "prompt": "Use case: identity-preserve. Produce one horizontal sprite strip with exactly FOUR equally spaced cells, each one fullbody NPC182/0 running. Image1 is immutable original47x76 identity/palette: bald elderly clean-shaven stocky man, gray side hair, green vest/tunic, cyan sleeves, dark rusty trousers, brown folded boots and belt pouch. Image2 is CAMERA reference for requested DIRECT BACK, running directly away from viewer. Only rear head gray horseshoe hair and bald crown, NO eyes/no face. AnatomicalLEFT is viewerLEFT, RIGHT is viewerRIGHT. Image3 is a completed LEFT-profile RUN motion reference only: translate its phase sequence into the requested camera, do not retain its sideview. Keep this one camera across all four cells. Same character, skull size, torso width, clothing, logical coarsepixel scale, baseline, framing in every cell. No turning during animation.\nExactly four chronological phases left to right:\n0 anatomicalLEFT leg landing/contact forward in travel direction; LEFT boot alone on the ground. RIGHT leg trails with knee sharply bent and boot heel raised near buttock. RIGHT arm forward bent90degrees fistlowchest, LEFT arm back bent90degrees.\n1 AIRBORNE flight toward RIGHT-leg landing: RIGHT knee raised forward, LEFT leg extending behind. BOTH boots clearly elevated above the SAME groundline by 4 logical nativepixels; RIGHT arm back, LEFT arm forward, elbows90.\n2 anatomicalRIGHT leg landing/contact forward; RIGHT boot alone on ground. LEFT leg trails with knee sharply bent and raisedheel. LEFT arm forward fistlowchest, RIGHT arm back.\n3 AIRBORNE flight toward LEFT-leg landing: LEFT knee raised forward, RIGHT leg extending behind. BOTH boots above SAME groundline by4pixels; LEFT arm back, RIGHT arm forward.\nNear/far limb occlusion and foreshortening must represent the stated camera. Phases0/2 visibly alternate the contactfoot and opposing fist. Phases1/3 visibly alternate raisedknee. Not four identical jogging poses. No mirrored reused frames. Entire body opaque on transparent background; no labels, ground, grid, numbers, shadow or extra objects. Retain native palette, especially muted dark rust trousers; no bright red redesign. Retro Daggerfall coarsepixels, no glossy cartoon. Same transparent padding under flight poses: never lower them to baseline.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-2a80d436-0710-471d-8559-b855795c3910.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/view-4-review-native.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/run-left-review-sheet-4x.png"
+  ],
+  "view": 4,
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+      "sha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/view-4-review-native.png",
+      "sha256": "3857bfab4a89a4b414d926ce924efec40239764fe6db23afbf31698d752a361a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/run-left-review-sheet-4x.png",
+      "sha256": "9b8e3f51654eb6e06f4c959113104b1fac351ca5f02a0977c6a7296b1fbb0ae0"
+    }
+  ]
+}

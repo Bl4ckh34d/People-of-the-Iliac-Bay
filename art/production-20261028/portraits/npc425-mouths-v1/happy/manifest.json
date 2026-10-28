@@ -1,0 +1,121 @@
+{
+  "record": 425,
+  "mood": "happy",
+  "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\mouth\\happy\\raw.png",
+  "rawSha256": "3ae378cace0a67ba26487412c4c94d97ede0fff635c0a0b6899d915eabb280ff",
+  "frames": [
+    {
+      "shape": "A",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\A.png",
+      "sha256": "2477e8eac48afba538aaedafbbad295d931f019e8f35072638e202999198b9cf",
+      "wholeCellBounds": [
+        0.0,
+        0.0,
+        621.0,
+        281.3333333333333
+      ]
+    },
+    {
+      "shape": "B",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\B.png",
+      "sha256": "b460808ccd7d29625c169eb4bb9e3aded3f73544ce5b60fa6b306b91dc0987db",
+      "wholeCellBounds": [
+        621.0,
+        0.0,
+        1242.0,
+        281.3333333333333
+      ]
+    },
+    {
+      "shape": "C",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\C.png",
+      "sha256": "e6dfb089c903f1fd9040020af12d49fd7f9a4dab1d6338f92de3eabe42057ccf",
+      "wholeCellBounds": [
+        1242.0,
+        0.0,
+        1863.0,
+        281.3333333333333
+      ]
+    },
+    {
+      "shape": "D",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\D.png",
+      "sha256": "127247171b145e88406286a97dbf7cfce423dcc300ec9b21a0bb0d008f2d8e17",
+      "wholeCellBounds": [
+        0.0,
+        281.3333333333333,
+        621.0,
+        562.6666666666666
+      ]
+    },
+    {
+      "shape": "E",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\E.png",
+      "sha256": "1a377e44e274abd3b9cd90c1e15dab62e0d058f87f9357ac0d6558595f7a1092",
+      "wholeCellBounds": [
+        621.0,
+        281.3333333333333,
+        1242.0,
+        562.6666666666666
+      ]
+    },
+    {
+      "shape": "F",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\F.png",
+      "sha256": "e2851ac38f26a1ed30ddfefa3936da1cafd0ad6dc3956181914360d80a64a693",
+      "wholeCellBounds": [
+        1242.0,
+        281.3333333333333,
+        1863.0,
+        562.6666666666666
+      ]
+    },
+    {
+      "shape": "G",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\G.png",
+      "sha256": "93e1fa6a7527631023b54b62b9a01d63af853809bb1f973fc9eead0a03b3d620",
+      "wholeCellBounds": [
+        0.0,
+        562.6666666666666,
+        621.0,
+        844.0
+      ]
+    },
+    {
+      "shape": "H",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\H.png",
+      "sha256": "742e34db5fb578184bb856d7f3970abdb43e1c2140479937ce792ad743adb925",
+      "wholeCellBounds": [
+        621.0,
+        562.6666666666666,
+        1242.0,
+        844.0
+      ]
+    },
+    {
+      "shape": "X",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc425-mouths-v1\\happy\\candidate\\X.png",
+      "sha256": "62d1749fe42f797b6bd5882a1f78b1b7f3a008e4d7953b0b22e4d6205bc47e1a",
+      "wholeCellBounds": [
+        1242.0,
+        562.6666666666666,
+        1863.0,
+        844.0
+      ]
+    }
+  ],
+  "mouthBoxFullCoordinates": [
+    20,
+    39,
+    45,
+    52
+  ],
+  "upperToothAnchor": "C/D/H keep own B through localrow8/full43; E/G preserve own upper contours and require native inspection.",
+  "sampler": "fractional whole atlas cell EXTENT nearest64x29",
+  "status": "native-static-review-pending",
+  "poseSemanticsPass": null,
+  "audiovisualPass": null,
+  "limits": [
+    "E/G upper tooth anchor and F/V contact require bounded neutral review."
+  ]
+}

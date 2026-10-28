@@ -1,0 +1,45 @@
+{
+  "archive": 390,
+  "motion_template": 385,
+  "raw_output_directory": "C:/Users/Daniel/.codex/generated_images/01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v1",
+    "view-1-v1",
+    "view-2-v1",
+    "view-3-v1",
+    "view-4-v1"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "69d24f5d-3f75-4a36-9476-8b7ac9f4243b"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "7ce4ffbc-fb7f-4444-a4f6-eea027a235a8"
+    },
+    {
+      "name": "view-2-v1",
+      "id": "ac5cc5f6-94d4-418b-8c1e-51f025c80867"
+    },
+    {
+      "name": "view-3-v1",
+      "id": "22c33571-27bf-47d2-94ec-476eb6aeec23",
+      "references": [
+        "../../motion-reference-381/view-3.png",
+        "native-reference/view-3.png"
+      ]
+    },
+    {
+      "name": "view-4-v1",
+      "id": "2194bd60-055d-4775-8895-7e6611f2a9e7"
+    }
+  ],
+  "reference_policy": "385run supplies poses for views0/1/2/4;381run supplies clearer rear-left arm alternation for view3. Native390 alone defines black hair/beard, teal elbow-sleeved tunic, yellow/brown plaid trousers, tan low shoes and green pouches. Opposite views follow exact native renderer mirrors.",
+  "known_limits": [
+    "Candidate only: face/beard detail, brighter skin, plaid cell scale and yellow saturation differ from native pixels.",
+    "Rear-left fourth flight has bulkier thigh and wider pose inherited from motion template; profile leg depth remains ambiguous.",
+    "Four-frame cadence lacks passing intermediates. Twelve opposite-view frames are mirror derivatives, not independent generations.",
+    "No runtime integration, game playback acceptance or user approval."
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "date": "2026-10-28",
+  "reviews": [
+    {
+      "folder": "families/382/jump-eight-views-v1",
+      "reviewer": "parent agent /root",
+      "reviewKind": "static visual review",
+      "result": "Parent inspected all32: four clear phases, front0 noticeably larger than some bearings; proportional limit confirmed.",
+      "files": [
+        {
+          "file": "manifest.json",
+          "sha256": "3d0ebecc0a9e9f316b3f7fa9c7aa09caac101f7a971c69ee93676efc04a80a55"
+        },
+        {
+          "file": "review-bearings-0-3.png",
+          "sha256": "126e4c0ccf74d3fd04070097fdf64d4ec6eafbfae0305177b11c194b1a3d1b62"
+        },
+        {
+          "file": "review-bearings-4-7.png",
+          "sha256": "14b1957c8c52ec25b3f27ba7d1386604280a7c3165645bdaa94953bb2aab62af"
+        }
+      ]
+    },
+    {
+      "folder": "families/382/climb-eight-views-v1",
+      "reviewer": "parent agent /root",
+      "reviewKind": "static visual review",
+      "result": "Parent inspected all32: anatomical right-hand contract more consistent than381; side-body lean and far-limb occlusion remain.",
+      "files": [
+        {
+          "file": "manifest.json",
+          "sha256": "f4f40905cf3f47e33a861cffc8c5c5c7ba152d47be05be2f27d21fffc748549d"
+        },
+        {
+          "file": "review-bearings-0-3.png",
+          "sha256": "4d7894deddb5cf28aed4c3dfacf2c1325212860bccdd8d868efd60e47fb0fc00"
+        },
+        {
+          "file": "review-bearings-4-7.png",
+          "sha256": "2a0bd7a6890d491b64e51d32dbc3fe71ab5f497766d365ae74503afae4db49ae"
+        }
+      ]
+    },
+    {
+      "folder": "families/382/swim-profile-v1",
+      "reviewer": "parent agent /root",
+      "reviewKind": "static visual review",
+      "result": "Parent inspected4phase pilot: body length/phases readable, shaded muscles more detailed than original.",
+      "files": [
+        {
+          "file": "manifest.json",
+          "sha256": "489f744b561a2ed75e3fd0e0f0b2d860a6b68a6347d4a9d97b5541dda1e5083d"
+        },
+        {
+          "file": "native-comparison.png",
+          "sha256": "44ab32fc024167d1d126d78c13643fc7f340b270b3d8d8d4f8061bcf14a3b1d9"
+        }
+      ]
+    },
+    {
+      "folder": "families/382/swim-eight-views-v1",
+      "reviewer": "parent agent /root",
+      "reviewKind": "static visual review",
+      "result": "Parent inspected all32 authored phases: long profiles and foreshortened front/rear clear, quarter-camera/proportion differences visible. Replaces profile coverage count; no waterline or temporal acceptance.",
+      "files": [
+        {
+          "file": "manifest.json",
+          "sha256": "9fbd229447c2bece4e2b840e45e7f7f727f90c6d4347dd8dbcf87c5f617c0eb4"
+        },
+        {
+          "file": "review-bearings-0-3.png",
+          "sha256": "1d0f5947a278e105a85068aa0e00ea82f6d677d39ef310ce15c5413066193dad"
+        },
+        {
+          "file": "review-bearings-4-7.png",
+          "sha256": "f798344692a6a7e8f02fdd8b1fd85d827955558c052f12ab1cb6b1adeef9e109"
+        }
+      ]
+    }
+  ],
+  "temporalAccepted": false,
+  "physicalWallOrWaterAccepted": false,
+  "integrated": false,
+  "userApproved": false
+}

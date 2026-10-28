@@ -1,0 +1,21 @@
+{
+  "prompt": "Repair the anatomical hand error in Image1's FOUR-frame rear-left walking strip, using Image2 ONLY to verify the original jester's right-hand marotte. Keep all four existing leg phases, body size, camera, cap and costume colors. Current error: nearer RED LEFT hand wrongly holds the prop, farther GOLD RIGHT arm hangs back. Correct every frame so GOLD RIGHT hand holds the upright marotte; free RED LEFT hand NEVER holds it. Do not solve by recoloring the costume or mirroring.\nCamera remains exactly behind-left45degrees, seeing broad back and nearer red LEFT shoulder. GOLD RIGHT arm is on far side: raise and bend this gold arm forward around FAR side of torso, with gold sleeve/hand only partly visible as necessary, to grip upright marotte at the far front side. Occlusion by nearer red torso/arm is physically correct; keep miniature prop head visible and consistent, but never attach it to red sleeve. Remove the former red gripping hand from pole. The now free RED LEFT arm must swing opposite LEFT GOLD leg: phase0 goldlegfront so red arm back toward screenRIGHT; phase1 red arm begins forward; phase2 goldlegbehind so free red arm forward toward screenLEFT with EMPTY hand; phase3 red arm back. Exactly2arms/2hands each, no third arm. Keep four legs poses precisely and all non-arm pixels as closely as possible. Original anatomicalLEFT upperbody RED/right GOLD; LEFT LEG GOLD/right RED unchanged. Fullbody4equalcells, opaque sprites, transparentbackground, no text/grid/shadow.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-b35086f1-918f-465f-bdad-19b3102c03b2.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-3-rear-left-v1.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_5-0.png"
+  ],
+  "view": 3,
+  "action": "walk",
+  "correction": "right-hand prop ownership",
+  "referencePins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-3-rear-left-v1.png",
+      "sha256": "8e08a1b5b169fb3b446270585f7c7d22c12c84fc5e901ca8de8fae5ecbdfec53"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_5-0.png",
+      "sha256": "c1da1f3aaaff5b40720e6238caaf17c828c800dcfa618f51f9da36bde84c16be"
+    }
+  ]
+}

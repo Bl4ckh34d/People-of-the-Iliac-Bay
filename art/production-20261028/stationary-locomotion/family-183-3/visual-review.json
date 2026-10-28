@@ -1,0 +1,182 @@
+{
+  "parentStaticReview": {
+    "reviewer": "root",
+    "scope": "Left walk four phases",
+    "artifact": "walk/view-2-review-2x.png",
+    "sha256": "9b760da77a260c1b7cbb6b64218a240ca302de64e115f6d60fb02fc2f9e9142f",
+    "nativeAtlasSha256": "f73e1450c973b577cdcea03ff43e00036be81a506e420dd20f049b22a48e4f48",
+    "finding": "Contact0 near lead brighter/foreground; contact2 far lead darker. Passing1/3 overlap distinct. Gray armor assignment subtle. Static review candidate, no temporal acceptance."
+  },
+  "localStaticReview": {
+    "views": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "method": "Inspected raw generated images and packed view-N-review-2x.png via view_image; static review only.",
+    "artifacts": [
+      {
+        "path": "walk\\view-0-review-2x.png",
+        "sha256": "435de12a0955fb8338263a1cb148c057e039343231a640f210a0b266110c6106"
+      },
+      {
+        "path": "walk\\view-1-review-2x.png",
+        "sha256": "22e4702113787de8c1c3673ec1bf7b460a8383dfca9cfcb299a45505755de4c4"
+      },
+      {
+        "path": "walk\\view-2-review-2x.png",
+        "sha256": "9b760da77a260c1b7cbb6b64218a240ca302de64e115f6d60fb02fc2f9e9142f"
+      },
+      {
+        "path": "walk\\view-3-review-2x.png",
+        "sha256": "ab77309939c62def198c152f0ed1f395971fb66a4cdad1c7c30d6a1a1f822ba7"
+      },
+      {
+        "path": "walk\\view-4-review-2x.png",
+        "sha256": "60ea9cf7a3d65dbb1c0ca6bbbf2d0abefbab91bb75d74daceeb71364c0db8bd8"
+      },
+      {
+        "path": "walk\\view-5-review-2x.png",
+        "sha256": "646b36c571c2a55b5193f3f4156589704dce6a152566c95900c11ccd144f5d33"
+      },
+      {
+        "path": "walk\\view-6-review-2x.png",
+        "sha256": "db9d555f657bee818e32047229bfc341ff43040860156be4a6140fd0446eb22e"
+      },
+      {
+        "path": "walk\\view-7-review-2x.png",
+        "sha256": "8ebe3c4be4bfa39a1d6868b36261e14dd41662fd24103ff87fa82c85f42ae2ad"
+      }
+    ],
+    "findings": {
+      "0": "Opposite contact feet and passing knees visible. Empty left arm counter-swing. Passing1 full extent 6px smaller, head/body drift remains.",
+      "2": "Parent confirmed near/far contact and passing overlap; gray armor identity subtle.",
+      "4": "Opposite heel contacts, passing3 repaired to left lifted leg. Empty arm forward1/2 vs back0/3. Upper back tabard only one row rather than two; inferred rear design is simplified. Pole top above coif and lower end slightly raised; retained candidate limit.",
+      "6": "Near right spear arm now fixed through all phases. Far hand visible forward at1 but mostly hidden at2; contact near/far shading and passing crossing subtle. No duplicate hashes, no temporal approval.",
+      "1": "Contact0 crossed near-left lead repaired individually. Other contact keeps far-right lead; passing knees differ. Replacement extent3px smaller. Candidate.",
+      "3": "Native original plus only selected jester rear-left contact2 finally produces crossed thighs. Bounded style match retains crossing, but body/head are smaller and spear shorter than companion phases; current v5 remains needs-pose-scale-review, excluded from candidate count. Earlier own-wrong-pose-first edits failed to change hip linkage.",
+      "5": "Needs contact depth review: contacts0/2 visually repeat same limb connections despite fullstrip and singleframe attempts. Counterarm and passing changes visible. Excluded from candidate count.",
+      "7": "Opposite contact2 supplied as individual keyframe with crossed thigh visible; passing1 remains unusually extended. Replacement frame extent160 vs others152-154, visible size mismatch. Candidate carries this unresolved scale/proportion limit."
+    },
+    "acceptedProductionFrames": 0,
+    "combinedSheet": {
+      "path": "walk/selected-views-review-sheet.png",
+      "sha256": "d0103f2db7a470052662fdfe70afe9cfc1abacd04bd88a689a5be51b95dbc9ee",
+      "viewed": true
+    }
+  },
+  "parentRearLeftReview": {
+    "artifact": "walk/view-3-review-2x.png",
+    "sha256": "f7f4cd62a383638bf22f4e71e662e00e965b18facdbc39b6cba225ca8eec47b5",
+    "finding": "Root agrees contact0/2 hip-to-knee linkage obscured and countercontact not demonstrated. Excluded from candidate count."
+  },
+  "localRunReview": {
+    "views": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "artifact": "run/view-2-review-2x.png",
+    "sha256": "b01549ad734c0d42167573999646d31a45b74c67412667eca468c3d6f48e37b7",
+    "nativeAtlasSha256": "33f5ffe91d49981818d11cc9084876887453676a0aaafa706f8e302b6b2fcf2e",
+    "method": "Actual raw images and final native-scale contact sheet inspected with view_image. Static review candidate, no temporal acceptance.",
+    "findings": "Contact0 near bright support vs contact2 far dark support. Flight1 far dark knee vs flight3 near bright knee, arms back0/3 and forward1/2. Spear stays in right hand. Extent heights156/151/156/155, alpha-bound ground gaps0/5/0/4 including spear. No fabricated flight translation. Small face/arm proportions vary.",
+    "acceptedProductionFrames": 0,
+    "artifacts": [
+      {
+        "path": "run\\view-0-review-2x.png",
+        "sha256": "79ae1ec5dc88be40327905dec52a285ed309017ca6a274be0476735603be3254"
+      },
+      {
+        "path": "run\\view-1-review-2x.png",
+        "sha256": "1f6be768256b2ff69a3902d02d89a7cfc83e41854bc6752ba4db3eedfddb508f"
+      },
+      {
+        "path": "run\\view-2-review-2x.png",
+        "sha256": "b01549ad734c0d42167573999646d31a45b74c67412667eca468c3d6f48e37b7"
+      },
+      {
+        "path": "run\\view-3-review-2x.png",
+        "sha256": "660223fd364d9050ccfccb80aca854fecfd078171647ac1375ee71e443ee4ed0"
+      },
+      {
+        "path": "run\\view-4-review-2x.png",
+        "sha256": "7aeceaf2d88af74332a9d5d59fa4fcaa429e390edcffa4d5228c361f1dc20d08"
+      },
+      {
+        "path": "run\\view-5-review-2x.png",
+        "sha256": "6f9287b7bdecfde05451462b19fe8a8ea2a4360e4ed970d7826eb7ec443c657c"
+      },
+      {
+        "path": "run\\view-6-review-2x.png",
+        "sha256": "3ee621acec7cca6b4accc3948f9830012c03c417d037e4ef03a47e603fbff198"
+      },
+      {
+        "path": "run\\view-7-review-2x.png",
+        "sha256": "b5c652fe17043ed1660c760832a2b5e9210b0137d7051c21e44ec069e25cb724"
+      }
+    ],
+    "additionalFindings": {
+      "0": "Direct front, alternating support and flight knees, arm timing0/3 back and1/2 forward corrected. Spear and face remain consistent with reinterpretation limits.",
+      "4": "Direct back, alternating support foot and folded heel, both feet airborne1/3. Arm timing corrected. Back tabard simplified to one upper row; no native exact claim.",
+      "1": "Alternate far/near knee and support depth visible after v2; freearm sequence retained. Flight1 rear toe small but positive clearance.",
+      "6": "Fourth flight had near toe at baseline; authored knee/heel flex repair now lifts it. Ground gaps0/7/0/13 include spear; no code translation creates flight. Bright/dark leg ownership alternates and right spear grip fixed. Stronger knee folding makes flight3 asymmetric.",
+      "3": "Single ImageGen contact2 heel edit prevents lifted foot below supportsole; single flight3 heel edit creates actual raised far boot, no code offset. Near/far armor and free arm phases differ. Contact2 is smaller, pole proportions vary.",
+      "5": "Opposite gray leg ownership explicit after individual dark far support0; near/far knees alternate in flight1/3. Arm timing repaired. Highlights much stronger than native original, body and pole reinterpretation remain.",
+      "7": "Dark far support0 vs bright near support2 and inverse flight knees distinguish phases; freearm timing corrected. Head remains more frontal than body, outfit brighter than source."
+    },
+    "openViews": {},
+    "combinedSheet": {
+      "path": "run/selected-views-review-sheet.png",
+      "sha256": "2d014f1d684e7ed6852b31e36edfed02e54f6b3c7ad645b065bf26001b007b8a",
+      "viewed": true
+    }
+  },
+  "authoringBoundary": {
+    "creativeEdits": "All heel, arm, leg-depth, camera, costume and prop corrections are authored by builtin image_gen. Each has unchanged raw PNG plus adjacent JSON exact prompt, generatedSource receipt and reference pins.",
+    "deterministicProcessing": "Pillow only lossless reference crops, nearest-neighbor whole-image packing, alpha cutoff128, contact-frame rigid registration, review sheets/GIFs, hashes and checks.",
+    "guardFlightYOffsetOverrides": false,
+    "paintedPixelEdits": false,
+    "parentReview": "Only explicit artifact-hash-specific root findings are recorded. Remaining root review backlog is separate and no blanket approval is inferred."
+  },
+  "checkpoint": {
+    "selectedFrames": 64,
+    "candidateFrames": 56,
+    "candidateWalkViews": [
+      0,
+      1,
+      2,
+      4,
+      6,
+      7
+    ],
+    "candidateRunViews": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "heldWalkViews": {
+      "3": "needs-pose-scale-review",
+      "5": "needs-contact-depth-review"
+    },
+    "providerIdentityAliases": 4,
+    "productionFrames": 0,
+    "manifestSha256": "fbb57a1a4dbe09468c8fadbf9a64bf6e981ce671420a737dabe284f7ad760cec",
+    "mechanicalVerificationSha256": "4f7534bd33831465ba10a8e4c4f701ba1f93d35658e271e4361dea296184e5c7"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "status": "corrected active-arm cleanplate prototype; staged for parent build",
+  "asset": "shopkeeper-182-0-angle-6-12frame-v2-cleanplate.png",
+  "orientation": 6,
+  "bearing": "right profile; nose and forward direction image-right",
+  "cellDimensions": [96, 96],
+  "sheetDimensions": [384, 288],
+  "effectiveCharacterHeight": 76,
+  "frameRateFps": 5,
+  "animationMap": [0,0,0,1,2,3,3,3,3,3,3,5],
+  "anatomy": "Anatomical LEFT active arm offers image-right. The anatomical RIGHT resting hand at the front pouch remains visible. The old lower left-profile sleeve/wrist/hip hand is removed during gesture phases.",
+  "compositing": {
+    "method": "Tight color-selected removal of the old left-side active sleeve and rear wrist/hand inside a traced silhouette. Vest, pouch, right hand, and all remaining body pixels remain as in the original angle sheet.",
+    "coordinates": "96x96 cell, origin top-left",
+    "oldActiveArmRemovalPolygons": [
+      [[31,27],[36,25],[40,26],[43,29],[45,34],[45,41],[44,46],[42,50],[39,52],[36,49],[34,44],[32,39]],
+      [[37,47],[41,47],[44,50],[44,53],[41,55],[38,54],[36,51]],
+      [[34,27],[38,25],[43,26],[47,29],[48,33],[46,37],[42,38],[38,35],[35,32]]
+    ],
+    "selection": "Cyan sleeve colors and skin-colored wrist/hand only, so green vest and the pouch/right hand stay intact."
+  },
+  "qa": {
+    "restFrames0to2ExactOriginal": true,
+    "gestureFrames3to11OldRearWristRemoved": true,
+    "pouchRightHandRetained": true,
+    "visualReview": "Enlarged before/after phases 3,4,5,11 reviewed. Hanging rear cyan sleeve and wrist/hand removed; front pouch hand retained. No build or Player changes made by art agent.",
+    "limitations": ["Profile phase3/4 gestures remain subtle; parent owns gameplay/build verification."]
+  },
+  "sourceReferences": {
+    "previousSheet": "shopkeeper-182-0-angle-6-12frame-v1.png",
+    "beforeAfter": "work/keeper-review/audit/view6-before-after-v3.png"
+  }
+}

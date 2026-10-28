@@ -1,0 +1,55 @@
+{
+  "reviewed": [
+    {
+      "targetId": "common-445",
+      "manifestSha256": "80cb8fe4fbcd8d510c8cc5ac6e6e9db897d2c5b48e43729961ae69554d8cb92e",
+      "contacts": [
+        {
+          "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\exact-feature-reuse\\common-445\\mouths-54-contact.png",
+          "sha256": "772db61ab2332dc58ad1827f12a6b0b806972d02699e65b562ccc2afe5690767",
+          "feature": "mouths",
+          "statesInspected": 54
+        }
+      ],
+      "scope": "static contacts only; inherited donor limits; no temporal/phoneme/runtime acceptance"
+    },
+    {
+      "targetId": "common-452",
+      "manifestSha256": "39229a0c4a4be90dfbd2d244b93292087098fab77dffb05a02ca2dc9cb67f9c8",
+      "contacts": [
+        {
+          "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\exact-feature-reuse\\common-452\\eyes-54-contact.png",
+          "sha256": "3c5d818806475528655fa004fd23e8aff51fe27015c69bbb94c59a2cc2605b44",
+          "feature": "eyes",
+          "statesInspected": 54
+        },
+        {
+          "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\exact-feature-reuse\\common-452\\mouths-54-contact.png",
+          "sha256": "f6f5dc63bd2951e7ba7fd7ae3ec1508bc9889e81278ff1dac529e07f1937dc51",
+          "feature": "mouths",
+          "statesInspected": 54
+        }
+      ],
+      "scope": "static contacts only; inherited donor limits; no temporal/phoneme/runtime acceptance"
+    },
+    {
+      "targetId": "common-434",
+      "manifestSha256": "79891c15289508e8b099d339bfff7cbf9ff42b329074056ee7b978fa319a45a3",
+      "contacts": [
+        {
+          "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\exact-feature-reuse\\common-434\\mouths-54-contact.png",
+          "sha256": "74046b3f7b6a3ac5adda7b4eed9644c4561bf1b5cd8a1925a3f46f015ac67f33",
+          "feature": "mouths",
+          "statesInspected": 54
+        }
+      ],
+      "scope": "static contacts only; inherited donor limits; no temporal/phoneme/runtime acceptance"
+    }
+  ],
+  "remainingFullContactReviews": 0,
+  "allSourcePairsInspected": true,
+  "limitations": [
+    "452 narrow HALF aperture and weak fine phoneme distinctions.",
+    "434/445 only mouths; original eyes unchanged."
+  ]
+}

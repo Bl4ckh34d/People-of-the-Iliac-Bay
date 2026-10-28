@@ -1,0 +1,24 @@
+{
+  "prompt": "Use case: identity-preserve. Make one horizontal4cell RUN sprite strip for exact elderlyNPC182/0. Ref1 immutableoriginalidentity/palette, ref2 requested camera/clothes, ref3 RUNcontact/flightmotion reference only. Requested camera FRONT-RIGHT threequarter: travels towardviewer andimageRIGHT; see frontchest plus characterRIGHTside, head/torso same45degreeangle; nearrightlimbs foreground. This camera is FIXED throughall4cells; all bodyparts followit, not turn inanimation. Stockyelderly clean-shaven man, baldgrayhair, greenvest/tunic cyansleeves darkmutedrusttrousers foldedbrownboots. Pouch on anatomicalLEFThip consistently. Preserve nativecoarsepixelstyle and47x76proportions, nostyleupgrade. Same skull/torso scale, samebaseline andmargin across4cells. RUN elbows90degrees, torsoleanforward~10degrees.\nLeft-to-right explicit4phases:\n0 LEFT foot CONTACT forward alongtravel, heelplanted baseline. RIGHT leg trails knee deeplyfolded bootheelraised. RIGHT ARM forward bentfistatlowchest, LEFTARM back.\n1 FLIGHT with RIGHT KNEE forward, LEFTleg behind. Bothboots\u22654logicalnativepixels abovebaseline. LEFTARM forward, RIGHTARM back.\n2 RIGHT foot CONTACT forward heelplanted baseline. LEFTlegtrails kneedeeplyfolded bootheelraised. LEFTARMforward, RIGHTARMback.\n3 FLIGHT with LEFT KNEE forward, RIGHTlegbehind. Bothboots\u22654logicalnativepixels abovebaseline. RIGHTARMforward, LEFTARMback.\nNearforegroundleg must alternate: different hip/knee overlap in0vs2 and1vs3. Arms must visiblyalternate and opposelegs. Do not repeat sameleadinglimb. Do not turntorso betweenframes, no posemirroring. Bodies opaque, backgroundtransparent. No labels, shadows, ground/grid or otherobjects. Fourfullfigures equalcellspacing. Preserve transparentgapbeneathflightfeet.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-16ec2fce-1825-4dd3-aa87-0aa0c4c75884.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/view-7-review-native.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/run-left-review-sheet-4x.png"
+  ],
+  "view": 7,
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+      "sha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/view-7-review-native.png",
+      "sha256": "b33de901b3e083d483ea8011432afdc017790a2a20fe9035c4a5039921955b15"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/run-left-review-sheet-4x.png",
+      "sha256": "9b8e3f51654eb6e06f4c959113104b1fac351ca5f02a0977c6a7296b1fbb0ae0"
+    }
+  ]
+}

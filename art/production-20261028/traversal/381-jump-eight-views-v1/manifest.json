@@ -1,0 +1,970 @@
+{
+  "status": "generated-eight-bearing-jump-pilot-review-candidate",
+  "appearance": 381,
+  "state": "jumping",
+  "bearings": [
+    "front",
+    "front-left",
+    "left-profile",
+    "rear-left",
+    "back",
+    "rear-right",
+    "right-profile",
+    "front-right"
+  ],
+  "phases": [
+    "crouch",
+    "takeoff",
+    "apex",
+    "landing"
+  ],
+  "framesPerBearing": 4,
+  "frameCount": 32,
+  "canvas": [
+    160,
+    192
+  ],
+  "atlas": "atlas-8x4.png",
+  "atlasLayout": "8rows bearings,4columns phases",
+  "atlasSha256": "4664d3e48ff33230235d03797d20290c34e125a3a5d2fafeba10d2a625b09b02",
+  "groundY": 181,
+  "frames": [
+    {
+      "bearing": 0,
+      "bearingName": "front",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-0-phase-0-crouch.png",
+      "sha256": "ee004cdadb037bf48cc65f451f0cb3ea7ce4ce7ea88e579c1b06844d73204ee7",
+      "alpha128Bounds": [
+        46,
+        82,
+        113,
+        181
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-front-cycle-v1\\phase-0-crouch.png",
+      "sourceSha256": "878f5bce960160bf9b445bc903eddad7372d95c08e0bf32c3b864226c838340f",
+      "processing": "copied existing verified front frame byte-for-pixel"
+    },
+    {
+      "bearing": 0,
+      "bearingName": "front",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-0-phase-1-takeoff.png",
+      "sha256": "65c5930ea1c64fedd9ec4542de786d791ab3621d18b6f05a1104ca3683c5380c",
+      "alpha128Bounds": [
+        42,
+        25,
+        120,
+        175
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-front-cycle-v1\\phase-1-takeoff.png",
+      "sourceSha256": "06e1747049a83628fd0e0e5ccd38841b7679c38cdaa4e200e2734ac24b741ad5",
+      "processing": "copied existing verified front frame byte-for-pixel"
+    },
+    {
+      "bearing": 0,
+      "bearingName": "front",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-0-phase-2-apex.png",
+      "sha256": "89f6aa311fc9a32a5537067315c37aecf7a0c51607ed0898e6eca04085bf477f",
+      "alpha128Bounds": [
+        30,
+        16,
+        132,
+        133
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-front-cycle-v1\\phase-2-apex.png",
+      "sourceSha256": "760301a3ab19bc3333550fae02ea5496dfd416805783c36070706ff0e3bce12e",
+      "processing": "copied existing verified front frame byte-for-pixel"
+    },
+    {
+      "bearing": 0,
+      "bearingName": "front",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-0-phase-3-landing.png",
+      "sha256": "179699689c9d935ef1ecc77730c8b7e7e4c1e0787acb02aabf18809f8a53d6d8",
+      "alpha128Bounds": [
+        38,
+        76,
+        123,
+        182
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-front-cycle-v1\\phase-3-landing.png",
+      "sourceSha256": "652a16fc15997ba90648f4608ba380cb7074b78b39f27433c3f86c70dbf37ee1",
+      "processing": "copied existing verified front frame byte-for-pixel"
+    },
+    {
+      "bearing": 1,
+      "bearingName": "front-left",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-1-phase-0-crouch.png",
+      "sha256": "4dcb7959497d15a559c393504102b4eba6adda7413be6622e3e344a9689ba662",
+      "alpha128Bounds": [
+        59,
+        70,
+        129,
+        180
+      ],
+      "medianCutoutAlpha": 253.0,
+      "source": "381-jump-view-1-generated-v3.png",
+      "sourceSha256": "6e2f63ba99232f973f058a09b6412a4dbcc62ae951f2464260a540b6a603f5e1",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "scale": 0.24271844660194175,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        30,
+        8
+      ],
+      "headCenterInCell": 208
+    },
+    {
+      "bearing": 1,
+      "bearingName": "front-left",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-1-phase-1-takeoff.png",
+      "sha256": "9467d115e2928785d7ffd7fd13271a952b963d3851f1d70234f9b7b5be359486",
+      "alpha128Bounds": [
+        41,
+        25,
+        123,
+        175
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-1-generated-v3.png",
+      "sourceSha256": "6e2f63ba99232f973f058a09b6412a4dbcc62ae951f2464260a540b6a603f5e1",
+      "sourceCrop": [
+        512,
+        0,
+        1024,
+        768
+      ],
+      "scale": 0.24271844660194175,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        30,
+        8
+      ],
+      "headCenterInCell": 207
+    },
+    {
+      "bearing": 1,
+      "bearingName": "front-left",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-1-phase-2-apex.png",
+      "sha256": "f9c11239ac696f216e0d6c0c3b5b6c5a101606d0dfa277870ba256df99f17cae",
+      "alpha128Bounds": [
+        26,
+        16,
+        127,
+        135
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-1-generated-v3.png",
+      "sourceSha256": "6e2f63ba99232f973f058a09b6412a4dbcc62ae951f2464260a540b6a603f5e1",
+      "sourceCrop": [
+        1024,
+        0,
+        1536,
+        768
+      ],
+      "scale": 0.24271844660194175,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        24,
+        -1
+      ],
+      "headCenterInCell": 232
+    },
+    {
+      "bearing": 1,
+      "bearingName": "front-left",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-1-phase-3-landing.png",
+      "sha256": "1f38af9d4ebec5e102837299a414611d9548760347a942cce90aaf673af26ead",
+      "alpha128Bounds": [
+        27,
+        70,
+        129,
+        180
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-1-generated-v3.png",
+      "sourceSha256": "6e2f63ba99232f973f058a09b6412a4dbcc62ae951f2464260a540b6a603f5e1",
+      "sourceCrop": [
+        1536,
+        0,
+        2048,
+        768
+      ],
+      "scale": 0.24271844660194175,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        25,
+        8
+      ],
+      "headCenterInCell": 228
+    },
+    {
+      "bearing": 2,
+      "bearingName": "left-profile",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-2-phase-0-crouch.png",
+      "sha256": "54b82d7e4f9897d727844aec0fed34256018abbc98788904042c2afe57b3b762",
+      "alpha128Bounds": [
+        67,
+        81,
+        139,
+        180
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-2-generated-v1.png",
+      "sourceSha256": "22e2dd2635bbd97c754653245bab0ad628ae6dee8a083e1fb7ee23c1b1597a35",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "scale": 0.24,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        38,
+        9
+      ],
+      "headCenterInCell": 174
+    },
+    {
+      "bearing": 2,
+      "bearingName": "left-profile",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-2-phase-1-takeoff.png",
+      "sha256": "d6b8e7e6026d0643aa9666cbd8d8813294332c4710c0c70cd609f0fd5dcc3306",
+      "alpha128Bounds": [
+        45,
+        25,
+        115,
+        175
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-2-generated-v1.png",
+      "sourceSha256": "22e2dd2635bbd97c754653245bab0ad628ae6dee8a083e1fb7ee23c1b1597a35",
+      "sourceCrop": [
+        512,
+        0,
+        1024,
+        768
+      ],
+      "scale": 0.24,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        23,
+        6
+      ],
+      "headCenterInCell": 239
+    },
+    {
+      "bearing": 2,
+      "bearingName": "left-profile",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-2-phase-2-apex.png",
+      "sha256": "caa8caa6922f0bac51e78a133dae3d7ee0bfad92bfcd2fd7123a93e9a8358289",
+      "alpha128Bounds": [
+        44,
+        16,
+        119,
+        131
+      ],
+      "medianCutoutAlpha": 252.0,
+      "source": "381-jump-view-2-generated-v1.png",
+      "sourceSha256": "22e2dd2635bbd97c754653245bab0ad628ae6dee8a083e1fb7ee23c1b1597a35",
+      "sourceCrop": [
+        1024,
+        0,
+        1536,
+        768
+      ],
+      "scale": 0.24,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        20,
+        -3
+      ],
+      "headCenterInCell": 250
+    },
+    {
+      "bearing": 2,
+      "bearingName": "left-profile",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-2-phase-3-landing.png",
+      "sha256": "e3e0d8690412c0afc25c8ddc4b792d2b4d8feb545c955a8ed6a1ae66cc0c046e",
+      "alpha128Bounds": [
+        46,
+        84,
+        127,
+        180
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-2-generated-v1.png",
+      "sourceSha256": "22e2dd2635bbd97c754653245bab0ad628ae6dee8a083e1fb7ee23c1b1597a35",
+      "sourceCrop": [
+        1536,
+        0,
+        2048,
+        768
+      ],
+      "scale": 0.24,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        21,
+        8
+      ],
+      "headCenterInCell": 244
+    },
+    {
+      "bearing": 3,
+      "bearingName": "rear-left",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-3-phase-0-crouch.png",
+      "sha256": "5ab786eaa50ed51550a0dcf22980e4b4748ce0cce73c81a244fcb827c314b91e",
+      "alpha128Bounds": [
+        63,
+        81,
+        133,
+        181
+      ],
+      "medianCutoutAlpha": 252.0,
+      "source": "381-jump-view-3-generated-v1.png",
+      "sourceSha256": "9ce9e63add90c258726bd346e48e570334fed128a38951fca9920bc7085608e6",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        767
+      ],
+      "scale": 0.2617801047120419,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        21,
+        1
+      ],
+      "headCenterInCell": 226
+    },
+    {
+      "bearing": 3,
+      "bearingName": "rear-left",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-3-phase-1-takeoff.png",
+      "sha256": "586939e51e5fb6dc59c53f088cd306a380119d2311214eba70841dce27bcb9e3",
+      "alpha128Bounds": [
+        44,
+        25,
+        125,
+        176
+      ],
+      "medianCutoutAlpha": 252.0,
+      "source": "381-jump-view-3-generated-v1.png",
+      "sourceSha256": "9ce9e63add90c258726bd346e48e570334fed128a38951fca9920bc7085608e6",
+      "sourceCrop": [
+        512,
+        0,
+        1025,
+        767
+      ],
+      "scale": 0.2617801047120419,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        16,
+        -1
+      ],
+      "headCenterInCell": 244
+    },
+    {
+      "bearing": 3,
+      "bearingName": "rear-left",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-3-phase-2-apex.png",
+      "sha256": "84e0f7a6d054fa4cbbc7d5c305d762fd975862c6eb187cdc8355cb8007921c23",
+      "alpha128Bounds": [
+        38,
+        16,
+        117,
+        123
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-3-generated-v1.png",
+      "sourceSha256": "9ce9e63add90c258726bd346e48e570334fed128a38951fca9920bc7085608e6",
+      "sourceCrop": [
+        1025,
+        0,
+        1538,
+        767
+      ],
+      "scale": 0.2617801047120419,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        19,
+        -8
+      ],
+      "headCenterInCell": 233
+    },
+    {
+      "bearing": 3,
+      "bearingName": "rear-left",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-3-phase-3-landing.png",
+      "sha256": "73cef5b6eb256ad94fde9a1d08b798217ab9bc57d3aace439f3779002633d424",
+      "alpha128Bounds": [
+        37,
+        82,
+        115,
+        181
+      ],
+      "medianCutoutAlpha": 252.0,
+      "source": "381-jump-view-3-generated-v1.png",
+      "sourceSha256": "9ce9e63add90c258726bd346e48e570334fed128a38951fca9920bc7085608e6",
+      "sourceCrop": [
+        1538,
+        0,
+        2050,
+        767
+      ],
+      "scale": 0.2617801047120419,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        13,
+        1
+      ],
+      "headCenterInCell": 257
+    },
+    {
+      "bearing": 4,
+      "bearingName": "back",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-4-phase-0-crouch.png",
+      "sha256": "34931e5b826de73d1d17446ab50af55c77204d63831d22b64052edcd1600dc94",
+      "alpha128Bounds": [
+        41,
+        77,
+        120,
+        181
+      ],
+      "medianCutoutAlpha": 253.0,
+      "source": "381-jump-view-4-generated-v1.png",
+      "sourceSha256": "f92ca2b65c9c811fc27b158d836fd51044a04af2c7ef41e4c2da01cd39c40459",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "scale": 0.24752475247524752,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        18,
+        5
+      ],
+      "headCenterInCell": 251
+    },
+    {
+      "bearing": 4,
+      "bearingName": "back",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-4-phase-1-takeoff.png",
+      "sha256": "13a73c31c63aaa8bf75f5df318863c69779cf55838ab24f70b6d7b0bde74c229",
+      "alpha128Bounds": [
+        40,
+        25,
+        119,
+        174
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-4-generated-v1.png",
+      "sourceSha256": "f92ca2b65c9c811fc27b158d836fd51044a04af2c7ef41e4c2da01cd39c40459",
+      "sourceCrop": [
+        512,
+        0,
+        1024,
+        768
+      ],
+      "scale": 0.24752475247524752,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        16,
+        1
+      ],
+      "headCenterInCell": 258
+    },
+    {
+      "bearing": 4,
+      "bearingName": "back",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-4-phase-2-apex.png",
+      "sha256": "8524db40b4d2218f1cb0797d3e8c1f7209f850cf4c29a9dde75f488c780527f6",
+      "alpha128Bounds": [
+        32,
+        16,
+        131,
+        126
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-4-generated-v1.png",
+      "sourceSha256": "f92ca2b65c9c811fc27b158d836fd51044a04af2c7ef41e4c2da01cd39c40459",
+      "sourceCrop": [
+        1024,
+        0,
+        1536,
+        768
+      ],
+      "scale": 0.24752475247524752,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        18,
+        -7
+      ],
+      "headCenterInCell": 252
+    },
+    {
+      "bearing": 4,
+      "bearingName": "back",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-4-phase-3-landing.png",
+      "sha256": "53ec324399612ce1e91b19c8685e574dee0162c11a05bacd59351fefc7d71d68",
+      "alpha128Bounds": [
+        33,
+        76,
+        126,
+        181
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-4-generated-v1.png",
+      "sourceSha256": "f92ca2b65c9c811fc27b158d836fd51044a04af2c7ef41e4c2da01cd39c40459",
+      "sourceCrop": [
+        1536,
+        0,
+        2048,
+        768
+      ],
+      "scale": 0.24752475247524752,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        16,
+        5
+      ],
+      "headCenterInCell": 260
+    },
+    {
+      "bearing": 5,
+      "bearingName": "rear-right",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-5-phase-0-crouch.png",
+      "sha256": "a1d56b6d70f097cae0788c2bf4808b7b301d45d9d2173aa4b7546330ca76b776",
+      "alpha128Bounds": [
+        22,
+        75,
+        97,
+        181
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-5-generated-v1.png",
+      "sourceSha256": "2c2ec124bcb5d4612c884e4fbf3b93a45058d8fae64339c2910aab5a17c46781",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "scale": 0.2533783783783784,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        0,
+        5
+      ],
+      "headCenterInCell": 315
+    },
+    {
+      "bearing": 5,
+      "bearingName": "rear-right",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-5-phase-1-takeoff.png",
+      "sha256": "5f7a1e3d8a142be6c74267c99362255bbf1aadcec0044c766d3e4a70106098a1",
+      "alpha128Bounds": [
+        47,
+        25,
+        128,
+        175
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-5-generated-v1.png",
+      "sourceSha256": "2c2ec124bcb5d4612c884e4fbf3b93a45058d8fae64339c2910aab5a17c46781",
+      "sourceCrop": [
+        512,
+        0,
+        1024,
+        768
+      ],
+      "scale": 0.2533783783783784,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        14,
+        0
+      ],
+      "headCenterInCell": 260
+    },
+    {
+      "bearing": 5,
+      "bearingName": "rear-right",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-5-phase-2-apex.png",
+      "sha256": "a02909cd5ab76c9d3efec1bb7fbb2c6f2aaed76cbc78d40e32cffae04ae8b52b",
+      "alpha128Bounds": [
+        47,
+        16,
+        121,
+        127
+      ],
+      "medianCutoutAlpha": 253.0,
+      "source": "381-jump-view-5-generated-v1.png",
+      "sourceSha256": "2c2ec124bcb5d4612c884e4fbf3b93a45058d8fae64339c2910aab5a17c46781",
+      "sourceCrop": [
+        1024,
+        0,
+        1536,
+        768
+      ],
+      "scale": 0.2533783783783784,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        15,
+        -15
+      ],
+      "headCenterInCell": 256
+    },
+    {
+      "bearing": 5,
+      "bearingName": "rear-right",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-5-phase-3-landing.png",
+      "sha256": "26f61fca9d783ae38f3bd68a1c5daeba63a7556020ea5403db65fa0d3cb1bdbf",
+      "alpha128Bounds": [
+        42,
+        77,
+        127,
+        181
+      ],
+      "medianCutoutAlpha": 252.0,
+      "source": "381-jump-view-5-generated-v1.png",
+      "sourceSha256": "2c2ec124bcb5d4612c884e4fbf3b93a45058d8fae64339c2910aab5a17c46781",
+      "sourceCrop": [
+        1536,
+        0,
+        2048,
+        768
+      ],
+      "scale": 0.2533783783783784,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        6,
+        5
+      ],
+      "headCenterInCell": 294
+    },
+    {
+      "bearing": 6,
+      "bearingName": "right-profile",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-6-phase-0-crouch.png",
+      "sha256": "41975c16e0f4803d8be04c3c82fd0d6533c5d23770086ed170897bf5b98f4531",
+      "alpha128Bounds": [
+        16,
+        80,
+        91,
+        181
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-6-generated-v1.png",
+      "sourceSha256": "c1583a84298dc7743cfe9962d29b7ddbceb035d33c4a793ab060da57aee8f486",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "scale": 0.25252525252525254,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        -4,
+        10
+      ],
+      "headCenterInCell": 333
+    },
+    {
+      "bearing": 6,
+      "bearingName": "right-profile",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-6-phase-1-takeoff.png",
+      "sha256": "a714beaa43acc541ce9d729b44eb2288a8d2e56f00235af2ef68a407e0403c04",
+      "alpha128Bounds": [
+        47,
+        25,
+        118,
+        175
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-6-generated-v1.png",
+      "sourceSha256": "c1583a84298dc7743cfe9962d29b7ddbceb035d33c4a793ab060da57aee8f486",
+      "sourceCrop": [
+        512,
+        0,
+        1024,
+        768
+      ],
+      "scale": 0.25252525252525254,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        14,
+        5
+      ],
+      "headCenterInCell": 261
+    },
+    {
+      "bearing": 6,
+      "bearingName": "right-profile",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-6-phase-2-apex.png",
+      "sha256": "861015659de58572c64bc91b788e823940dd8d5f277b89174ac7c7a8f3f5a61e",
+      "alpha128Bounds": [
+        37,
+        16,
+        112,
+        119
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-6-generated-v1.png",
+      "sourceSha256": "c1583a84298dc7743cfe9962d29b7ddbceb035d33c4a793ab060da57aee8f486",
+      "sourceCrop": [
+        1024,
+        0,
+        1536,
+        768
+      ],
+      "scale": 0.25252525252525254,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        14,
+        -12
+      ],
+      "headCenterInCell": 260
+    },
+    {
+      "bearing": 6,
+      "bearingName": "right-profile",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-6-phase-3-landing.png",
+      "sha256": "229ada08de310625d021d13646a6c099669bd496d4618dc6c4fd6e4c7ebf35c4",
+      "alpha128Bounds": [
+        34,
+        86,
+        115,
+        181
+      ],
+      "medianCutoutAlpha": 252,
+      "source": "381-jump-view-6-generated-v1.png",
+      "sourceSha256": "c1583a84298dc7743cfe9962d29b7ddbceb035d33c4a793ab060da57aee8f486",
+      "sourceCrop": [
+        1536,
+        0,
+        2048,
+        768
+      ],
+      "scale": 0.25252525252525254,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        14,
+        10
+      ],
+      "headCenterInCell": 260
+    },
+    {
+      "bearing": 7,
+      "bearingName": "front-right",
+      "phase": 0,
+      "phaseName": "crouch",
+      "file": "frames/view-7-phase-0-crouch.png",
+      "sha256": "f4aa84939c1b532f6aa0451512fd3986c8b268493b6634883f9c2467e3db3e79",
+      "alpha128Bounds": [
+        35,
+        70,
+        101,
+        181
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-7-generated-v1.png",
+      "sourceSha256": "82b7a756fec284459be6a152917b5f16e8f0b3cdc8dbe671cf426efcc20e183d",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "scale": 0.23547880690737832,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        9,
+        15
+      ],
+      "headCenterInCell": 302
+    },
+    {
+      "bearing": 7,
+      "bearingName": "front-right",
+      "phase": 1,
+      "phaseName": "takeoff",
+      "file": "frames/view-7-phase-1-takeoff.png",
+      "sha256": "5e15dd9763edbc9e384c355447dd6ab5a107a7a319481a8d6c79661a217946f6",
+      "alpha128Bounds": [
+        40,
+        25,
+        119,
+        175
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-7-generated-v1.png",
+      "sourceSha256": "82b7a756fec284459be6a152917b5f16e8f0b3cdc8dbe671cf426efcc20e183d",
+      "sourceCrop": [
+        512,
+        0,
+        1023,
+        768
+      ],
+      "scale": 0.23547880690737832,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        18,
+        14
+      ],
+      "headCenterInCell": 263
+    },
+    {
+      "bearing": 7,
+      "bearingName": "front-right",
+      "phase": 2,
+      "phaseName": "apex",
+      "file": "frames/view-7-phase-2-apex.png",
+      "sha256": "9fa011718993b99cfe0960583dd1df01bcfdcd93b91b91b8c232c1503e662652",
+      "alpha128Bounds": [
+        36,
+        16,
+        130,
+        128
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-7-generated-v1.png",
+      "sourceSha256": "82b7a756fec284459be6a152917b5f16e8f0b3cdc8dbe671cf426efcc20e183d",
+      "sourceCrop": [
+        1023,
+        0,
+        1534,
+        768
+      ],
+      "scale": 0.23547880690737832,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        21,
+        1
+      ],
+      "headCenterInCell": 250
+    },
+    {
+      "bearing": 7,
+      "bearingName": "front-right",
+      "phase": 3,
+      "phaseName": "landing",
+      "file": "frames/view-7-phase-3-landing.png",
+      "sha256": "5fe7a23dae50aa3a2d9498e86a5b6f76f75d133ab501ba7bc5c5f2fc4b39999a",
+      "alpha128Bounds": [
+        39,
+        76,
+        123,
+        181
+      ],
+      "medianCutoutAlpha": 253,
+      "source": "381-jump-view-7-generated-v1.png",
+      "sourceSha256": "82b7a756fec284459be6a152917b5f16e8f0b3cdc8dbe671cf426efcc20e183d",
+      "sourceCrop": [
+        1534,
+        0,
+        2046,
+        768
+      ],
+      "scale": 0.23547880690737832,
+      "scaleBasis": "one uniform scale per bearing: authored takeoff silhouette150px, matching frontal takeoff",
+      "placement": [
+        11,
+        15
+      ],
+      "headCenterInCell": 292
+    }
+  ],
+  "technicalChecks": {
+    "all32Rgba": true,
+    "distinctPhasesPerBearing": 4,
+    "noAlpha128Clipping": true,
+    "atlasExact": true
+  },
+  "visualReview": "All32packedframes inspected in two contact sheets; eight bearings and four real phases present. No obvious duplicate limbs or clipped figures. Face/body/pouch consistency remains a candidate limitation.",
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "exactNativePalette": false,
+  "processing": "Nearest-neighbor sampling and transparent placement only. Output alpha retained; review image simulates cutoff128. No anatomy painting, mirroring or translation-only substitute poses.",
+  "knownLimits": [
+    "Generative proportions and face/cloth details vary between bearings; compare against native identity before acceptance.",
+    "Four keyframes are sparse; timing is diagnostic only.",
+    "Native source frontal idle165px and walking110px are different source scales; this pilot uses frontal idle-derived canvas with150px takeoffbody.",
+    "Pouch position follows available native views; global anatomical side consistency still requires user review."
+  ],
+  "visuallyReviewed": true,
+  "pixelCanvas": [
+    160,
+    192
+  ],
+  "worldScaleContract": "../native-scale-contract.json",
+  "intendedActorWorldHeightBeforeGlobalScale": 79,
+  "worldScaleApplied": false
+}

@@ -1,0 +1,72 @@
+{
+  "archive": 393,
+  "motion_template": 392,
+  "raw_output_directory": "C:/Users/Daniel/.codex/generated_images/01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v1",
+    "view-1-v1",
+    "view-2-v3",
+    "view-3-v3",
+    "view-4-v2"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "44820f25-076e-42c9-b297-4d666317dbbc"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "c63d9f19-dddd-4111-bc1e-9986e154609a"
+    },
+    {
+      "name": "view-2-v1",
+      "id": "e2400726-1c58-4c2e-b07d-39c9fade3e4b"
+    },
+    {
+      "name": "view-3-v1",
+      "id": "96ff7017-88bb-4f13-9937-e6351d353f1f"
+    },
+    {
+      "name": "view-4-v1",
+      "id": "cbe4f413-a056-4a89-b83a-637a0e8fd45c"
+    },
+    {
+      "name": "view-2-v2",
+      "id": "38b0f7e1-82af-48ea-91fb-77a0772c00d7",
+      "references": [
+        "view-2-v1.png"
+      ]
+    },
+    {
+      "name": "view-2-v3",
+      "id": "51062bac-2ca9-453f-8b84-97354a2b9ac9",
+      "references": [
+        "view-2-v1.png",
+        "native-reference/view-2.png"
+      ]
+    },
+    {
+      "name": "view-3-v3",
+      "id": "b52f0819-afee-4a1a-a4cb-28b1b13c207a",
+      "references": [
+        "view-3-v1.png",
+        "native-reference/view-3.png"
+      ]
+    },
+    {
+      "name": "view-4-v2",
+      "id": "c30d56f6-e3ee-4d5c-aa2b-84aff75b2a90",
+      "references": [
+        "view-4-v1.png",
+        "native-reference/view-4.png"
+      ]
+    }
+  ],
+  "reference_policy": "392 supplies female run motion only. Native393 defines blue/yellow-trim hood, brown capelet, blue bodice, dark forearms, blue/yellow striped skirt and black shoes. Brown pouch visible only front/front-left; generated extra pouches in profile/rear removed using native directional references. Smooth profile-v2 rejected. Opposite views follow native renderer mirrors.",
+  "known_limits": [
+    "Candidate only: shoulder/capelet volume, brighter skin, skirt stripe widths and yellow saturation differ from original pixels. Repaired profile has somewhat cleaner stripe edges.",
+    "Leg depth remains partly hidden by skirt; opposite contacts have similar silhouettes. Physical cloth simulation not established.",
+    "Four-frame cadence lacks passing intermediates. Twelve opposite-view frames are mirror derivatives, not independent generations.",
+    "No runtime integration, game playback acceptance or user approval."
+  ]
+}

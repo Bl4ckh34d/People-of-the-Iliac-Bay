@@ -1,0 +1,31 @@
+{
+  "phase": 3,
+  "source": "flat-182-0-walk-left-passing-keyframe-v2.png",
+  "name": "left-forward-flight",
+  "pose": "LEFT-facing RUN opposite FLIGHT after right-foot push-off: BOTH boots clearly ABOVE original ground baseline by at least4logical native pixels. FAR RIGHT leg extends BEHIND toward imageRIGHT with knee slightly bent. NEAR LEFT thigh/knee drives FORWARD toward imageLEFT, knee raised; near lower leg bent beneath it and near bent leg foreground at crossing. NEAR LEFT arm drives BACK toward imageRIGHT, elbow90degrees, fist behind hip. FAR RIGHT arm FORWARD toward imageLEFT, fist low chest. This is airborne LEFT-leg-forward recovery, opposite the other flight. No planted support foot; visible transparent gap beneath BOTH soles.",
+  "file": "run-view-2-phase-3-v1.png",
+  "view": 2,
+  "status": "generated-awaiting-flight-and-phase-review",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-02560602-2e88-486b-b999-01e94204f2ca.png",
+  "prompt": "Use case: identity-preserve. ONE running keyframe for original Daggerfall stationary merchant182/0, strict LEFT PROFILE. IMAGE1 is authoritative original identity/palette47x76pixels. IMAGE2 is same merchant in a WALK phase and is edit target for exact camera, face, headsize, stocky proportions, costume and canvas geometry. IMAGE3 is ONLY a different man's generated RUNNING posture guide; never copy his dark skin, black hair, orange collar, blue tunic, tights or green shoes. Its repeated arm/flight defects must NOT be copied; obey the precise new phase below. Our merchant stays elderly pale bald-crowned grey-sidehair, clean-shaven, broad stocky green waistcoat/belly, muted cyan sleeves, DARK RUST-BROWN knee breeches, folded brown boots and original brown belt/pouch. Preserve exact identity, coarse1996pixel clusters, source palette, no modern fine texture/new accessories. Keep same canvas dimensions/headscale/pelvisposition and strict nose-LEFT camera as image2. Lean torso forward only modestly(about10degrees), no hunched monster/anatomy change. Running has bent elbows and longer energetic leg motion, unlike walking. PHASE: LEFT-facing RUN opposite FLIGHT after right-foot push-off: BOTH boots clearly ABOVE original ground baseline by at least4logical native pixels. FAR RIGHT leg extends BEHIND toward imageRIGHT with knee slightly bent. NEAR LEFT thigh/knee drives FORWARD toward imageLEFT, knee raised; near lower leg bent beneath it and near bent leg foreground at crossing. NEAR LEFT arm drives BACK toward imageRIGHT, elbow90degrees, fist behind hip. FAR RIGHT arm FORWARD toward imageLEFT, fist low chest. This is airborne LEFT-leg-forward recovery, opposite the other flight. No planted support foot; visible transparent gap beneath BOTH soles. Ground baseline is the same invisible line under image2's grounded boot; do not draw it. Contacts reach it, flights remain above it, never shift canvas to falsely ground airborne boots. Render exactly one complete character, no extra cells or views. Head/hands/boots fit with margin. Actual transparent background and fully opaque body. No floor, shadow, text, borders or checkerboard.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/flat-182-0-walk-left-passing-keyframe-v2.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-reference-385-left-review.png"
+  ],
+  "tool": "built-in image_gen",
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+      "sha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/flat-182-0-walk-left-passing-keyframe-v2.png",
+      "sha256": "2f51efd6d14aa92920d657bc8b6aabe80a69f598d39b4b2dc476e6878b70bc9a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-reference-385-left-review.png",
+      "sha256": "dd36ca32764d2d08a829bebf7584443048770673e8d52212625062f8fd8181cb"
+    }
+  ]
+}

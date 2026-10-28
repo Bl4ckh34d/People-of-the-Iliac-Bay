@@ -1,0 +1,13 @@
+{
+  "arguments": {
+    "prompt": "Edit target image1. Create a nearly-closed blink pose of this exact pixel portrait. BOTH eyes eighty percent closed, just a very thin sliver of iris below the upper eyelids. Upper lash lines descend almost to bottom eyelids, at same height as CLOSED in image2 but one native pixel higher. Cover bright pupil highlights completely with upper eyelid skin. Only a tiny dark same-position iris strip remains at bottom. Unlike image1, eyes must plainly read as mostly shut. Do NOT draw sleepy low eyebrows: brows stay worried and exactly unchanged. Keep head, hair, nose, lower eye contours, skin, crop and pixel scale unchanged. Image2 is fully closed endpoint; target is ONE native pixel more open than image2. Output single 64:35 upper-half composition, enlarged crisp original pixels, no text, no margin. Image1 reference OPEN, image2 reference CLOSED.",
+    "referenced_image_paths": [
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc152-afraid-open-reference.png",
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc152-afraid-closed-reference.png"
+    ],
+    "transparent_background": false
+  },
+  "output_hint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-993392fc-ef03-45f5-820c-4a4d929d43a4.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "provider": "built-in image_gen",
+  "rawSourcePath": "C:/Users/Daniel/.codex/generated_images/01a1807d-d8cf-78d0-bd35-9799085fcd8d/exec-993392fc-ef03-45f5-820c-4a4d929d43a4.png"
+}

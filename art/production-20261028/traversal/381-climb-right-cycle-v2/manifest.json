@@ -1,0 +1,273 @@
+{
+  "status": "climb-contact-repair-candidate",
+  "appearance": 381,
+  "state": "climbing",
+  "bearing": 6,
+  "bearingName": "right-profile",
+  "frameCount": 4,
+  "pixelCanvas": [
+    160,
+    224
+  ],
+  "pixelScale": 0.105,
+  "scaleBasis": "One shared21/200 factor for all four regenerated poses; no individual pose height fitting.",
+  "frames": [
+    {
+      "phase": 0,
+      "name": "near-reach",
+      "file": "phase-0-near-reach.png",
+      "sha256": "dcdeb689b84c419ceef29827a53d0c03d8a71342120d6b347b92c509af5d0366",
+      "generatedSource": "381-climb-right-contact-master-generated-v1.png",
+      "generatedSha256": "4f835c459a1129b22343d4b8bc22cf721e26c924e8d7493f26acb66b180e3fc8",
+      "pixelScale": 0.105,
+      "placement": [
+        37,
+        26
+      ],
+      "contactAuditRects": [
+        [
+          760,
+          20,
+          1024,
+          220
+        ],
+        [
+          740,
+          430,
+          1024,
+          580
+        ],
+        [
+          680,
+          800,
+          1024,
+          1000
+        ],
+        [
+          630,
+          1250,
+          1024,
+          1450
+        ]
+      ],
+      "contactRightEdgeSourceX": [
+        927,
+        869,
+        856,
+        861
+      ],
+      "contactRightEdgePackedX": [
+        134.33499999999998,
+        128.245,
+        126.88,
+        127.405
+      ],
+      "contactHorizontalSpanPackedPixels": 7.455,
+      "alpha128Bounds": [
+        67,
+        32,
+        135,
+        174
+      ],
+      "medianCutoutAlpha": 253
+    },
+    {
+      "phase": 1,
+      "name": "near-pull",
+      "file": "phase-1-near-pull.png",
+      "sha256": "f59ab170bdfa3073ca5c92bd60c27bce4da2c6f665ba138e06d7e5631ad9e808",
+      "generatedSource": "381-climb-right-near-pull-contact-generated-v1.png",
+      "generatedSha256": "9b6f68a30d56b2e79ecb65257d3d4027db3893f05a45130ded1ef04ec9ff0df4",
+      "pixelScale": 0.105,
+      "placement": [
+        36,
+        30
+      ],
+      "contactAuditRects": [
+        [
+          800,
+          0,
+          1024,
+          200
+        ],
+        [
+          760,
+          220,
+          1024,
+          400
+        ],
+        [
+          680,
+          850,
+          1024,
+          1030
+        ],
+        [
+          620,
+          1250,
+          1024,
+          1420
+        ]
+      ],
+      "contactRightEdgeSourceX": [
+        885,
+        867,
+        888,
+        865
+      ],
+      "contactRightEdgePackedX": [
+        128.925,
+        127.035,
+        129.24,
+        126.825
+      ],
+      "contactHorizontalSpanPackedPixels": 2.415,
+      "alpha128Bounds": [
+        70,
+        34,
+        130,
+        175
+      ],
+      "medianCutoutAlpha": 253.0
+    },
+    {
+      "phase": 2,
+      "name": "far-reach",
+      "file": "phase-2-far-reach.png",
+      "sha256": "1452363f8cbea716c1715f01bdc4c9d5d059f270a5cddee04eaea84f3147ae10",
+      "generatedSource": "381-climb-right-far-reach-contact-generated-v2.png",
+      "generatedSha256": "f64d6ddd1f76a832960505e74915dff87f5f6a06e452f916c1bb3716b29d9a9f",
+      "pixelScale": 0.105,
+      "placement": [
+        34,
+        26
+      ],
+      "contactAuditRects": [
+        [
+          760,
+          20,
+          1024,
+          220
+        ],
+        [
+          760,
+          400,
+          1024,
+          600
+        ],
+        [
+          740,
+          800,
+          1024,
+          1000
+        ],
+        [
+          680,
+          1250,
+          1024,
+          1420
+        ]
+      ],
+      "contactRightEdgeSourceX": [
+        895,
+        886,
+        928,
+        896
+      ],
+      "contactRightEdgePackedX": [
+        127.975,
+        127.03,
+        131.44,
+        128.07999999999998
+      ],
+      "contactHorizontalSpanPackedPixels": 4.41,
+      "alpha128Bounds": [
+        66,
+        30,
+        132,
+        171
+      ],
+      "medianCutoutAlpha": 253
+    },
+    {
+      "phase": 3,
+      "name": "far-pull",
+      "file": "phase-3-far-pull.png",
+      "sha256": "c1d67fecf0619580b34e5ecdae9d4e2dca26a8e53ea59a147a136f860a9ca8ac",
+      "generatedSource": "381-climb-right-far-pull-contact-generated-v2.png",
+      "generatedSha256": "992ed0f413f5e9a3b11468d8508eb38ebb292ed57682c9ad222e2b91b488dd2a",
+      "pixelScale": 0.105,
+      "placement": [
+        30,
+        28
+      ],
+      "contactAuditRects": [
+        [
+          800,
+          0,
+          1024,
+          210
+        ],
+        [
+          800,
+          200,
+          1024,
+          380
+        ],
+        [
+          780,
+          880,
+          1024,
+          1040
+        ],
+        [
+          720,
+          1270,
+          1024,
+          1430
+        ]
+      ],
+      "contactRightEdgeSourceX": [
+        907,
+        912,
+        962,
+        962
+      ],
+      "contactRightEdgePackedX": [
+        125.235,
+        125.75999999999999,
+        131.01,
+        131.01
+      ],
+      "contactHorizontalSpanPackedPixels": 5.7749999999999995,
+      "alpha128Bounds": [
+        67,
+        30,
+        132,
+        174
+      ],
+      "medianCutoutAlpha": 253
+    }
+  ],
+  "atlasSha256": "d6ed6587be2d2d17e739a6f7c0040e9db856a9d900cc983fa66a00d5afea309b",
+  "technicalChecks": {
+    "rgba": true,
+    "distinctPhases": 4,
+    "noAlpha128Clipping": true,
+    "atlasExact": true,
+    "identicalPixelScale": true
+  },
+  "visuallyReviewed": true,
+  "visualReview": "Contact sheet inspected at3x: feet point toward wall, near/far arm leads differ, no isolated elbow. Measured contact edge spans2.4\u20137.5 nativepixels remain; no exact contact or leg-identity acceptance.",
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "worldScaleContract": "../native-scale-contract.json",
+  "intendedActorWorldHeightBeforeGlobalScale": 79,
+  "worldScaleApplied": false,
+  "knownLimits": [
+    "Contact right-edge span is measured, not guaranteed physical palm/toe contact.",
+    "Strict profile leaves near/far leg identity partly ambiguous; no alternating leg pass claimed.",
+    "Face, cloth, skin and outline differ across independently regenerated phases.",
+    "Seven other climb bearings remain missing."
+  ]
+}

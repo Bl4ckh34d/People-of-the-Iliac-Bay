@@ -1,0 +1,66 @@
+{
+  "archive": 396,
+  "motion_template": 395,
+  "raw_output_directory": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v1",
+    "view-1-v2",
+    "view-2-v2",
+    "view-3-v2",
+    "view-4-v2"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "2d060495-3c81-4673-ac53-85f3f09c7e7f"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "4265c720-cc31-4a4e-ae5e-3288f4504d47"
+    },
+    {
+      "name": "view-1-v2",
+      "id": "acf7e8c6-4f8f-449d-a70b-cce7015b0be8",
+      "references": [
+        "view-1-v1.png",
+        "native-reference/view-1.png"
+      ]
+    },
+    {
+      "name": "view-2-v2",
+      "id": "8bc61b6e-7279-4320-864b-24f030cc618d"
+    },
+    {
+      "name": "view-3-v2",
+      "id": "44bbcc85-82b9-4f63-8f49-662d4b5fb1fe"
+    },
+    {
+      "name": "view-4-v2",
+      "id": "43966b0f-a53a-49db-bd8b-4315c5f34ab6"
+    },
+    {
+      "name": "view-3-phase-2-v3",
+      "id": "fabcc5d1-10ff-4cf3-89c7-eb751f62f4e9",
+      "references": [
+        "view-3-v2.png",
+        "native-reference/view-3.png"
+      ]
+    }
+  ],
+  "source_overrides": [
+    {
+      "bearing": 3,
+      "phase": 2,
+      "file": "view-3-phase-2-v3.png",
+      "resolution_ratio": 1.9841688654353562,
+      "normalization": "Uniform alpha128 body-height matching to original contact0; no artistic edits."
+    }
+  ],
+  "reference_policy": "395 supplies run motion only. Native396 controls dark skin, short black bob, orange strapless bodice and narrow orange front/back panels, bare shoulders/arms/legs/ankles and pale yellow low shoes. No cape or ankle wraps. Rear-left opposite contact repaired individually. Renderer mirrors for bearings5/6/7.",
+  "known_limits": [
+    "Candidate only: hair volume, muscle definition, face, shoe shape and cloth folds differ from native pixels. Single rear-left repair has softer shading.",
+    "Profile contact leg silhouettes remain similar; depth exchange is less legible than arm alternation. Four frames omit passing intermediates.",
+    "Twelve opposite-view frames are derived mirrors, not independent generations.",
+    "No runtime integration, temporal game acceptance or user approval."
+  ]
+}

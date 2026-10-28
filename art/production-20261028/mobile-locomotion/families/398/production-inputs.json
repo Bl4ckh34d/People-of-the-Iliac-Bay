@@ -1,0 +1,49 @@
+{
+  "archive": 398,
+  "motion_template": 397,
+  "raw_output_directory": "C:/Users/Daniel/.codex/generated_images/01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v1",
+    "view-1-v1",
+    "view-2-v2",
+    "view-3-v1",
+    "view-4-v1"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "dfef355b-1bca-4c86-9aad-0633caafa134"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "5058c2d4-1a56-47e4-aa99-0a7dacff23a6"
+    },
+    {
+      "name": "view-2-v1",
+      "id": "daba2ef6-0c12-424d-9da6-450a18ab3ca3"
+    },
+    {
+      "name": "view-3-v1",
+      "id": "d19b6cca-5043-4e8f-9ebf-bc26226b770c"
+    },
+    {
+      "name": "view-4-v1",
+      "id": "c98d6cd0-0b93-4d51-87f9-f295e1ec951d"
+    },
+    {
+      "name": "view-2-v2",
+      "id": "d0c84e7e-bb5b-4d03-bc3a-93dc59c4513e",
+      "references": [
+        "view-2-v1.png",
+        "native-reference/view-2.png"
+      ]
+    }
+  ],
+  "reference_policy": "397 supplies corrected motion poses only. Native398 defines dark skin, blue hood with yellow trim, teal cropped top, yellow belt, blue knee skirt/yellow patterned border, blue low shoes and tan front pouch. Profile repaired to remove invented pouch and restore native fabric coverage. Opposite views follow native renderer mirrors.",
+  "known_limits": [
+    "Candidate only: skin and cloth shading smoother/brighter than native pixels, hood proportions and yellow pattern width vary.",
+    "Profile contacts share similar leg silhouettes; leg depth and cloth mechanics remain uncertain. Four-frame cadence omits passing intermediates.",
+    "Twelve mirror derivatives are not independent generations.",
+    "No runtime integration, temporal game acceptance or user approval."
+  ]
+}

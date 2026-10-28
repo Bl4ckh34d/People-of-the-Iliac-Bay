@@ -1,0 +1,16 @@
+{
+  "status": "single-base review prototype; not integrated",
+  "asset": "shopkeeper-182-0-front-left-base-v2.png",
+  "source": "work/keeper-native-idle/182-0-frame-00.png",
+  "bearing": "front-left three-quarter; nose/image-left; both eyes visible",
+  "logicalTarget": "76px character height in 96x96 transparent cell",
+  "pose": "static rest; anatomical RIGHT hand at anatomical RIGHT pouch; anatomical LEFT arm relaxed",
+  "animation": "none; this is one base/keypose only",
+  "tool": "built-in image_gen",
+  "qa": [
+    "Bearing is visibly turned image-left, moderate quarter rather than frontal or strict profile.",
+    "Asymmetric pouch and resting hand remain visible on same hip in this pose.",
+    "Generated source is 1280x1536; visual style has block pixels but retains smoother shading than native. It requires parent review/downsampling before use.",
+    "No animation phase cells have been generated from this base."
+  ]
+}

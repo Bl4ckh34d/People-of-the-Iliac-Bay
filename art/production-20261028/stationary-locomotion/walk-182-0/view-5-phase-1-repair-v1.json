@@ -1,0 +1,16 @@
+{
+  "view": 5,
+  "name": "rear-right",
+  "targetPhase": 1,
+  "sourceCell": 1,
+  "fix": "Character faces AWAY toward UPPER RIGHT. Switch lifted leg for LEFT-support PASSING: FAR LEFT leg is straight and bears weight with boot planted beneath hips. NEAR RIGHT leg bends and passes FORWARD toward image RIGHT, with raised near knee and boot visibly in front of supporting shin; raised near boot is on RIGHT side of supporting calf, slightly lifted. The near bent leg must be FOREGROUND and occlude far support leg at overlap. Input instead raises far leg behind, which is wrong. Arms stay nearly vertical.",
+  "status": "generated-awaiting-visual-review",
+  "file": "view-5-phase-1-repair-v1.png",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-a5ef19f1-1b32-49ad-b7cc-107918974d33.png",
+  "prompt": "Precise single-keyframe limb-pose edit. Image is exact edit target and source identity/camera. Keep EXACT same canvas dimensions, transparent margins, head position, head/face silhouette, hair, green vest/torso, belt/pouch, body scale, colors and pixel density. Output only ONE full-body character in this same camera. Change ONLY arms/legs as follows: Character faces AWAY toward UPPER RIGHT. Switch lifted leg for LEFT-support PASSING: FAR LEFT leg is straight and bears weight with boot planted beneath hips. NEAR RIGHT leg bends and passes FORWARD toward image RIGHT, with raised near knee and boot visibly in front of supporting shin; raised near boot is on RIGHT side of supporting calf, slightly lifted. The near bent leg must be FOREGROUND and occlude far support leg at overlap. Input instead raises far leg behind, which is wrong. Arms stay nearly vertical. Maintain same grounded-foot baseline and same torso/head anchor. Modest ordinary WALK, no running/flight. Correct real limb occlusion, no extra arms/legs, no mirroring of body or pouch. Do not move or redraw the face, do not change clothing/palette or camera. Original coarse crisp pixels and actual transparent background; no text, floor or shadows. The only requested difference is the specified genuine opposite gait phase.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/keyframe-inputs/view-5-cell-1.png"
+  ],
+  "sourceSheet": "view-5-rear-right-v1.png",
+  "tool": "built-in image_gen"
+}

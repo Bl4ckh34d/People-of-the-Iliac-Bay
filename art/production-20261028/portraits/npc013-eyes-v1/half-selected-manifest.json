@@ -1,0 +1,70 @@
+{
+  "record": 13,
+  "frames": [
+    {
+      "mood": "neutral",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc013-eyes-v1\\neutral-half-selected.png",
+      "sha256": "6cb95c85dec98965c4b0a829d2f51659ca99493ba78706f48f60c4cf31c90c76",
+      "selectedLidRowFrom": "sad"
+    },
+    {
+      "mood": "happy",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc013-eyes-v1\\happy-half-selected.png",
+      "sha256": "f6e8fa31a053118f08514b2b903c79575fdef875b1a411ddcaddae095c138003",
+      "selectedLidRowFrom": "sad"
+    },
+    {
+      "mood": "angry",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc013-eyes-v1\\angry-half-selected.png",
+      "sha256": "e8ecf2719be41ca32adf703dc534b889fe037ef6a413900e5ffdbfa94d2f8c85",
+      "selectedLidRowFrom": "sad"
+    },
+    {
+      "mood": "sad",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc013-eyes-v1\\sad-half-selected.png",
+      "sha256": "a026ca37b4269a8087ea82d45bddd1e6935d4b64bb50e7f6154a9c5f78140cf0",
+      "selectedLidRowFrom": "sad"
+    },
+    {
+      "mood": "afraid",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc013-eyes-v1\\afraid-half-selected.png",
+      "sha256": "03f74424f05fcc1ccbb087061b7f89d2347de390d3c1f5ac3cc98ca36138ee70",
+      "selectedLidRowFrom": "sad"
+    },
+    {
+      "mood": "guarded",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc013-eyes-v1\\guarded-half-selected.png",
+      "sha256": "810b0543f03e129cac96622e649779500c03051ef020531611517ad61f8361a3",
+      "selectedLidRowFrom": "sad"
+    }
+  ],
+  "config": {
+    "donor": "sad",
+    "row": 27,
+    "iris": 28,
+    "xspans": [
+      [
+        17,
+        29
+      ],
+      [
+        36,
+        44
+      ]
+    ],
+    "aperture": [
+      26,
+      29
+    ],
+    "repair": [
+      "neutral",
+      "happy",
+      "angry",
+      "afraid",
+      "guarded"
+    ]
+  },
+  "policy": "Same-face generated lid row only after exact OPEN aperture comparison; own remaining lids/brows kept, original exposed iris fixed.",
+  "status": "static-candidate",
+  "temporalPass": null
+}

@@ -1,0 +1,19 @@
+{
+  "prompt": "Use case: identity-preserve. Create a FOUR-frame horizontal RUN sprite strip. Exactly TWO references: Image1 is the character APPEARANCE authority (original Daggerfall182/0, native47x76). Image2 is ONLY the camera and four chronological running POSES template, not appearance. Replace the young385man in EACH templatecell with the same elderly182man fromImage1 while keeping that cell's camera, planted/airborne feet, specific arm and leg positions, relative limb depth and phase. All4bodies run diagonally towardviewer and imageRIGHT, FRONT-RIGHT45degreecamera. Preserve template distinctcontact, flight, oppositecontact, oppositeflight phases; do not repeat its firstpose fourtimes. Appearance must exclusively182: shortstocky older body, bald crown gray sidehair, clean-shaven matureface, green buttonedvest/tunic, lightcyan shortsleeves, mutedrusttrousers, foldedbrownboots, originalbeltpouch. NO385orange scarf, NOyellowtunictrim, NOchainmail, NOblackhair, NObeard. Keep original182proportions,47x76logicalbodyheight and coarsepixelart/palette. Same skull/torso scale inall4cells. Shared baseline for contacts, bootsclearlyairborne\u22654logicalpixels in flightcells. Same cameraacrossallframes, allheads pointRIGHT notLEFT. Fourfullbodyfigures, equalcells with margins; bodyopaque outsidefullytransparent. No shadow,labels,grid or ground.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-891b1c82-c6ad-4835-bb3b-5abae374ee63.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-385-view-7-reference.png"
+  ],
+  "view": 7,
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+      "sha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-385-view-7-reference.png",
+      "sha256": "cfb3d080b1f95348e3ff3c28304f7e86df1ebb634c10433a450bef21a94d6680"
+    }
+  ]
+}

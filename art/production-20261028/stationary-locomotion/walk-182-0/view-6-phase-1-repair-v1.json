@@ -1,0 +1,16 @@
+{
+  "view": 6,
+  "name": "right-profile",
+  "targetPhase": 1,
+  "sourceCell": 1,
+  "fix": "STRICT RIGHT profile, nose and boots pointRIGHT. Switch lifted leg for LEFT-support PASSING: FAR LEFT leg remains straight supporting body, its boot planted under hip. NEAR RIGHT leg bends forward toward image RIGHT; near knee protrudes RIGHT in front of support knee; near boot lifted to RIGHT of support shin at mid-shin height. Near bent leg must be foreground, overlapping and occluding straight far leg. Input has near leg straight and far leg raised behind; reverse these anatomical roles. Arms nearly vertical, no wide swing.",
+  "status": "generated-awaiting-visual-review",
+  "file": "view-6-phase-1-repair-v1.png",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-948f75c6-fcc6-4f8c-9309-7afb923ce752.png",
+  "prompt": "Precise single-keyframe limb-pose edit. Image is exact edit target and source identity/camera. Keep EXACT same canvas dimensions, transparent margins, head position, head/face silhouette, hair, green vest/torso, belt/pouch, body scale, colors and pixel density. Output only ONE full-body character in this same camera. Change ONLY arms/legs as follows: STRICT RIGHT profile, nose and boots pointRIGHT. Switch lifted leg for LEFT-support PASSING: FAR LEFT leg remains straight supporting body, its boot planted under hip. NEAR RIGHT leg bends forward toward image RIGHT; near knee protrudes RIGHT in front of support knee; near boot lifted to RIGHT of support shin at mid-shin height. Near bent leg must be foreground, overlapping and occluding straight far leg. Input has near leg straight and far leg raised behind; reverse these anatomical roles. Arms nearly vertical, no wide swing. Maintain same grounded-foot baseline and same torso/head anchor. Modest ordinary WALK, no running/flight. Correct real limb occlusion, no extra arms/legs, no mirroring of body or pouch. Do not move or redraw the face, do not change clothing/palette or camera. Original coarse crisp pixels and actual transparent background; no text, floor or shadows. The only requested difference is the specified genuine opposite gait phase.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/keyframe-inputs/view-6-cell-1.png"
+  ],
+  "sourceSheet": "view-6-right-profile-v1.png",
+  "tool": "built-in image_gen"
+}

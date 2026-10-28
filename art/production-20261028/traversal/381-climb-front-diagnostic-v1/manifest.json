@@ -1,0 +1,123 @@
+{
+  "status": "front-limb-identity-diagnostic-not-production",
+  "appearance": 381,
+  "state": "climbing",
+  "bearing": 0,
+  "frameCount": 4,
+  "frames": [
+    {
+      "phase": 0,
+      "file": "phase-0.png",
+      "sha256": "0477c34158c77e888ef1ad547ad461b3a8de6fda3949733b0996fe521f75afbc",
+      "source": "381-climb-view-0-diagnostic-generated-v2.png",
+      "sourceSha256": "103fb66023864549334f6a02d8896403abeceffa834534862406f331d774e0d1",
+      "sourceCrop": [
+        0,
+        0,
+        724,
+        543
+      ],
+      "pixelScale": 0.2916666666666667,
+      "scaleBasis": "Head-width target21; single repaired phase has different body/head ratio, disclosed and not normalized by bbox.",
+      "placement": [
+        -61,
+        33
+      ],
+      "alpha128Bounds": [
+        45,
+        37,
+        116,
+        189
+      ]
+    },
+    {
+      "phase": 1,
+      "file": "phase-1.png",
+      "sha256": "6c76f0c13722be5990af59debdf1d0e8d9d2403d43863d9a39eaaa4203d9843c",
+      "source": "381-climb-view-0-diagnostic-generated-v2.png",
+      "sourceSha256": "103fb66023864549334f6a02d8896403abeceffa834534862406f331d774e0d1",
+      "sourceCrop": [
+        724,
+        0,
+        1448,
+        543
+      ],
+      "pixelScale": 0.2916666666666667,
+      "scaleBasis": "Head-width target21; single repaired phase has different body/head ratio, disclosed and not normalized by bbox.",
+      "placement": [
+        2,
+        33
+      ],
+      "alpha128Bounds": [
+        47,
+        55,
+        114,
+        189
+      ]
+    },
+    {
+      "phase": 2,
+      "file": "phase-2.png",
+      "sha256": "f1d91810840c4910d1959a4c642c1e3d263bb6504397f7608ba1e556156021c0",
+      "source": "381-climb-front-right-reach-generated-v1.png",
+      "sourceSha256": "1bd43a189ccf95c90d5ef3727fbeb048ee5bd99189ed565d9d8c4c005e6e4257",
+      "sourceCrop": [
+        0,
+        0,
+        1024,
+        1536
+      ],
+      "pixelScale": 0.14482758620689656,
+      "scaleBasis": "Head-width target21; single repaired phase has different body/head ratio, disclosed and not normalized by bbox.",
+      "placement": [
+        4,
+        -3
+      ],
+      "alpha128Bounds": [
+        48,
+        29,
+        114,
+        197
+      ]
+    },
+    {
+      "phase": 3,
+      "file": "phase-3.png",
+      "sha256": "9c5a643ca4b740753d59f33bf5a2c91f1682626a884e5b9c8b6357a8e9400148",
+      "source": "381-climb-view-0-diagnostic-generated-v2.png",
+      "sourceSha256": "103fb66023864549334f6a02d8896403abeceffa834534862406f331d774e0d1",
+      "sourceCrop": [
+        724,
+        543,
+        1448,
+        1086
+      ],
+      "pixelScale": 0.2916666666666667,
+      "scaleBasis": "Head-width target21; single repaired phase has different body/head ratio, disclosed and not normalized by bbox.",
+      "placement": [
+        2,
+        38
+      ],
+      "alpha128Bounds": [
+        45,
+        55,
+        112,
+        190
+      ]
+    }
+  ],
+  "technicalChecks": {
+    "rgba": true,
+    "noAlpha128ClippingPacked": true
+  },
+  "visuallyReviewed": true,
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "knownLimits": [
+    "Phase2 regenerated as single frame after grid repair changed the wrong knee; body/head ratio differs from other phases.",
+    "Green pouch stays screenright in selected candidates.",
+    "Pull leg transitions differ from rear cycle and remain temporally unaccepted.",
+    "This is limb-side audit evidence, not added to selected coverage."
+  ],
+  "visualReview": "Contact sheet inspected: opposing reach hand/knee and fixed pouch side visible. Repaired phase2 body ratio differs; pull timing not accepted."
+}

@@ -1,0 +1,70 @@
+{
+  "record": 197,
+  "rows": [
+    {
+      "mood": "neutral",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\neutral-half-selected.png",
+      "sha256": "a036a2e221de22898d378a98332bb75beabb1c912b4e2de76f66fa4cc92e58ed",
+      "lidSource": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\neutral-half-raw.png",
+      "lidSourceSha256": "4f8028432ef979fd99b8622af63a0ca812fc855e2e012c2649c14ca1c3d62764",
+      "exposedRow22Unchanged": true
+    },
+    {
+      "mood": "happy",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\happy-half-selected.png",
+      "sha256": "8c6e9ad1601da3caae1e409d6707605bf3df6fb3e81dd5ba4f6433f3488f7343",
+      "lidSource": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\neutral-half-raw.png",
+      "lidSourceSha256": "4f8028432ef979fd99b8622af63a0ca812fc855e2e012c2649c14ca1c3d62764",
+      "exposedRow22Unchanged": true
+    },
+    {
+      "mood": "angry",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\angry-half-selected.png",
+      "sha256": "50d24622f012dfab99038297425fd0198247bf4e82891afb06460dc0a88eae6e",
+      "lidSource": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\neutral-half-raw.png",
+      "lidSourceSha256": "4f8028432ef979fd99b8622af63a0ca812fc855e2e012c2649c14ca1c3d62764",
+      "exposedRow22Unchanged": true
+    },
+    {
+      "mood": "sad",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\sad-half-selected.png",
+      "sha256": "74a0cb932da178110369df376d83fbbd48b1d2d5ae8de50c09867119d805c121",
+      "lidSource": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\sad-half-raw.png",
+      "lidSourceSha256": "bfe7ded32c57f5516f3d788c361d3d92afa95bfdb4740aeb7aaf0e2d09bad889",
+      "exposedRow22Unchanged": true
+    },
+    {
+      "mood": "afraid",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\afraid-half-selected.png",
+      "sha256": "94d1ccbb806adfef1241d63ed031e0d8fb0e6fd0374d39e437c9cb6f54450559",
+      "lidSource": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\afraid-half-raw.png",
+      "lidSourceSha256": "15c3fae10d5e1a46fb22126f64af0e0ab61bd13b18099a2247d62f47a8805748",
+      "exposedRow22Unchanged": true
+    },
+    {
+      "mood": "guarded",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\guarded-half-selected.png",
+      "sha256": "6e6c8a6bf9eaf2e778523ab701977db5557e7482bebd405bb9461cbe96b480f2",
+      "lidSource": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc197-eyes-v1\\neutral-half-raw.png",
+      "lidSourceSha256": "4f8028432ef979fd99b8622af63a0ca812fc855e2e012c2649c14ca1c3d62764",
+      "exposedRow22Unchanged": true
+    }
+  ],
+  "halfLidBoxes": [
+    [
+      19,
+      20,
+      30,
+      22
+    ],
+    [
+      34,
+      20,
+      45,
+      22
+    ]
+  ],
+  "status": "candidate-static-review-pending",
+  "selectionReason": "Neutral, sad, afraid raw lids narrow original21..22 aperture. Happy/angry raw HALF remained too OPEN and are rejected. Same-face neutral lid strip selected for compatible happy/angry/guarded geometry; own eyebrows/socket above20 and exposed iris row22 remain unchanged. Guarded generation produced no output.",
+  "temporalPass": null
+}

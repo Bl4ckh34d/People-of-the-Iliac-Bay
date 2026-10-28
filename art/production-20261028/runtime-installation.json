@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-28T15:45:18",
+  "installed": true,
+  "bundleSha256": "7a98bd0b427fb47ee10ce45a474e302bbee677c7bf287b581087ebe74e34c0c1",
+  "installedPath": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\Player\\DaggerfallUnity_Data\\StreamingAssets\\Mods\\peopleoftheiliacbay.dfmod",
+  "bundleBytes": 137660065,
+  "uniqueBodyActionSets": 91,
+  "bodyFrames": 2000,
+  "bodyIdentityActionMappings": 114,
+  "addedSleepMappings": 68,
+  "totalSleepMappings": 394,
+  "addedPortraits": 12,
+  "totalAnimatedPortraits": 62,
+  "newPortraitParts": 1296,
+  "verification": {
+    "coreTests": 2155,
+    "spritePolicyChecks": 15,
+    "actualRendererReleaseChecks": 6,
+    "guardSleepChecks": 14,
+    "marketSleepChecks": 7,
+    "runtimeCompileErrors": 0,
+    "runtimeCompileWarnings": 0,
+    "nativeRunningBearings": 8,
+    "nativeRunningPhases": 4,
+    "nativeRunningTransitions": [
+      "conversation",
+      "standing",
+      "sleep",
+      "death"
+    ],
+    "nativePortraitRecords": 32,
+    "nativePortraitOutputCombinations": 16524
+  },
+  "limits": [
+    "Melee, stationary locomotion, new static idle, climb and swim have structural/package checks but no exhaustive gameplay visual acceptance.",
+    "Jump/climb/swim artwork follows existing physical states; no new movement capability was added.",
+    "One-handed sword art only appears for a compatible equipped sword.",
+    "Voice assignments were preserved; no new voice recordings generated."
+  ],
+  "evidence": {
+    "portrait-native-13.png": "9b7000930c0e0af823612ac8caa3f5c08a7123d0dba92fb38315b4e94e702a01",
+    "portrait-native-236.png": "dec784f0d001260e28795f856af4e54dc81756ec80e1a947feef6332d504ceae",
+    "portrait-player-test.txt": "638dbb8c2169406cc84ccf4f7d94744d1fc211e87e0d986bb25085a4eeb58cb9",
+    "running-native-view-0.png": "b05122dfde1ac2ed32b46572536d66de10d107699e6f33e87246d7c6eb0b3660",
+    "running-native-view-2.png": "4b0e635319011c986b90e8ac7905c41517c59b6591cb7ce6a0480ca26351ff7e",
+    "running-player-test.txt": "5c5fea91528d5f3fa6971f8d875425fa750bf6b7d216e45a8bd8e15c1db7a8e2",
+    "unity-package-test.txt": "938d01073626b8f3240103e9e50413fcbf68052703a0b0eba5d9b1d0fa4561ed"
+  }
+}

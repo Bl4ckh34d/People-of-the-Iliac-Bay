@@ -1,0 +1,17 @@
+{
+  "prompt": "Edit ONLY legs in THIRD cell (phase2) of this four-frame walking jester strip. This third pose wrongly repeats GOLD leg forward, RED leg behind. Swap the stride anatomically: near RIGHT RED leg must extend FORWARD toward imageRIGHT with its RED pointed shoe planted; far LEFT GOLD leg must extend BEHIND toward imageLEFT with its GOLD pointed shoe trailing. Red thigh overlaps gold at their crossing. Each leg keeps its own color from hip through shoe, not a mixed colored boot. Exactlytwo legs. Keep all upper-body pixels, cap/head/body size, correct gold marotte-holding arm and free red forward arm unchanged. Keep first, second and fourth cells unchanged. Result chronology gold contact0, gold support/redpassing1, RED contact2, red support/goldpassing3. Do not duplicate phase0 legs. Common baseline and fixed front-right quarter camera, original coarse pixel art and transparent background. Four equal cells, no other changes.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-0483d66c-840b-481e-9c27-01ded8d6e01d.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-7-front-right-single-seeded-v2.png"
+  ],
+  "view": 7,
+  "phase": 2,
+  "action": "walk",
+  "correction": "opposite red forward contact",
+  "referencePins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-7-front-right-single-seeded-v2.png",
+      "sha256": "c68a825d102e33f4124ce7f1da8a919e13baf5aeaa540677ff07e3925ebd7adc"
+    }
+  ]
+}

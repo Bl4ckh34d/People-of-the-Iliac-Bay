@@ -1,0 +1,37 @@
+{
+  "status": "repaired compositing prototype; staged in mod texture bytes for parent build",
+  "asset": "shopkeeper-182-0-front-left-12frame-v3-cleanplate.png",
+  "preview": "work/keeper-review/audit/view1-before-after-v11.png",
+  "orientation": 1,
+  "bearing": "true front-left quarter; nose image-left; do not mirror",
+  "cellDimensions": [96, 96],
+  "sheetDimensions": [384, 288],
+  "effectiveCharacterHeight": 76,
+  "frameRateFps": 5,
+  "animationMap": [0, 0, 0, 1, 2, 3, 3, 3, 3, 3, 3, 5],
+  "anatomy": "Only anatomical LEFT offer arm/sleeve/hand changes, extending image-right. Anatomical RIGHT pouch hand at image-left remains fixed. Old lower image-right resting active-arm sleeve/wrist removed under gesture poses.",
+  "compositing": {
+    "method": "Start from exact approved rest base. In the tight distal old-arm silhouette, clear old cyan sleeve/wrist pixels and same-pose transparent pixels, retaining the pose clean-plate's non-arm vest/pants pixels. Then place only the raised anatomical-left arm silhouette from the corresponding keypose above the body. No broad rectangular restoration masks.",
+    "coordinates": "96x96 cell, origin top-left",
+    "oldLowerArmCleanPlatePolygon": [[56,44],[63,44],[67,47],[66,52],[63,54],[59,55],[56,53],[55,50]],
+    "raisedArmPolygonsByPose": {
+      "1": [[58,25],[63,25],[67,29],[69,34],[72,37],[73,42],[72,46],[68,49],[64,49],[61,46],[59,42],[58,37]],
+      "2": [[58,25],[63,25],[67,29],[70,33],[74,36],[78,39],[81,42],[83,47],[81,50],[76,51],[71,50],[67,48],[64,45],[61,41],[59,36]],
+      "3": [[58,25],[63,25],[67,29],[70,33],[74,35],[79,37],[83,39],[84,43],[84,48],[82,51],[77,52],[72,50],[68,48],[64,45],[61,41],[59,37]],
+      "5": [[58,25],[63,25],[67,29],[70,33],[74,36],[78,39],[81,42],[83,47],[81,50],[76,51],[71,50],[67,48],[64,45],[61,41],[59,36]]
+    },
+    "sourceAtlas": "shopkeeper-182-0-front-left-keyposes-normalized-inspection.png"
+  },
+  "qa": {
+    "restFrames0to2ExactBase": true,
+    "holdFrames5to10UsePose3": true,
+    "phase11Intermediate": true,
+    "visualReview": "Enlarged shoulder-to-pouch before/after phases3,4,5,11 reviewed. Extra old lower sleeve/wrist removed; connected raised sleeve and pouch hand retained.",
+    "limitations": ["Parent owns build/Unity testing; no build or Player changes made by art agent."]
+  },
+  "sourceReferences": {
+    "base": "shopkeeper-182-0-front-left-base-v3-96cell.png",
+    "normalizedKeyposes": "shopkeeper-182-0-front-left-keyposes-normalized-inspection.png",
+    "beforeAfter": "work/keeper-review/audit/view1-before-after-v11.png"
+  }
+}

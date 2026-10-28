@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "archive": 385,
+  "direction": 6,
+  "bearing": "right-profile",
+  "action": "bow",
+  "status": "candidate-two-key-pair-incomplete-cycle",
+  "sourceRect": [
+    300,
+    150,
+    1145,
+    1280
+  ],
+  "cellSize": [
+    171,
+    229
+  ],
+  "generatedUniqueFrames": 2,
+  "cycleComplete": false,
+  "processing": "Same crop and nearest-neighbor reduction for both frames. Generated alpha preserved.",
+  "frames": [
+    {
+      "phase": "draw",
+      "source": "385-bow-right-key-draw-v1.png",
+      "sourceSha256": "20453181ecdc7f84898cab7660e9001ac9e70866b458d8c74ce18905417a376a",
+      "file": "candidate-bow-right-pair\\draw.png",
+      "sha256": "743bfdaf37ebf527566a5f566a6a45ba30e95e3e8666f788535d6de894be90e4"
+    },
+    {
+      "phase": "release",
+      "source": "385-bow-right-key-release-v1.png",
+      "sourceSha256": "342ce89f82fb9c7e410a1d73de3b9a20968b8239a3b3a94319c0ae4ac0c40c33",
+      "file": "candidate-bow-right-pair\\release.png",
+      "sha256": "fe339323ef0c817f8cea3103a47c5279f76b6b7e14f0a6e66d4d8c429d563a15"
+    }
+  ],
+  "missingPhases": [
+    "nock-ready",
+    "recovery"
+  ],
+  "states": {
+    "candidate": true,
+    "generated": true,
+    "technically_checked": true,
+    "visually_reviewed": true,
+    "integrated": false,
+    "user_approved": false
+  },
+  "block": "Further nock generation rejected by image_gen moderation_blocked violence; see generation-block.json."
+}

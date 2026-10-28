@@ -1,0 +1,121 @@
+{
+  "status": "camera-repair-candidate-pending-parent-review",
+  "source": "381-swim-view-4-camera-repair-generated-v1.png",
+  "sourceSha256": "19ea96c7b85e614b798b4d86392543f4ae314fb4c626b1ce9ca31a749f8ec298",
+  "appearance": 381,
+  "state": "swimming",
+  "bearing": 4,
+  "frames": [
+    {
+      "phase": 0,
+      "file": "phase-0.png",
+      "sha256": "8fd0438f643a8a36a6ee0d494739e8f73edfa4d2ac4a61d3dec4cfa9849248ed",
+      "source": "381-swim-view-4-camera-repair-generated-v1.png",
+      "sourceSha256": "19ea96c7b85e614b798b4d86392543f4ae314fb4c626b1ce9ca31a749f8ec298",
+      "sourceCrop": [
+        0,
+        0,
+        768,
+        512
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        56,
+        13
+      ],
+      "alpha128Bounds": [
+        104,
+        39,
+        149,
+        111
+      ]
+    },
+    {
+      "phase": 1,
+      "file": "phase-1.png",
+      "sha256": "f701f6cf70703a477fdf7291ac53c0246f48241eab82a776a15a62651e5b0ffb",
+      "source": "381-swim-view-4-camera-repair-generated-v1.png",
+      "sourceSha256": "19ea96c7b85e614b798b4d86392543f4ae314fb4c626b1ce9ca31a749f8ec298",
+      "sourceCrop": [
+        768,
+        0,
+        1536,
+        512
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        59,
+        12
+      ],
+      "alpha128Bounds": [
+        75,
+        39,
+        181,
+        110
+      ]
+    },
+    {
+      "phase": 2,
+      "file": "phase-2.png",
+      "sha256": "a58470d5e0328850978d5f716dcd8c2b2128a23daa1223e486b45a5f9ecf4a71",
+      "source": "381-swim-view-4-camera-repair-generated-v2.png",
+      "sourceSha256": "3058daf84c3b1d3de603ab905550bd49f00dd225b6d9c4605e6886f9f3dcbb54",
+      "sourceCrop": [
+        0,
+        512,
+        700,
+        1024
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        55,
+        19
+      ],
+      "alpha128Bounds": [
+        76,
+        38,
+        175,
+        100
+      ]
+    },
+    {
+      "phase": 3,
+      "file": "phase-3.png",
+      "sha256": "08e27ab06c0142e71ba54f003317a0177a21f027dcdc0cd3bdec5ef4bcca33ea",
+      "source": "381-swim-view-4-camera-repair-generated-v1.png",
+      "sourceSha256": "19ea96c7b85e614b798b4d86392543f4ae314fb4c626b1ce9ca31a749f8ec298",
+      "sourceCrop": [
+        700,
+        512,
+        1536,
+        1024
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        47,
+        12
+      ],
+      "alpha128Bounds": [
+        58,
+        38,
+        199,
+        95
+      ]
+    }
+  ],
+  "technicalChecks": {
+    "rgba": true,
+    "noAlpha128Clipping": true,
+    "identicalPixelScale": true
+  },
+  "visuallyReviewed": true,
+  "uniformCameraAccepted": false,
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "notes": [
+    "Camera projection genuinely regenerated; no canvas squashing or perspective warping.",
+    "Feet more foreground, torso foreshortened; exact match to profile eye height remains under review.",
+    "Recovery arm projection differs from master; phase consistency remains a limitation."
+  ],
+  "visualReview": "Parent inspected lower camera; recovery subsequently repaired to tuck hands behind shoulders. Combined v2 swim preferred after parent inspection."
+}

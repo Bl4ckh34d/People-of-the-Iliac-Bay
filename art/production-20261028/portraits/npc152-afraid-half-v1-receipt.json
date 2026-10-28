@@ -1,0 +1,15 @@
+{
+  "arguments": {
+    "prompt": "Use case: identity-preserve. Pixel-art animation asset repair, Daggerfall NPC152. Image1 is the selected afraid OPEN upper-half portrait edit target, image2 is its CLOSED endpoint, image3 is original identity reference. Create ONE upper-half portrait with the intermediate HALF blink between image1 and image2. Keep exact same whole upper-face framing and 64:35 ratio, nearest-neighbour enlarged pixel clusters. Only upper eyelids descend halfway over the existing eyeballs. Continuous thin dark upper-lash contours across both eyes. A narrow strip of the original iris remains visible below new descending upper lashes at exactly the original iris coordinates. Do not move pupils down, do not enlarge or round eyes. Keep lower lids, cheeks, nose, brows, forehead, hair, complexion and shading completely fixed to image1. Existing worried brows stay unchanged. Eye white muted brown/gray like original, no white flash or horizontal two-tone split. Full 64x35-proportion upper face only, no extra rows or cells, no border, no text, no lower face. Subtle old-game pixel artwork, never high-resolution repaint.",
+    "referenced_image_paths": [
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc152-afraid-open-reference.png",
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc152-afraid-closed-reference.png",
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc152-neutral-upper-reference.png"
+    ],
+    "transparent_background": false
+  },
+  "output_hint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-60447da6-c5c7-412c-a85c-013db8f89053.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "provider": "built-in image_gen",
+  "rawSourcePath": "C:/Users/Daniel/.codex/generated_images/01a1807d-d8cf-78d0-bd35-9799085fcd8d/exec-60447da6-c5c7-412c-a85c-013db8f89053.png",
+  "status": "generated-not-selected"
+}

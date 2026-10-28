@@ -1,0 +1,122 @@
+{
+  "record": 236,
+  "bank": "TFAC00I0.RCI",
+  "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-236.png",
+  "sourceSha256": "72ae33a5f1097bb8f7acd1272407821cf91182b07fcfee0423af882415ca7619",
+  "eyeEnvelopePolygons": [
+    [
+      [
+        17,
+        16
+      ],
+      [
+        22,
+        13
+      ],
+      [
+        29,
+        13
+      ],
+      [
+        31,
+        16
+      ],
+      [
+        31,
+        23
+      ],
+      [
+        17,
+        23
+      ]
+    ],
+    [
+      [
+        34,
+        14
+      ],
+      [
+        44,
+        13
+      ],
+      [
+        49,
+        16
+      ],
+      [
+        49,
+        23
+      ],
+      [
+        34,
+        23
+      ]
+    ]
+  ],
+  "nativeEyeApertureRows": [
+    21,
+    22
+  ],
+  "fixedLowerFaceFromRow": 24,
+  "sampling": "Whole square NN64x64; no independent iris shift",
+  "masters": [
+    {
+      "mood": "neutral",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\neutral-master.png",
+      "sha256": "72ae33a5f1097bb8f7acd1272407821cf91182b07fcfee0423af882415ca7619",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-236.png",
+      "rawSha256": "72ae33a5f1097bb8f7acd1272407821cf91182b07fcfee0423af882415ca7619",
+      "outsideMaskExact": true
+    },
+    {
+      "mood": "happy",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\happy-master.png",
+      "sha256": "edc8b8547eef3313fe579cf0201e1a9ef507b3cecaf137f2f4f01bf66f86f74d",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\happy-raw.png",
+      "rawSha256": "9fd60f386f5dae9112347fbb12e60042c8c525d6cadfa117d061d535e45b954e",
+      "outsideMaskExact": true
+    },
+    {
+      "mood": "angry",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\angry-master.png",
+      "sha256": "dbba7288db308f60d0c4eb058a3a2525344b222d55be5d8edb5f07f271587643",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\angry-raw.png",
+      "rawSha256": "cc565cf9f0d724411f686760e7b23766b4695aec6493af0360f28e4ca8c75e8f",
+      "outsideMaskExact": true
+    },
+    {
+      "mood": "sad",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\sad-master.png",
+      "sha256": "bf87076cd4e9fa0d6a22a75c2f0a9e6072b9f3695e1aaceb2b91ee14f0be32e5",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\sad-raw.png",
+      "rawSha256": "e4f11c8092b187c46d5a8b5a13eb068d40b158447d621f89f5ee9bf830c84497",
+      "outsideMaskExact": true
+    },
+    {
+      "mood": "afraid",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\afraid-master.png",
+      "sha256": "a7caba15d1ef09d7d972927580e8e4f847ee56d598139f074b5e25a34224810b",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\afraid-raw.png",
+      "rawSha256": "9739ea4ca8d6954f44b6eec33a43dc16fa3612daeb2dea315b928e34f07f840e",
+      "outsideMaskExact": true
+    },
+    {
+      "mood": "guarded",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\guarded-master.png",
+      "sha256": "da2c7fdc7c6df136fc29527154d2ef2c8e3fc3169bd8e987add86fef5d22d7b4",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc236-masters-v1\\guarded-raw.png",
+      "rawSha256": "5384e87509f56e438ef1b43e447e6a214a0d4c1e0507a4cd28c08725c298bd04",
+      "outsideMaskExact": true
+    }
+  ],
+  "visualAcceptance": {
+    "scope": "Root direct native composite comparison; masters only",
+    "reviewContactSha256": "2ef2c265d56245a3a56abd9f2436f2e2de8be65c92d0fadfdae31f7de86f24ef",
+    "limitations": [
+      "Happy restrained; sad/fear both raised-brow but fear outer brow higher. Eyes remain native rows21/22. No blink/lateral validation yet."
+    ]
+  },
+  "limitations": [
+    "No blink or gaze states selected yet. Original mouth retained."
+  ]
+}

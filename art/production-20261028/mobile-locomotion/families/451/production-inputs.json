@@ -1,0 +1,81 @@
+{
+  "archive": 451,
+  "motion_template": 397,
+  "raw_output_directory": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v2",
+    "view-1-v1",
+    "view-2-v1",
+    "view-3-v1",
+    "view-4-v1"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "ea15631e-52c6-497e-842f-82f2dc3f5d22"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "e990e538-f464-4915-9093-ab2f6fd9b785"
+    },
+    {
+      "name": "view-2-v1",
+      "id": "fca65b23-987b-4d36-b4fd-3f15d0b4ed97"
+    },
+    {
+      "name": "view-3-v1",
+      "id": "d0b51fda-b9ac-4943-9ccf-48f1e0aa1f9f"
+    },
+    {
+      "name": "view-4-v1",
+      "id": "7441a20f-5e10-4088-a46f-ec9bcf0ceac8"
+    },
+    {
+      "name": "view-0-v2",
+      "id": "b648cb10-d55b-43e4-8d74-de63f470be24",
+      "references": [
+        "view-0-v1.png",
+        "native-reference/view-0.png"
+      ]
+    },
+    {
+      "name": "view-4-v2",
+      "id": "ff7df0b3-449c-4df4-a9c2-d8c5ed4facef",
+      "references": [
+        "view-4-v1.png",
+        "native-reference/view-4.png"
+      ]
+    },
+    {
+      "name": "view-4-phase-2-v3",
+      "id": "f95a7715-40d6-42e5-91e3-ccf80052e99c",
+      "references": [
+        "view-4-v1.png",
+        "native-reference/view-4.png"
+      ]
+    },
+    {
+      "name": "view-4-phase-2-v4",
+      "id": "dbbbe278-bd9e-43f8-bb2e-bdcb1618c55a",
+      "references": [
+        "view-4-phase-2-v3.png"
+      ]
+    }
+  ],
+  "source_overrides": [
+    {
+      "bearing": 4,
+      "phase": 2,
+      "file": "view-4-phase-2-v4.png",
+      "resolution_ratio": 2.187904967602592,
+      "normalization": "Uniform alpha128 silhouette height matched to rear contact0."
+    }
+  ],
+  "reference_policy": "397 motion only; native451 identity with light tan skin, green/orange hood, teal short top/gold abdomen, green gloves, plaid skirt/brown shoes and brown pouches. Front missing pouch restored; back opposite contact repaired to keep pouch IMAGE LEFT with low hand IMAGE RIGHT. Opposite bearings use native renderer mirrors.",
+  "known_limits": [
+    "Candidate only: skin/arm definition, hood, glove shape, gold shine and plaid pattern vary. Front repaired plaid less regular; rear single repair smoother.",
+    "Skirt folds and hidden leg depth approximate; profile contacts similar; four phases omit passing intermediates.",
+    "Twelve mirrored view slots are derivatives, not independent generations.",
+    "No runtime integration, temporal game acceptance or user approval."
+  ]
+}

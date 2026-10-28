@@ -1,0 +1,239 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-28",
+  "identity": "vanilla:mobile:381:None",
+  "sourceInventory": "../source-inventory.json",
+  "sourceInventorySha256": "91a686400097a7d572d0219820b26362257e355ff2ce833df2e39851f32c622e",
+  "sourceInventoryCounts": {
+    "currentFlatRecords": 206,
+    "historicalVisualStationaryRecords": 209,
+    "stationaryUnion": 226,
+    "civilianMobileFamilies": 24,
+    "guardFamilies": 1,
+    "knownProviderQualifiedIdentities": 436,
+    "enabledMods": 21,
+    "additionalExtractedModReferences": 133,
+    "modMobileResourceFamilies": 2,
+    "excludedEditorMarkers": 17,
+    "exactSourceEquivalenceGroups": 22
+  },
+  "status": "381-three-action-eight-bearing-candidates-generated-inventory-uncovered",
+  "actions": [
+    {
+      "action": "jumping",
+      "manifest": "381-jump-eight-views-v1/manifest.json",
+      "manifestSha256": "dbf2860e02f5a088ff9b5c29ee61e1457d7337d3bbb1877f78fec5d55155e050",
+      "selectedPackedFrames": 32,
+      "generatedBearings": 8,
+      "targetBearings": 8,
+      "targetFramesPerBearing": 4,
+      "technicalChecks": {
+        "all32Rgba": true,
+        "distinctPhasesPerBearing": 4,
+        "noAlpha128Clipping": true,
+        "atlasExact": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "All32packedframes inspected in two contact sheets; eight bearings and four real phases present. No obvious duplicate limbs or clipped figures. Face/body/pouch consistency remains a candidate limitation.",
+      "integrated": false,
+      "userApproved": false,
+      "acceptedProductionFrames": 0
+    },
+    {
+      "action": "climbing",
+      "manifest": "381-climb-eight-views-v1/manifest.json",
+      "manifestSha256": "6b5703d3a8279560bf267ab1ddb213a5db255f0ab2f604390c81c723365838a9",
+      "selectedPackedFrames": 32,
+      "generatedBearings": 8,
+      "targetBearings": 8,
+      "targetFramesPerBearing": 4,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPerBearing": true,
+        "sourceCropNoAlpha128Clipping": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "uniformPixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both32-frame contact pages personally inspected. Eight bearings with genuine reach/pull/tuck/push articulation; front-right7 subsequently regenerated toward viewer to separate from profile6. Far-limb occlusion, source identity variation and exact wall registration remain unaccepted.",
+      "integrated": false,
+      "userApproved": false,
+      "acceptedProductionFrames": 0
+    },
+    {
+      "action": "swimming",
+      "manifest": "381-swim-eight-views-v2/manifest.json",
+      "manifestSha256": "50de2cc7cc5695e9e1b39d409342d3f74094d99bb8efb466abf78bffbd48707b",
+      "selectedPackedFrames": 32,
+      "generatedBearings": 8,
+      "targetBearings": 8,
+      "targetFramesPerBearing": 4,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPerBearing": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "uniformPixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both native-size contact sheets personally inspected: eight distinct bearings and four readable phases, no cropped limbs. Camera elevation, head/face and pouch variation remain; no temporal acceptance.",
+      "integrated": false,
+      "userApproved": false,
+      "acceptedProductionFrames": 0
+    }
+  ],
+  "selectedPackedCandidateFrames": 96,
+  "targetFramesFor381ThreeActions": 96,
+  "missingPackedFramesFor381AtFourPhases": 0,
+  "acceptedProductionFrames": 0,
+  "otherIdentitiesTraversalProduction": "382 has96 candidates;383 has84 candidates, with swim bearings4/5/7 open. Bearing4 is blocked; its retry is excluded. Remaining inventory uncovered.",
+  "worldScaleContract": "native-scale-contract.json",
+  "notes": [
+    "Packed means technically valid candidate, not visual or runtime acceptance.",
+    "Swimv2 is preferred after lower front/rear camera regeneration. Climb uses the new reach/pull/tuck/push sequence; old contralateral diagnostics are not counted. Temporal, cross-bearing and wall-contact acceptance remain open.",
+    "No package, game code, build, installation or shared queue changed.",
+    "Initial grids and superseded compact swim remain rejected evidence, excluded from current selected frame count."
+  ],
+  "additionalAuditCandidates": [
+    {
+      "manifest": "381-climb-rear-cycle-v1/manifest.json",
+      "packedFrames": 4,
+      "selectedProduction": false,
+      "reason": "Opposite arm/knee audit; pull leg transition sparse; physical depth contact unvalidated."
+    }
+  ],
+  "additionalFamilies": [
+    {
+      "identity": "vanilla:mobile:382:None",
+      "action": "jumping",
+      "manifest": "families/382/jump-eight-views-v1/manifest.json",
+      "manifestSha256": "3d0ebecc0a9e9f316b3f7fa9c7aa09caac101f7a971c69ee93676efc04a80a55",
+      "selectedPackedFrames": 32,
+      "authoredFrames": 20,
+      "mirrorDerivedFrames": 12,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPhasesPerBearing": true,
+        "sourceCropNoAlpha128Clipping": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "mirrorsExact": true,
+        "samePixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both native-scale contact pages inspected: four poses and five authored cameras distinct; three exact mirrors preserve symmetric limb timing. Front0 body visibly larger than other bearings; generated head/body ratios and native palette remain unaccepted.",
+      "integrated": false,
+      "userApproved": false
+    },
+    {
+      "identity": "vanilla:mobile:382:None",
+      "action": "climbing",
+      "manifest": "families/382/climb-eight-views-v1/manifest.json",
+      "manifestSha256": "f4f40905cf3f47e33a861cffc8c5c5c7ba152d47be05be2f27d21fffc748549d",
+      "selectedPackedFrames": 32,
+      "authoredFrames": 32,
+      "mirrorDerivedFrames": 0,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPhasesPerBearing": true,
+        "sourceCropNoAlpha128Clipping": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "samePixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both32-frame contact pages inspected. Right-arm identity readable across front/rear and opposed profiles; four phases distinct. Right profile leans more than other views, far limbs occluded. No temporal, physical-contact or palette acceptance.",
+      "integrated": false,
+      "userApproved": false
+    },
+    {
+      "identity": "vanilla:mobile:382:None",
+      "action": "swimming",
+      "manifest": "families/382/swim-eight-views-v1/manifest.json",
+      "manifestSha256": "9fbd229447c2bece4e2b840e45e7f7f727f90c6d4347dd8dbcf87c5f617c0eb4",
+      "selectedPackedFrames": 32,
+      "authoredFrames": 32,
+      "mirrorDerivedFrames": 0,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPhasesPerBearing": true,
+        "sourceCropNoAlpha128Clipping": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "samePixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both contact pages inspected at native pixel size: eight bearings and four breaststroke phases distinct, long profile anatomy and camera foreshortening plausible. Quarter camera elevation and proportions vary. Static candidate, not temporal/waterline acceptance.",
+      "integrated": false,
+      "userApproved": false
+    },
+    {
+      "identity": "vanilla:mobile:383:None",
+      "action": "jumping",
+      "manifest": "families/383/jump-eight-views-v1/manifest.json",
+      "manifestSha256": "5e9144ed99a83203407e06e85c42aff4826cdf8387d507abd0e623aee08a80b4",
+      "selectedPackedFrames": 32,
+      "authoredFrames": 20,
+      "mirrorDerivedFrames": 12,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPhasesPerBearing": true,
+        "sourceCropNoAlpha128Clipping": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "mirrorsExact": true,
+        "samePixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both native-scale contact pages personally inspected: five authored cameras and three exact mirror derivatives show four clear phases. Teal/yellow identity retained; front0 larger, profile apex torso slightly turns toward camera. Face/hair/hem and proportions vary; no temporal acceptance.",
+      "integrated": false,
+      "userApproved": false
+    },
+    {
+      "identity": "vanilla:mobile:383:None",
+      "action": "climbing",
+      "manifest": "families/383/climb-eight-views-v1/manifest.json",
+      "manifestSha256": "b2af16decbecf92675fb1a88cd0a57c587586cc90c17b2aa487ce5b5758491d9",
+      "selectedPackedFrames": 32,
+      "authoredFrames": 32,
+      "mirrorDerivedFrames": 0,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPhasesPerBearing": true,
+        "sourceCropNoAlpha128Clipping": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "samePixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both contact pages personally inspected: anatomical right arm readable across8views, four true joint phases. Right profile stronger lean and rear-left repaired sleeve-edge drift remain. Front0 larger; no temporal, wall-contact or palette acceptance.",
+      "integrated": false,
+      "userApproved": false
+    },
+    {
+      "identity": "vanilla:mobile:383:None",
+      "action": "swimming",
+      "manifest": "families/383/swim-five-views-v1/manifest.json",
+      "manifestSha256": "dc0adcdfe52121ff3228df548fcb76f6ee674c9c67c23b4f9c458a6eb69f29c9",
+      "selectedPackedFrames": 20,
+      "authoredFrames": 20,
+      "mirrorDerivedFrames": 0,
+      "technicalChecks": {
+        "rgba": true,
+        "fourDistinctPhasesPerBearing": true,
+        "sourceCropNoAlpha128Clipping": true,
+        "noAlpha128Clipping": true,
+        "atlasExact": true,
+        "samePixelScaleWithinBearing": true
+      },
+      "visuallyReviewed": true,
+      "visualResult": "Both five-bearing contact pages inspected at native pixel size with alpha128 cutout. Four distinct breaststroke phases, long profile bodies and teal/yellow costume retained. Front and quarter camera/proportion variation and facial shading drift remain. Missing bearings4/5/7 are explicitly blank; no blocked or excluded output selected. No temporal or waterline acceptance.",
+      "integrated": false,
+      "userApproved": false
+    }
+  ],
+  "selectedPackedCandidateFramesAllFamilies": 276,
+  "remaining382FramesAtFourPhases": 0,
+  "remaining383FramesAtFourPhases": 12
+}

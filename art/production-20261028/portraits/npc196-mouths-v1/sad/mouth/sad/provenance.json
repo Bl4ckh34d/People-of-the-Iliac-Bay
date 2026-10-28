@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-28T04:46:58.2245746Z",
+    "portraitRecord":  196,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "sad",
+    "prompt":  "Produce a sad speech-mouth atlas for this EXACT bearded Daggerfall portrait. FIRST image is the geometry/phoneme template: preserve its exact 3x3 grid and nine lower-half 64x29 cell crops. SECOND image is the same person\u0027s selected closed sad mouth: restrained sadness with gently downward corners. Change only lip tension/corners subtly while preserving identity, moustache/beard, native pixel scale, low contrast, jaw/neck/clothing/background. OUTPUT ONLY the 3x3 lower-half grid matching first image aspect, no labels or full faces. Row-major A B C / D E F / G H X: A closed pressured P/B/M; B narrow opening with nearly together teeth EE/consonants; C medium unrounded EH/AE visibly more open than B; D tall vertical AA largest opening DOWNWARD; E slightly rounded AO/ER, clearly NARROWER and rounder than C; F small puckered UW/OW/W no teeth bite; G upper teeth touching lower lip F/V; H raised tongue behind upper teeth L, opening between C/D; X relaxed CLOSED emotional idle. Keep A/X closed, never agape. Upper teeth stay at template\u0027s fixed native lower-half row 5; lower jaw opens DOWN. Never raise upper teeth in D/H. Preserve tall D, unrounded C versus rounded narrower E, small F, G contact and visible H tongue. Oral interior opaque, subdued ivory teeth, no bright white banner. No zoom or shifted cell framing.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-2557943e-6741-4a5a-81ef-04db5c62f5ce.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-2557943e-6741-4a5a-81ef-04db5c62f5ce.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "a13506f5b169c24ca34f34a1e768f2f14886b6a09bd8a544886521e4929010e0",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "4e36b061634e6d9cc4367283a5c683df4f86f0d791c9008c3f097474043cc0e1",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-2557943e-6741-4a5a-81ef-04db5c62f5ce.png",
+                      "sha256":  "32b2a44cc7a9ceea5f23f8d9288a38d3567c6e740a4a496b698c555ec3220d41",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/sad/raw.png",
+                "sha256":  "32b2a44cc7a9ceea5f23f8d9288a38d3567c6e740a4a496b698c555ec3220d41",
+                "width":  1863,
+                "height":  844
+            }
+}

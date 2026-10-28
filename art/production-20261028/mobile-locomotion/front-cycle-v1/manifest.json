@@ -1,0 +1,52 @@
+{
+  "bearing": 0,
+  "source_entries": [
+    {
+      "phase": 0,
+      "source": "385-front-near-contact-source.png",
+      "source_sha256": "94522ffc2f38391ab49fffdab22eea04ca2b00492d3347e7b0391b2b6e1781c3",
+      "scale": 0.2,
+      "placement": [
+        18,
+        10
+      ]
+    },
+    {
+      "phase": 1,
+      "source": "385-front-far-flight-v1.png",
+      "source_sha256": "adcb60d93fd05ad02aede688e81ddf53d03a56ddd5f60e67926b8d11d1d6d993",
+      "scale": 0.1,
+      "placement": [
+        18,
+        10
+      ]
+    },
+    {
+      "phase": 2,
+      "source": "385-front-far-contact-v1.png",
+      "source_sha256": "572ec72893e7242c1128e3825bc30efa3cf721d503ec9e4bb560ed92af4e6d33",
+      "scale": 0.1,
+      "placement": [
+        18,
+        14
+      ]
+    },
+    {
+      "phase": 3,
+      "source": "385-front-near-flight-source.png",
+      "source_sha256": "931d8b2d725e52eba2c9be5adb3a1f92ab25a9fc1f8390c6456b83f921fb3af8",
+      "scale": 0.2,
+      "placement": [
+        18,
+        13
+      ]
+    }
+  ],
+  "generated": true,
+  "technical_checked": true,
+  "visual_reviewed": false,
+  "integrated": false,
+  "user_approved": false,
+  "phase_reference": "left-cycle-v2",
+  "packing": "Scale normalized by original input resolution; contact baseline aligned; flight head fixed at mean contact head minus3px, not foot-normalized."
+}

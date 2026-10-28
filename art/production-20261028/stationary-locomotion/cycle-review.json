@@ -1,0 +1,130 @@
+{
+  "status": "one-bearing-four-phase-review-candidate-not-production",
+  "identity": "vanilla:stationary:182:0",
+  "action": "walk",
+  "bearing": 2,
+  "frameOrderReason": "Contact near leg, support near leg with far passing, contact far leg, support far leg with near passing. Original generation labels are not temporal order.",
+  "logicalOriginalExtent": [
+    47,
+    76
+  ],
+  "reviewCell": [
+    96,
+    96
+  ],
+  "uniformScale": 0.05128205128205128,
+  "commonRawCanvasAnchor": [
+    493.5,
+    1549
+  ],
+  "nativePlacementAnchor": [
+    48,
+    88
+  ],
+  "alphaCutoff": 128,
+  "reviewFps": 4,
+  "frames": [
+    {
+      "index": 0,
+      "source": "flat-182-0-walk-left-contactA-v1.png",
+      "sourceSha256": "68c0cb0ad3eda86728e0b4b1144bdc1d6fcd89716b23bb9822eec9193ffd60b6",
+      "phase": "near-contact",
+      "description": "Near leg forward; near arm back.",
+      "sourceSize": [
+        987,
+        1594
+      ],
+      "scaledCanvasSize": [
+        51,
+        82
+      ],
+      "placement": [
+        23,
+        9
+      ],
+      "nativeAlphaBounds": [
+        29,
+        12,
+        69,
+        89
+      ]
+    },
+    {
+      "index": 1,
+      "source": "flat-182-0-walk-left-passingB-v1.png",
+      "sourceSha256": "52812f05ce89e84cfd3a3a90aee9bcb7534ac7e1618b9e4513119d705e799a5a",
+      "phase": "near-support",
+      "description": "Near leg supports; far bent leg passes forward behind it.",
+      "sourceSize": [
+        987,
+        1594
+      ],
+      "scaledCanvasSize": [
+        51,
+        82
+      ],
+      "placement": [
+        23,
+        9
+      ],
+      "nativeAlphaBounds": [
+        33,
+        12,
+        60,
+        89
+      ]
+    },
+    {
+      "index": 2,
+      "source": "flat-182-0-walk-left-contactB-v1.png",
+      "sourceSha256": "c6e3e113e000302d398053af3c74df5e44197063a04d33a81b8eaf029286ef13",
+      "phase": "far-contact",
+      "description": "Far leg forward; near arm forward, near leg behind.",
+      "sourceSize": [
+        987,
+        1593
+      ],
+      "scaledCanvasSize": [
+        51,
+        82
+      ],
+      "placement": [
+        23,
+        9
+      ],
+      "nativeAlphaBounds": [
+        31,
+        12,
+        66,
+        88
+      ]
+    },
+    {
+      "index": 3,
+      "source": "flat-182-0-walk-left-passing-keyframe-v2.png",
+      "sourceSha256": "2f51efd6d14aa92920d657bc8b6aabe80a69f598d39b4b2dc476e6878b70bc9a",
+      "phase": "far-support",
+      "description": "Far leg supports; near bent leg passes forward in front.",
+      "sourceSize": [
+        987,
+        1594
+      ],
+      "scaledCanvasSize": [
+        51,
+        82
+      ],
+      "placement": [
+        23,
+        9
+      ],
+      "nativeAlphaBounds": [
+        31,
+        12,
+        60,
+        89
+      ]
+    }
+  ],
+  "sourcePixelsChanged": false,
+  "reviewTransform": "Derived review only: common nearest-neighbor scale, common placement, existing billboard alpha cutoff; no pose warping, limb edits, mirroring, interpolation or duplicate-frame invention."
+}

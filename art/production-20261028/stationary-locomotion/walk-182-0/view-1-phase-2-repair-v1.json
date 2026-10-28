@@ -1,0 +1,16 @@
+{
+  "view": 1,
+  "name": "front-left",
+  "targetPhase": 2,
+  "sourceCell": 0,
+  "fix": "The character faces toward LOWER LEFT. Change to OPPOSITE CONTACT. Move the visible NEAR arm (large cyan sleeve on the image RIGHT side of torso) FORWARD toward image LEFT: bend it gently across front of waist so near hand is LEFT of hip. Move FAR arm BACK toward image RIGHT. NEAR LEFT leg trails BACK toward image RIGHT, toe planted, heel raised. FAR RIGHT leg reaches FORWARD toward image LEFT, heel planted. Near trailing thigh is in front of far advancing thigh where they overlap. Both feet touch common ground. This must visibly reverse the input's near arm-back/contact pose.",
+  "status": "generated-awaiting-visual-review",
+  "file": "view-1-phase-2-repair-v1.png",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-68eb5c1e-2bc2-4db1-aeb5-7f15a6eabe22.png",
+  "prompt": "Precise single-keyframe limb-pose edit. Image is exact edit target and source identity/camera. Keep EXACT same canvas dimensions, transparent margins, head position, head/face silhouette, hair, green vest/torso, belt/pouch, body scale, colors and pixel density. Output only ONE full-body character in this same camera. Change ONLY arms/legs as follows: The character faces toward LOWER LEFT. Change to OPPOSITE CONTACT. Move the visible NEAR arm (large cyan sleeve on the image RIGHT side of torso) FORWARD toward image LEFT: bend it gently across front of waist so near hand is LEFT of hip. Move FAR arm BACK toward image RIGHT. NEAR LEFT leg trails BACK toward image RIGHT, toe planted, heel raised. FAR RIGHT leg reaches FORWARD toward image LEFT, heel planted. Near trailing thigh is in front of far advancing thigh where they overlap. Both feet touch common ground. This must visibly reverse the input's near arm-back/contact pose. Maintain same grounded-foot baseline and same torso/head anchor. Modest ordinary WALK, no running/flight. Correct real limb occlusion, no extra arms/legs, no mirroring of body or pouch. Do not move or redraw the face, do not change clothing/palette or camera. Original coarse crisp pixels and actual transparent background; no text, floor or shadows. The only requested difference is the specified genuine opposite gait phase.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/keyframe-inputs/view-1-cell-0.png"
+  ],
+  "sourceSheet": "view-1-front-left-v1.png",
+  "tool": "built-in image_gen"
+}

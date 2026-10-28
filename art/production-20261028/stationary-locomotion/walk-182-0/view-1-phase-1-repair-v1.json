@@ -1,0 +1,16 @@
+{
+  "view": 1,
+  "name": "front-left",
+  "targetPhase": 1,
+  "sourceCell": 1,
+  "fix": "Correct this PASSING phase by switching which leg is lifted. The character faces LOWER LEFT. The NEAR LEFT LEG (the large bent foreground leg currently raised toward image LEFT) must become STRAIGHT and WEIGHT-BEARING, its boot planted beneath hips on baseline. Lift the FAR RIGHT leg to pass forward just LEFT of the near supporting shin, but keep this bent far leg BEHIND the straight near leg at overlap. Do not retain the same lifted near leg as input. Arms stay nearly vertical.",
+  "status": "generated-awaiting-visual-review",
+  "file": "view-1-phase-1-repair-v1.png",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-66d300e9-26f6-4748-bf7e-fd4d6559017f.png",
+  "prompt": "Precise single-keyframe limb-pose edit. Image is exact edit target and source identity/camera. Keep EXACT same canvas dimensions, transparent margins, head position, head/face silhouette, hair, green vest/torso, belt/pouch, body scale, colors and pixel density. Output only ONE full-body character in this same camera. Change ONLY arms/legs as follows: Correct this PASSING phase by switching which leg is lifted. The character faces LOWER LEFT. The NEAR LEFT LEG (the large bent foreground leg currently raised toward image LEFT) must become STRAIGHT and WEIGHT-BEARING, its boot planted beneath hips on baseline. Lift the FAR RIGHT leg to pass forward just LEFT of the near supporting shin, but keep this bent far leg BEHIND the straight near leg at overlap. Do not retain the same lifted near leg as input. Arms stay nearly vertical. Maintain same grounded-foot baseline and same torso/head anchor. Modest ordinary WALK, no running/flight. Correct real limb occlusion, no extra arms/legs, no mirroring of body or pouch. Do not move or redraw the face, do not change clothing/palette or camera. Original coarse crisp pixels and actual transparent background; no text, floor or shadows. The only requested difference is the specified genuine opposite gait phase.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/keyframe-inputs/view-1-cell-1.png"
+  ],
+  "sourceSheet": "view-1-front-left-v1.png",
+  "tool": "built-in image_gen"
+}

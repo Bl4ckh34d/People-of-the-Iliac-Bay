@@ -1,0 +1,130 @@
+{
+  "status": "alternative-climb-motion-candidate",
+  "appearance": 381,
+  "state": "climbing",
+  "bearing": 6,
+  "phases": [
+    "reach",
+    "pull",
+    "tuck",
+    "push"
+  ],
+  "source": "381-climb-paired-pilot-generated-v1.png",
+  "sourceSha256": "e195eb83049760bab1ea66ec1e63a0bd6561d923d137d9978d2d69a19bf8d432",
+  "frameCount": 4,
+  "pixelCanvas": [
+    160,
+    224
+  ],
+  "pixelScale": 0.19090909090909092,
+  "frames": [
+    {
+      "phase": 0,
+      "name": "reach",
+      "file": "phase-0-reach.png",
+      "sha256": "816d84ae45c533b5e43502b362136fa95e721783041a550a3e7bd71836d9200f",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        38,
+        27
+      ],
+      "alpha128Bounds": [
+        64,
+        30,
+        132,
+        166
+      ]
+    },
+    {
+      "phase": 1,
+      "name": "pull",
+      "file": "phase-1-pull.png",
+      "sha256": "825400331abd53df2cdb4a3a3ac7f441998fc0cfccf1e67099f379fb9ad6dd44",
+      "sourceCrop": [
+        512,
+        0,
+        1024,
+        720
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        36,
+        24
+      ],
+      "alpha128Bounds": [
+        65,
+        43,
+        120,
+        151
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "tuck",
+      "file": "phase-2-tuck.png",
+      "sha256": "8bf2d9392c4f671dbe68e8c4319d0c923665b2fc2a69febdb4bda84100244be7",
+      "sourceCrop": [
+        0,
+        768,
+        512,
+        1536
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        34,
+        25
+      ],
+      "alpha128Bounds": [
+        58,
+        43,
+        123,
+        116
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "push",
+      "file": "phase-3-push.png",
+      "sha256": "92d1724094cb8d439b9e388f002bab7af21739e76578199a6390978cdf5d0b2e",
+      "sourceCrop": [
+        512,
+        720,
+        1024,
+        1536
+      ],
+      "pixelScale": 0.19090909090909092,
+      "placement": [
+        38,
+        28
+      ],
+      "alpha128Bounds": [
+        58,
+        31,
+        124,
+        166
+      ]
+    }
+  ],
+  "technicalChecks": {
+    "rgba": true,
+    "fourDistinctFrames": true,
+    "noAlpha128Clipping": true,
+    "uniformPixelScale": true
+  },
+  "visuallyReviewed": true,
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "knownLimits": [
+    "Paired-hand alternative, not the same contralateral cycle as prior candidates.",
+    "Far limbs overlap substantially in pull/tuck; exact anatomical connectivity not proven.",
+    "Static artwork alone does not establish fixed wall grips or physical weight transfer.",
+    "No integration or temporal acceptance."
+  ],
+  "visualReview": "Contact sheet inspected after correcting unequal source row crops. Four genuine joint poses and fixed right camera; far limbs strongly overlap, no contact/temporal acceptance."
+}

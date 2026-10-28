@@ -1,0 +1,1303 @@
+{
+  "archive": 383,
+  "status": "eight-bearing-review-candidate-not-approved",
+  "frame_count": 32,
+  "generated_pose_count": 20,
+  "derived_mirrored_frame_count": 12,
+  "native_record_mapping": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "bearing_names": [
+    "front",
+    "front-left",
+    "left-profile",
+    "rear-left",
+    "back",
+    "rear-right",
+    "right-profile",
+    "front-right"
+  ],
+  "phase_order": [
+    "left-contact",
+    "right-flight",
+    "right-contact",
+    "left-flight"
+  ],
+  "fps": 8,
+  "canvas": [
+    160,
+    176
+  ],
+  "contact_pixel_height": 110,
+  "pivot_pixels_top_left": [
+    80,
+    156
+  ],
+  "pivot_uv_bottom_left": [
+    0.5,
+    0.11363636363636363
+  ],
+  "target_native_body_world_height": 2.025,
+  "proposed_units_per_pixel": 0.01840909090909091,
+  "proposed_padded_quad_world_size": [
+    2.9454545454545453,
+    3.24
+  ],
+  "world_scale_status": "Export proposal only; native GlobalScale=0.025, current texture override integration not applied.",
+  "native_reference_manifest_sha256": "ec4ef6f2d04d43217bdf8eac3446ce992d5a017b6e264bb36795c022f571d1c5",
+  "source_selection_sha256": "1336d5dfefdad61b306b0f30c0855527b142c0de9f9d6947c616c19f691bbac3",
+  "packing": "Alpha preserved, actual alpha128 gutters, nearest-neighbor resolution-normalized common bearing scale and head anchor. Contacts ground156; flight head starts3px higher; extra clearance translations recorded. Distinct source poses, no limb transformations.",
+  "generated": true,
+  "technical_checked": true,
+  "visual_reviewed": false,
+  "integrated": false,
+  "user_approved": false,
+  "frames": [
+    {
+      "bearing": 0,
+      "name": "front",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "source": {
+        "file": "view-0-v1.png",
+        "column": 0
+      },
+      "source_sha256": "7ba781992f5f0e4d02f7e25bc2e5d4d27c0888166d748e57ed5c7da2ff1c8f97",
+      "source_crop": [
+        0,
+        0,
+        514,
+        724
+      ],
+      "source_bounds": [
+        130,
+        173,
+        344,
+        658
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2277432712215321,
+      "effective_scale": 0.2277432712215321,
+      "placement": [
+        29,
+        6
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-0-frame-0.png",
+      "frame_pixel_sha256": "defbd8a7b5dd57c28fb8933439d8517fca17ce0b86f521cf6d1e038d5ff10e5e",
+      "cutout_bounds": [
+        59,
+        45,
+        107,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 0,
+      "name": "front",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "source": {
+        "file": "view-0-v1.png",
+        "column": 1
+      },
+      "source_sha256": "7ba781992f5f0e4d02f7e25bc2e5d4d27c0888166d748e57ed5c7da2ff1c8f97",
+      "source_crop": [
+        514,
+        0,
+        1077,
+        724
+      ],
+      "source_bounds": [
+        170,
+        165,
+        391,
+        645
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2277432712215321,
+      "effective_scale": 0.2277432712215321,
+      "placement": [
+        14,
+        5
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-0-frame-1.png",
+      "frame_pixel_sha256": "286af6f6b56627cd4fb086dc3b312d8d1cf07e40575087c9e5a3ea093c8d6f0b",
+      "cutout_bounds": [
+        53,
+        43,
+        103,
+        152
+      ],
+      "lowest_cutout_clearance": 4,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 0,
+      "name": "front",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "source": {
+        "file": "view-0-v1.png",
+        "column": 2
+      },
+      "source_sha256": "7ba781992f5f0e4d02f7e25bc2e5d4d27c0888166d748e57ed5c7da2ff1c8f97",
+      "source_crop": [
+        1077,
+        0,
+        1656,
+        724
+      ],
+      "source_bounds": [
+        172,
+        177,
+        391,
+        658
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2277432712215321,
+      "effective_scale": 0.2277432712215321,
+      "placement": [
+        15,
+        6
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-0-frame-2.png",
+      "frame_pixel_sha256": "f9c9491d5ead0d760c48ab52915c5cb1d8444527b8aaaf9538efa34c459abf51",
+      "cutout_bounds": [
+        54,
+        46,
+        104,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 0,
+      "name": "front",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "source": {
+        "file": "view-0-v1.png",
+        "column": 3
+      },
+      "source_sha256": "7ba781992f5f0e4d02f7e25bc2e5d4d27c0888166d748e57ed5c7da2ff1c8f97",
+      "source_crop": [
+        1656,
+        0,
+        2171,
+        724
+      ],
+      "source_bounds": [
+        189,
+        169,
+        407,
+        645
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2277432712215321,
+      "effective_scale": 0.2277432712215321,
+      "placement": [
+        14,
+        5
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-0-frame-3.png",
+      "frame_pixel_sha256": "30f015815f022a6c29bca84c49dbeb757cd47939d0012e10daaf10cef4c6f03a",
+      "cutout_bounds": [
+        57,
+        44,
+        106,
+        152
+      ],
+      "lowest_cutout_clearance": 4,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 1,
+      "name": "front-left",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "source": {
+        "file": "view-1-v1.png",
+        "column": 0
+      },
+      "source_sha256": "5c02b0643ad8f0b4ee6b5e8c841166639bb44c76699ebcaab1f9d67c11b3497d",
+      "source_crop": [
+        0,
+        0,
+        573,
+        724
+      ],
+      "source_bounds": [
+        173,
+        157,
+        397,
+        572
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.26666666666666666,
+      "effective_scale": 0.26666666666666666,
+      "placement": [
+        7,
+        3
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-1-frame-0.png",
+      "frame_pixel_sha256": "3f7f03c6f41fafbbc894267d836aa0d45c834a544f1abf546bef35523187ce4d",
+      "cutout_bounds": [
+        53,
+        45,
+        113,
+        155
+      ],
+      "lowest_cutout_clearance": 1,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 1,
+      "name": "front-left",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "source": {
+        "file": "view-1-v1.png",
+        "column": 1
+      },
+      "source_sha256": "5c02b0643ad8f0b4ee6b5e8c841166639bb44c76699ebcaab1f9d67c11b3497d",
+      "source_crop": [
+        573,
+        0,
+        1084,
+        724
+      ],
+      "source_bounds": [
+        177,
+        151,
+        363,
+        563
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.26666666666666666,
+      "effective_scale": 0.26666666666666666,
+      "placement": [
+        16,
+        3
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-1-frame-1.png",
+      "frame_pixel_sha256": "9ccbfefeb479613c24fd1675c709abf5df0b7d3edea56f628d70f6b6835df40b",
+      "cutout_bounds": [
+        63,
+        43,
+        113,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 1,
+      "name": "front-left",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "source": {
+        "file": "view-1-v1.png",
+        "column": 2
+      },
+      "source_sha256": "5c02b0643ad8f0b4ee6b5e8c841166639bb44c76699ebcaab1f9d67c11b3497d",
+      "source_crop": [
+        1084,
+        0,
+        1665,
+        724
+      ],
+      "source_bounds": [
+        148,
+        159,
+        404,
+        569
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.26666666666666666,
+      "effective_scale": 0.26666666666666666,
+      "placement": [
+        9,
+        4
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-1-frame-2.png",
+      "frame_pixel_sha256": "bc6836e6d66341f5c36cf276b9f3a3e5570d856aa38d3b485abcabf198e7ce6d",
+      "cutout_bounds": [
+        48,
+        46,
+        117,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 1,
+      "name": "front-left",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "source": {
+        "file": "view-1-v1.png",
+        "column": 3
+      },
+      "source_sha256": "5c02b0643ad8f0b4ee6b5e8c841166639bb44c76699ebcaab1f9d67c11b3497d",
+      "source_crop": [
+        1665,
+        0,
+        2171,
+        724
+      ],
+      "source_bounds": [
+        178,
+        146,
+        367,
+        563
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.26666666666666666,
+      "effective_scale": 0.26666666666666666,
+      "placement": [
+        16,
+        3
+      ],
+      "additional_flight_clearance_shift": 1,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-1-frame-3.png",
+      "frame_pixel_sha256": "829fccde019c082ae82a021b044977a4d0b7096fda75b1ab7a5dfed7b11c72fb",
+      "cutout_bounds": [
+        63,
+        42,
+        114,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 2,
+      "name": "left-profile",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "source": {
+        "file": "view-2-v1.png",
+        "column": 0
+      },
+      "source_sha256": "0bd2fc974c5a1146a9dfb91f6b70950c7e7a5183a8b05ffb4ca8e41bd7d901a4",
+      "source_crop": [
+        0,
+        0,
+        588,
+        724
+      ],
+      "source_bounds": [
+        81,
+        131,
+        489,
+        648
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2119460500963391,
+      "effective_scale": 0.2119460500963391,
+      "placement": [
+        24,
+        19
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-2-frame-0.png",
+      "frame_pixel_sha256": "b2a2314d8ea22647542d836a6bac94e2c8b8a52144c36d86b5a2fdd1bbc97b0b",
+      "cutout_bounds": [
+        41,
+        47,
+        128,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 2,
+      "name": "left-profile",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "source": {
+        "file": "view-2-v1.png",
+        "column": 1
+      },
+      "source_sha256": "0bd2fc974c5a1146a9dfb91f6b70950c7e7a5183a8b05ffb4ca8e41bd7d901a4",
+      "source_crop": [
+        588,
+        0,
+        1088,
+        724
+      ],
+      "source_bounds": [
+        99,
+        113,
+        420,
+        596
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2119460500963391,
+      "effective_scale": 0.2119460500963391,
+      "placement": [
+        37,
+        19
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-2-frame-1.png",
+      "frame_pixel_sha256": "35cf047b1da059b78e40dc41d568ee196cbf55051ac4ec0ea69680889d8ec67a",
+      "cutout_bounds": [
+        58,
+        43,
+        126,
+        145
+      ],
+      "lowest_cutout_clearance": 11,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 2,
+      "name": "left-profile",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "source": {
+        "file": "view-2-v1.png",
+        "column": 2
+      },
+      "source_sha256": "0bd2fc974c5a1146a9dfb91f6b70950c7e7a5183a8b05ffb4ca8e41bd7d901a4",
+      "source_crop": [
+        1088,
+        0,
+        1687,
+        724
+      ],
+      "source_bounds": [
+        80,
+        131,
+        483,
+        652
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2119460500963391,
+      "effective_scale": 0.2119460500963391,
+      "placement": [
+        24,
+        18
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-2-frame-2.png",
+      "frame_pixel_sha256": "361ad0da7079b711a72fcc5294c50177c96c7e4834cd2510462d4c14e9cbecfc",
+      "cutout_bounds": [
+        41,
+        46,
+        126,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 2,
+      "name": "left-profile",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "source": {
+        "file": "view-2-v1.png",
+        "column": 3
+      },
+      "source_sha256": "0bd2fc974c5a1146a9dfb91f6b70950c7e7a5183a8b05ffb4ca8e41bd7d901a4",
+      "source_crop": [
+        1687,
+        0,
+        2171,
+        724
+      ],
+      "source_bounds": [
+        116,
+        131,
+        431,
+        626
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2119460500963391,
+      "effective_scale": 0.2119460500963391,
+      "placement": [
+        36,
+        15
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-2-frame-3.png",
+      "frame_pixel_sha256": "95a728f69533095ec4de27c20400c5d35e6ee870a1b101862741a24cfc182830",
+      "cutout_bounds": [
+        61,
+        43,
+        128,
+        147
+      ],
+      "lowest_cutout_clearance": 9,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 3,
+      "name": "rear-left",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "source": {
+        "file": "view-3-v1.png",
+        "column": 0
+      },
+      "source_sha256": "9a7d0d976f40ca3c3d661198453c295441cb6a4de08f30c4c342b62eb07a72e7",
+      "source_crop": [
+        0,
+        0,
+        575,
+        724
+      ],
+      "source_bounds": [
+        104,
+        168,
+        446,
+        661
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2231237322515213,
+      "effective_scale": 0.2231237322515213,
+      "placement": [
+        23,
+        9
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-3-frame-0.png",
+      "frame_pixel_sha256": "4a1d103d86f5aae637787d62ba43970f855de58b345bde1949620e7d20916d1a",
+      "cutout_bounds": [
+        46,
+        47,
+        122,
+        157
+      ],
+      "lowest_cutout_clearance": -1,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 3,
+      "name": "rear-left",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "source": {
+        "file": "view-3-v1.png",
+        "column": 1
+      },
+      "source_sha256": "9a7d0d976f40ca3c3d661198453c295441cb6a4de08f30c4c342b62eb07a72e7",
+      "source_crop": [
+        575,
+        0,
+        1094,
+        724
+      ],
+      "source_bounds": [
+        130,
+        157,
+        418,
+        654
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2231237322515213,
+      "effective_scale": 0.2231237322515213,
+      "placement": [
+        29,
+        7
+      ],
+      "additional_flight_clearance_shift": 1,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-3-frame-1.png",
+      "frame_pixel_sha256": "699422af24a3b7b2bc98d05ac267f6a5de79bd6de4eba892a26e745636979663",
+      "cutout_bounds": [
+        58,
+        42,
+        122,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 3,
+      "name": "rear-left",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "source": {
+        "file": "view-3-v1.png",
+        "column": 2
+      },
+      "source_sha256": "9a7d0d976f40ca3c3d661198453c295441cb6a4de08f30c4c342b62eb07a72e7",
+      "source_crop": [
+        1094,
+        0,
+        1648,
+        724
+      ],
+      "source_bounds": [
+        102,
+        168,
+        444,
+        661
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2231237322515213,
+      "effective_scale": 0.2231237322515213,
+      "placement": [
+        25,
+        9
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-3-frame-2.png",
+      "frame_pixel_sha256": "18be72a844f17a3505967e1bd461a4fdcdf9e4545258eef43014b18db2b4e32d",
+      "cutout_bounds": [
+        48,
+        47,
+        124,
+        157
+      ],
+      "lowest_cutout_clearance": -1,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 3,
+      "name": "rear-left",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "source": {
+        "file": "view-3-v1.png",
+        "column": 3
+      },
+      "source_sha256": "9a7d0d976f40ca3c3d661198453c295441cb6a4de08f30c4c342b62eb07a72e7",
+      "source_crop": [
+        1648,
+        0,
+        2171,
+        724
+      ],
+      "source_bounds": [
+        111,
+        146,
+        457,
+        661
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2231237322515213,
+      "effective_scale": 0.2231237322515213,
+      "placement": [
+        30,
+        5
+      ],
+      "additional_flight_clearance_shift": 5,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-3-frame-3.png",
+      "frame_pixel_sha256": "18db289c9f508c5f194c655173005ffecb37b43689c979f5ada195adb4093280",
+      "cutout_bounds": [
+        55,
+        38,
+        132,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 4,
+      "name": "back",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "source": {
+        "file": "view-4-v1.png",
+        "column": 0
+      },
+      "source_sha256": "758a87cce9e4cbdcf4a1310fbe3b90507638651fc7f46702d347ba52c4cb7667",
+      "source_crop": [
+        0,
+        0,
+        542,
+        724
+      ],
+      "source_bounds": [
+        151,
+        162,
+        355,
+        591
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2558139534883721,
+      "effective_scale": 0.2558139534883721,
+      "placement": [
+        12,
+        5
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-4-frame-0.png",
+      "frame_pixel_sha256": "5d5926e340ad32fb7b0728c1f2896f83f588a0ee822362d6990faa813b596f80",
+      "cutout_bounds": [
+        51,
+        46,
+        103,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 4,
+      "name": "back",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "source": {
+        "file": "view-4-v1.png",
+        "column": 1
+      },
+      "source_sha256": "758a87cce9e4cbdcf4a1310fbe3b90507638651fc7f46702d347ba52c4cb7667",
+      "source_crop": [
+        542,
+        0,
+        1099,
+        724
+      ],
+      "source_bounds": [
+        188,
+        155,
+        395,
+        573
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2558139534883721,
+      "effective_scale": 0.2558139534883721,
+      "placement": [
+        9,
+        3
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-4-frame-1.png",
+      "frame_pixel_sha256": "7e7f10b81a36aecee9d5dd61a6ecf977001bcdb00f698cf2553b03ab48dc204d",
+      "cutout_bounds": [
+        57,
+        43,
+        110,
+        149
+      ],
+      "lowest_cutout_clearance": 7,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 4,
+      "name": "back",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "source": {
+        "file": "view-4-v1.png",
+        "column": 2
+      },
+      "source_sha256": "758a87cce9e4cbdcf4a1310fbe3b90507638651fc7f46702d347ba52c4cb7667",
+      "source_crop": [
+        1099,
+        0,
+        1626,
+        724
+      ],
+      "source_bounds": [
+        162,
+        162,
+        372,
+        593
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2558139534883721,
+      "effective_scale": 0.2558139534883721,
+      "placement": [
+        16,
+        4
+      ],
+      "additional_flight_clearance_shift": 0,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-4-frame-2.png",
+      "frame_pixel_sha256": "eeedcc254437f596b19d4dd529e58fc68b60a934277e07457d8fbbe0d399776a",
+      "cutout_bounds": [
+        58,
+        45,
+        111,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 4,
+      "name": "back",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "source": {
+        "file": "view-4-v1.png",
+        "column": 3
+      },
+      "source_sha256": "758a87cce9e4cbdcf4a1310fbe3b90507638651fc7f46702d347ba52c4cb7667",
+      "source_crop": [
+        1626,
+        0,
+        2171,
+        724
+      ],
+      "source_bounds": [
+        155,
+        155,
+        362,
+        589
+      ],
+      "source_resolution_ratio": 1.0,
+      "bearing_common_scale": 0.2558139534883721,
+      "effective_scale": 0.2558139534883721,
+      "placement": [
+        10,
+        2
+      ],
+      "additional_flight_clearance_shift": 1,
+      "generated": true,
+      "derived_mirrored": false,
+      "file": "frames/view-4-frame-3.png",
+      "frame_pixel_sha256": "fd2707c667d85770496500c00dad9f07f71831e8d84b6b110736c5b87481bf92",
+      "cutout_bounds": [
+        50,
+        42,
+        102,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 5,
+      "name": "rear-right",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 3,
+        "phase": 0
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-5-frame-0.png",
+      "frame_pixel_sha256": "6d867cd9dd399aea56b8bea14b0c8534278e7bb3b616a33a4ffc55cb229f5344",
+      "cutout_bounds": [
+        38,
+        47,
+        114,
+        157
+      ],
+      "lowest_cutout_clearance": -1,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 5,
+      "name": "rear-right",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 3,
+        "phase": 1
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-5-frame-1.png",
+      "frame_pixel_sha256": "6b7eef83e04bc8a8c840caac8a9f56d57e480479e2b360814a356748a46fd249",
+      "cutout_bounds": [
+        38,
+        42,
+        102,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 5,
+      "name": "rear-right",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 3,
+        "phase": 2
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-5-frame-2.png",
+      "frame_pixel_sha256": "c079676fb994a0bc4542f6d4223c07bdd0522da225c8a024a817f2c82876ddd8",
+      "cutout_bounds": [
+        36,
+        47,
+        112,
+        157
+      ],
+      "lowest_cutout_clearance": -1,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 5,
+      "name": "rear-right",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 3,
+        "phase": 3
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-5-frame-3.png",
+      "frame_pixel_sha256": "a835282a10dc550bf1336e3a3e97b3f905b20b0250e42890eb6b9fb864b2be56",
+      "cutout_bounds": [
+        28,
+        38,
+        105,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 6,
+      "name": "right-profile",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 2,
+        "phase": 0
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-6-frame-0.png",
+      "frame_pixel_sha256": "4bfe46587a08de250eed0e6513d4ae4784d183f2a1e80683e148ea9de3c161cf",
+      "cutout_bounds": [
+        32,
+        47,
+        119,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 6,
+      "name": "right-profile",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 2,
+        "phase": 1
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-6-frame-1.png",
+      "frame_pixel_sha256": "23bdae58d7f32994ab73e1dab0a0ada1542ed0bc7ef708f9f78f7053f61c1dbf",
+      "cutout_bounds": [
+        34,
+        43,
+        102,
+        145
+      ],
+      "lowest_cutout_clearance": 11,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 6,
+      "name": "right-profile",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 2,
+        "phase": 2
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-6-frame-2.png",
+      "frame_pixel_sha256": "2c4d0498253593bc9f1be3c11a949c0e2592902f9508a289f2e0662de9b04df6",
+      "cutout_bounds": [
+        34,
+        46,
+        119,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 6,
+      "name": "right-profile",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 2,
+        "phase": 3
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-6-frame-3.png",
+      "frame_pixel_sha256": "d7305ab1488ddbe8321d2e071644947d34443366632ab8c3cb28c5a47f2929a0",
+      "cutout_bounds": [
+        32,
+        43,
+        99,
+        147
+      ],
+      "lowest_cutout_clearance": 9,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 7,
+      "name": "front-right",
+      "phase": 0,
+      "phase_name": "left-contact",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 1,
+        "phase": 0
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-7-frame-0.png",
+      "frame_pixel_sha256": "6545b509b8bc05bf05ae3973021bf516def62ae7dec19206f8a44473e086cd0c",
+      "cutout_bounds": [
+        47,
+        45,
+        107,
+        155
+      ],
+      "lowest_cutout_clearance": 1,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 7,
+      "name": "front-right",
+      "phase": 1,
+      "phase_name": "right-flight",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 1,
+        "phase": 1
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-7-frame-1.png",
+      "frame_pixel_sha256": "0ecf01106530bed2815ecb06680fa8294095fbc3b7891713c1ca81afea622ecf",
+      "cutout_bounds": [
+        47,
+        43,
+        97,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 7,
+      "name": "front-right",
+      "phase": 2,
+      "phase_name": "right-contact",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 1,
+        "phase": 2
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-7-frame-2.png",
+      "frame_pixel_sha256": "72c1a2f37fa2ad24ff761f8f9db5e436a41f5fcd95c1fda8d01713de6e48cf8b",
+      "cutout_bounds": [
+        43,
+        46,
+        112,
+        156
+      ],
+      "lowest_cutout_clearance": 0,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    },
+    {
+      "bearing": 7,
+      "name": "front-right",
+      "phase": 3,
+      "phase_name": "left-flight",
+      "generated": false,
+      "derived_mirrored": true,
+      "derived_from": {
+        "bearing": 1,
+        "phase": 3
+      },
+      "derivation": "Exact horizontal reflection of entire packed frame, matching native mobile renderer record mapping.",
+      "file": "frames/view-7-frame-3.png",
+      "frame_pixel_sha256": "68eb1dcd539aee00e5a028ffe2e3f64d85a5bba92e6bb37166f9505b8d5a730c",
+      "cutout_bounds": [
+        46,
+        42,
+        97,
+        153
+      ],
+      "lowest_cutout_clearance": 3,
+      "technical_checked": true,
+      "visual_reviewed": false,
+      "integrated": false,
+      "user_approved": false
+    }
+  ],
+  "known_limits": [
+    "Candidate only: model changes folds, head/face detail and saturated teal highlights beyond native pixels.",
+    "Four-frame cadence inherits381motion limits and lacks passing intermediates.",
+    "Rear-left flight3 has wider trailing stride than flight1.",
+    "Opposite12frames use native renderer reflections including green pouch, not independent generations.",
+    "No runtime integration, game playback acceptance or user approval."
+  ]
+}

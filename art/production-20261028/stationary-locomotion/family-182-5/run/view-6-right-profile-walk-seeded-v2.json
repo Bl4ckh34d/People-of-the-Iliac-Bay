@@ -1,0 +1,21 @@
+{
+  "prompt": "Transform Image1's four WALK frames into four RUN frames of that exact jester, same RIGHT-facing side camera and identity. Image1 fixes correct costume anatomy, proportions and right-hand prop; Image2 supplies same-bearing RUN motion only. Never copy385 man's clothing or face.\nNear RIGHT sleeve is GOLD and only this GOLD right hand carries the upright marotte forward screenRIGHT. Far LEFT sleeve is RED and its hand is empty. Keep these exact arm identities throughout. Near RIGHT LEG is RED from hip through pointed shoe; far LEFT LEG is GOLD from hip through pointed shoe. Never change a leg color halfway or give it the other shoe. Same smiling hooded face, two-tip cap, tunic bells, long pointed shoes and original131logicalheight; same prop head size eachframe.\nPhase0 LEFT GOLD leg forward planted screenRIGHT, RIGHT RED leg bent back screenLEFT with heel raised; empty RED arm swings back screenLEFT. Phase1 FLIGHT RIGHT RED knee forward screenRIGHT, LEFT GOLD leg extended behind screenLEFT; empty RED arm forward screenRIGHT beneath gold carrying arm. Phase2 RIGHT RED leg forward planted screenRIGHT, LEFT GOLD leg bent back screenLEFT with heel raised; empty RED arm forward beneath gold carrying arm. Phase3 FLIGHT LEFT GOLD knee forward screenRIGHT, RIGHT RED leg extended behind screenLEFT; empty RED arm back screenLEFT. Exactlythosefour phases: opposite contact legs0/2 and opposite airborne knees1/3. Both feet clear shared baseline1/3, contacts0/2 ground; do not merely recolor feet on duplicate legs. Keep right-profile head/body yaw fixed, same size and cell framing, full cap/prop/shoes with margins. Coarse pixel art, opaque interiors, transparent background, no text/grid/shadow.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-e66351ff-d946-42d3-b3ab-7b60aabb9f14.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-6-review-native.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/run/motion-385-view-6-reference.png"
+  ],
+  "view": 6,
+  "action": "run",
+  "correction": "run from reviewed same-bearing jester walk anatomy",
+  "referencePins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-6-review-native.png",
+      "sha256": "02e0bbddcc74136e151018aa8fdabddcbd1cbd08366748f55aa879971932acb3"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/run/motion-385-view-6-reference.png",
+      "sha256": "371790dd087584d30b26a8b1422bcc8b5aef529fb65de5468808e21b8f0ca803"
+    }
+  ]
+}

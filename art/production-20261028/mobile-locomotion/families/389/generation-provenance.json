@@ -1,0 +1,98 @@
+{
+  "archive": 389,
+  "date": "2026-10-28",
+  "calls": [
+    {
+      "file": "view-0-v1.png",
+      "sha256": "4af9034e4a4599db06f5348592fd9f9201eb30c2a4fe2ac49b8111bcd0c49858",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-30b84a80-0464-4601-a210-fbd101e29314.png",
+      "prompt": "view-0-v1.prompt.txt",
+      "prompt_sha256": "3d3e51318c3533d87f75d49bbace3e4adde61aae1432e9fd60e8fcffec6538c4",
+      "references": [
+        "../../motion-reference-385/view-0.png",
+        "native-reference/view-0.png"
+      ],
+      "selected": false
+    },
+    {
+      "file": "view-1-v1.png",
+      "sha256": "387710b67b90bf394236af4c14e2ce058a53b80104668d85b483803cb626eeee",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-9def0a1c-577f-44ad-a498-fb31ea8cc904.png",
+      "prompt": "view-1-v1.prompt.txt",
+      "prompt_sha256": "04ed91642733f601fe95f8758658bf72aa1611c0100be6e77e2e362dc95aca50",
+      "references": [
+        "../../motion-reference-385/view-1.png",
+        "native-reference/view-1.png"
+      ],
+      "selected": false
+    },
+    {
+      "file": "view-0-v2.png",
+      "sha256": "e92cd4c768ba9ba0f43b7c233b37adbd794647f7d870ce91496fc5c5890fca0f",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-b5900825-df67-4921-800f-e1e21f54c192.png",
+      "prompt": "view-0-v2.prompt.txt",
+      "prompt_sha256": "4f92182d80e33c3c50158b308eb1ffb2a7f850ba4e7e88d1d1a4fca639740f33",
+      "references": [
+        "view-0-v1.png",
+        "native-reference/view-0.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-1-v2.png",
+      "sha256": "1eeb6d349667d71d227cf084b8312a34b575191afd28fb4872754bdd2028fc16",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-d8270265-c567-46e8-bab4-e55a38fcbcee.png",
+      "prompt": "view-1-v2.prompt.txt",
+      "prompt_sha256": "cbdb07dcfe4e3ec8ac81836388e46819fff4fd59e173f52ce409e0ff3efeec3c",
+      "references": [
+        "view-1-v1.png",
+        "native-reference/view-1.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-2-v2.png",
+      "sha256": "bb00b5aaba67d3bc60b84cd652f73a0d92b433577acd5d2659475ecec0c02b98",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-2aa80a5d-71b5-4c1e-9d5f-2b094e1ce3de.png",
+      "prompt": "view-2-v2.prompt.txt",
+      "prompt_sha256": "5ad89726d5e3805567ce5ba39381e8bf39e72bc645a2693f5abe77c1820bff3d",
+      "references": [
+        "../../motion-reference-385/view-2.png",
+        "native-reference/view-2.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-3-v2.png",
+      "sha256": "8b5fcd082f300099c153fb9b1e3ef4ea15ca1187f4735e79d2d0f19e6a8ca055",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-75b9bd31-ca1e-423d-980b-b97cf2023f5c.png",
+      "prompt": "view-3-v2.prompt.txt",
+      "prompt_sha256": "ee4d3b69d2bd63bb8344f10f1ad090eca933d6bf376a8db01c411a6f9480ed53",
+      "references": [
+        "../../motion-reference-385/view-3.png",
+        "native-reference/view-3.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-4-v2.png",
+      "sha256": "fe6265f492b736f84b028852528eee5c0a1f1edd90c808bb4ede83ac5846d460",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-a7bdabd2-67ab-4cf1-8e53-3d98ce9dbe6f.png",
+      "prompt": "view-4-v2.prompt.txt",
+      "prompt_sha256": "83d92d8482f85f209e0101b11a4268d0e3d78ad05aed50e2dd6f6119337ece3d",
+      "references": [
+        "../../motion-reference-385/view-4.png",
+        "native-reference/view-4.png"
+      ],
+      "selected": true
+    }
+  ],
+  "reference_policy": "385run supplies pose only; native389 defines green hood/cowl, teal elbow-sleeved tunic, exposed brown forearms, striped trousers, brown cuffed boots and green native pouches. Front v1 outputs had incorrect long sleeves; v2 repaired source-bound sleeve extent. Opposite views use exact native renderer mirrors."
+}

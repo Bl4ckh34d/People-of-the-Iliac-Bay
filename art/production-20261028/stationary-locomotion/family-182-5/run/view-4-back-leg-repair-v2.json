@@ -1,0 +1,21 @@
+{
+  "prompt": "Repair ONLY legs and shoes in Image1's four-frame BACK RUN strip. Image2 verifies the correct back-view anatomical leg colors: LEFT leg on screenLEFT is GOLD from hip through pointed shoe; RIGHT leg on screenRIGHT is RED-ORANGE from hip through pointed shoe. No gold leg with red shoe or red leg with gold shoe. Preserve all existing heads, bodies, free red arms, carrying gold arms and right-hand marottes, fixed direct-back camera and scale.\nFour corrected running phases:0 keep screenLEFT GOLD leg planted straight and screenRIGHT RED leg bent backward with heel/sole raised.1 AIRBORNE: screenRIGHT RED leg advances away from viewer and hangs bent down, RED pointed shoe above ground; screenLEFT GOLD leg folded back with GOLD heel/sole raised.2 screenRIGHT RED leg planted straight, RED shoe on baseline; screenLEFT GOLD leg bent backward with GOLD heel/sole raised. This must visibly swap supporting leg relative to0.3 AIRBORNE: screenLEFT GOLD leg advances away and hangs bent down, GOLD shoe above ground; screenRIGHT RED leg folded back with RED heel/sole raised. This must swap airborne leg positions relative to1. Soles may be dark brown, but shoe uppers always match their own leg color. Exactlytwo connected legs, normal knees, no crossing color patches. Natural run with contact0/2 and flight1/3; same torso/head/prop as original. Four equal cells and fullbody margins, coarse pixel art, opaque interiors transparent background. No other edits.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-856678bb-fb21-4e04-b7f2-63901c65496a.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/run/view-4-back-v1.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-4-review-native.png"
+  ],
+  "view": 4,
+  "action": "run",
+  "correction": "leg ownership, counter-contact and counter-flight",
+  "referencePins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/run/view-4-back-v1.png",
+      "sha256": "45ea5e5ba133b927b61bc94ae859d0dab2547fd7cf042390e9a51359a8b0a1e8"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-4-review-native.png",
+      "sha256": "8d79ae237ee408468d91aa53dfe8ad7d48194e2ed7dc57057528a26469b67485"
+    }
+  ]
+}

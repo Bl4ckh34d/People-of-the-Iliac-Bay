@@ -1,0 +1,118 @@
+{
+  "status": "provisional masked animation prototype; ready for Unity review",
+  "asset": "shopkeeper-182-0-angle-2-12frame-v5.png",
+  "preview": "shopkeeper-182-0-angle-2-12frame-v5-preview-4x.png",
+  "orientation": 2,
+  "bearing": "left profile; nose image-left; do not mirror",
+  "base": "shopkeeper-182-0-angle-2-base-96cell.png",
+  "cellDimensions": [
+    96,
+    96
+  ],
+  "sheetDimensions": [
+    384,
+    288
+  ],
+  "effectiveCharacterHeight": 76,
+  "frameRateFps": 5,
+  "animationMap": [
+    0,
+    0,
+    0,
+    1,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    5
+  ],
+  "anatomy": "Anatomical LEFT active arm on image-right. Anatomical RIGHT resting hand/pouch stays image-left.",
+  "compositing": {
+    "method": "Exact base outside swept-arm/occlusion region; within region, replace with corresponding normalized full-pose keypose as clean plate, covering the old hanging sleeve and naturally revealed vest.",
+    "polygon": [
+      [
+        53,
+        26
+      ],
+      [
+        62,
+        25
+      ],
+      [
+        69,
+        31
+      ],
+      [
+        76,
+        36
+      ],
+      [
+        87,
+        38
+      ],
+      [
+        88,
+        49
+      ],
+      [
+        81,
+        54
+      ],
+      [
+        73,
+        56
+      ],
+      [
+        66,
+        56
+      ],
+      [
+        60,
+        54
+      ],
+      [
+        55,
+        50
+      ],
+      [
+        53,
+        43
+      ]
+    ],
+    "regionCoordinates": "96x96 cell, origin top-left",
+    "keyposeMapping": [
+      -1,
+      -1,
+      -1,
+      1,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      5
+    ]
+  },
+  "qa": {
+    "sheetDimensionsVerified": "384x288",
+    "restFrames0to2ExactBase": true,
+    "holdFrames5to10Exact": true,
+    "changedPixelsOutsideSweptMask": 0,
+    "changedPixelsInFrames3_4_11": 397,
+    "visualReview": "No duplicate old sleeve observed; perspective is left profile with nose image-left; hand/pouch anatomy preserved.",
+    "limitations": [
+      "Clean plate comes from normalized generated keypose cells; pixel variation within the swept-arm/occlusion polygon is expected.",
+      "Must review in Unity before runtime acceptance."
+    ]
+  },
+  "sourceReferences": {
+    "approvedStyleBase": "shopkeeper-182-0-front-left-base-v3.png",
+    "nativeTiming": "work/keeper-native-idle/182-0-all-native-frames.png",
+    "normalizedKeyposes": "shopkeeper-182-0-angle-2-keyposes-normalized.png"
+  }
+}

@@ -1,0 +1,229 @@
+{
+  "archive": 456,
+  "status": "exported and visually checked; pilot style user-approved; native runtime alignment pending",
+  "nativeIdleSize": [
+    77,
+    173
+  ],
+  "cellSize": [
+    77,
+    173
+  ],
+  "atlasSize": [
+    308,
+    346
+  ],
+  "atlas": "atlas.png",
+  "framesPerDirection": 1,
+  "animationLoop": false,
+  "alpha": "binary threshold128; transparent RGB cleared",
+  "resampling": "nearest-neighbour; uniform scale across views",
+  "seatPivotStatus": "estimated from silhouette; runtime seat alignment unverified",
+  "frames": [
+    {
+      "orientation": 0,
+      "view": "front",
+      "file": "view-0-front.png",
+      "rect": [
+        0,
+        0,
+        77,
+        173
+      ],
+      "content": [
+        9,
+        51,
+        58,
+        121
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        38,
+        121
+      ]
+    },
+    {
+      "orientation": 1,
+      "view": "front-left",
+      "file": "view-1-front-left.png",
+      "rect": [
+        77,
+        0,
+        77,
+        173
+      ],
+      "content": [
+        8,
+        52,
+        60,
+        120
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        44,
+        122
+      ]
+    },
+    {
+      "orientation": 2,
+      "view": "left",
+      "file": "view-2-left.png",
+      "rect": [
+        154,
+        0,
+        77,
+        173
+      ],
+      "content": [
+        12,
+        52,
+        53,
+        120
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        55,
+        122
+      ]
+    },
+    {
+      "orientation": 3,
+      "view": "rear-left",
+      "file": "view-3-rear-left.png",
+      "rect": [
+        231,
+        0,
+        77,
+        173
+      ],
+      "content": [
+        9,
+        52,
+        58,
+        120
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        47,
+        122
+      ]
+    },
+    {
+      "orientation": 4,
+      "view": "rear",
+      "file": "view-4-rear.png",
+      "rect": [
+        0,
+        173,
+        77,
+        173
+      ],
+      "content": [
+        11,
+        55,
+        55,
+        117
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        39,
+        123
+      ]
+    },
+    {
+      "orientation": 5,
+      "view": "rear-right",
+      "file": "view-5-rear-right.png",
+      "rect": [
+        77,
+        173,
+        77,
+        173
+      ],
+      "content": [
+        8,
+        55,
+        60,
+        117
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        29,
+        123
+      ]
+    },
+    {
+      "orientation": 6,
+      "view": "right",
+      "file": "view-6-right.png",
+      "rect": [
+        154,
+        173,
+        77,
+        173
+      ],
+      "content": [
+        9,
+        51,
+        58,
+        121
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        19,
+        121
+      ]
+    },
+    {
+      "orientation": 7,
+      "view": "front-right",
+      "file": "view-7-front-right.png",
+      "rect": [
+        231,
+        173,
+        77,
+        173
+      ],
+      "content": [
+        7,
+        51,
+        62,
+        121
+      ],
+      "groundPivot": [
+        38.5,
+        172
+      ],
+      "seatPivotEstimate": [
+        32,
+        121
+      ]
+    }
+  ],
+  "generatedSHA256": "bdfb4660296a6fec21540ecdcc633bc849f9a9530d7a73926de31504a2368556",
+  "nativeIdleScale": [
+    -139,
+    -139
+  ]
+}

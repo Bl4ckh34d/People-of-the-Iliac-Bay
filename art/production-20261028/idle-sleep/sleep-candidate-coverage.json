@@ -1,0 +1,3558 @@
+{
+  "date": "2026-10-28",
+  "scope": "Additional DET sleep candidates only. Existing326 mappings unchanged. This does not claim universal humanoid coverage.",
+  "counts": {
+    "generated": 75,
+    "technicallyChecked": 75,
+    "visuallyChecked": 75,
+    "needsCorrection": 0,
+    "integrated": 0,
+    "userApproved": 0
+  },
+  "processing": "Actual transparent horizontal/vertical gaps partition rows/columns; each cell cropped at alpha128 bounds. No source pixels painted, alpha altered, palette changes or image resampling in deliverable PNGs. Preview uses native cutout128 and NN scaling only. Raw atlases may not honor equal cells; use individual crop metadata, not assumed4x2UVs.",
+  "atlases": [
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-scholar-sleep-pilot-v2.png",
+      "sha256": "0e3776f1a93b908ed0ab910dc43b054e82795eafdf2cf92fd871cbf18688d466",
+      "size": [
+        1536,
+        1024
+      ],
+      "actualRowSplit": 513,
+      "actualColumnSplits": [
+        0,
+        398,
+        766,
+        1137,
+        1536
+      ],
+      "nominalRowSplit": 512.0,
+      "transparentRowGap": [
+        506,
+        520
+      ],
+      "equalGridDeviation": 1.0
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "sha256": "d8e18d7364e4ac4bc9249987efd15dab3befc9ba5926c85044c2287a8f1d2a71",
+      "size": [
+        1309,
+        1201
+      ],
+      "actualRowSplit": 605,
+      "actualColumnSplits": [
+        0,
+        319,
+        657,
+        983,
+        1309
+      ],
+      "nominalRowSplit": 600.5,
+      "transparentRowGap": [
+        590,
+        619
+      ],
+      "equalGridDeviation": 4.5
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "sha256": "0924fa419c71e00e8f62135dae9ab0e25b2ecfb68152cff1a16548b02f0a00c4",
+      "size": [
+        1286,
+        1223
+      ],
+      "actualRowSplit": 614,
+      "actualColumnSplits": [
+        0,
+        324,
+        642,
+        961,
+        1286
+      ],
+      "nominalRowSplit": 611.5,
+      "transparentRowGap": [
+        605,
+        622
+      ],
+      "equalGridDeviation": 2.5
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "sha256": "ab9fcf8be536cc2f2ec281de06343d75d4fea875ab8bb063919e4b0ad6a79fac",
+      "size": [
+        1500,
+        1049
+      ],
+      "actualRowSplit": 521,
+      "actualColumnSplits": [
+        0,
+        427,
+        752,
+        1088,
+        1500
+      ],
+      "nominalRowSplit": 524.5,
+      "transparentRowGap": [
+        517,
+        525
+      ],
+      "equalGridDeviation": -3.5
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-16-20-sleep-v2.png",
+      "sha256": "2d32e3e07d9b1f938eea29b767394155a93d1e220ed835eef7a1cce9aee847a9",
+      "size": [
+        1254,
+        1254
+      ],
+      "actualRowSplit": 688,
+      "actualColumnSplits": [
+        0,
+        321,
+        626,
+        936,
+        1254
+      ],
+      "nominalRowSplit": 627.0,
+      "transparentRowGap": [
+        681,
+        694
+      ],
+      "equalGridDeviation": 61.0
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "sha256": "08c2b7319ef44993a6e7fe82706ea9ac6f027f674ad93019676cdf50b9b5664a",
+      "size": [
+        1254,
+        1254
+      ],
+      "actualRowSplit": 612,
+      "actualColumnSplits": [
+        0,
+        313,
+        627,
+        940,
+        1254
+      ],
+      "nominalRowSplit": 627.0,
+      "transparentRowGap": [
+        595,
+        628
+      ],
+      "equalGridDeviation": -15.0
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "sha256": "a7ad538647028eccf38115141509e45435768f431e686df712ade24f4033bd69",
+      "size": [
+        1254,
+        1254
+      ],
+      "actualRowSplit": 637,
+      "actualColumnSplits": [
+        0,
+        313,
+        627,
+        939,
+        1254
+      ],
+      "nominalRowSplit": 627.0,
+      "transparentRowGap": [
+        616,
+        658
+      ],
+      "equalGridDeviation": 10.0
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "sha256": "4eaeb16385e715a494b77ae8351c9aeace147a484f231e1cf5aba519e2f4daa1",
+      "size": [
+        1254,
+        1254
+      ],
+      "actualRowSplit": 617,
+      "actualColumnSplits": [
+        0,
+        313,
+        627,
+        935,
+        1254
+      ],
+      "nominalRowSplit": 627.0,
+      "transparentRowGap": [
+        594,
+        639
+      ],
+      "equalGridDeviation": -10.0
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "sha256": "957942cecac8eb9eb9d0f83aaa723041c9f404077f8151cdcc033bdbb79bfd22",
+      "size": [
+        1254,
+        1254
+      ],
+      "actualRowSplit": 616,
+      "actualColumnSplits": [
+        0,
+        314,
+        628,
+        942,
+        1254
+      ],
+      "nominalRowSplit": 627.0,
+      "transparentRowGap": [
+        596,
+        635
+      ],
+      "equalGridDeviation": -11.0
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "sha256": "f66c780a73a9841cb3a03bd6cdf71bf302c77258d80eee89af78e73bc7a9c303",
+      "size": [
+        1254,
+        1254
+      ],
+      "actualRowSplit": 618,
+      "actualColumnSplits": [
+        0,
+        314,
+        628,
+        941,
+        1254
+      ],
+      "nominalRowSplit": 627.0,
+      "transparentRowGap": [
+        595,
+        640
+      ],
+      "equalGridDeviation": -9.0
+    }
+  ],
+  "entries": [
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10015,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sources\\10015_0-0.png",
+      "sourcePixelSha256": "c98f11ec62a555e89d43c4a9a8caab04d12ec17b8b78d664452559c40230a83a",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-scholar-sleep-pilot-v2.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        398,
+        513
+      ],
+      "alpha128BoundsInCell": [
+        94,
+        20,
+        334,
+        505
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10015-0-sleep.png",
+      "size": [
+        240,
+        485
+      ],
+      "sha256": "9b63fe734cb1f33eeb01c321b305c7bdf7875fe43908d7549c6e99147d7df1fe",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "review-with-limits",
+      "issues": [
+        "golden eye/eyewear detail from awake source is not retained exactly"
+      ],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10015,
+      "record": 1,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sources\\10015_1-0.png",
+      "sourcePixelSha256": "0ab26116686bd21f807c9b00da54461891867b7fdacf86863f91224831cd19b8",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-scholar-sleep-pilot-v2.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        398,
+        0,
+        766,
+        513
+      ],
+      "alpha128BoundsInCell": [
+        64,
+        28,
+        295,
+        506
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10015-1-sleep.png",
+      "size": [
+        231,
+        478
+      ],
+      "sha256": "9d8cf8eb4b33f2a8fb9c40361b28278f5b6af7f836ec705a47905117ae38178e",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10015,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sources\\10015_2-0.png",
+      "sourcePixelSha256": "f63d45daa1f664f12cd6ec6301ba6195bce23f674cd020828268570511306889",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-scholar-sleep-pilot-v2.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        766,
+        0,
+        1137,
+        513
+      ],
+      "alpha128BoundsInCell": [
+        73,
+        22,
+        305,
+        506
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10015-2-sleep.png",
+      "size": [
+        232,
+        484
+      ],
+      "sha256": "1f5547c658e83f6443b3c83a4fc78a0e0b01acbebf2a1b3a2562059cfc127607",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10015,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sources\\10015_3-0.png",
+      "sourcePixelSha256": "b3ebc036029cf94f90eb48d9503b8205fc932633cb0094693518f1e91ee71386",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-scholar-sleep-pilot-v2.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        1137,
+        0,
+        1536,
+        513
+      ],
+      "alpha128BoundsInCell": [
+        66,
+        16,
+        303,
+        506
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10015-3-sleep.png",
+      "size": [
+        237,
+        490
+      ],
+      "sha256": "190eea6ad5b852b497bcc9fac3e50049bbbaa4d4b11dae2794b86b3cadc86058",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10015,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sources\\10015_4-0.png",
+      "sourcePixelSha256": "6c6c0f78a6b181f7fea2c45d9e54c1c56fb93eb275a23b0c1bd15e7081d6ccee",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-scholar-sleep-pilot-v2.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        513,
+        398,
+        1024
+      ],
+      "alpha128BoundsInCell": [
+        90,
+        8,
+        335,
+        494
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10015-4-sleep.png",
+      "size": [
+        245,
+        486
+      ],
+      "sha256": "1e14f11a77defaca89c4cea80874bbf3261f909d8fb945230b457c95cb36ec70",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_0-0.png",
+      "sourcePixelSha256": "d8bbbf1720284b85e196272e1df671d2b5bcc68e5597f57a53f6e3fe01602e2b",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        319,
+        605
+      ],
+      "alpha128BoundsInCell": [
+        47,
+        61,
+        284,
+        590
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-0-sleep.png",
+      "size": [
+        237,
+        529
+      ],
+      "sha256": "255a40bcf89184109c302d0ef449d7e8a8bf50bddd40b31fc23246405ffac9a7",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 1,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_1-0.png",
+      "sourcePixelSha256": "6de5b7208402fffc88d2cb20615d8de2b64f8fc2f4d2c746d464669bc9de9591",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        319,
+        0,
+        657,
+        605
+      ],
+      "alpha128BoundsInCell": [
+        36,
+        20,
+        296,
+        590
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-1-sleep.png",
+      "size": [
+        260,
+        570
+      ],
+      "sha256": "8ca5de2814b8d803751e9924b5c2a34a9e4bfdb32d5e7ab033926bdac1e8f1e8",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_2-0.png",
+      "sourcePixelSha256": "afd894507eb540804af42dacc6c95240142a0bbf75dd0b1b9ea7e6bae5e9ba67",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        657,
+        0,
+        983,
+        605
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        57,
+        284,
+        590
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-2-sleep.png",
+      "size": [
+        241,
+        533
+      ],
+      "sha256": "316f62f4d9190de350a3fabefac6e1574df8cd5509b071083652b02a51fc38bc",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_3-0.png",
+      "sourcePixelSha256": "6ead14140216ab0b3a8fa0da47615001b552646982888ac76c2399315ea6607b",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        983,
+        0,
+        1309,
+        605
+      ],
+      "alpha128BoundsInCell": [
+        44,
+        52,
+        279,
+        590
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-3-sleep.png",
+      "size": [
+        235,
+        538
+      ],
+      "sha256": "12bd235c108b6c0e7ed52b7ae06b401d032933917c2e6831a61c2be287d64d57",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_4-0.png",
+      "sourcePixelSha256": "8effed6d9b6a7a98cbcafaea69fbb4e3fc88ad78416b7157e777be0895173b34",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        605,
+        319,
+        1201
+      ],
+      "alpha128BoundsInCell": [
+        47,
+        15,
+        283,
+        561
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-4-sleep.png",
+      "size": [
+        236,
+        546
+      ],
+      "sha256": "209a6d123078f97f7969e2952a5d946628e17c314ff3318392ba6bad64361595",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 5,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_5-0.png",
+      "sourcePixelSha256": "186c37751a0211527fefa6a86144a7d11989e63515f50d753a515f7dc3fcfc40",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        319,
+        605,
+        657,
+        1201
+      ],
+      "alpha128BoundsInCell": [
+        50,
+        15,
+        284,
+        561
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-5-sleep.png",
+      "size": [
+        234,
+        546
+      ],
+      "sha256": "b725509331da88db02ff960976d96226a61c204770180e513699b54a53565828",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 6,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_6-0.png",
+      "sourcePixelSha256": "42e313d38c8bebc5b129a9b4808ffc628ea1b141e7b37772ba62889d77c73f67",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        657,
+        605,
+        983,
+        1201
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        19,
+        279,
+        561
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-6-sleep.png",
+      "size": [
+        234,
+        542
+      ],
+      "sha256": "868450b85ab3b386374d8e16ecbe3ce9842f2269a3c035cb45520b808e33ee63",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10011,
+      "record": 7,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10011_7-0.png",
+      "sourcePixelSha256": "407a9d8047873b368a5420df8c3092e599b15463fbb4cda1542b4d0d761dcf49",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-nobles-sleep-v2.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        983,
+        605,
+        1309,
+        1201
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        20,
+        278,
+        561
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10011-7-sleep.png",
+      "size": [
+        235,
+        541
+      ],
+      "sha256": "5b9606012ce30ce36349da5f83cb53f8fb2301bcc41edae4f35351b25afaef8f",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_0-0.png",
+      "sourcePixelSha256": "92eea3505a11c611905df390bd99f4e57df0fb3f882a159dfaea002b20a38b5e",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        324,
+        614
+      ],
+      "alpha128BoundsInCell": [
+        41,
+        23,
+        286,
+        605
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-0-sleep.png",
+      "size": [
+        245,
+        582
+      ],
+      "sha256": "2396c31af1c056e852504607d7f34698361b0e0f577211050b71488f31fb635a",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 1,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_1-0.png",
+      "sourcePixelSha256": "8c7962bfcefad2d2ee7fd9a9f1ca3fe2d101814c3ffc397397f1a4b6eb9f0bfb",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        324,
+        0,
+        642,
+        614
+      ],
+      "alpha128BoundsInCell": [
+        39,
+        51,
+        279,
+        605
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-1-sleep.png",
+      "size": [
+        240,
+        554
+      ],
+      "sha256": "51f7f1a05704310af106b5127d7d7b4ee7971fc168fc191ca7169f7f6edcf969",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_2-0.png",
+      "sourcePixelSha256": "9a1d63e6f3d00c73b65261c0938fb79e223ce0117b86c0b44b1dbc17956662bc",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        642,
+        0,
+        961,
+        614
+      ],
+      "alpha128BoundsInCell": [
+        40,
+        36,
+        279,
+        605
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-2-sleep.png",
+      "size": [
+        239,
+        569
+      ],
+      "sha256": "ed30d850748ed08b7e35bb63556c0d9dfd2ff4b575e785b5009f7f593f68255a",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "review-with-limits",
+      "issues": [
+        "source-face-partly-hidden-by-hair-direction; facial reconstruction is inferred"
+      ],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_3-0.png",
+      "sourcePixelSha256": "fac90567d3d7b419bf5fd7f70d5f14c1293e3e14c9b25e93fc9ac1b83ada5428",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        961,
+        0,
+        1286,
+        614
+      ],
+      "alpha128BoundsInCell": [
+        42,
+        43,
+        282,
+        605
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-3-sleep.png",
+      "size": [
+        240,
+        562
+      ],
+      "sha256": "ad7cfa637dabaae67071189529cc903b398d3bf0478b7d05da8889e8ce6bc660",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_4-0.png",
+      "sourcePixelSha256": "4e85840b65f13743ee42e58f696bf55fd076093a54fbc6e62687e493d337e56f",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        614,
+        324,
+        1223
+      ],
+      "alpha128BoundsInCell": [
+        42,
+        34,
+        284,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-4-sleep.png",
+      "size": [
+        242,
+        560
+      ],
+      "sha256": "8b415e96222f518c5586f19bb1f3072995a5c450137151c7d490a85070c98b1c",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 5,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_5-0.png",
+      "sourcePixelSha256": "15b23c05f0de41e53a14233ca9d2e434ba9aee0c3500984f1e98f3ac084f5a56",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        324,
+        614,
+        642,
+        1223
+      ],
+      "alpha128BoundsInCell": [
+        38,
+        29,
+        279,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-5-sleep.png",
+      "size": [
+        241,
+        565
+      ],
+      "sha256": "0eadcfe719aaebde096390a63208ec9822b853d83c45c08465656de11657e15f",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "review-with-limits",
+      "issues": [
+        "brown head/hair interpretation uncertain in low-resolution source; review required"
+      ],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 6,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_6-0.png",
+      "sourcePixelSha256": "b95434bb95754466db2f91d503b86fe3ced8bb2c8d62a9491e2572f6004cd81a",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        642,
+        614,
+        961,
+        1223
+      ],
+      "alpha128BoundsInCell": [
+        40,
+        25,
+        280,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-6-sleep.png",
+      "size": [
+        240,
+        569
+      ],
+      "sha256": "6a712cd075cf3ebe1efb2e039f165861bc731212c9c03c72d946214caee01844",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 7,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_7-0.png",
+      "sourcePixelSha256": "77a619d344ac220cb4700cb9cbce11aed42975d64d4f2254b53f2eca2599ae1c",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-0-7-sleep-v1.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        961,
+        614,
+        1286,
+        1223
+      ],
+      "alpha128BoundsInCell": [
+        40,
+        9,
+        278,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-7-sleep.png",
+      "size": [
+        238,
+        585
+      ],
+      "sha256": "233a82e716dbc2e6533479ae5d97108e6256f745cadcae961ae398202bac17ae",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 8,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_8-0.png",
+      "sourcePixelSha256": "c21e3abb9f4b1ac753b5a95312ca96783a9193d73f8dd546e7b63018b00dfa87",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        427,
+        521
+      ],
+      "alpha128BoundsInCell": [
+        149,
+        9,
+        378,
+        517
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-8-sleep.png",
+      "size": [
+        229,
+        508
+      ],
+      "sha256": "03933bff17f67e4c0afd8e1a36f822039f0a762bc6b7a7049a6d4b080767d4e6",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 9,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_9-0.png",
+      "sourcePixelSha256": "8afcb1b3154f990384adc8aefcb4b1fb2326937bdd23a29403eab913841e8433",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        427,
+        0,
+        752,
+        521
+      ],
+      "alpha128BoundsInCell": [
+        50,
+        24,
+        275,
+        517
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-9-sleep.png",
+      "size": [
+        225,
+        493
+      ],
+      "sha256": "d356380480eb82607bc959331a2309a590e3176338f806cff1d33759121ab1a1",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 10,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_10-0.png",
+      "sourcePixelSha256": "49544e047137f89eb96614aa2a970264f876b5d6f91a42614983f5d4ec94cd51",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        752,
+        0,
+        1088,
+        521
+      ],
+      "alpha128BoundsInCell": [
+        50,
+        28,
+        279,
+        517
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-10-sleep.png",
+      "size": [
+        229,
+        489
+      ],
+      "sha256": "a6f2f181caadde0dd64d117a5e2ea72fe9f65c69c88cb2fd07650adc6321fc6a",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 11,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_11-0.png",
+      "sourcePixelSha256": "3d8b0daf09dec9da73dca1bef113d8a4a47567c7955017221f60e912ddc5f970",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        1088,
+        0,
+        1500,
+        521
+      ],
+      "alpha128BoundsInCell": [
+        58,
+        24,
+        285,
+        517
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-11-sleep.png",
+      "size": [
+        227,
+        493
+      ],
+      "sha256": "b12cc81411d341e6182765ed4fee5595262d72520c667e375959c8f8c77ae738",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 12,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_12-0.png",
+      "sourcePixelSha256": "9a1054c3feb7dfa19941a0066277093e2f4ae63705d8f613cf9ef91c6c37f59a",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        521,
+        427,
+        1049
+      ],
+      "alpha128BoundsInCell": [
+        148,
+        7,
+        378,
+        508
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-12-sleep.png",
+      "size": [
+        230,
+        501
+      ],
+      "sha256": "3a1868ff1009d227be0deb888b02a0c61d33c92f738e11beb514a2416366b8fd",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 13,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_13-0.png",
+      "sourcePixelSha256": "54c9c58cd2678c6bd06cd4c37b7a3c0d58346e5db558457b6f3c3d710830a0d8",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        427,
+        521,
+        752,
+        1049
+      ],
+      "alpha128BoundsInCell": [
+        51,
+        5,
+        276,
+        508
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-13-sleep.png",
+      "size": [
+        225,
+        503
+      ],
+      "sha256": "133ccc36510bd3aeab1e7c39cf4041a3db1de8f1af02f7bbc7b73de19e22af6f",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 14,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_14-0.png",
+      "sourcePixelSha256": "aca73577a0d5d3d73880be5e735a19ccbb4aaf83c7ca8670214548295d0a1196",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        752,
+        521,
+        1088,
+        1049
+      ],
+      "alpha128BoundsInCell": [
+        50,
+        10,
+        279,
+        508
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-14-sleep.png",
+      "size": [
+        229,
+        498
+      ],
+      "sha256": "096b9926524181acfee9967bcedc2af7ba02f5642cd1289ec49d2f9f6ab17c4f",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 15,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_15-0.png",
+      "sourcePixelSha256": "fdd00c618feacf38dde0094f06861d04cf0a409c98deec7b076bcd96d0da3812",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-8-15-sleep-v1.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        1088,
+        521,
+        1500,
+        1049
+      ],
+      "alpha128BoundsInCell": [
+        58,
+        7,
+        286,
+        508
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-15-sleep.png",
+      "size": [
+        228,
+        501
+      ],
+      "sha256": "a34ff6513225cb75c691d169c754b1c432d327399070c11540720a83f5c0120c",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 16,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_16-0.png",
+      "sourcePixelSha256": "4df460d810b3b05e0d8a754ccc980b3fab350f5781552e7f25de1de97b1ace3d",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-16-20-sleep-v2.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        321,
+        688
+      ],
+      "alpha128BoundsInCell": [
+        31,
+        48,
+        299,
+        681
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-16-sleep.png",
+      "size": [
+        268,
+        633
+      ],
+      "sha256": "ef131fc187f9310625afe402e014bbf03175285fa4656c06225c7e76ed88e8f1",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 17,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_17-0.png",
+      "sourcePixelSha256": "fd136b7565d2d34e82d6642d6c4d8793954864fa5c9c5fea0376a902bb1cebae",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-16-20-sleep-v2.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        321,
+        0,
+        626,
+        688
+      ],
+      "alpha128BoundsInCell": [
+        18,
+        45,
+        284,
+        681
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-17-sleep.png",
+      "size": [
+        266,
+        636
+      ],
+      "sha256": "523a1594f4afa029da5ca3d3820245145e27b1bd72ef6639abcdf5e63dd99df8",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 18,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_18-0.png",
+      "sourcePixelSha256": "bcf31447f1ecfc98f77be02df5cb8022ca799640be0218f7b9a3e11302d7015b",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-16-20-sleep-v2.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        626,
+        0,
+        936,
+        688
+      ],
+      "alpha128BoundsInCell": [
+        22,
+        42,
+        290,
+        681
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-18-sleep.png",
+      "size": [
+        268,
+        639
+      ],
+      "sha256": "916703d5c6f215de0c948870c147db8bccf47fd04933d63372c1efce0a17b704",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 19,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_19-0.png",
+      "sourcePixelSha256": "5bba266684f22009bb048bc45b1e9f78928d5140970fcd6ab9057e104f814fcf",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-civilians-16-20-sleep-v2.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        936,
+        0,
+        1254,
+        688
+      ],
+      "alpha128BoundsInCell": [
+        20,
+        59,
+        288,
+        681
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-19-sleep.png",
+      "size": [
+        268,
+        622
+      ],
+      "sha256": "0502ef31a18bf37c60a25cdd64ac284ac2e6ebe574ba75664093fff16bd42541",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10012,
+      "record": 20,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10012_20-0.png",
+      "sourcePixelSha256": "7ac4598449d24243410f0c01896e9a10f247c0f0d0ce1e561eaa4bdb99849540",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-10012-20-sleep-repair-v2.png",
+      "cellIndex": 0,
+      "alpha128BoundsInCell": [
+        68,
+        111,
+        750,
+        1794
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10012-20-sleep.png",
+      "size": [
+        682,
+        1683
+      ],
+      "sha256": "c29e6dd7913279cb738a89ac2df735cc4b5c6831d769485e1093fb09157b59b0",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true,
+        "longBlanketCorrected": true
+      },
+      "proportionRepair": {
+        "previousHeightWidthRatio": 1.956,
+        "selectedHeightWidthRatio": 2.468,
+        "visualCheck": "Complete long blanket replaces short squat original; head/pillow/hair remain recognizable. This is visual similarity, not pixel identity."
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10013,
+      "record": 1,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10013_1-0.png",
+      "sourcePixelSha256": "60dc783235c3e8e24bf9d35d277bf82ec4719a1ef8d3d6a21473c3bc366a7236",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        313,
+        612
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        32,
+        268,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10013-1-sleep.png",
+      "size": [
+        223,
+        563
+      ],
+      "sha256": "e6472e2ae2f566c92e94b2581d7b29cbc17369cea67ae073aa537b6021b34874",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10013,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10013_2-0.png",
+      "sourcePixelSha256": "b5eec458905e9aed5ba9fb92c2e64a0cba028aa8998096ce5d1add9a981c816d",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        313,
+        0,
+        627,
+        612
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        32,
+        269,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10013-2-sleep.png",
+      "size": [
+        224,
+        563
+      ],
+      "sha256": "e702e5940783742b4d6e9edf65a56376fa11924334d37039f58e407d1ea55ac2",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10013,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10013_3-0.png",
+      "sourcePixelSha256": "a23e0b924bf9c7bddf9fb6b86c1a9ee867efcae03a651469836cb30e0438d927",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        627,
+        0,
+        940,
+        612
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        32,
+        268,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10013-3-sleep.png",
+      "size": [
+        223,
+        563
+      ],
+      "sha256": "7d50471fa814204847d1d3f2f018c0f94b1980f119a1c4d042d0866d10836b77",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10016,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10016_0-0.png",
+      "sourcePixelSha256": "c59a909a0fdd566898664f804f1574c3f887cfd7997334e49bbd6f11977cb956",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        940,
+        0,
+        1254,
+        612
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        38,
+        269,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10016-0-sleep.png",
+      "size": [
+        224,
+        557
+      ],
+      "sha256": "e122f446935847da4cc122777f4606599c20145ded8828db72c5ac18f058e682",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10016,
+      "record": 1,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10016_1-0.png",
+      "sourcePixelSha256": "da5f264c19b5f2e5422a4a41bc53ad9cd0ed577903232d62af420d35ab32d9d7",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        612,
+        313,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        48,
+        268,
+        610
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10016-1-sleep.png",
+      "size": [
+        223,
+        562
+      ],
+      "sha256": "a87ad7e09ed2dec9b74652d2d68519cf961b8e869fe204e5d845dc63ec3e8b5f",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10016,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10016_2-0.png",
+      "sourcePixelSha256": "923e966a0c69426ef7fc8e91b898e699eb8303edb1d0d8dbaf4b538a03f2c25b",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        313,
+        612,
+        627,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        17,
+        269,
+        610
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10016-2-sleep.png",
+      "size": [
+        224,
+        593
+      ],
+      "sha256": "3ea7c33f9c9e0fc85de2c7ae0be604bfe1e3d2148b0a580584517431a2258500",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10016,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10016_3-0.png",
+      "sourcePixelSha256": "721d91f074280d9627961f20ec4667b8bb5aa541be646f0c417e7d55b7ec346e",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        627,
+        612,
+        940,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        31,
+        268,
+        610
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10016-3-sleep.png",
+      "size": [
+        223,
+        579
+      ],
+      "sha256": "a1ebbe4ea0ed530db8034ae46e88576fcf324b5e4d4b48704657841d1e14a383",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10016,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10016_4-0.png",
+      "sourcePixelSha256": "b09f142cba6c071d25c249fdb6ed17d97c960b5c04d1e60d82ebb0867d900da8",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-0-sleep-v1.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        940,
+        612,
+        1254,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        21,
+        269,
+        611
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10016-4-sleep.png",
+      "size": [
+        224,
+        590
+      ],
+      "sha256": "cc966ba8551543d88cac44648f6f1e0cc26a762d5aa01eaa6ae7762377c50541",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_0-0.png",
+      "sourcePixelSha256": "cb30b1f054413493d87ecacdd48b2c347b18322676cca94477eb1b1121e403ca",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        313,
+        637
+      ],
+      "alpha128BoundsInCell": [
+        41,
+        63,
+        271,
+        616
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-0-sleep.png",
+      "size": [
+        230,
+        553
+      ],
+      "sha256": "190e9a5fcb47c7a90e30e428b2f7e2abefd1ac0c0dab11029a10f8a88fbf3a4e",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_2-0.png",
+      "sourcePixelSha256": "1b0e442c586deccea67023b01cf0306677baf21901dc88a61c399111add87789",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        313,
+        0,
+        627,
+        637
+      ],
+      "alpha128BoundsInCell": [
+        42,
+        38,
+        277,
+        616
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-2-sleep.png",
+      "size": [
+        235,
+        578
+      ],
+      "sha256": "5ae3d26e44773e325ee42c7b4ed16acd471779f88efc08141d884a64607efe84",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_3-0.png",
+      "sourcePixelSha256": "244860dd007f697c5a1d5d61a56eeb550470732ce32d7ff35c93c59f979995d6",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        627,
+        0,
+        939,
+        637
+      ],
+      "alpha128BoundsInCell": [
+        38,
+        72,
+        271,
+        616
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-3-sleep.png",
+      "size": [
+        233,
+        544
+      ],
+      "sha256": "277e4dd1064dc450dc7804d311dbb3fad61919da5ced1f7f14fc61b00d54b4e1",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "review-with-limits",
+      "issues": [
+        "source-face-partly-hidden; conservative generated face is not exact identity proof"
+      ],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_4-0.png",
+      "sourcePixelSha256": "44a44b412cf8a28a39b384a6f0fc437f628cea920b0340c740e726f0aa004ee5",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        939,
+        0,
+        1254,
+        637
+      ],
+      "alpha128BoundsInCell": [
+        42,
+        26,
+        273,
+        616
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-4-sleep.png",
+      "size": [
+        231,
+        590
+      ],
+      "sha256": "b71dce346feeab43c110f249afbce7bb1028703260ba9610451e5cfc14cf47ee",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "review-with-limits",
+      "issues": [
+        "source head is mostly turned away; generated long-muzzled beastfolk face requires specific identity review"
+      ],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 5,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_5-0.png",
+      "sourcePixelSha256": "c4097dd9b5dc0a7dcce6fd42e05014874d6531caea42d5c41c5e1633e7e8e80d",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        637,
+        313,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        41,
+        26,
+        271,
+        582
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-5-sleep.png",
+      "size": [
+        230,
+        556
+      ],
+      "sha256": "d454e28b6e7c646da78fc26c4d9e26d01ffb2d6a88ce578ecd07f283df56c6bd",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 6,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_6-0.png",
+      "sourcePixelSha256": "fbc19457f309b254fd927489f7d0b67249f90d8f5123f63072ccd2e651b7a806",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        313,
+        637,
+        627,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        42,
+        32,
+        277,
+        582
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-6-sleep.png",
+      "size": [
+        235,
+        550
+      ],
+      "sha256": "22e61b2f76f0f9bc080aca8aafeab434e9417294fe068d7dee72b80fa0546208",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 7,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_7-0.png",
+      "sourcePixelSha256": "4f24dbf00f9e5c651fb83ed6ec6b6be7d2d9ea937cc314ea8ee457599c6e8cc5",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        627,
+        637,
+        939,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        38,
+        34,
+        271,
+        582
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-7-sleep.png",
+      "size": [
+        233,
+        548
+      ],
+      "sha256": "a0ad2095ead6281382022a654b0741c2c5adc1e316f9417d49254b9755b17a1e",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "review-with-limits",
+      "issues": [
+        "source-face-partly-hidden; conservative generated face is not exact identity proof"
+      ],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 8,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_8-0.png",
+      "sourcePixelSha256": "c9bf2b16828770191aba57f80b37525fed6833c966e3fe432bb115c363f18d74",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-1-sleep-v1.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        939,
+        637,
+        1254,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        42,
+        22,
+        274,
+        581
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-8-sleep.png",
+      "size": [
+        232,
+        559
+      ],
+      "sha256": "ee0831108884adad80d377034725f4bc7468a06eead78cdea02706edbdc9cf26",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 9,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_9-0.png",
+      "sourcePixelSha256": "6b64f3891279c5a5fde8760846d921be78ecdbde4814c7f150c83f37ff1e5f1b",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        313,
+        617
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        32,
+        271,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-9-sleep.png",
+      "size": [
+        228,
+        562
+      ],
+      "sha256": "2e712f90c02cf0662edfdae3099b1b15dd867714292c97ca30f8f453742300a9",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 10,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_10-0.png",
+      "sourcePixelSha256": "7082fc2d3d59f960241bc0164485edbfd9fc9193e7e530aae736322930ef0198",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        313,
+        0,
+        627,
+        617
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        41,
+        271,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-10-sleep.png",
+      "size": [
+        228,
+        553
+      ],
+      "sha256": "af8529cdec2f281361791d60a0d52570868fe429306e15c2320793f7ba0e2eaf",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 11,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_11-0.png",
+      "sourcePixelSha256": "baeb9a60c717de15ee47e64133ff0bbd3faa7456265c61dbafc1fbcee02fad21",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        627,
+        0,
+        935,
+        617
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        32,
+        271,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-11-sleep.png",
+      "size": [
+        228,
+        562
+      ],
+      "sha256": "48e3fc4314875e7f2eef4c56d4c892ea1fcfee6f0972f5ce1285bf87f7dc624a",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10014,
+      "record": 12,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10014_12-0.png",
+      "sourcePixelSha256": "2667c660aba90bb6c5051a69eb0ac8cd71ee7bc815204c0dd562e42eed7e15fa",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        935,
+        0,
+        1254,
+        617
+      ],
+      "alpha128BoundsInCell": [
+        38,
+        28,
+        289,
+        594
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10014-12-sleep.png",
+      "size": [
+        251,
+        566
+      ],
+      "sha256": "7ed7b6a11ad499193f8ad1d8e4167d032847f191641b4297f90557060a956d82",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10018,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10018_0-0.png",
+      "sourcePixelSha256": "42994f82a7520568eb31cd4b7267f6531c7e78728fd48e83d1691f48d4b27f66",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        617,
+        313,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        42,
+        271,
+        604
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10018-0-sleep.png",
+      "size": [
+        228,
+        562
+      ],
+      "sha256": "2880da53cc34e9ccc6010fba75ad3016efe784944516242c2620839a3c521b61",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10018,
+      "record": 1,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10018_1-0.png",
+      "sourcePixelSha256": "ede0c01ef50decb4c23c1efe907410b2c085cd8bf2651c53b259fe3780f47724",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        313,
+        617,
+        627,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        23,
+        271,
+        604
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10018-1-sleep.png",
+      "size": [
+        228,
+        581
+      ],
+      "sha256": "a5e8389f4f9e86e9aa1b6f60bd6a87ec0aaaa082dfcd7a21f0abe36c4fe453da",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10018,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10018_2-0.png",
+      "sourcePixelSha256": "ba3128b0d9c4a71c20b84b552cc82893c7060224420a2fbee1c5f5aa24719fd9",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        627,
+        617,
+        935,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        36,
+        271,
+        604
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10018-2-sleep.png",
+      "size": [
+        228,
+        568
+      ],
+      "sha256": "0579c000567cc79d1c30f168aa92031c607f34b1aa1342dd977f8455169a5009",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10018,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10018_3-0.png",
+      "sourcePixelSha256": "b9abbd7f7074ad95e61825de8aed3b7f7445fe74f6de7b2cbeb2227d10e495b1",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-2-sleep-v1.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        935,
+        617,
+        1254,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        49,
+        43,
+        276,
+        604
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10018-3-sleep.png",
+      "size": [
+        227,
+        561
+      ],
+      "sha256": "f21480f9953c09bc80136a32445ffa6a300d50a4254351a4f0f7a69cf900431c",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_0-0.png",
+      "sourcePixelSha256": "2b200af698d094b759d1e06010a54a4c7e778e8dc8f47bd706f76b428d7a635e",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        314,
+        616
+      ],
+      "alpha128BoundsInCell": [
+        46,
+        40,
+        273,
+        596
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-0-sleep.png",
+      "size": [
+        227,
+        556
+      ],
+      "sha256": "bf6680f983bd1f52ada0722a8ebcebb79cf9e6ee8ab41bc9d4e6e9f2911a5574",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 1,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_1-0.png",
+      "sourcePixelSha256": "102214a74d5d230c19d33c6a121507f40f540c63a4127a9e5ca85ece5d1c500c",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        314,
+        0,
+        628,
+        616
+      ],
+      "alpha128BoundsInCell": [
+        41,
+        38,
+        272,
+        596
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-1-sleep.png",
+      "size": [
+        231,
+        558
+      ],
+      "sha256": "aeeffb9886dddb7e3446d0e16a4a84a2ada3609b2b74949ef71665d9d3ae9cd5",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_2-0.png",
+      "sourcePixelSha256": "9a1ec65786642e51141b9e955ee9d7d534dfb2b2f3db80e5a8253bbaeef10842",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        628,
+        0,
+        942,
+        616
+      ],
+      "alpha128BoundsInCell": [
+        41,
+        31,
+        272,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-2-sleep.png",
+      "size": [
+        231,
+        564
+      ],
+      "sha256": "0759eec09d30faec1e7455ec30032b31fe2161e550360bf91064c77fc0f79e3d",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_3-0.png",
+      "sourcePixelSha256": "cf8e3ba0af41cc75a0a3399e42062231d2ccbba09cf774b83a2301f4e6e2599b",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        942,
+        0,
+        1254,
+        616
+      ],
+      "alpha128BoundsInCell": [
+        43,
+        43,
+        271,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-3-sleep.png",
+      "size": [
+        228,
+        552
+      ],
+      "sha256": "26edb0baba63207258c49d6331480cefe2caf2b9abb5258b8373a6398c06cd8e",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_4-0.png",
+      "sourcePixelSha256": "0640007c969e70ebc2587a04bcc75688a2e298f5bd7307bbfd2697c9c6a26d22",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        616,
+        314,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        41,
+        46,
+        274,
+        606
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-4-sleep.png",
+      "size": [
+        233,
+        560
+      ],
+      "sha256": "c8bc1c66a86a047fffd1f352f40e5075923ff84884c0be2c216277eedbda88cf",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 5,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_5-0.png",
+      "sourcePixelSha256": "44bc32d4c6b2ef5f77522cc3133c150d565936bdfaf444412b44a9fb232befa9",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        314,
+        616,
+        628,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        41,
+        37,
+        274,
+        606
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-5-sleep.png",
+      "size": [
+        233,
+        569
+      ],
+      "sha256": "6c47182e87ce2ff0e5ca8e21cbc21d07e48e559176b5a51e2144eb77866421a5",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 6,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_6-0.png",
+      "sourcePixelSha256": "b0fa0448eeccb640275abe1f9caf25c346d142b3a154634cc31c4dd583a7c99d",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        628,
+        616,
+        942,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        40,
+        39,
+        273,
+        607
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-6-sleep.png",
+      "size": [
+        233,
+        568
+      ],
+      "sha256": "a6a0a73d4a03ef2c6692af33780464929bbdc8269d28828023b6edac2aa4d5b9",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10017,
+      "record": 7,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10017_7-0.png",
+      "sourcePixelSha256": "7b9867f791e7532b7b8f658cc27b2f558e738303018a6a4f9bf53484a2278bfb",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-3-sleep-v1.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        942,
+        616,
+        1254,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        42,
+        20,
+        273,
+        606
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10017-7-sleep.png",
+      "size": [
+        231,
+        586
+      ],
+      "sha256": "648b0cb0e45e9f6f65404b319b79e0eb32a284bc8b400cfe76a07fd41cf1afe5",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10018,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10018_4-0.png",
+      "sourcePixelSha256": "86347ef90af6039a6364b79915ca214636bd91d1cdb0bd1d42fd1cb1719a8f2e",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 0,
+      "extractionCell": [
+        0,
+        0,
+        314,
+        618
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        34,
+        270,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10018-4-sleep.png",
+      "size": [
+        225,
+        561
+      ],
+      "sha256": "4c19a56691d2f0a2c7afda2386210571fc970bfaec5efb095e018058981adea3",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10019,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10019_0-0.png",
+      "sourcePixelSha256": "714748dfce467b2aaae3b5a693f4d9a7d7606305b1653e4c479a336c979581ea",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 1,
+      "extractionCell": [
+        314,
+        0,
+        628,
+        618
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        33,
+        269,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10019-0-sleep.png",
+      "size": [
+        224,
+        562
+      ],
+      "sha256": "c8917da3023e317656a9a26d3b23f386225b76597aebf21837d77823316e1d69",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "review-with-limits",
+      "issues": [
+        "source face obscured by arm; generated face is inferred"
+      ],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10020,
+      "record": 0,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10020_0-0.png",
+      "sourcePixelSha256": "eec38ba83b481e6437207f1467878e02dc2e4fe788435c925eeab08a761919ae",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 2,
+      "extractionCell": [
+        628,
+        0,
+        941,
+        618
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        21,
+        269,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10020-0-sleep.png",
+      "size": [
+        224,
+        574
+      ],
+      "sha256": "2f89cc832a37c18fa6ad2d5564456f6de0f7be26b6e6892e9501a3cd74ece82d",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10020,
+      "record": 2,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10020_2-0.png",
+      "sourcePixelSha256": "1715e49cb5e561712a23550b53861abf13c1c42357e84f3c979728114a9a4f88",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 3,
+      "extractionCell": [
+        941,
+        0,
+        1254,
+        618
+      ],
+      "alpha128BoundsInCell": [
+        44,
+        33,
+        269,
+        595
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10020-2-sleep.png",
+      "size": [
+        225,
+        562
+      ],
+      "sha256": "30dc3f336b6c1f4956e396cfbcc29e1c3a06e5fdb435dc5493a2c881df0185dc",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10020,
+      "record": 3,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10020_3-0.png",
+      "sourcePixelSha256": "dda013652c0bc6131609548d1b0ff16f1ece8dc72df3599a095e8dabcea7c053",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 4,
+      "extractionCell": [
+        0,
+        618,
+        314,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        38,
+        270,
+        603
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10020-3-sleep.png",
+      "size": [
+        225,
+        565
+      ],
+      "sha256": "c5b514107c099f9fa02be3795c49e79f6c7b7988cd920f59ebeeae8d2107e1c6",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10020,
+      "record": 4,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10020_4-0.png",
+      "sourcePixelSha256": "f8ac7f84fd5d72e3b52dd18a0a473b4b95404395e7835ee6d3e6f625301396f7",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 5,
+      "extractionCell": [
+        314,
+        618,
+        628,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        42,
+        269,
+        603
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10020-4-sleep.png",
+      "size": [
+        224,
+        561
+      ],
+      "sha256": "bc47656d0c52e4b3d15bce099aba3e471b89b0673583f0225ff2974a12988ce1",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10020,
+      "record": 5,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10020_5-0.png",
+      "sourcePixelSha256": "14c1db33f4047f60fe0bb7e8f467faa500996b710426cc6dc8e0c61a4345aafb",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 6,
+      "extractionCell": [
+        628,
+        618,
+        941,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        45,
+        42,
+        269,
+        603
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10020-5-sleep.png",
+      "size": [
+        224,
+        561
+      ],
+      "sha256": "4f09f637f82ba61562f748209cc127e80bb4e2d4083ce4a88e293301f6820d54",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10020,
+      "record": 6,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10020_6-0.png",
+      "sourcePixelSha256": "1b81f90f5a32d7cc237e47d74f8cf363a06a101c64c1e9ae417feeb2ca03223f",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-4-sleep-v2.png",
+      "cellIndex": 7,
+      "extractionCell": [
+        941,
+        618,
+        1254,
+        1254
+      ],
+      "alpha128BoundsInCell": [
+        44,
+        23,
+        270,
+        603
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10020-6-sleep.png",
+      "size": [
+        226,
+        580
+      ],
+      "sha256": "8b6fbb087cfc126f9e9aa1b6b21f10a5d476632c0f9d51d824f4f1fa869c903a",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true
+      }
+    },
+    {
+      "provider": "daggerfall expanded textures",
+      "providerGuid": "00272292-acc6-4e51-ba4c-3a3e89199609",
+      "archive": 10020,
+      "record": 7,
+      "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\daggerfall expanded textures\\10020_7-0.png",
+      "sourcePixelSha256": "54d182ea20db13208f45693ed82cdb24044bd8937ff5a1669de15cfbabbeb0a2",
+      "sourceBundleSha256": "46d7781b70b875b4bcf87260aafbc55cccaa3add4fc4d2b95ccbd35b79947ca6",
+      "atlas": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\det-remaining-5-sleep-v2.png",
+      "cellIndex": 0,
+      "alpha128BoundsInCell": [
+        218,
+        177,
+        760,
+        1428
+      ],
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidates\\det-10020-7-sleep.png",
+      "size": [
+        542,
+        1251
+      ],
+      "sha256": "64d5a23dd55f9d48801e7f2811dcacd0d12a1e1b8653fc3e02231d8f2132dfd9",
+      "generated": true,
+      "technicalChecked": true,
+      "visualChecked": true,
+      "integrated": false,
+      "userApproved": false,
+      "candidateStatus": "reviewable-candidate",
+      "issues": [],
+      "visualChecks": {
+        "headIdentityCompared": true,
+        "closedEyesReviewed": true,
+        "greenBlanket": true,
+        "whitePillow": true,
+        "completeNeckToToesCoverage": true,
+        "rendererCutoff128Preview": true,
+        "longBlanketCorrected": true
+      }
+    }
+  ],
+  "reviewPages": [
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-1.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-2.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-3.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-4.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-5.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-6.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-7.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-8.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-9.png",
+    "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\idle-sleep\\sleep-candidate-review-10.png"
+  ]
+}

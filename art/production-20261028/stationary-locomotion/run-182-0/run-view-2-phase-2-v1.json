@@ -1,0 +1,31 @@
+{
+  "phase": 2,
+  "source": "flat-182-0-walk-left-contactB-v1.png",
+  "name": "right-contact",
+  "pose": "LEFT-facing RUN RIGHT-LEG CONTACT: FAR RIGHT leg extends forward to imageLEFT, heel touches original ground baseline. NEAR LEFT leg trails toward imageRIGHT, knee sharply bent, heel lifted toward buttock and near boot entirely off ground. NEAR LEFT arm FORWARD toward imageLEFT, elbow90degrees, near fist low chest. FAR RIGHT arm BACK toward imageRIGHT, bent elbow, far fist behind hip. Clear OPPOSITE arm/leg roles from left-contact phase. Only far forward boot grounded; near rear leg must be visibly foreground at overlapping thigh.",
+  "file": "run-view-2-phase-2-v1.png",
+  "view": 2,
+  "status": "generated-awaiting-flight-and-phase-review",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-9c85902a-2265-4dcd-8e39-77717a6d3cd4.png",
+  "prompt": "Use case: identity-preserve. ONE running keyframe for original Daggerfall stationary merchant182/0, strict LEFT PROFILE. IMAGE1 is authoritative original identity/palette47x76pixels. IMAGE2 is same merchant in a WALK phase and is edit target for exact camera, face, headsize, stocky proportions, costume and canvas geometry. IMAGE3 is ONLY a different man's generated RUNNING posture guide; never copy his dark skin, black hair, orange collar, blue tunic, tights or green shoes. Its repeated arm/flight defects must NOT be copied; obey the precise new phase below. Our merchant stays elderly pale bald-crowned grey-sidehair, clean-shaven, broad stocky green waistcoat/belly, muted cyan sleeves, DARK RUST-BROWN knee breeches, folded brown boots and original brown belt/pouch. Preserve exact identity, coarse1996pixel clusters, source palette, no modern fine texture/new accessories. Keep same canvas dimensions/headscale/pelvisposition and strict nose-LEFT camera as image2. Lean torso forward only modestly(about10degrees), no hunched monster/anatomy change. Running has bent elbows and longer energetic leg motion, unlike walking. PHASE: LEFT-facing RUN RIGHT-LEG CONTACT: FAR RIGHT leg extends forward to imageLEFT, heel touches original ground baseline. NEAR LEFT leg trails toward imageRIGHT, knee sharply bent, heel lifted toward buttock and near boot entirely off ground. NEAR LEFT arm FORWARD toward imageLEFT, elbow90degrees, near fist low chest. FAR RIGHT arm BACK toward imageRIGHT, bent elbow, far fist behind hip. Clear OPPOSITE arm/leg roles from left-contact phase. Only far forward boot grounded; near rear leg must be visibly foreground at overlapping thigh. Ground baseline is the same invisible line under image2's grounded boot; do not draw it. Contacts reach it, flights remain above it, never shift canvas to falsely ground airborne boots. Render exactly one complete character, no extra cells or views. Head/hands/boots fit with margin. Actual transparent background and fully opaque body. No floor, shadow, text, borders or checkerboard.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/flat-182-0-walk-left-contactB-v1.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-reference-385-left-review.png"
+  ],
+  "tool": "built-in image_gen",
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+      "sha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/flat-182-0-walk-left-contactB-v1.png",
+      "sha256": "c6e3e113e000302d398053af3c74df5e44197063a04d33a81b8eaf029286ef13"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-reference-385-left-review.png",
+      "sha256": "dd36ca32764d2d08a829bebf7584443048770673e8d52212625062f8fd8181cb"
+    }
+  ]
+}

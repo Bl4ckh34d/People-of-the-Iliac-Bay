@@ -1,0 +1,96 @@
+{
+  "record": 195,
+  "mood": "guarded",
+  "frames": [
+    {
+      "gaze": "front",
+      "phase": "open",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\front-open.png",
+      "sha256": "72c15731cc4c2fc53d189af86852ad1e726a2c1768ebeef28476956bb7ad5b11"
+    },
+    {
+      "gaze": "front",
+      "phase": "half",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\front-half.png",
+      "sha256": "fcf25b79801fa79ea788e9b0cc704ee4937c02b430dc695fa8751345b6f19131"
+    },
+    {
+      "gaze": "front",
+      "phase": "closed",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\front-closed.png",
+      "sha256": "62bd69e9e9bb2a640f01d819e891d8b531893fba2deb057e9f6518925618a49c"
+    },
+    {
+      "gaze": "left",
+      "phase": "open",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\left-open.png",
+      "sha256": "dbd12c3e83f154273b96531bdc486688c91bcdc1f4525e6d2759fe56fccffd15"
+    },
+    {
+      "gaze": "left",
+      "phase": "half",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\left-half.png",
+      "sha256": "483a3f9f0ce175abcdc32f4e5975a1225f7b48841bcd8141d8efbdb248a5577a"
+    },
+    {
+      "gaze": "left",
+      "phase": "closed",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\left-closed.png",
+      "sha256": "62bd69e9e9bb2a640f01d819e891d8b531893fba2deb057e9f6518925618a49c"
+    },
+    {
+      "gaze": "right",
+      "phase": "open",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\right-open.png",
+      "sha256": "6c0558bb57eb095c3b8008d2e07d576eb6d190a2da5736a73719363b4b1798ca"
+    },
+    {
+      "gaze": "right",
+      "phase": "half",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\right-half.png",
+      "sha256": "ad36b6e7a21a9f1c67919e3c8e584652bb3fab9cfedbe5077d52e8ea0ba43b25"
+    },
+    {
+      "gaze": "right",
+      "phase": "closed",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc195-eyes-v1\\guarded-v2\\right-closed.png",
+      "sha256": "62bd69e9e9bb2a640f01d819e891d8b531893fba2deb057e9f6518925618a49c"
+    }
+  ],
+  "fit": {
+    "aperture": [
+      [
+        17,
+        18,
+        27,
+        20
+      ],
+      [
+        36,
+        19,
+        46,
+        20
+      ]
+    ],
+    "lids": [
+      [
+        14,
+        17,
+        30,
+        19
+      ]
+    ],
+    "exposedRows": [
+      19,
+      19
+    ],
+    "rightClosedAtHalf": true,
+    "reason": "Guarded right eye has only one aperture row19. HALF is asymmetric: left partial, right fully closed; no impossible fractional native-pixel vertical aperture."
+  },
+  "status": "parent-static-review-pending",
+  "reviewLimitations": [
+    "No temporal pass or publication.",
+    "Fit belongs to this particular mood, not a universal row lock.",
+    "Parent static review: HALF looks like a short wink. Only plausible as brief transition; no symmetric blink or timing pass."
+  ]
+}

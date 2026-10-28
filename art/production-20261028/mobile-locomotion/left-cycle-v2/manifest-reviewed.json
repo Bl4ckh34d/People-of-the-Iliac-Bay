@@ -1,0 +1,233 @@
+{
+  "appearance": 385,
+  "bearing": 2,
+  "view": "left profile",
+  "phase_order": [
+    "near-contact",
+    "far-flight",
+    "far-contact",
+    "near-flight"
+  ],
+  "frame_count": 4,
+  "fps": 8,
+  "canvas": [
+    144,
+    152
+  ],
+  "atlas": "atlas.png",
+  "frames": [
+    {
+      "index": 0,
+      "phase": "near-contact",
+      "file": "00-near-contact.png",
+      "source": "385-left-near-contact-v1.png",
+      "source_sha256": "38f5a14c808a1ae1be4912b3c41523e27f7fd7be317fa21e3829071f1ec0da97",
+      "anatomical_intent": "near foot supports, near arm back",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        20
+      ],
+      "cutout_source_bounds": [
+        254,
+        90,
+        977,
+        1231
+      ],
+      "ground_y": 138,
+      "flight_clearance": 0,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": true,
+      "integrated": false,
+      "user_approved": false,
+      "prompt": "prompt-385-left-near-contact-v1.txt",
+      "generation_references": [
+        "385-run-opposite-keyframe-v1.png",
+        "../../run/mobile/385/native-view-2-four-frames.png"
+      ],
+      "generation_method": "built-in imagegen single source-conditioned pose",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-3c55f32b-ca34-4cb6-81eb-b031d10ef34b.png"
+    },
+    {
+      "index": 1,
+      "phase": "far-flight",
+      "file": "01-far-flight.png",
+      "source": "385-left-far-flight-v1.png",
+      "source_sha256": "1d350a8604e5c72717ea826852f2874583476999be9a2bd982e633b5182e4ff7",
+      "anatomical_intent": "far knee rising, near arm forward",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        16
+      ],
+      "cutout_source_bounds": [
+        285,
+        85,
+        1002,
+        1228
+      ],
+      "ground_y": 138,
+      "flight_clearance": 4,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": true,
+      "integrated": false,
+      "user_approved": false,
+      "prompt": "prompt-385-left-far-flight-v1.txt",
+      "generation_references": [
+        "385-left-far-contact-v1.png"
+      ],
+      "generation_method": "built-in imagegen single source-conditioned pose",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-395da6f6-aad8-4b10-b455-7fa97867f14e.png"
+    },
+    {
+      "index": 2,
+      "phase": "far-contact",
+      "file": "02-far-contact.png",
+      "source": "385-left-far-contact-v1.png",
+      "source_sha256": "4e6051ec31d3f0c176f4535351d9726eb5856cf8f3237cee5379cae5d81057d2",
+      "anatomical_intent": "far foot supports, near arm forward",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        17
+      ],
+      "cutout_source_bounds": [
+        241,
+        86,
+        954,
+        1264
+      ],
+      "ground_y": 138,
+      "flight_clearance": 0,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": true,
+      "integrated": false,
+      "user_approved": false,
+      "prompt": "prompt-385-left-far-contact-v1.txt",
+      "generation_references": [
+        "385-run-opposite-keyframe-v1.png",
+        "../../run/mobile/385/native-view-2-four-frames.png"
+      ],
+      "generation_method": "built-in imagegen single source-conditioned pose",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-a87ee6a9-0cb8-4856-9b64-79a2ee0dfe20.png"
+    },
+    {
+      "index": 3,
+      "phase": "near-flight",
+      "file": "03-near-flight.png",
+      "source": "385-left-near-flight-v2.png",
+      "source_sha256": "ff2c007146016dc9311bc72edbb974a35775dcb4a6c65d61edb871865cfe2f5f",
+      "anatomical_intent": "near knee rising, near arm back",
+      "global_scale": 0.096,
+      "placement": [
+        22,
+        19
+      ],
+      "cutout_source_bounds": [
+        261,
+        86,
+        994,
+        1197
+      ],
+      "ground_y": 138,
+      "flight_clearance": 4,
+      "generated": true,
+      "technical_checked": true,
+      "visual_reviewed": true,
+      "integrated": false,
+      "user_approved": false,
+      "prompt": "prompt-385-left-near-flight-v2.txt",
+      "generation_references": [
+        "385-run-opposite-keyframe-v1.png",
+        "385-left-far-flight-v1.png"
+      ],
+      "generation_method": "built-in imagegen single source-conditioned pose",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-a82d2830-cf24-43ad-8461-420de1020462.png"
+    }
+  ],
+  "method": "Separate source-conditioned imagegen keyframes, then common nearest-neighbor scale and head anchor. No mirroring, no duplicate frame substitution, no palette edits.",
+  "generated": true,
+  "technical_checked": true,
+  "visual_reviewed": true,
+  "integrated": false,
+  "user_approved": false,
+  "limits": [
+    "Only bearing2 has this candidate cycle.",
+    "Source palette differs slightly across generations.",
+    "Head vertical travel differs between flight phases; inspect temporal bob."
+  ],
+  "status": "left-profile-four-phase-review-candidate",
+  "technical_checks": [
+    {
+      "frame": "00-near-contact.png",
+      "cutout_bounds": [
+        46,
+        29,
+        116,
+        138
+      ],
+      "no_clipping": true,
+      "raw_copy_unchanged": true,
+      "frame_sha256": "1c9a281cce26e58c1332ad8d7d6ff8a2fa9482c9705051fd64dca61aa5e4ee5a"
+    },
+    {
+      "frame": "01-far-flight.png",
+      "cutout_bounds": [
+        49,
+        24,
+        119,
+        134
+      ],
+      "no_clipping": true,
+      "raw_copy_unchanged": true,
+      "frame_sha256": "58aa757ace4b0aa7d39528335d90bf5c9430dfee39ca446921f1d60f4ca8dd6f"
+    },
+    {
+      "frame": "02-far-contact.png",
+      "cutout_bounds": [
+        45,
+        25,
+        114,
+        138
+      ],
+      "no_clipping": true,
+      "raw_copy_unchanged": true,
+      "frame_sha256": "2938d6e61265291272b4d66eeca16a7576712d0551f79f36ba3f85fb3b42acb9"
+    },
+    {
+      "frame": "03-near-flight.png",
+      "cutout_bounds": [
+        47,
+        27,
+        118,
+        134
+      ],
+      "no_clipping": true,
+      "raw_copy_unchanged": true,
+      "frame_sha256": "49d8875de15fbc10f7b00ab183a15dec73bc6294a14421f7bcfa5a6c26d7a39b"
+    }
+  ],
+  "gif_frames": 4,
+  "visual_review": {
+    "evidence": [
+      "contact-sheet.png",
+      "../opposite-keyframe-comparison.png"
+    ],
+    "passed": [
+      "Near arm is behind torso in near-contact and near-flight, forward over torso in far-flight and far-contact.",
+      "Four source-conditioned images have distinct contact and flight leg poses; no duplicated or mirrored frame stands in for another phase.",
+      "All four share original master camera, canvas and common scale. Face, orange collar, teal tunic, yellow hem, striped legs, green shoes and pouch remain identifiable.",
+      "Near-flight v2 reduces the visibly excessive head lift of v1."
+    ],
+    "limits": [
+      "This is a visual keyframe/contact-sheet review, not native game playback acceptance.",
+      "Turquoise saturation and small costume folds vary across generated phases; exact native palette fidelity is not passed.",
+      "Four-frame cadence omits intermediate support/passing poses and remains a low-frame-rate candidate.",
+      "Near/far leg overlap is largely hidden by the long tunic; anatomical ownership is inferred from source-conditioned phase intent and visible arm depth.",
+      "No other bearings are generated by this cycle; integration and user approval remain false."
+    ]
+  }
+}

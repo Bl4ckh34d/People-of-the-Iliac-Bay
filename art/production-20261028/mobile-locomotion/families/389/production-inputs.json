@@ -1,0 +1,57 @@
+{
+  "archive": 389,
+  "motion_template": 385,
+  "raw_output_directory": "C:/Users/Daniel/.codex/generated_images/01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v2",
+    "view-1-v2",
+    "view-2-v2",
+    "view-3-v2",
+    "view-4-v2"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "30b84a80-0464-4601-a210-fbd101e29314"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "9def0a1c-577f-44ad-a498-fb31ea8cc904"
+    },
+    {
+      "name": "view-0-v2",
+      "id": "b5900825-df67-4921-800f-e1e21f54c192",
+      "references": [
+        "view-0-v1.png",
+        "native-reference/view-0.png"
+      ]
+    },
+    {
+      "name": "view-1-v2",
+      "id": "d8270265-c567-46e8-bab4-e55a38fcbcee",
+      "references": [
+        "view-1-v1.png",
+        "native-reference/view-1.png"
+      ]
+    },
+    {
+      "name": "view-2-v2",
+      "id": "2aa80a5d-71b5-4c1e-9d5f-2b094e1ce3de"
+    },
+    {
+      "name": "view-3-v2",
+      "id": "75b9bd31-ca1e-423d-980b-b97cf2023f5c"
+    },
+    {
+      "name": "view-4-v2",
+      "id": "a7bdabd2-67ab-4cf1-8e53-3d98ce9dbe6f"
+    }
+  ],
+  "reference_policy": "385run supplies pose only; native389 defines green hood/cowl, teal elbow-sleeved tunic, exposed brown forearms, striped trousers, brown cuffed boots and green native pouches. Front v1 outputs had incorrect long sleeves; v2 repaired source-bound sleeve extent. Opposite views use exact native renderer mirrors.",
+  "known_limits": [
+    "Candidate only: hood volume, boot volume, teal brightness and jagged hem depth vary from native pixels.",
+    "Profile opposite contacts/flights have similar leg silhouettes; thigh depth beneath tunic is ambiguous. Rear-left arm movement is less legible than front/profile.",
+    "Four-frame cadence lacks passing intermediates. Twelve opposite-view frames are mirror derivatives, not independent generations.",
+    "No runtime integration, game playback acceptance or user approval."
+  ]
+}

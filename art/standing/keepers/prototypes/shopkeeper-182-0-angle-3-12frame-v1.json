@@ -1,0 +1,135 @@
+{
+  "status": "provisional masked animation prototype; ready for Unity review",
+  "asset": "shopkeeper-182-0-angle-3-12frame-v1.png",
+  "preview": "shopkeeper-182-0-angle-3-12frame-v1-preview-4x.png",
+  "orientation": 3,
+  "bearing": "rear-left three-quarter; tiny face/nose visible on image-left; do not mirror",
+  "base": "shopkeeper-182-0-angle-3-base-96cell.png",
+  "cellDimensions": [
+    96,
+    96
+  ],
+  "sheetDimensions": [
+    384,
+    288
+  ],
+  "effectiveCharacterHeight": 76,
+  "frameRateFps": 5,
+  "animationMap": [
+    0,
+    0,
+    0,
+    1,
+    2,
+    3,
+    3,
+    3,
+    3,
+    3,
+    3,
+    5
+  ],
+  "anatomy": "Anatomical LEFT active arm on image-left. Anatomical RIGHT pouch/resting hand remains image-right.",
+  "compositing": {
+    "method": "Exact base outside swept-arm/occlusion region; inside region replace with matching normalized full-pose keypose as a clean plate, covering old hanging sleeve and revealed vest.",
+    "polygon": [
+      [
+        33,
+        25
+      ],
+      [
+        39,
+        27
+      ],
+      [
+        43,
+        32
+      ],
+      [
+        48,
+        36
+      ],
+      [
+        47,
+        42
+      ],
+      [
+        43,
+        49
+      ],
+      [
+        39,
+        55
+      ],
+      [
+        34,
+        57
+      ],
+      [
+        28,
+        55
+      ],
+      [
+        23,
+        51
+      ],
+      [
+        17,
+        48
+      ],
+      [
+        12,
+        44
+      ],
+      [
+        12,
+        37
+      ],
+      [
+        17,
+        32
+      ],
+      [
+        24,
+        29
+      ],
+      [
+        29,
+        27
+      ]
+    ],
+    "regionCoordinates": "96x96 cell; origin top-left",
+    "keyposeMapping": [
+      -1,
+      -1,
+      -1,
+      1,
+      2,
+      3,
+      3,
+      3,
+      3,
+      3,
+      3,
+      5
+    ]
+  },
+  "qa": {
+    "sheetDimensionsVerified": "384x288",
+    "restFrames0to2ExactBase": true,
+    "holdFrames5to10Exact": true,
+    "changedPixelsOutsideSweptMask": 0,
+    "changedPixelsInFrames3_4_11": 1626,
+    "visualReview": "Rear-left view, nose/face edge image-left; active anatomical LEFT arm moves image-left; pouch remains image-right; no duplicate sleeve.",
+    "limitations": [
+      "Generated keypose clean plate introduces pixel variation only within swept-arm/occlusion polygon.",
+      "Review in Unity before runtime acceptance."
+    ]
+  },
+  "sourceReferences": {
+    "approvedStyleBase": "shopkeeper-182-0-front-left-base-v3.png",
+    "nativeTiming": "work/keeper-native-idle/182-0-all-native-frames.png",
+    "rawKeyposeAtlas": "shopkeeper-182-0-angle-3-keypose-atlas-raw.png",
+    "normalizedKeyposes": "shopkeeper-182-0-angle-3-keyposes-normalized.png"
+  }
+}

@@ -1,0 +1,423 @@
+{
+  "status": "user-approved pilot style; all vanilla mobile exports validated",
+  "scope": "vanilla human mobile appearances only; eight single sitting frames each",
+  "archives": [
+    381,
+    382,
+    383,
+    384,
+    385,
+    386,
+    387,
+    388,
+    389,
+    390,
+    391,
+    392,
+    393,
+    394,
+    395,
+    396,
+    397,
+    398,
+    451,
+    452,
+    453,
+    454,
+    455,
+    456
+  ],
+  "daggerfallCityBretonMale": [
+    385,
+    386,
+    391,
+    394
+  ],
+  "daggerfallCityBretonFemale": [
+    453,
+    454,
+    455,
+    456
+  ],
+  "sourceAuthority": "daggerfall-unity/Assets/Scripts/Internal/MobilePersonBillboard.cs:124-125,145-155,410-432",
+  "seatForward": "Horizontal normalized direction from backrest toward chair front and NPC feet; actor.transform.forward equals seatForward",
+  "orientationFormula": "(-RoundToInt(Angle(cameraDir, seatForward) * -Sign(Cross(cameraDir, seatForward).y) / 45) + 8) % 8",
+  "orientationViews": [
+    "front",
+    "front-left",
+    "left",
+    "rear-left",
+    "rear",
+    "rear-right",
+    "right",
+    "front-right"
+  ],
+  "nativeWalkingRecords": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    3,
+    2,
+    1
+  ],
+  "nativeWalkingMirrored": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    true,
+    true,
+    true
+  ],
+  "framesPerDirection": 1,
+  "animationLoop": false,
+  "pilot": {
+    "archive": 385,
+    "identitySource": "pilot-385/source/385-5-0.png",
+    "nativeIdleSize": [
+      72,
+      163
+    ],
+    "nativeIdleScale": [
+      -134,
+      -134
+    ],
+    "draftSize": [
+      1536,
+      1024
+    ],
+    "draftLayout": "4 columns x 2 rows; orientation index in reading order",
+    "draftFiles": [
+      "pilot-385/drafts/sitting-385-v1-rejected.png",
+      "pilot-385/drafts/sitting-385-v2-rejected.png"
+    ],
+    "preview": "pilot-385/drafts/sitting-385-v2-quarter-preview.png",
+    "alphaExtrema": [
+      0,
+      254
+    ],
+    "accepted": true,
+    "qaHistorical": "Source fidelity fails: modern outlined pixel treatment, altered body/head proportions and missing purse in v2. Actual alpha exists (most backdrop alpha zero); soft alpha and residual background pixels require further validation. Viewer exposes hidden backdrop RGB. No production slicing or integration.",
+    "qa": "User explicitly approved both visual pilots, overriding earlier worker rejection. Preserve original drafts and apply alpha cleanup on exports."
+  },
+  "production": [
+    {
+      "archive": 381,
+      "manifest": "381/manifest.json",
+      "atlas": "381/atlas.png",
+      "nativeIdleSize": [
+        73,
+        165
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 382,
+      "manifest": "382/manifest.json",
+      "atlas": "382/atlas.png",
+      "nativeIdleSize": [
+        78,
+        165
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 383,
+      "manifest": "383/manifest.json",
+      "atlas": "383/atlas.png",
+      "nativeIdleSize": [
+        74,
+        164
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 384,
+      "manifest": "384/manifest.json",
+      "atlas": "384/atlas.png",
+      "nativeIdleSize": [
+        78,
+        167
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 385,
+      "manifest": "385/manifest.json",
+      "atlas": "385/atlas.png",
+      "nativeIdleSize": [
+        72,
+        163
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 386,
+      "manifest": "386/manifest.json",
+      "atlas": "386/atlas.png",
+      "nativeIdleSize": [
+        75,
+        165
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 387,
+      "manifest": "387/manifest.json",
+      "atlas": "387/atlas.png",
+      "nativeIdleSize": [
+        77,
+        164
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 388,
+      "manifest": "388/manifest.json",
+      "atlas": "388/atlas.png",
+      "nativeIdleSize": [
+        91,
+        164
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 389,
+      "manifest": "389/manifest.json",
+      "atlas": "389/atlas.png",
+      "nativeIdleSize": [
+        74,
+        165
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 390,
+      "manifest": "390/manifest.json",
+      "atlas": "390/atlas.png",
+      "nativeIdleSize": [
+        74,
+        164
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 391,
+      "manifest": "391/manifest.json",
+      "atlas": "391/atlas.png",
+      "nativeIdleSize": [
+        71,
+        166
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 392,
+      "manifest": "392/manifest.json",
+      "atlas": "392/atlas.png",
+      "nativeIdleSize": [
+        78,
+        179
+      ],
+      "nativeIdleScale": [
+        -139,
+        -139
+      ]
+    },
+    {
+      "archive": 393,
+      "manifest": "393/manifest.json",
+      "atlas": "393/atlas.png",
+      "nativeIdleSize": [
+        74,
+        167
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 394,
+      "manifest": "394/manifest.json",
+      "atlas": "394/atlas.png",
+      "nativeIdleSize": [
+        91,
+        166
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 395,
+      "manifest": "395/manifest.json",
+      "atlas": "395/atlas.png",
+      "nativeIdleSize": [
+        68,
+        177
+      ],
+      "nativeIdleScale": [
+        -139,
+        -139
+      ]
+    },
+    {
+      "archive": 396,
+      "manifest": "396/manifest.json",
+      "atlas": "396/atlas.png",
+      "nativeIdleSize": [
+        62,
+        176
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 397,
+      "manifest": "397/manifest.json",
+      "atlas": "397/atlas.png",
+      "nativeIdleSize": [
+        69,
+        166
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 398,
+      "manifest": "398/manifest.json",
+      "atlas": "398/atlas.png",
+      "nativeIdleSize": [
+        68,
+        163
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 451,
+      "manifest": "451/manifest.json",
+      "atlas": "451/atlas.png",
+      "nativeIdleSize": [
+        68,
+        166
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 452,
+      "manifest": "452/manifest.json",
+      "atlas": "452/atlas.png",
+      "nativeIdleSize": [
+        78,
+        178
+      ],
+      "nativeIdleScale": [
+        -134,
+        -134
+      ]
+    },
+    {
+      "archive": 453,
+      "manifest": "453/manifest.json",
+      "atlas": "453/atlas.png",
+      "nativeIdleSize": [
+        66,
+        173
+      ],
+      "nativeIdleScale": [
+        -139,
+        -139
+      ]
+    },
+    {
+      "archive": 454,
+      "manifest": "454/manifest.json",
+      "atlas": "454/atlas.png",
+      "nativeIdleSize": [
+        69,
+        160
+      ],
+      "nativeIdleScale": [
+        -128,
+        -128
+      ]
+    },
+    {
+      "archive": 455,
+      "manifest": "455/manifest.json",
+      "atlas": "455/atlas.png",
+      "nativeIdleSize": [
+        74,
+        166
+      ],
+      "nativeIdleScale": [
+        -139,
+        -139
+      ]
+    },
+    {
+      "archive": 456,
+      "manifest": "456/manifest.json",
+      "atlas": "456/atlas.png",
+      "nativeIdleSize": [
+        77,
+        173
+      ],
+      "nativeIdleScale": [
+        -139,
+        -139
+      ]
+    }
+  ],
+  "exportedAppearances": 24,
+  "exportedSingleFrames": 192,
+  "pendingArchives": []
+}

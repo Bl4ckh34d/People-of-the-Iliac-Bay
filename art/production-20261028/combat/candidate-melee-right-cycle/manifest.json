@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "archive": 385,
+  "direction": 6,
+  "bearing": "right-profile",
+  "action": "melee-one-handed-sword",
+  "status": "candidate-complete-four-key-cycle; user approval and runtime integration pending",
+  "sourceRect": [
+    350,
+    100,
+    1145,
+    1300
+  ],
+  "cellSize": [
+    161,
+    243
+  ],
+  "bodyHeightApproximate": 163,
+  "processing": "Same crop and nearest-neighbor reduction for all frames. Generated alpha preserved.",
+  "generatedUniqueFrames": 4,
+  "reusedFrames": 0,
+  "cycle": [
+    {
+      "phase": "ready",
+      "source": "385-melee-right-key-ready-v2.png",
+      "sourceSha256": "dee03788f2c2423de31dfc33d6941e241d8b528a6fa59721e9c9dba92f03b915",
+      "file": "candidate-melee-right-cycle\\ready.png",
+      "sha256": "4be46142e5a61dd876fb3eb7ce51076e0821b36016d407fbb250b7aaad8b4a45",
+      "durationMs": 180
+    },
+    {
+      "phase": "windup",
+      "source": "385-melee-right-key-windup-v1.png",
+      "sourceSha256": "622f55fa883b64de32417b62c6ff818f740f9268c4675e21983a0cf448688475",
+      "file": "candidate-melee-right-cycle\\windup.png",
+      "sha256": "72fb10f7e830751ea6860c0f28187c93a562ce0e26a956c3d635b59c914dd861",
+      "durationMs": 160
+    },
+    {
+      "phase": "strike",
+      "source": "385-melee-right-key-strike-bound-v2.png",
+      "sourceSha256": "0862371b6f4e7edcac0818651085aefa04ad36caba5c7d26f65b6a8144c7c14a",
+      "file": "candidate-melee-right-cycle\\strike.png",
+      "sha256": "8e0bf0ca023ba6655179b7d8d2e782e4e27c624694a92c5e24dd90479e12fc2d",
+      "durationMs": 100
+    },
+    {
+      "phase": "recovery",
+      "source": "385-melee-right-key-recovery-v1.png",
+      "sourceSha256": "fdedbbd6af2b0dc11fcfad4f3dc02567114f1c677aa93d2a3aefc864f4a09585",
+      "file": "candidate-melee-right-cycle\\recovery.png",
+      "sha256": "9e5d0c56ff7ab7693a5b726859038064ff0c732093ea74e2bae264cb6ec27835",
+      "durationMs": 180
+    }
+  ],
+  "states": {
+    "candidate": true,
+    "generated": true,
+    "technically_checked": true,
+    "visually_reviewed": true,
+    "integrated": false,
+    "user_approved": false
+  },
+  "limitations": [
+    "No native runtime playback verified.",
+    "Partial alpha preserved; no binary-alpha cleanup.",
+    "Subtle generated body and weapon differences remain.",
+    "Other seven directions absent."
+  ]
+}

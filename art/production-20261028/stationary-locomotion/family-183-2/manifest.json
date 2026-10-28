@@ -1,0 +1,685 @@
+{
+  "status": "source-family-review-work-in-progress",
+  "aliases": [
+    "vanilla:stationary:183:2",
+    "vanilla:stationary:334:15",
+    "vanilla:stationary:357:12"
+  ],
+  "originals": [
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\native\\183_2-0.png",
+      "fileSha256": "5f61aeea12e5e07a22aaa5823c1e92808b5607fd0b1cbcaff47c88150e708144",
+      "pixelSha256": "c72ec3b4b88edb3531c43887f666c8882dbebddb91c5f4b0dbbc5eadc9dcb14f",
+      "dimensions": [
+        69,
+        159
+      ]
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\native\\334_15-0.png",
+      "fileSha256": "5f61aeea12e5e07a22aaa5823c1e92808b5607fd0b1cbcaff47c88150e708144",
+      "pixelSha256": "c72ec3b4b88edb3531c43887f666c8882dbebddb91c5f4b0dbbc5eadc9dcb14f",
+      "dimensions": [
+        69,
+        159
+      ]
+    },
+    {
+      "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\sources\\native\\357_12-0.png",
+      "fileSha256": "5f61aeea12e5e07a22aaa5823c1e92808b5607fd0b1cbcaff47c88150e708144",
+      "pixelSha256": "c72ec3b4b88edb3531c43887f666c8882dbebddb91c5f4b0dbbc5eadc9dcb14f",
+      "dimensions": [
+        69,
+        159
+      ]
+    }
+  ],
+  "logicalExtent": [
+    69,
+    159
+  ],
+  "cellSize": [
+    192,
+    192
+  ],
+  "baseline": 180,
+  "alphaCutoff": 128,
+  "acceptedProductionViews": 0,
+  "actions": {
+    "walk": {
+      "generatedViews": [
+        0,
+        1,
+        2,
+        6
+      ],
+      "candidateViews": [
+        0,
+        2,
+        6
+      ],
+      "missingCandidateViews": [
+        1,
+        3,
+        4,
+        5,
+        7
+      ],
+      "selectedFrames": 16,
+      "candidateFrames": 12,
+      "remainingProductionViews": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "views": [
+        {
+          "view": 0,
+          "name": "front",
+          "status": "review-candidate",
+          "frames": [
+            {
+              "phase": 0,
+              "source": "walk/view-0-front-v1.png",
+              "sha256": "d35addc69e86e44274d57bced7f478db01b1140b5199740bba54ff89adaf73cc",
+              "sourceBox": [
+                0,
+                0,
+                413,
+                953
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                35,
+                24,
+                358,
+                889
+              ],
+              "commonViewScale": 0.18296892980437285,
+              "headAnchorX": 220.0,
+              "placement": [
+                56,
+                18
+              ],
+              "contactRegistrationY": 1,
+              "nativeBounds": [
+                62,
+                25,
+                122,
+                180
+              ],
+              "pixelSha256": "11035b2fd03f912d9444c57f82f882b195c7366222cf8954277cf0f9d0802d4b",
+              "packedFrame": "walk/frames/view-0-frame-0.png",
+              "packedFileSha256": "1f5f58ca8efbd31d86ec631300c27251a32fc1fadb707e2d25a4b0284af26d65"
+            },
+            {
+              "phase": 1,
+              "source": "walk/view-0-front-v1.png",
+              "sha256": "d35addc69e86e44274d57bced7f478db01b1140b5199740bba54ff89adaf73cc",
+              "sourceBox": [
+                413,
+                0,
+                826,
+                953
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                38,
+                20,
+                356,
+                889
+              ],
+              "commonViewScale": 0.18296892980437285,
+              "headAnchorX": 217.5,
+              "placement": [
+                56,
+                18
+              ],
+              "contactRegistrationY": 1,
+              "nativeBounds": [
+                63,
+                22,
+                122,
+                180
+              ],
+              "pixelSha256": "5d0934aebcf1c395a4283d01f921a853bd2ea777271be706bcd28e4c34ac2d31",
+              "packedFrame": "walk/frames/view-0-frame-1.png",
+              "packedFileSha256": "e026c3881bbe03d49234d07aeb005a2eb5a25f53b1c257a0ff2d70dd9d8228fd"
+            },
+            {
+              "phase": 2,
+              "source": "walk/view-0-front-v1.png",
+              "sha256": "d35addc69e86e44274d57bced7f478db01b1140b5199740bba54ff89adaf73cc",
+              "sourceBox": [
+                826,
+                0,
+                1238,
+                953
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                41,
+                24,
+                367,
+                887
+              ],
+              "commonViewScale": 0.18296892980437285,
+              "headAnchorX": 230.0,
+              "placement": [
+                54,
+                18
+              ],
+              "contactRegistrationY": 1,
+              "nativeBounds": [
+                61,
+                22,
+                121,
+                180
+              ],
+              "pixelSha256": "6cf10ee5dbeb9e0f0eb43c1135c279e9333056399e2a1623d89cbea9779abd7b",
+              "packedFrame": "walk/frames/view-0-frame-2.png",
+              "packedFileSha256": "fd076c658f4247c2fef5edd54b182bd234a930f63aa522d8e1cd0123186dbd77"
+            },
+            {
+              "phase": 3,
+              "source": "walk/view-0-front-v1.png",
+              "sha256": "d35addc69e86e44274d57bced7f478db01b1140b5199740bba54ff89adaf73cc",
+              "sourceBox": [
+                1238,
+                0,
+                1651,
+                953
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                48,
+                23,
+                367,
+                889
+              ],
+              "commonViewScale": 0.18296892980437285,
+              "headAnchorX": 226.5,
+              "placement": [
+                55,
+                18
+              ],
+              "contactRegistrationY": 1,
+              "nativeBounds": [
+                64,
+                24,
+                123,
+                180
+              ],
+              "pixelSha256": "87caa020b690c494942d1ad1b16ada5e56672273113f96088de541f315bfff06",
+              "packedFrame": "walk/frames/view-0-frame-3.png",
+              "packedFileSha256": "22e31f405b295322773febc312399d69c35f4453224a3ded6c8995583f152fe2"
+            }
+          ]
+        },
+        {
+          "view": 1,
+          "name": "front-left",
+          "status": "needs-pose-scale-review",
+          "frames": [
+            {
+              "phase": 0,
+              "source": "walk/view-1-phase-0-native-motion-v3.png",
+              "sha256": "673a075534c0870e303c971694faaa57cccfbfc27c7ea80bdcc4f423eb70d1cf",
+              "sourceBox": [
+                0,
+                0,
+                1005,
+                1565
+              ],
+              "canvasScale": 0.46325878594249204,
+              "rawCutoffBounds": [
+                163,
+                10,
+                858,
+                1506
+              ],
+              "commonViewScale": 0.2294255946892864,
+              "headAnchorX": 610.5,
+              "placement": [
+                31,
+                20
+              ],
+              "contactRegistrationY": 0,
+              "nativeBounds": [
+                48,
+                21,
+                122,
+                180
+              ],
+              "pixelSha256": "e371f892fcfe94dc9e9d9cc2ab042836722163f0775afab6dd0d5145cbced2f5",
+              "packedFrame": "walk/frames/view-1-frame-0.png",
+              "packedFileSha256": "52f5465d7c20e9b02b8cbfdcb087f8696800ad756fab832e03ccc9b34d193cbd"
+            },
+            {
+              "phase": 1,
+              "source": "walk/view-1-front-left-contact-v2.png",
+              "sha256": "f14b4f2122b269dc634530781c9e9ee97b7fa2ddf49e3a44fd866ceb54ac5ac8",
+              "sourceBox": [
+                542,
+                0,
+                1085,
+                725
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                112,
+                15,
+                394,
+                678
+              ],
+              "commonViewScale": 0.2294255946892864,
+              "headAnchorX": 262.5,
+              "placement": [
+                36,
+                25
+              ],
+              "contactRegistrationY": 5,
+              "nativeBounds": [
+                62,
+                28,
+                127,
+                180
+              ],
+              "pixelSha256": "cdbf2ba9deb685fef8aad5f2b2ebaa68d7496719e879c6311e5ef70a0941d9c1",
+              "packedFrame": "walk/frames/view-1-frame-1.png",
+              "packedFileSha256": "2133bcc8bdd06454a21a6bb4a3b841e74b868e65fc62c80adfd4fbc32c0c1b1f"
+            },
+            {
+              "phase": 2,
+              "source": "walk/view-1-front-left-contact-v2.png",
+              "sha256": "f14b4f2122b269dc634530781c9e9ee97b7fa2ddf49e3a44fd866ceb54ac5ac8",
+              "sourceBox": [
+                1085,
+                0,
+                1628,
+                725
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                83,
+                15,
+                385,
+                678
+              ],
+              "commonViewScale": 0.2294255946892864,
+              "headAnchorX": 263.0,
+              "placement": [
+                36,
+                25
+              ],
+              "contactRegistrationY": 5,
+              "nativeBounds": [
+                55,
+                28,
+                125,
+                180
+              ],
+              "pixelSha256": "82263c3c28d16a1222f9ec35b2952169f3dd88e68f14045578de2f3a1218897b",
+              "packedFrame": "walk/frames/view-1-frame-2.png",
+              "packedFileSha256": "c601a35f02925dcb829a16d848f827fa5a7fdc5a33db6c8fd553d7472dd0543e"
+            },
+            {
+              "phase": 3,
+              "source": "walk/view-1-front-left-contact-v2.png",
+              "sha256": "f14b4f2122b269dc634530781c9e9ee97b7fa2ddf49e3a44fd866ceb54ac5ac8",
+              "sourceBox": [
+                1628,
+                0,
+                2170,
+                725
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                109,
+                15,
+                402,
+                676
+              ],
+              "commonViewScale": 0.2294255946892864,
+              "headAnchorX": 274.0,
+              "placement": [
+                33,
+                25
+              ],
+              "contactRegistrationY": 5,
+              "nativeBounds": [
+                58,
+                28,
+                125,
+                180
+              ],
+              "pixelSha256": "faaa29a51722bef09bd526ce1c9e52b711018ec054678baccbeb75fef68c9d5a",
+              "packedFrame": "walk/frames/view-1-frame-3.png",
+              "packedFileSha256": "94af6082a98fc74d14fa2db0951598df433ca1ad72b8933db43306609ae057c9"
+            }
+          ]
+        },
+        {
+          "view": 2,
+          "name": "left-profile",
+          "status": "review-candidate",
+          "frames": [
+            {
+              "phase": 0,
+              "source": "walk/view-2-phase-0-spear-v3.png",
+              "sha256": "c6f00132db7208736a2cc37a7f37969981c968a9f9de118d1f9610a47909a1b8",
+              "sourceBox": [
+                0,
+                0,
+                1024,
+                1536
+              ],
+              "canvasScale": 0.5,
+              "rawCutoffBounds": [
+                177,
+                42,
+                1012,
+                1435
+              ],
+              "commonViewScale": 0.22698072805139186,
+              "headAnchorX": 660.0,
+              "placement": [
+                21,
+                17
+              ],
+              "contactRegistrationY": 0,
+              "nativeBounds": [
+                41,
+                22,
+                136,
+                180
+              ],
+              "pixelSha256": "ffd2bc509dc1c8ddb2e4eb4c0e5d94bb74d7e2991107e39a4d09ac550c55779a",
+              "packedFrame": "walk/frames/view-2-frame-0.png",
+              "packedFileSha256": "387627f87ec36b972013ca79c553336e6400ef53d7baa797259d6b744e8196f5"
+            },
+            {
+              "phase": 1,
+              "source": "walk/view-2-left-profile-ownership-v2.png",
+              "sha256": "69df740cf494e76515068080acdb8cf2a985efe7aa95c97e08fe74360da653eb",
+              "sourceBox": [
+                512,
+                0,
+                1024,
+                768
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                165,
+                17,
+                401,
+                715
+              ],
+              "commonViewScale": 0.22698072805139186,
+              "headAnchorX": 251.5,
+              "placement": [
+                39,
+                18
+              ],
+              "contactRegistrationY": 1,
+              "nativeBounds": [
+                76,
+                22,
+                130,
+                180
+              ],
+              "pixelSha256": "b762f18482904c547752f6efa4c1b77479a0cffb21482c0d17513468841516cd",
+              "packedFrame": "walk/frames/view-2-frame-1.png",
+              "packedFileSha256": "a7f6351bc741007f1957808b6b5ec43a4942837a7971d428cf18f95ddd2f5ca1"
+            },
+            {
+              "phase": 2,
+              "source": "walk/view-2-left-profile-ownership-v2.png",
+              "sha256": "69df740cf494e76515068080acdb8cf2a985efe7aa95c97e08fe74360da653eb",
+              "sourceBox": [
+                1024,
+                0,
+                1536,
+                768
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                69,
+                17,
+                476,
+                717
+              ],
+              "commonViewScale": 0.22698072805139186,
+              "headAnchorX": 257.5,
+              "placement": [
+                38,
+                18
+              ],
+              "contactRegistrationY": 1,
+              "nativeBounds": [
+                54,
+                22,
+                146,
+                180
+              ],
+              "pixelSha256": "4a7c0ea3fd492b75d645cd3daa5a83c91caa70592eeed0c537ea337d1d79c729",
+              "packedFrame": "walk/frames/view-2-frame-2.png",
+              "packedFileSha256": "4b7afa891cc98c78fc61a1a3ace254249f455695707f32a5eb3a0ea51b432b6e"
+            },
+            {
+              "phase": 3,
+              "source": "walk/view-2-left-profile-ownership-v2.png",
+              "sha256": "69df740cf494e76515068080acdb8cf2a985efe7aa95c97e08fe74360da653eb",
+              "sourceBox": [
+                1536,
+                0,
+                2048,
+                768
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                160,
+                17,
+                414,
+                712
+              ],
+              "commonViewScale": 0.22698072805139186,
+              "headAnchorX": 270.0,
+              "placement": [
+                35,
+                19
+              ],
+              "contactRegistrationY": 2,
+              "nativeBounds": [
+                71,
+                23,
+                129,
+                180
+              ],
+              "pixelSha256": "79ff18e64c13f5f0b0aebb68b9861a070adc8e1f2a96856799710460cced5dff",
+              "packedFrame": "walk/frames/view-2-frame-3.png",
+              "packedFileSha256": "1a9c24a0ec89dceadbb007e4fe2f52fa4131d874771dc800cd74ca6bea2d0857"
+            }
+          ]
+        },
+        {
+          "view": 6,
+          "name": "right-profile",
+          "status": "review-candidate",
+          "frames": [
+            {
+              "phase": 0,
+              "source": "walk/view-6-right-profile-v1.png",
+              "sha256": "1d44219770d03a8f747c90b1fed7262373a17354a0ac0c44f23d1e82b085814d",
+              "sourceBox": [
+                0,
+                0,
+                512,
+                768
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                91,
+                12,
+                463,
+                719
+              ],
+              "commonViewScale": 0.22410147991543342,
+              "headAnchorX": 310.0,
+              "placement": [
+                27,
+                19
+              ],
+              "contactRegistrationY": 0,
+              "nativeBounds": [
+                47,
+                22,
+                131,
+                180
+              ],
+              "pixelSha256": "eca3bdf0bc05fc18458f0986b3b37ab7bd4d6afe889b4c032a4191cc7c007e51",
+              "packedFrame": "walk/frames/view-6-frame-0.png",
+              "packedFileSha256": "8e88d74b54250281fe64d61046410af145ae89e8687da9f10b828d1027ea6393"
+            },
+            {
+              "phase": 1,
+              "source": "walk/view-6-right-profile-v1.png",
+              "sha256": "1d44219770d03a8f747c90b1fed7262373a17354a0ac0c44f23d1e82b085814d",
+              "sourceBox": [
+                512,
+                0,
+                1024,
+                768
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                120,
+                11,
+                387,
+                719
+              ],
+              "commonViewScale": 0.22410147991543342,
+              "headAnchorX": 292.5,
+              "placement": [
+                30,
+                19
+              ],
+              "contactRegistrationY": 0,
+              "nativeBounds": [
+                57,
+                21,
+                117,
+                180
+              ],
+              "pixelSha256": "b635460c3e528393ae9b6f56e24b67f2684f064e6bf3300cfcf27e336e0417d2",
+              "packedFrame": "walk/frames/view-6-frame-1.png",
+              "packedFileSha256": "a64ec27c12e586dce09d0c69073843fd54cd8f03f70dc9591d5800c876d78ced"
+            },
+            {
+              "phase": 2,
+              "source": "walk/view-6-phase-2-arm-v2.png",
+              "sha256": "29233f0aa656b3b81f04ed0f67cb4a4f3af651539b1ef7148ce631cb39ac7bc6",
+              "sourceBox": [
+                0,
+                0,
+                1024,
+                1536
+              ],
+              "canvasScale": 0.5,
+              "rawCutoffBounds": [
+                219,
+                22,
+                904,
+                1441
+              ],
+              "commonViewScale": 0.22410147991543342,
+              "headAnchorX": 597.0,
+              "placement": [
+                29,
+                19
+              ],
+              "contactRegistrationY": 0,
+              "nativeBounds": [
+                54,
+                21,
+                131,
+                180
+              ],
+              "pixelSha256": "bd4be051e408add4afd5dee2d36086632919dda8205b2066ea981bd03d1951f0",
+              "packedFrame": "walk/frames/view-6-frame-2.png",
+              "packedFileSha256": "bf17e0ef0eff90c7eed3b0c1aa4e5171cee20fb2e5574fd85113295d92121d7b"
+            },
+            {
+              "phase": 3,
+              "source": "walk/view-6-right-profile-v1.png",
+              "sha256": "1d44219770d03a8f747c90b1fed7262373a17354a0ac0c44f23d1e82b085814d",
+              "sourceBox": [
+                1536,
+                0,
+                2048,
+                768
+              ],
+              "canvasScale": 1,
+              "rawCutoffBounds": [
+                121,
+                13,
+                414,
+                719
+              ],
+              "commonViewScale": 0.22410147991543342,
+              "headAnchorX": 297.5,
+              "placement": [
+                29,
+                19
+              ],
+              "contactRegistrationY": 0,
+              "nativeBounds": [
+                56,
+                23,
+                122,
+                180
+              ],
+              "pixelSha256": "a2b51dac04f4a633f57c651c04e71937fa9aa279ad213f001227f6f048e33627",
+              "packedFrame": "walk/frames/view-6-frame-3.png",
+              "packedFileSha256": "d3fb9e64eaf95328325f995e95a1281aa8f03b623c3c2d783c9848acfe44ef83"
+            }
+          ]
+        }
+      ]
+    },
+    "run": {
+      "generatedViews": [],
+      "candidateViews": [],
+      "missingCandidateViews": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "selectedFrames": 0,
+      "candidateFrames": 0,
+      "remainingProductionViews": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "views": []
+    }
+  },
+  "transform": "Common scale per view, head horizontal registration, rigid whole-frame contact alignment. Source PNGs unchanged; no mirroring, interpolation or invented phases. Four unique images do not prove gait or identity fidelity.",
+  "selectionFileSha256": "cd067790c39d7c634ac1e2140d704f584822dd4e4651d5c424dc383c84a476e0"
+}

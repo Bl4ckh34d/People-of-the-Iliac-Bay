@@ -1,0 +1,114 @@
+{
+  "archive": 392,
+  "motion_template": 385,
+  "raw_output_directory": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v1",
+    "view-1-v1",
+    "view-2-v1",
+    "view-3-v1",
+    "view-4-v1"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "a1e0802b-6755-4bc4-a0e6-3ce7640841b8"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "51683622-79ab-47f0-9300-6b4e667de80b"
+    },
+    {
+      "name": "view-2-v1",
+      "id": "f1e02e16-80da-4581-b149-ae4c2b9bb6fc"
+    },
+    {
+      "name": "view-3-v1",
+      "id": "7bb7e7e3-ede9-4862-a138-a0173056a7ba",
+      "references": [
+        "../../motion-reference-381/view-3.png",
+        "native-reference/view-3.png"
+      ]
+    },
+    {
+      "name": "view-4-v1",
+      "id": "fdcd926d-c40a-402c-94cb-442bce11b929"
+    },
+    {
+      "name": "view-2-v2",
+      "id": "1d3a11e4-a50f-44e4-b831-05e9022f6ab0",
+      "references": [
+        "view-2-v1.png"
+      ]
+    },
+    {
+      "name": "view-0-phase-2-v2",
+      "id": "3c8f9b3b-d608-4e26-afe0-bdc158f95f3b",
+      "references": [
+        "view-0-v1.png",
+        "native-reference/view-0.png"
+      ]
+    },
+    {
+      "name": "view-2-phase-2-v3",
+      "id": "3a4583af-6783-4e66-ac7c-ddd032f35011",
+      "references": [
+        "view-2-v1.png",
+        "native-reference/view-2.png"
+      ]
+    },
+    {
+      "name": "view-1-phase-1-v2",
+      "id": "35d18d41-60a6-4ba1-aab2-d089d0467136",
+      "references": [
+        "view-1-v1.png",
+        "native-reference/view-1.png"
+      ]
+    },
+    {
+      "name": "view-1-phase-2-v2",
+      "id": "f7d550ce-f666-48eb-ac88-f0609a0ddc97",
+      "references": [
+        "view-1-v1.png",
+        "native-reference/view-1.png"
+      ]
+    }
+  ],
+  "source_overrides": [
+    {
+      "bearing": 0,
+      "phase": 2,
+      "file": "view-0-phase-2-v2.png",
+      "resolution_ratio": 2.618147448015123,
+      "normalization": "Alpha128 body height matched to original same-bearing contact0 or flight1; uniform scale only, no anatomy edits."
+    },
+    {
+      "bearing": 2,
+      "phase": 2,
+      "file": "view-2-phase-2-v3.png",
+      "resolution_ratio": 1.9586614173228347,
+      "normalization": "Alpha128 body height matched to original same-bearing contact0 or flight1; uniform scale only, no anatomy edits."
+    },
+    {
+      "bearing": 1,
+      "phase": 1,
+      "file": "view-1-phase-1-v2.png",
+      "resolution_ratio": 1.8177083333333333,
+      "normalization": "Alpha128 body height matched to original same-bearing contact0 or flight1; uniform scale only, no anatomy edits."
+    },
+    {
+      "bearing": 1,
+      "phase": 2,
+      "file": "view-1-phase-2-v2.png",
+      "resolution_ratio": 1.763157894736842,
+      "normalization": "Alpha128 body height matched to original same-bearing contact0 or flight1; uniform scale only, no anatomy edits."
+    }
+  ],
+  "reference_policy": "385run supplies joint poses only for0/1/2/4;381run supplies rear-left. Native392 defines woman, bonnet, hair, blue bell-sleeved dress, white neckline/back highlight, red border, grey calf skirt and pink shoes. Four single poses repair repeated arms/contact. Failed full-strip profile correction retained but not selected. Individual resolution ratios explicitly match original corresponding contact/flight silhouette heights. Opposite views follow native renderer mirrors.",
+  "known_limits": [
+    "Candidate only: face detail, bonnet volume, hair brightness, sleeve and skirt folds vary from native. Individual repairs have smoother shading and differing hand/cuff scale.",
+    "Profile/front-left leg depth is partly concealed by grey skirt; physical cloth simulation not proven. Rear-left fourth flight has wider stride.",
+    "Four-frame cadence lacks passing intermediates. Twelve opposite-view frames are mirror derivatives, not independent generations.",
+    "No runtime integration, game playback acceptance or user approval."
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "record": 220,
+  "mood": "guarded",
+  "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\mouth\\guarded\\raw.png",
+  "rawSha256": "5c51c21747ad0f96fc5f9d674e976083842dede3fc7a4de889f32ca15d7081c1",
+  "frames": [
+    {
+      "shape": "A",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\A.png",
+      "sha256": "3cd07f507693caca2070d73574f5f76d7b58e487573fa25e1bdf33953b7cf28c",
+      "wholeCellBounds": [
+        0.0,
+        0.0,
+        621.0,
+        281.3333333333333
+      ]
+    },
+    {
+      "shape": "B",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\B.png",
+      "sha256": "31b62d951e552991df727d40203d00817d3d156306e1f738e3ce5251859beb97",
+      "wholeCellBounds": [
+        621.0,
+        0.0,
+        1242.0,
+        281.3333333333333
+      ]
+    },
+    {
+      "shape": "C",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\C.png",
+      "sha256": "ebe4f9e95964334d70f4acc785a34378e303e16a58581a3a48ddc6e673036bfc",
+      "wholeCellBounds": [
+        1242.0,
+        0.0,
+        1863.0,
+        281.3333333333333
+      ]
+    },
+    {
+      "shape": "D",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\D.png",
+      "sha256": "7cd72e7bda92c828e3b31296f9d582d003e9ccff50bb1f59558dd7371dba09a7",
+      "wholeCellBounds": [
+        0.0,
+        281.3333333333333,
+        621.0,
+        562.6666666666666
+      ]
+    },
+    {
+      "shape": "E",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\E.png",
+      "sha256": "5f5e70f628e947be4d00d6d3ef3f20d9e80e11696d08e019d496c457339082e5",
+      "wholeCellBounds": [
+        621.0,
+        281.3333333333333,
+        1242.0,
+        562.6666666666666
+      ]
+    },
+    {
+      "shape": "F",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\F.png",
+      "sha256": "01e7749a491e5e52bb283617f57308ca31108531175b14672569af5b32346ca7",
+      "wholeCellBounds": [
+        1242.0,
+        281.3333333333333,
+        1863.0,
+        562.6666666666666
+      ]
+    },
+    {
+      "shape": "G",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\G.png",
+      "sha256": "ae82e6326752b0fd6e2af35b9301e3509e0b0f71397b0cf0117c048fb94734bf",
+      "wholeCellBounds": [
+        0.0,
+        562.6666666666666,
+        621.0,
+        844.0
+      ]
+    },
+    {
+      "shape": "H",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\H.png",
+      "sha256": "5c249ec8287c3219a42b128b923198555d47722102d6aa8ea197bdccc83e74fc",
+      "wholeCellBounds": [
+        621.0,
+        562.6666666666666,
+        1242.0,
+        844.0
+      ]
+    },
+    {
+      "shape": "X",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc220-mouths-v1\\guarded\\candidate\\X.png",
+      "sha256": "2fbbacfbe54813dea47cfc0037f9e2d2525417505b7086d4c8d85bcb9bc1a3ed",
+      "wholeCellBounds": [
+        1242.0,
+        562.6666666666666,
+        1863.0,
+        844.0
+      ]
+    }
+  ],
+  "mouthBoxFullCoordinates": [
+    22,
+    35,
+    43,
+    48
+  ],
+  "upperToothAnchor": "C/D/H keep own B through localrow4/full39; E preserves own rounded upper contour. E/G tooth heights require native inspection.",
+  "sampler": "fractional whole atlas cell EXTENT nearest64x29",
+  "status": "native-static-review-pending",
+  "poseSemanticsPass": null,
+  "audiovisualPass": null,
+  "limits": [
+    "F/V lip contact and C/E distinction require independent inspection and playback."
+  ]
+}

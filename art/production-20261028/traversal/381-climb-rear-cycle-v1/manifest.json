@@ -1,0 +1,124 @@
+{
+  "status": "rear-climb-alternation-candidate",
+  "appearance": 381,
+  "state": "climbing",
+  "bearing": 4,
+  "frameCount": 4,
+  "frames": [
+    {
+      "phase": 0,
+      "file": "phase-0.png",
+      "sha256": "7448d9f4129f1a72feda7b3482103b92b423c8ccf9098ad1040eea3a23f4a20e",
+      "source": "381-climb-view-4-generated-v2.png",
+      "sourceSha256": "71f853dcfd507490df91acdb84c47bd7e639b25faa29f014837ea3ead65e4fe9",
+      "sourceCrop": [
+        0,
+        0,
+        512,
+        768
+      ],
+      "pixelScale": 0.21,
+      "placement": [
+        26,
+        23
+      ],
+      "alpha128Bounds": [
+        50,
+        28,
+        113,
+        177
+      ]
+    },
+    {
+      "phase": 1,
+      "file": "phase-1.png",
+      "sha256": "9dac895191a876437b06a1a3ce67c14ddcd45250bec55a26caf6851a47aff758",
+      "source": "381-climb-view-4-generated-v2.png",
+      "sourceSha256": "71f853dcfd507490df91acdb84c47bd7e639b25faa29f014837ea3ead65e4fe9",
+      "sourceCrop": [
+        512,
+        0,
+        1024,
+        768
+      ],
+      "pixelScale": 0.21,
+      "placement": [
+        26,
+        23
+      ],
+      "alpha128Bounds": [
+        51,
+        44,
+        116,
+        178
+      ]
+    },
+    {
+      "phase": 2,
+      "file": "phase-2.png",
+      "sha256": "e98f471c8eaa7a8e3ebc5222076de69b0c85eaeed1ca04ab0cfe5186ba42f02b",
+      "source": "381-climb-view-4-generated-v2.png",
+      "sourceSha256": "71f853dcfd507490df91acdb84c47bd7e639b25faa29f014837ea3ead65e4fe9",
+      "sourceCrop": [
+        1024,
+        0,
+        1536,
+        768
+      ],
+      "pixelScale": 0.21,
+      "placement": [
+        26,
+        23
+      ],
+      "alpha128Bounds": [
+        50,
+        28,
+        118,
+        175
+      ]
+    },
+    {
+      "phase": 3,
+      "file": "phase-3.png",
+      "sha256": "4563e7a4faccd4e2106ea542ce0d5fb090ea23920dbb65d391afc95b724ed607",
+      "source": "381-climb-view-4-generated-v2.png",
+      "sourceSha256": "71f853dcfd507490df91acdb84c47bd7e639b25faa29f014837ea3ead65e4fe9",
+      "sourceCrop": [
+        1536,
+        0,
+        2048,
+        768
+      ],
+      "pixelScale": 0.21,
+      "placement": [
+        26,
+        23
+      ],
+      "alpha128Bounds": [
+        49,
+        44,
+        115,
+        178
+      ]
+    }
+  ],
+  "pixelCanvas": [
+    160,
+    224
+  ],
+  "technicalChecks": {
+    "rgba": true,
+    "fourDistinctPhases": true,
+    "noAlpha128Clipping": true,
+    "uniformPixelScale": true
+  },
+  "visuallyReviewed": true,
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "knownLimits": [
+    "Reach phases visibly alternate opposite hand/knee. Pull phases retain previous knee lead; intermediate leg transition is sparse.",
+    "Rear view cannot prove front-back wall contact depth.",
+    "Comparison does not prove matching limb depth identity in profile."
+  ],
+  "visualReview": "Rear/profile comparison inspected: reach phases visibly alternate opposite arm/knee; pulls retain earlier knee lead. No temporal/contact acceptance."
+}

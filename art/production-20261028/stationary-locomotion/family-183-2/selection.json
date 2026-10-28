@@ -1,0 +1,39 @@
+{
+  "logicalHeight": 159,
+  "cellSize": 192,
+  "baseline": 180,
+  "actions": {
+    "walk": {
+      "2": {
+        "source": "walk/view-2-left-profile-ownership-v2.png",
+        "status": "review-candidate",
+        "frames": {
+          "0": "walk/view-2-phase-0-spear-v3.png"
+        }
+      },
+      "0": {
+        "source": "walk/view-0-front-v1.png",
+        "status": "review-candidate"
+      },
+      "1": {
+        "source": "walk/view-1-front-left-contact-v2.png",
+        "status": "needs-pose-scale-review",
+        "frames": {
+          "0": "walk/view-1-phase-0-native-motion-v3.png"
+        }
+      },
+      "6": {
+        "source": "walk/view-6-right-profile-v1.png",
+        "status": "review-candidate",
+        "frames": {
+          "2": "walk/view-6-phase-2-arm-v2.png"
+        }
+      },
+      "7": {
+        "source": "walk/view-7-front-right-v1.png",
+        "status": "needs-opposite-contact-review"
+      }
+    },
+    "run": {}
+  }
+}

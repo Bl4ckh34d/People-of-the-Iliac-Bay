@@ -1,0 +1,72 @@
+{
+  "archive": 390,
+  "date": "2026-10-28",
+  "calls": [
+    {
+      "file": "view-0-v1.png",
+      "sha256": "09d423c07c049a5be1776ee6070a78929c2532ed7093b1d21f8dc26ef9ae65c0",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-69d24f5d-3f75-4a36-9476-8b7ac9f4243b.png",
+      "prompt": "view-0-v1.prompt.txt",
+      "prompt_sha256": "9fb01371669074c90832eeefa910ad5f08644abec59c2eeffe8f7eabacc55b52",
+      "references": [
+        "../../motion-reference-385/view-0.png",
+        "native-reference/view-0.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-1-v1.png",
+      "sha256": "6332a0865c5c35281410b4e65e6dbcf4be8539cbe60ad6bb34d5622311c6e7ae",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-7ce4ffbc-fb7f-4444-a4f6-eea027a235a8.png",
+      "prompt": "view-1-v1.prompt.txt",
+      "prompt_sha256": "7616438c49479f5b95512dbc815fbda1a8a86ebd38c407cab18ccd4d2fc92cdc",
+      "references": [
+        "../../motion-reference-385/view-1.png",
+        "native-reference/view-1.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-2-v1.png",
+      "sha256": "a7a500a09309593082ba836c5023522e8db1c9532b3596849185929af8e70c4d",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-ac5cc5f6-94d4-418b-8c1e-51f025c80867.png",
+      "prompt": "view-2-v1.prompt.txt",
+      "prompt_sha256": "2448cc25cd559e61ae4b7ef7255a303fe51b81862511493d98eafccbce7d94a4",
+      "references": [
+        "../../motion-reference-385/view-2.png",
+        "native-reference/view-2.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-3-v1.png",
+      "sha256": "97d7261afa1647dd36bcb232eb47ed3cbc42d60ba25cdc7bf159b884b5f70e03",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-22c33571-27bf-47d2-94ec-476eb6aeec23.png",
+      "prompt": "view-3-v1.prompt.txt",
+      "prompt_sha256": "ed8605a493716c87967bbae96690d7531eb11d07b73e83d3105c796e415daabd",
+      "references": [
+        "../../motion-reference-381/view-3.png",
+        "native-reference/view-3.png"
+      ],
+      "selected": true
+    },
+    {
+      "file": "view-4-v1.png",
+      "sha256": "edcc920737553bbc82a601679be162ca816e452a30094ad31c284165a4219264",
+      "tool": "built-in image_gen",
+      "raw_tool_output": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660\\exec-2194bd60-055d-4775-8895-7e6611f2a9e7.png",
+      "prompt": "view-4-v1.prompt.txt",
+      "prompt_sha256": "38903f3ce1b7a3fd0f40478dc9965d540c38769151f27cc3cd4ce4cca269287a",
+      "references": [
+        "../../motion-reference-385/view-4.png",
+        "native-reference/view-4.png"
+      ],
+      "selected": true
+    }
+  ],
+  "reference_policy": "385run supplies poses for views0/1/2/4;381run supplies clearer rear-left arm alternation for view3. Native390 alone defines black hair/beard, teal elbow-sleeved tunic, yellow/brown plaid trousers, tan low shoes and green pouches. Opposite views follow exact native renderer mirrors."
+}

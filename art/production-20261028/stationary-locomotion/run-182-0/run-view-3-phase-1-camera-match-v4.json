@@ -1,0 +1,19 @@
+{
+  "prompt": "Use case: precise-object-edit. Bounded CAMERA correction only. Image1 is the EDIT TARGET pose; Image2 is ONLY the exact desired rear-left CAMERA angle and head/torso orientation. Image1 currently looks too much straight back. Redraw Image1 from the same stronger LEFT-REAR oblique camera as Image2: expose more left side, head looks away and imageLEFT, back panel narrows by perspective. Preserve Image1's gait phase, not Image2's. This is AIRBORNE flight toward RIGHT leg landing: RIGHT knee forward, LEFT leg trails; both boots elevated. LEFT arm remains FORWARD, fist low chest toward imageLEFT; RIGHT arm BACK, low fist toward imageRIGHT. This is the opposite arm phase to Image2. Do not copy Image2's left-arm-back/right-contact stance. Keep Image1 character size, green tunic, cyan sleeves, rusty trousers, brown boots, bald gray hair, belt pouch. Exactly two arms/two legs. Use Image2 ONLY to fix camera yaw; no mirroring or pose duplication. Fullbody sprite opaque on transparent background, identical canvas ratio, no text or shadow.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-73478c66-7c6a-42a9-8c5c-02e9bca218d6.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/input-view-3-phase-1-camera-v3.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/run-view-3-phase-0-back-camera-v1.png"
+  ],
+  "referenceCanvasHeight": 725,
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/input-view-3-phase-1-camera-v3.png",
+      "sha256": "b4edb5429be447b7095a7abbc980d976bc07448c2c14324a0fe74042a579f9bb"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/run-view-3-phase-0-back-camera-v1.png",
+      "sha256": "67d5b61df7386302ecf1d92c67efb71fd03b6100f19bb705a67c5a7b3eaa42ba"
+    }
+  ]
+}

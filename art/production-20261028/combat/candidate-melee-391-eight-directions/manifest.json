@@ -1,0 +1,845 @@
+{
+  "schemaVersion": 1,
+  "archive": 391,
+  "action": "melee-one-handed-sword",
+  "status": "candidate-eight-direction-four-phase-set",
+  "selectedUniquePoses": 32,
+  "cellSize": [
+    190,
+    260
+  ],
+  "pixelFootPivot": [
+    95,
+    244
+  ],
+  "nativeReference": {
+    "path": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+    "sha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+    "nativeRecord": 5,
+    "nativePixelSize": [
+      71,
+      166
+    ],
+    "nativeRecordScaleXY": [
+      -134,
+      -134
+    ],
+    "nativeSizeBeforeOverridesGlobalScale": [
+      34,
+      80
+    ]
+  },
+  "worldSizePolicy": "Pixel canvas/pivot are not world size. Preserve native record-scaled size and TextureReplacement overrides separately at future integration. No runtime world size was set.",
+  "atlas": "atlas.png",
+  "atlasSha256": "c0b60b556de19fcd9d57450e51f01cabdf93f9303ac932e38697e6120d5d6175",
+  "directions": [
+    {
+      "direction": 0,
+      "bearing": "front",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "0-front-ready.png",
+          "sha256": "d131cfef8be6da5dd317ac4f56df8a33308986ee6ec3524b8268936dbf2b37a1",
+          "source": "391-melee-front-cycle-v1.png",
+          "sourceSha256": "0da3bf16fa210cb4bbec64f57d322c0c73a34d420acfcbc8806a7dbe2094c2d1",
+          "sourceRect": [
+            148,
+            0,
+            389,
+            733
+          ],
+          "sharedStripScale": 0.35853131749460043,
+          "translation": [
+            51,
+            -3
+          ],
+          "measuredFootCenter": 124.0,
+          "measuredFootBaseline": 688
+        },
+        {
+          "phase": "windup",
+          "path": "0-front-windup.png",
+          "sha256": "ffa0065ef55204f9167444476730539b3dfa3b19880688cd6d4af4c8f108df63",
+          "source": "391-melee-front-cycle-v1.png",
+          "sourceSha256": "0da3bf16fa210cb4bbec64f57d322c0c73a34d420acfcbc8806a7dbe2094c2d1",
+          "sourceRect": [
+            646,
+            0,
+            936,
+            733
+          ],
+          "sharedStripScale": 0.35853131749460043,
+          "translation": [
+            33,
+            -3
+          ],
+          "measuredFootCenter": 172.0,
+          "measuredFootBaseline": 688
+        },
+        {
+          "phase": "strike",
+          "path": "0-front-strike.png",
+          "sha256": "b598845f0fb81ae32668647f14e9c116b129acc49735fd0890fb33d3ec57557f",
+          "source": "391-melee-front-cycle-v1.png",
+          "sourceSha256": "0da3bf16fa210cb4bbec64f57d322c0c73a34d420acfcbc8806a7dbe2094c2d1",
+          "sourceRect": [
+            1111,
+            0,
+            1489,
+            733
+          ],
+          "sharedStripScale": 0.35853131749460043,
+          "translation": [
+            2,
+            -3
+          ],
+          "measuredFootCenter": 258.5,
+          "measuredFootBaseline": 688
+        },
+        {
+          "phase": "recovery",
+          "path": "0-front-recovery.png",
+          "sha256": "4d6088f17f8bd13ce5b4f53325718135ca971539d235e7bf308ce491536bd731",
+          "source": "391-melee-front-cycle-v1.png",
+          "sourceSha256": "0da3bf16fa210cb4bbec64f57d322c0c73a34d420acfcbc8806a7dbe2094c2d1",
+          "sourceRect": [
+            1691,
+            0,
+            2026,
+            733
+          ],
+          "sharedStripScale": 0.35853131749460043,
+          "translation": [
+            17,
+            -3
+          ],
+          "measuredFootCenter": 216.5,
+          "measuredFootBaseline": 689
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-0-0.png",
+      "identityReferenceSha256": "ca84a9bb303faaa16913ad25288af687a9048fedcf8d8b4bc2bda6ca96b7ca19",
+      "identityReferenceKind": "Original native walk, generation identity input",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-0.png",
+      "motionTemplateSha256": "890fa3b78367ebd1a47891a4183e452658e76ede0c3e6c0381b8160f12a74f31",
+      "headMeasurementY": 225,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": null
+    },
+    {
+      "direction": 1,
+      "bearing": "front-left",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "1-front-left-ready.png",
+          "sha256": "5e6f9cee9f7ea546ec61d371db3072c3bb890e5503664006f1ffecb61dccd3b0",
+          "source": "391-melee-front-left-cycle-v1.png",
+          "sourceSha256": "ed28e90a112de84d18f063878524a51408f66e8f5b22d13d035592ec865a76c9",
+          "sourceRect": [
+            146,
+            0,
+            399,
+            733
+          ],
+          "sharedStripScale": 0.3600867678958785,
+          "translation": [
+            47,
+            1
+          ],
+          "measuredFootCenter": 132.5,
+          "measuredFootBaseline": 674
+        },
+        {
+          "phase": "windup",
+          "path": "1-front-left-windup.png",
+          "sha256": "0f826f5c539da21ed7d54282541327b681e1599752b5435570e597d33fab9be7",
+          "source": "391-melee-front-left-cycle-v1.png",
+          "sourceSha256": "ed28e90a112de84d18f063878524a51408f66e8f5b22d13d035592ec865a76c9",
+          "sourceRect": [
+            628,
+            0,
+            961,
+            733
+          ],
+          "sharedStripScale": 0.3600867678958785,
+          "translation": [
+            23,
+            1
+          ],
+          "measuredFootCenter": 201.0,
+          "measuredFootBaseline": 674
+        },
+        {
+          "phase": "strike",
+          "path": "1-front-left-strike.png",
+          "sha256": "2be239f8fa4f689277a68ccbba7500572404c36cc3b26c7cb950faf92b5feacb",
+          "source": "391-melee-front-left-cycle-v1.png",
+          "sourceSha256": "ed28e90a112de84d18f063878524a51408f66e8f5b22d13d035592ec865a76c9",
+          "sourceRect": [
+            1074,
+            0,
+            1486,
+            733
+          ],
+          "sharedStripScale": 0.3600867678958785,
+          "translation": [
+            -7,
+            1
+          ],
+          "measuredFootCenter": 284.0,
+          "measuredFootBaseline": 674
+        },
+        {
+          "phase": "recovery",
+          "path": "1-front-left-recovery.png",
+          "sha256": "8d59c39c0bcdc4ef5b89451085d9d7a8fca0c5bc8a63b6638741b537416f077d",
+          "source": "391-melee-front-left-cycle-v1.png",
+          "sourceSha256": "ed28e90a112de84d18f063878524a51408f66e8f5b22d13d035592ec865a76c9",
+          "sourceRect": [
+            1665,
+            0,
+            2028,
+            733
+          ],
+          "sharedStripScale": 0.3600867678958785,
+          "translation": [
+            9,
+            1
+          ],
+          "measuredFootCenter": 239.0,
+          "measuredFootBaseline": 674
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-1-0.png",
+      "identityReferenceSha256": "364b738f68693ee5c5878a23a76f7eabc3d4e5c02c6b7fc3087477c49fb8dc86",
+      "identityReferenceKind": "Original native walk, generation identity input",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-1.png",
+      "motionTemplateSha256": "08b7d597b180d8a24b5cb1923718632d9239b266a14cefc0baaf490c19063467",
+      "headMeasurementY": 213,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": null
+    },
+    {
+      "direction": 2,
+      "bearing": "left-profile",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "2-left-profile-ready.png",
+          "sha256": "98075bcd0c29a2f1ef58dd6a53f6416074be25efc0bdbef0e6a81140d84c5c62",
+          "source": "391-melee-left-cycle-v1.png",
+          "sourceSha256": "425a2f1901bb2e95bed5950fd4e71f052add310962f4622d7afe60dd21697418",
+          "sourceRect": [
+            157,
+            0,
+            350,
+            733
+          ],
+          "sharedStripScale": 0.3547008547008547,
+          "translation": [
+            55,
+            1
+          ],
+          "measuredFootCenter": 112.5,
+          "measuredFootBaseline": 684
+        },
+        {
+          "phase": "windup",
+          "path": "2-left-profile-windup.png",
+          "sha256": "17cdaac604249a1b047484b22990fb201097c33d21bb6269769bf1a825a8d36a",
+          "source": "391-melee-left-cycle-v1.png",
+          "sourceSha256": "425a2f1901bb2e95bed5950fd4e71f052add310962f4622d7afe60dd21697418",
+          "sourceRect": [
+            654,
+            0,
+            904,
+            733
+          ],
+          "sharedStripScale": 0.3547008547008547,
+          "translation": [
+            35,
+            1
+          ],
+          "measuredFootCenter": 170.0,
+          "measuredFootBaseline": 684
+        },
+        {
+          "phase": "strike",
+          "path": "2-left-profile-strike.png",
+          "sha256": "c2acf8e7ccdc36ea58808547a0121e7dc0ed02f83eaea0255bfa9f7b4bb5fd26",
+          "source": "391-melee-left-cycle-v1.png",
+          "sourceSha256": "425a2f1901bb2e95bed5950fd4e71f052add310962f4622d7afe60dd21697418",
+          "sourceRect": [
+            1066,
+            0,
+            1466,
+            733
+          ],
+          "sharedStripScale": 0.3547008547008547,
+          "translation": [
+            -18,
+            1
+          ],
+          "measuredFootCenter": 319.5,
+          "measuredFootBaseline": 684
+        },
+        {
+          "phase": "recovery",
+          "path": "2-left-profile-recovery.png",
+          "sha256": "b930c258462a991f319374e346a90a494a351b4c487b750d6c72020273e2529d",
+          "source": "391-melee-left-cycle-v1.png",
+          "sourceSha256": "425a2f1901bb2e95bed5950fd4e71f052add310962f4622d7afe60dd21697418",
+          "sourceRect": [
+            1686,
+            0,
+            2004,
+            733
+          ],
+          "sharedStripScale": 0.3547008547008547,
+          "translation": [
+            10,
+            1
+          ],
+          "measuredFootCenter": 241.0,
+          "measuredFootBaseline": 684
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-2-0.png",
+      "identityReferenceSha256": "c5891e5771513a7913836605080611a40b5e0109bbf3802b0b72bcb18e0d5e5b",
+      "identityReferenceKind": "Original native walk, generation identity input",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-2.png",
+      "motionTemplateSha256": "017d749501defa6de4ec0e6907083de2eb56ce8bf3c997db07a138549ddfb989",
+      "headMeasurementY": 216,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": null
+    },
+    {
+      "direction": 3,
+      "bearing": "rear-left",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "3-rear-left-ready.png",
+          "sha256": "675f28aea1d9e2a918ab6de8537f48b32361a3dde20621bf0dd67af1edc153cd",
+          "source": "391-melee-rear-left-cycle-v1.png",
+          "sourceSha256": "1557695b5db06f563a33ebc9409354b4ec4132562dc407c5d46e4c5d7deb7cfe",
+          "sourceRect": [
+            98,
+            0,
+            361,
+            733
+          ],
+          "sharedStripScale": 0.34439834024896265,
+          "translation": [
+            50,
+            16
+          ],
+          "measuredFootCenter": 130.0,
+          "measuredFootBaseline": 663
+        },
+        {
+          "phase": "windup",
+          "path": "3-rear-left-windup.png",
+          "sha256": "2de9b4e7be5a4d0d77615807bcefde4587a7e2a1f4b40d1a4a3d35d252cdc907",
+          "source": "391-melee-rear-left-cycle-v1.png",
+          "sourceSha256": "1557695b5db06f563a33ebc9409354b4ec4132562dc407c5d46e4c5d7deb7cfe",
+          "sourceRect": [
+            682,
+            0,
+            969,
+            733
+          ],
+          "sharedStripScale": 0.34439834024896265,
+          "translation": [
+            51,
+            16
+          ],
+          "measuredFootCenter": 128.5,
+          "measuredFootBaseline": 663
+        },
+        {
+          "phase": "strike",
+          "path": "3-rear-left-strike.png",
+          "sha256": "3a19675e658af23f506e043521f5d1cee242579af026d638d426d75bc767548c",
+          "source": "391-melee-rear-left-cycle-v1.png",
+          "sourceSha256": "1557695b5db06f563a33ebc9409354b4ec4132562dc407c5d46e4c5d7deb7cfe",
+          "sourceRect": [
+            1111,
+            0,
+            1479,
+            733
+          ],
+          "sharedStripScale": 0.34439834024896265,
+          "translation": [
+            10,
+            16
+          ],
+          "measuredFootCenter": 246.5,
+          "measuredFootBaseline": 663
+        },
+        {
+          "phase": "recovery",
+          "path": "3-rear-left-recovery.png",
+          "sha256": "a2e37cf4cd21c44ca2ad268e07bb31f5e89a34c2bf41e48830db616779cd6357",
+          "source": "391-melee-rear-left-cycle-v1.png",
+          "sourceSha256": "1557695b5db06f563a33ebc9409354b4ec4132562dc407c5d46e4c5d7deb7cfe",
+          "sourceRect": [
+            1768,
+            0,
+            2061,
+            733
+          ],
+          "sharedStripScale": 0.34439834024896265,
+          "translation": [
+            41,
+            16
+          ],
+          "measuredFootCenter": 158.0,
+          "measuredFootBaseline": 663
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-3-0.png",
+      "identityReferenceSha256": "f499705a56f05c7dc0dda75f085ab8b4234faafea7a56b8f924416ed1c462e93",
+      "identityReferenceKind": "Original native walk, generation identity input",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-3.png",
+      "motionTemplateSha256": "a4b52e51bbfe0ed4aa5afa59facf25da8df72101bfa9fdcd346a2796daf38844",
+      "headMeasurementY": 181,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": "Far weapon grip occluded in strike/recovery; final occlusion review remains open."
+    },
+    {
+      "direction": 4,
+      "bearing": "back",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "4-back-ready.png",
+          "sha256": "b912143a351a8b82b9d3fc6682226d2a0d752b947e94a7c0510976f30644a4c0",
+          "source": "391-melee-back-cycle-v1.png",
+          "sourceSha256": "6d24a8e5ade51163db37f1456d5b16fc0d8004b0ebd4a411ee6b8c8306e7b905",
+          "sourceRect": [
+            134,
+            0,
+            402,
+            733
+          ],
+          "sharedStripScale": 0.3313373253493014,
+          "translation": [
+            53,
+            16
+          ],
+          "measuredFootCenter": 127.0,
+          "measuredFootBaseline": 688
+        },
+        {
+          "phase": "windup",
+          "path": "4-back-windup.png",
+          "sha256": "6537e650b6edc24770e80ba36bb3985a0db15de4d365362a81a55beaab69d7c5",
+          "source": "391-melee-back-cycle-v1.png",
+          "sourceSha256": "6d24a8e5ade51163db37f1456d5b16fc0d8004b0ebd4a411ee6b8c8306e7b905",
+          "sourceRect": [
+            675,
+            0,
+            950,
+            733
+          ],
+          "sharedStripScale": 0.3313373253493014,
+          "translation": [
+            52,
+            16
+          ],
+          "measuredFootCenter": 129.5,
+          "measuredFootBaseline": 688
+        },
+        {
+          "phase": "strike",
+          "path": "4-back-strike.png",
+          "sha256": "ba8e51661674cd7971fdaa77a16a1c41808e18a7acc3696d682e86072785e488",
+          "source": "391-melee-back-cycle-v1.png",
+          "sourceSha256": "6d24a8e5ade51163db37f1456d5b16fc0d8004b0ebd4a411ee6b8c8306e7b905",
+          "sourceRect": [
+            1206,
+            0,
+            1639,
+            733
+          ],
+          "sharedStripScale": 0.3313373253493014,
+          "translation": [
+            51,
+            16
+          ],
+          "measuredFootCenter": 132.0,
+          "measuredFootBaseline": 688
+        },
+        {
+          "phase": "recovery",
+          "path": "4-back-recovery.png",
+          "sha256": "cfdebaf3c60db51671bfd8e444383d50c79c969116d7120d478a2636aa369dc7",
+          "source": "391-melee-back-cycle-v1.png",
+          "sourceSha256": "6d24a8e5ade51163db37f1456d5b16fc0d8004b0ebd4a411ee6b8c8306e7b905",
+          "sourceRect": [
+            1770,
+            0,
+            2110,
+            733
+          ],
+          "sharedStripScale": 0.3313373253493014,
+          "translation": [
+            52,
+            16
+          ],
+          "measuredFootCenter": 130.5,
+          "measuredFootBaseline": 688
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-4-0.png",
+      "identityReferenceSha256": "b917e487af54642e290070a6b1711de57a544573b03c0d1f834513b8b55588c0",
+      "identityReferenceKind": "Original native walk, generation identity input",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-4.png",
+      "motionTemplateSha256": "580481a889cb4846871e96f07b764677cb7259cf91f6c4d6563de43588dcf13e",
+      "headMeasurementY": 187,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": null
+    },
+    {
+      "direction": 5,
+      "bearing": "rear-right",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "5-rear-right-ready.png",
+          "sha256": "890dd5996bf80e4f53eacaec579d29a655de9f721dfdfed967d0f650226754c3",
+          "source": "391-melee-rear-right-cycle-v1.png",
+          "sourceSha256": "4a6e08f1402c77f2eedea2a99f12f34921c0333e19cf7726831aa5a2d1efcf57",
+          "sourceRect": [
+            130,
+            0,
+            404,
+            733
+          ],
+          "sharedStripScale": 0.3516949152542373,
+          "translation": [
+            47,
+            1
+          ],
+          "measuredFootCenter": 136.0,
+          "measuredFootBaseline": 691
+        },
+        {
+          "phase": "windup",
+          "path": "5-rear-right-windup.png",
+          "sha256": "a1cf2ebe1590b5324f5073f3865b3aa8fedd1b7afeb298ba7f37d5cb850c6b32",
+          "source": "391-melee-rear-right-cycle-v1.png",
+          "sourceSha256": "4a6e08f1402c77f2eedea2a99f12f34921c0333e19cf7726831aa5a2d1efcf57",
+          "sourceRect": [
+            665,
+            0,
+            919,
+            733
+          ],
+          "sharedStripScale": 0.3516949152542373,
+          "translation": [
+            47,
+            1
+          ],
+          "measuredFootCenter": 137.0,
+          "measuredFootBaseline": 691
+        },
+        {
+          "phase": "strike",
+          "path": "5-rear-right-strike.png",
+          "sha256": "59e46ea0907b2d5f5cc3efb7967d0b751a3aefdff07e055334db3ae45350f965",
+          "source": "391-melee-rear-right-cycle-v1.png",
+          "sourceSha256": "4a6e08f1402c77f2eedea2a99f12f34921c0333e19cf7726831aa5a2d1efcf57",
+          "sourceRect": [
+            1202,
+            0,
+            1641,
+            733
+          ],
+          "sharedStripScale": 0.3516949152542373,
+          "translation": [
+            47,
+            1
+          ],
+          "measuredFootCenter": 137.0,
+          "measuredFootBaseline": 691
+        },
+        {
+          "phase": "recovery",
+          "path": "5-rear-right-recovery.png",
+          "sha256": "a73a0b901e15bf4464fa4fe610bdb91058afb07564f01698a1cd95658fade76c",
+          "source": "391-melee-rear-right-cycle-v1.png",
+          "sourceSha256": "4a6e08f1402c77f2eedea2a99f12f34921c0333e19cf7726831aa5a2d1efcf57",
+          "sourceRect": [
+            1752,
+            0,
+            2115,
+            733
+          ],
+          "sharedStripScale": 0.3516949152542373,
+          "translation": [
+            50,
+            1
+          ],
+          "measuredFootCenter": 129.0,
+          "measuredFootBaseline": 691
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-3-0.png",
+      "identityReferenceSha256": "f499705a56f05c7dc0dda75f085ab8b4234faafea7a56b8f924416ed1c462e93",
+      "identityReferenceKind": "Original native walk, generation identity input; opposite bearing interpreted via native renderer mirror contract",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-5.png",
+      "motionTemplateSha256": "8898603cc0f3a436b574ef4f8b0b97fbf7558e6f81a5768be90744810ae602fe",
+      "headMeasurementY": 219,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": null
+    },
+    {
+      "direction": 6,
+      "bearing": "right-profile",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "6-right-profile-ready.png",
+          "sha256": "30cd72e0dca6b3fd4c258221a224769a76b55f4ab9b6faf500b2bf8b3e2c8a6f",
+          "source": "391-melee-right-cycle-v1.png",
+          "sourceSha256": "d8b61016321768de7bd2a09cb0234463b2158dca1131e752d26171bc2de3e3fb",
+          "sourceRect": [
+            185,
+            0,
+            387,
+            733
+          ],
+          "sharedStripScale": 0.3616557734204793,
+          "translation": [
+            65,
+            -3
+          ],
+          "measuredFootCenter": 82.5,
+          "measuredFootBaseline": 682
+        },
+        {
+          "phase": "windup",
+          "path": "6-right-profile-windup.png",
+          "sha256": "52f51c4c9fc775ba6d6679c7f9decb3e2e6eb0e79b44d560119b74340f953194",
+          "source": "391-melee-right-cycle-v1.png",
+          "sourceSha256": "d8b61016321768de7bd2a09cb0234463b2158dca1131e752d26171bc2de3e3fb",
+          "sourceRect": [
+            641,
+            0,
+            910,
+            733
+          ],
+          "sharedStripScale": 0.3616557734204793,
+          "translation": [
+            29,
+            -2
+          ],
+          "measuredFootCenter": 183.5,
+          "measuredFootBaseline": 681
+        },
+        {
+          "phase": "strike",
+          "path": "6-right-profile-strike.png",
+          "sha256": "d5ff5455104310b06f3b0fd0aa72120da89a5935e672a606911c4ab108fc4fa3",
+          "source": "391-melee-right-cycle-v1.png",
+          "sourceSha256": "d8b61016321768de7bd2a09cb0234463b2158dca1131e752d26171bc2de3e3fb",
+          "sourceRect": [
+            1258,
+            0,
+            1625,
+            733
+          ],
+          "sharedStripScale": 0.3616557734204793,
+          "translation": [
+            65,
+            -2
+          ],
+          "measuredFootCenter": 82.0,
+          "measuredFootBaseline": 681
+        },
+        {
+          "phase": "recovery",
+          "path": "6-right-profile-recovery.png",
+          "sha256": "94345bd69abb3b02d71c47045db7390117c3b39805a3e97b4ce283bca5ffa472",
+          "source": "391-melee-right-cycle-v1.png",
+          "sourceSha256": "d8b61016321768de7bd2a09cb0234463b2158dca1131e752d26171bc2de3e3fb",
+          "sourceRect": [
+            1817,
+            0,
+            2109,
+            733
+          ],
+          "sharedStripScale": 0.3616557734204793,
+          "translation": [
+            64,
+            -3
+          ],
+          "measuredFootCenter": 84.5,
+          "measuredFootBaseline": 683
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-2-0.png",
+      "identityReferenceSha256": "c5891e5771513a7913836605080611a40b5e0109bbf3802b0b72bcb18e0d5e5b",
+      "identityReferenceKind": "Original native walk, generation identity input; opposite bearing interpreted via native renderer mirror contract",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-6.png",
+      "motionTemplateSha256": "764a36db5960897ce490130663518530e139a07dc83a2e8fbc86ba56855522a5",
+      "headMeasurementY": 223,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": null
+    },
+    {
+      "direction": 7,
+      "bearing": "front-right",
+      "phaseCount": 4,
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "7-front-right-ready.png",
+          "sha256": "5e79e3a781fa38841689f1b07bef174fe8cb3c5b86aeff1de01032c7ad81b8be",
+          "source": "391-melee-front-right-cycle-v1.png",
+          "sourceSha256": "65742a13367f837a2b68924e6bc169d2c406b492dff559737474328ec769ad5d",
+          "sourceRect": [
+            122,
+            0,
+            385,
+            733
+          ],
+          "sharedStripScale": 0.3287128712871287,
+          "translation": [
+            48,
+            22
+          ],
+          "measuredFootCenter": 141.5,
+          "measuredFootBaseline": 676
+        },
+        {
+          "phase": "windup",
+          "path": "7-front-right-windup.png",
+          "sha256": "d51471053abd6d9b4e8a2e271a1ab1e63ba329df974a48a67ce2c89ef25da5e6",
+          "source": "391-melee-front-right-cycle-v1.png",
+          "sourceSha256": "65742a13367f837a2b68924e6bc169d2c406b492dff559737474328ec769ad5d",
+          "sourceRect": [
+            630,
+            0,
+            937,
+            733
+          ],
+          "sharedStripScale": 0.3287128712871287,
+          "translation": [
+            35,
+            22
+          ],
+          "measuredFootCenter": 182.5,
+          "measuredFootBaseline": 676
+        },
+        {
+          "phase": "strike",
+          "path": "7-front-right-strike.png",
+          "sha256": "995c6790f81d82ffe9cb9e546b4f6197c5b31539368d70fa87c0e6615796cca7",
+          "source": "391-melee-front-right-cycle-v1.png",
+          "sourceSha256": "65742a13367f837a2b68924e6bc169d2c406b492dff559737474328ec769ad5d",
+          "sourceRect": [
+            1218,
+            0,
+            1618,
+            733
+          ],
+          "sharedStripScale": 0.3287128712871287,
+          "translation": [
+            55,
+            22
+          ],
+          "measuredFootCenter": 121.5,
+          "measuredFootBaseline": 676
+        },
+        {
+          "phase": "recovery",
+          "path": "7-front-right-recovery.png",
+          "sha256": "4f67654d06b06a374b868ccfda4777c95207ca95191cc63826d9ffd8e8b61a42",
+          "source": "391-melee-front-right-cycle-v1.png",
+          "sourceSha256": "65742a13367f837a2b68924e6bc169d2c406b492dff559737474328ec769ad5d",
+          "sourceRect": [
+            1762,
+            0,
+            2068,
+            733
+          ],
+          "sharedStripScale": 0.3287128712871287,
+          "translation": [
+            50,
+            22
+          ],
+          "measuredFootCenter": 135.5,
+          "measuredFootBaseline": 676
+        }
+      ],
+      "identityReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\391-1-0.png",
+      "identityReferenceSha256": "364b738f68693ee5c5878a23a76f7eabc3d4e5c02c6b7fc3087477c49fb8dc86",
+      "identityReferenceKind": "Original native walk, generation identity input; opposite bearing interpreted via native renderer mirror contract",
+      "frontalIdleIdentityInput": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\standing\\source\\native-idle\\391-0.png",
+      "frontalIdleIdentityInputSha256": "4125d5c60274b2fead6c172e2cc615fae3b30c1ed1fcd16a16903e956c4198d3",
+      "originalWalkEvidenceManifest": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\combat\\native-reference\\391\\manifest.json",
+      "originalWalkEvidenceManifestSha256": "4bdc033a96dff287da34956dcd157bb84d4b423185f8da2869fde220767c9ecd",
+      "motionTemplate": "motion-templates/385-view-7.png",
+      "motionTemplateSha256": "cd7dc6ca8492a31c0dc7c81bc143547a0f01fb3945738a8bda1852e32038956d",
+      "headMeasurementY": 171,
+      "bodyPixelHeightTarget": 166,
+      "reviewLimit": null
+    }
+  ],
+  "processing": "Measured four silhouette spans; same nearest-neighbor scale per strip, foot-center/baseline translation. Original alpha preserved; no mirroring or anatomy edits.",
+  "states": {
+    "candidate": true,
+    "generated": true,
+    "technically_checked": true,
+    "visually_reviewed": true,
+    "integrated": false,
+    "user_approved": false
+  },
+  "limitations": [
+    "No runtime playback/user acceptance.",
+    "Generated art is not pixel-identical to native source.",
+    "Partial alpha/fringes retained.",
+    "Rear-left grip occlusion remains an open final review."
+  ],
+  "repairs": []
+}

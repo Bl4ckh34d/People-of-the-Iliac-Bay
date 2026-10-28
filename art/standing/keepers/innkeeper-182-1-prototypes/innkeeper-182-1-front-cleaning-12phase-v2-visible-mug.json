@@ -1,0 +1,59 @@
+{
+  "date": "2026-10-18",
+  "status": "front-loop review prototype; user review pending; not runtime-integrated",
+  "archive": 182,
+  "record": 1,
+  "source": {
+    "nativeFile": "work/keeper-native-idle/182-1-frame-00.png",
+    "nativeDimensions": [61, 117],
+    "nativeFrameCount": 1,
+    "installedPlayerSettings": "Player/PortableAppdata/settings.ini points at C:/Users/Daniel/Desktop/Code_Experiments/DFU/GameFiles",
+    "installedModConfig": "Player/PortableAppdata/Mods/GameData/Mods.json",
+    "installedSourceCheck": "No loose keeper/TEXTURE.182 replacement found in Player StreamingAssets. Active mod bundles were listed, not exhaustively unpacked; source record used is native GameFiles/arena2/TEXTURE.182."
+  },
+  "generator": "built-in image_gen edit",
+  "target": "Front-facing 12-frame cleaning-loop prototype, 4 columns × 3 rows, row-major.",
+  "sourceImageDimensions": [1448, 1086],
+  "runtimeImportTarget": {
+    "frameCanvas": [96, 96],
+    "effectiveCharacterHeightPx": 76,
+    "resampling": "Main agent handles deterministic point-sampling; generated source canvas size is not the runtime frame size."
+  },
+  "timing": {
+    "frameCount": 12,
+    "fps": 5,
+    "cycleSeconds": 2.4,
+    "phases": "0 rest; 1–2 settle/start; 3–5 outward wipe; 6–8 rub/hold; 9–10 retract; 11 settle/blend to rest.",
+    "cellPhases": [
+      { "cell": 0, "row": 0, "column": 0, "phase": "source-like rest with mug" },
+      { "cell": 1, "row": 0, "column": 1, "phase": "small towel anticipation" },
+      { "cell": 2, "row": 0, "column": 2, "phase": "wipe begins" },
+      { "cell": 3, "row": 0, "column": 3, "phase": "outward wipe" },
+      { "cell": 4, "row": 1, "column": 0, "phase": "wipe/rub" },
+      { "cell": 5, "row": 1, "column": 1, "phase": "wipe/rub" },
+      { "cell": 6, "row": 1, "column": 2, "phase": "wipe hold" },
+      { "cell": 7, "row": 1, "column": 3, "phase": "wipe hold" },
+      { "cell": 8, "row": 2, "column": 0, "phase": "return begins" },
+      { "cell": 9, "row": 2, "column": 1, "phase": "retract" },
+      { "cell": 10, "row": 2, "column": 2, "phase": "near-rest" },
+      { "cell": 11, "row": 2, "column": 3, "phase": "rest blend" }
+    ],
+    "sourceMapping": "Native record 182/1 has one static source frame, used as identity/pose reference only. Generated cell i is new prototype phase i, row floor(i/4), column i mod 4; no native animation frame mapping exists.",
+    "provenance": "Newly authorized generated motion; native archive 182/1 contains only one static frame."
+  },
+  "handsAndObject": {
+    "confirmedByUser": "A visible object must be cleaned by the towel.",
+    "anatomicalSides": "Anatomical RIGHT hand appears on viewer-left and holds the mug; anatomical LEFT hand appears on viewer-right and holds the towel in contact with it.",
+    "vessel": "Small gray metal mug kept visible and anchored across all cells. No other held object.",
+    "edit": "One targeted edit changed visibility/hand contact across the 12-cell sheet; no further image calls planned until front-loop review."
+  },
+  "floorProps": "Exactly three fixed original bottles: tall green at image-left foot, squat green jug foreground center, turquoise-necked red bottle image-right foot. Position may show small generative variation; inspect after point-sampling.",
+  "qa": {
+    "cell0": "Now includes the required mug and therefore is an adapted prototype, not pixel-identical to the original native frame. Keep native 182/1 frame0 untouched as source reference; user must decide how front loop enters runtime.",
+    "mugVisibility": "Mug is visibly present in each cell after the edit. Its shape is simplified; inspect hand grip and towel contact at 96×96 point-sampled size.",
+    "sequence": "Cloth moves through a small wipe/retract cycle. Body remains mostly stationary; generated pixels still vary slightly in body and prop edges across cells.",
+    "style": "Raw sheet has finer shading and colored edge fringe than native art. Review after main's 96×96 point-sampling import at 76px effective character height; not yet accepted as final pixel art."
+  },
+  "file": "innkeeper-182-1-front-cleaning-12phase-v2-visible-mug.png",
+  "runtimeIntegration": "None. Do not generate other angles until this frontal 12-frame cleaning loop is reviewed."
+}

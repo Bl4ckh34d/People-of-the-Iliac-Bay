@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "archive": 385,
+  "direction": 0,
+  "bearing": "front",
+  "action": "melee-one-handed-sword",
+  "generatedUniqueFrames": 4,
+  "reusedFrames": 0,
+  "status": "candidate-four-key-cycle; minor size/palette variation remains; no user/runtime acceptance",
+  "cellSize": [
+    170,
+    250
+  ],
+  "commonScale": 0.16,
+  "cycle": [
+    {
+      "phase": "ready",
+      "source": "385-melee-front-key-ready-v2.png",
+      "sourceSha256": "c06de78614a1359ec206d97a046241046b6b24ef58f3edef11e25f4f259adef5",
+      "file": "candidate-melee-front-cycle\\ready.png",
+      "sha256": "4655d79b1b784578a920a264b6ca520814a506d5b47df277b1c88b5139748676",
+      "nativeCanvasTranslation": [
+        -2,
+        12
+      ],
+      "measuredRawFootBaseline": 1428,
+      "measuredRawFootCenterX": 544.0
+    },
+    {
+      "phase": "windup",
+      "source": "385-melee-front-key-windup-v1.png",
+      "sourceSha256": "539a3b859dd5298a82bdc091405f3b9c18d6f772343696797fb9495991d28afd",
+      "file": "candidate-melee-front-cycle\\windup.png",
+      "sha256": "6b3d12fe4cfc3a98df6f741b8071b556905d42e85e643c51e5a862b6b8076996",
+      "nativeCanvasTranslation": [
+        -2,
+        7
+      ],
+      "measuredRawFootBaseline": 1459,
+      "measuredRawFootCenterX": 543.5
+    },
+    {
+      "phase": "strike",
+      "source": "385-melee-front-key-strike-v1.png",
+      "sourceSha256": "b516f959e2e0cf831e877ec6408f59de435102dcf782a11989e9f30d68063696",
+      "file": "candidate-melee-front-cycle\\strike.png",
+      "sha256": "ae50fe00f715f3e6c20d1f11c56620bf6e8172b3ec4f2e4795e09b3a5c0626c7",
+      "nativeCanvasTranslation": [
+        21,
+        23
+      ],
+      "measuredRawFootBaseline": 1358,
+      "measuredRawFootCenterX": 403.0
+    },
+    {
+      "phase": "recovery",
+      "source": "385-melee-front-key-recovery-v1.png",
+      "sourceSha256": "14bcfe9b89cf276654883b875eff860ffba73b728970cac2e180553bab363855",
+      "file": "candidate-melee-front-cycle\\recovery.png",
+      "sha256": "ba408e0211d67110aaa1746c449dfc24967a05b33d22e9eedb25b95bd191cbc4",
+      "nativeCanvasTranslation": [
+        13,
+        23
+      ],
+      "measuredRawFootBaseline": 1359,
+      "measuredRawFootCenterX": 447.5
+    }
+  ],
+  "processing": "One common nearest-neighbor scale, each full image translated to measured shared foot baseline/center. Original alpha retained.",
+  "states": {
+    "candidate": true,
+    "generated": true,
+    "technically_checked": true,
+    "visually_reviewed": true,
+    "integrated": false,
+    "user_approved": false
+  },
+  "limitations": [
+    "Generated front does not preserve native front pixels exactly.",
+    "Minor head-height/palette variation remains.",
+    "Foot-based translation aligns global generator shifts; no per-frame scaling or anatomy repair.",
+    "Partial-alpha/fringe pixels remain."
+  ]
+}

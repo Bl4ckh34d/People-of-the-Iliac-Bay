@@ -1,0 +1,51 @@
+{
+  "date": "2026-10-18",
+  "status": "user-approved-visual-reference-provisional",
+  "scope": "One rear-left three-quarter shopkeeper visual direction for archive 182 record 0. Use as style/angle reference only. Animation remains unverified for integration. Original front frames remain untouched.",
+  "nativeSource": {
+    "archive": 182,
+    "record": 0,
+    "frameCount": 12,
+    "size": [47, 76],
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "uniquePixelStates": 7,
+    "phase": "Frames 0-2 rest; frame 3 starts anatomical-left-arm offer; frame 4 reaches farther; frames 5-10 hold; frame 11 retracts."
+  },
+  "output": {
+    "file": "art/standing/keepers/prototypes/shopkeeper-182-0-rear-left-3q-12frame-v1-user-approved-style-reference.png",
+    "dimensions": [1447, 1087],
+    "sha256": "8ad6c8da19d91a8653dd136448b02463d610157822e0d96a58cd4fdda905f1e4",
+    "layout": {
+      "columns": 4,
+      "rows": 3,
+      "cellOrder": "left-to-right, top-to-bottom",
+      "cellIndexBase": 0,
+      "animationFramesPerView": 12
+    }
+  },
+  "frameMapping": [
+    { "sourceFrame": 0, "cell": 0, "row": 0, "column": 0 },
+    { "sourceFrame": 1, "cell": 1, "row": 0, "column": 1 },
+    { "sourceFrame": 2, "cell": 2, "row": 0, "column": 2 },
+    { "sourceFrame": 3, "cell": 3, "row": 0, "column": 3 },
+    { "sourceFrame": 4, "cell": 4, "row": 1, "column": 0 },
+    { "sourceFrame": 5, "cell": 5, "row": 1, "column": 1 },
+    { "sourceFrame": 6, "cell": 6, "row": 1, "column": 2 },
+    { "sourceFrame": 7, "cell": 7, "row": 1, "column": 3 },
+    { "sourceFrame": 8, "cell": 8, "row": 2, "column": 0 },
+    { "sourceFrame": 9, "cell": 9, "row": 2, "column": 1 },
+    { "sourceFrame": 10, "cell": 10, "row": 2, "column": 2 },
+    { "sourceFrame": 11, "cell": 11, "row": 2, "column": 3 }
+  ],
+  "visualQA": {
+    "all12CellsPresent": true,
+    "singleRearThreeQuarterAngle": true,
+    "gestureHandedness": "Fail: reaching arm appears on the same visible side as the pouch; it must be anatomical left, opposite the anatomical-right pouch.",
+    "phaseTiming": "Fail: frame 3 jumps to full extension; cells 4-10 largely repeat full extension; frame 11 does not show the requested retraction.",
+    "pixelStyle": "Fail: red stray edge pixels and softened pixels reduce native-style fidelity.",
+    "decision": "User approved the rear three-quarter visual direction as provisional reference. Preserve findings: anatomy, phase progression and pixel-art QA remain unresolved; do not silently treat this prototype as runtime-ready animation."
+  },
+  "tool": "built-in image_gen",
+  "generatedSource": "C:/Users/Daniel/.codex/generated_images/01a14af3-b15c-7ca0-864d-3412a90ab3b0/exec-c1a2b4b3-be91-4fb9-b779-414fe2f5c01c.png"
+}

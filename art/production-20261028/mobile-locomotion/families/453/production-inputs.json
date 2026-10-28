@@ -1,0 +1,66 @@
+{
+  "archive": 453,
+  "motion_template": 397,
+  "raw_output_directory": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-774d-79c1-9bfd-2639419d2660",
+  "selected_strips": [
+    "view-0-v1",
+    "view-1-v1",
+    "view-2-v1",
+    "view-3-v2",
+    "view-4-v1"
+  ],
+  "calls": [
+    {
+      "name": "view-0-v1",
+      "id": "5cfad54e-8481-426e-97d7-5386cc087284"
+    },
+    {
+      "name": "view-1-v1",
+      "id": "5e7b64f8-2372-4f1d-8dc9-eb3feb98b5e9"
+    },
+    {
+      "name": "view-2-v1",
+      "id": "d5e7f810-49da-42b5-ace4-b604b2f1b06b"
+    },
+    {
+      "name": "view-3-v1",
+      "id": "d931ed6e-48f1-4707-98f2-158f66d62c44"
+    },
+    {
+      "name": "view-4-v1",
+      "id": "8b8c4f4e-1cf3-4a5a-9c9c-e2510e329afc"
+    },
+    {
+      "name": "view-3-v2",
+      "id": "57bad7e4-49ba-4e52-ad09-a35a4cb94a29",
+      "references": [
+        "view-3-v1.png",
+        "native-reference/view-3.png"
+      ]
+    },
+    {
+      "name": "view-1-phase-2-v2",
+      "id": "0a6e316e-7436-4d68-a391-3fc8dfd579d3",
+      "references": [
+        "view-1-v1.png",
+        "native-reference/view-1.png"
+      ]
+    }
+  ],
+  "source_overrides": [
+    {
+      "bearing": 1,
+      "phase": 2,
+      "file": "view-1-phase-2-v2.png",
+      "resolution_ratio": 1.9328063241106719,
+      "normalization": "Uniform alpha128 silhouette height matched to front-left contact0."
+    }
+  ],
+  "reference_policy": "397 motion only. Native453 identity long blonde hair/orange bodice/yellow long sleeves/dark belt/rust skirt with turquoise hem/yellow shoes, no pouches. Rear-left sleeves and invented rear buckle corrected; front-left opposite contact generated singly. Native renderer mirrors opposite views.",
+  "known_limits": [
+    "Candidate only: hair volume, face definition, torso/hip proportions and skirt trim vary. Front-left repaired contact2 is more profile-like and has coarser/larger pixel shading.",
+    "Hidden leg depth and cloth mechanics approximate; four phases omit passing intermediates.",
+    "Twelve opposite render slots are derived mirrors, not independent generations.",
+    "No runtime integration, temporal game acceptance or user approval."
+  ]
+}

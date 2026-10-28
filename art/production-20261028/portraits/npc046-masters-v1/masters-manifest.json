@@ -1,0 +1,63 @@
+{
+  "portraitRecord": 46,
+  "source": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-046.png",
+  "sourceSha256": "c6c92f4d0d3ad790c8b46258e18dfe4dba857a86d3fd893be1ece77ed592b11e",
+  "masters": [
+    {
+      "mood": "neutral",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\neutral-master.png",
+      "sha256": "517aa7a85197201d704216708949765fbe74bf9e3b2458040c8e494bd4cd7a86",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\portraits\\mobile-mouths\\split-mask-prototype\\catalog\\common-046.png",
+      "rawSha256": "c6c92f4d0d3ad790c8b46258e18dfe4dba857a86d3fd893be1ece77ed592b11e"
+    },
+    {
+      "mood": "happy",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\happy-master.png",
+      "sha256": "03dec7400e5c974cff111c55c7fd0a3b0de6dce0e596f9919812db85bb49d5cd",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\happy-raw.png",
+      "rawSha256": "ee94af89080fb540f2707ff4aba7717b9707ab47d2687f746249885afe373119"
+    },
+    {
+      "mood": "angry",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\angry-master.png",
+      "sha256": "47a3d136dc584ca3790e52d2bd08fcb3001172ceb3b7182f09e2b8fe5f2c2d9e",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\angry-raw.png",
+      "rawSha256": "07db457bbb1fc71aa0c3a778edbd5dec7a7c98bb81a2aa542bfb07d027e28bdf"
+    },
+    {
+      "mood": "sad",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\sad-master.png",
+      "sha256": "47a5bae6a0b5ce717921db942cc38b7fc2efa672ef39ff6fa7adfa081390c6c0",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\sad-raw.png",
+      "rawSha256": "428f18f5a086683ea48f1c8c8ecdd70428b596b9d359414d8381fb555ace60b7"
+    },
+    {
+      "mood": "afraid",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\afraid-master.png",
+      "sha256": "49c95e3caa17e88b1fab4ec21ed41c17474269a35dba54d3f2cf0cdb0cb0deb1",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\afraid-raw.png",
+      "rawSha256": "357df1f088bb2b15ee3c471395665e7e99e80edf31f909a626d8062664464d9b"
+    },
+    {
+      "mood": "guarded",
+      "file": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\guarded-master.png",
+      "sha256": "3a2a8ea836252195a7f007fda6f07e6b823935523393d7579db972ebd463892c",
+      "raw": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\guarded-raw.png",
+      "rawSha256": "de78f01205091a8bf74d5bf265d1d4973e679626e39eb1d80bc8901c15d78f3a"
+    }
+  ],
+  "browMask": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\art\\production-20261028\\portraits\\npc046-masters-v1\\brow-mask.png",
+  "browMaskSha256": "6997437a0adc6d03367cbb1a04330d21648fefb262efd83dcc998ea7d4fe5464",
+  "nativeApertureRows": [
+    22,
+    23
+  ],
+  "stationaryRightFromX": 32,
+  "policy": "Original-conditioned generated visible-left eyebrow only; original exposed eyeball, gold hood edge and occluded image-right side remain exact.",
+  "status": "static-candidate-review-pending",
+  "limitations": [
+    "Emotion readability limited by hood occlusion and one visible brow.",
+    "No iris invented on occluded image-right eye.",
+    "No temporal/audio/published/user acceptance."
+  ]
+}

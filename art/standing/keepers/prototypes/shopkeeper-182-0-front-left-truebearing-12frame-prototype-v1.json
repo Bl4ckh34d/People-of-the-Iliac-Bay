@@ -1,0 +1,17 @@
+{
+  "status": "visual-review-prototype; not accepted or runtime-ready",
+  "asset": "shopkeeper-182-0-front-left-truebearing-12frame-prototype-v1.png",
+  "source": "work/keeper-native-idle/182-0-all-native-frames.png",
+  "sourceArchiveRecord": "182/0",
+  "generatedDimensions": [1448, 1086],
+  "intendedLayout": "4 columns x 3 rows; frames row-major, 5 fps; native phases 0-2 rest, 3 start offer, 4 farther extension, 5-10 hold, 11 partial retraction",
+  "promptedBearing": "front-left, nose image-left",
+  "qa": [
+    "Generated sheet appears front-facing rather than a clearly true nose-image-left quarter bearing.",
+    "Output is substantially softer and higher-detail than the native hard-cluster pixel art, with colored fringe pixels.",
+    "Generated cells redraw body pixels; fixed-body invariant is not verified and sheet must not be used as body-locked animation.",
+    "Preserve as rejected direction/evidence only; do not integrate."
+  ],
+  "tool": "built-in image_gen",
+  "sourceFrameMapping": "Generated cell i is intended to correspond to native frame i, row=floor(i/4), column=i mod 4."
+}

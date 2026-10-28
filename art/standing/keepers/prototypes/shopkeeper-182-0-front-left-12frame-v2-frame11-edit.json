@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-18",
+  "status": "provisional-frame11-correction",
+  "base": "art/standing/keepers/prototypes/shopkeeper-182-0-front-left-12frame-v1.png",
+  "archive": 182,
+  "record": 0,
+  "orientation": 1,
+  "angle": "front-left three-quarter; nose points image-left",
+  "nativeSource": {
+    "frameCount": 12,
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "frame11Reference": "work/keeper-native-idle/182-0-frame-11.png",
+    "frame11Phase": "Partial retraction after full hold: visibly less extended than frame10, still away from rest.",
+    "front": "Original native frontal animation remains unchanged."
+  },
+  "file": "art/standing/keepers/prototypes/shopkeeper-182-0-front-left-12frame-v2-frame11-edit.png",
+  "dimensions": [1446, 1088],
+  "sha256": "c1ffae8e5e9670d234971226298a512a56e497dcf14b3ab7cd353a485e435f1d",
+  "layout": { "columns": 4, "rows": 3, "cellOrder": "left-to-right, top-to-bottom" },
+  "frameMapping": [
+    { "sourceFrame": 0, "cell": 0, "row": 0, "column": 0 },
+    { "sourceFrame": 1, "cell": 1, "row": 0, "column": 1 },
+    { "sourceFrame": 2, "cell": 2, "row": 0, "column": 2 },
+    { "sourceFrame": 3, "cell": 3, "row": 0, "column": 3 },
+    { "sourceFrame": 4, "cell": 4, "row": 1, "column": 0 },
+    { "sourceFrame": 5, "cell": 5, "row": 1, "column": 1 },
+    { "sourceFrame": 6, "cell": 6, "row": 1, "column": 2 },
+    { "sourceFrame": 7, "cell": 7, "row": 1, "column": 3 },
+    { "sourceFrame": 8, "cell": 8, "row": 2, "column": 0 },
+    { "sourceFrame": 9, "cell": 9, "row": 2, "column": 1 },
+    { "sourceFrame": 10, "cell": 10, "row": 2, "column": 2 },
+    { "sourceFrame": 11, "cell": 11, "row": 2, "column": 3 }
+  ],
+  "visualQA": {
+    "frame11": "Pass visually for partial retraction; hand/forearm bends back toward hip and stays away from full-rest pose. Exact native pixel equivalence is not claimed.",
+    "anatomy": "Pouch remains on image-left/anatomical-right; active arm remains image-right/anatomical-left.",
+    "preservation": "Fail exact preservation: image edit changed other cells, though same angle and general style remain.",
+    "pixelStyle": "Softened pixels and stray edge colors remain.",
+    "integration": "Provisional review sheet only."
+  }
+}

@@ -1,0 +1,728 @@
+{
+  "schemaVersion": 1,
+  "archive": 385,
+  "action": "melee-one-handed-sword",
+  "status": "candidate-eight-direction-four-phase-set",
+  "selectedUniquePoses": 32,
+  "cellSize": [
+    190,
+    260
+  ],
+  "atlas": "atlas.png",
+  "atlasSha256": "4f9362c5ca50078b0f2c1f42368cacfa62ceedf6f38654732fb1186eeb1ee766",
+  "processing": "Native-size nearest-neighbor packing. Per-strip shared scale; source-resolution-specific scale for replacement key. Measured foot center/baseline translation. Alpha and source RGB retained; no mirroring, silhouette erosion or palette substitution.",
+  "nativeReference": {
+    "nativeRecord": 5,
+    "nativePixelSize": [
+      72,
+      163
+    ],
+    "nativeRecordScaleXY": [
+      -134,
+      -134
+    ],
+    "nativeSizeBeforeOverridesGlobalScale": [
+      35,
+      78
+    ],
+    "metadataSource": "art/standing/source/native-idle.csv; art/run/pilot-385/source/records.csv"
+  },
+  "worldSizePolicy": "Canvas and foot pivot are pixels only. Native record-scaled world size, TextureReplacement override and GlobalScale remain separate; no runtime size was set.",
+  "pixelFootPivot": [
+    95,
+    244
+  ],
+  "directions": [
+    {
+      "direction": 0,
+      "bearing": "front",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "0-front-ready.png",
+          "sha256": "bbf1ebbd396120dd449757a09a4644766092331d2d9e1184aabdfaf78d8dfe13",
+          "source": "candidate-melee-front-cycle\\ready.png",
+          "sourceSha256": "4655d79b1b784578a920a264b6ca520814a506d5b47df277b1c88b5139748676",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            10,
+            3
+          ],
+          "measuredSourceFootCenterX": 85.5,
+          "measuredSourceFootBaseline": 241
+        },
+        {
+          "phase": "windup",
+          "path": "0-front-windup.png",
+          "sha256": "f58a87228fa5e55ef9355640693ef88504e0256a5b1424c38541b9a55fcdcf80",
+          "source": "candidate-melee-front-cycle\\windup.png",
+          "sourceSha256": "6b3d12fe4cfc3a98df6f741b8071b556905d42e85e643c51e5a862b6b8076996",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            10,
+            3
+          ],
+          "measuredSourceFootCenterX": 85.0,
+          "measuredSourceFootBaseline": 241
+        },
+        {
+          "phase": "strike",
+          "path": "0-front-strike.png",
+          "sha256": "5a433cb7291d32f6c6792011b46ed13c859d2be467327fa18595de93e68e4506",
+          "source": "candidate-melee-front-cycle\\strike.png",
+          "sourceSha256": "ae50fe00f715f3e6c20d1f11c56620bf6e8172b3ec4f2e4795e09b3a5c0626c7",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            -16,
+            4
+          ],
+          "measuredSourceFootCenterX": 110.5,
+          "measuredSourceFootBaseline": 240
+        },
+        {
+          "phase": "recovery",
+          "path": "0-front-recovery.png",
+          "sha256": "2bbd9c3f03421cf51964e1a52b6c941f87c6baf2d41aeef4989440eb40ef0fad",
+          "source": "candidate-melee-front-cycle\\recovery.png",
+          "sourceSha256": "ba408e0211d67110aaa1746c449dfc24967a05b33d22e9eedb25b95bd191cbc4",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            -8,
+            3
+          ],
+          "measuredSourceFootCenterX": 102.5,
+          "measuredSourceFootBaseline": 241
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": null
+    },
+    {
+      "direction": 1,
+      "bearing": "front-left",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "1-front-left-ready.png",
+          "sha256": "9c63f2bc1ea6cfb5c72c6f20091a40485977c0a01f3c19570588983498775b0b",
+          "source": "385-melee-front-left-cycle-v1.png",
+          "sourceSha256": "8f41017c3c0bb23a259705eddd5d5dd9fd40b869601ca96e0eab6b30dc2a2318",
+          "sourceRect": [
+            0,
+            0,
+            517,
+            760
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            2,
+            7
+          ],
+          "measuredSourceFootCenterX": 286.0,
+          "measuredSourceFootBaseline": 728
+        },
+        {
+          "phase": "windup",
+          "path": "1-front-left-windup.png",
+          "sha256": "b8ffc541a9730760d78e77c7c0b7111ca8694c64949b110564ebbcdc6f6f751c",
+          "source": "385-melee-front-left-cycle-v1.png",
+          "sourceSha256": "8f41017c3c0bb23a259705eddd5d5dd9fd40b869601ca96e0eab6b30dc2a2318",
+          "sourceRect": [
+            517,
+            0,
+            1034,
+            760
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            2,
+            7
+          ],
+          "measuredSourceFootCenterX": 285.5,
+          "measuredSourceFootBaseline": 728
+        },
+        {
+          "phase": "strike",
+          "path": "1-front-left-strike.png",
+          "sha256": "904ea864d9cf402d765e5ff5b4580abdefd7d47d6e119bd787438e6866f889c8",
+          "source": "385-melee-front-left-cycle-v1.png",
+          "sourceSha256": "8f41017c3c0bb23a259705eddd5d5dd9fd40b869601ca96e0eab6b30dc2a2318",
+          "sourceRect": [
+            1034,
+            0,
+            1551,
+            760
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            -7,
+            7
+          ],
+          "measuredSourceFootCenterX": 313.5,
+          "measuredSourceFootBaseline": 728
+        },
+        {
+          "phase": "recovery",
+          "path": "1-front-left-recovery.png",
+          "sha256": "31a47ac2cea842484398c1a84f8432679b654aa22b7f8ab3ca75e51cf6bc08cd",
+          "source": "385-melee-front-left-cycle-v1.png",
+          "sourceSha256": "8f41017c3c0bb23a259705eddd5d5dd9fd40b869601ca96e0eab6b30dc2a2318",
+          "sourceRect": [
+            1551,
+            0,
+            2068,
+            760
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            -7,
+            7
+          ],
+          "measuredSourceFootCenterX": 313.5,
+          "measuredSourceFootBaseline": 728
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": null
+    },
+    {
+      "direction": 2,
+      "bearing": "left-profile",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "2-left-profile-ready.png",
+          "sha256": "bd64b8f9e15bba4084b75d1d26b7498778e02bd5106cbb8625e3c8e3b4c550ce",
+          "source": "385-melee-left-cycle-v1.png",
+          "sourceSha256": "76ca08e4864e3d8d0ba64c0c3f488d18a5417914667beaeaab263eacab197bb6",
+          "sourceRect": [
+            0,
+            0,
+            520,
+            756
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            12,
+            12
+          ],
+          "measuredSourceFootCenterX": 254.5,
+          "measuredSourceFootBaseline": 714
+        },
+        {
+          "phase": "windup",
+          "path": "2-left-profile-windup.png",
+          "sha256": "5b0f12023cec52fdbd5743bcecb30bcac17fbfa9c2260789fb2c6ef5ee0896c5",
+          "source": "385-melee-left-cycle-v1.png",
+          "sourceSha256": "76ca08e4864e3d8d0ba64c0c3f488d18a5417914667beaeaab263eacab197bb6",
+          "sourceRect": [
+            520,
+            0,
+            950,
+            756
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            9,
+            12
+          ],
+          "measuredSourceFootCenterX": 264.5,
+          "measuredSourceFootBaseline": 714
+        },
+        {
+          "phase": "strike",
+          "path": "2-left-profile-strike.png",
+          "sha256": "617c575e321c476a1c9e72e5a0317c552d68820615dce1a7b13b549a5c867118",
+          "source": "385-melee-left-cycle-v1.png",
+          "sourceSha256": "76ca08e4864e3d8d0ba64c0c3f488d18a5417914667beaeaab263eacab197bb6",
+          "sourceRect": [
+            950,
+            0,
+            1560,
+            756
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            -42,
+            12
+          ],
+          "measuredSourceFootCenterX": 422.5,
+          "measuredSourceFootBaseline": 714
+        },
+        {
+          "phase": "recovery",
+          "path": "2-left-profile-recovery.png",
+          "sha256": "e0dc2efbec25b61f983972a3900cd84309ccec6687460ed0d2804bb44f8f7d41",
+          "source": "385-melee-left-cycle-v1.png",
+          "sourceSha256": "76ca08e4864e3d8d0ba64c0c3f488d18a5417914667beaeaab263eacab197bb6",
+          "sourceRect": [
+            1560,
+            0,
+            2079,
+            756
+          ],
+          "scale": 0.3253493013972056,
+          "translation": [
+            -13,
+            12
+          ],
+          "measuredSourceFootCenterX": 330.5,
+          "measuredSourceFootBaseline": 714
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": null
+    },
+    {
+      "direction": 3,
+      "bearing": "rear-left",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "3-rear-left-ready.png",
+          "sha256": "b55b874c66049e5fc50a243522d9b39c7cdaf5472efb97c958b1bc08da5a869b",
+          "source": "385-melee-rear-left-cycle-v1.png",
+          "sourceSha256": "e010f3c6c28abd8f1f36d8644e4f71a11a133d8d313de7ced87db9d59ac9015a",
+          "sourceRect": [
+            0,
+            0,
+            500,
+            761
+          ],
+          "scale": 0.3299595141700405,
+          "translation": [
+            23,
+            6
+          ],
+          "measuredSourceFootCenterX": 217.0,
+          "measuredSourceFootBaseline": 722
+        },
+        {
+          "phase": "windup",
+          "path": "3-rear-left-windup.png",
+          "sha256": "0d6924924cf75f7b71304a3008f553fbf773074323a6f16cea5141446eb3a74c",
+          "source": "385-melee-rear-left-cycle-v1.png",
+          "sourceSha256": "e010f3c6c28abd8f1f36d8644e4f71a11a133d8d313de7ced87db9d59ac9015a",
+          "sourceRect": [
+            520,
+            0,
+            960,
+            761
+          ],
+          "scale": 0.3299595141700405,
+          "translation": [
+            20,
+            6
+          ],
+          "measuredSourceFootCenterX": 227.5,
+          "measuredSourceFootBaseline": 722
+        },
+        {
+          "phase": "strike",
+          "path": "3-rear-left-strike.png",
+          "sha256": "6317b10f519284fad4f87ea7411dec1f7b377937113752ef9398e9df7199a122",
+          "source": "385-melee-rear-left-key-strike-v2.png",
+          "sourceSha256": "8e24fafaad21e17a3190d248a616483cd701945d13a17c3b8291e9785b645026",
+          "sourceRect": null,
+          "scale": 0.1724867724867725,
+          "translation": [
+            11,
+            -4
+          ],
+          "measuredSourceFootCenterX": 488.5,
+          "measuredSourceFootBaseline": 1437
+        },
+        {
+          "phase": "recovery",
+          "path": "3-rear-left-recovery.png",
+          "sha256": "f090ea66509aeef136da260db9e9cf68d43bcc7310eee5d66fde9a5dcc448c28",
+          "source": "385-melee-rear-left-cycle-v1.png",
+          "sourceSha256": "e010f3c6c28abd8f1f36d8644e4f71a11a133d8d313de7ced87db9d59ac9015a",
+          "sourceRect": [
+            1510,
+            0,
+            2067,
+            761
+          ],
+          "scale": 0.3299595141700405,
+          "translation": [
+            -15,
+            6
+          ],
+          "measuredSourceFootCenterX": 333.5,
+          "measuredSourceFootBaseline": 722
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": "Far right-arm grip partially occluded in strike/recovery; candidate needs final occlusion review."
+    },
+    {
+      "direction": 4,
+      "bearing": "back",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "4-back-ready.png",
+          "sha256": "5bb3bd1bedd9b79db9c17d9130a26d08f62f34ef47b8c8a652f3edcd2a8d0763",
+          "source": "385-melee-back-cycle-v1.png",
+          "sourceSha256": "01062dea681e32df1998232d9894347b99557eab0ea2512f912782814100357c",
+          "sourceRect": [
+            0,
+            0,
+            517,
+            760
+          ],
+          "scale": 0.3299595141700405,
+          "translation": [
+            15,
+            5
+          ],
+          "measuredSourceFootCenterX": 242.5,
+          "measuredSourceFootBaseline": 725
+        },
+        {
+          "phase": "windup",
+          "path": "4-back-windup.png",
+          "sha256": "79599638761c7be74ed81d8990f4d15067ffb654cf0f8198d74ba0f70f30ec6a",
+          "source": "385-melee-back-cycle-v1.png",
+          "sourceSha256": "01062dea681e32df1998232d9894347b99557eab0ea2512f912782814100357c",
+          "sourceRect": [
+            517,
+            0,
+            1034,
+            760
+          ],
+          "scale": 0.3299595141700405,
+          "translation": [
+            15,
+            5
+          ],
+          "measuredSourceFootCenterX": 242.0,
+          "measuredSourceFootBaseline": 724
+        },
+        {
+          "phase": "strike",
+          "path": "4-back-strike.png",
+          "sha256": "9059b4efb51984fec15a61d2ac3181acc41dd3f0301fb08005663640e0fb0cc8",
+          "source": "385-melee-back-cycle-v1.png",
+          "sourceSha256": "01062dea681e32df1998232d9894347b99557eab0ea2512f912782814100357c",
+          "sourceRect": [
+            1034,
+            0,
+            1570,
+            760
+          ],
+          "scale": 0.3299595141700405,
+          "translation": [
+            15,
+            5
+          ],
+          "measuredSourceFootCenterX": 242.5,
+          "measuredSourceFootBaseline": 724
+        },
+        {
+          "phase": "recovery",
+          "path": "4-back-recovery.png",
+          "sha256": "e57b9f25a0d7324b65cb082c912ad629a1238b5075c23a84f9dcd4ff3c66012d",
+          "source": "385-melee-back-cycle-v1.png",
+          "sourceSha256": "01062dea681e32df1998232d9894347b99557eab0ea2512f912782814100357c",
+          "sourceRect": [
+            1570,
+            0,
+            2068,
+            760
+          ],
+          "scale": 0.3299595141700405,
+          "translation": [
+            15,
+            5
+          ],
+          "measuredSourceFootCenterX": 242.5,
+          "measuredSourceFootBaseline": 724
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": null
+    },
+    {
+      "direction": 5,
+      "bearing": "rear-right",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "5-rear-right-ready.png",
+          "sha256": "cc236276cc63c551bc67987b33aa275c6f9c3544d45a5d58adaa093801f972d2",
+          "source": "385-melee-rear-right-cycle-v2.png",
+          "sourceSha256": "06a49ec6709e5b54006aef5ab73693fde6c1849ba0caab06557a2944ba081d88",
+          "sourceRect": [
+            0,
+            0,
+            517,
+            760
+          ],
+          "scale": 0.3313008130081301,
+          "translation": [
+            16,
+            9
+          ],
+          "measuredSourceFootCenterX": 237.0,
+          "measuredSourceFootBaseline": 709
+        },
+        {
+          "phase": "windup",
+          "path": "5-rear-right-windup.png",
+          "sha256": "8b2114245e0c2f0cfbfa3a5661085b3f1d3dbb65c7ce0b06025bb0add247de45",
+          "source": "385-melee-rear-right-cycle-v2.png",
+          "sourceSha256": "06a49ec6709e5b54006aef5ab73693fde6c1849ba0caab06557a2944ba081d88",
+          "sourceRect": [
+            517,
+            0,
+            1034,
+            760
+          ],
+          "scale": 0.3313008130081301,
+          "translation": [
+            15,
+            9
+          ],
+          "measuredSourceFootCenterX": 241.0,
+          "measuredSourceFootBaseline": 709
+        },
+        {
+          "phase": "strike",
+          "path": "5-rear-right-strike.png",
+          "sha256": "98684f8ff16922f9f08ca6b75c520a5fb524b13a246bb90b373c87bf5613f562",
+          "source": "385-melee-rear-right-cycle-v2.png",
+          "sourceSha256": "06a49ec6709e5b54006aef5ab73693fde6c1849ba0caab06557a2944ba081d88",
+          "sourceRect": [
+            1034,
+            0,
+            1590,
+            760
+          ],
+          "scale": 0.3313008130081301,
+          "translation": [
+            22,
+            9
+          ],
+          "measuredSourceFootCenterX": 221.5,
+          "measuredSourceFootBaseline": 709
+        },
+        {
+          "phase": "recovery",
+          "path": "5-rear-right-recovery.png",
+          "sha256": "53509b40a27126aef73e54f3e7c06feb9c210cd0655abbeffa61ccdfba84dbe7",
+          "source": "385-melee-rear-right-cycle-v2.png",
+          "sourceSha256": "06a49ec6709e5b54006aef5ab73693fde6c1849ba0caab06557a2944ba081d88",
+          "sourceRect": [
+            1590,
+            0,
+            2068,
+            760
+          ],
+          "scale": 0.3313008130081301,
+          "translation": [
+            25,
+            9
+          ],
+          "measuredSourceFootCenterX": 212.0,
+          "measuredSourceFootBaseline": 710
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": null
+    },
+    {
+      "direction": 6,
+      "bearing": "right-profile",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "6-right-profile-ready.png",
+          "sha256": "59876d37c17be3286eb8c17cc6604fa4bfb86d33842c04b319adceb5eff4c95f",
+          "source": "candidate-melee-right-cycle\\ready.png",
+          "sourceSha256": "4be46142e5a61dd876fb3eb7ce51076e0821b36016d407fbb250b7aaad8b4a45",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            32,
+            9
+          ],
+          "measuredSourceFootCenterX": 62.5,
+          "measuredSourceFootBaseline": 235
+        },
+        {
+          "phase": "windup",
+          "path": "6-right-profile-windup.png",
+          "sha256": "21c36c528608b2141693f751aaee99d023ac1f6f642de88407c727c4f47bf403",
+          "source": "candidate-melee-right-cycle\\windup.png",
+          "sourceSha256": "72fb10f7e830751ea6860c0f28187c93a562ce0e26a956c3d635b59c914dd861",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            32,
+            9
+          ],
+          "measuredSourceFootCenterX": 62.5,
+          "measuredSourceFootBaseline": 235
+        },
+        {
+          "phase": "strike",
+          "path": "6-right-profile-strike.png",
+          "sha256": "d8350e979709622a34d6a90aefc26a41153c6aa230ad6286eb62e82bcd2667bc",
+          "source": "candidate-melee-right-cycle\\strike.png",
+          "sourceSha256": "8e0bf0ca023ba6655179b7d8d2e782e4e27c624694a92c5e24dd90479e12fc2d",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            32,
+            9
+          ],
+          "measuredSourceFootCenterX": 62.5,
+          "measuredSourceFootBaseline": 235
+        },
+        {
+          "phase": "recovery",
+          "path": "6-right-profile-recovery.png",
+          "sha256": "e88ecd396939b57a16ea9e9f374d25f32825570df73acd8d1675a825a883aa61",
+          "source": "candidate-melee-right-cycle\\recovery.png",
+          "sourceSha256": "9e5d0c56ff7ab7693a5b726859038064ff0c732093ea74e2bae264cb6ec27835",
+          "sourceRect": null,
+          "scale": 1.0,
+          "translation": [
+            32,
+            9
+          ],
+          "measuredSourceFootCenterX": 62.5,
+          "measuredSourceFootBaseline": 235
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": null
+    },
+    {
+      "direction": 7,
+      "bearing": "front-right",
+      "phaseCount": 4,
+      "weaponHand": "anatomical right",
+      "frames": [
+        {
+          "phase": "ready",
+          "path": "7-front-right-ready.png",
+          "sha256": "3e60a4c219249c398d282397427db0e3b9b0e6acaaf7d0232babfc3da50861cf",
+          "source": "385-melee-front-right-cycle-v1.png",
+          "sourceSha256": "16ec5793c3348484e9b22451002a7fbcd07568d63277686048a88f724359e669",
+          "sourceRect": [
+            0,
+            0,
+            517,
+            760
+          ],
+          "scale": 0.32796780684104626,
+          "translation": [
+            -3,
+            12
+          ],
+          "measuredSourceFootCenterX": 298.0,
+          "measuredSourceFootBaseline": 708
+        },
+        {
+          "phase": "windup",
+          "path": "7-front-right-windup.png",
+          "sha256": "8e50482e3130c7a7c6dfd93e3a0a40bf4fb4488ee45c7c36c54b52e2c5815ded",
+          "source": "385-melee-front-right-cycle-v1.png",
+          "sourceSha256": "16ec5793c3348484e9b22451002a7fbcd07568d63277686048a88f724359e669",
+          "sourceRect": [
+            517,
+            0,
+            1034,
+            760
+          ],
+          "scale": 0.32796780684104626,
+          "translation": [
+            -5,
+            12
+          ],
+          "measuredSourceFootCenterX": 303.5,
+          "measuredSourceFootBaseline": 708
+        },
+        {
+          "phase": "strike",
+          "path": "7-front-right-strike.png",
+          "sha256": "63bd71103dcd3ef403bebc42eb453aa0cbd07e34ab2deaaee6be8150e7b21be9",
+          "source": "385-melee-front-right-cycle-v1.png",
+          "sourceSha256": "16ec5793c3348484e9b22451002a7fbcd07568d63277686048a88f724359e669",
+          "sourceRect": [
+            1034,
+            0,
+            1580,
+            760
+          ],
+          "scale": 0.32796780684104626,
+          "translation": [
+            6,
+            12
+          ],
+          "measuredSourceFootCenterX": 270.0,
+          "measuredSourceFootBaseline": 708
+        },
+        {
+          "phase": "recovery",
+          "path": "7-front-right-recovery.png",
+          "sha256": "2ef2304c7ebb68d678e675830892db8cfbfab89baae930e7a4e3993aa85bc857",
+          "source": "385-melee-front-right-cycle-v1.png",
+          "sourceSha256": "16ec5793c3348484e9b22451002a7fbcd07568d63277686048a88f724359e669",
+          "sourceRect": [
+            1580,
+            0,
+            2069,
+            760
+          ],
+          "scale": 0.32796780684104626,
+          "translation": [
+            21,
+            12
+          ],
+          "measuredSourceFootCenterX": 227.0,
+          "measuredSourceFootBaseline": 708
+        }
+      ],
+      "review": "candidate reviewed at native size; no user/runtime acceptance",
+      "specificLimit": null
+    }
+  ],
+  "states": {
+    "candidate": true,
+    "generated": true,
+    "technically_checked": true,
+    "visually_reviewed": true,
+    "integrated": false,
+    "user_approved": false
+  },
+  "limitations": [
+    "No runtime playback or user approval.",
+    "Minor palette/anatomical differences remain between generated views.",
+    "Partial alpha/fringes retained.",
+    "Rear-left original strip strike rejected for switching hands; selected strike replaced with bound correction.",
+    "385 rear-right v1 rear pouch removed in v2 after direct original native records3/4 inspection.",
+    "This manifest covers one appearance only; broader coverage is tracked separately."
+  ]
+}

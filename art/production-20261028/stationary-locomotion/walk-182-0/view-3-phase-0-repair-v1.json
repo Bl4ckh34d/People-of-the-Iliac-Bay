@@ -1,0 +1,16 @@
+{
+  "view": 3,
+  "name": "rear-left",
+  "targetPhase": 0,
+  "sourceCell": 0,
+  "fix": "The character faces AWAY toward UPPER LEFT. Correct to LEFT-leg CONTACT. Visible NEAR LEFT leg reaches FORWARD toward image LEFT, heel grounded; FAR RIGHT leg trails toward image RIGHT, toe grounded and heel lifted. The large NEAR cyan sleeve along image LEFT edge must swing BACK toward image RIGHT, with near hand behind hip. The FAR right arm swings FORWARD toward image LEFT, mostly occluded by back/torso. Reverse the input near-arm-forward silhouette. Keep back of vest/back of head dominant, only tiny profile edge; do not turn toward camera.",
+  "status": "generated-awaiting-visual-review",
+  "file": "view-3-phase-0-repair-v1.png",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-e21bc2b3-d3d0-4770-b036-35155a8a8be3.png",
+  "prompt": "Precise single-keyframe limb-pose edit. Image is exact edit target and source identity/camera. Keep EXACT same canvas dimensions, transparent margins, head position, head/face silhouette, hair, green vest/torso, belt/pouch, body scale, colors and pixel density. Output only ONE full-body character in this same camera. Change ONLY arms/legs as follows: The character faces AWAY toward UPPER LEFT. Correct to LEFT-leg CONTACT. Visible NEAR LEFT leg reaches FORWARD toward image LEFT, heel grounded; FAR RIGHT leg trails toward image RIGHT, toe grounded and heel lifted. The large NEAR cyan sleeve along image LEFT edge must swing BACK toward image RIGHT, with near hand behind hip. The FAR right arm swings FORWARD toward image LEFT, mostly occluded by back/torso. Reverse the input near-arm-forward silhouette. Keep back of vest/back of head dominant, only tiny profile edge; do not turn toward camera. Maintain same grounded-foot baseline and same torso/head anchor. Modest ordinary WALK, no running/flight. Correct real limb occlusion, no extra arms/legs, no mirroring of body or pouch. Do not move or redraw the face, do not change clothing/palette or camera. Original coarse crisp pixels and actual transparent background; no text, floor or shadows. The only requested difference is the specified genuine opposite gait phase.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/keyframe-inputs/view-3-cell-0.png"
+  ],
+  "sourceSheet": "view-3-rear-left-v1.png",
+  "tool": "built-in image_gen"
+}

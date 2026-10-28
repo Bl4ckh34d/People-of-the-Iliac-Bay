@@ -1,0 +1,141 @@
+{
+  "status": "anatomically-repaired-profile-swim-review-candidate",
+  "appearance": 381,
+  "state": "swimming",
+  "bearing": 6,
+  "bearingName": "right-profile",
+  "frameCount": 4,
+  "pixelCanvas": [
+    256,
+    128
+  ],
+  "pixelScale": 0.10194174757281553,
+  "pixelScaleBasis": "One shared factor21/206 derived from corrected glide head width. No per-pose size fitting or canvas stretching.",
+  "frames": [
+    {
+      "phase": 0,
+      "name": "glide",
+      "file": "phase-0-glide.png",
+      "sha256": "e2eea5ff485c523115d92b31f041987648d1c66bc7a72151a65f92e0e877eef3",
+      "generatedSource": "381-swim-right-glide-repair-generated-v1.png",
+      "generatedSha256": "712bb641fca6fd81e0117ad25553a79d9b8cdeb664ffa2f767ea510049d4c09a",
+      "generatedSize": [
+        2172,
+        724
+      ],
+      "pixelScale": 0.10194174757281553,
+      "headWidthAtAuditCrossSection": 205,
+      "expectedPackedHeadWidth": 20.898058252427184,
+      "placement": [
+        -1,
+        13
+      ],
+      "alpha128Bounds": [
+        14,
+        28,
+        208,
+        71
+      ],
+      "medianCutoutAlpha": 253.0
+    },
+    {
+      "phase": 1,
+      "name": "pull",
+      "file": "phase-1-pull.png",
+      "sha256": "583bb3bc402bf6247830a0736a3e740eb3bbfbf55ab8c539c6a425d619302a42",
+      "generatedSource": "381-swim-right-pull-repair-generated-v1.png",
+      "generatedSha256": "9fc7b7c725478b74d6a728c9c791111a6a4e5173bab579ed985c5ae5c310704b",
+      "generatedSize": [
+        2164,
+        727
+      ],
+      "pixelScale": 0.10194174757281553,
+      "headWidthAtAuditCrossSection": 215,
+      "expectedPackedHeadWidth": 21.91747572815534,
+      "placement": [
+        -3,
+        18
+      ],
+      "alpha128Bounds": [
+        16,
+        28,
+        167,
+        77
+      ],
+      "medianCutoutAlpha": 253.0
+    },
+    {
+      "phase": 2,
+      "name": "recovery",
+      "file": "phase-2-recovery.png",
+      "sha256": "e649a3b414d90624fa702d4cd63d4fd74a6247bbb682d77feebebbc0fc1ed7cb",
+      "generatedSource": "381-swim-right-recovery-repair-generated-v1.png",
+      "generatedSha256": "11e33e6d016c2d1278efb7f350a316dc299d544ec1d6cb5d2a5ad0b65749d679",
+      "generatedSize": [
+        2172,
+        724
+      ],
+      "pixelScale": 0.10194174757281553,
+      "headWidthAtAuditCrossSection": 217,
+      "expectedPackedHeadWidth": 22.12135922330097,
+      "placement": [
+        -13,
+        17
+      ],
+      "alpha128Bounds": [
+        22,
+        28,
+        171,
+        81
+      ],
+      "medianCutoutAlpha": 253.0
+    },
+    {
+      "phase": 3,
+      "name": "kick",
+      "file": "phase-3-kick.png",
+      "sha256": "d71da9d00f5588c8ec245b410a08efb1b1e0ea3ec3e368ef87d47857a3e9da5a",
+      "generatedSource": "381-swim-right-kick-repair-generated-v1.png",
+      "generatedSha256": "eeb53094387df9c4d8573e24b56d0d9514db114f805e730dd2b220d275f12a2e",
+      "generatedSize": [
+        2172,
+        724
+      ],
+      "pixelScale": 0.10194174757281553,
+      "headWidthAtAuditCrossSection": 205,
+      "expectedPackedHeadWidth": 20.898058252427184,
+      "placement": [
+        -1,
+        13
+      ],
+      "alpha128Bounds": [
+        14,
+        28,
+        211,
+        71
+      ],
+      "medianCutoutAlpha": 253.0
+    }
+  ],
+  "atlasSha256": "e0268b2caa5cc1c458d844bc64964e22995c2da90e6e6ff1344a233a411066b3",
+  "technicalChecks": {
+    "rgba": true,
+    "distinctPhases": 4,
+    "noAlpha128Clipping": true,
+    "atlasExact": true,
+    "identicalPixelScaleAllPhases": true
+  },
+  "visualReview": "pending-parent-four-phase-review",
+  "worldScaleContract": "../native-scale-contract.json",
+  "intendedActorWorldHeightBeforeGlobalScale": 79,
+  "worldScaleApplied": false,
+  "runtimeIntegrated": false,
+  "userApproved": false,
+  "masterReview": "Parent inspected corrected glide native-before-after and accepted it as a production reference, not final user approval.",
+  "knownLimits": [
+    "Only right-profile4phase is generated on corrected anatomy; other bearings remain missing.",
+    "Source-conditioned new phases vary head width by about6percent; shared scale retains that difference rather than distorting each pose.",
+    "No native NPC swim waterline renderer exists in reviewed sources; no water is baked into art.",
+    "Exact palette, full temporal motion and runtime world mapping remain unaccepted."
+  ]
+}

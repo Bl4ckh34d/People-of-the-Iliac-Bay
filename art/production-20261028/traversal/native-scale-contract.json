@@ -1,0 +1,13 @@
+{
+  "appearance": 381,
+  "nativeFormula": "size + int(size * scale / 256), with C# integer truncation toward zero; then multiply MeshReader.GlobalScale",
+  "codeSource": "daggerfall-unity/Assets/Scripts/Internal/MobilePersonBillboard.cs:321",
+  "walking": {"pixelHeight": 110, "scaleY": -70, "heightBeforeGlobalScale": 80},
+  "idle": {"pixelHeight": 165, "scaleY": -134, "heightBeforeGlobalScale": 79},
+  "interpretation": "The native110px walking and165px idle sources have nearly equal actor world height. Pixel height alone is not evidence of an actor size change.",
+  "intendedActorWorldHeightBeforeGlobalScale": 79,
+  "generatedRuntimeScaleApplied": false,
+  "generatedRuntimeScaleValidated": false,
+  "integrationRequirement": "Keep source-relative anatomy, animation anchors and native actor world height distinct. Transparent canvas dimensions or a crouched/swimming silhouette bounding box must not be normalized to standing world height. Select the runtime mapping from a common body reference, then retain it across phases.",
+  "evidence": ["native-idle.csv381record5scaleY=-134", "parent verified native walking record scaleY=-70", "CacheRecordSizesAndFrames code re-read28October2026"]
+}

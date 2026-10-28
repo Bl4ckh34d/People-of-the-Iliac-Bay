@@ -1,0 +1,35 @@
+﻿{
+    "schemaVersion":  1,
+    "createdUtc":  "2026-10-28T05:30:57.8781095Z",
+    "portraitRecord":  425,
+    "bank":  "TFAC00I0.RCI",
+    "part":  "mouth",
+    "emotion":  "neutral",
+    "prompt":  "Create Daggerfall NPC425 nine neutral speech lower-face frames using the exact reference3x3grid. Each cell ENTIRE64x29lowerhalf, composition identical, mouth center at fullface x32,y43. Keep skin tone, red-brown lips, nose/chin/jaw/hair/neck/background unmoved. No eyes/fullheads. Row-major A B C / D E F / G H X. A closed pressed P/B/M, B narrow consonant/EE opening nearly together teeth, C medium unrounded EH/AE, D genuinely tall open AA by LOWER jaw/lip opening, E slightly rounded AO/ER narrower than C but NOT tiny pucker, F small puckered UW/OW/W, G upper incisors touching raised lower lip for F/V (NOT broad gritted teeth), H tongue raised just behind upper teeth for L opening betweenC andD, X relaxed closed exactreference. Upper teeth stay at SAME verticalheight in B/C/D/E/G/H, under upperlip native lowerrow7/full42; never lift teeth for wider opening. D taller than C, tongue H distinct fromD. Preserve subtle original pixel texture and lowcontrast palette. No bright tooth banner, no extra makeup, no beard, no labels/dividers/spacing, no percell zoom. Exact3equalcolumns3equalrows, output64:29atlasaspect.",
+    "outputHint":  "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-73436dfe-6539-4127-b4b7-70653584f857.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "generatedPath":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-73436dfe-6539-4127-b4b7-70653584f857.png",
+    "sourceOriginal":  {
+                           "path":  "original.png",
+                           "sha256":  "ee7110bff683f87ea4d27b216c116519756aab8c96e8b6239a812d6093d6cfde",
+                           "width":  64,
+                           "height":  64
+                       },
+    "referenceGrid":  {
+                          "path":  "mouth-reference-grid.png",
+                          "sha256":  "9c809c50fcd59e48e4b31b762093ce99b3dc9eab85d46c70ab6f548984097450",
+                          "width":  1536,
+                          "height":  696
+                      },
+    "generator":  {
+                      "path":  "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-73436dfe-6539-4127-b4b7-70653584f857.png",
+                      "sha256":  "d8c9eb601aae2494a4f1e0b924bc76152b0072adc0ab4c3aecb6188802d5f2f0",
+                      "width":  1863,
+                      "height":  844
+                  },
+    "raw":  {
+                "path":  "mouth/neutral/raw.png",
+                "sha256":  "d8c9eb601aae2494a4f1e0b924bc76152b0072adc0ab4c3aecb6188802d5f2f0",
+                "width":  1863,
+                "height":  844
+            }
+}

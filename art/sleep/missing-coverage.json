@@ -1,0 +1,2979 @@
+{
+  "date": "2026-10-18",
+  "tool": "built-in image_gen",
+  "existingMappingsPreserved": 215,
+  "newMappings": 111,
+  "newDistinctImages": 109,
+  "totalMappings": 326,
+  "totalDistinctImages": 300,
+  "providers": {
+    "elves & beastfolk - replaces": {
+      "guid": "b4cd53b2-2517-4ed7-9efc-1be21b2643a7",
+      "title": "Elves & Beastfolk - Replaces",
+      "version": "1.0"
+    },
+    "elves & beastfolk - resources": {
+      "guid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+      "title": "Elves & Beastfolk - Resources",
+      "version": "1.1"
+    },
+    "lively cities": {
+      "guid": "8445fd1c-7455-4c18-8850-70e1416c5c4f",
+      "title": "Lively Cities",
+      "version": "1.3.4"
+    },
+    "rmb resource pack": {
+      "guid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+      "title": "RMB Resource Pack",
+      "version": "0.3.0"
+    }
+  },
+  "batches": [
+    {
+      "batch": 0,
+      "file": "art\\sleep\\topdown-missing-00.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-00.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-4dae842f-56dc-4b7c-8e8f-863dcbdaa32d.png",
+      "prompt": "Use case: identity-preserve. Asset: Daggerfall sleeping NPC atlas. Image1 is approved existing overhead sleeper geometry/style reference; do not recreate those people. Image2 contains ONLY the EIGHT currently missing original adult NPC head identity references, read left-to-right top row then bottom row. Create exactly FOUR equal columns by TWO equal rows on square canvas. Eight complete distinct sleepers, one centered per cell, with generous transparent margins. Straight top-down view, head TOP, covered feet BOTTOM. Total silhouette about2.35 times width, match image1 head/body ratio. Thick muted moss/olive GREEN blanket covers ENTIRE body from neck to toes; small WHITE pillow behind head. Only head visible. Eyes fully closed, peaceful sleep. Preserve each image2 adult woman's skin tone, exact blonde/brown/black hair and headband, hair silhouette and apparent age; no invented beards, crowns, hats. Cell1 light skin pale blonde shoulder hair; cell2 light warm skin long honey-blonde hair; cell3 tanned skin brown-blonde hair; cell4 tanned skin long dark blonde-brown hair; cell5 dark brown skin black shoulder hair; cell6 fair skin blonde hair; cell7 fair skin short blonde hair; cell8 dark brown skin long black hair with narrow gold headband. Coarse 1996 pixel-art, limited color clusters, crisp pixels, not smooth modern art. Each head/pillow/blanket forms one complete contiguous sprite. No clothes, hands, limbs, feet, exposed torso, props, bed frame, perspective, text, labels, grid, background shadows or checkerboard. Output genuine alpha transparency.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-00.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 5,
+          "cell": 0,
+          "sourcePixelHash": "1c8c8eada1791e542dd1271b870b57fd25fb7a891195b54c037c38853b488e63",
+          "sourceDimensions": [
+            53,
+            80
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-5.png"
+        },
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 6,
+          "cell": 1,
+          "sourcePixelHash": "293ef496e0e5dc9195335df16270036038fa1c248d8f1d974ec08330c3fcc601",
+          "sourceDimensions": [
+            37,
+            79
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-6.png"
+        },
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 7,
+          "cell": 2,
+          "sourcePixelHash": "7ce4100bf908a1ccfc122334919b726b5aa367c7f90d68f6f93e741120f07776",
+          "sourceDimensions": [
+            33,
+            81
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-7.png"
+        },
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 8,
+          "cell": 3,
+          "sourcePixelHash": "bee4327ec35cb6ed2cb8a9eb0dd0300509a3f0d2a34c27d88ad96794ddeb40b9",
+          "sourceDimensions": [
+            39,
+            80
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-8.png"
+        },
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 9,
+          "cell": 4,
+          "sourcePixelHash": "df6a153e5efc4a747b43c0f4179767eb84a01b44ebd69998017bae23e5fc0bc8",
+          "sourceDimensions": [
+            29,
+            80
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-9.png"
+        },
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 10,
+          "cell": 5,
+          "sourcePixelHash": "84d61accdaf5adb78d7369e666adc7f65b61eb3cf9f49ff968822b1b6cde8a0a",
+          "sourceDimensions": [
+            40,
+            75
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-10.png"
+        },
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 11,
+          "cell": 6,
+          "sourcePixelHash": "37bd011d990f4d07c80fa47fdb781f2e97e9e24bf55231d8143960f504dc0798",
+          "sourceDimensions": [
+            36,
+            53
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-11.png"
+        },
+        {
+          "provider": "vanilla",
+          "providerGuid": "",
+          "archive": 184,
+          "record": 12,
+          "cell": 7,
+          "sourcePixelHash": "65d2578ac4894ee8936399ce3ebd5ca485199f0a67ebae28df30dbbf41e7b28f",
+          "sourceDimensions": [
+            35,
+            44
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-source\\flat-184-12.png"
+        }
+      ],
+      "pngSha256": "4990d7f26e303c2ffd2721c10c2b741b1c52f9150c007fe6b5861df3266bc4a5",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              42,
+              48,
+              271,
+              598
+            ],
+            "ratio": 2.4017467248908297
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              355,
+              48,
+              585,
+              598
+            ],
+            "ratio": 2.391304347826087
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              669,
+              48,
+              898,
+              598
+            ],
+            "ratio": 2.4017467248908297
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              982,
+              48,
+              1212,
+              598
+            ],
+            "ratio": 2.391304347826087
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              42,
+              670,
+              271,
+              1219
+            ],
+            "ratio": 2.3973799126637556
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              355,
+              670,
+              585,
+              1219
+            ],
+            "ratio": 2.3869565217391306
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              669,
+              671,
+              898,
+              1218
+            ],
+            "ratio": 2.388646288209607
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              982,
+              669,
+              1212,
+              1219
+            ],
+            "ratio": 2.391304347826087
+          }
+        ]
+      }
+    },
+    {
+      "batch": 1,
+      "file": "art\\sleep\\topdown-missing-01.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-01.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-59b71822-040c-4fd2-91d3-c86a8d245eb6.png",
+      "prompt": "Use case: identity-preserve. Asset: Daggerfall Unity sleeping NPC atlas. Image1 is existing approved sleeper geometry/style reference ONLY; do not recreate its people. Image2 contains eight newly missing actual installed-mod NPC appearances; use each head/face as exact identity reference, read left-to-right top row then bottom row. Create square transparent canvas with EXACTLY FOUR equal columns and TWO equal rows, one complete distinct sleeper centered per cell, generous transparent gaps. Straight TOP-DOWN view, head TOP, feet BOTTOM. Match image1 silhouette about2.35 times width, same head/body ratio. Small WHITE pillow supports head; thick muted moss/olive GREEN blanket covers entire body NECK TO TOES. Only face/head visible. Eyes fully CLOSED, peacefully asleep, no glowing eyes. Preserve each source's apparent age, skin or fur/scales color, species, hair color/style, baldness, beard, pointed ears, muzzle, horns and close-fitting hood/cap/helmet/crown/headband. Never convert elf/Orc/Khajiit/Argonian heads to human. Never invent visible hair under opaque hood. Keep existing helmets/hoods when source hair unknown. Remove ALL props, weapons, books, bottles, staffs, shields and held items. Each cell one contiguous head/pillow/blanket silhouette; no exposed body, limbs, hands, feet or clothes. Coarse 1996 low-resolution pixel-art, limited color clusters, crisp pixel edges, not smooth modern art. No perspective, bed frame, scenery, text, labels, grids, checkerboard or background shadow. Genuine alpha transparency. Preserve source cell order exactly. Cells:1 tanned adult human woman with long wavy brown hair;2 grey-skinned adult Dark Elf female barkeep with long pale-blonde hair, face at right of held tray;3 grey Dark Elf woman black hair;4 grey Dark Elf man brown short hair;5 grey Dark Elf sorceress long black hair and gold brow ornament;6 grey Dark Elf man short grey hair;7 grey Dark Elf woman grey bob and gold brow ornament;8 grey Dark Elf man short dark hair.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-01.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "elves & beastfolk - replaces",
+          "providerGuid": "b4cd53b2-2517-4ed7-9efc-1be21b2643a7",
+          "archive": 182,
+          "record": 33,
+          "cell": 0,
+          "sourcePixelHash": "2fd8fbf2745a3e1071628a2153b24f0efe458902afbcd752103530045c67d2fb",
+          "sourceDimensions": [
+            52,
+            128
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - replaces--182_33-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 0,
+          "cell": 1,
+          "sourcePixelHash": "6f2aa3aad00900e28cbd33796f5191b85d835763e3abe66def411b005bf1fb4b",
+          "sourceDimensions": [
+            83,
+            123
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_0-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 1,
+          "cell": 2,
+          "sourcePixelHash": "341107b83121d4f59878a94e8c22ae5b0270fca621736ee346d20a3d541e80b6",
+          "sourceDimensions": [
+            52,
+            128
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_1-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 10,
+          "cell": 3,
+          "sourcePixelHash": "64b85f1e035e4519a8d8daace8aa4ce15971825659f15c6e8991f6a894f758f0",
+          "sourceDimensions": [
+            80,
+            126
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_10-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 2,
+          "cell": 4,
+          "sourcePixelHash": "e0e4a992a3c9dbc5801a055c442280cd2c695d3c83829d70710ad8332f4b9fd4",
+          "sourceDimensions": [
+            131,
+            137
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_2-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 3,
+          "cell": 5,
+          "sourcePixelHash": "bccc6d46aa1dd45745847127f1dece3a8a89197dfb91f07c1cad68eccc5e0cb0",
+          "sourceDimensions": [
+            66,
+            126
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_3-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 4,
+          "cell": 6,
+          "sourcePixelHash": "6f58751a52b289d64021b118476891cc1a172ad56b498f8a1de6262dac91f802",
+          "sourceDimensions": [
+            58,
+            128
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_4-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 5,
+          "cell": 7,
+          "sourcePixelHash": "29925fd0d4aea227d5ac965c8aad47f56851765f82c18dc6d7eba1bd8ae45df7",
+          "sourceDimensions": [
+            61,
+            117
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_5-0.png"
+        }
+      ],
+      "pngSha256": "828dfd163ea66e7ff0aa9dc1498e2652edebc6289ef206ed53647593c66d3f18",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              41,
+              40,
+              272,
+              595
+            ],
+            "ratio": 2.4025974025974026
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              355,
+              35,
+              586,
+              595
+            ],
+            "ratio": 2.4242424242424243
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              669,
+              35,
+              899,
+              595
+            ],
+            "ratio": 2.4347826086956523
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              982,
+              35,
+              1213,
+              595
+            ],
+            "ratio": 2.4242424242424243
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              41,
+              660,
+              272,
+              1222
+            ],
+            "ratio": 2.432900432900433
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              355,
+              659,
+              586,
+              1222
+            ],
+            "ratio": 2.4372294372294374
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              669,
+              660,
+              899,
+              1222
+            ],
+            "ratio": 2.4434782608695653
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              982,
+              660,
+              1213,
+              1222
+            ],
+            "ratio": 2.432900432900433
+          }
+        ]
+      }
+    },
+    {
+      "batch": 2,
+      "file": "art\\sleep\\topdown-missing-02.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-02.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-79f8dac3-53a0-440e-8918-2c54c7b31259.png",
+      "prompt": "Use case: identity-preserve. Asset: Daggerfall Unity sleeping NPC atlas. Image1 is existing approved sleeper geometry/style reference ONLY; do not recreate its people. Image2 contains eight newly missing actual installed-mod NPC appearances; use each head/face as exact identity reference, read left-to-right top row then bottom row. Create square transparent canvas with EXACTLY FOUR equal columns and TWO equal rows, one complete distinct sleeper centered per cell, generous transparent gaps. Straight TOP-DOWN view, head TOP, feet BOTTOM. Match image1 silhouette about2.35 times width, same head/body ratio. Small WHITE pillow supports head; thick muted moss/olive GREEN blanket covers entire body NECK TO TOES. Only face/head visible. Eyes fully CLOSED, peacefully asleep, no glowing eyes. Preserve each source's apparent age, skin or fur/scales color, species, hair color/style, baldness, beard, pointed ears, muzzle, horns and close-fitting hood/cap/helmet/crown/headband. Never convert elf/Orc/Khajiit/Argonian heads to human. Never invent visible hair under opaque hood. Keep existing helmets/hoods when source hair unknown. Remove ALL props, weapons, books, bottles, staffs, shields and held items. Each cell one contiguous head/pillow/blanket silhouette; no exposed body, limbs, hands, feet or clothes. Coarse 1996 low-resolution pixel-art, limited color clusters, crisp pixel edges, not smooth modern art. No perspective, bed frame, scenery, text, labels, grids, checkerboard or background shadow. Genuine alpha transparency. Preserve source cell order exactly. Cells:1 grey Dark Elf woman dark swept-back hair;2 grey Dark Elf boy short black hair gold brow band, child face;3 grey Dark Elf man reddish-brown hair and full beard;4 grey Dark Elf girl red hair and blue brow band, child face;5 golden-skinned elf woman long black hair and gold brow ornament;6 golden-skinned elf woman white-grey bob and gold brow ornament;7 golden elf man brown hair pointed ears;8 golden elf man black hair and dark beard.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-02.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 6,
+          "cell": 0,
+          "sourcePixelHash": "fd2a1e34f2ea5763969ea065074749d241068610aaf575a03aa76afbb69acc3e",
+          "sourceDimensions": [
+            80,
+            77
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_6-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 7,
+          "cell": 1,
+          "sourcePixelHash": "7fadf3356136721a9f48a3cf38bff92014f9b0b873a1e0c20beec73ca2b2e429",
+          "sourceDimensions": [
+            31,
+            79
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_7-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 8,
+          "cell": 2,
+          "sourcePixelHash": "3124ce908596b893850f5b14515f128c3dbf17d7d4480218edcc645767f36f92",
+          "sourceDimensions": [
+            75,
+            126
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_8-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1300,
+          "record": 9,
+          "cell": 3,
+          "sourcePixelHash": "a1b2c0d3b465a5dffed563cc93102794a0d5342a0234b8718b7dc73e913c73f0",
+          "sourceDimensions": [
+            33,
+            78
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1300_9-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1301,
+          "record": 0,
+          "cell": 4,
+          "sourcePixelHash": "438f39ef73e665842d74050eb7c8fdba654dd7d2c2f3dc40972660e8afa80fdb",
+          "sourceDimensions": [
+            131,
+            137
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1301_0-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1301,
+          "record": 1,
+          "cell": 5,
+          "sourcePixelHash": "0fbb2aaea32dc0ff29c2217b6ef3057c4eed4831bc243b44d665a269e67e1efd",
+          "sourceDimensions": [
+            57,
+            127
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1301_1-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1301,
+          "record": 2,
+          "cell": 6,
+          "sourcePixelHash": "ecca9549b3fbc3481785be29c16bc62569f6a5f3de20a22873723066542fb040",
+          "sourceDimensions": [
+            68,
+            124
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1301_2-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1301,
+          "record": 3,
+          "cell": 7,
+          "sourcePixelHash": "7879d333ac694766e341e054d2814e178e801841f134814f02632260763045b8",
+          "sourceDimensions": [
+            66,
+            126
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1301_3-0.png"
+        }
+      ],
+      "pngSha256": "c526fde08c0a5eb41840a85b3e3c7031285392d3364e66109c80e9962edfeeb9",
+      "corrections": [
+        {
+          "prompt": "Use case: precise-object-edit. Image1 is edit target sleeping atlas. Change ONLY eyes of TOP-LEFT sleeper (grey Dark Elf woman with dark swept-back hair). Current red visible irises/open eye slits must become completely closed dark eyelids, calm asleep, no red, no glow. Preserve all eight people, faces, hair, ears, skin colors, blanket/pillow shapes, positions, canvas dimensions, 4-column 2-row cell layout and actual alpha transparency unchanged. Do not add any text or objects. Output complete corrected atlas.",
+          "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-a9c247d0-4e96-4b82-9b51-33dbe2aabdcf.png"
+        }
+      ],
+      "selectedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-a9c247d0-4e96-4b82-9b51-33dbe2aabdcf.png",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              64,
+              50,
+              283,
+              586
+            ],
+            "ratio": 2.4474885844748857
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              368,
+              56,
+              585,
+              587
+            ],
+            "ratio": 2.447004608294931
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              668,
+              52,
+              886,
+              586
+            ],
+            "ratio": 2.44954128440367
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              972,
+              54,
+              1190,
+              586
+            ],
+            "ratio": 2.4403669724770642
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              56,
+              667,
+              286,
+              1204
+            ],
+            "ratio": 2.3347826086956522
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              368,
+              666,
+              586,
+              1204
+            ],
+            "ratio": 2.467889908256881
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              667,
+              663,
+              886,
+              1204
+            ],
+            "ratio": 2.470319634703196
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              971,
+              665,
+              1191,
+              1205
+            ],
+            "ratio": 2.4545454545454546
+          }
+        ]
+      }
+    },
+    {
+      "batch": 3,
+      "file": "art\\sleep\\topdown-missing-03.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-03.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-32702a5f-ca97-4280-ade9-67c0cd166d4e.png",
+      "prompt": "Use case: identity-preserve. Asset: Daggerfall Unity sleeping NPC atlas. Image1 is existing approved sleeper geometry/style reference ONLY; do not recreate its people. Image2 contains eight newly missing actual installed-mod NPC appearances; use each head/face as exact identity reference, read left-to-right top row then bottom row. Create square transparent canvas with EXACTLY FOUR equal columns and TWO equal rows, one complete distinct sleeper centered per cell, generous transparent gaps. Straight TOP-DOWN view, head TOP, feet BOTTOM. Match image1 silhouette about2.35 times width, same head/body ratio. Small WHITE pillow supports head; thick muted moss/olive GREEN blanket covers entire body NECK TO TOES. Only face/head visible. Eyes fully CLOSED, peacefully asleep, no glowing eyes. Preserve each source's apparent age, skin or fur/scales color, species, hair color/style, baldness, beard, pointed ears, muzzle, horns and close-fitting hood/cap/helmet/crown/headband. Never convert elf/Orc/Khajiit/Argonian heads to human. Never invent visible hair under opaque hood. Keep existing helmets/hoods when source hair unknown. Remove ALL props, weapons, books, bottles, staffs, shields and held items. Each cell one contiguous head/pillow/blanket silhouette; no exposed body, limbs, hands, feet or clothes. Coarse 1996 low-resolution pixel-art, limited color clusters, crisp pixel edges, not smooth modern art. No perspective, bed frame, scenery, text, labels, grids, checkerboard or background shadow. Genuine alpha transparency. Preserve source cell order exactly. Cells:1 older golden elf man grey hair and full grey beard;2 warm tan elf woman blonde shoulder hair, face at right of tray;3 tan elf man brown hair and pointed ears;4 tan elf man reddish-brown hair and full beard;5 tan elf man short brown hair;6 green Orc male dark short hair pronounced lower tusks;7 brown-green Orc male dark short hair lower tusks;8 dark green Orc male black hair lower tusks.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-03.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1301,
+          "record": 4,
+          "cell": 0,
+          "sourcePixelHash": "e7cfb9e590b6a303877e14b9e8a0e1f2b2c40718b27476cc8229e32b4d5df85b",
+          "sourceDimensions": [
+            71,
+            128
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1301_4-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1302,
+          "record": 0,
+          "cell": 1,
+          "sourcePixelHash": "60e4f5054852c316f36bd0ee839ee0d6e50c57278e461cbf5c892b0c25bb9111",
+          "sourceDimensions": [
+            83,
+            123
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1302_0-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1302,
+          "record": 1,
+          "cell": 2,
+          "sourcePixelHash": "ffaea4dc8bf45f8cab5ca72137a1395cca91f46363b423f4855baea2d9cdd4e2",
+          "sourceDimensions": [
+            68,
+            124
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1302_1-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1302,
+          "record": 2,
+          "cell": 3,
+          "sourcePixelHash": "61043b00151fe496d6182de00bf7c69035cbd8802a86bb5d01e9f040bcccefd7",
+          "sourceDimensions": [
+            59,
+            125
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1302_2-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1302,
+          "record": 3,
+          "cell": 4,
+          "sourcePixelHash": "643129c1ab2e6c007f8252682285f5a638dfc5883a7bf53454e98a588f3c89bb",
+          "sourceDimensions": [
+            80,
+            126
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1302_3-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1303,
+          "record": 0,
+          "cell": 5,
+          "sourcePixelHash": "60195abcb87ffd10f732ca604239e6839078e002a9dc6d9715095df21363664e",
+          "sourceDimensions": [
+            52,
+            131
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1303_0-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1303,
+          "record": 1,
+          "cell": 6,
+          "sourcePixelHash": "42eac651835cd360cf5a4ec7e33deec5d861d551c78195a96c524e786ca03887",
+          "sourceDimensions": [
+            52,
+            131
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1303_1-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1303,
+          "record": 2,
+          "cell": 7,
+          "sourcePixelHash": "4467f7e95a1af10497aa4002613761872cbc1a9feeb114fee7b9129c07adbff1",
+          "sourceDimensions": [
+            52,
+            131
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1303_2-0.png"
+        }
+      ],
+      "pngSha256": "5a0d977b77a8ba62dfd45df74de7ab97ba6c77251f0ebf2c0ac7ed4cb0793c47",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              44,
+              39,
+              270,
+              597
+            ],
+            "ratio": 2.4690265486725664
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              358,
+              47,
+              583,
+              597
+            ],
+            "ratio": 2.4444444444444446
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              671,
+              47,
+              897,
+              597
+            ],
+            "ratio": 2.433628318584071
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              985,
+              47,
+              1210,
+              597
+            ],
+            "ratio": 2.4444444444444446
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              44,
+              675,
+              270,
+              1224
+            ],
+            "ratio": 2.4292035398230087
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              358,
+              668,
+              583,
+              1224
+            ],
+            "ratio": 2.471111111111111
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              671,
+              668,
+              897,
+              1224
+            ],
+            "ratio": 2.4601769911504423
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              985,
+              668,
+              1210,
+              1224
+            ],
+            "ratio": 2.471111111111111
+          }
+        ]
+      }
+    },
+    {
+      "batch": 4,
+      "file": "art\\sleep\\topdown-missing-04.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-04.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-c6834af5-3c47-4307-9f9a-922976799d39.png",
+      "prompt": "Use case: identity-preserve. Asset: Daggerfall Unity sleeping NPC atlas. Image1 is existing approved sleeper geometry/style reference ONLY; do not recreate its people. Image2 contains eight newly missing actual installed-mod NPC appearances; use each head/face as exact identity reference, read left-to-right top row then bottom row. Create square transparent canvas with EXACTLY FOUR equal columns and TWO equal rows, one complete distinct sleeper centered per cell, generous transparent gaps. Straight TOP-DOWN view, head TOP, feet BOTTOM. Match image1 silhouette about2.35 times width, same head/body ratio. Small WHITE pillow supports head; thick muted moss/olive GREEN blanket covers entire body NECK TO TOES. Only face/head visible. Eyes fully CLOSED, peacefully asleep, no glowing eyes. Preserve each source's apparent age, skin or fur/scales color, species, hair color/style, baldness, beard, pointed ears, muzzle, horns and close-fitting hood/cap/helmet/crown/headband. Never convert elf/Orc/Khajiit/Argonian heads to human. Never invent visible hair under opaque hood. Keep existing helmets/hoods when source hair unknown. Remove ALL props, weapons, books, bottles, staffs, shields and held items. Each cell one contiguous head/pillow/blanket silhouette; no exposed body, limbs, hands, feet or clothes. Coarse 1996 low-resolution pixel-art, limited color clusters, crisp pixel edges, not smooth modern art. No perspective, bed frame, scenery, text, labels, grids, checkerboard or background shadow. Genuine alpha transparency. Preserve source cell order exactly. Cells:1 green Orc male in horned iron helmet;2 tawny Khajiit woman reddish mane and feline muzzle;3 tawny Khajiit woman feline face, red-brown braided hair and turquoise face ornament;4 tawny Khajiit man brown hair and feline muzzle;5 tawny Khajiit man brown hair and feline muzzle;6 pale orange Khajiit woman blonde bob and feline face at right of tray;7 tawny Khajiit man dark brown hair and feline face;8 tawny Khajiit man dark brown hair and feline face.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-04.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1303,
+          "record": 3,
+          "cell": 0,
+          "sourcePixelHash": "458dae5d79eeb56501b4b8de8be3813d8f3ce50842c882d557d93c110847a1c8",
+          "sourceDimensions": [
+            66,
+            159
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1303_3-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1304,
+          "record": 0,
+          "cell": 1,
+          "sourcePixelHash": "b3500154fe2d3bade074d7235fe3955039de0dd42494d76e8afac76ad124d12f",
+          "sourceDimensions": [
+            52,
+            128
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1304_0-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1304,
+          "record": 1,
+          "cell": 2,
+          "sourcePixelHash": "51b82fdcb20d1dcae3b0ae1cb1905961104e7d1eafdb8d42401047925de79da7",
+          "sourceDimensions": [
+            87,
+            90
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1304_1-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1304,
+          "record": 2,
+          "cell": 3,
+          "sourcePixelHash": "ac8c6897f65533ff711c9f256c69831763b5a937e476517d90cc38afa975dbe6",
+          "sourceDimensions": [
+            68,
+            124
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1304_2-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1304,
+          "record": 3,
+          "cell": 4,
+          "sourcePixelHash": "a2e890096437641bc52be0d33e0f4d46874e73ef9b485ef9c859d511e614a709",
+          "sourceDimensions": [
+            68,
+            124
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1304_3-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1304,
+          "record": 4,
+          "cell": 5,
+          "sourcePixelHash": "d133301f20e3556bcb7ce425383dbdbc5040a7d2d320e4bc33f62d2f7a5e7d8c",
+          "sourceDimensions": [
+            83,
+            123
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1304_4-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1304,
+          "record": 5,
+          "cell": 6,
+          "sourcePixelHash": "c2118e492d6737b0e0dcfa9eef4b16efd269c9d3c6eca95b8acc388656c4842e",
+          "sourceDimensions": [
+            80,
+            126
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1304_5-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1305,
+          "record": 0,
+          "cell": 7,
+          "sourcePixelHash": "967b60c0c4dc125cfee3cf417aac3529b87e8f646cc48ab1ea13471af8670f53",
+          "sourceDimensions": [
+            68,
+            124
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1305_0-0.png"
+        }
+      ],
+      "pngSha256": "a39a53db27617b5eae753e47e10e968f91ee978b70bc55538e5c3611be76dac9",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              42,
+              37,
+              273,
+              594
+            ],
+            "ratio": 2.411255411255411
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              355,
+              49,
+              588,
+              594
+            ],
+            "ratio": 2.3390557939914163
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              666,
+              37,
+              898,
+              594
+            ],
+            "ratio": 2.4008620689655173
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              981,
+              46,
+              1213,
+              594
+            ],
+            "ratio": 2.3620689655172415
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              42,
+              658,
+              272,
+              1221
+            ],
+            "ratio": 2.4478260869565216
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              355,
+              662,
+              585,
+              1221
+            ],
+            "ratio": 2.4304347826086956
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              666,
+              658,
+              898,
+              1221
+            ],
+            "ratio": 2.4267241379310347
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              981,
+              661,
+              1212,
+              1221
+            ],
+            "ratio": 2.4242424242424243
+          }
+        ]
+      }
+    },
+    {
+      "batch": 5,
+      "file": "art\\sleep\\topdown-missing-05.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-05.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-8bd7290d-63d9-4f4a-94f0-c82fc67f4373.png",
+      "prompt": "Use case: identity-preserve. Asset: Daggerfall Unity sleeping NPC atlas. Image1 is existing approved sleeper geometry/style reference ONLY; do not recreate its people. Image2 contains eight newly missing actual installed-mod NPC appearances; use each head/face as exact identity reference, read left-to-right top row then bottom row. Create square transparent canvas with EXACTLY FOUR equal columns and TWO equal rows, one complete distinct sleeper centered per cell, generous transparent gaps. Straight TOP-DOWN view, head TOP, feet BOTTOM. Match image1 silhouette about2.35 times width, same head/body ratio. Small WHITE pillow supports head; thick muted moss/olive GREEN blanket covers entire body NECK TO TOES. Only face/head visible. Eyes fully CLOSED, peacefully asleep, no glowing eyes. Preserve each source's apparent age, skin or fur/scales color, species, hair color/style, baldness, beard, pointed ears, muzzle, horns and close-fitting hood/cap/helmet/crown/headband. Never convert elf/Orc/Khajiit/Argonian heads to human. Never invent visible hair under opaque hood. Keep existing helmets/hoods when source hair unknown. Remove ALL props, weapons, books, bottles, staffs, shields and held items. Each cell one contiguous head/pillow/blanket silhouette; no exposed body, limbs, hands, feet or clothes. Coarse 1996 low-resolution pixel-art, limited color clusters, crisp pixel edges, not smooth modern art. No perspective, bed frame, scenery, text, labels, grids, checkerboard or background shadow. Genuine alpha transparency. Preserve source cell order exactly. Cells:1 orange tiger Khajiit man, white muzzle, black stripes;2 small tan Alfiq feline with green cap, preserve feline muzzle;3 small grey Alfiq feline red collar and small brow ornaments;4 small grey Alfiq feline blue hat with colored trim, retain hat and no book;5 green Argonian reptilian head with short spikes and pointed muzzle;6 green Argonian head with blue spikes;7 green Argonian head under wide black hat with gold trim;8 green Argonian head under black pointed hood trimmed gold. Feline Alfiq heads stay feline, no human faces.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-05.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1305,
+          "record": 1,
+          "cell": 0,
+          "sourcePixelHash": "f3592279b4ba910a09ca5bda3329acb2568228f494ec7e98c91a59f5013dcc77",
+          "sourceDimensions": [
+            63,
+            165
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1305_1-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1307,
+          "record": 0,
+          "cell": 4,
+          "sourcePixelHash": "129f6133e24d6a8b041481edaea0ea31eb90f9b554f50ccdf94911a51de0acea",
+          "sourceDimensions": [
+            71,
+            81
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1307_0-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1307,
+          "record": 1,
+          "cell": 5,
+          "sourcePixelHash": "cb2a88df53de543c233426e8d1bf3f482b80ca61ecfd1df98ebe7c48c525de42",
+          "sourceDimensions": [
+            45,
+            79
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1307_1-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1307,
+          "record": 2,
+          "cell": 6,
+          "sourcePixelHash": "6e943c46d32933b83a219a200974607757c09fff9dfb4df502ccb583841606c9",
+          "sourceDimensions": [
+            29,
+            83
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1307_2-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1307,
+          "record": 3,
+          "cell": 7,
+          "sourcePixelHash": "c157aefa4d34252169e790fd0157c9f5507f45fc19e806364f93abbadf49d25b",
+          "sourceDimensions": [
+            45,
+            85
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1307_3-0.png"
+        }
+      ],
+      "pngSha256": "616a12558ccdde28a240a198bc464b443dd531997f73fb5bd3fec317b9222d80",
+      "corrections": [
+        {
+          "prompt": "Use case: precise-object-edit. Image1 is edit target sleeping atlas. Change ONLY eyes of TOP-LEFT tiger Khajiit sleeper. Current bright white visible eyes must become completely CLOSED dark eyelids. Preserve white fur markings surrounding eyes, feline muzzle, tiger stripes, ears, all other seven people, pillow and blanket geometry, positions, canvas dimensions,4-column2-row layout, and actual alpha transparency unchanged. Calm sleeping face, no open eyes, no glow. Output complete corrected atlas.",
+          "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-caa22932-fb19-4193-a760-ddd43e30d9c5.png"
+        },
+        {
+          "prompt": "Use case: precise-object-edit. Image1 is target sprite atlas. REMOVE EXACTLY THREE COMPLETE SPRITES: TOP ROW COLUMN2 green-cap small cat; TOP ROW COLUMN3 grey small cat; TOP ROW COLUMN4 pointed-hat small cat. Replace their ENTIRE cells, including heads, pillows and blankets, with FULL ALPHA TRANSPARENCY. Keep those three cells EMPTY. Retain TOP ROW COLUMN1 tiger-headed HUMANOID Khajiit man unchanged. Retain ALL FOUR BOTTOM ROW Argonian humanoid people unchanged. Preserve all five retained people, pixels, positions,4-column2-row layout, canvas dimensions, proportions and transparency. Do NOT rearrange or fill empty cells. No new animals, no replacement heads, no new objects, no text, no checkerboard. Output complete atlas with ONLY FIVE original humanoid sleepers; three empty transparent cells in top row columns2\u00e2\u20ac\u201c4.",
+          "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-9e909dc5-6d37-4c4d-9e4b-ecb973702a43.png"
+        },
+        {
+          "prompt": "Use case: precise-object-edit. Image1 is target sprite atlas. REMOVE EXACTLY THREE COMPLETE SPRITES: TOP ROW COLUMN2 green-cap small cat; TOP ROW COLUMN3 grey small cat; TOP ROW COLUMN4 pointed-hat small cat. Replace their ENTIRE cells, including heads, pillows and blankets, with FULL ALPHA TRANSPARENCY. Keep those three cells EMPTY. Retain TOP ROW COLUMN1 tiger-headed HUMANOID Khajiit man unchanged. Retain ALL FOUR BOTTOM ROW Argonian humanoid people unchanged. Preserve all five retained people, pixels, positions,4-column2-row layout, canvas dimensions, proportions and transparency. Do NOT rearrange or fill empty cells. No new animals, no replacement heads, no new objects, no text, no checkerboard. Output complete atlas with ONLY FIVE original humanoid sleepers; three empty transparent cells in top row columns2\u00e2\u20ac\u201c4.",
+          "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-9e909dc5-6d37-4c4d-9e4b-ecb973702a43.png"
+        }
+      ],
+      "selectedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-9e909dc5-6d37-4c4d-9e4b-ecb973702a43.png",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              42,
+              31,
+              275,
+              595
+            ],
+            "ratio": 2.4206008583690988
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              42,
+              647,
+              277,
+              1221
+            ],
+            "ratio": 2.442553191489362
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              353,
+              650,
+              588,
+              1221
+            ],
+            "ratio": 2.429787234042553
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              662,
+              647,
+              898,
+              1221
+            ],
+            "ratio": 2.4322033898305087
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              977,
+              647,
+              1211,
+              1221
+            ],
+            "ratio": 2.452991452991453
+          }
+        ]
+      }
+    },
+    {
+      "batch": 6,
+      "file": "art\\sleep\\topdown-missing-06.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-06.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-4f376146-00bd-4c54-a2d7-b9c955190331.png",
+      "prompt": "Use case: identity-preserve. Asset: Daggerfall Unity sleeping NPC atlas. Image1 is existing approved sleeper geometry/style reference ONLY; do not recreate its people. Image2 contains eight newly missing actual installed-mod NPC appearances; use each head/face as exact identity reference, read left-to-right top row then bottom row. Create square transparent canvas with EXACTLY FOUR equal columns and TWO equal rows, one complete distinct sleeper centered per cell, generous transparent gaps. Straight TOP-DOWN view, head TOP, feet BOTTOM. Match image1 silhouette about2.35 times width, same head/body ratio. Small WHITE pillow supports head; thick muted moss/olive GREEN blanket covers entire body NECK TO TOES. Only face/head visible. Eyes fully CLOSED, peacefully asleep, no glowing eyes. Preserve each source's apparent age, skin or fur/scales color, species, hair color/style, baldness, beard, pointed ears, muzzle, horns and close-fitting hood/cap/helmet/crown/headband. Never convert elf/Orc/Khajiit/Argonian heads to human. Never invent visible hair under opaque hood. Keep existing helmets/hoods when source hair unknown. Remove ALL props, weapons, books, bottles, staffs, shields and held items. Each cell one contiguous head/pillow/blanket silhouette; no exposed body, limbs, hands, feet or clothes. Coarse 1996 low-resolution pixel-art, limited color clusters, crisp pixel edges, not smooth modern art. No perspective, bed frame, scenery, text, labels, grids, checkerboard or background shadow. Genuine alpha transparency. Preserve source cell order exactly. Cells:1 brown Argonian reptilian muzzle and short head spikes;2 green Argonian woman face at right of held tray;3 green Argonian woman red/orange head spikes and pointed ears;4 green Argonian man prominent brow and horns;5 fair young human man short brown hair and brown cap;6 tanned human man under gold helmet with red crest;7 elderly tanned human man grey beard beneath blue hood;8 fair young human woman short brown hair.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-06.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1307,
+          "record": 4,
+          "cell": 0,
+          "sourcePixelHash": "cfa2b794abffbfea997f2642a6d8779317213871d4a41ff175f4ec044ac0b7df",
+          "sourceDimensions": [
+            71,
+            81
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1307_4-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1307,
+          "record": 5,
+          "cell": 1,
+          "sourcePixelHash": "284dbd8efce3b0adc890efec4b77bf1c50c5ef87e51e18917e3539f58d1bd488",
+          "sourceDimensions": [
+            83,
+            123
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1307_5-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1307,
+          "record": 6,
+          "cell": 2,
+          "sourcePixelHash": "bd2451a08513ee8ce441cda79d24c999f94373d6c91eae2ece91428ffa81f80c",
+          "sourceDimensions": [
+            131,
+            137
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1307_6-0.png"
+        },
+        {
+          "provider": "elves & beastfolk - resources",
+          "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+          "archive": 1308,
+          "record": 0,
+          "cell": 3,
+          "sourcePixelHash": "e24a031795a6deffe5d951005f4c129db84d8245cbc61caaf9eeb7dcd7bd6e4c",
+          "sourceDimensions": [
+            63,
+            167
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1308_0-0.png"
+        },
+        {
+          "provider": "lively cities",
+          "providerGuid": "8445fd1c-7455-4c18-8850-70e1416c5c4f",
+          "archive": 1200,
+          "record": 14,
+          "cell": 4,
+          "sourcePixelHash": "499e7f60c9777ba784c7aa34883fd502ca37fd6208df766d19321f45c11c421d",
+          "sourceDimensions": [
+            104,
+            300
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\lively cities--1200_14-0.png"
+        },
+        {
+          "provider": "lively cities",
+          "providerGuid": "8445fd1c-7455-4c18-8850-70e1416c5c4f",
+          "archive": 1200,
+          "record": 15,
+          "cell": 5,
+          "sourcePixelHash": "53cbfb2b100932994c6421407b1b84dfc46b0ba204675c107570ad9c1f01673f",
+          "sourceDimensions": [
+            128,
+            330
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\lively cities--1200_15-0.png"
+        },
+        {
+          "provider": "lively cities",
+          "providerGuid": "8445fd1c-7455-4c18-8850-70e1416c5c4f",
+          "archive": 1200,
+          "record": 17,
+          "cell": 6,
+          "sourcePixelHash": "f3b16c4c38c953280b30b93bc506b466473f19237b461374cda49aa21d17a4b5",
+          "sourceDimensions": [
+            158,
+            330
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\lively cities--1200_17-0.png"
+        },
+        {
+          "provider": "lively cities",
+          "providerGuid": "8445fd1c-7455-4c18-8850-70e1416c5c4f",
+          "archive": 1200,
+          "record": 19,
+          "cell": 7,
+          "sourcePixelHash": "018a22ff8b90361e1c7d4ae36e1610f52c7895dd0ddd14c4cd85011c5ba72fd3",
+          "sourceDimensions": [
+            152,
+            322
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\lively cities--1200_19-0.png"
+        }
+      ],
+      "pngSha256": "86e98c3fccd0dab4ce1c803145aadb55db9a42c2b6d71956c3fb1d129093655a",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              57,
+              43,
+              284,
+              607
+            ],
+            "ratio": 2.484581497797357
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              363,
+              51,
+              587,
+              607
+            ],
+            "ratio": 2.482142857142857
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              667,
+              46,
+              891,
+              607
+            ],
+            "ratio": 2.5044642857142856
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              971,
+              48,
+              1198,
+              608
+            ],
+            "ratio": 2.4669603524229076
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              55,
+              669,
+              284,
+              1219
+            ],
+            "ratio": 2.4017467248908297
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              360,
+              634,
+              590,
+              1219
+            ],
+            "ratio": 2.5434782608695654
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              664,
+              669,
+              895,
+              1219
+            ],
+            "ratio": 2.380952380952381
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              969,
+              675,
+              1200,
+              1219
+            ],
+            "ratio": 2.354978354978355
+          }
+        ]
+      }
+    },
+    {
+      "batch": 7,
+      "file": "art\\sleep\\topdown-missing-07.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-07.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-501b7544-d44c-4e59-bc06-693693253661.png",
+      "prompt": "undefinedCells:1 adult human man in dark blue hood, brown sideburns;2 adult fair human man short curly reddish-brown hair;3 fair woman brown hair with gold flower headdress;4 elderly pale human woman grey hair and gold crown;5 dark brown human man black beard blue turban;6 human woman with blue face veil and gold brow band, keep veil eyes closed;7 human woman pink face veil and gold brow band, keep veil eyes closed;8 tan human man black beard blue beret.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-07.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "lively cities",
+          "providerGuid": "8445fd1c-7455-4c18-8850-70e1416c5c4f",
+          "archive": 1200,
+          "record": 53,
+          "cell": 0,
+          "sourcePixelHash": "864115ad987e1d1e2f830bbdde7a80d0b7bc4a6199442945d8cd982d6ca94ff4",
+          "sourceDimensions": [
+            40,
+            74
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\lively cities--1200_53-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 53,
+          "cell": 0,
+          "sourcePixelHash": "864115ad987e1d1e2f830bbdde7a80d0b7bc4a6199442945d8cd982d6ca94ff4",
+          "sourceDimensions": [
+            40,
+            74
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_53-0.png"
+        },
+        {
+          "provider": "lively cities",
+          "providerGuid": "8445fd1c-7455-4c18-8850-70e1416c5c4f",
+          "archive": 1200,
+          "record": 54,
+          "cell": 1,
+          "sourcePixelHash": "c56c4ab24f55e4d57c74ca3fe406f8f844143144cb9b435b5198f45d932f040a",
+          "sourceDimensions": [
+            40,
+            69
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\lively cities--1200_54-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 54,
+          "cell": 1,
+          "sourcePixelHash": "c56c4ab24f55e4d57c74ca3fe406f8f844143144cb9b435b5198f45d932f040a",
+          "sourceDimensions": [
+            40,
+            69
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_54-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 0,
+          "cell": 2,
+          "sourcePixelHash": "5e15ba23401c3d9f705ec1f128397a3dc81e7cfd45b41bdc8d908d418b8e0a0e",
+          "sourceDimensions": [
+            85,
+            166
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_0-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 1,
+          "cell": 3,
+          "sourcePixelHash": "fb9ad9a07363e6551281e8739bb3d2fd4a5a83cc407fb8a1a50be4bf86ba94a8",
+          "sourceDimensions": [
+            95,
+            151
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_1-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 10,
+          "cell": 4,
+          "sourcePixelHash": "368c6928a5b71193e6fd715acef26b95d8cd6798e092ccdb41cb432ee9233638",
+          "sourceDimensions": [
+            91,
+            160
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_10-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 11,
+          "cell": 5,
+          "sourcePixelHash": "4278f0d7a3ea31f4da16f7e25b5b731b011755da31b351840bba23e679e9b205",
+          "sourceDimensions": [
+            62,
+            159
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_11-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 12,
+          "cell": 6,
+          "sourcePixelHash": "58d328b34fec867f30be06c7ec03e9b7850785ccb4751b64501b4f75e0bfe0ca",
+          "sourceDimensions": [
+            62,
+            159
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_12-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 13,
+          "cell": 7,
+          "sourcePixelHash": "d265eaabb08eade951f8a9c0dcb2a0b7c7178e50c5e64ab6bffa5d8db5ecf5c7",
+          "sourceDimensions": [
+            89,
+            160
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_13-0.png"
+        }
+      ],
+      "pngSha256": "04dd564b11b66dfb90fcb3e5192c5b1399818d76bf798960f5d8df1029674550",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              43,
+              33,
+              271,
+              594
+            ],
+            "ratio": 2.460526315789474
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              357,
+              39,
+              584,
+              594
+            ],
+            "ratio": 2.444933920704846
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              670,
+              41,
+              897,
+              594
+            ],
+            "ratio": 2.436123348017621
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              983,
+              28,
+              1211,
+              594
+            ],
+            "ratio": 2.482456140350877
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              43,
+              655,
+              271,
+              1221
+            ],
+            "ratio": 2.482456140350877
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              356,
+              664,
+              584,
+              1221
+            ],
+            "ratio": 2.442982456140351
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              670,
+              664,
+              897,
+              1221
+            ],
+            "ratio": 2.4537444933920707
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              983,
+              660,
+              1211,
+              1221
+            ],
+            "ratio": 2.460526315789474
+          }
+        ]
+      }
+    },
+    {
+      "batch": 8,
+      "file": "art\\sleep\\topdown-missing-08.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-08.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-ea725e55-1ec8-41da-a00e-c7f4e476cf19.png",
+      "prompt": "undefinedCells:1 fair young man brown cap short brown hair;2 tan man gold helmet red crest;3 older brown-skinned man grey long beard under brown hood;4 elderly tan man grey beard under blue hood;5 bald elderly light-skinned man monocle, no paper or staff;6 fair young woman short brown hair;7 dark brown man black beard turquoise turban red jewel;8 grey-skinned woman long black hair seen from behind in source, retain long black hair, no invented headwear.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-08.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 14,
+          "cell": 0,
+          "sourcePixelHash": "62ef43cfbe0900956419365414d29a41c408971a03f02fc93ac0b251003a223d",
+          "sourceDimensions": [
+            54,
+            151
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_14-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 15,
+          "cell": 1,
+          "sourcePixelHash": "d70ec4a0a5871f18c7df79eab267efe3379aa39aae400ae6b2806d89e0e7c670",
+          "sourceDimensions": [
+            66,
+            165
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_15-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 16,
+          "cell": 2,
+          "sourcePixelHash": "3e9b1cc6ec2f511a5631e46b109a3d8a847a7f92172c0378e4c860f94b1244c3",
+          "sourceDimensions": [
+            88,
+            160
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_16-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 17,
+          "cell": 3,
+          "sourcePixelHash": "bb1db2b76940d64016face090b471a992b5990f224f499b5cb71c6d1620f2e14",
+          "sourceDimensions": [
+            79,
+            165
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_17-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 18,
+          "cell": 4,
+          "sourcePixelHash": "cdc5f6e2c8924ff1637caebe98e72abbd538e0ed463b46cb6d70403cc46f1bf6",
+          "sourceDimensions": [
+            79,
+            165
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_18-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 19,
+          "cell": 5,
+          "sourcePixelHash": "3a14c251bd631eb075de9b4685a18653fc26084e6f9d579fda4416c10748730c",
+          "sourceDimensions": [
+            76,
+            161
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_19-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 2,
+          "cell": 6,
+          "sourcePixelHash": "408418a4f393444d7c1a0ad262506d5b2b8f09c2ba09adb89f88ced1b0254c74",
+          "sourceDimensions": [
+            89,
+            172
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_2-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 20,
+          "cell": 7,
+          "sourcePixelHash": "c6b90e0bf1448823b1e44ffff6d3c4d45ba05b08f285ccd1a1ec374cbe13409a",
+          "sourceDimensions": [
+            53,
+            161
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_20-0.png"
+        }
+      ],
+      "pngSha256": "bc587d1aee9cc514022a6fe4268226b5de059c3627cc136481dbee67549d0e73",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              44,
+              32,
+              270,
+              594
+            ],
+            "ratio": 2.4867256637168142
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              357,
+              5,
+              584,
+              594
+            ],
+            "ratio": 2.594713656387665
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              671,
+              33,
+              897,
+              594
+            ],
+            "ratio": 2.482300884955752
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              984,
+              33,
+              1211,
+              594
+            ],
+            "ratio": 2.4713656387665197
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              44,
+              665,
+              270,
+              1221
+            ],
+            "ratio": 2.4601769911504423
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              357,
+              660,
+              584,
+              1221
+            ],
+            "ratio": 2.4713656387665197
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              671,
+              642,
+              897,
+              1221
+            ],
+            "ratio": 2.561946902654867
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              984,
+              660,
+              1211,
+              1221
+            ],
+            "ratio": 2.4713656387665197
+          }
+        ]
+      }
+    },
+    {
+      "batch": 9,
+      "file": "art\\sleep\\topdown-missing-09.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-09.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-81fc4034-f4c8-459f-acaf-2e00604bc105.png",
+      "prompt": "undefinedCells:1 elderly bald fair man enormous white moustache and side hair;2,3,4 same tan warrior appearance with pale fur cap blue feather and brown beard, different source poses, preserve same head in all three;5,6,7,8 human soldiers wearing dark blue close-fitting hood and visible fair face, source weapon poses differ, maintain head identity and hood. Remove every weapon/shield and visible body.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-09.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 21,
+          "cell": 0,
+          "sourcePixelHash": "7050810191d37b0db80a3df9e9faa938167d04090ac3bfb951b0f8ac6511e250",
+          "sourceDimensions": [
+            108,
+            156
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_21-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 22,
+          "cell": 1,
+          "sourcePixelHash": "7d636af180bc732d5d940c324dfbf691b01bc6730e98b1514f7bf11f30cbadc2",
+          "sourceDimensions": [
+            89,
+            133
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_22-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 23,
+          "cell": 2,
+          "sourcePixelHash": "43036ff8727f5ca306bb74aec02f3a14e5ec9f8caaf6c0c301dc9a4ad753206d",
+          "sourceDimensions": [
+            89,
+            113
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_23-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 24,
+          "cell": 3,
+          "sourcePixelHash": "3eb0a1f1b276e5d15b0260dd924ad4a6af874fd2af82663f02da15c3a19332db",
+          "sourceDimensions": [
+            89,
+            133
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_24-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 25,
+          "cell": 4,
+          "sourcePixelHash": "da1b9c48266c0c3ff0fa82b71bcd81df33004efc6045251c8a2047ea089a0195",
+          "sourceDimensions": [
+            66,
+            100
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_25-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 26,
+          "cell": 5,
+          "sourcePixelHash": "db226baaaea7b3abb400bd789fb9dfc27bf268011bd5893b0972315ee6b22acb",
+          "sourceDimensions": [
+            66,
+            100
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_26-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 27,
+          "cell": 6,
+          "sourcePixelHash": "81d027aec1aa677ac3a864570bfaf990c5c9864a59625af412d2f80c877b086a",
+          "sourceDimensions": [
+            72,
+            98
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_27-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 28,
+          "cell": 7,
+          "sourcePixelHash": "458be7cdff2d01d13c517fb51b3617102b7a913c2d4f1dab2e95d80cb03835a7",
+          "sourceDimensions": [
+            72,
+            98
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_28-0.png"
+        }
+      ],
+      "pngSha256": "0514912ee00da5be84407350075d1b4b431d6902474b8ca6111b7bd16bac09bd",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              45,
+              39,
+              270,
+              593
+            ],
+            "ratio": 2.462222222222222
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              358,
+              13,
+              583,
+              593
+            ],
+            "ratio": 2.577777777777778
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              671,
+              13,
+              896,
+              593
+            ],
+            "ratio": 2.577777777777778
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              983,
+              13,
+              1209,
+              594
+            ],
+            "ratio": 2.5707964601769913
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              45,
+              658,
+              270,
+              1220
+            ],
+            "ratio": 2.497777777777778
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              358,
+              658,
+              583,
+              1220
+            ],
+            "ratio": 2.497777777777778
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              671,
+              658,
+              896,
+              1220
+            ],
+            "ratio": 2.497777777777778
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              983,
+              658,
+              1209,
+              1220
+            ],
+            "ratio": 2.4867256637168142
+          }
+        ]
+      },
+      "corrections": [
+        {
+          "prompt": "Use case: compositing. Image1 is the EDIT TARGET: the APPROVED full-length 4-column2-row sleeping atlas. KEEP IMAGE1'S EIGHT COMPLETE GREEN BLANKET BODIES AND WHITE PILLOWS UNCHANGED: exact neck-to-covered-foot length, width, silhouette, fold geometry, coarse pixels, cell positions and square canvas. Image2 is ONLY THE HEAD IDENTITY SOURCE: short-body atlas09. Replace ONLY image1's8HEADS with the8exact image2heads in same cell order: top-left bald elder with grey sidehair and large grey-white moustache; top columns2,3,4 the3bearded turban men with pale fur turbans and blue feathers; bottom row4blue-hooded men. Preserve image2face identity, hair/headwear, closed eyes, skin/palette and recognizable pixel-art features. DO NOT copy any green blanket from image2. DO NOT shorten or rescale image1blankets. Do NOT uniformly resize entire sprites. Numeric invariant from image1FULL sprite: each green blanket runs NECK to coveredfoot about443px at visible hood/headheight118px: green-body/headheight3.75-to-1 and blanketlength/blanketwidthabout1.96-to-1. Keep that approved geometry. Source09bluehoodheadheight118px must remain about118px in output, with its green body about443px, NOT296or315px. Put bluehoodheads at templatepillow neckline without expanding head relativebody. Turbanfeathers may extend slightly higher, never enlarge the face/body. Canvas remains image1square1254x1254 or its exact uniform native output dimensions, with4equalcolumns2equalrows. All8full feetends fit, generous alpha gaps; no cell overlap. Only head replacement; every green BODY remains from longapproved image1. Actual alpha transparency, no text/grid/checkerboard. Output full square corrected atlas09.",
+          "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-9b1829a7-6ea0-46ba-bdbd-80ade6252b6c.png",
+          "rejectedAttempt": {
+            "prompt": "Use case: identity-preserve. Image1 is target sleeping atlas with8 correct identities but bodies TOO SHORT. Image2 is approved existing LONG adult sleeper atlas; match its body/blanket LENGTH RELATIVE TO HEAD SIZE. Correct ONLY target blanket-covered body LENGTH, preserving all8 exact heads/faces, baldness, grey moustache, three fur turbans with blue feathers, four blue hoods, closed eyes, pillows, palette, coarse pixel-art style and identity ordering. TOP ROW: bald elderly grey-moustache man then3same turbaned bearded men. BOTTOM ROW:4blue-hooded men. Keep EXACTLY4equalcolumns and2equalrows. Increase canvas HEIGHT as necessary so rows have enough space. Preserve each target HEAD WIDTH and head scale relative to blanket WIDTH; do NOT uniformly scale entire people. Extend green blankets DOWNWARD from unchanged neck/shoulder width so covered adult bodies have same neck-to-covered-toes LENGTH relative to head WIDTH as image2. Make blanket section about2.8 times visible head width and total silhouette about2.35 times blanket/pillow width, comparable to approved long adult sleepers. Current short target blanket section is about1.8head-widths; increase that length about45percent. Add appropriate matching coarse green fold pixels along longer blanket; retain original head/pillow and existing upper body shape. Feet end remains rounded/covered, body never exposed. Eight COMPLETE separate contiguous head/pillow/green blanket sprites, generous real alpha gutters; no neighboring cell overlap or cropping. Straight top-down view. No text, no borders, no grid, no checkerboard, no new faces/objects. Genuine alpha transparency. Output corrected tall enough4x2atlas.",
+            "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-8878d8b3-e76e-44c3-a6af-b7ef759b1f7b.png",
+            "reason": "Rejected: green length only295-to308px in sampleturban; originalwidecanvas/head/bodyratio remained wrong."
+          },
+          "approvedTemplate": "art/sleep/topdown-batch-15.png",
+          "metricMethod": "Full original PNGs. Green neck-to-foot uses alpha>=128,G>1.13R,G>1.10B andgreenrowcoverage>25percentcellwidth. Hood head uses largest connected coloredhood region above neckline. Fullhead-tofoot comparison retains sourcepixels without resampling.",
+          "approved": {
+            "cell": 4,
+            "greenLength": 443,
+            "headWidth": 161,
+            "headHeight": 118,
+            "greenWidth": 226,
+            "greenPerHeadHeight": 3.754
+          },
+          "originalRejected": {
+            "cell": 4,
+            "greenLength": 296,
+            "headWidth": 129,
+            "headHeight": 118,
+            "greenWidth": 221,
+            "greenPerHeadHeight": 2.508
+          },
+          "corrected": {
+            "cell": 4,
+            "greenLength": 443,
+            "headHeight": 119,
+            "greenPerHeadHeight": 3.723
+          },
+          "result": "Selected correction extends actualgreenbody49.7percent whileheadheightchangesbyless1percent;complete8sprites useapprovedlongblanketgeometry."
+        }
+      ],
+      "selectedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-9b1829a7-6ea0-46ba-bdbd-80ade6252b6c.png",
+      "bodyProportionQA": {
+        "approvedGreenLength": 443,
+        "approvedHeadWidth": 161,
+        "approvedHeadHeight": 118,
+        "approvedGreenPerHeadHeight": 3.754,
+        "rejectedGreenLength": 296,
+        "rejectedHeadHeight": 118,
+        "correctedGreenLength": 443,
+        "correctedHeadWidth": 133,
+        "correctedHeadHeight": 119,
+        "correctedGreenPerHeadHeight": 3.723,
+        "greenLengthChangePercent": 49.7,
+        "headHeightChangePercent": 0.8,
+        "fullComparison": "work/sleep-09-full-length-comparison.png"
+      }
+    },
+    {
+      "batch": 10,
+      "file": "art\\sleep\\topdown-missing-10.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-10.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-5f309804-3e65-43c1-9fee-91f6ac60f87f.png",
+      "prompt": "undefinedCells:1 human soldier dark blue hood and tan face gold collar beneath hood;2 elderly tan man long white hair and beard, gold small crown;3 human soldier dark blue hood and tan face gold collar;4,5 human soldiers dark blue close hood fair face;6,7 human soldiers dark blue close hood fair face, no sword;8 human soldier dark blue hood and tan face gold collar. No weapon, shield or hands. Preserve distinct source heads and headwear.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-10.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 29,
+          "cell": 0,
+          "sourcePixelHash": "137fed93ae76136350b452e1de13641c757c7386f70a3d2a5496f68a2b8eaef6",
+          "sourceDimensions": [
+            77,
+            88
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_29-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 3,
+          "cell": 1,
+          "sourcePixelHash": "2b4cd872ca04d434e6d4259ca7e66c42a9ba45281825b2059c2dda6618135a46",
+          "sourceDimensions": [
+            79,
+            159
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_3-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 30,
+          "cell": 2,
+          "sourcePixelHash": "701e29ca21947d404c30254dd82d48fe714bb8856a563f131eb7216012cfd925",
+          "sourceDimensions": [
+            77,
+            88
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_30-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 31,
+          "cell": 3,
+          "sourcePixelHash": "b4f3a1a116e0f2c4ee8120938f5359cd4c9ccba1710791fbed87631eb1210fac",
+          "sourceDimensions": [
+            72,
+            98
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_31-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 32,
+          "cell": 4,
+          "sourcePixelHash": "354ce96d82b8d9e43977ddad5d5d76e84ab89e55dbec85c8192412aff1193060",
+          "sourceDimensions": [
+            72,
+            98
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_32-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 33,
+          "cell": 5,
+          "sourcePixelHash": "d801d5b684b3eb875ec03d7202b67d573458284389166b08eb5f06b891e5f7df",
+          "sourceDimensions": [
+            50,
+            75
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_33-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 34,
+          "cell": 6,
+          "sourcePixelHash": "ea016db85524d043765991e698ae6b22398b62f2717caee6a2552c64db814fe9",
+          "sourceDimensions": [
+            50,
+            75
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_34-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 35,
+          "cell": 7,
+          "sourcePixelHash": "364413d6a5b97b75ac5d962d561662317cbe261380107916fd08a27c80b9cd51",
+          "sourceDimensions": [
+            72,
+            98
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_35-0.png"
+        }
+      ],
+      "pngSha256": "10f4b5efd90870420d63462a31829a4afb5f0735fbe1c66b1aebe01619f6b274",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              42,
+              31,
+              272,
+              594
+            ],
+            "ratio": 2.4478260869565216
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              356,
+              36,
+              586,
+              594
+            ],
+            "ratio": 2.4260869565217393
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              669,
+              31,
+              899,
+              594
+            ],
+            "ratio": 2.4478260869565216
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              983,
+              31,
+              1212,
+              594
+            ],
+            "ratio": 2.458515283842795
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              42,
+              658,
+              272,
+              1221
+            ],
+            "ratio": 2.4478260869565216
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              356,
+              658,
+              586,
+              1221
+            ],
+            "ratio": 2.4478260869565216
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              669,
+              658,
+              899,
+              1221
+            ],
+            "ratio": 2.4478260869565216
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              982,
+              658,
+              1212,
+              1221
+            ],
+            "ratio": 2.4478260869565216
+          }
+        ]
+      }
+    },
+    {
+      "batch": 11,
+      "file": "art\\sleep\\topdown-missing-11.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-11.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-d9db08de-4d7e-40c9-968d-4abf1aa39ca2.png",
+      "prompt": "undefinedCells:1 human soldier dark blue hood tan face gold collar;2,3 human soldiers dark blue close hood and fair face;4 tan man pale fur cap blue feather brown beard;5 tan muscular man black thick beard purple turban and gold jewel;6 tan man pale fur cap blue feather brown beard;7,8 tan men blue head cloth and gold conical helmet, preserve head shape and blue cloth.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-11.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 36,
+          "cell": 0,
+          "sourcePixelHash": "57cf2c58bac5d704b42b9e0ac6ac8da6554f3b90ada8a8a35edd8c05b003d921",
+          "sourceDimensions": [
+            72,
+            98
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_36-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 37,
+          "cell": 1,
+          "sourcePixelHash": "10c768ff2a7a8c24fb4ea9a9fb757ef713e7c9e28d4e65c3d9ec82a7dbf822db",
+          "sourceDimensions": [
+            50,
+            77
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_37-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 38,
+          "cell": 2,
+          "sourcePixelHash": "9e3475b6797829ab568ebac092ca0f6afffb291eddf13a9a2df58565858707c1",
+          "sourceDimensions": [
+            50,
+            77
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_38-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 39,
+          "cell": 3,
+          "sourcePixelHash": "7ce9d9610329b1c740053aa4f012779ff5054266dcfdb05688a34c50bf1ad4d1",
+          "sourceDimensions": [
+            95,
+            133
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_39-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 4,
+          "cell": 4,
+          "sourcePixelHash": "c305e3df458e5356c3376f75257f3eca4ebed350d5ed871544eae771d1c1d04a",
+          "sourceDimensions": [
+            90,
+            160
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_4-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 40,
+          "cell": 5,
+          "sourcePixelHash": "5c5b7fdb7d2a4dda13f23c4a1b04816358a5d2cb376d8d14a3e27d68c988707d",
+          "sourceDimensions": [
+            95,
+            133
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_40-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 41,
+          "cell": 6,
+          "sourcePixelHash": "aa12c8f2a5579da8a655b8268b17632d673588fc9be0df503b3ca826e4eabefe",
+          "sourceDimensions": [
+            52,
+            104
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_41-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 42,
+          "cell": 7,
+          "sourcePixelHash": "c409a1d21f661e87c44e5129e545aa14abb1b516d975ae512f273a32ea60ee98",
+          "sourceDimensions": [
+            52,
+            104
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_42-0.png"
+        }
+      ],
+      "pngSha256": "d55d9e3e7aa2fc649974ffca03ef4fd32246c264245486bb95cbe15aeda4c59b",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              44,
+              31,
+              271,
+              594
+            ],
+            "ratio": 2.4801762114537445
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              357,
+              32,
+              584,
+              594
+            ],
+            "ratio": 2.4757709251101323
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              670,
+              32,
+              897,
+              594
+            ],
+            "ratio": 2.4757709251101323
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              984,
+              3,
+              1210,
+              594
+            ],
+            "ratio": 2.6150442477876106
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              44,
+              645,
+              271,
+              1221
+            ],
+            "ratio": 2.537444933920705
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              357,
+              630,
+              584,
+              1221
+            ],
+            "ratio": 2.60352422907489
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              671,
+              644,
+              897,
+              1221
+            ],
+            "ratio": 2.5530973451327434
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              984,
+              644,
+              1210,
+              1221
+            ],
+            "ratio": 2.5530973451327434
+          }
+        ]
+      }
+    },
+    {
+      "batch": 12,
+      "file": "art\\sleep\\topdown-missing-12.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-12.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-81487414-608a-4bbe-a355-8f5336587b63.png",
+      "prompt": "undefinedCells:1 light-skinned elderly king grey hair/beard gold crown;2 light-skinned adult noblewoman brown long hair red-gold circlet;3 tan man fur cap blue feather brown beard;4 older dark brown-skinned man short white hair and white beard;5 dark brown-skinned bald male mage clean shaven;6 light-skinned woman long white hair under blue hood;7 dark brown-skinned woman grey-black bob and gold brow band;8 tan woman long black hair gold earrings red headband.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-12.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 43,
+          "cell": 0,
+          "sourcePixelHash": "8e08499a9e1b6c717baf36513293864d501f16b4e3d644a18b571f16975fa82b",
+          "sourceDimensions": [
+            65,
+            81
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_43-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 44,
+          "cell": 1,
+          "sourcePixelHash": "5f0de1b21c494acb4731acf77ad55b88c80459465817b6c47f02e9ee555d60c1",
+          "sourceDimensions": [
+            80,
+            83
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_44-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 45,
+          "cell": 2,
+          "sourcePixelHash": "4aeb1ab69e0bab1c1e6a7fe766d3ec685c5f1b72de95b24393f0605a7a281825",
+          "sourceDimensions": [
+            89,
+            113
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_45-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 46,
+          "cell": 3,
+          "sourcePixelHash": "aab72c7844914dd6481eb5d1476612e62a38312094cd127add3630a765edd20b",
+          "sourceDimensions": [
+            62,
+            118
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_46-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 47,
+          "cell": 4,
+          "sourcePixelHash": "e0268e4a8295c0d0db89556748b06d4b921dc10f3029377c9ff1bbc065804d15",
+          "sourceDimensions": [
+            34,
+            89
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_47-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 48,
+          "cell": 5,
+          "sourcePixelHash": "749cf5a7ed161d64a9dd69be2069b4bfa2b6bc5f65738702f99a9c27d77a7053",
+          "sourceDimensions": [
+            53,
+            93
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_48-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 49,
+          "cell": 6,
+          "sourcePixelHash": "fa3bcc7644cfec00388fa1b394783490364e89a521ce84ff78fd8073e51a17cb",
+          "sourceDimensions": [
+            58,
+            128
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_49-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 5,
+          "cell": 7,
+          "sourcePixelHash": "1f0805b86ac3aa0f26552fd0b430843cfc4b4ee4869ad2d397804c2fd40ea2d7",
+          "sourceDimensions": [
+            94,
+            160
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_5-0.png"
+        }
+      ],
+      "pngSha256": "e57d8098356e09154ba7093ce7496c30420412b22c0c93064bbbe5fcbe44ccd2",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              45,
+              28,
+              278,
+              594
+            ],
+            "ratio": 2.429184549356223
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              359,
+              37,
+              592,
+              594
+            ],
+            "ratio": 2.390557939914163
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              667,
+              10,
+              898,
+              594
+            ],
+            "ratio": 2.5281385281385282
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              976,
+              40,
+              1208,
+              595
+            ],
+            "ratio": 2.3922413793103448
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              44,
+              660,
+              276,
+              1221
+            ],
+            "ratio": 2.418103448275862
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              358,
+              652,
+              591,
+              1221
+            ],
+            "ratio": 2.4420600858369097
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              662,
+              659,
+              897,
+              1221
+            ],
+            "ratio": 2.391489361702128
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              977,
+              657,
+              1212,
+              1221
+            ],
+            "ratio": 2.4
+          }
+        ]
+      }
+    },
+    {
+      "batch": 13,
+      "file": "art\\sleep\\topdown-missing-13.png",
+      "bundleFile": "mod\\Textures\\sleep-topdown-missing-13.png.bytes",
+      "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a14abe-53e4-70c3-841c-443714bcfd6a\\exec-99698136-5ca7-4545-891b-386903392c7d.png",
+      "prompt": "undefinedCells:1 dark brown-skinned woman curly dark brown hair;2 fair adult man reddish-brown swept-back hair in side view;3 fair young male knight brown hair under silver chainmail coif;4 fair young female knight pale blonde hair under silver chainmail coif;5 tan male man wild thick black curls and long black beard, no sword;6 tan older woman orange-white scarf covering hair;7 dark brown-skinned male black short curls and moustache;8 dark brown-skinned female blue headscarf, long dark braids and gold earrings.",
+      "referenceSheet": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\missing-13.png",
+      "referenceStyle": "art/sleep/topdown-batch-15.png",
+      "items": [
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 50,
+          "cell": 0,
+          "sourcePixelHash": "1fd7b8c02ed83fc6b7848237d9fdf5118e5c2b8cf52a2425822f6301eb93f0e6",
+          "sourceDimensions": [
+            46,
+            119
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_50-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 51,
+          "cell": 1,
+          "sourcePixelHash": "e0bd9a596e7fd4321bc8d27abda33d061b20dedbbeeec41c23ae73710f50134b",
+          "sourceDimensions": [
+            41,
+            73
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_51-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 55,
+          "cell": 2,
+          "sourcePixelHash": "d4c8cf7dba2930c6d9de726b89416354cd2830a8046464b3be329654973a5089",
+          "sourceDimensions": [
+            66,
+            159
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_55-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 56,
+          "cell": 3,
+          "sourcePixelHash": "c1f040cc7ce52e7ac2df5bee22da63d21a4152bb234ca5b85dd777ceb4798a14",
+          "sourceDimensions": [
+            66,
+            159
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_56-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 6,
+          "cell": 4,
+          "sourcePixelHash": "b12978ec2c509a071d25ee38e8da65d661a59d7d4ca9638cd39627a0948f6c70",
+          "sourceDimensions": [
+            55,
+            122
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_6-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 7,
+          "cell": 5,
+          "sourcePixelHash": "1b84c106dd702f1fe5c1aa44fa6905431771cd285416ece002a825a474a2b709",
+          "sourceDimensions": [
+            96,
+            161
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_7-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 8,
+          "cell": 6,
+          "sourcePixelHash": "b2d012cf282956a961bb96a29278ccee2aea4e168f331e8a0d3e5be6b32d0b3c",
+          "sourceDimensions": [
+            85,
+            160
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_8-0.png"
+        },
+        {
+          "provider": "rmb resource pack",
+          "providerGuid": "24b43287-5e37-450f-954a-a1e3bbb3bf9e",
+          "archive": 1200,
+          "record": 9,
+          "cell": 7,
+          "sourcePixelHash": "39404514bb60bb0d359251f9da34ece7a74fdbd59f8e5255140526c16a3805cc",
+          "sourceDimensions": [
+            69,
+            161
+          ],
+          "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\rmb resource pack--1200_9-0.png"
+        }
+      ],
+      "pngSha256": "ea7e4917e677b4a4d375d906af7f2a4e2ba6b6eee8b8d785e23db643ce898cec",
+      "structuralQA": {
+        "dimensions": [
+          1254,
+          1254
+        ],
+        "mappedCells": [
+          {
+            "cell": 0,
+            "bounds": [
+              43,
+              33,
+              271,
+              594
+            ],
+            "ratio": 2.460526315789474
+          },
+          {
+            "cell": 1,
+            "bounds": [
+              357,
+              36,
+              584,
+              594
+            ],
+            "ratio": 2.458149779735683
+          },
+          {
+            "cell": 2,
+            "bounds": [
+              670,
+              32,
+              897,
+              594
+            ],
+            "ratio": 2.4757709251101323
+          },
+          {
+            "cell": 3,
+            "bounds": [
+              983,
+              32,
+              1211,
+              594
+            ],
+            "ratio": 2.4649122807017543
+          },
+          {
+            "cell": 4,
+            "bounds": [
+              43,
+              652,
+              271,
+              1221
+            ],
+            "ratio": 2.495614035087719
+          },
+          {
+            "cell": 5,
+            "bounds": [
+              357,
+              659,
+              584,
+              1221
+            ],
+            "ratio": 2.4757709251101323
+          },
+          {
+            "cell": 6,
+            "bounds": [
+              670,
+              659,
+              898,
+              1221
+            ],
+            "ratio": 2.4649122807017543
+          },
+          {
+            "cell": 7,
+            "bounds": [
+              984,
+              659,
+              1211,
+              1221
+            ],
+            "ratio": 2.4757709251101323
+          }
+        ]
+      }
+    }
+  ],
+  "unresolved": [
+    {
+      "provider": "daggerfall expanded textures",
+      "archives": "10011\u201310020 and related humanoid billboards/mobile assets",
+      "reason": "Broader installed-path scan found additional humanoid artwork outside textures/;fullclassificationpending.10015/0\u20134 scholarsarevisuallyverifiedsourceswithoutsleepmappings.Expansionpausedbyuserkeeperstandingpriority."
+    }
+  ],
+  "excluded": "Animals, including cat-shaped Alfiq1306/0,1,2;visually classified props/statues;no invented art for absent source textures.",
+  "verification": {
+    "visual": "All fourteen selected output atlases inspected against the actual source appearances; Dark Elf and tiger closed-eye edits inspected after generation. Generated identity likeness is approximate, not pixel-identical. Atlas09shortbodyrejectedandcorrectedusingfullapprovedlongbodytemplate;actualgreenlength/headheightmeasuredbeforeproductioncopy.",
+    "assets": "14 PNGs;109 mapped nonempty separated alpha footprints with ratios1.7\u20133.2;3 excluded animal cells fully transparent;runtime copies byte-identical.",
+    "core": "dotnet run --project tests/LivingCities.Tests/LivingCities.Tests.csproj --no-restore:713/713 passed;work/SleepMissing-core.log.",
+    "runtimeCompile": "dotnet build tools/RuntimeCompile/RuntimeCompile.csproj --no-restore --nologo:0 warnings/errors;work/SleepMissing-runtime-compile.log.",
+    "native": "SleepCoverageProbe.Verify(StreetPopulation) is callable by the parent gameplay probe; native execution is not claimed here."
+  },
+  "excludedAnimalReferences": [
+    {
+      "provider": "elves & beastfolk - resources",
+      "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+      "archive": 1306,
+      "record": 0,
+      "cell": 1,
+      "sourcePixelHash": "cbb76608308fda1fe0f6cbfaaf08bba4b888fec7fb8cd8de1ff48a59267b6e80",
+      "sourceDimensions": [
+        29,
+        24
+      ],
+      "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1306_0-0.png",
+      "reason": "Cat-shaped Alfiq excluded by explicit humanoid-only scope."
+    },
+    {
+      "provider": "elves & beastfolk - resources",
+      "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+      "archive": 1306,
+      "record": 1,
+      "cell": 2,
+      "sourcePixelHash": "455968be45921d5ec865ae1fad2ac63cbcab8f5f1be279f6e5b49a2d2d8b0758",
+      "sourceDimensions": [
+        29,
+        24
+      ],
+      "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1306_1-0.png",
+      "reason": "Cat-shaped Alfiq excluded by explicit humanoid-only scope."
+    },
+    {
+      "provider": "elves & beastfolk - resources",
+      "providerGuid": "e508f8c4-f153-4725-98d4-9dfc2a1fcf9d",
+      "archive": 1306,
+      "record": 2,
+      "cell": 3,
+      "sourcePixelHash": "543082a38975553a3e315b1954930cbf7b0e5ad7477e8c70145ad0866a29161c",
+      "sourceDimensions": [
+        43,
+        40
+      ],
+      "sourceReference": "C:\\Users\\Daniel\\Desktop\\Code_Experiments\\DFU\\LivingCities\\work\\sleep-mod-source\\elves & beastfolk - resources--1306_2-0.png",
+      "reason": "Cat-shaped Alfiq excluded by explicit humanoid-only scope."
+    }
+  ]
+}

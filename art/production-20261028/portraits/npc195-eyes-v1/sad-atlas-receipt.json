@@ -1,0 +1,13 @@
+{
+  "arguments": {
+    "prompt": "Daggerfall NPC195 sad eye animation atlas, conditioned strictly on attached selected OPEN and CLOSED upper-half endpoints. Create exact 3 columns x3 rows of equally sized cells, no gutters/borders/text. Every cell repeats the entire same 64:35-proportion upper-half crop at exactly identical scale/framing. Overall sheet also64:35 aspect. Row1 gaze FRONT: OPEN, HALF, CLOSED. Row2 both pupils gaze toward image LEFT: OPEN, HALF, CLOSED. Row3 both pupils gaze toward image RIGHT: OPEN, HALF, CLOSED. Column1 eyes open; column2 upper lids visibly descend about halfway with a thin continuous dark upper lash and only narrow exposed iris strips; column3 fully closed as reference2, no iris remnants. HALF must clearly differ from OPEN while visible iris stays at same position within its own same-gaze OPEN. Upper lids occlude pupils; never slide pupils down. BOTH eyes gaze same image side in lateral rows, no crossed eyes. Keep modest lateral glance within original corners, native original-sized irises and muted gray-brown whites. No enlarged round eyes, no white flashes or two-tone sclera bands. Keep eyebrows and mood from image1 fixed in all9 cells. Forehead, hair, nose, temples, lower lids and cheeks remain exactly fixed. Only pupil direction and upper eyelid coverage change. Crisp original coarse pixel clusters, no smooth redraw, no face zoom. Use image2's CLOSED anatomy and selected mood. Full upper-half cells only; no mouth or lower face.",
+    "referenced_image_paths": [
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc195-eyes-v1/sad-open-reference.png",
+      "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/portraits/npc195-eyes-v1/sad-closed-reference.png"
+    ],
+    "transparent_background": false
+  },
+  "output_hint": "Generated images are saved to C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d as C:\\Users\\Daniel\\.codex\\generated_images\\01a1807d-d8cf-78d0-bd35-9799085fcd8d\\exec-b7fe23e9-46f2-402f-aacd-7791e2e7922d.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+  "provider": "built-in image_gen",
+  "rawSourcePath": "C:/Users/Daniel/.codex/generated_images/01a1807d-d8cf-78d0-bd35-9799085fcd8d/exec-b7fe23e9-46f2-402f-aacd-7791e2e7922d.png"
+}

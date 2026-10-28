@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-18",
+  "status": "provisional-angle-prototype",
+  "archive": 182,
+  "record": 0,
+  "orientation": 7,
+  "angle": "front-right three-quarter; nose points image-right",
+  "nativeSource": {
+    "frameCount": 12,
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "phase": "Frames 0-2 rest; frame 3 starts anatomical-left-arm offer; frame 4 reaches farther; frames 5-10 hold; frame 11 is distinct partial retraction, not rest.",
+    "frame11Reference": "work/keeper-native-idle/182-0-frame-11.png",
+    "front": "Original native frontal animation remains unchanged."
+  },
+  "file": "art/standing/keepers/prototypes/shopkeeper-182-0-front-right-12frame-v1.png",
+  "dimensions": [1446, 1087],
+  "sha256": "c540298e85fc2c277853f0da448642dac3f802d606830bb1cb0d9e83ced76cc6",
+  "layout": { "columns": 4, "rows": 3, "cellOrder": "left-to-right, top-to-bottom" },
+  "frameMapping": [
+    { "sourceFrame": 0, "cell": 0, "row": 0, "column": 0 },
+    { "sourceFrame": 1, "cell": 1, "row": 0, "column": 1 },
+    { "sourceFrame": 2, "cell": 2, "row": 0, "column": 2 },
+    { "sourceFrame": 3, "cell": 3, "row": 0, "column": 3 },
+    { "sourceFrame": 4, "cell": 4, "row": 1, "column": 0 },
+    { "sourceFrame": 5, "cell": 5, "row": 1, "column": 1 },
+    { "sourceFrame": 6, "cell": 6, "row": 1, "column": 2 },
+    { "sourceFrame": 7, "cell": 7, "row": 1, "column": 3 },
+    { "sourceFrame": 8, "cell": 8, "row": 2, "column": 0 },
+    { "sourceFrame": 9, "cell": 9, "row": 2, "column": 1 },
+    { "sourceFrame": 10, "cell": 10, "row": 2, "column": 2 },
+    { "sourceFrame": 11, "cell": 11, "row": 2, "column": 3 }
+  ],
+  "visualQA": {
+    "cellCount": 12,
+    "angleConsistent": true,
+    "anatomy": "Provisional pass: right hand/pouch remain on character's anatomical right; active left arm appears on opposite side.",
+    "phaseProgression": "Frame 11 visibly partial-retracts and does not return to full rest. Frame 3 still jumps too quickly to full extension; exact native pixel motion is not claimed.",
+    "pixelStyle": "Softened pixels and stray red/green edge noise remain.",
+    "integration": "Prototype only; compare frame11 hand position and pixel scale with native before in-game use."
+  }
+}

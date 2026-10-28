@@ -1,0 +1,1044 @@
+{
+  "appearance": 385,
+  "status": "review-candidate-not-approved",
+  "nativeIdleSize": [
+    72,
+    163
+  ],
+  "bearings": [
+    "Front",
+    "Front-left",
+    "Left profile",
+    "Rear-left",
+    "Back",
+    "Rear-right",
+    "Right profile",
+    "Front-right"
+  ],
+  "frameCount": 4,
+  "fps": 8,
+  "frameDurationMs": 125,
+  "loop": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "atlas": "atlas-8x4.png",
+  "layout": "8 rows bearing, 4 columns frame",
+  "canvas": [
+    192,
+    224
+  ],
+  "groundY": 194,
+  "generation": "built-in imagegen; independent bearings, no generated sprite mirroring",
+  "packing": "nearest-neighbor scaling, uniform per bearing; alpha preserved; contact baseline aligned; flight not foot-normalized",
+  "phaseContract": "A-B-A-B, opposing anatomical arm/leg",
+  "runtimeIntegrated": false,
+  "frames": [
+    {
+      "bearing": 0,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-0-v1.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        21,
+        7
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        53,
+        31,
+        175,
+        215
+      ],
+      "file": "frames/view-0-frame-0.png"
+    },
+    {
+      "bearing": 0,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-0-v1.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        21,
+        7
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        21,
+        30,
+        174,
+        204
+      ],
+      "file": "frames/view-0-frame-1.png"
+    },
+    {
+      "bearing": 0,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-0-v1.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1611,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        18,
+        7
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        18,
+        28,
+        170,
+        212
+      ],
+      "file": "frames/view-0-frame-2.png"
+    },
+    {
+      "bearing": 0,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-0-v1.png",
+      "sourceCrop": [
+        1611,
+        0,
+        2148,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        15,
+        7
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        18,
+        30,
+        136,
+        193
+      ],
+      "file": "frames/view-0-frame-3.png"
+    },
+    {
+      "bearing": 1,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-1-v1.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        25,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        34,
+        15,
+        177,
+        203
+      ],
+      "file": "frames/view-1-frame-0.png"
+    },
+    {
+      "bearing": 1,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-1-v1.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        28,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        66,
+        30,
+        179,
+        211
+      ],
+      "file": "frames/view-1-frame-1.png"
+    },
+    {
+      "bearing": 1,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-1-v1.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1611,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        28,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        32,
+        30,
+        180,
+        219
+      ],
+      "file": "frames/view-1-frame-2.png"
+    },
+    {
+      "bearing": 1,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-1-v1.png",
+      "sourceCrop": [
+        1611,
+        0,
+        2148,
+        732
+      ],
+      "scale": 0.286215978928885,
+      "placement": [
+        23,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        23,
+        30,
+        171,
+        208
+      ],
+      "file": "frames/view-1-frame-3.png"
+    },
+    {
+      "bearing": 2,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-2-v2.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.2832319721980886,
+      "placement": [
+        18,
+        8
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        40,
+        28,
+        168,
+        203
+      ],
+      "file": "frames/view-2-frame-0.png"
+    },
+    {
+      "bearing": 2,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-2-v2.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.2832319721980886,
+      "placement": [
+        21,
+        11
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        22,
+        31,
+        172,
+        205
+      ],
+      "file": "frames/view-2-frame-1.png"
+    },
+    {
+      "bearing": 2,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-2-v2.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1612,
+        732
+      ],
+      "scale": 0.2832319721980886,
+      "placement": [
+        24,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        24,
+        28,
+        174,
+        212
+      ],
+      "file": "frames/view-2-frame-2.png"
+    },
+    {
+      "bearing": 2,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-2-v2.png",
+      "sourceCrop": [
+        1612,
+        0,
+        2149,
+        732
+      ],
+      "scale": 0.2832319721980886,
+      "placement": [
+        22,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        22,
+        28,
+        168,
+        202
+      ],
+      "file": "frames/view-2-frame-3.png"
+    },
+    {
+      "bearing": 3,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-3-v2.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.2844677137870855,
+      "placement": [
+        19,
+        10
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        49,
+        28,
+        169,
+        204
+      ],
+      "file": "frames/view-3-frame-0.png"
+    },
+    {
+      "bearing": 3,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-3-v2.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.2844677137870855,
+      "placement": [
+        20,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        20,
+        14,
+        171,
+        204
+      ],
+      "file": "frames/view-3-frame-1.png"
+    },
+    {
+      "bearing": 3,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-3-v2.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1611,
+        732
+      ],
+      "scale": 0.2844677137870855,
+      "placement": [
+        20,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        25,
+        27,
+        171,
+        212
+      ],
+      "file": "frames/view-3-frame-2.png"
+    },
+    {
+      "bearing": 3,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-3-v2.png",
+      "sourceCrop": [
+        1611,
+        0,
+        2148,
+        732
+      ],
+      "scale": 0.2844677137870855,
+      "placement": [
+        20,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        24,
+        27,
+        151,
+        210
+      ],
+      "file": "frames/view-3-frame-3.png"
+    },
+    {
+      "bearing": 4,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-4-v2.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.2884955752212389,
+      "placement": [
+        29,
+        6
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        29,
+        30,
+        183,
+        196
+      ],
+      "file": "frames/view-4-frame-0.png"
+    },
+    {
+      "bearing": 4,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-4-v2.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.2884955752212389,
+      "placement": [
+        17,
+        6
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        17,
+        30,
+        172,
+        198
+      ],
+      "file": "frames/view-4-frame-1.png"
+    },
+    {
+      "bearing": 4,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-4-v2.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1611,
+        732
+      ],
+      "scale": 0.2884955752212389,
+      "placement": [
+        20,
+        6
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        20,
+        30,
+        175,
+        208
+      ],
+      "file": "frames/view-4-frame-2.png"
+    },
+    {
+      "bearing": 4,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-4-v2.png",
+      "sourceCrop": [
+        1611,
+        0,
+        2148,
+        732
+      ],
+      "scale": 0.2884955752212389,
+      "placement": [
+        8,
+        6
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        8,
+        30,
+        157,
+        211
+      ],
+      "file": "frames/view-4-frame-3.png"
+    },
+    {
+      "bearing": 5,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-5-v4.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.26875515251442705,
+      "placement": [
+        17,
+        16
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        24,
+        29,
+        161,
+        207
+      ],
+      "file": "frames/view-5-frame-0.png"
+    },
+    {
+      "bearing": 5,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-5-v4.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.26875515251442705,
+      "placement": [
+        18,
+        17
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        18,
+        30,
+        161,
+        201
+      ],
+      "file": "frames/view-5-frame-1.png"
+    },
+    {
+      "bearing": 5,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-5-v4.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1612,
+        732
+      ],
+      "scale": 0.26875515251442705,
+      "placement": [
+        20,
+        16
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        22,
+        30,
+        162,
+        209
+      ],
+      "file": "frames/view-5-frame-2.png"
+    },
+    {
+      "bearing": 5,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-5-v4.png",
+      "sourceCrop": [
+        1612,
+        0,
+        2149,
+        732
+      ],
+      "scale": 0.26875515251442705,
+      "placement": [
+        20,
+        16
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        20,
+        29,
+        147,
+        207
+      ],
+      "file": "frames/view-5-frame-3.png"
+    },
+    {
+      "bearing": 6,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-6-v2.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.29081177520071366,
+      "placement": [
+        20,
+        5
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        35,
+        13,
+        175,
+        208
+      ],
+      "file": "frames/view-6-frame-0.png"
+    },
+    {
+      "bearing": 6,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-6-v2.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.29081177520071366,
+      "placement": [
+        16,
+        4
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        16,
+        28,
+        171,
+        217
+      ],
+      "file": "frames/view-6-frame-1.png"
+    },
+    {
+      "bearing": 6,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-6-v2.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1611,
+        732
+      ],
+      "scale": 0.29081177520071366,
+      "placement": [
+        12,
+        5
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        12,
+        14,
+        151,
+        213
+      ],
+      "file": "frames/view-6-frame-2.png"
+    },
+    {
+      "bearing": 6,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-6-v2.png",
+      "sourceCrop": [
+        1611,
+        0,
+        2148,
+        732
+      ],
+      "scale": 0.29081177520071366,
+      "placement": [
+        7,
+        5
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        17,
+        28,
+        158,
+        215
+      ],
+      "file": "frames/view-6-frame-3.png"
+    },
+    {
+      "bearing": 7,
+      "frame": 0,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-7-v1.png",
+      "sourceCrop": [
+        0,
+        0,
+        537,
+        732
+      ],
+      "scale": 0.28225108225108225,
+      "placement": [
+        18,
+        8
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        18,
+        16,
+        168,
+        211
+      ],
+      "file": "frames/view-7-frame-0.png"
+    },
+    {
+      "bearing": 7,
+      "frame": 1,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "contact",
+      "source": "generated-abab-view-7-v1.png",
+      "sourceCrop": [
+        537,
+        0,
+        1074,
+        732
+      ],
+      "scale": 0.28225108225108225,
+      "placement": [
+        19,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        19,
+        16,
+        171,
+        211
+      ],
+      "file": "frames/view-7-frame-1.png"
+    },
+    {
+      "bearing": 7,
+      "frame": 2,
+      "phase": "A",
+      "rightArm": "forward",
+      "leftLeg": "forward",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-7-v1.png",
+      "sourceCrop": [
+        1074,
+        0,
+        1611,
+        732
+      ],
+      "scale": 0.28225108225108225,
+      "placement": [
+        16,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        16,
+        24,
+        166,
+        213
+      ],
+      "file": "frames/view-7-frame-2.png"
+    },
+    {
+      "bearing": 7,
+      "frame": 3,
+      "phase": "B",
+      "rightArm": "back",
+      "leftLeg": "back",
+      "intendedSupport": "low-flight",
+      "source": "generated-abab-view-7-v1.png",
+      "sourceCrop": [
+        1611,
+        0,
+        2148,
+        732
+      ],
+      "scale": 0.28225108225108225,
+      "placement": [
+        19,
+        9
+      ],
+      "nativeCanvas": [
+        192,
+        224
+      ],
+      "alphaBounds": [
+        19,
+        19,
+        165,
+        213
+      ],
+      "file": "frames/view-7-frame-3.png"
+    }
+  ],
+  "knownLimitations": [
+    "Four poses still emphasize stride extremes; passing/recovery transitions are weak.",
+    "Side and rear-quarter leg depth/occlusion needs user review; no final anatomical approval claimed.",
+    "Authored flight clearance varies between bearings; no full playback acceptance claimed.",
+    "Generated shading/detail remains a review candidate rather than a proven vanilla match."
+  ],
+  "gifFrameDurationsMs": [
+    120,
+    130,
+    120,
+    130
+  ]
+}

@@ -1,0 +1,157 @@
+{
+  "scope": "Supplement to previous bounded checkpoint; not a full inventory completion",
+  "reviews": [
+    {
+      "id": "portrait012",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "portraits/npc012-eyes-v1/selected54-contact.png",
+          "sha256": "3149ccccb2e3718a48ab4b2427a0055f1ad4a19859364921194c43b8321c4e55"
+        },
+        {
+          "path": "portraits/npc012-complete-candidate/mouths54-contact.png",
+          "sha256": "484c02e381ea69d4e5a7c1cfbe8c7db3d82ee004325bf3a750223bd8fccb807e"
+        },
+        {
+          "path": "portraits/npc012-complete-candidate/manifest.json",
+          "sha256": "3ad519eb9ff5cee8303ff6398d44b36eda3ef8a4235b14bfb350889610650f5f"
+        }
+      ],
+      "findings": "54 own eyes and54 existing exact-derived mouths. Source row27 iris retained under generated lids; row28+fixed. Lateral sclera/highlights differ. No temporal or voice acceptance.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    },
+    {
+      "id": "portrait220",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "portraits/npc220-complete-candidate/mouths54-contact.png",
+          "sha256": "e7f76f8e65321b64f19a06ef57818425419e3c6198f691688071e8ebc5260c0f"
+        },
+        {
+          "path": "portraits/npc220-complete-candidate/manifest.json",
+          "sha256": "5a66d96e0e22bc910b46c2634094ba878d30e505519e580fc025e48dede92849"
+        }
+      ],
+      "findings": "All54 own mouths seen; derived eyes previously seen. C/E subtle; G/FV weak.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    },
+    {
+      "id": "portrait425",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "portraits/npc425-complete-candidate/mouths54-contact.png",
+          "sha256": "7c0b8ff6db6538f9fe61b6fe431a1b6e42fabf076b00057d6cea9e78b2267ebb"
+        },
+        {
+          "path": "portraits/npc425-complete-candidate/manifest.json",
+          "sha256": "bb96025d9688a91fcc83ac38ad0a39c237f68218972ff318d1aebc6029d55a4a"
+        }
+      ],
+      "findings": "All54 own mouths seen; derived eyes previously seen. E sometimes high; G/FV and Happy/Guarded distinctions weak; individual voice missing.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    },
+    {
+      "id": "jesterRun",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "stationary-locomotion/family-182-5/run/selected-views-review-sheet.png",
+          "sha256": "333a5399c043cc63a47c1f22a1b6605950c5be57f167e46457885910341c86a8"
+        },
+        {
+          "path": "stationary-locomotion/family-182-5/manifest.json",
+          "sha256": "4d03e1f166aab5c9cdc40ce7b7f358bdb10511bcaa94fd0afc91d0824f81e457"
+        }
+      ],
+      "findings": "32 frames reviewed; correct asymmetric costume/prop hand, face/prop/palette variability remains.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    },
+    {
+      "id": "guard183-3WalkPilot",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "stationary-locomotion/family-183-3/walk/view-2-review-2x.png",
+          "sha256": "9b760da77a260c1b7cbb6b64218a240ca302de64e115f6d60fb02fc2f9e9142f"
+        }
+      ],
+      "findings": "Four left-view phases reviewed; contact lead leg is distinguished by overlap/shading, subtle gray armor anatomy.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    },
+    {
+      "id": "382Jump",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "traversal/families/382/jump-eight-views-v1/review-bearings-0-3.png",
+          "sha256": "126e4c0ccf74d3fd04070097fdf64d4ec6eafbfae0305177b11c194b1a3d1b62"
+        },
+        {
+          "path": "traversal/families/382/jump-eight-views-v1/review-bearings-4-7.png",
+          "sha256": "14b1957c8c52ec25b3f27ba7d1386604280a7c3165645bdaa94953bb2aab62af"
+        },
+        {
+          "path": "traversal/families/382/jump-eight-views-v1/manifest.json",
+          "sha256": "3d0ebecc0a9e9f316b3f7fa9c7aa09caac101f7a971c69ee93676efc04a80a55"
+        }
+      ],
+      "findings": "32 phase slots inspected;20authored+12mirrors explicit. Front0 larger; head/body/view scale variation.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    },
+    {
+      "id": "382Climb",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "traversal/families/382/climb-eight-views-v1/review-bearings-0-3.png",
+          "sha256": "4d7894deddb5cf28aed4c3dfacf2c1325212860bccdd8d868efd60e47fb0fc00"
+        },
+        {
+          "path": "traversal/families/382/climb-eight-views-v1/review-bearings-4-7.png",
+          "sha256": "2a0bd7a6890d491b64e51d32dbc3fe71ab5f497766d365ae74503afae4db49ae"
+        },
+        {
+          "path": "traversal/families/382/climb-eight-views-v1/manifest.json",
+          "sha256": "f4f40905cf3f47e33a861cffc8c5c5c7ba152d47be05be2f27d21fffc748549d"
+        }
+      ],
+      "findings": "32 authored phases inspected. Anatomical right-hand reach more consistent across cameras. Profile lean and hidden limbs limit review; wall contact unverified.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    },
+    {
+      "id": "382SwimPilot",
+      "reviewer": "root",
+      "method": "Direct visual inspection of saved contacts, not agent summary alone",
+      "files": [
+        {
+          "path": "traversal/families/382/swim-profile-v1/native-comparison.png",
+          "sha256": "44ab32fc024167d1d126d78c13643fc7f340b270b3d8d8d4f8061bcf14a3b1d9"
+        },
+        {
+          "path": "traversal/families/382/swim-profile-v1/manifest.json",
+          "sha256": "489f744b561a2ed75e3fd0e0f0b2d860a6b68a6347d4a9d97b5541dda1e5083d"
+        }
+      ],
+      "findings": "Four long-body swim poses compared to unchanged original. More defined musculature, no water/temporal acceptance.",
+      "runtimeAcceptance": false,
+      "temporalAcceptance": false
+    }
+  ]
+}

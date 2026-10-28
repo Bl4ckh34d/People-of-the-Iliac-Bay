@@ -1,0 +1,21 @@
+{
+  "prompt": "Use case: identity-preserve. Produce ONE full-body running sprite, not a sheet. Reference Image 1 is the immutable character appearance: original Daggerfall stationary NPC 182/0. Reference Image 2 is only the exact camera and ONE pose template. Replace the man in Image 2 with the elderly man from Image 1, preserving that template's specific arm positions, leg positions, foreground limb occlusion, ground contact or airborne state and framing. Camera is rear-left: away from viewer and image LEFT, back and left side visible. Pose is flight toward anatomical LEFT foot landing, RIGHT arm forward, LEFT arm back. This is phase 3 of a four-phase run; do not substitute a generic running stance.\nAppearance must be exclusively Image 1: stocky older body, bald crown with gray side hair, clean-shaven mature face with NO mustache or beard, green buttoned tunic/vest, light cyan sleeves, muted rusty trousers, folded brown boots and original belt pouch. No orange scarf, yellow trim, chainmail, dark hair or beard from Image 2. Keep the original 47-by-76 logical body proportions and coarse Daggerfall pixel-art palette. Do not inherit the template's long thin legs. One complete body including all boots and hands, matching template camera. Keep canvas aspect and relative head/foot position close to Image 2; transparent padding retained. Both boots visibly airborne above the invisible groundline; do not lower a foot onto ground. Opaque body and transparent exterior. No text, labels, grid, shadows or props.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-2c76662c-f463-4772-8100-507aac06e1d3.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/mobile-locomotion/eight-view-candidate-v1/frames/view-3-frame-3.png"
+  ],
+  "view": 3,
+  "phase": 3,
+  "referenceCanvasHeight": 725,
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+      "sha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/mobile-locomotion/eight-view-candidate-v1/frames/view-3-frame-3.png",
+      "sha256": "ed6ba51f8c5a4602735dbae203ea0d08a040d93881aae9d5233577b5387ea790"
+    }
+  ]
+}

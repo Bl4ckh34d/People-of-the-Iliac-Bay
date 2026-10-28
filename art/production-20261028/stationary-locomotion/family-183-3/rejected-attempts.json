@@ -1,0 +1,41 @@
+{
+  "unselected": [
+    {
+      "source": "walk/view-4-back-v1.png",
+      "reason": "Repeated right lifted passing leg, no counterarm and high spear carry."
+    },
+    {
+      "source": "walk/view-4-back-phase-carry-repair-v2.png phase3",
+      "reason": "Passing leg not corrected; replaced by individual v3."
+    },
+    {
+      "source": "walk/view-6-right-profile-v1.png",
+      "reason": "Same apparent contact depth and inconsistent near/right spear-arm ownership."
+    },
+    {
+      "source": "walk/view-6-right-profile-leg-depth-v2.png",
+      "reason": "Leg depth improved but near arm switched ownership; replaced by v3."
+    },
+    {
+      "source": "walk/view-3-phase-2-countercontact-v2.png",
+      "reason": "Still same openV connections; v3 retained only for explicit needs-review status."
+    },
+    {
+      "source": "walk/view-5-phase-0-motion-keyframe-v3.png",
+      "reason": "Still same near lead foot; no reliable crossed hip connections, pole/body proportions also changed."
+    },
+    {
+      "source": "walk/view-5-phase-0-native-motion-v4.png",
+      "reason": "Direct native+motion produced different body/camera proportions and unclear near trailing contact; not selected. Rear-right remains explicitly unresolved."
+    },
+    {
+      "source": "run/view-2-left-profile-counterarm-v3.png",
+      "reason": "Counterarm timing corrected but near/far leg shading and overlap changed back; individual phase2/3 repairs use prior depth-v2 legs."
+    },
+    {
+      "source": "walk/view-3-phase-2-pole-length-v6.png",
+      "reason": "Spear tip extends too high while lower shaft still ends well above feet. Crossed legs preserved, but prop geometry not corrected. Keep selected v5 needs-pose-scale-review; no further blind repair."
+    }
+  ],
+  "retention": "Raw generated sources retained with exact prompts/hashes as provenance, not accepted production."
+}

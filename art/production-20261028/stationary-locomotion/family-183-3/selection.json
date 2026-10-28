@@ -1,0 +1,133 @@
+{
+  "logicalHeight": 159,
+  "cellSize": 192,
+  "baseline": 180,
+  "actions": {
+    "walk": {
+      "2": {
+        "source": "walk/view-2-left-profile-color-mapped-v2.png",
+        "sourceBoxes": [
+          [
+            0,
+            0,
+            559,
+            793
+          ],
+          [
+            559,
+            0,
+            974,
+            793
+          ],
+          [
+            974,
+            0,
+            1526,
+            793
+          ],
+          [
+            1526,
+            0,
+            1983,
+            793
+          ]
+        ],
+        "status": "review-candidate",
+        "frames": {
+          "2": "walk/selected-view-2-phase-2-countercontact-v3.png"
+        }
+      },
+      "0": {
+        "source": "walk/view-0-front-v1.png",
+        "status": "review-candidate",
+        "frames": {
+          "3": "walk/selected-view-0-phase-3-passing-v2.png"
+        }
+      },
+      "4": {
+        "source": "walk/view-4-back-phase-carry-repair-v2.png",
+        "status": "review-candidate",
+        "frames": {
+          "3": "walk/view-4-phase-3-passing-v3.png"
+        }
+      },
+      "6": {
+        "source": "walk/view-6-right-profile-arm-ownership-v3.png",
+        "status": "review-candidate"
+      },
+      "1": {
+        "source": "walk/view-1-front-left-v1.png",
+        "status": "review-candidate",
+        "frames": {
+          "0": "walk/view-1-phase-0-countercontact-v2.png"
+        }
+      },
+      "3": {
+        "source": "walk/view-3-rear-left-v1.png",
+        "status": "needs-pose-scale-review",
+        "frames": {
+          "2": "walk/view-3-phase-2-style-match-v5.png"
+        }
+      },
+      "5": {
+        "source": "walk/view-5-rear-right-contact-arm-v2.png",
+        "status": "needs-contact-depth-review"
+      },
+      "7": {
+        "source": "walk/view-7-front-right-phase-repair-v2.png",
+        "status": "review-candidate",
+        "frames": {
+          "2": "walk/view-7-phase-2-motion-keyframe-v3.png"
+        }
+      }
+    },
+    "run": {
+      "2": {
+        "source": "run/view-2-left-profile-depth-v2.png",
+        "status": "review-candidate",
+        "frames": {
+          "2": "run/view-2-phase-2-counterarm-v4.png",
+          "3": "run/view-2-phase-3-counterarm-v4.png"
+        }
+      },
+      "0": {
+        "source": "run/view-0-front-counterarm-v2.png",
+        "status": "review-candidate"
+      },
+      "4": {
+        "source": "run/view-4-back-counterarm-v2.png",
+        "status": "review-candidate"
+      },
+      "6": {
+        "source": "run/view-6-right-profile-depth-v2.png",
+        "status": "review-candidate",
+        "frames": {
+          "3": "run/view-6-phase-3-flight-v3.png"
+        }
+      },
+      "1": {
+        "source": "run/view-1-front-left-depth-v2.png",
+        "status": "review-candidate"
+      },
+      "3": {
+        "source": "run/view-3-rear-left-v1.png",
+        "status": "review-candidate",
+        "frames": {
+          "2": "run/view-3-phase-2-heel-v2.png",
+          "3": "run/view-3-phase-3-flight-v2.png"
+        }
+      },
+      "5": {
+        "source": "run/view-5-rear-right-counterarm-v3.png",
+        "status": "review-candidate",
+        "frames": {
+          "0": "run/view-5-phase-0-depth-v4.png"
+        }
+      },
+      "7": {
+        "source": "run/view-7-front-right-final-corrections-v3.png",
+        "status": "review-candidate"
+      }
+    }
+  }
+}

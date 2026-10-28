@@ -1,0 +1,21 @@
+{
+  "prompt": "Create FOUR LEFT-facing WALK frames of EXACT armored guard Image1. Image1 alone supplies identity, armor, color pattern, sword and long spear proportions. Image2 is a COLOR-CODED LEFT/RIGHT LEG MOTION guide ONLY: its GOLD LEG means anatomicalLEFT leg (near camera), its RED LEG means anatomicalRIGHT leg (far camera). Translate these into the guard's TWO GRAY ARMORED LEGS. Never copy jester colors, hood, cap, smile, shoes or marotte.\nPreserve tall slender66x159 guard, warm brown clean-shaven face, gray chainmail coif/shoulder mantle, gray plate/gauntlets/greaves/boots, brown belt. Keep muted forest green/tan checker tabard exactly as original: chest2x2 blocks, top anatomicalRIGHT TAN and LEFT GREEN, lower RIGHT GREEN and LEFT TAN; below belt skirt repeats those rows. Near LEFT hip has dark long sword/scabbard. Far RIGHT gauntlet holds long upright brown-shaft spear with simple dark gray pointed blade; near LEFT hand free. Same shaft/blade length proportions as native source. Shaft bottom should clear boot baseline by only2\u20133 logical pixels, not20pixels; blade tip should be about level with coif top or a few pixels above, not a head taller. Guard body from coif to grounded boot should stay about156logicalpixels inside159total extent. Do not shorten spear into baton or add shield.\nStrict consistent LEFT profile camera. Match guide anatomical leg ownership with unmistakable depth:\n0 NEAR LEFT gray leg forward screenLEFT planted, FAR RIGHT gray leg trails screenRIGHT; near LEFT arm back screenRIGHT. Near left thigh/knee clearly in foreground.\n1 NEAR LEFT gray leg vertical support in foreground. FAR RIGHT gray knee passes FORWARD screenLEFT and its lifted boot appears ahead of the supporting shin, partially behind it at crossing. Near left arm moves toward front.\n2 FAR RIGHT gray leg forward screenLEFT planted, NEAR LEFT gray leg trails screenRIGHT. This is OPPOSITE contact to0: show broad near LEFT knee/greave behind at screenRIGHT crossing IN FRONT of the far right thigh, not same near leg leading again. Near LEFT arm forward screenLEFT with empty hand.\n3 FAR RIGHT gray leg vertical support farther from camera. NEAR LEFT gray knee and boot pass FORWARD screenLEFT, crossing clearly IN FRONT of support leg. Not a duplicate of1. Near left arm back.\nKeep both legs gray, but preserve occlusion/depth so near/far alternation is clear. RIGHT spear arm remains controlled same hand all4; near left free arm counter-swings, left scabbard stays attached. Walking one foot grounded eachphase. Consistent body/head/weapon size, full tip/shaft/feet in four equal cells with ample gutters. Coarse native Daggerfall pixelart, opaque interiors transparentbackground. No labels/grid/shadow.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-362521d4-5bb6-41f5-992c-b96f6a8afe49.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/183_3-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-2-review-native.png"
+  ],
+  "view": 2,
+  "action": "walk",
+  "method": "native identity plus same-bearing color-coded leg ownership motion",
+  "referencePins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/183_3-0.png",
+      "sha256": "84c872cc3239e3dc1cad803eccaa8d1547b46367d00b92fc367dd6a58146fc92"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/family-182-5/walk/view-2-review-native.png",
+      "sha256": "3ced2b2f1fed00c17b28622097b514cd24a95976ec38fdaef529491534d185d5"
+    }
+  ]
+}

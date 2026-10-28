@@ -1,0 +1,31 @@
+{
+  "phase": 0,
+  "source": "flat-182-0-walk-left-contactA-v1.png",
+  "name": "left-contact",
+  "pose": "LEFT-facing RUN LEFT-LEG CONTACT: NEAR LEFT leg extends forward to imageLEFT, heel touches original ground baseline. FAR RIGHT leg is trailing to imageRIGHT, its knee sharply bent and heel lifted behind toward buttock, far boot entirely off ground. NEAR LEFT arm is BACK toward imageRIGHT, elbow bent about90degrees, near fist behind/along hip. FAR RIGHT arm is FORWARD toward imageLEFT, elbow bent, far fist near low chest. Clear opposing arm/leg motion. Only near forward boot touches ground.",
+  "file": "run-view-2-phase-0-v1.png",
+  "view": 2,
+  "status": "generated-awaiting-flight-and-phase-review",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-c2be6128-051c-4b84-a886-100ad8042841.png",
+  "prompt": "Use case: identity-preserve. ONE running keyframe for original Daggerfall stationary merchant182/0, strict LEFT PROFILE. IMAGE1 is authoritative original identity/palette47x76pixels. IMAGE2 is same merchant in a WALK phase and is edit target for exact camera, face, headsize, stocky proportions, costume and canvas geometry. IMAGE3 is ONLY a different man's generated RUNNING posture guide; never copy his dark skin, black hair, orange collar, blue tunic, tights or green shoes. Its repeated arm/flight defects must NOT be copied; obey the precise new phase below. Our merchant stays elderly pale bald-crowned grey-sidehair, clean-shaven, broad stocky green waistcoat/belly, muted cyan sleeves, DARK RUST-BROWN knee breeches, folded brown boots and original brown belt/pouch. Preserve exact identity, coarse1996pixel clusters, source palette, no modern fine texture/new accessories. Keep same canvas dimensions/headscale/pelvisposition and strict nose-LEFT camera as image2. Lean torso forward only modestly(about10degrees), no hunched monster/anatomy change. Running has bent elbows and longer energetic leg motion, unlike walking. PHASE: LEFT-facing RUN LEFT-LEG CONTACT: NEAR LEFT leg extends forward to imageLEFT, heel touches original ground baseline. FAR RIGHT leg is trailing to imageRIGHT, its knee sharply bent and heel lifted behind toward buttock, far boot entirely off ground. NEAR LEFT arm is BACK toward imageRIGHT, elbow bent about90degrees, near fist behind/along hip. FAR RIGHT arm is FORWARD toward imageLEFT, elbow bent, far fist near low chest. Clear opposing arm/leg motion. Only near forward boot touches ground. Ground baseline is the same invisible line under image2's grounded boot; do not draw it. Contacts reach it, flights remain above it, never shift canvas to falsely ground airborne boots. Render exactly one complete character, no extra cells or views. Head/hands/boots fit with margin. Actual transparent background and fully opaque body. No floor, shadow, text, borders or checkerboard.",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/flat-182-0-walk-left-contactA-v1.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-reference-385-left-review.png"
+  ],
+  "tool": "built-in image_gen",
+  "referenceInputPins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_0-0.png",
+      "sha256": "de5d67533ab2e9de9a8b3cbfbb4ab8d720976175437577f7c1ec9c6c71d3365a"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/flat-182-0-walk-left-contactA-v1.png",
+      "sha256": "68c0cb0ad3eda86728e0b4b1144bdc1d6fcd89716b23bb9822eec9193ffd60b6"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/run-182-0/motion-reference-385-left-review.png",
+      "sha256": "dd36ca32764d2d08a829bebf7584443048770673e8d52212625062f8fd8181cb"
+    }
+  ]
+}

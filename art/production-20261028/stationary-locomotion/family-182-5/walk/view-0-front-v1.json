@@ -1,0 +1,20 @@
+{
+  "prompt": "Create a horizontal FOUR-frame front-facing WALK sprite strip. Image1 is the exact jester identity, proportions, original costume colors and right-hand marotte. Image2 supplies FRONT camera and chronological walk motion ONLY. Never inherit the merchant face, beard, gray hair, green jacket, rust trousers, boots, pouch or stocky proportions.\nIdentity: tall slender 86x131 native Daggerfall jester, smiling brown-toned clean-shaven face, tight two-color hood and two-tip bell cap. Anatomical RIGHT torso/sleeve/cap is GOLD (screenLEFT in front view). Anatomical LEFT torso/sleeve/cap RED-ORANGE (screenRIGHT). Legs counterchanged: RIGHT LEG RED-ORANGE (screenLEFT), LEFT LEG GOLD (screenRIGHT). Pointed shoes match leg colors, small olive bells on cap and tunic. RIGHT GOLD hand carries upright striped olive marotte topped with matching miniature jester head. Prop stays in this exact hand all phases, fully visible. Free LEFT RED arm counter-swings naturally; right carrying arm controlled.\nAll four sprites strictly front-facing torso/head, same camera, size, cap width, eye line, full body margins, four equal cells. No side-view faces or turning during cycle. Four phases left-to-right: 0 LEFT GOLD foot steps toward viewer, RIGHT RED foot behind; free LEFT RED arm swings backward. 1 LEFT GOLD leg supports, RIGHT RED knee passes forward, free red arm coming forward. 2 RIGHT RED foot steps toward viewer, LEFT GOLD foot behind; free LEFT RED arm clearly forward. 3 RIGHT RED leg supports, LEFT GOLD knee passes forward, free red arm swings back. Walking always one foot supporting on common baseline, no jumping/running. Actual alternating colored legs and arm poses, no four near-duplicate stands. Coarse pixel art at original logical131px fullheight, opaque interiors with transparent background. No shadow, grid, lettering or ground.",
+  "generatedSource": "C:\\Users\\Daniel\\.codex\\generated_images\\01a1807c-c563-7922-9e98-f606d781bfb8\\exec-627b5c35-a94f-47b6-b5b2-2a4a91a6ba02.png",
+  "referenceInputs": [
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_5-0.png",
+    "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/view-0-review-native.png"
+  ],
+  "view": 0,
+  "action": "walk",
+  "referencePins": [
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/sources/native/182_5-0.png",
+      "sha256": "c1da1f3aaaff5b40720e6238caaf17c828c800dcfa618f51f9da36bde84c16be"
+    },
+    {
+      "path": "C:/Users/Daniel/Desktop/Code_Experiments/DFU/LivingCities/art/production-20261028/stationary-locomotion/walk-182-0/view-0-review-native.png",
+      "sha256": "5b49ea3a975b89a41d3aa5e7c8e6b91870c52c23ae826696a1c834a2c8366525"
+    }
+  ]
+}

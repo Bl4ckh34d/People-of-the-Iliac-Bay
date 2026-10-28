@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-18",
+  "status": "provisional-frame11-edit-failed",
+  "base": "art/standing/keepers/prototypes/shopkeeper-182-0-back-12frame-v1.png",
+  "archive": 182,
+  "record": 0,
+  "orientation": 4,
+  "angle": "straight back; character faces away",
+  "nativeSource": {
+    "frameCount": 12,
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "frame11Reference": "work/keeper-native-idle/182-0-frame-11.png",
+    "frame11Phase": "Partial retraction after full hold; not rest and not full extension.",
+    "front": "Original native frontal animation remains unchanged."
+  },
+  "file": "art/standing/keepers/prototypes/shopkeeper-182-0-back-12frame-v2-frame11-edit.png",
+  "dimensions": [1446, 1088],
+  "sha256": "bdd66bf565197ed051f86e193e3dc86e4fa0a0333a4bbeabd4f4910742b445bf",
+  "layout": { "columns": 4, "rows": 3, "cellOrder": "left-to-right, top-to-bottom" },
+  "frameMapping": [
+    { "sourceFrame": 0, "cell": 0, "row": 0, "column": 0 },
+    { "sourceFrame": 1, "cell": 1, "row": 0, "column": 1 },
+    { "sourceFrame": 2, "cell": 2, "row": 0, "column": 2 },
+    { "sourceFrame": 3, "cell": 3, "row": 0, "column": 3 },
+    { "sourceFrame": 4, "cell": 4, "row": 1, "column": 0 },
+    { "sourceFrame": 5, "cell": 5, "row": 1, "column": 1 },
+    { "sourceFrame": 6, "cell": 6, "row": 1, "column": 2 },
+    { "sourceFrame": 7, "cell": 7, "row": 1, "column": 3 },
+    { "sourceFrame": 8, "cell": 8, "row": 2, "column": 0 },
+    { "sourceFrame": 9, "cell": 9, "row": 2, "column": 1 },
+    { "sourceFrame": 10, "cell": 10, "row": 2, "column": 2 },
+    { "sourceFrame": 11, "cell": 11, "row": 2, "column": 3 }
+  ],
+  "visualQA": {
+    "frame11": "Fail: cell11 still appears fully extended, not partial retraction.",
+    "anatomy": "Pass: active anatomical-left arm on image-left, pouch/right hand on image-right.",
+    "preservation": "Fail: image edit visibly redrew other cells.",
+    "pixelStyle": "Softened pixels and stray edge colors remain.",
+    "decision": "Do not use this edit as a frame11 correction."
+  }
+}

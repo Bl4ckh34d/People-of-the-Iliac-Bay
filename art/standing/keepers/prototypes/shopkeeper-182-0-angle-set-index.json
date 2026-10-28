@@ -1,0 +1,101 @@
+{
+  "date": "2026-10-18",
+  "status": "review-prototype-set; not runtime-integrated",
+  "archive": 182,
+  "record": 0,
+  "nativeSource": {
+    "file": "work/keeper-native-idle/182-0-all-native-frames.png",
+    "dimensions": [47, 76],
+    "frameCount": 12,
+    "frameRateFps": 5,
+    "cycleSeconds": 2.4,
+    "framePhases": "0-2 rest; 3 begins offer; 4 reaches farther; 5-10 hold; 11 partial retraction, not rest.",
+    "frame11Comparison": {
+      "changedPixelsVsFrame0": 140,
+      "boundsVsFrame0": [23, 20, 37, 42],
+      "changedPixelsVsFrame10": 236,
+      "boundsVsFrame10": [28, 20, 47, 46]
+    },
+    "front": "Original frontal animation remains unchanged and is the exact orientation 0 source."
+  },
+  "reviewPreview": "art/standing/keepers/prototypes/shopkeeper-182-0-frame11-angles-preview.png",
+  "orientationConvention": "DFU MobilePersonBillboard: 0 front; 1 front-left; 2 left; 3 rear-left; 4 back; 5 rear-right; 6 right; 7 front-right.",
+  "cellMapping": "For every generated 4×3 sheet, native source frame i maps to row floor(i/4), column i mod 4, zero-based, read left-to-right then top-to-bottom.",
+  "runtimeIntegration": "None. User requested reviewable angles for later in-game testing; this set is only art direction/prototype material. Original front stays native. Do not mirror asymmetric sides. Preserve anatomical RIGHT pouch/right resting hand and anatomical LEFT offer arm.",
+  "orientations": [
+    {
+      "orientation": 0,
+      "angle": "front",
+      "previewFrame11": "work/keeper-native-idle/182-0-frame-11.png",
+      "sheet": "work/keeper-native-idle/182-0-all-native-frames.png",
+      "metadata": "work/keeper-native-idle/native-idle-inventory.json",
+      "frame11Status": "Exact native frame 11; all 12 original frames preserved."
+    },
+    {
+      "orientation": 1,
+      "angle": "front-left; nose image-left",
+      "previewFrame11": "art/standing/keepers/prototypes/shopkeeper-182-0-front-left-12frame-v2-frame11-edit.png",
+      "metadata": [
+        "art/standing/keepers/prototypes/shopkeeper-182-0-front-left-12frame-v1.json",
+        "art/standing/keepers/prototypes/shopkeeper-182-0-front-left-12frame-v2-frame11-edit.json"
+      ],
+      "frame11Status": "v1 rested fully and was wrong. v2 visually shows partial retraction, but edit redrew other cells and exact native geometry is not proven."
+    },
+    {
+      "orientation": 2,
+      "angle": "left profile; nose image-left",
+      "previewFrame11": "art/standing/keepers/prototypes/shopkeeper-182-0-left-profile-12frame-v2-frame11-edit.png",
+      "metadata": [
+        "art/standing/keepers/prototypes/shopkeeper-182-0-left-profile-12frame-v1.json",
+        "art/standing/keepers/prototypes/shopkeeper-182-0-left-profile-12frame-v2-frame11-edit.json"
+      ],
+      "frame11Status": "v1 rested fully and was wrong. v2 looks partially retracted; exact native geometry and anatomical side remain ambiguous in profile. Edit redrew other cells."
+    },
+    {
+      "orientation": 3,
+      "angle": "rear-left three-quarter",
+      "previewFrame11": "art/standing/keepers/prototypes/shopkeeper-182-0-rear-left-3q-12frame-v1-user-approved-style-reference.png",
+      "metadata": [
+        "art/standing/keepers/prototypes/shopkeeper-182-0-rear-left-3q-12frame-v1-user-approved-style-reference.json",
+        "art/standing/keepers/prototypes/shopkeeper-182-0-rear-left-3q-12frame-v2-frame11-edit.json"
+      ],
+      "frame11Status": "User-approved visual direction. v1 cell11 rests fully and is wrong for animation; single v2 edit did not fix anatomical handedness. Keep v1 as style reference, not runtime art."
+    },
+    {
+      "orientation": 4,
+      "angle": "back",
+      "previewFrame11": "art/standing/keepers/prototypes/shopkeeper-182-0-back-12frame-v1.png",
+      "metadata": [
+        "art/standing/keepers/prototypes/shopkeeper-182-0-back-12frame-v1.json",
+        "art/standing/keepers/prototypes/shopkeeper-182-0-back-12frame-v2-frame11-edit.json"
+      ],
+      "frame11Status": "v1 cell11 rests fully and is wrong; v2 cell11 remains fully extended and is wrong. Anatomical side is readable and correctly assigned."
+    },
+    {
+      "orientation": 5,
+      "angle": "rear-right three-quarter",
+      "previewFrame11": "art/standing/keepers/prototypes/shopkeeper-182-0-rear-right-12frame-v1.png",
+      "metadata": "art/standing/keepers/prototypes/shopkeeper-182-0-rear-right-12frame-v1.json",
+      "frame11Status": "Possibly intermediate, but exact hand geometry is ambiguous. Offer arm appears on same visible side as anatomical-right pouch; anatomy fails."
+    },
+    {
+      "orientation": 6,
+      "angle": "right profile; nose image-right",
+      "previewFrame11": "art/standing/keepers/prototypes/shopkeeper-182-0-right-profile-12frame-v1.png",
+      "metadata": "art/standing/keepers/prototypes/shopkeeper-182-0-right-profile-12frame-v1.json",
+      "frame11Status": "Visually shows partial retraction and is not full rest. Exact native geometry not proven; handedness is provisional by side silhouette."
+    },
+    {
+      "orientation": 7,
+      "angle": "front-right; nose image-right",
+      "previewFrame11": "art/standing/keepers/prototypes/shopkeeper-182-0-front-right-12frame-v1.png",
+      "metadata": "art/standing/keepers/prototypes/shopkeeper-182-0-front-right-12frame-v1.json",
+      "frame11Status": "Visually shows partial retraction and is not full rest. Exact native geometry not proven; right pouch and left offer arm appear on opposite anatomical sides."
+    }
+  ],
+  "sharedVisualLimits": [
+    "Generated sprites have softened pixels and stray colored edge pixels compared with native art.",
+    "Most generated sheets jump from rest to full extension at frame 3, instead of matching the native gradual reach across frames 3-5.",
+    "An imagegen edit may redraw cells other than cell 11; v2 edit sheets are separate review artifacts and do not replace their v1 sources."
+  ]
+}
